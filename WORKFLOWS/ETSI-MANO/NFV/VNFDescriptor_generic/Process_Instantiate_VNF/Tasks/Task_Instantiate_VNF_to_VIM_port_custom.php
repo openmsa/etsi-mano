@@ -1,0 +1,118 @@
+<?php
+
+require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
+require_once '/opt/fmc_repository/Process/Reference/OPENSTACK/Library/OBMF/openstack_common_obmf.php';
+
+function list_args()
+{
+  create_var_def('servers.0.name', 'String');
+  create_var_def('servers.0.image_id', 'OBMFRef');
+  create_var_def('servers.0.flavor_id', 'OBMFRef');
+  create_var_def('servers.0.floating_ip_id', 'OBMFRef');
+  create_var_def('servers.0.availability_zone', 'String');
+  create_var_def('servers.0.config_drive', 'Boolean');
+  create_var_def('servers.0.key_name', 'OBMFRef');
+  create_var_def('servers.0.networks.0.network', 'OBMFRef');
+  create_var_def('servers.0.networks.0.port', 'String');
+  create_var_def('servers.0.security_groups.0.security_group', 'OBMFRef');
+  create_var_def('servers.0.user_data', 'String');
+  create_var_def('servers.0.personality.0.path', 'String');
+  create_var_def('servers.0.personality.0.contents', 'String');
+  create_var_def('servers.0.metadata.0.metadata_key', 'String');
+  create_var_def('servers.0.metadata.0.metadata_value', 'String');
+
+}
+
+$device_id = substr($context['deviceid'], 3);
+
+$index = 0;
+foreach ($context['servers'] as $server) {
+
+$name = $server['name'];
+$image_id = $server['image_id'];
+$flavor_id = $server['flavor_id'];
+$availability_zone = $server['availability_zone'];
+
+logToFile(debug_dump($server['networks'], "===========< NETWORKS >=========== :"));
+
+$networks = $server['networks'];
+
+$security_groups = array();
+if (!empty($server['security_groups'])) {
+   $security_groups = $server['security_groups']; 
+}
+$personality = array();
+if (!empty($server['personality'])) {
+   $personality = $server['personality']; 
+}
+$metadata = array();
+if (!empty($server['metadata'])) {
+   $metadata = $server['metadata']; 
+}
+$user_data = "";
+if (!empty($server['user_data'])) {
+   $user_data = base64_encode($server['user_data']);
+}
+$key = $server['key_name'];
+$config_drive = $server['config_drive'];
+
+$response = _nova_server_create ($device_id, $name, $networks,
+							$availability_zone, $flavor_id, $image_id,
+							$security_groups, $key, $user_data, $personality, $config_drive, 		 
+                                                        $metadata);
+$response = json_decode($response, true);
+if ($response['wo_status'] !== ENDED) {
+	$response = json_encode($response);
+	echo $response;
+	exit;
+}
+
+$wo_comment = $response['wo_comment'];
+$wo_comment = json_decode(str_replace("\\\"", "\"", $wo_comment), true);
+$server_id = $wo_comment['server']['id'];
+
+$context['servers'][$index]['server_id'] = $server_id;
+
+if (empty($server_id)) {
+	echo "Server ID is null _ can wait for server status.";
+	exit; 
+}
+$response = wait_for_server_status($device_id, $server_id, ACTIVE, $context, 1000);
+$response = json_decode($response, true);
+if ($response['wo_status'] !== ENDED) {
+	$response = json_encode($response);
+	echo $response;
+	exit;
+}
+
+if (!empty($server['floating_ip_id'])) {
+
+$floating_ip_id = $server['floating_ip_id'];
+
+$response = _nova_floating_ip_associate($device_id, $server_id, $floating_ip_id);
+$response = json_decode($response, true);
+if ($response['wo_status'] !== ENDED) {
+	$response = json_encode($response);
+	echo $response;
+	exit;
+}
+
+$response = get_floating_ip_address($device_id, $name);
+$response = json_decode($response, true);
+if ($response['wo_status'] !== ENDED) {
+	$response = json_encode($response);
+	echo $response;
+	exit;
+}
+$floating_ip_address = $response['wo_newparams']['server_floating_ip'];
+$context['servers'][$index]['floating_ip_address'] = $floating_ip_address;
+}
+
+$index++;
+//echo $ret;
+}
+
+$ret = prepare_json_response(ENDED, "Servers Created Successfully.", $context, true);
+echo $ret;
+
+?>
