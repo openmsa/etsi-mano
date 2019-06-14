@@ -2,8 +2,7 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
 import java.util.List;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -62,21 +61,19 @@ import io.swagger.annotations.ApiResponses;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Path("/nslcm/v1")
+@Path("/sol005/nslcm/v1")
 @Api(value = "/", description = "")
 public class DefaultApiServiceImpl implements DefaultApi {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultApiServiceImpl.class);
 
-	private DeviceService deviceService;
-	private final NsdRepository nsdRepository = new NsdRepository();
+	private final DeviceService deviceService;
+	private final NsdRepository nsdRepository;
 
-	public DefaultApiServiceImpl() {
-		try {
-			final InitialContext jndiContext = new InitialContext();
-			deviceService = (DeviceService) jndiContext.lookup(DeviceService.RemoteJNDIName);
-		} catch (final NamingException e) {
-			e.printStackTrace();
-		}
+	@Inject
+	public DefaultApiServiceImpl(DeviceService _deviceService, NsdRepository _nsdRepository) {
+		super();
+		deviceService = _deviceService;
+		nsdRepository = _nsdRepository;
 	}
 
 	/**
