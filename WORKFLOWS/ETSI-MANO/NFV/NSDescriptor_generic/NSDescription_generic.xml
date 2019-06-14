@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <group>NFV|Network Service (NS)|Orchestration|</group>
+    <icon>/images/repository/CommandDefinition/icons/Network.png</icon>
+    <name>NSD Generic Onbording &amp; NS Life Cycle Management (LCM)</name>
+    <order>10000</order>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>false</showProcessExecConsole>
+    <showVariables>true</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Deviceid" displayOrder="0" maxLength="100" name="params.deviceid" startIncrement="0" type="Device">
+      <sections>
+        <section>Synchronise to VIM tenant</section>
+      </sections>
+    </variable>
+    <variable default="Router" displayName="Router Name" displayOrder="1" maxLength="100" name="params.router_name" startIncrement="0" type="String">
+      <values>
+        <value>Ng4T-Router</value>
+        <value>OPNFV-Router</value>
+        <value>FGT-Router</value>
+      </values>
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable default="true" displayName="Router Admin State Up" displayOrder="2" maxLength="100" name="params.router_admin_state_up" startIncrement="0" type="Boolean">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable displayName="External Gateway Network" displayOrder="3" maxLength="100" name="params.external_gateway_network" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+      <classes>
+        <class>networks</class>
+      </classes>
+    </variable>
+    <variable displayName="Router Id" displayOrder="4" maxLength="100" name="params.router_id" startIncrement="0" type="String">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable displayName="network Name" displayOrder="5" maxLength="100" name="params.networks.0.network_name" startIncrement="0" type="String">
+      <values>
+        <value>s1u-network</value>
+        <value>s1mme-network</value>
+        <value>spare-network</value>
+        <value>fgt-network-2</value>
+        <value>sgi-network</value>
+        <value>dia-network</value>
+        <value>ng4t-mgt-network</value>
+        <value>fgt-mgmt-network</value>
+        <value>s11-network</value>
+        <value>measurement</value>
+        <value>fgt-network-1</value>
+        <value>s5-network</value>
+      </values>
+      <sections>
+        <section>Network Config</section>
+      </sections>
+    </variable>
+    <variable default="true" displayName="admin State Up" displayOrder="6" maxLength="100" name="params.networks.0.admin_state_up" startIncrement="0" type="Boolean">
+      <sections>
+        <section>Network Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="router External" displayOrder="7" maxLength="100" name="params.networks.0.router_external" startIncrement="0" type="Boolean" visible="false">
+      <sections>
+        <section>Network Config</section>
+      </sections>
+    </variable>
+    <variable displayName="network id" displayOrder="8" maxLength="100" name="params.networks.0.network_id" startIncrement="0" type="String">
+      <sections>
+        <section>Network Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="port Security Enabled" displayOrder="9" maxLength="100" name="params.networks.0.port_security_enabled" startIncrement="0" type="Boolean">
+      <sections>
+        <section>Network Config</section>
+      </sections>
+    </variable>
+    <variable displayName="subnet Name" displayOrder="10" maxLength="100" name="params.networks.0.subnet_name" startIncrement="0" type="String">
+      <values>
+        <value>fgt-mgmt-subnet</value>
+        <value>sgi-subnet</value>
+        <value>s11-subnet</value>
+        <value>dia-subnet</value>
+        <value>spare-subnet</value>
+        <value>s1u-subnet</value>
+        <value>s5-subnet</value>
+        <value>fgt-subnet-2</value>
+        <value>measurement</value>
+        <value>fgt-subnet-1</value>
+        <value>ng4t-mgt-subnet</value>
+      </values>
+      <sections>
+        <section>Subnet Config</section>
+      </sections>
+    </variable>
+    <variable displayName="subnet Cidr" displayOrder="11" maxLength="100" name="params.networks.0.subnet_cidr" startIncrement="0" type="String">
+      <values>
+        <value>26.0.0.0/24</value>
+        <value>192.168.37.0/24</value>
+        <value>192.168.57.0/24</value>
+        <value>192.168.117.0/24</value>
+        <value>192.168.17.0/24</value>
+        <value>192.168.1.0/24</value>
+        <value>192.168.77.0/24</value>
+        <value>27.0.0.0/24</value>
+        <value>192.168.27.0/24</value>
+        <value>192.168.67.0/24</value>
+        <value>25.0.0.0/24</value>
+        <value>192.168.47.0/24</value>
+      </values>
+      <sections>
+        <section>Subnet Config</section>
+      </sections>
+    </variable>
+    <variable default="true" displayName="subnet Enable Dhcp" displayOrder="12" maxLength="100" name="params.networks.0.subnet_enable_dhcp" startIncrement="0" type="Boolean">
+      <sections>
+        <section>Subnet Config</section>
+      </sections>
+    </variable>
+    <variable displayName="subnet id" displayOrder="13" maxLength="100" name="params.networks.0.subnet_id" startIncrement="0" type="String">
+      <sections>
+        <section>Subnet Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="subnet Attached To Router" displayOrder="14" maxLength="100" name="params.networks.0.subnet_attached_to_router" startIncrement="0" type="Boolean">
+      <sections>
+        <section>Subnet Config</section>
+      </sections>
+    </variable>
+    <variable displayName="Tenant Id" displayOrder="15" maxLength="100" name="params.tenant_id" startIncrement="0" type="String">
+      <sections>
+        <section>Network Config</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content/>  </example>
+<process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_New_service">
+    <visibility>5</visibility>
+    <displayName>Deploy New NS</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    
+  
+  
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_New_service/Tasks/</processPath>
+      <displayName>Synchronise to VIM tenant</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS">
+    <visibility>5</visibility>
+    <displayName>Instantantiate NS</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+    
+    
+  
+    
+    
+    
+  
+    
+    
+    
+  <task name="Task_Router_Config.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/</processPath>
+      <displayName>Router Config</displayName>
+    </task>
+    <task name="Task_Network_Config.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/</processPath>
+      <displayName>Network Config</displayName>
+    </task>
+    <task name="Task_Subnet_Config.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/</processPath>
+      <displayName>Subnet Config</displayName>
+    </task>
+    <task name="Task_Sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/</processPath>
+      <displayName>Sync</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Update_NS">
+    <visibility>5</visibility>
+    <displayName>Scale-Out NS</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/Task_Network_Config.php">
+      <processPath/>
+      <displayName>Network Config</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/Task_Subnet_Config.php">
+      <processPath/>
+      <displayName>Subnet Config</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/Task_Sync.php">
+      <processPath/>
+      <displayName>Sync</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS">
+    <visibility>5</visibility>
+    <displayName>Scale-In NS</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+    
+  
+    
+    
+    
+  
+    
+    
+    
+  
+    
+    
+    
+  <task name="Task_Remove_Subnet.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/</processPath>
+      <displayName>Remove Subnet</displayName>
+    </task>
+    <task name="Task_Remove_Network.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/</processPath>
+      <displayName>Remove Network</displayName>
+    </task>
+    <task name="Task_Sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/</processPath>
+      <displayName>Sync</displayName>
+    </task>
+  </process>
+
+<process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Terminate_NS">
+    <visibility>5</visibility>
+    <displayName>Terminate NS</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/Task_Remove_Subnet.php">
+      <processPath/>
+      <displayName>Remove Subnet</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/Task_Remove_Network.php">
+      <processPath/>
+      <displayName>Remove Network</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/Task_Remove_Router.php">
+      <processPath/>
+      <displayName>Remove Router</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/Task_Sync.php">
+      <processPath/>
+      <displayName>Sync</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>
