@@ -1,0 +1,31 @@
+version: "2"
+
+services:
+
+  mano-api:
+    image: ubi.mano.api:1.0
+    build:
+      context: ..
+      dockerfile: docker/mano-api/Dockerfile
+
+    hostname: mano
+
+  tests:
+    image: ubi.mano.tests:1.0
+    build:
+      context: ..
+      dockerfile: docker/tests/Dockerfile
+
+    hostname: tests
+
+  msa:
+    image: ubi.mano.msa:1.0
+    build:
+      context: ..
+      dockerfile: docker/msa/Dockerfile
+
+    hostname: msa
+    ports:
+    - "80:80"
+    - "443:443"
+    - "1090:1090"
