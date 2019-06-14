@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <group>NFV|Virtual Network Function (VNF)|Orchestration|</group>
+    <icon>/images/repository/CommandDefinition/icons/web cluster.jpg</icon>
+    <name>VNFD Generic Onboarding &amp; VNF Life Cycle Management (LCM) - with port creation</name>
+    <order>10000</order>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>false</showProcessExecConsole>
+    <showVariables>true</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Vimtenant" displayOrder="0" maxLength="100" name="params.deviceid" startIncrement="0" type="Device">
+      <sections>
+        <section>Synchronize to VIM tenant</section>
+      </sections>
+      <sdTypes>
+        <sdType manId="14020603" modId="16051904"/>
+        <sdType manId="14020603" modId="16051903"/>
+        <sdType manId="14020603" modId="14020605"/>
+      </sdTypes>
+    </variable>
+    <variable default="LINUX-GENERIC" displayName="MSA Device Model" displayOrder="1" editable="false" maxLength="100" name="params.servers.0.device_man_model" startIncrement="0" type="String">
+      <values>
+        <value>FORTINET</value>
+        <value>PALOALTO</value>
+        <value>LINUX-GENERIC</value>
+        <value>CISCO-ISR-CSR</value>
+      </values>
+      <sections>
+        <section>Create VNFCs on OpenMSA</section>
+      </sections>
+    </variable>
+    <variable default="root" displayName="MSA Device Login" displayOrder="2" maxLength="100" name="params.servers.0.device_login" startIncrement="0" type="String">
+      <sections>
+        <section>Create VNFCs on OpenMSA</section>
+      </sections>
+    </variable>
+    <variable default="OpenMSA" displayName="MSA Device Password" displayOrder="3" maxLength="100" name="params.servers.0.device_password" startIncrement="0" type="Password">
+      <sections>
+        <section>Create VNFCs on OpenMSA</section>
+      </sections>
+    </variable>
+    <variable displayName="name" displayOrder="4" maxLength="100" name="params.servers.0.name" startIncrement="0" type="String">
+      <sections>
+        <section>Instantiate VNF to VIM - Instance</section>
+      </sections>
+    </variable>
+    <variable displayName="image" displayOrder="5" maxLength="100" name="params.servers.0.image_id" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Instance</section>
+      </sections>
+      <classes>
+        <class>images</class>
+      </classes>
+    </variable>
+    <variable displayName="flavor" displayOrder="6" maxLength="100" name="params.servers.0.flavor_id" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Instance</section>
+      </sections>
+      <classes>
+        <class>flavors</class>
+      </classes>
+    </variable>
+    <variable default="nova" displayName="availability Zone" displayOrder="7" maxLength="100" name="params.servers.0.availability_zone" startIncrement="0" type="String">
+      <values>
+        <value>nova</value>
+      </values>
+      <sections>
+        <section>Instantiate VNF to VIM - Instance</section>
+      </sections>
+    </variable>
+    <variable displayName="key Name" displayOrder="8" maxLength="100" name="params.servers.0.key_name" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Instance</section>
+      </sections>
+      <classes>
+        <class>keypairs</class>
+      </classes>
+    </variable>
+    <variable default="false" displayName="Config Drive" displayOrder="9" maxLength="100" name="params.servers.0.config_drive" startIncrement="0" type="Boolean">
+      <sections>
+        <section>Instantiate VNF to VIM - Instance</section>
+      </sections>
+    </variable>
+    <variable displayName="Public Network" displayOrder="10" maxLength="100" name="params.servers.0.public_network" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Create floating IP</section>
+      </sections>
+      <classes>
+        <class>networks</class>
+      </classes>
+    </variable>
+    <variable displayName="Networks" displayOrder="11" maxLength="100" name="params.servers.0.networks.0.network" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Networks</section>
+      </sections>
+      <classes>
+        <class>networks</class>
+      </classes>
+    </variable>
+    <variable displayName="Networks port" displayOrder="12" maxLength="100" name="params.servers.0.networks.0.port" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Networks</section>
+      </sections>
+      <classes>
+        <class>ports</class>
+      </classes>
+    </variable>
+    <variable default="a075d94e-11cd-435a-b784-5cf2ce29c883" displayName="security Groups" displayOrder="13" maxLength="100" name="params.servers.0.security_groups.0.security_group" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+      <sections>
+        <section>Instantiate VNF to VIM - Security</section>
+      </sections>
+      <classes>
+        <class>security_groups</class>
+      </classes>
+    </variable>
+    <variable displayName="floating Ip" displayOrder="14" maxLength="100" name="params.servers.0.floating_ip_id" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef" visible="false">
+      <sections>
+        <section>Instantiate VNF to VIM</section>
+      </sections>
+      <classes>
+        <class>floatingips</class>
+      </classes>
+    </variable>
+    <variable cols="100" displayName="user Data" displayOrder="15" maxLength="100" name="params.servers.0.user_data" rows="70" startIncrement="0" type="String">
+      <sections>
+        <section>Instantiate VNF to VIM - User Data</section>
+      </sections>
+    </variable>
+    <variable displayName="personality - path" displayOrder="16" maxLength="100" name="params.servers.0.personality.0.path" startIncrement="0" type="String">
+      <sections>
+        <section>Instantiate VNF to VIM - Personality</section>
+      </sections>
+    </variable>
+    <variable displayName="personality - contents" displayOrder="17" maxLength="100" name="params.servers.0.personality.0.contents" startIncrement="0" type="String">
+      <sections>
+        <section>Instantiate VNF to VIM - Personality</section>
+      </sections>
+    </variable>
+    <variable displayName="metadata Key" displayOrder="18" maxLength="100" name="params.servers.0.metadata.0.metadata_key" startIncrement="0" type="String">
+      <sections>
+        <section>Instantiate VNF to VIM - Metadata</section>
+      </sections>
+    </variable>
+    <variable displayName="metadata Value" displayOrder="19" maxLength="100" name="params.servers.0.metadata.0.metadata_value" startIncrement="0" type="String">
+      <sections>
+        <section>Instantiate VNF to VIM</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content>
+      <?php?>
+    </content>  </example>
+  <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Deploy_new_VNF">
+    <visibility>5</visibility>
+    <displayName>Deploy new VNF</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+  
+  
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Deploy_new_VNF/Tasks/</processPath>
+      <displayName>Synchronize to VIM tenant</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF">
+    <visibility>5</visibility>
+    <displayName>Instantiate VNF</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+  <task name="Task_Instantiate_VNF_to_VIM_port_custom.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/</processPath>
+      <displayName>Instantiate VNF to VIM</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+      <processPath/>
+      <displayName>Get authentification token</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/Task_Create_floating_ip.php">
+      <processPath/>
+      <displayName>Create and associate floating IP</displayName>
+    </task>
+    <task name="Task_Create_VNFCs_on_OpenMSA.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/</processPath>
+      <displayName>Create VNFCs on OpenMSA</displayName>
+    </task>
+    <task name="Task_VNFC_provision.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/</processPath>
+      <displayName>VNFC provision</displayName>
+    </task>
+    <task name="Task_VNFC_reachability_check.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/</processPath>
+      <displayName>VNFC reachability check</displayName>
+    </task>
+    <task name="Task_VNFC_Ping_Check.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/</processPath>
+      <displayName>VNFC Ping Check</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Start_VNF">
+    <visibility>5</visibility>
+    <displayName>Start VNFi</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+  <task name="Task_VNF_Start.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Start_VNF/Tasks/</processPath>
+      <displayName>VNF Start</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Stop_VNFi">
+    <visibility>5</visibility>
+    <displayName>Stop VNFi</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+  <task name="Task_VNF_Stop.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Stop_VNFi/Tasks/</processPath>
+      <displayName>VNF Stop</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Restart_VNFi">
+    <visibility>5</visibility>
+    <displayName>Restart VNFi</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+  <task name="Task_VNF_Restart.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Restart_VNFi/Tasks/</processPath>
+      <displayName>VNF Restart</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Terminate_VNFi">
+    <visibility>5</visibility>
+    <displayName>Terminate VNFi</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  
+    
+  
+    
+  <task name="Task_Delete_on_Openstack.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Terminate_VNFi/Tasks/</processPath>
+      <displayName>Delete from Openstack</displayName>
+    </task>
+    <task name="Task_Delete_on_OpenMSA.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Terminate_VNFi/Tasks/</processPath>
+      <displayName>Delete from OpenMSA</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+
+</ObjectDefinition>
