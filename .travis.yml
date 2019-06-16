@@ -1,0 +1,11 @@
+language: php
+php:
+  - '7.0'
+
+services:
+  - docker
+
+script:
+  - ./bin/check_php_syntax.sh
+  - cd docker; docker-compose build
+  - cd docker; docker-compose up -d && sleep 5m && docker-compose down
