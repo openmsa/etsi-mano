@@ -7,5 +7,9 @@ services:
 
 script:
   - ./bin/check_php_syntax.sh
-  - cd docker; docker-compose build
-  - cd docker; docker-compose up -d && sleep 5m && docker-compose down
+  - cd docker
+  - docker-compose build
+  - docker-compose up -d
+  - sleep 3m
+  - docker exec -it ubimano_msa_1 bash -lc check_services_status.sh
+  - docker-compose down
