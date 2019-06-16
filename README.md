@@ -1,5 +1,5 @@
-# MANO
-ETSI MANO implementation
+ETSI MANO implementation for OpenMSA
+------------------------------------
 
 [![build][build-icon]][build-page]
 
