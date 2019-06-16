@@ -3,8 +3,8 @@ ETSI MANO implementation for OpenMSA
 
 [![build][build-icon]][build-page]
 
-[build-icon]: https://travis-ci.org/openmsa/etsi-mano.svg?branch=master
-[build-page]: https://travis-ci.org/openmsa/etsi-mano/branches
+[build-icon]: https://travis-ci.com/openmsa/etsi-mano.svg?branch=master
+[build-page]: https://travis-ci.com/openmsa/etsi-mano/branches
 
 
 
