@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 
 /**
- * A single way to handle subscrption storage.
+ * A single way to handle subscription storage.
  *
  * @author ovi@ubiqube.com
  *
@@ -33,7 +33,7 @@ public class SubscriptionRepository extends AbstractGenericRepository<Subscripti
 	}
 
 	@Override
-	Class getClazz() {
+	Class<?> getClazz() {
 		return SubscriptionObject.class;
 	}
 

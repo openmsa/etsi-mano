@@ -26,6 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		_auth.authenticationProvider(passthroughUserProvider);
 	}
 
+	/**
+	 * All request must be authenticated, No login page.
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()

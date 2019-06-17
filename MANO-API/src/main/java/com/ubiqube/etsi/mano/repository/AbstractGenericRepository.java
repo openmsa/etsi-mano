@@ -8,6 +8,13 @@ import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.utils.ConfiguredObjectMapper;
 
+/**
+ * A Generic implementation of classical CRUD action around a repository.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <T>
+ */
 public abstract class AbstractGenericRepository<T> extends AbstractRepository<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
@@ -20,6 +27,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	abstract String setId(T _entity);
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public final T get(String _id) {
 		final String uri = getUriForId(_id);
@@ -28,14 +36,13 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
 		final String content = new String(repositoryContent);
 		try {
-			final T t;
 			return (T) mapper.readValue(content, getClazz());
 		} catch (final Exception e) {
 			throw new GenericException(e);
 		}
 	}
 
-	abstract Class getClazz();
+	abstract Class<?> getClazz();
 
 	@Override
 	public final void delete(String _id) {
@@ -52,7 +59,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		final String uri = getUriForId(saveId);
 		try {
 			final String str = mapper.writeValueAsString(_entity);
-			LOG.info("Creating entity @" + uri);
+			LOG.info("Creating entity @ {}", uri);
 			repositoryService.addFile(uri, "SOL005", "", str, "ncroot");
 		} catch (final Exception e) {
 			throw new GenericException(e);

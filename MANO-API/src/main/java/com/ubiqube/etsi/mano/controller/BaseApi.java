@@ -4,13 +4,18 @@ import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 
+/**
+ * Common part to all ETSI MANO API.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class BaseApi {
 	protected static final String NCROOT = "ncroot";
 	protected static final String MANO = "MANO";
@@ -22,14 +27,15 @@ public class BaseApi {
 	protected static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 	protected static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
 	protected static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";
-
-	// Should be injected.
-
+	/** Injected patch engine. */
 	protected final Patcher patcher;
-
+	/** Injected object mapper. */
 	protected ObjectMapper mapper;
+	/** Injected, subscription repository. */
 	protected SubscriptionRepository subscriptionRepository;
+	/** Injected vnf package repository manager. */
 	protected VnfPackageRepository vnfPackageRepository;
+	/** Injected Repository MSA Service. */
 	protected RepositoryService repositoryService;
 
 	@Inject
@@ -40,41 +46,6 @@ public class BaseApi {
 		subscriptionRepository = _subscriptionRepository;
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
-	}
-
-	/**
-	 * MSA related stuff.
-	 *
-	 * @throws ServiceException
-	 */
-	private void init() throws ServiceException {
-		if (!repositoryService.exists(PROCESS_BASE_PATH)) {
-			repositoryService.addDirectory(PROCESS_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(PROCESS_NFVO_BASE_PATH)) {
-			repositoryService.addDirectory(PROCESS_NFVO_BASE_PATH, "", MANO, NCROOT);
-		}
-
-		if (!repositoryService.exists(PROCESS_VNF_VNF_PCKGM_BASE_PATH)) {
-			repositoryService.addDirectory(PROCESS_VNF_VNF_PCKGM_BASE_PATH, "", MANO, NCROOT);
-		}
-
-		if (!repositoryService.exists(DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(NVFO_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(NVFO_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_NVFO_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_SUBSCRIPTION_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_SUBSCRIPTION_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_NSD_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_NSD_BASE_PATH, "", MANO, NCROOT);
-		}
-
 	}
 
 	/**

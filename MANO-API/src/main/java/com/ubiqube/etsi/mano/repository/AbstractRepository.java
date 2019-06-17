@@ -8,6 +8,13 @@ import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 
+/**
+ * Handle MSA repository services for T objects.
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <T> A storable object.
+ */
 public abstract class AbstractRepository<T> {
 
 	protected RepositoryService repositoryService;

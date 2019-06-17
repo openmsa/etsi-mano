@@ -6,6 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
+/**
+ * Implementation of a repository for a VNFPackage document.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Repository
 public class VnfPackageRepository extends AbstractGenericRepository<VnfPkgInfo> {
 
@@ -27,7 +33,7 @@ public class VnfPackageRepository extends AbstractGenericRepository<VnfPkgInfo> 
 	}
 
 	@Override
-	Class getClazz() {
+	Class<?> getClazz() {
 		return VnfPkgInfo.class;
 	}
 

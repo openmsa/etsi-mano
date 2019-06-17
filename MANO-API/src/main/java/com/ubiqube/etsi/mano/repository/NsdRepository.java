@@ -6,6 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 
+/**
+ * An implementation of a repository for a NSD Document.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Repository
 public class NsdRepository extends AbstractGenericRepository<NsDescriptorsNsdInfo> {
 	private final static String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
@@ -26,7 +32,7 @@ public class NsdRepository extends AbstractGenericRepository<NsDescriptorsNsdInf
 	}
 
 	@Override
-	Class getClazz() {
+	Class<?> getClazz() {
 		return NsDescriptorsNsdInfo.class;
 	}
 
