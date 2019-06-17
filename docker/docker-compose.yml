@@ -9,6 +9,7 @@ services:
       dockerfile: docker/mano-api/Dockerfile
 
     hostname: mano
+    depends_on: [ "msa" ]
 
   tests:
     image: ubi.mano.tests:1.0
@@ -17,6 +18,7 @@ services:
       dockerfile: docker/tests/Dockerfile
 
     hostname: tests
+    depends_on: [ "mano-api" ]
 
   msa:
     image: ubi.mano.msa:1.0
