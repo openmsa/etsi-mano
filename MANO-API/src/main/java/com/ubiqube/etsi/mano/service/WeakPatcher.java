@@ -27,7 +27,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
  */
 @Service
 public class WeakPatcher implements Patcher {
-	/** Loger instance. */
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(WeakPatcher.class);
 	/** Json object mapper. */
 	private final ObjectMapper mapper = new ObjectMapper();

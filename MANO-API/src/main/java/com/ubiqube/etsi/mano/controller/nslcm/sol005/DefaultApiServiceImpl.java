@@ -341,7 +341,7 @@ public class DefaultApiServiceImpl implements DefaultApi {
 		nsInstance.setNsInstanceName(req.getNsName());
 		nsInstance.setNsInstanceDescription(req.getNsDescription());
 		resp.setNsInstance(nsInstance);
-		return null;
+		return resp;
 	}
 
 	/**

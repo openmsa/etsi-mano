@@ -302,7 +302,7 @@ public class DefaultApiServiceImpl implements DefaultApi {
 		final StringBuilder sb = new StringBuilder().append(REPOSITORY_NSD_BASE_PATH).append("/").append(id);
 		final String uri = sb.toString();
 		try {
-			if (!repositoryService.exists(uri.toString())) {
+			if (!repositoryService.exists(uri)) {
 				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
 			}
 		} catch (final ServiceException e) {
