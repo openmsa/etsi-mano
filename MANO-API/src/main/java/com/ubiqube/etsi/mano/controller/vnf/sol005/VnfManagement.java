@@ -56,16 +56,9 @@ import net.sf.json.JSONObject;
 @Service
 public class VnfManagement {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPkgSol003.class);
-	private static final String NCROOT = "ncroot";
-	private static final String MANO = "MANO";
-	private static final String PROCESS_BASE_PATH = "Process";
-	private static final String PROCESS_NFVO_BASE_PATH = PROCESS_BASE_PATH + "/NFVO";
-	private static final String PROCESS_VNF_VNF_PCKGM_BASE_PATH = PROCESS_NFVO_BASE_PATH + "/VNF_PCKGM";
-	private static final String DATAFILE_BASE_PATH = "Datafiles";
 	private static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 	private static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
-	private static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";
 
 	private final VnfPackageRepository vnfPackageRepository = new VnfPackageRepository();
 	private RepositoryService repositoryService;

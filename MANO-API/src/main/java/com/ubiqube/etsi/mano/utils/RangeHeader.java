@@ -8,7 +8,7 @@ public class RangeHeader {
 	/**
 	 * The unit of the range.
 	 */
-	public static enum Unit {
+	public enum Unit {
 		BYTES;
 	}
 
@@ -25,10 +25,10 @@ public class RangeHeader {
 	 * @param from the start value of the range
 	 * @param to   the end value of the range
 	 */
-	public RangeHeader(Unit unit, long from, long to) {
-		this.unit = unit;
-		this.from = from;
-		this.to = to;
+	public RangeHeader(Unit _unit, long _from, long _to) {
+		this.unit = _unit;
+		this.from = _from;
+		this.to = _to;
 	}
 
 	/**
@@ -74,8 +74,8 @@ public class RangeHeader {
 		final String[] tokens = range.replace("Range: ", "").split("=");
 		final Unit unit = Unit.valueOf(tokens[0].toUpperCase());
 		final String[] fromTo = tokens[1].split("-");
-		final long from = Long.valueOf(fromTo[0]);
-		final long to = Long.valueOf(fromTo[1]);
+		final long from = Long.parseLong(fromTo[0]);
+		final long to = Long.parseLong(fromTo[1]);
 		return new RangeHeader(unit, from, to);
 	}
 

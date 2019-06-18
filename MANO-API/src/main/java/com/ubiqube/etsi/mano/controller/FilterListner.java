@@ -4,17 +4,18 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
-import com.ubiqube.etsi.mano.grammar.EtsifilterBaseListener;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.AttrNameContext;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.OpContext;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.SimpleFilterExprContext;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.ValueContext;
+import com.ubiqube.etsi.mano.grammar.EtsifilterBaseListener;
 
 /**
  * Filter listner. For more information see .g4 files or 4.3.2 Attribute-based
@@ -28,9 +29,9 @@ public class FilterListner extends EtsifilterBaseListener {
 	private static final Logger LOG = LoggerFactory.getLogger(FilterListner.class);
 
 	/** Final list of filter. */
-	private final List<Filter> _filters = new ArrayList<Filter>();
+	private final List<Filter> _filters = new ArrayList<>();
 
-	private final Deque<String> _attr = new ArrayDeque<String>();
+	private final Deque<String> _attr = new ArrayDeque<>();
 
 	private String _attribute = null;
 
@@ -40,7 +41,8 @@ public class FilterListner extends EtsifilterBaseListener {
 
 	@Override
 	public void enterOp(OpContext _ctx) {
-		_attribute = Joiner.on(".").join(_attr);
+		_attribute = _attr.stream().map(String::valueOf).collect(Collectors.joining(", "));
+		Joiner.on(".").join(_attr);
 		_attr.clear();
 		super.enterOp(_ctx);
 	}

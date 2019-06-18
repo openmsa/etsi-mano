@@ -14,7 +14,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
  */
 @Repository
 public class NsdRepository extends AbstractGenericRepository<NsDescriptorsNsdInfo> {
-	private final static String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
+	private static final String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
 
 	@Override
 	String getUriForId(String _id) {

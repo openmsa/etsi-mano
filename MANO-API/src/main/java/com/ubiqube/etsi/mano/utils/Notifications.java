@@ -26,9 +26,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication.AuthTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthenticationParamsBasic;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthenticationParamsOauth2ClientCredentials;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication.AuthTypeEnum;
 
 /**
  * This class handle the notification callback.
@@ -92,19 +92,18 @@ public class Notifications {
 		httpPost.setHeader("Content-type", "application/json");
 		final org.apache.http.entity.StringEntity requestEntity = new StringEntity(_content, ContentType.APPLICATION_JSON);
 		httpPost.setEntity(requestEntity);
-		final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		CloseableHttpResponse response = null;
-		try {
-			response = httpClient.execute(context.getTargetHost(), httpPost, context);
-			final int status = response.getStatusLine().getStatusCode();
-			if ((status < 200) || (status >= 300)) {
-				LOG.error("An error Occured while contacting {} errorcode was: {}", status, _uri);
+		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+			try (CloseableHttpResponse response = httpClient.execute(context.getTargetHost(), httpPost, context)) {
+				final int status = response.getStatusLine().getStatusCode();
+				if ((status < 200) || (status >= 300)) {
+					LOG.error("An error Occured while contacting {} errorcode was: {}", status, _uri);
+					response.close();
+					httpClient.close();
+					throw new GenericException("HttpClient got an error: " + status);
+				}
 				response.close();
 				httpClient.close();
-				throw new GenericException("HttpClient got an error: " + status);
 			}
-			response.close();
-			httpClient.close();
 		} catch (final Exception e) {
 			throw new GenericException(e);
 		}

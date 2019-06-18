@@ -9,7 +9,12 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
 
 public class BadRequestException extends WebApplicationException {
 
-	public BadRequestException() { super(); }
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	public BadRequestException() {
+		super();
+	}
 
 	public BadRequestException(String _detail) {
 		super(Response.serverError().status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON_TYPE).entity(new ProblemDetails(400, _detail)).build());
