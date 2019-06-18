@@ -1,12 +1,14 @@
 package com.ubiqube.etsi.mano.repository;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.repository.RepositoryElement;
+import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.utils.ConfiguredObjectMapper;
 
 /**
  * A Generic implementation of classical CRUD action around a repository.
@@ -19,8 +21,10 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
 
-	public AbstractGenericRepository() {
-		mapper = ConfiguredObjectMapper.getMapper();
+	@Inject
+	public AbstractGenericRepository(ObjectMapper _mapper, RepositoryService _repositoryService) {
+		super(_repositoryService);
+		mapper = _mapper;
 	}
 
 	abstract String getUriForId(String _id);

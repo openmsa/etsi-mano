@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.repository;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.inject.Inject;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -10,7 +9,7 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 
 /**
  * Handle MSA repository services for T objects.
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  * @param <T> A storable object.
@@ -19,14 +18,9 @@ public abstract class AbstractRepository<T> {
 
 	protected RepositoryService repositoryService;
 
-	public AbstractRepository() {
-		try {
-			final InitialContext jndiContext = new InitialContext();
-			repositoryService = (RepositoryService) jndiContext.lookup("ubi-jentreprise/RepositoryManagerBean/remote-com.ubiqube.api.interfaces.repository.RepositoryService");
-
-		} catch (final NamingException e) {
-			throw new GenericException(e);
-		}
+	@Inject
+	public AbstractRepository(RepositoryService _repositoryService) {
+		repositoryService = _repositoryService;
 	}
 
 	abstract T get(String id);
