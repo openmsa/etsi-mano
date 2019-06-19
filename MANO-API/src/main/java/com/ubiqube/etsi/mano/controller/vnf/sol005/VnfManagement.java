@@ -178,6 +178,7 @@ public class VnfManagement {
 	 *
 	 * @param vnfPkgId
 	 * @param artifactPath
+	 * @param _accept
 	 * @param rangeHeader
 	 * @return
 	 * @throws ServiceException
@@ -188,7 +189,12 @@ public class VnfManagement {
 		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(artifactPath.trim()).toString(), "");
 
 		if (!listvnfPckgFiles.isEmpty()) {
-			return getZipArchive(rangeHeader, listvnfPckgFiles);
+			if (listvnfPckgFiles.size() > 1) {
+				return getZipArchive(rangeHeader, listvnfPckgFiles);
+			}
+			final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
+			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
+			return Response.ok().type(APPLICATION_ZIP).entity(new ByteArrayInputStream(content.getBytes())).build();
 		}
 		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
