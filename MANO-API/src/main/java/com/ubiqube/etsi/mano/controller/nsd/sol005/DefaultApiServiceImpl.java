@@ -1,5 +1,8 @@
 package com.ubiqube.etsi.mano.controller.nsd.sol005;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -27,6 +31,7 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
@@ -47,6 +52,8 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingNotification;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostResponse;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.utils.RangeHeader;
+import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -69,6 +76,8 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "/", description = "")
 public class DefaultApiServiceImpl implements DefaultApi {
 	private static final String REPOSITORY_NSD_BASE_PATH = "Datafiles/NFVO/nsd/";
+	private static final String APPLICATION_ZIP = "application/zip";
+
 	private final ObjectMapper mapper;
 	private final NsdRepository nsdRepository;
 	private final RepositoryService repositoryService;
@@ -201,6 +210,8 @@ public class DefaultApiServiceImpl implements DefaultApi {
 	 * NFVO to choose the format to return for a single-file NSD; for a multi-file
 	 * NSD, a ZIP file shall be returned.NOTE: The structure of the NSD zip file is
 	 * outside the scope of the present document.
+	 * 
+	 * @return
 	 *
 	 */
 	@Override
@@ -215,8 +226,22 @@ public class DefaultApiServiceImpl implements DefaultApi {
 			@ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 406, message = "406 Not Acceptable If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the NSD, the NFVO shall respond with this response code. The \"ProblemDetails\" structure may be included with the \"detail\" attribute providing more information about the error.           ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 409, message = "Conflict Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact \"nsdOnboardingState\" has a value different from ONBOARDED. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
-	public void nsDescriptorsNsdInfoIdNsdContentGet(@PathParam("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept, @Context SecurityContext securityContext, @HeaderParam("Range") String range) { // TODO: Implement...
-
+	public Response nsDescriptorsNsdInfoIdNsdContentGet(@PathParam("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept, @Context SecurityContext securityContext, @HeaderParam("Range") String range) {
+		try {
+			final RangeHeader rangeHeader = RangeHeader.fromValue(range);
+			final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NSD_BASE_PATH).append("/").append(nsdInfoId).toString(), "");
+			if (!listvnfPckgFiles.isEmpty()) {
+				if (listvnfPckgFiles.size() > 1) {
+					return getZipArchive(rangeHeader, listvnfPckgFiles);
+				}
+				final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
+				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
+				return Response.ok().type(APPLICATION_ZIP).entity(new ByteArrayInputStream(content.getBytes())).build();
+			}
+			throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ").append(nsdInfoId).toString());
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	/**
@@ -663,4 +688,35 @@ public class DefaultApiServiceImpl implements DefaultApi {
 			throw new GenericException(e);
 		}
 	}
+
+	/**
+	 * Method allows to archive VNF Package contents and artifacts.
+	 *
+	 * @param range
+	 * @param listvnfPckgFiles
+	 * @return
+	 *
+	 */
+	private Response getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
+
+		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
+		ByteArrayOutputStream bos;
+
+		try {
+			if (rangeHeader == null) {
+				bos = zip.getZipFile();
+				final Response.ResponseBuilder response = Response.status(Response.Status.OK).type(APPLICATION_ZIP).entity(new ByteArrayInputStream(bos.toByteArray()));
+				return response.build();
+
+			}
+			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
+			final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
+					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
+			final Response.ResponseBuilder response = Response.status(Response.Status.PARTIAL_CONTENT).type(APPLICATION_ZIP).entity(new ByteArrayInputStream(bos.toByteArray())).header("Content-Range", contentRange);
+			return response.build();
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
 }
