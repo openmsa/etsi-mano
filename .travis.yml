@@ -13,6 +13,7 @@ matrix:
       script:
         - ./bin/check_php_syntax.sh
 
-    - services: docker
+    - language: minimal
+      services: docker
       script:
         - ./bin/run_docker_compose.sh
