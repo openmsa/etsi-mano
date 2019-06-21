@@ -525,4 +525,29 @@ public class VnfManagement {
 		return vnfPkgInfo;
 	}
 
+	public void subscriptionsSubscriptionIdDelete(String _subscriptionId) {
+		subscriptionRepository.delete(_subscriptionId);
+	}
+
+	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(String _subscriptionId) {
+		return subscriptionRepository.get(_subscriptionId).getSubscriptionsPkgmSubscription();
+	}
+
+	public Response vnfPackagesVnfPkgIdPackageContentGet(String _vnfPkgId, String _range) {
+		getVnfPkgIndividualInfoOrCheckOnboardingStatus(_vnfPkgId, true);
+
+		// List vnfd package from repository
+		List<String> listvnfPckgFiles;
+		try {
+			listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(_vnfPkgId).toString(), "");
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+
+		if (!listvnfPckgFiles.isEmpty()) {
+			return getZipArchive(RangeHeader.fromValue(_range), listvnfPckgFiles);
+		}
+		throw new NotFoundException("VNF package content not found for vnfPkgId: " + _vnfPkgId);
+	}
+
 }
