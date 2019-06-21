@@ -7,4 +7,6 @@ RUN	cd /opt/fmc_repository &&\
 
 COPY docker/msa/license/* /opt/ubiqube/
 
+RUN ln -s /opt/sms/bin/check_services_status.sh /usr/bin/
+
 CMD ["/sbin/init"]
