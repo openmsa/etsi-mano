@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
 public class Application {
-	private final static Logger LOG = LoggerFactory.getLogger(Application.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);

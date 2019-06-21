@@ -29,7 +29,7 @@ public class PassthroughUserProvider extends AbstractUserDetailsAuthenticationPr
 	@Override
 	protected UserDetails retrieveUser(String _username, UsernamePasswordAuthenticationToken _authentication) {
 		LOG.debug("retreiving user: {}", _username);
-		final Collection<? extends GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		final Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 		return new User(_username, _authentication.getCredentials().toString(), authorities);
 	}
 
