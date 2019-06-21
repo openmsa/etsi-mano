@@ -1,15 +1,8 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol003;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -33,14 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.sol005.VnfManagement;
-import com.ubiqube.etsi.mano.exception.BadRequestException;
-import com.ubiqube.etsi.mano.exception.ConflictException;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
@@ -48,19 +37,16 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
-import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -82,6 +68,8 @@ import net.sf.json.JSONObject;
 @Path("/sol003/vnfpkgm/v1")
 @Api(value = "/sol003/vnfpkgm/v1", description = "")
 public class VnfPkgSol003 extends BaseApi {
+	private static final String SUBSCRIPTIONS_SUBSCRIPTION_ID_GET = "subscriptionsSubscriptionIdGet";
+
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPkgSol003.class);
 	private final VnfManagement vnfManagement;
 
@@ -89,23 +77,6 @@ public class VnfPkgSol003 extends BaseApi {
 	public VnfPkgSol003(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
 		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
 		vnfManagement = _vnfManagement;
-	}
-
-	/**
-	 * Map YAML file to JsonObject.
-	 *
-	 * @param yaml VNF Package Metadata from repository
-	 * @return the JsonObject as a String
-	 */
-	private static String convertYamlToJson(final String yaml) {
-		try {
-			final ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-			final Object obj = yamlReader.readValue(yaml, Object.class);
-			final ObjectMapper jsonWriter = new ObjectMapper();
-			return jsonWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
 	}
 
 	@GET
@@ -174,7 +145,7 @@ public class VnfPkgSol003 extends BaseApi {
 		final SubscriptionsPostQuery subscriptionsPostQuery = string2Object(body, SubscriptionsPostQuery.class);
 		// Job
 		final String id = UUID.randomUUID().toString();
-		final String href = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(id).getUri().toString();
+		final String href = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(id).getUri().toString();
 		return vnfManagement.subscriptionsPost(subscriptionsPostQuery, href, id);
 	}
 
@@ -265,7 +236,7 @@ public class VnfPkgSol003 extends BaseApi {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 
 		final String hrefVnfPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString();
-		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(subscriptionId).getUri().toString();
+		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(subscriptionId).getUri().toString();
 
 		vnfManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, hrefVnfPackage, hrefSubscription);
 	}
@@ -297,7 +268,7 @@ public class VnfPkgSol003 extends BaseApi {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 
-		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(subscriptionId).getUri().toString();
+		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(subscriptionId).getUri().toString();
 		final String hrefPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString();
 
 		vnfManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, hrefSubscription, hrefPackage);
@@ -369,8 +340,8 @@ public class VnfPkgSol003 extends BaseApi {
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, accept);
+	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return Response.ok(vnfPkgInfo).build();
@@ -397,7 +368,7 @@ public class VnfPkgSol003 extends BaseApi {
 			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class), @ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 409, message = "Conflict. Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact that \"onboardingState\" of the VNF package has a value different from \"ONBOARDED\". The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) throws ServiceException {
+	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
@@ -439,292 +410,6 @@ public class VnfPkgSol003 extends BaseApi {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	public Response vnfPackagesVnfPkgIdVnfdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
-	}
-
-	/**
-	 * Get the list of VNF Packages Information corresponding IDs.
-	 *
-	 * @return <b>vnfPackageIdList</b> VNF Packages details IDs list.
-	 * @throws ServiceException
-	 */
-	private List<String> getVnfPkgIdsFromRepository() throws ServiceException {
-
-		// List vnfd package from repository
-		final List<String> listFilesInFolder = repositoryService.doSearch(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "");
-		final List<String> vnfPackageIdList = new ArrayList<>();
-
-		// Split files path and store VNF Pckg Id
-		for (final String filePath : listFilesInFolder) {
-			final String[] splitArray = filePath.split("/", -1);
-			final String retrievedVnfPckId = splitArray[3];
-			vnfPackageIdList.add(retrievedVnfPckId);
-		}
-
-		final Set<String> set = new HashSet<>(vnfPackageIdList);
-		vnfPackageIdList.clear();
-		vnfPackageIdList.addAll(set);
-
-		return vnfPackageIdList;
-	}
-
-	private JSONArray applyAttributebasedFilteringAndSelectors(UriInfo uriInfo, JSONArray vnfPkgInfos, JSONObject contentJson) {
-		// Get the dynamic paramaters attribute / value(s)
-		MultivaluedMap<String, String> queryParams;
-		queryParams = uriInfo.getQueryParameters();
-		String attributesParams = "";
-		List<String> attributesValuesParams = new LinkedList<String>();
-
-		// Get the filter parameter from the query params object.
-		for (final Map.Entry<String, List<String>> entry : queryParams.entrySet()) {
-			attributesParams = entry.getKey();
-			attributesValuesParams = entry.getValue();
-		}
-
-		// List of the fields exclude by default from the VNF Package Info
-		final ArrayList<String> listOfDefaultExcludeFields = new ArrayList<String>();
-		listOfDefaultExcludeFields.add("softwareImages");
-		listOfDefaultExcludeFields.add("additionalArtifacts");
-
-		// Filtering operation
-		if ("all_fields".equals(attributesParams)) {
-			vnfPkgInfos.add(contentJson);
-		} else if ("fields".equals(attributesParams)) {
-			keepFieldsInVnfPckgInfo(contentJson, attributesValuesParams, listOfDefaultExcludeFields);
-			vnfPkgInfos.add(contentJson);
-		} else if ("exclude_fields".equals(attributesParams) || "exclude_default".equals(attributesParams)) {
-			removeFields(contentJson, listOfDefaultExcludeFields);
-			vnfPkgInfos.add(contentJson);
-		} else {
-			final boolean isFilterMatched = isFilterMatched(attributesParams, attributesValuesParams, contentJson);
-			if (isFilterMatched) {
-				removeFields(contentJson, listOfDefaultExcludeFields);
-				vnfPkgInfos.add(contentJson);
-			}
-		}
-		return vnfPkgInfos;
-	}
-
-	/**
-	 * Method allows to archive VNF Package contents and artifacts.
-	 *
-	 * @param range
-	 * @param listvnfPckgFiles
-	 * @return
-	 *
-	 */
-	private Response getZipArchive(String range, List<String> listvnfPckgFiles) {
-
-		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
-		ByteArrayOutputStream bos;
-
-		try {
-			if (range == null) {
-				bos = zip.getZipFile();
-				final Response.ResponseBuilder response = Response.status(Response.Status.OK).type("application/zip").entity(new ByteArrayInputStream(bos.toByteArray()));
-				return response.build();
-
-			} else {
-				final RangeHeader rangeHeader = RangeHeader.fromValue(range);
-				bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
-				final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
-						.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
-				final Response.ResponseBuilder response = Response.status(Response.Status.PARTIAL_CONTENT).type("application/zip").entity(new ByteArrayInputStream(bos.toByteArray())).header("Content-Range", contentRange);
-				return response.build();
-			}
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(String vnfPkgId, boolean isCheckOnbordingStatus) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-
-		if (isCheckOnbordingStatus) {
-			final String onboardingState = vnfPkgInfo.getOnboardingState();
-			if (OnboardingStateEnum.PROCESSING.toString().equalsIgnoreCase(onboardingState)
-					|| OnboardingStateEnum.UPLOADING.toString().equalsIgnoreCase(onboardingState.toUpperCase())) {
-				throw new ConflictException("Conflict with the current VNF Package onbording state: " + onboardingState.toUpperCase());
-			}
-		} else {
-			return vnfPkgInfo;
-		}
-		return vnfPkgInfo;
-	}
-
-	/**
-	 * Private Method allows to search in VNFPackInfos the matched values based-on
-	 * filter input.
-	 *
-	 * @param attributesParams
-	 * @param attributesValuesParams
-	 * @param contentJson
-	 * @return TRUE if matched and FALSE in opposite.
-	 */
-	private boolean isFilterMatched(String attributesParams, List<String> attributesValuesParams, JSONObject contentJson) {
-		String filterOperator = "";
-
-		if (!("".equals(attributesParams) && attributesValuesParams.isEmpty())) {
-
-			final ArrayList<String> listOfAttribute = splitStringObj("\\.", attributesParams);
-
-			final String attributeValues = attributesValuesParams.get(0);
-			final ArrayList<String> listOfExpectedValues = splitStringObj(",", attributeValues);
-
-			// Retrieve the filter operator from filter attribute.
-			filterOperator = getOperatorFromList(listOfAttribute);
-
-			// Extract input attribute matched value(s).
-			final ArrayList<String> attrMatchedValues = extractAttrMatchedValues(listOfAttribute, contentJson);
-			// Apply the filter and return matched VNFPackage info(s)
-			return compareValuesBasedOnFilterOperator(listOfExpectedValues, attrMatchedValues, filterOperator);
-		}
-		return true;
-	}
-
-	/**
-	 * Private method allows to extract from VFND Infos (Json object) the attribute
-	 * value(s).
-	 *
-	 * @param listOfAttrName  Attribute
-	 * @param vnfPackInfoJson VNFD infos
-	 * @return List of the value(s)
-	 */
-	private ArrayList<String> extractAttrMatchedValues(ArrayList<String> listOfAttrName, JSONObject vnfPackInfoJson) throws BadRequestException {
-		final ArrayList<String> matchedValues = new ArrayList();
-		JSONObject vnfPackInfo = vnfPackInfoJson;
-
-		int index = 0;
-		if (isthereAnOperatorFilterInList(listOfAttrName)) {
-			index = 1;
-		}
-
-		// TODO - Extract object from Map Entry loop
-
-		for (final String key : listOfAttrName) {
-			final Object object = vnfPackInfo.get(key);
-			if (object == null) {
-				throw new com.ubiqube.etsi.mano.exception.BadRequestException("Wrong filter name: " + key);
-			}
-
-			if (((object instanceof JSONArray) || (object instanceof JSONObject)) && (index < (listOfAttrName.size() - index))) {
-				if (object instanceof JSONArray) {
-					for (int i = 0; i < ((JSONArray) object).size(); i++) {
-						final String value = (String) ((JSONArray) object).get(i);
-						if (value instanceof String) {
-							matchedValues.add(value);
-						}
-					}
-				} else {
-					vnfPackInfo = (JSONObject) object;
-				}
-			} else if (((object instanceof String) || (object instanceof Integer) || (object instanceof Boolean) || (object instanceof Character))
-					&& (index < (listOfAttrName.size() - index))) {
-				matchedValues.add(String.valueOf(object));
-			}
-		}
-		return matchedValues;
-	}
-
-	/**
-	 * private method allows to filter the inputs attributes matched values based-on
-	 * filtering operator.
-	 *
-	 * @param listOfExpectedValues
-	 * @param attrMatchedValues
-	 * @param filterOperator
-	 * @return boolean True if the operation result is true else false.
-	 */
-	private boolean compareValuesBasedOnFilterOperator(List<String> listOfExpectedValues, ArrayList<String> attrMatchedValues, String filterOperator) {
-		for (final String value : attrMatchedValues) {
-			for (final String expectedValue : listOfExpectedValues) {
-				// Attribute equal to one of the expect values in the list.
-				if ("".equals(filterOperator) || "eq".equals(filterOperator)) {
-					if (expectedValue.equals(value)) {
-						return true;
-					}
-				}
-				// Attribute not equal to any of the values in the list
-				if ("neq".equals(filterOperator)) {
-					if (!expectedValue.equals(value)) {
-						return true;
-					}
-				}
-				// Attribute greater than <value>
-
-				// TODO - Implementation for the other operators.
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Private method allows to slip a String object.
-	 *
-	 * @param regex
-	 * @param object
-	 * @return List of the split values
-	 */
-	private ArrayList<String> splitStringObj(String regex, String object) {
-		final ArrayList<String> list = new ArrayList();
-		list.addAll(Arrays.asList(object.split(regex)));
-
-		return list;
-	}
-
-	/**
-	 * Private method allows to check if a filtering operator in the list of
-	 * attributes name.
-	 *
-	 * @param listOfAttrName
-	 * @return If there is an filtering operator in the list return TRUE alse FALSE.
-	 */
-	private boolean isthereAnOperatorFilterInList(ArrayList<String> listOfAttrName) {
-		// Check the last attribute name if it an filtering operator or not.
-		final String lastAttribute = listOfAttrName.get(listOfAttrName.size() - 1);
-
-		if (!"".equals(getOperatorFromList(listOfAttrName))) {
-			return true;
-		}
-		return false;
-	}
-
-	private String getOperatorFromList(ArrayList<String> listOfAttrName) {
-		for (final String attribute : listOfAttrName) {
-			if ("eq".equals(attribute) || "neq".equals(attribute) || "gt".equals(attribute)
-					|| "lt".equals(attribute) || "gte".equals(attribute) || "lte".equals(attribute) || "cont".equals(attribute) || "ncont".equals(attribute)) {
-				return attribute;
-			}
-		}
-		return "";
-	}
-
-	private void keepFieldsInVnfPckgInfo(JSONObject contentJson, List<String> attributesValuesParams, ArrayList<String> listOfDefaultExcludeFields) {
-		final String attributeValues = attributesValuesParams.get(0);
-		final ArrayList<String> fieldsFromInput = splitStringObj(",", attributeValues);
-		final ArrayList<String> fieldsToRemove = listOfDefaultExcludeFields;
-
-		// Compare the both lists contents and remove them from the "excluded fields by
-		// default" the matched values.
-		fieldsToRemove.removeAll(fieldsFromInput);
-
-		// Remove the exclude fields not matched to the inputs fields list.
-		for (final String field : fieldsToRemove) {
-			removeField(contentJson, field);
-		}
-
-	}
-
-	private void removeField(JSONObject contentJson, String field) {
-		if (contentJson.containsKey(field)) {
-			contentJson.remove(field);
-		}
-
-	}
-
-	private void removeFields(JSONObject contentJson, ArrayList<String> fields) {
-		for (final String field : fields) {
-			removeField(contentJson, field);
-		}
 	}
 
 }

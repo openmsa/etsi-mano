@@ -33,6 +33,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -88,8 +90,15 @@ import net.sf.json.JSONArray;
  */
 @RestController
 @Path("/sol005/vnfpkgm/v1")
-@Api(value = "/sol005/vnfpkgm/v1", description = "")
+@Api(value = "/sol005/vnfpkgm/v1")
 public class VnfPkgSol005 extends BaseApi {
+	private static final String VNF_PACKAGES_VNF_PKG_ID_GET = "vnfPackagesVnfPkgIdGet";
+
+	private static final String SUBSCRIPTIONS_SUBSCRIPTION_ID_GET = "subscriptionsSubscriptionIdGet";
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPkgSol005.class);
+
+	private static final String SOL005 = "SOL005";
 	private final VnfManagement vnfManagement;
 
 	@Inject
@@ -105,7 +114,7 @@ public class VnfPkgSol005 extends BaseApi {
 	@ApiOperation(value = "Query multiple subscriptions.", tags = {})
 	public List<SubscriptionsPkgmSubscription> subscriptionsGet2(@Context UriInfo info) {
 		final MultivaluedMap<String, String> queryParameter = info.getQueryParameters();
-		System.out.println("=> " + queryParameter);
+		LOG.info("qp => {}", queryParameter);
 		return new ArrayList<>();
 	}
 
@@ -140,7 +149,7 @@ public class VnfPkgSol005 extends BaseApi {
 		final SubscriptionsPostQuery subscriptionsPostQuery = string2Object(body, SubscriptionsPostQuery.class);
 		// Job
 		final String id = UUID.randomUUID().toString();
-		final String href = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(id).getUri().toString();
+		final String href = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(id).getUri().toString();
 		return vnfManagement.subscriptionsPost(subscriptionsPostQuery, href, id);
 	}
 
@@ -186,8 +195,8 @@ public class VnfPkgSol005 extends BaseApi {
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 
-		final String hrefVnfPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString();
-		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(subscriptionId).getUri().toString();
+		final String hrefVnfPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), VNF_PACKAGES_VNF_PKG_ID_GET)).build(vnfPkgId).getUri().toString();
+		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(subscriptionId).getUri().toString();
 
 		vnfManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, hrefVnfPackage, hrefSubscription);
 	}
@@ -207,8 +216,8 @@ public class VnfPkgSol005 extends BaseApi {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 
-		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(subscriptionId).getUri().toString();
-		final String hrefPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString();
+		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(subscriptionId).getUri().toString();
+		final String hrefPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), VNF_PACKAGES_VNF_PKG_ID_GET)).build(vnfPkgId).getUri().toString();
 
 		vnfManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, hrefSubscription, hrefPackage);
 	}
@@ -250,8 +259,8 @@ public class VnfPkgSol005 extends BaseApi {
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, accept);
+	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse resp = new VnfPackagesVnfPkgIdGetResponse();
 		resp.setVnfPkgInfo(vnfPkgInfo);
 		return Response.ok(resp).build();
@@ -266,7 +275,7 @@ public class VnfPkgSol005 extends BaseApi {
 			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class), @ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 409, message = "Conflict. Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact that \"onboardingState\" of the VNF package has a value different from \"ONBOARDED\". The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) throws ServiceException {
+	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
@@ -307,13 +316,13 @@ public class VnfPkgSol005 extends BaseApi {
 		try {
 			final StringBuilder sb = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId);
 			String uri = sb.toString();
-			if (!repositoryService.exists(uri.toString())) {
-				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
+			if (!repositoryService.exists(uri)) {
+				repositoryService.addDirectory(uri, "", SOL005, NCROOT);
 			}
 
 			uri = sb.append("/").append("Metadata.yaml").toString();
 			try {
-				repositoryService.addFile(uri, "", "Added: SOL005", mapper.writeValueAsString(jsonString).toString(), "ncroot");
+				repositoryService.addFile(uri, "", "Added: SOL005", mapper.writeValueAsString(jsonString), NCROOT);
 			} catch (final JsonProcessingException e) {
 				throw new GenericException(e);
 			}
@@ -323,18 +332,11 @@ public class VnfPkgSol005 extends BaseApi {
 
 		vnfPkgInfo.setUserDefinedData(jsonString);
 
-		/*
-		 * VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
-		 * checksum.algorithm("SHA-256"); String hash =
-		 * Hashing.sha256().hashString(jsonString, StandardCharsets.UTF_8).toString();
-		 * checksum.setHash(hash); gud.setChecksum(checksum);
-		 */
-
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		final VnfPackagesVnfPkgInfoLinks links = new VnfPackagesVnfPkgInfoLinks();
 		final VnfPackagesVnfPkgInfoLinksSelf self = new VnfPackagesVnfPkgInfoLinksSelf();
-		self.setHref(Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString());
+		self.setHref(Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), VNF_PACKAGES_VNF_PKG_ID_GET)).build(vnfPkgId).getUri().toString());
 		links.self(self);
 		vnfPkgInfo.setLinks(links);
 		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
@@ -380,7 +382,7 @@ public class VnfPkgSol005 extends BaseApi {
 		}
 		if (isVnfdMetafile) {
 			final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-			repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
+			repositoryService.deleteRepositoryElement(repositoryElement, NCROOT);
 			return null;
 		}
 		throw new NotFoundException("No such object: " + vnfPkgId);
@@ -411,12 +413,6 @@ public class VnfPkgSol005 extends BaseApi {
 		}
 		patcher.patch(body, vnfPkgInfo);
 		vnfPackageRepository.save(vnfPkgInfo);
-		/*
-		 * VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
-		 * checksum.algorithm("SHA-256"); String hash =
-		 * Hashing.sha256().hashString(jsonString, StandardCharsets.UTF_8).toString();
-		 * checksum.setHash(hash); gud.setChecksum(checksum);
-		 */
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -524,7 +520,7 @@ public class VnfPkgSol005 extends BaseApi {
 					fileName = fileName.substring(0, fileName.length() - 1);
 				}
 				final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(fileName).toString();
-				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
+				repositoryService.addDirectory(uri, "", SOL005, NCROOT);
 				continue;
 			}
 
@@ -535,7 +531,7 @@ public class VnfPkgSol005 extends BaseApi {
 			while ((read = zis.read(buffer)) != -1) {
 				baos.write(buffer, 0, read);
 			}
-			repositoryService.addFile(uri, "SOL005", "", baos.toByteArray(), "ncroot");
+			repositoryService.addFile(uri, SOL005, "", baos.toByteArray(), NCROOT);
 		}
 	}
 

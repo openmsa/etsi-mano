@@ -79,7 +79,6 @@ import io.swagger.annotations.ApiResponses;
 @Path("/sol005/nsd/v1")
 @Api(value = "/", description = "")
 public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
-	private static final String REPOSITORY_NSD_BASE_PATH = "Datafiles/NFVO/nsd/";
 	private static final String APPLICATION_ZIP = "application/zip";
 
 	private final NsdRepository nsdRepository;
@@ -118,7 +117,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
-		final List<NsDescriptorsNsdInfoIdGetResponse> response = new ArrayList<NsDescriptorsNsdInfoIdGetResponse>();
+		final List<NsDescriptorsNsdInfoIdGetResponse> response = new ArrayList<>();
 		for (final String entry : listFilesInFolder) {
 			final RepositoryElement repositoryElement = repositoryService.getElement(entry);
 			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
@@ -308,7 +307,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	public List<Object> nsDescriptorsNsdInfoIdPatch(@PathParam("nsdInfoId") String nsdInfoId, NsDescriptorsNsdInfoIdPatchQuery body, @HeaderParam("Content-Type") String contentType, @Context SecurityContext securityContext) {
-		return new ArrayList<Object>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -361,9 +360,8 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public List<Object> pnfDescriptorsGet(String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
-		// TODO: Implement...
 
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -381,7 +379,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void pnfDescriptorsPnfdInfoIdDelete(String pnfdInfoId) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -396,7 +394,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public PnfDescriptorsPnfdInfoIdGetResponse pnfDescriptorsPnfdInfoIdGet(String pnfdInfoId, String accept, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 		return null;
 	}
@@ -410,7 +408,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public PnfDescriptorsPnfdInfoIdPatchResponse pnfDescriptorsPnfdInfoIdPatch(String pnfdInfoId, String accept, String contentType, PnfDescriptorsPnfdInfoIdPatchQuery body, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 		return null;
 	}
@@ -425,7 +423,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void pnfDescriptorsPnfdInfoIdPnfdContentGet(String pnfdInfoId, String accept, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -440,7 +438,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void pnfDescriptorsPnfdInfoIdPnfdContentPut(String pnfdInfoId, String accept, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -452,7 +450,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public PnfDescriptorsPnfdInfoIdGetResponse pnfDescriptorsPost(String accept, String contentType, PnfDescriptorsPostQuery body, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 		return null;
 	}
@@ -470,9 +468,9 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public List<Object> subscriptionsGet(String accept, String filter, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -497,7 +495,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public SubscriptionsPostResponse subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 		return null;
 	}
@@ -514,7 +512,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void subscriptionsSubscriptionIdDelete(String subscriptionId, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -531,7 +529,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public SubscriptionsPostResponse subscriptionsSubscriptionIdGet(String subscriptionId, String accept, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 		return null;
 	}
@@ -549,7 +547,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdChangeNotificationPost(NsdChangeNotification nsdChangeNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -566,7 +564,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdDeletionNotificationPost(NsdDeletionNotification nsdDeletionNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -583,7 +581,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdOnBoardingFailureNotificationPost(NsdOnBoardingFailureNotification nsdOnBoardingFailureNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -600,7 +598,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdOnBoardingNotificationPost(NsdOnBoardingNotification nsdOnBoardingNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -618,7 +616,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdDeletionNotificationGet(String accept, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -635,7 +633,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdDeletionNotificationPost(PnfdDeletionNotification pnfdDeletionNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -652,7 +650,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdOnBoardingFailureNotificationPost(PnfdOnBoardingFailureNotification pnfdOnBoardingFailureNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 
@@ -669,7 +667,7 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 	 */
 	@Override
 	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdOnBoardingNotificationPost(PnfdOnBoardingNotification pnfdOnBoardingNotification, String accept, String contentType, @Context SecurityContext securityContext) {
-		// TODO: Implement...
+		// : Implement...
 
 	}
 

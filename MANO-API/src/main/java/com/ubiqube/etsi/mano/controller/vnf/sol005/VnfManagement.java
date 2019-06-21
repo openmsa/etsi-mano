@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -21,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.api.entities.repository.RepositoryElement;
@@ -75,7 +73,7 @@ public class VnfManagement {
 		subscriptionRepository = _subscriptionRepository;
 	}
 
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, false);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -89,7 +87,7 @@ public class VnfManagement {
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
-		final List<SubscriptionsPkgmSubscription> response = new ArrayList<SubscriptionsPkgmSubscription>();
+		final List<SubscriptionsPkgmSubscription> response = new ArrayList<>();
 		for (final String entry : listFilesInFolder) {
 			final RepositoryElement repositoryElement = repositoryService.getElement(entry);
 			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
@@ -503,8 +501,6 @@ public class VnfManagement {
 			final Object obj = yamlReader.readValue(yaml, Object.class);
 			final ObjectMapper jsonWriter = new ObjectMapper();
 			return jsonWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
