@@ -1,12 +1,22 @@
 #!/bin/bash
 
+set -x
+set -e
+
 cd docker
 
 docker-compose build
 docker-compose up -d
 
-docker exec ubimano_msa_1 ifconfig eth0
+MSA="ubimano_msa_1"
+
+docker exec $MSA ifconfig eth0
 
 sleep 3m
-docker exec -it ubimano_msa_1 bash -lc check_services_status.sh
-docker-compose down
+
+docker exec -it $MSA check_services_status.sh
+docker exec $MSA service elasticsearch status
+
+../tests/test_login.sh || {
+	docker exec $MSA service tomcat restart
+}
