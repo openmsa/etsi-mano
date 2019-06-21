@@ -17,3 +17,4 @@ matrix:
       services: docker
       script:
         - ./bin/run_docker_compose.sh
+        - ./tests/test_login.sh
