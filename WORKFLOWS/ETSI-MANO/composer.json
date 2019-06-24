@@ -1,0 +1,14 @@
+{
+	"name" : "ubiqube/etsi-mano",
+	"description" : "ETSI MANO client API",
+	"type" : "library",
+	"license" : "LGPL-3.0",
+	"require" : {
+		"symfony/yaml" : "2.4.10"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Ubiqube\\" : "src"
+		}
+	}
+}
