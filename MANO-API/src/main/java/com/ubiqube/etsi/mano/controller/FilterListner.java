@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.AttrNameContext;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.OpContext;
 import com.ubiqube.etsi.mano.grammar.Etsifilter.SimpleFilterExprContext;
@@ -42,7 +41,6 @@ public class FilterListner extends EtsifilterBaseListener {
 	@Override
 	public void enterOp(OpContext _ctx) {
 		_attribute = _attr.stream().map(String::valueOf).collect(Collectors.joining(", "));
-		Joiner.on(".").join(_attr);
 		_attr.clear();
 		super.enterOp(_ctx);
 	}
@@ -62,7 +60,7 @@ public class FilterListner extends EtsifilterBaseListener {
 
 	@Override
 	public void exitValue(ValueContext _ctx) {
-		LOG.info("exitValue " + _ctx.getText());
+		LOG.info("exitValue {}", _ctx.getText());
 		_value = _ctx.getText();
 		super.exitValue(_ctx);
 	}
