@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.controller.vnf.sol005;
+package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
