@@ -19,3 +19,4 @@ matrix:
         - (cd docker; docker-compose build)
         - ./bin/run_docker_compose.sh
         - ./tests/test_login.sh
+        - ./tests/test_lookup_devices.sh
