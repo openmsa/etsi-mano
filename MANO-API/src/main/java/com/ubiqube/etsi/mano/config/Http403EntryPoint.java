@@ -33,7 +33,7 @@ public class Http403EntryPoint implements AuthenticationEntryPoint {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param _mapper JSON Object mapper.
 	 */
 	@Inject
@@ -47,6 +47,7 @@ public class Http403EntryPoint implements AuthenticationEntryPoint {
 		LOG.error("Auth failed");
 		_response.setContentType(MediaType.APPLICATION_JSON);
 		_response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		_response.addHeader("WWW-Authenticate", "Basic realm=\"ETSI-MANO API Realm\"");
 		final PrintWriter out = _response.getWriter();
 		final ProblemDetails problemDetails = new ProblemDetails(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized.");
 		out.print(mapper.writeValueAsString(problemDetails));
