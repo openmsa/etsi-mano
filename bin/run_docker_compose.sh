@@ -5,7 +5,6 @@ set -e
 
 cd docker
 
-docker-compose build
 docker-compose up -d
 
 MSA="ubimano_msa_1"

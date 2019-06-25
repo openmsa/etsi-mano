@@ -16,5 +16,6 @@ matrix:
     - language: minimal
       services: docker
       script:
+        - (cd docker; docker-compose build)
         - ./bin/run_docker_compose.sh
         - ./tests/test_login.sh
