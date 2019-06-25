@@ -9,6 +9,7 @@ services:
       dockerfile: docker/mano-api/Dockerfile
 
     hostname: mano
+    networks: [ ubi.network ]
     depends_on: [ "msa" ]
 
   tests:
@@ -18,6 +19,7 @@ services:
       dockerfile: docker/tests/Dockerfile
 
     hostname: tests
+    networks: [ ubi.network ]
     depends_on: [ "mano-api" ]
 
   msa:
@@ -25,9 +27,20 @@ services:
     build:
       context: ..
       dockerfile: docker/msa/Dockerfile
+    networks:
+      ubi.network:
+        ipv4_address: 172.18.0.2
 
     hostname: msa
     ports:
     - "80:80"
     - "443:443"
     - "1090:1090"
+
+
+networks:
+  ubi.network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+          gateway: 172.18.0.1
