@@ -1,5 +1,8 @@
 FROM openmsa/openmsa:1.2
 
+RUN wget -q https://getcomposer.org/download/1.8.6/composer.phar
+RUN chmod +x composer.phar && mv composer.phar /usr/bin/composer
+
 RUN	cd /opt/fmc_repository &&\
 	git clone https://github.com/openmsa/etsi-mano &&\
 	cd Process &&\
