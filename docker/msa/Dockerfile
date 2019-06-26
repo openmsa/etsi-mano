@@ -14,7 +14,5 @@ COPY docker/msa/license/* /opt/ubiqube/
 
 RUN ln -s /opt/sms/bin/check_services_status.sh /usr/bin/
 
-COPY docker/msa/install-php-yaml.sh /root
-RUN /root/install-php-yaml.sh
 
 CMD ["/sbin/init"]
