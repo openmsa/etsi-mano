@@ -16,7 +16,7 @@ matrix:
     - language: minimal
       services: docker
       script:
-        - (cd docker; docker-compose build)
+        - ./bin/build_docker_containers.sh
         - ./bin/run_docker_compose.sh
         - ./tests/test_login.sh
         - ./tests/test_lookup_devices.sh
