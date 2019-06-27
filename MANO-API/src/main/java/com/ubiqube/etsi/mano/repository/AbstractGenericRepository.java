@@ -35,6 +35,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	@Override
 	public final T get(String _id) {
 		final String uri = getUriForId(_id);
+		LOG.debug("Loading ID: {}", _id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
