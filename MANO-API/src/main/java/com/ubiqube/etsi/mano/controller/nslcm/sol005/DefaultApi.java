@@ -9,16 +9,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierDeletionNotification;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdHealPostQuery;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdInstantiatePostQuery;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdScalePostQuery;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdTerminatePostQuery;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdUpdatePostQuery;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccIdGetResponse;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationOccurrenceNotification;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery;
@@ -39,90 +31,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPostQuery;
  *
  */
 public interface DefaultApi {
-
-	/**
-	 * Query multiple NS instances.
-	 *
-	 * Query NS Instances. The GET method queries information about multiple NS
-	 * instances. This method shall support the URI query parameters, request and
-	 * response data structures, and response codes, as specified in the Tables
-	 * 6.4.2.3.2-1 and 6.4.2.3.2-2.
-	 *
-	 */
-	public List<Object> nsInstancesGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter, @QueryParam("all_fields") String allFields, @QueryParam("fields") String fields, @QueryParam("exclude_fields") String excludeFields, @QueryParam("exclude_default") String excludeDefault, @Context SecurityContext securityContext);
-
-	/**
-	 * Delete NS instance resource.
-	 *
-	 * Delete NS Identifier This method deletes an individual NS instance resource.
-	 *
-	 */
-	public void nsInstancesNsInstanceIdDelete(@PathParam("nsInstanceId") String nsInstanceId, @Context SecurityContext securityContext);
-
-	/**
-	 * Read an individual NS instance resource.
-	 *
-	 * The GET method retrieves information about a NS instance by reading an
-	 * individual NS instance resource.
-	 *
-	 */
-	public InlineResponse200 nsInstancesNsInstanceIdGet(@PathParam("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Context SecurityContext securityContext);
-
-	/**
-	 * Heal a NS instance.
-	 *
-	 * The POST method requests to heal a NS instance resource. This method shall
-	 * follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for
-	 * URI query parameters, request and response data structures, and response
-	 * codes.
-	 *
-	 */
-	public NsInstancesNsInstance nsInstancesNsInstanceIdHealPost(@PathParam("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NsInstancesNsInstanceIdHealPostQuery body, @Context SecurityContext securityContext);
-
-	/**
-	 * Instantiate a NS.
-	 *
-	 * The POST method requests to instantiate a NS instance resource.
-	 *
-	 */
-	public NsInstancesNsInstance nsInstancesNsInstanceIdInstantiatePost(@PathParam("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NsInstancesNsInstanceIdInstantiatePostQuery body, @Context SecurityContext securityContext);
-
-	/**
-	 * Scale a NS instance.
-	 *
-	 * The POST method requests to scale a NS instance resource.
-	 *
-	 */
-	public NsInstancesNsInstance nsInstancesNsInstanceIdScalePost(@PathParam("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NsInstancesNsInstanceIdScalePostQuery body, @Context SecurityContext securityContext);
-
-	/**
-	 * Terminate a NS instance.
-	 *
-	 * Terminate NS task. The POST method terminates a NS instance. This method can
-	 * only be used with a NS instance in the INSTANTIATED state. Terminating a NS
-	 * instance does not delete the NS instance identifier, but rather transitions
-	 * the NS into the NOT_INSTANTIATED state. This method shall support the URI
-	 * query parameters, request and response data structures, and response codes,
-	 * as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
-	 *
-	 */
-	public NsInstancesNsInstance nsInstancesNsInstanceIdTerminatePost(@PathParam("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NsInstancesNsInstanceIdTerminatePostQuery body, @Context SecurityContext securityContext);
-
-	/**
-	 * Updates a NS instance.
-	 *
-	 * Scale NS instance. The POST method requests to scale a NS instance resource.
-	 *
-	 */
-	public NsInstancesNsInstance nsInstancesNsInstanceIdUpdatePost(@PathParam("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NsInstancesNsInstanceIdUpdatePostQuery body, @Context SecurityContext securityContext);
-
-	/**
-	 * Create a NS instance resource.
-	 *
-	 * The POST method creates a new NS instance resource.
-	 *
-	 */
-	public InlineResponse200 nsInstancesPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NsInstancesPostQuery body, @Context SecurityContext securityContext);
 
 	/**
 	 * Query multiple NS LCM operation occurrences.
