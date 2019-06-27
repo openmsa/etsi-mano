@@ -1,5 +1,9 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,8 +16,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.api.entities.orchestration.ProcessInstance;
+import com.ubiqube.api.exception.ServiceException;
+import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeVnfFlavourRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
@@ -24,17 +38,34 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VimConnectionInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInfoModificationRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
+import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
+import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.Patcher;
 
 import io.swagger.annotations.ApiParam;
 
-@Path("/vnf_instances")
+@Path("/sol003/vnflcm/v1/vnf_instances")
 @Consumes({ "application/json" })
 @Produces({ "application/json" })
 @io.swagger.annotations.Api(description = "the vnf_instances API")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
-public class VnfInstancesApi {
+public class VnfInstancesApi extends BaseApi {
+
+	private static final String REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_instances";
+	private final VnfInstancesRepository vnfInstancesRepository;
+	private final OrchestrationService orchestrationService;
+
+	@Autowired
+	public VnfInstancesApi(Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, OrchestrationService _orchestrationService, VnfInstancesRepository _vnfInstancesRepository) {
+		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+		vnfInstancesRepository = _vnfInstancesRepository;
+		orchestrationService = _orchestrationService;
+	}
 
 	@GET
 	@Consumes({ "application/json" })
@@ -57,7 +88,6 @@ public class VnfInstancesApi {
 	}
 
 	@POST
-
 	@Consumes({ "application/json" })
 	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Create VNF Identifier  The POST method creates a new VNF instance resource. ", response = VnfInstance.class, tags = {})
@@ -74,8 +104,36 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 422, message = "Unprocessable Entity If the payload body of a request contains syntactically correct data (e.g. well-formed JSON) but the data cannot be processed (e.g. because it fails validation against a schema), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and should include in the \"detail\" attribute more information about the source of the problem. NOTE 2: This error response code is only applicable for methods that have a request body. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfInstancesPost(@ApiParam(value = "The VNF creation parameters", required = true) CreateVnfRequest createVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
-		throw new GenericException("TODO");
+	public Response vnfInstancesPost(@ApiParam(value = "The VNF creation parameters", required = true) CreateVnfRequest createVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context UriInfo uriInfo) {
+		final String vnfId = createVnfRequest.getVnfdId();
+		vnfPackageRepository.get(vnfId);
+		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
+		final String id = UUID.randomUUID().toString();
+		vnfInstance.setId(id);
+		final StringBuilder sb = new StringBuilder().append(REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH).append("/").append(id);
+		final String uri = sb.toString();
+		try {
+			if (!repositoryService.exists(uri)) {
+				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
+			}
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+
+		final String hrefScaleToLevel = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdScaleToLevelPost")).build(id).getUri().toString();
+		final String hrefScale = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdScalePost")).build(id).getUri().toString();
+		final String hrefOperate = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdOperatePost")).build(id).getUri().toString();
+		final String hrefInstanciate = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdInstantiatePost")).build(id).getUri().toString();
+		final String hrefIndicators = "";// javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(),
+											// "")).build(id).getUri().toString();
+		final String hrefHeal = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdHealPost")).build(id).getUri().toString();
+		final String hrefChangeFlavor = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdChangeFlavourPost")).build(id).getUri().toString();
+		final String hrefChangeExtConn = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdChangeExtConnPost")).build(id).getUri().toString();
+		final String hrefSelf = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdGet")).build(id).getUri().toString();
+		final VnfInstanceLinks vnfInstanceLinks = LcmFactory.createVnfInstancesLink(hrefSelf, hrefChangeExtConn, hrefChangeFlavor, hrefHeal, hrefIndicators, hrefInstanciate, hrefOperate, hrefScale, hrefScaleToLevel);
+		vnfInstance.setLinks(vnfInstanceLinks);
+		vnfInstancesRepository.save(vnfInstance);
+		return Response.ok(vnfInstance).build();
 	}
 
 	@POST
@@ -136,7 +194,8 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	public Response vnfInstancesVnfInstanceIdDelete(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
-		throw new GenericException("TODO");
+		vnfInstancesRepository.delete(vnfInstanceId);
+		return Response.noContent().build();
 	}
 
 	@GET
@@ -157,7 +216,8 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	public Response vnfInstancesVnfInstanceIdGet(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
-		throw new GenericException("TODO");
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		return Response.ok(vnfInstance).build();
 	}
 
 	@POST
@@ -198,6 +258,23 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	public Response vnfInstancesVnfInstanceIdInstantiatePost(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the VNF instantiation.", required = true) InstantiateVnfRequest instantiateVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
+		final Map<String, String> varsMap = new HashMap<String, String>();
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VimConnectionInfo vimConnection = vnfInstance.getVimConnectionInfo().get(0);
+		if (null == vimConnection) {
+			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
+		}
+		varsMap.put("deviceId", vimConnection.getVimId());
+
+		final String processName = "Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Deploy_new_VNF";
+		final String serviceName = "Process/ETSI-MANO/NFV/VNFDescriptor_generic/VNFDescriptor_generic";
+		final long serviceId = 0;
+		final String ubiqubeId = "TMAA6";
+		try {
+			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(ubiqubeId, serviceId, serviceName, processName, varsMap);
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
 		throw new GenericException("TODO");
 	}
 
