@@ -4,6 +4,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * Jersey configuration. With Multi-part for document upload, and annotation
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
+@EnableWebMvc
 public class JerseyConfig extends ResourceConfig {
 
 	public static void main(String[] args) {
