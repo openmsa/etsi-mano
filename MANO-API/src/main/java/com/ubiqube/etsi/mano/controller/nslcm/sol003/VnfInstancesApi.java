@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +58,7 @@ import io.swagger.annotations.ApiParam;
 @io.swagger.annotations.Api(description = "the vnf_instances API")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
 public class VnfInstancesApi extends BaseApi {
-
+	private static final Logger LOG = LoggerFactory.getLogger(VnfInstancesApi.class);
 	private static final String REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_instances";
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final OrchestrationService orchestrationService;
@@ -84,6 +87,14 @@ public class VnfInstancesApi extends BaseApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	public Response vnfInstancesGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
+		try {
+			final List<String> listFilesInFolder = repositoryService.doSearch(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "vnfPkgInfo.json");
+			for (final String string : listFilesInFolder) {
+				LOG.info("String => {}", string);
+			}
+		} catch (final ServiceException e) {
+			e.printStackTrace();
+		}
 		throw new GenericException("TODO");
 	}
 

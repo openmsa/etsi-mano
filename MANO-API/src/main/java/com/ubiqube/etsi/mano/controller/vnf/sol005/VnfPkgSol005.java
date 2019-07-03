@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -301,8 +302,8 @@ public class VnfPkgSol005 extends BaseApi {
 	 */
 	@POST
 	@Path("/vnf_packages")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
+	@Consumes({ "*/*" })
+	@Produces({ "*/*" })
 	@ApiOperation(value = "Create a new individual VNF package resource.", tags = {})
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "201 Created             An individual VNF package resource has been created successfully. The response body shall contain a representation of the new individual VNF package resource, as defined in clause 9.5.2.4. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the individual VNF package resource. ", response = VnfPackagesVnfPkgIdGetResponse.class) })
 	public Response vnfPackagesPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, String body, @Context UriInfo uriInfo) {
@@ -324,6 +325,7 @@ public class VnfPkgSol005 extends BaseApi {
 			uri = sb.append("/").append("Metadata.yaml").toString();
 			try {
 				repositoryService.addFile(uri, "", "Added: SOL005", mapper.writeValueAsString(jsonString), NCROOT);
+
 			} catch (final JsonProcessingException e) {
 				throw new GenericException(e);
 			}
@@ -347,11 +349,17 @@ public class VnfPkgSol005 extends BaseApi {
 		URI uri;
 		try {
 			uri = new URI(self.getHref());
+			final Map<String, String> userData = (Map<String, String>) vnfPkgInfo.getUserDefinedData();
+			final String content = mapper.writeValueAsString(userData.get("heat"));
+			repositoryService.addFile(REPOSITORY_NVFO_DATAFILE_BASE_PATH + '/' + vnfPkgId + "/vnfd.json", "SOL005", "", content, "ncroot");
 		} catch (final URISyntaxException e) {
+			throw new GenericException(e);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
 		return Response.status(201).contentLocation(uri).entity(vnfPackagesVnfPkgIdGetResponse).build();
-
 	}
 
 	/**

@@ -118,7 +118,6 @@ public class VnfManagement {
 		subscriptionRepository.save(subscriptionObject);
 
 		response.add(pack);
-
 		return response;
 	}
 
@@ -217,6 +216,11 @@ public class VnfManagement {
 			} else if (APPLICATION_ZIP.equals(accept)
 					|| (APPLICATION_ZIP.equals(accept) && MediaType.TEXT_PLAIN.equals(accept))) {
 				return getZipArchive(null, listvnfPckgFiles);
+			} else {
+				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
+				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
+				final String yaml = conJsonToYaml(content);
+				return Response.ok(yaml, "application/x-yaml").build();
 			}
 		}
 		throw new NotFoundException("VNFD not found for vnfPkg with id: " + vnfPkgId);
@@ -501,6 +505,17 @@ public class VnfManagement {
 			final Object obj = yamlReader.readValue(yaml, Object.class);
 			final ObjectMapper jsonWriter = new ObjectMapper();
 			return jsonWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
+	private String conJsonToYaml(String json) {
+		try {
+			final ObjectMapper jsonReader = new ObjectMapper();
+			final Object obj = jsonReader.readValue(json, Object.class);
+			final ObjectMapper yamlWriter = new ObjectMapper(new YAMLFactory());
+			return yamlWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
