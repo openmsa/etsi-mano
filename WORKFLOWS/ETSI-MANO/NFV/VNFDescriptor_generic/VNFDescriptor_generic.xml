@@ -1,20 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ObjectDefinition>  <information>
     <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
     <description/>
     <displayField>service_id</displayField>
     <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
     <group>NFV|Virtual Network Function (VNF)|Orchestration|</group>
     <icon>/images/repository/CommandDefinition/icons/web cluster.jpg</icon>
     <name>VNFD Generic Onboarding &amp; VNF Life Cycle Management (LCM)</name>
     <order>10000</order>
+    <poolId>0</poolId>
     <readVariableVisibility>5</readVariableVisibility>
     <showDetailedServiceInstances>true</showDetailedServiceInstances>
     <showProcessExecConsole>false</showProcessExecConsole>
     <showVariables>true</showVariables>
     <visibility>5</visibility>
   </information>  <variables frozen="0">
-    <variable displayName="Vimtenant" displayOrder="0" maxLength="100" name="params.deviceid" startIncrement="0" type="Device">
+    <variable displayName="Vimtenant" displayOrder="0" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" type="Device">
       <sections>
         <section>Synchronize to VIM tenant</section>
       </sections>
@@ -24,7 +26,7 @@
         <sdType manId="14020603" modId="14020605"/>
       </sdTypes>
     </variable>
-    <variable default="LINUX-GENERIC" displayName="MSA Device Model" displayOrder="1" editable="false" maxLength="100" name="params.servers.0.device_man_model" startIncrement="0" type="String">
+    <variable default="LINUX-GENERIC" displayName="MSA Device Model" displayOrder="1" editable="false" maxLength="100" name="params.servers.0.device_man_model" numberOfRowMax="0" startIncrement="0" type="String">
       <values>
         <value>FORTINET</value>
         <value>PALOALTO</value>
@@ -35,22 +37,22 @@
         <section>Create VNFCs on OpenMSA</section>
       </sections>
     </variable>
-    <variable default="root" displayName="MSA Device Login" displayOrder="2" maxLength="100" name="params.servers.0.device_login" startIncrement="0" type="String">
+    <variable default="root" displayName="MSA Device Login" displayOrder="2" maxLength="100" name="params.servers.0.device_login" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Create VNFCs on OpenMSA</section>
       </sections>
     </variable>
-    <variable default="OpenMSA" displayName="MSA Device Password" displayOrder="3" maxLength="100" name="params.servers.0.device_password" startIncrement="0" type="Password">
+    <variable default="OpenMSA" displayName="MSA Device Password" displayOrder="3" maxLength="100" name="params.servers.0.device_password" numberOfRowMax="0" startIncrement="0" type="Password">
       <sections>
         <section>Create VNFCs on OpenMSA</section>
       </sections>
     </variable>
-    <variable displayName="name" displayOrder="4" maxLength="100" name="params.servers.0.name" startIncrement="0" type="String">
+    <variable displayName="name" displayOrder="4" maxLength="100" name="params.servers.0.name" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Instantiate VNF to VIM - Instance</section>
       </sections>
     </variable>
-    <variable displayName="image" displayOrder="5" maxLength="100" name="params.servers.0.image_id" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="image" displayOrder="5" maxLength="100" name="params.servers.0.image_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Instantiate VNF to VIM - Instance</section>
       </sections>
@@ -58,7 +60,7 @@
         <class>images</class>
       </classes>
     </variable>
-    <variable displayName="flavor" displayOrder="6" maxLength="100" name="params.servers.0.flavor_id" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="flavor" displayOrder="6" maxLength="100" name="params.servers.0.flavor_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Instantiate VNF to VIM - Instance</section>
       </sections>
@@ -66,7 +68,7 @@
         <class>flavors</class>
       </classes>
     </variable>
-    <variable default="nova" displayName="availability Zone" displayOrder="7" maxLength="100" name="params.servers.0.availability_zone" startIncrement="0" type="String">
+    <variable default="nova" displayName="availability Zone" displayOrder="7" maxLength="100" name="params.servers.0.availability_zone" numberOfRowMax="0" startIncrement="0" type="String">
       <values>
         <value>nova</value>
       </values>
@@ -74,7 +76,7 @@
         <section>Instantiate VNF to VIM - Instance</section>
       </sections>
     </variable>
-    <variable displayName="key Name" displayOrder="8" maxLength="100" name="params.servers.0.key_name" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="key Name" displayOrder="8" maxLength="100" name="params.servers.0.key_name" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Instantiate VNF to VIM - Instance</section>
       </sections>
@@ -82,7 +84,7 @@
         <class>keypairs</class>
       </classes>
     </variable>
-    <variable displayName="Public Network" displayOrder="9" maxLength="100" name="params.servers.0.public_network" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="Public Network" displayOrder="9" maxLength="100" name="params.servers.0.public_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Instantiate VNF to VIM - Create floating IP</section>
       </sections>
@@ -90,7 +92,7 @@
         <class>networks</class>
       </classes>
     </variable>
-    <variable displayName="networks" displayOrder="10" maxLength="100" name="params.servers.0.networks.0.network" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="networks" displayOrder="10" maxLength="100" name="params.servers.0.networks.0.network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Instantiate VNF to VIM - Networks</section>
       </sections>
@@ -98,23 +100,23 @@
         <class>networks</class>
       </classes>
     </variable>
-    <variable default="true" displayName="DHCP Mode" displayOrder="11" maxLength="100" name="params.servers.0.networks.0.dhcp_mode" startIncrement="0" type="Boolean">
+    <variable default="true" displayName="DHCP Mode" displayOrder="11" maxLength="100" name="params.servers.0.networks.0.dhcp_mode" numberOfRowMax="0" startIncrement="0" type="Boolean">
       <sections>
         <section>Instantiate VNF to VIM - Networks</section>
       </sections>
     </variable>
-    <variable displayName="Fixed IP Address" displayOrder="12" maxLength="100" name="params.servers.0.networks.0.fixed_ip" selector="params.servers.0.networks.0.dhcp_mode" startIncrement="0" type="Composite">
+    <variable displayName="Fixed IP Address" displayOrder="12" maxLength="100" name="params.servers.0.networks.0.fixed_ip" numberOfRowMax="0" selector="params.servers.0.networks.0.dhcp_mode" startIncrement="0" type="Composite">
       <sections>
         <section>Instantiate VNF to VIM - Networks</section>
       </sections>
       <behaviors>
-        <behavior displayName="ip_address" displayOrder="0" maxLength="100" name="params.servers.0.networks.0.ip_address" selectorValue="false" startIncrement="0" type="String">
+        <behavior displayName="ip_address" displayOrder="0" maxLength="100" name="params.servers.0.networks.0.ip_address" numberOfRowMax="0" selectorValue="false" startIncrement="0" type="String">
           <sections>
             <section>servers</section>
             <section>networks</section>
           </sections>
         </behavior>
-        <behavior displayName="ip_address" displayOrder="0" maxLength="100" name="params.servers.0.networks.0.ip_address" selectorValue="true" startIncrement="0" type="String" visible="false">
+        <behavior displayName="ip_address" displayOrder="0" maxLength="100" name="params.servers.0.networks.0.ip_address" numberOfRowMax="0" selectorValue="true" startIncrement="0" type="String" visible="false">
           <sections>
             <section>servers</section>
             <section>networks</section>
@@ -122,7 +124,7 @@
         </behavior>
       </behaviors>
     </variable>
-    <variable default="a075d94e-11cd-435a-b784-5cf2ce29c883" displayName="security Groups" displayOrder="13" maxLength="100" name="params.servers.0.security_groups.0.security_group" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable default="a075d94e-11cd-435a-b784-5cf2ce29c883" displayName="security Groups" displayOrder="13" maxLength="100" name="params.servers.0.security_groups.0.security_group" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Instantiate VNF to VIM - Security</section>
       </sections>
@@ -130,7 +132,7 @@
         <class>security_groups</class>
       </classes>
     </variable>
-    <variable displayName="floating Ip" displayOrder="14" maxLength="100" name="params.servers.0.floating_ip_id" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef" visible="false">
+    <variable displayName="floating Ip" displayOrder="14" maxLength="100" name="params.servers.0.floating_ip_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef" visible="false">
       <sections>
         <section>Instantiate VNF to VIM</section>
       </sections>
@@ -138,27 +140,27 @@
         <class>floatingips</class>
       </classes>
     </variable>
-    <variable cols="100" displayName="user Data" displayOrder="15" maxLength="100" name="params.servers.0.user_data" rows="70" startIncrement="0" type="String">
+    <variable cols="100" displayName="user Data" displayOrder="15" maxLength="100" name="params.servers.0.user_data" numberOfRowMax="0" rows="70" startIncrement="0" type="String">
       <sections>
         <section>Instantiate VNF to VIM - User Data</section>
       </sections>
     </variable>
-    <variable displayName="personality - path" displayOrder="16" maxLength="100" name="params.servers.0.personality.0.path" startIncrement="0" type="String">
+    <variable displayName="personality - path" displayOrder="16" maxLength="100" name="params.servers.0.personality.0.path" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Instantiate VNF to VIM - Personality</section>
       </sections>
     </variable>
-    <variable displayName="personality - contents" displayOrder="17" maxLength="100" name="params.servers.0.personality.0.contents" startIncrement="0" type="String">
+    <variable displayName="personality - contents" displayOrder="17" maxLength="100" name="params.servers.0.personality.0.contents" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Instantiate VNF to VIM - Personality</section>
       </sections>
     </variable>
-    <variable displayName="metadata Key" displayOrder="18" maxLength="100" name="params.servers.0.metadata.0.metadata_key" startIncrement="0" type="String">
+    <variable displayName="metadata Key" displayOrder="18" maxLength="100" name="params.servers.0.metadata.0.metadata_key" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Instantiate VNF to VIM - Metadata</section>
       </sections>
     </variable>
-    <variable displayName="metadata Value" displayOrder="19" maxLength="100" name="params.servers.0.metadata.0.metadata_value" startIncrement="0" type="String">
+    <variable displayName="metadata Value" displayOrder="19" maxLength="100" name="params.servers.0.metadata.0.metadata_value" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Instantiate VNF to VIM</section>
       </sections>
@@ -178,6 +180,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Deploy_new_VNF/Tasks/</processPath>
       <displayName>Synchronize to VIM tenant</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF">
     <visibility>5</visibility>
@@ -245,6 +248,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Instantiate_VNF/Tasks/</processPath>
       <displayName>VNFC Ping Check</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Start_VNF">
     <visibility>5</visibility>
@@ -258,6 +262,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Start_VNF/Tasks/</processPath>
       <displayName>VNF Start</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Stop_VNFi">
     <visibility>5</visibility>
@@ -271,6 +276,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Stop_VNFi/Tasks/</processPath>
       <displayName>VNF Stop</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Restart_VNFi">
     <visibility>5</visibility>
@@ -284,6 +290,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Restart_VNFi/Tasks/</processPath>
       <displayName>VNF Restart</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Terminate_VNFi">
     <visibility>5</visibility>
@@ -305,6 +312,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Terminate_VNFi/Tasks/</processPath>
       <displayName>Delete from OpenMSA</displayName>
     </task>
+  <compensation/>
   </process>
 <process name="Process/ETSI-MANO/NFV/VNFDescriptor_generic/Process_Move_To_Trash">
     <visibility>5</visibility>
@@ -312,6 +320,7 @@
     <icon/>
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
+  <compensation/>
   </process>
 
 </ObjectDefinition>

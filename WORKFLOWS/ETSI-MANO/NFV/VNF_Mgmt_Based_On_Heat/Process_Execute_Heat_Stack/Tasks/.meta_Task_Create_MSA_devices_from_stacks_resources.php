@@ -7,19 +7,26 @@
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1561642199804</value>
+            <value>1562168966982</value>
         </entry>
         <entry>
             <key>COMMENT</key>
             <value></value>
         </entry>
         <entry>
+            <key>REPOSITORY</key>
+        </entry>
+        <entry>
             <key>DATE_CREATION</key>
-            <value>1527154971674</value>
+            <value>1562071149062</value>
+        </entry>
+        <entry>
+            <key>CONFIGURATION_FILTER</key>
+            <value></value>
         </entry>
         <entry>
             <key>TAG</key>
-            <value></value>
+            <value>Task_Create_MSA_devices_from_stacks_resources.php</value>
         </entry>
         <entry>
             <key>TYPE</key>

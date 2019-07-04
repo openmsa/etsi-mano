@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>NFV|Network Service (NS)|Orchestration|Abstract</group>
+    <icon>/images/eclipseIcons/page_obj.gif</icon>
+    <name>Abstract NS Manager</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>false</showDetailedServiceInstances>
+    <showProcessExecConsole>false</showProcessExecConsole>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Ns Package Id" displayOrder="0" maxLength="100" name="params.ns_package_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Get NSD ID from NFVO Catalogs</section>
+      </sections>
+    </variable>
+    <variable default="44ba518b-faaf-41af-a7d6-52c0eb64991c" displayName="Nspkgid" displayOrder="1" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Get NSD ID from NFVO Catalogs</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content/>  </example>
+  <process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Instantiate_NSD">
+    <visibility>5</visibility>
+    <displayName>Instantiate NS</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    
+    
+    
+  
+    
+    
+    
+  
+    
+    
+  
+    
+    
+    
+  <task name="Task_Get_NSD_ID_from_NFVO_Catalogs.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Instantiate_NSD/Tasks/</processPath>
+      <displayName>Get VNFDs IDs linked to the NSD</displayName>
+    </task>
+    <task name="Task_Instantiate_NS_to_VIM.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Instantiate_NSD/Tasks/</processPath>
+      <displayName>Instantiate NS to VIM</displayName>
+    </task>
+    <task name="Task_Instantiate_VNFs_to_VIM.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Instantiate_NSD/Tasks/</processPath>
+      <displayName>Instantiate VNFs to VIM</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Terminate_NS">
+    <visibility>5</visibility>
+    <displayName>Terminate NS</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="Task_Delete_VNF_Instances_from_VIM.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Terminate_NS/Tasks/</processPath>
+      <displayName>Delete VNF Instances from VIM</displayName>
+    </task>
+    <task name="Task_Delete_NS_instance_from_VIM.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Terminate_NS/Tasks/</processPath>
+      <displayName>Delete NS instance from VIM</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>

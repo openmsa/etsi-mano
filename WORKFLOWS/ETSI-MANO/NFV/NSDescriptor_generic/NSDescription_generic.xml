@@ -1,25 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ObjectDefinition>  <information>
     <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
     <description/>
     <displayField>service_id</displayField>
     <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
     <group>NFV|Network Service (NS)|Orchestration|</group>
     <icon>/images/repository/CommandDefinition/icons/Network.png</icon>
     <name>NSD Generic Onbording &amp; NS Life Cycle Management (LCM)</name>
     <order>10000</order>
+    <poolId>0</poolId>
     <readVariableVisibility>5</readVariableVisibility>
     <showDetailedServiceInstances>true</showDetailedServiceInstances>
     <showProcessExecConsole>false</showProcessExecConsole>
     <showVariables>true</showVariables>
     <visibility>5</visibility>
   </information>  <variables frozen="0">
-    <variable displayName="Deviceid" displayOrder="0" maxLength="100" name="params.deviceid" startIncrement="0" type="Device">
+    <variable displayName="Deviceid" displayOrder="0" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" type="Device">
       <sections>
         <section>Synchronise to VIM tenant</section>
       </sections>
+      <sdTypes>
+        <sdType manId="14020603" modId="16051904"/>
+      </sdTypes>
     </variable>
-    <variable default="Router" displayName="Router Name" displayOrder="1" maxLength="100" name="params.router_name" startIncrement="0" type="String">
+    <variable default="Router" displayName="Router Name" displayOrder="1" maxLength="100" name="params.router_name" numberOfRowMax="0" startIncrement="0" type="String">
       <values>
         <value>Ng4T-Router</value>
         <value>OPNFV-Router</value>
@@ -29,12 +34,12 @@
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable default="true" displayName="Router Admin State Up" displayOrder="2" maxLength="100" name="params.router_admin_state_up" startIncrement="0" type="Boolean">
+    <variable default="true" displayName="Router Admin State Up" displayOrder="2" maxLength="100" name="params.router_admin_state_up" numberOfRowMax="0" startIncrement="0" type="Boolean">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable displayName="External Gateway Network" displayOrder="3" maxLength="100" name="params.external_gateway_network" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="External Gateway Network" displayOrder="3" maxLength="100" name="params.external_gateway_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Router Config</section>
       </sections>
@@ -42,12 +47,12 @@
         <class>networks</class>
       </classes>
     </variable>
-    <variable displayName="Router Id" displayOrder="4" maxLength="100" name="params.router_id" startIncrement="0" type="String">
+    <variable displayName="Router Id" displayOrder="4" maxLength="100" name="params.router_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable displayName="network Name" displayOrder="5" maxLength="100" name="params.networks.0.network_name" startIncrement="0" type="String">
+    <variable displayName="network Name" displayOrder="5" maxLength="100" name="params.networks.0.network_name" numberOfRowMax="0" startIncrement="0" type="String">
       <values>
         <value>s1u-network</value>
         <value>s1mme-network</value>
@@ -66,27 +71,27 @@
         <section>Network Config</section>
       </sections>
     </variable>
-    <variable default="true" displayName="admin State Up" displayOrder="6" maxLength="100" name="params.networks.0.admin_state_up" startIncrement="0" type="Boolean">
+    <variable default="true" displayName="admin State Up" displayOrder="6" maxLength="100" name="params.networks.0.admin_state_up" numberOfRowMax="0" startIncrement="0" type="Boolean">
       <sections>
         <section>Network Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="router External" displayOrder="7" maxLength="100" name="params.networks.0.router_external" startIncrement="0" type="Boolean" visible="false">
+    <variable default="false" displayName="router External" displayOrder="7" maxLength="100" name="params.networks.0.router_external" numberOfRowMax="0" startIncrement="0" type="Boolean" visible="false">
       <sections>
         <section>Network Config</section>
       </sections>
     </variable>
-    <variable displayName="network id" displayOrder="8" maxLength="100" name="params.networks.0.network_id" startIncrement="0" type="String">
+    <variable displayName="network id" displayOrder="8" maxLength="100" name="params.networks.0.network_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Network Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="port Security Enabled" displayOrder="9" maxLength="100" name="params.networks.0.port_security_enabled" startIncrement="0" type="Boolean">
+    <variable default="false" displayName="port Security Enabled" displayOrder="9" maxLength="100" name="params.networks.0.port_security_enabled" numberOfRowMax="0" startIncrement="0" type="Boolean">
       <sections>
         <section>Network Config</section>
       </sections>
     </variable>
-    <variable displayName="subnet Name" displayOrder="10" maxLength="100" name="params.networks.0.subnet_name" startIncrement="0" type="String">
+    <variable displayName="subnet Name" displayOrder="10" maxLength="100" name="params.networks.0.subnet_name" numberOfRowMax="0" startIncrement="0" type="String">
       <values>
         <value>fgt-mgmt-subnet</value>
         <value>sgi-subnet</value>
@@ -104,7 +109,7 @@
         <section>Subnet Config</section>
       </sections>
     </variable>
-    <variable displayName="subnet Cidr" displayOrder="11" maxLength="100" name="params.networks.0.subnet_cidr" startIncrement="0" type="String">
+    <variable displayName="subnet Cidr" displayOrder="11" maxLength="100" name="params.networks.0.subnet_cidr" numberOfRowMax="0" startIncrement="0" type="String">
       <values>
         <value>26.0.0.0/24</value>
         <value>192.168.37.0/24</value>
@@ -123,22 +128,22 @@
         <section>Subnet Config</section>
       </sections>
     </variable>
-    <variable default="true" displayName="subnet Enable Dhcp" displayOrder="12" maxLength="100" name="params.networks.0.subnet_enable_dhcp" startIncrement="0" type="Boolean">
+    <variable default="true" displayName="subnet Enable Dhcp" displayOrder="12" maxLength="100" name="params.networks.0.subnet_enable_dhcp" numberOfRowMax="0" startIncrement="0" type="Boolean">
       <sections>
         <section>Subnet Config</section>
       </sections>
     </variable>
-    <variable displayName="subnet id" displayOrder="13" maxLength="100" name="params.networks.0.subnet_id" startIncrement="0" type="String">
+    <variable displayName="subnet id" displayOrder="13" maxLength="100" name="params.networks.0.subnet_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Subnet Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="subnet Attached To Router" displayOrder="14" maxLength="100" name="params.networks.0.subnet_attached_to_router" startIncrement="0" type="Boolean">
+    <variable default="false" displayName="subnet Attached To Router" displayOrder="14" maxLength="100" name="params.networks.0.subnet_attached_to_router" numberOfRowMax="0" startIncrement="0" type="Boolean">
       <sections>
         <section>Subnet Config</section>
       </sections>
     </variable>
-    <variable displayName="Tenant Id" displayOrder="15" maxLength="100" name="params.tenant_id" startIncrement="0" type="String">
+    <variable displayName="Tenant Id" displayOrder="15" maxLength="100" name="params.tenant_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Network Config</section>
       </sections>
@@ -157,6 +162,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_New_service/Tasks/</processPath>
       <displayName>Synchronise to VIM tenant</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS">
     <visibility>5</visibility>
@@ -192,6 +198,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Deploy_NS/Tasks/</processPath>
       <displayName>Sync</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Update_NS">
     <visibility>5</visibility>
@@ -211,6 +218,7 @@
       <processPath/>
       <displayName>Sync</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS">
     <visibility>5</visibility>
@@ -245,6 +253,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Delete_NS/Tasks/</processPath>
       <displayName>Sync</displayName>
     </task>
+  <compensation/>
   </process>
 
 <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Terminate_NS">
@@ -269,6 +278,7 @@
       <processPath/>
       <displayName>Sync</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NSDescriptor_generic/Process_Move_To_Trash">
     <visibility>5</visibility>
@@ -276,5 +286,6 @@
     <icon/>
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
+  <compensation/>
   </process>
 </ObjectDefinition>
