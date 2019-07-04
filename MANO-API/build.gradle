@@ -15,6 +15,27 @@ repositories {
 	mavenCentral()
 }
 
+sourceSets {
+	integrationTests {
+		java {
+			srcDir file("src/test/integration")
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+		}
+	}
+}
+
+configurations {
+	integrationTestsCompile.extendsFrom testCompile
+	integrationTestsRuntime.extendsFrom testRuntime
+}
+
+task integrationTests(type: Test) {
+	testClassesDirs = sourceSets.integrationTests.output.classesDirs
+	classpath = sourceSets.integrationTests.runtimeClasspath
+	outputs.upToDateWhen { false }
+}
+
 group = 'com.ubiqube'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
