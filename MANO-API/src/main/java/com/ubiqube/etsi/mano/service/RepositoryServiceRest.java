@@ -27,7 +27,7 @@ public class RepositoryServiceRest implements RepositoryService {
 	public RepositoryServiceRest() {
 		restTemplate = new RestTemplate();
 		httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", "Basic bmNyb290OnViaXF1YmU=");
+		httpHeaders.add("Authorization", "Basic bmNyb290Ok9wZW5NU0E=");
 	}
 
 	@Override
