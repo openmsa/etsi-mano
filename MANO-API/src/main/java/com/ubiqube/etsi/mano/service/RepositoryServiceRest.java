@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
@@ -16,17 +17,17 @@ import com.ubiqube.api.interfaces.repository.RepositoryService;
 
 @Service
 public class RepositoryServiceRest implements RepositoryService {
-	private final static String URL = "http://localhost:8380/ubi-api-rest";
+	private final static String URL = "http://localhost:8080/ubi-api-rest";
 
 	private RepositoryService repositoryService;
 	private final RestTemplate restTemplate;
-	private final HttpEntity request;
+
+	private final HttpHeaders httpHeaders;
 
 	public RepositoryServiceRest() {
 		restTemplate = new RestTemplate();
-		final HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Basic bmNyb290OnViaXF1YmU=");
-		request = new HttpEntity<>(httpHeaders);
 	}
 
 	@Override
@@ -65,13 +66,19 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public List<String> doSearch(String path, String argl1) throws ServiceException {
-		final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(URL)
+	public List<String> doSearch(String path, String pattern) throws ServiceException {
+		final URI uri = UriComponentsBuilder.fromHttpUrl(URL)
 				.pathSegment("repository/v1/search")
 				.queryParam("URI", path)
-				.queryParam("pattern", argl1);
-		final ResponseEntity<List> resp = restTemplate.exchange(uriBuilder.build().toUri(), HttpMethod.GET, request, List.class);
-		return resp.getBody();
+				.queryParam("pattern", pattern)
+				.build()
+				.toUri();
+		return get(uri, HttpMethod.GET, List.class);
 	}
 
+	public <T> T get(URI uri, HttpMethod method, Class<T> clazz) {
+		final HttpEntity<String> request = new HttpEntity<>(httpHeaders);
+		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
+		return resp.getBody();
+	}
 }
