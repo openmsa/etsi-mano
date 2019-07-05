@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -345,8 +346,11 @@ public class DefaultApiServiceImpl extends BaseApi implements DefaultApi {
 		final String _self = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "nsDescriptorsNsdInfoIdGet")).build(id).getUri().toString();
 		final String _nsdContent = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "nsDescriptorsNsdInfoIdNsdContentGet")).build(id).getUri().toString();
 		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id, _self, _nsdContent);
-		final Object userDefinedData = nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
+		final  Map<String, Object> userDefinedData = (Map<String, Object>) nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		resp.setUserDefinedData(userDefinedData);
+		List<String> vnfPkgIds = (List<String>) userDefinedData.get("vnfPkgIds");
+		resp.setVnfPkgIds(vnfPkgIds);
+		
 		nsdRepository.save(resp);
 		return resp;
 	}
