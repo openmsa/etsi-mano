@@ -26,7 +26,7 @@ class BaseApi
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 		if ($httpCode < 200 || $httpCode > 299) {
-			throw new Exception('Error ' . $_url . ' Code: ' . $httpCode);
+			throw new Exception('Error ' . $this->baseUrl . $_url . ' Code: ' . $httpCode);
 		}
 		return $response;
 	}

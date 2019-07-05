@@ -2,28 +2,41 @@
 <metadata>
     <map>
         <entry>
+            <key>MODEL</key>
+        </entry>
+        <entry>
             <key>FILE_TYPE</key>
             <value>text</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1561642199804</value>
+            <value>1562166465881</value>
         </entry>
         <entry>
             <key>COMMENT</key>
             <value></value>
         </entry>
         <entry>
-            <key>DATE_CREATION</key>
-            <value>1527154971674</value>
+            <key>REPOSITORY</key>
         </entry>
         <entry>
-            <key>TAG</key>
+            <key>DATE_CREATION</key>
+            <value>1562166465753</value>
+        </entry>
+        <entry>
+            <key>MANUFACTURER</key>
+        </entry>
+        <entry>
+            <key>CONFIGURATION_FILTER</key>
             <value></value>
         </entry>
         <entry>
             <key>TYPE</key>
             <value>UPLOAD</value>
+        </entry>
+        <entry>
+            <key>TAG</key>
+            <value></value>
         </entry>
     </map>
 </metadata>

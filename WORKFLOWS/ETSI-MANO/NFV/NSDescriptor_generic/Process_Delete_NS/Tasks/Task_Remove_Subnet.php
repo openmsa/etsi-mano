@@ -11,7 +11,7 @@ $device_id = substr($context['deviceid'], 3);
 
 foreach ($context['networks'] as $network) {
 
-$cidr = $network['subnet_cidr'];
+//$cidr = $network['subnet_cidr'];
 $subnet_id = $network['subnet_id'];
 
 //if ($cidr === "192.168.1.0/24" || $cidr === "25.0.0.0/24" || $cidr === "31.0.0.0/24") {

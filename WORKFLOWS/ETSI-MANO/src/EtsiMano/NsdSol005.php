@@ -12,7 +12,7 @@ class NsdSol005 extends BaseApi
 	public function nsDescriptorsGet()
 	{
 		$url_frag = 'sol005/nsd/v1/ns_descriptors';
-		return json_decode($this->doGet($url_frag), JSON_OBJECT_AS_ARRAY);
+		return json_decode($this->doGet($url_frag), 1);
 	}
 
 	/**
@@ -25,7 +25,7 @@ class NsdSol005 extends BaseApi
 	public function nsDescriptorsNsdInfoIdGet($nsdInfoId)
 	{
 		$url_frag = 'sol005/nsd/v1/ns_descriptors/' . $nsdInfoId;
-		return json_decode($this->doGet($url_frag), JSON_OBJECT_AS_ARRAY);
+		return json_decode($this->doGet($url_frag), 1);
 	}
 
 	/**

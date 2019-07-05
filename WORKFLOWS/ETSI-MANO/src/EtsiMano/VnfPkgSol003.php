@@ -14,7 +14,7 @@ class VnfPkgSol003 extends BaseApi
 	public function vnfPackagesVnfPkgIdGet($vnf_pkg_id)
 	{
 		$url_frag = 'sol003/vnfpkgm/v1/vnf_packages/' . urlencode($vnf_pkg_id);
-		return json_decode($this->doGet($url_frag), JSON_OBJECT_AS_ARRAY);
+		return json_decode($this->doGet($url_frag), 1);
 	}
 
 	/**
@@ -25,7 +25,7 @@ class VnfPkgSol003 extends BaseApi
 	public function vnfPackagesGet()
 	{
 		$url_frag = 'sol003/vnfpkgm/v1/vnf_packages';
-		return json_decode($this->doGet($url_frag), JSON_OBJECT_AS_ARRAY);
+		return json_decode($this->doGet($url_frag), 1);
 	}
 
 	/**
