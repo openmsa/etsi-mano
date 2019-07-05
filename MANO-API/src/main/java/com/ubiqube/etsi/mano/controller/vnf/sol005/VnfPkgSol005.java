@@ -42,9 +42,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
+import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
+import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -64,6 +66,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
@@ -102,11 +105,15 @@ public class VnfPkgSol005 extends BaseApi {
 
 	private static final String SOL005 = "SOL005";
 	private final VnfManagement vnfManagement;
+	private final ManufacturerModel manufacturerModel;
+	private final DeviceService deviceService;
 
 	@Inject
-	public VnfPkgSol005(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
+	public VnfPkgSol005(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
 		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
 		vnfManagement = _vnfManagement;
+		manufacturerModel = _manufacturerModel;
+		deviceService = _deviceService;
 	}
 
 	@GET
@@ -344,22 +351,45 @@ public class VnfPkgSol005 extends BaseApi {
 		vnfPkgInfo.setLinks(links);
 		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
 		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
+		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
+		String content;
+		try {
+			content = mapper.writeValueAsString(userData.get("heat"));
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
+		checkUserData(userData);
 		vnfPackageRepository.save(vnfPkgInfo);
 		// Return.
 		URI uri;
 		try {
 			uri = new URI(self.getHref());
-			final Map<String, String> userData = (Map<String, String>) vnfPkgInfo.getUserDefinedData();
-			final String content = mapper.writeValueAsString(userData.get("heat"));
-			repositoryService.addFile(REPOSITORY_NVFO_DATAFILE_BASE_PATH + '/' + vnfPkgId + "/vnfd.json", "SOL005", "", content, "ncroot");
-		} catch (final URISyntaxException e) {
-			throw new GenericException(e);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		} catch (final ServiceException e) {
+			repositoryService.addFile(REPOSITORY_NVFO_DATAFILE_BASE_PATH + '/' + vnfPkgId + "/vnfd.json", SOL005, "", content, NCROOT);
+		} catch (final URISyntaxException | ServiceException e) {
 			throw new GenericException(e);
 		}
 		return Response.status(201).contentLocation(uri).entity(vnfPackagesVnfPkgIdGetResponse).build();
+	}
+
+	private void checkUserData(Map<String, Object> userData) {
+		final String vimId = (String) userData.get("vimId");
+		if (null == vimId) {
+			throw new BadRequestException("vimId could not be null");
+		}
+		try {
+			deviceService.getDeviceId(vimId);
+		} catch (final ServiceException e) {
+			throw new BadRequestException("vimId is not found in MSA.");
+		}
+		final String manufacturerId = (String) userData.get("manufacturerId");
+		assert (null != manufacturerId);
+		final String modelId = (String) userData.get("modelId");
+		assert (null != modelId);
+		// Probably not the best place to do that.
+		final String manufacturer = manufacturerModel.getManufacturerById(manufacturerId);
+		final String model = manufacturerModel.getModelById(manufacturerId, modelId);
+		userData.put("manufacturer", manufacturer);
+		userData.put("model", model);
 	}
 
 	/**
@@ -535,7 +565,7 @@ public class VnfPkgSol005 extends BaseApi {
 
 			final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(fileName).toString();
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-			final byte buffer[] = new byte[1024];
+			final byte[] buffer = new byte[1024];
 			int read;
 			while ((read = zis.read(buffer)) != -1) {
 				baos.write(buffer, 0, read);
