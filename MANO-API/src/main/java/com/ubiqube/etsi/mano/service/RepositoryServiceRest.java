@@ -76,7 +76,7 @@ public class RepositoryServiceRest implements RepositoryService {
 		return get(uri, HttpMethod.GET, List.class);
 	}
 
-	public <T> T get(URI uri, HttpMethod method, Class<T> clazz) {
+	private <T> T get(URI uri, HttpMethod method, Class<T> clazz) {
 		final HttpEntity<String> request = new HttpEntity<>(httpHeaders);
 		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
 		return resp.getBody();
