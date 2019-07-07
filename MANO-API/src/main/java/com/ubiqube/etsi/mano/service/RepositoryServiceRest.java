@@ -19,7 +19,6 @@ import com.ubiqube.api.interfaces.repository.RepositoryService;
 public class RepositoryServiceRest implements RepositoryService {
 	private final static String URL = "http://localhost:8080/ubi-api-rest";
 
-	private RepositoryService repositoryService;
 	private final RestTemplate restTemplate;
 
 	private final HttpHeaders httpHeaders;
@@ -31,38 +30,95 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public RepositoryElement getElement(String uri) {
-		return repositoryService.getElement(uri);
+	public RepositoryElement getElement(String path) {
+		final URI uri = apiUriBuilder()
+				.pathSegment("repository/v1/element")
+				.queryParam("URI", path)
+				.build()
+				.toUri();
+		return get(uri, HttpMethod.GET, RepositoryElementModel.class);
+	}
+
+	static class RepositoryElementModel implements RepositoryElement {
+		public String type;
+		public String name;
+		public String displayName;
+		public Boolean file;
+		public String uri;
+		public String repositoryName;
+		public String parentURI;
+		public String fileType;
+
+		public String getName() {
+			return name;
+		}
 	}
 
 	@Override
 	public byte[] getRepositoryElementContent(RepositoryElement repositoryElement) {
-		return repositoryService.getRepositoryElementContent(repositoryElement);
+		final URI uri = apiUriBuilder()
+				.pathSegment("repository/v1/repository-content")
+				.queryParam("fileURI", ((RepositoryElementModel)repositoryElement).uri)
+				.build()
+				.toUri();
+		return get(uri, HttpMethod.GET, String.class)
+			.getBytes(); // TODO: check if returned string needs decoding
 	}
 
 	@Override
-	public boolean exists(String uri) throws ServiceException {
-		return repositoryService.exists(uri);
+	public boolean exists(String path) throws ServiceException {
+		final URI uri = apiUriBuilder()
+				.pathSegment("repository/v1/exists")
+				.queryParam("uri", path)
+				.build()
+				.toUri();
+		return get(uri, HttpMethod.GET, UbiBoolModel.class)
+			.exists;
+	}
+
+	static class UbiBoolModel {
+		public boolean exists;
 	}
 
 	@Override
 	public void deleteRepositoryElement(RepositoryElement repositoryElement, String user) {
-		repositoryService.deleteRepositoryElement(repositoryElement, user);
+		final URI uri = apiUriBuilder()
+				.pathSegment("repository/v1/repository")
+				.queryParam("elementURI", ((RepositoryElementModel)repositoryElement).uri)
+				.build()
+				.toUri();
+		get(uri, HttpMethod.DELETE, String.class);
 	}
 
 	@Override
-	public void addFile(String uri, String arg2, String arg3, String arg4, String user) {
-		repositoryService.addFile(uri, arg2, arg3, arg4, user);
+	public void addFile(String path, String arg2, String arg3, String arg4, String user) {
+		final URI uri = apiUriBuilder()
+				.pathSegment("repository/v1/file")
+				.queryParam("uri", path)
+				.queryParam("comment", arg2)
+				.queryParam("tag", arg3)
+				.queryParam("binary", "true")
+				.queryParam("content", arg4)
+				.build()
+				.toUri();
+		get(uri, HttpMethod.POST, String.class);
 	}
 
 	@Override
 	public void addFile(String uri, String arg2, String arg3, byte[] arg4, String user) {
-		repositoryService.addFile(uri, arg2, arg3, arg4, user);
+		addFile(uri, arg2, arg3, new String(arg4), user);
 	}
 
 	@Override
 	public void addDirectory(String path, String arg1, String arg2, String user) {
-		repositoryService.addDirectory(path, arg1, arg2, user);
+		final URI uri = apiUriBuilder()
+				.pathSegment("repository/v1/directory")
+				.queryParam("uri", path)
+				.queryParam("comment", arg1)
+				.queryParam("tag", arg2)
+				.build()
+				.toUri();
+		get(uri, HttpMethod.POST, String.class);
 	}
 
 	@Override
