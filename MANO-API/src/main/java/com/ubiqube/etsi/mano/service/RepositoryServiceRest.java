@@ -67,7 +67,7 @@ public class RepositoryServiceRest implements RepositoryService {
 
 	@Override
 	public List<String> doSearch(String path, String pattern) throws ServiceException {
-		final URI uri = UriComponentsBuilder.fromHttpUrl(URL)
+		final URI uri = apiUriBuilder()
 				.pathSegment("repository/v1/search")
 				.queryParam("URI", path)
 				.queryParam("pattern", pattern)
@@ -80,5 +80,9 @@ public class RepositoryServiceRest implements RepositoryService {
 		final HttpEntity<String> request = new HttpEntity<>(httpHeaders);
 		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
 		return resp.getBody();
+	}
+
+	private UriComponentsBuilder apiUriBuilder() {
+		return UriComponentsBuilder.fromHttpUrl(URL);
 	}
 }
