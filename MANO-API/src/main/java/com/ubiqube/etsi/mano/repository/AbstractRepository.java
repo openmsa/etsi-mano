@@ -13,7 +13,6 @@ public abstract class AbstractRepository<T> {
 	protected RepositoryService repositoryService;
 
 	public AbstractRepository() {
-/*
 		try {
 			final InitialContext jndiContext = new InitialContext();
 			repositoryService = (RepositoryService) jndiContext.lookup("ubi-jentreprise/RepositoryManagerBean/remote-com.ubiqube.api.interfaces.repository.RepositoryService");
@@ -21,7 +20,6 @@ public abstract class AbstractRepository<T> {
 		} catch (final NamingException e) {
 			throw new GenericException(e);
 		}
-*/
 	}
 
 	abstract T get(String id);

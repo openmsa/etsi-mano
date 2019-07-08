@@ -71,14 +71,12 @@ public class DefaultApiServiceImpl implements DefaultApi {
 	private final NsdRepository nsdRepository = new NsdRepository();
 
 	public DefaultApiServiceImpl() {
-/*
 		try {
 			final InitialContext jndiContext = new InitialContext();
 			deviceService = (DeviceService) jndiContext.lookup(DeviceService.RemoteJNDIName);
 		} catch (final NamingException e) {
 			e.printStackTrace();
 		}
-*/
 	}
 
 	/**
