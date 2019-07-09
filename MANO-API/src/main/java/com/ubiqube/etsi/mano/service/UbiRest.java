@@ -25,11 +25,21 @@ public class UbiRest {
 
 	public <T> T call(URI uri, HttpMethod method, Class<T> clazz) {
 		final HttpEntity<String> request = new HttpEntity<>(httpHeaders);
-		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
-		return resp.getBody();
+		return _call(uri, method, request, clazz);
+	}
+
+	public <T> T call(URI uri, HttpMethod method, Object body, Class<T> clazz) {
+		final HttpEntity<Object> request = new HttpEntity<>(body, httpHeaders);
+		return _call(uri, method, request, clazz);
 	}
 
 	public UriComponentsBuilder uriBuilder() {
 		return UriComponentsBuilder.fromHttpUrl(URL);
 	}
+
+	private <T, Tbody> T _call(URI uri, HttpMethod method, HttpEntity<Tbody> request, Class<T> clazz) {
+		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
+		return resp.getBody();
+	}
+
 }
