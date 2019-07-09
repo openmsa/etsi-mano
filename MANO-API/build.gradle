@@ -60,6 +60,9 @@ dependencies {
 	compile group: "com.github.fge", name: "json-patch", version: '1.9'
 }
 
+springBoot {
+	mainClassName = 'com.ubiqube.etsi.mano.config.JerseyConfig'
+}
 
 task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"

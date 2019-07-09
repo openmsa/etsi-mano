@@ -91,7 +91,7 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public void addFile(String path, String arg2, String arg3, String arg4, String user) {
+	public void addFile(String path, String arg2, String arg3, String arg4, String user) throws ServiceException {
 		final URI uri = apiUriBuilder()
 				.pathSegment("repository/v1/file")
 				.queryParam("uri", path)
@@ -105,7 +105,7 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public void addFile(String uri, String arg2, String arg3, byte[] arg4, String user) {
+	public void addFile(String uri, String arg2, String arg3, byte[] arg4, String user) throws ServiceException {
 		addFile(uri, arg2, arg3, new String(arg4), user);
 	}
 

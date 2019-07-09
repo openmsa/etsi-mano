@@ -5,8 +5,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.netcelo.ses.entities.device.Manufacturer;
-import com.netcelo.ses.entities.device.Model;
+import com.ubiqube.api.entities.device.Manufacturer;
+import com.ubiqube.api.entities.device.Model;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.exception.GenericException;
