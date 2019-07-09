@@ -1,15 +1,8 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol003;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -27,50 +20,33 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.controller.BaseApi;
-import com.ubiqube.etsi.mano.controller.vnf.sol005.VnfManagement;
-import com.ubiqube.etsi.mano.exception.BadRequestException;
-import com.ubiqube.etsi.mano.exception.ConflictException;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPostQuery;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
-import com.ubiqube.etsi.mano.utils.Notifications;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
-import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -91,8 +67,10 @@ import net.sf.json.JSONObject;
  */
 @Path("/sol003/vnfpkgm/v1")
 @Api(value = "/sol003/vnfpkgm/v1", description = "")
-public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
-	private static final Logger LOGGER = LoggerFactory.getLogger(VnfPkgSol003.class);
+public class VnfPkgSol003 extends BaseApi {
+	private static final String SUBSCRIPTIONS_SUBSCRIPTION_ID_GET = "subscriptionsSubscriptionIdGet";
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPkgSol003.class);
 	private final VnfManagement vnfManagement;
 
 	@Inject
@@ -101,33 +79,14 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 		vnfManagement = _vnfManagement;
 	}
 
-	/**
-	 * Map YAML file to JsonObject.
-	 *
-	 * @param yaml VNF Package Metadata from repository
-	 * @return the JsonObject as a String
-	 */
-	private static String convertYamlToJson(final String yaml) {
-		try {
-			final ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-			final Object obj = yamlReader.readValue(yaml, Object.class);
-			final ObjectMapper jsonWriter = new ObjectMapper();
-			return jsonWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
 	@GET
 	@Path("/subs")
 	@Consumes({ "application/json" })
 	@Produces({ "application/json" })
 	@ApiOperation(value = "Query multiple subscriptions.", tags = {})
-	public List<InlineResponse2001> subscriptionsGet(InlineResponse2001 inlineResponse2001, @Context SecurityContext securityContext) {
-		LOGGER.info(inlineResponse2001.toString());
-		final ArrayList<InlineResponse2001> list = new ArrayList<InlineResponse2001>();
+	public List<InlineResponse2001> subscriptionsGet(InlineResponse2001 inlineResponse2001) {
+		LOG.info("Subs");
+		final ArrayList<InlineResponse2001> list = new ArrayList<>();
 		list.add(inlineResponse2001);
 		return list;
 	}
@@ -150,30 +109,8 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@Override
-	public List<SubscriptionsPkgmSubscription> subscriptionsGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter, @Context SecurityContext securityContext) {
-		List<String> listFilesInFolder;
-		try {
-			listFilesInFolder = repositoryService.doSearch(REPOSITORY_SUBSCRIPTION_BASE_PATH, "");
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
-		final List<SubscriptionsPkgmSubscription> response = new ArrayList<SubscriptionsPkgmSubscription>();
-		for (final String entry : listFilesInFolder) {
-			final RepositoryElement repositoryElement = repositoryService.getElement(entry);
-			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
-			try {
-				final SubscriptionObject subscriptionObject = mapper.readValue(content, SubscriptionObject.class);
-
-				final InlineResponse2001 pack = new InlineResponse2001();
-				final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
-				pack.setPkgmSubscription(subscriptionsPkgmSubscription);
-				response.add(subscriptionsPkgmSubscription);
-			} catch (final Exception e) {
-				throw new GenericException(e);
-			}
-		}
-		return response;
+	public List<SubscriptionsPkgmSubscription> subscriptionsGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter) {
+		return vnfManagement.subscriptionsGet(filter);
 	}
 
 	/**
@@ -204,27 +141,12 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class), @ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
 			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class), @ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@Override
-	public List<InlineResponse2001> subscriptionsPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, String body, @Context SecurityContext securityContext, @Context UriInfo uriInfo) {
+	public List<InlineResponse2001> subscriptionsPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, String body, @Context UriInfo uriInfo) {
 		final SubscriptionsPostQuery subscriptionsPostQuery = string2Object(body, SubscriptionsPostQuery.class);
-
 		// Job
 		final String id = UUID.randomUUID().toString();
-		// Response
-		final ArrayList<InlineResponse2001> response = new ArrayList<InlineResponse2001>();
-		final String callback = subscriptionsPostQuery.getPkgmSubscriptionRequest().getCallbackUri();
-		final String href = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(id).getUri().toString();
-		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getPkgmSubscriptionRequest().getFilter();
-		final SubscriptionsPkgmSubscription subscription = new SubscriptionsPkgmSubscription(callback, id, href, filter);
-
-		final InlineResponse2001 pack = new InlineResponse2001();
-		pack.setPkgmSubscription(subscription);
-		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getPkgmSubscriptionRequest().getAuthentication(), subscription);
-		subscriptionRepository.save(subscriptionObject);
-
-		response.add(pack);
-
-		return response;
+		final String href = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(id).getUri().toString();
+		return vnfManagement.subscriptionsPost(subscriptionsPostQuery, href, id);
 	}
 
 	/**
@@ -233,7 +155,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * The DELETE method terminates an individual subscription.
 	 *
 	 */
-	@Override
 	@DELETE
 	@Path("/subscriptions/{subscriptionId}")
 	@Consumes({ "application/json" })
@@ -243,8 +164,8 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public void subscriptionsSubscriptionIdDelete(@PathParam("subscriptionId") String subscriptionId, @Context SecurityContext securityContext) {
-		subscriptionRepository.delete(subscriptionId);
+	public void subscriptionsSubscriptionIdDelete(@PathParam("subscriptionId") String subscriptionId) {
+		vnfManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
 	}
 
 	/**
@@ -254,7 +175,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * subscription.
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/subscriptions/{subscriptionId}")
 	@Consumes({ "application/json" })
@@ -264,8 +184,8 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public String subscriptionsSubscriptionIdGet(@PathParam("subscriptionId") String subscriptionId, @HeaderParam("Accept") String accept, @Context SecurityContext securityContext) {
-		final SubscriptionsPkgmSubscription subs = subscriptionRepository.get(subscriptionId).getSubscriptionsPkgmSubscription();
+	public String subscriptionsSubscriptionIdGet(@PathParam("subscriptionId") String subscriptionId, @HeaderParam("Accept") String accept) {
+		final SubscriptionsPkgmSubscription subs = vnfManagement.subscriptionsSubscriptionIdGet(subscriptionId);
 		return object2String(subs);
 
 	}
@@ -279,7 +199,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * query parameters, request and response data structures, and response codes.
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/URI_is_provided_by_the_client_when_creating_the_subscription-VnfPackageChangeNotification")
 	@Consumes({ "application/json" })
@@ -288,7 +207,7 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification endpoint was tested successfully. The response body shall be empty.  "), @ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionVnfPackageChangeNotificationGet(@HeaderParam("Accept") String accept, @Context SecurityContext securityContext) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionVnfPackageChangeNotificationGet(@HeaderParam("Accept") String accept) {
 		// Nothing.
 	}
 
@@ -301,7 +220,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * and response codes.
 	 *
 	 */
-	@Override
 	@POST
 	@Path("/vnfPackageChangeNotification")
 	@Consumes({ "application/json" })
@@ -310,24 +228,17 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification was delivered successfully. "), @ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public void vnfPackageChangeNotificationPost(String body, @Context UriInfo uriInfo, @Context SecurityContext securityContext) {
+	public void vnfPackageChangeNotificationPost(String body, @Context UriInfo uriInfo) {
 		final NotificationsMessage notificationsMessage = string2Object(body, NotificationsMessage.class);
 
-		final Notifications notifications = new Notifications();
 		final String id = UUID.randomUUID().toString();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 
-		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
-		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
-		final String callbackUri = subscriptionsRepository.getSubscriptionsPkgmSubscription().getCallbackUri();
-
 		final String hrefVnfPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString();
-		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(subscriptionId).getUri().toString();
+		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(subscriptionId).getUri().toString();
 
-		final VnfPackageChangeNotification vnfPackageChangeNotification = new VnfPackageChangeNotification(id, vnfPkgId, vnfdId, subscriptionId, hrefVnfPackage, hrefSubscription);
-		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
+		vnfManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, hrefVnfPackage, hrefSubscription);
 	}
 
 	/**
@@ -339,34 +250,28 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * and response codes.
 	 *
 	 */
-	@Override
 	@POST
 	@Path("/vnfPackageOnboardingNotification")
 	@Consumes({ "application/json" })
 	@Produces({ "application/json" })
 	@ApiOperation(value = "Notify about VNF package onboarding or change", tags = {})
-	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification was delivered successfully.   "), @ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
-			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification was delivered successfully.   "),
+			@ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class),
+			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
+			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
+			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public void vnfPackageOnboardingNotificationPost(String body, @Context UriInfo uriInfo, @Context SecurityContext securityContext) {
+	public void vnfPackageOnboardingNotificationPost(String body, @Context UriInfo uriInfo) {
 		final NotificationsMessage notificationsMessage = string2Object(body, NotificationsMessage.class);
 
-		final Notifications notifications = new Notifications();
 		final String id = UUID.randomUUID().toString();
-
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
-		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
-		final SubscriptionsPkgmSubscription req = subscriptionsRepository.getSubscriptionsPkgmSubscription();
-		final String cbUrl = req.getCallbackUri();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-		final String vnfdId = notificationsMessage.getVnfdId();
-		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
-		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "subscriptionsSubscriptionIdGet")).build(subscriptionId).getUri().toString();
+		final String hrefSubscription = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), SUBSCRIPTIONS_SUBSCRIPTION_ID_GET)).build(subscriptionId).getUri().toString();
 		final String hrefPackage = Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfPackagesVnfPkgIdGet")).build(vnfPkgId).getUri().toString();
-		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = new NotificationVnfPackageOnboardingNotification(id, "", subscriptionId, vnfPkgId, vnfdId, hrefSubscription, hrefPackage);
 
-		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
+		vnfManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, hrefSubscription, hrefPackage);
 	}
 
 	/**
@@ -378,36 +283,24 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * data structures, and response codes.
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/vnf_packages")
 	@Consumes({ "application/json" })
 	@Produces({ "application/json" })
 	@ApiOperation(value = "Query VNF packages information.", tags = {})
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "200 OK Information of the selected VNF packages. ", response = Object.class, responseContainer = "List"), @ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
-			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
-			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "200 OK Information of the selected VNF packages. ", response = Object.class, responseContainer = "List"),
+			@ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class),
+			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
+			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
+			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
+			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
+			@ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
+			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesGet(@HeaderParam("Accept") String accept, @Context UriInfo uriInfo, @Context SecurityContext securityContext) throws ServiceException {
-
-		LOGGER.info(new StringBuilder("Method called: ").append(new Object() {
-		}.getClass().getEnclosingMethod().getName()).toString());
-
-		final List<String> vnfPkgsIdsList = getVnfPkgIdsFromRepository();
-
-		// TODO - Refactor this method to map vnfpkgInfo from YAML to VnfPkgInfo object
-		// and return a list of VnfPackagesVnfPkgIdGetResponse.
-
-		JSONArray vnfPkginfos = new JSONArray();
-		for (final String vnfPckId : vnfPkgsIdsList) {
-			final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/")
-					.append(vnfPckId).append("/").append("Metadata.yaml").toString();
-			final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
-			final JSONObject contentJson = JSONObject.fromObject(convertYamlToJson(content));
-			vnfPkginfos = applyAttributebasedFilteringAndSelectors(uriInfo, vnfPkginfos, contentJson);
-		}
-		return Response.ok(vnfPkginfos).build();
+	public Response vnfPackagesGet(@HeaderParam("Accept") String accept, @Context UriInfo uriInfo) throws ServiceException {
+		final MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
+		final JSONArray resp = vnfManagement.vnfPackagesGet(queryParameters);
+		return Response.ok(resp).build();
 	}
 
 	/**
@@ -419,7 +312,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * and response codes.
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/vnf_packages/{vnfPkgId}/artifacts/{artifactPath:.*}")
 	@Produces({ MediaType.APPLICATION_JSON, "application/zip" })
@@ -429,21 +321,8 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class), @ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 409, message = "Conflict. Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to any of the following scenarios: - Disable a VNF package resource of hich the operational state is not ENABLED - Enable a VNF package resource of which the operational state is not DISABLED The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathParam("vnfPkgId") String vnfPkgId, @PathParam("artifactPath") String artifactPath, @HeaderParam("Accept") String accept, @Context SecurityContext securityContext, @HeaderParam("Range") String range) throws ServiceException {
-
-		LOGGER.info(new StringBuilder("Method called: ").append(new Object() {
-		}.getClass().getEnclosingMethod().getName()).toString());
-
-		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
-
-		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(artifactPath.trim()).toString(), "");
-
-		if (listvnfPckgFiles.size() != 0) {
-			final Response response = getZipArchive(range, listvnfPckgFiles);
-			return response;
-		}
-		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
-				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
+	public Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathParam("vnfPkgId") String vnfPkgId, @PathParam("artifactPath") String artifactPath, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) throws ServiceException {
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
 
 	/**
@@ -452,7 +331,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * The GET method reads the information of a VNF package.
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/vnf_packages/{vnfPkgId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -462,8 +340,8 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, accept);
+	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return Response.ok(vnfPkgInfo).build();
@@ -481,7 +359,6 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * @throws ServiceException
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/vnf_packages/{vnfPkgId}/package_content")
 	@Produces({ MediaType.APPLICATION_JSON, "application/zip" })
@@ -491,21 +368,8 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class), @ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 409, message = "Conflict. Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact that \"onboardingState\" of the VNF package has a value different from \"ONBOARDED\". The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @Context SecurityContext securityContext, @HeaderParam("Range") String range) throws ServiceException {
-
-		LOGGER.info(new StringBuilder("Method called: ").append(new Object() {
-		}.getClass().getEnclosingMethod().getName()).toString());
-
-		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
-
-		// List vnfd package from repository
-		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).toString(), "");
-
-		if (listvnfPckgFiles.size() != 0) {
-			final Response response = getZipArchive(range, listvnfPckgFiles);
-			return response;
-		}
-		throw new NotFoundException("VNF package content not found for vnfPkgId: " + vnfPkgId);
+	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) {
+		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
 	/**
@@ -535,330 +399,17 @@ public class VnfPkgSol003 extends BaseApi implements DefaultSol003Api {
 	 * and response codes.
 	 *
 	 */
-	@Override
 	@GET
 	@Path("/vnf_packages/{vnfPkgId}/vnfd")
-	@Produces({ MediaType.TEXT_PLAIN, "application/zip" })
+	@Produces({ "*/*" })
 	@ApiOperation(value = "Read VNFD of an on-boarded VNF package.", tags = {})
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "200 OK On success, the content of the VNFD is returned. The payload body shall contain a copy of the file representing the VNFD or a ZIP file that contains the file or multiple files representing the VNFD, as specified above. The \"Content-Type\" HTTP header shall be set according to the format of the returned file, i.e. to \"text/plain\" for a YAML file or to \"application/zip\" for a ZIP file. "), @ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class), @ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
 			@ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = ProblemDetails.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = ProblemDetails.class), @ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 409, message = "Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact that \"onboardingState\" of the VNF package has a value different from \"ONBOARDED\". The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error.         ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfPackagesVnfPkgIdVnfdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @Context SecurityContext securityContext) throws ServiceException {
-
-		LOGGER.info(new StringBuilder("Method called: ").append(new Object() {
-		}.getClass().getEnclosingMethod().getName()).toString());
-
-		final List<String> listvnfPckgFiles = new LinkedList();
-
-		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
-
-		// TODO - Implement VNFD multi-files support
-		final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append("vnfd.json").toString();
-		listvnfPckgFiles.add(uri);
-
-		boolean isVnfd;
-
-		isVnfd = repositoryService.exists(uri);
-
-		if (isVnfd) {
-			if (MediaType.TEXT_PLAIN.equals(accept)) {
-				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
-				return Response.ok(content, MediaType.APPLICATION_JSON).build();
-			} else if ("application/zip".equals(accept)
-					|| ("application/zip".equals(accept) && MediaType.TEXT_PLAIN.equals(accept))) {
-				return getZipArchive(null, listvnfPckgFiles);
-			}
-		}
-		throw new NotFoundException("VNFD not found for vnfPkg with id: " + vnfPkgId);
-	}
-
-	/**
-	 * Get the list of VNF Packages Information corresponding IDs.
-	 *
-	 * @return <b>vnfPackageIdList</b> VNF Packages details IDs list.
-	 * @throws ServiceException
-	 */
-	private List<String> getVnfPkgIdsFromRepository() throws ServiceException {
-
-		// List vnfd package from repository
-		final List<String> listFilesInFolder = repositoryService.doSearch(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "");
-		final List<String> vnfPackageIdList = new ArrayList<String>();
-
-		// Split files path and store VNF Pckg Id
-		for (final String filePath : listFilesInFolder) {
-			final String[] splitArray = filePath.split("/", -1);
-			final String retrievedVnfPckId = splitArray[3];
-			vnfPackageIdList.add(retrievedVnfPckId);
-		}
-
-		final Set<String> set = new HashSet<String>(vnfPackageIdList);
-		vnfPackageIdList.clear();
-		vnfPackageIdList.addAll(set);
-
-		return vnfPackageIdList;
-	}
-
-	private JSONArray applyAttributebasedFilteringAndSelectors(UriInfo uriInfo, JSONArray vnfPkgInfos, JSONObject contentJson) {
-		// Get the dynamic paramaters attribute / value(s)
-		MultivaluedMap<String, String> queryParams;
-		queryParams = uriInfo.getQueryParameters();
-		String attributesParams = "";
-		List<String> attributesValuesParams = new LinkedList<String>();
-
-		// Get the filter parameter from the query params object.
-		for (final Map.Entry<String, List<String>> entry : queryParams.entrySet()) {
-			attributesParams = entry.getKey();
-			attributesValuesParams = entry.getValue();
-		}
-
-		// List of the fields exclude by default from the VNF Package Info
-		final ArrayList<String> listOfDefaultExcludeFields = new ArrayList<String>();
-		listOfDefaultExcludeFields.add("softwareImages");
-		listOfDefaultExcludeFields.add("additionalArtifacts");
-
-		// Filtering operation
-		if ("all_fields".equals(attributesParams)) {
-			vnfPkgInfos.add(contentJson);
-		} else if ("fields".equals(attributesParams)) {
-			keepFieldsInVnfPckgInfo(contentJson, attributesValuesParams, listOfDefaultExcludeFields);
-			vnfPkgInfos.add(contentJson);
-		} else if ("exclude_fields".equals(attributesParams) || "exclude_default".equals(attributesParams)) {
-			removeFields(contentJson, listOfDefaultExcludeFields);
-			vnfPkgInfos.add(contentJson);
-		} else {
-			final boolean isFilterMatched = isFilterMatched(attributesParams, attributesValuesParams, contentJson);
-			if (isFilterMatched) {
-				removeFields(contentJson, listOfDefaultExcludeFields);
-				vnfPkgInfos.add(contentJson);
-			}
-		}
-		return vnfPkgInfos;
-	}
-
-	/**
-	 * Method allows to archive VNF Package contents and artifacts.
-	 *
-	 * @param range
-	 * @param listvnfPckgFiles
-	 * @return
-	 *
-	 */
-	private Response getZipArchive(String range, List<String> listvnfPckgFiles) {
-
-		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
-		ByteArrayOutputStream bos;
-
-		try {
-			if (range == null) {
-				bos = zip.getZipFile();
-				final Response.ResponseBuilder response = Response.status(Response.Status.OK).type("application/zip").entity(new ByteArrayInputStream(bos.toByteArray()));
-				return response.build();
-
-			} else {
-				final RangeHeader rangeHeader = RangeHeader.fromValue(range);
-				bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
-				final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
-						.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
-				final Response.ResponseBuilder response = Response.status(Response.Status.PARTIAL_CONTENT).type("application/zip").entity(new ByteArrayInputStream(bos.toByteArray())).header("Content-Range", contentRange);
-				return response.build();
-			}
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(String vnfPkgId, boolean isCheckOnbordingStatus) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-
-		if (isCheckOnbordingStatus) {
-			final String onboardingState = vnfPkgInfo.getOnboardingState();
-			if (OnboardingStateEnum.PROCESSING.toString().equalsIgnoreCase(onboardingState)
-					|| OnboardingStateEnum.UPLOADING.toString().equalsIgnoreCase(onboardingState.toUpperCase())) {
-				throw new ConflictException("Conflict with the current VNF Package onbording state: " + onboardingState.toUpperCase());
-			}
-		} else {
-			return vnfPkgInfo;
-		}
-		return vnfPkgInfo;
-	}
-
-	/**
-	 * Private Method allows to search in VNFPackInfos the matched values based-on
-	 * filter input.
-	 *
-	 * @param attributesParams
-	 * @param attributesValuesParams
-	 * @param contentJson
-	 * @return TRUE if matched and FALSE in opposite.
-	 */
-	private boolean isFilterMatched(String attributesParams, List<String> attributesValuesParams, JSONObject contentJson) {
-		String filterOperator = "";
-
-		if (!("".equals(attributesParams) && attributesValuesParams.isEmpty())) {
-
-			final ArrayList<String> listOfAttribute = splitStringObj("\\.", attributesParams);
-
-			final String attributeValues = attributesValuesParams.get(0);
-			final ArrayList<String> listOfExpectedValues = splitStringObj(",", attributeValues);
-
-			// Retrieve the filter operator from filter attribute.
-			filterOperator = getOperatorFromList(listOfAttribute);
-
-			// Extract input attribute matched value(s).
-			final ArrayList<String> attrMatchedValues = extractAttrMatchedValues(listOfAttribute, contentJson);
-			// Apply the filter and return matched VNFPackage info(s)
-			return compareValuesBasedOnFilterOperator(listOfExpectedValues, attrMatchedValues, filterOperator);
-		}
-		return true;
-	}
-
-	/**
-	 * Private method allows to extract from VFND Infos (Json object) the attribute
-	 * value(s).
-	 *
-	 * @param listOfAttrName  Attribute
-	 * @param vnfPackInfoJson VNFD infos
-	 * @return List of the value(s)
-	 */
-	private ArrayList<String> extractAttrMatchedValues(ArrayList<String> listOfAttrName, JSONObject vnfPackInfoJson) throws BadRequestException {
-		final ArrayList<String> matchedValues = new ArrayList();
-		JSONObject vnfPackInfo = vnfPackInfoJson;
-
-		int index = 0;
-		if (isthereAnOperatorFilterInList(listOfAttrName)) {
-			index = 1;
-		}
-
-		// TODO - Extract object from Map Entry loop
-
-		for (final String key : listOfAttrName) {
-			final Object object = vnfPackInfo.get(key);
-			if (object == null) {
-				throw new com.ubiqube.etsi.mano.exception.BadRequestException("Wrong filter name: " + key);
-			}
-
-			if (((object instanceof JSONArray) || (object instanceof JSONObject)) && (index < (listOfAttrName.size() - index))) {
-				if (object instanceof JSONArray) {
-					for (int i = 0; i < ((JSONArray) object).size(); i++) {
-						final String value = (String) ((JSONArray) object).get(i);
-						if (value instanceof String) {
-							matchedValues.add(value);
-						}
-					}
-				} else {
-					vnfPackInfo = (JSONObject) object;
-				}
-			} else if (((object instanceof String) || (object instanceof Integer) || (object instanceof Boolean) || (object instanceof Character))
-					&& (index < (listOfAttrName.size() - index))) {
-				matchedValues.add(String.valueOf(object));
-			}
-		}
-		return matchedValues;
-	}
-
-	/**
-	 * private method allows to filter the inputs attributes matched values based-on
-	 * filtering operator.
-	 *
-	 * @param listOfExpectedValues
-	 * @param attrMatchedValues
-	 * @param filterOperator
-	 * @return boolean True if the operation result is true else false.
-	 */
-	private boolean compareValuesBasedOnFilterOperator(List<String> listOfExpectedValues, ArrayList<String> attrMatchedValues, String filterOperator) {
-		for (final String value : attrMatchedValues) {
-			for (final String expectedValue : listOfExpectedValues) {
-				// Attribute equal to one of the expect values in the list.
-				if ("".equals(filterOperator) || "eq".equals(filterOperator)) {
-					if (expectedValue.equals(value)) {
-						return true;
-					}
-				}
-				// Attribute not equal to any of the values in the list
-				if ("neq".equals(filterOperator)) {
-					if (!expectedValue.equals(value)) {
-						return true;
-					}
-				}
-				// Attribute greater than <value>
-
-				// TODO - Implementation for the other operators.
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Private method allows to slip a String object.
-	 *
-	 * @param regex
-	 * @param object
-	 * @return List of the split values
-	 */
-	private ArrayList<String> splitStringObj(String regex, String object) {
-		final ArrayList<String> list = new ArrayList();
-		list.addAll(Arrays.asList(object.split(regex)));
-
-		return list;
-	}
-
-	/**
-	 * Private method allows to check if a filtering operator in the list of
-	 * attributes name.
-	 *
-	 * @param listOfAttrName
-	 * @return If there is an filtering operator in the list return TRUE alse FALSE.
-	 */
-	private boolean isthereAnOperatorFilterInList(ArrayList<String> listOfAttrName) {
-		// Check the last attribute name if it an filtering operator or not.
-		final String lastAttribute = listOfAttrName.get(listOfAttrName.size() - 1);
-
-		if (!"".equals(getOperatorFromList(listOfAttrName))) {
-			return true;
-		}
-		return false;
-	}
-
-	private String getOperatorFromList(ArrayList<String> listOfAttrName) {
-		for (final String attribute : listOfAttrName) {
-			if ("eq".equals(attribute) || "neq".equals(attribute) || "gt".equals(attribute)
-					|| "lt".equals(attribute) || "gte".equals(attribute) || "lte".equals(attribute) || "cont".equals(attribute) || "ncont".equals(attribute)) {
-				return attribute;
-			}
-		}
-		return "";
-	}
-
-	private void keepFieldsInVnfPckgInfo(JSONObject contentJson, List<String> attributesValuesParams, ArrayList<String> listOfDefaultExcludeFields) {
-		final String attributeValues = attributesValuesParams.get(0);
-		final ArrayList<String> fieldsFromInput = splitStringObj(",", attributeValues);
-		final ArrayList<String> fieldsToRemove = listOfDefaultExcludeFields;
-
-		// Compare the both lists contents and remove them from the "excluded fields by
-		// default" the matched values.
-		fieldsToRemove.removeAll(fieldsFromInput);
-
-		// Remove the exclude fields not matched to the inputs fields list.
-		for (final String field : fieldsToRemove) {
-			removeField(contentJson, field);
-		}
-
-	}
-
-	private void removeField(JSONObject contentJson, String field) {
-		if (contentJson.containsKey(field)) {
-			contentJson.remove(field);
-		}
-
-	}
-
-	private void removeFields(JSONObject contentJson, ArrayList<String> fields) {
-		for (final String field : fields) {
-			removeField(contentJson, field);
-		}
+	public Response vnfPackagesVnfPkgIdVnfdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
 	}
 
 }

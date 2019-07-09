@@ -17,16 +17,19 @@ public class RuntimeExceptionMapper implements ExceptionMapper<Throwable> {
 
 	@Override
 	public Response toResponse(Throwable _exception) {
-		LOG.error("An error has occured.", _exception);
+		if (!_exception.getClass().getPackage().getName().startsWith("javax.ws.rs")) {
+			LOG.error("An error has occured.", _exception);
+		}
 		final int statusCode = 501;
 		if (_exception instanceof WebApplicationException) {
 			final WebApplicationException ex = (WebApplicationException) _exception;
-			final Response resp = ex.getResponse();
-			// We kill a lot of information here. :/
-			return Response.status(resp.getStatus())
-					.entity(new ProblemDetails(resp.getStatus(), ex.getMessage()))
-					.type(MediaType.APPLICATION_JSON_TYPE)
-					.build();
+			try (Response resp = ex.getResponse()) {
+				// We kill a lot of information here. :/
+				return Response.status(resp.getStatus())
+						.entity(new ProblemDetails(resp.getStatus(), ex.getMessage()))
+						.type(MediaType.APPLICATION_JSON_TYPE)
+						.build();
+			}
 		}
 		final String message = _exception.getMessage();
 		return Response.status(statusCode)

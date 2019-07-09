@@ -9,6 +9,9 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
 
 public class RequestRangeNotSatisfiableException extends WebApplicationException {
 
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	public RequestRangeNotSatisfiableException() {
 		super();
 	}

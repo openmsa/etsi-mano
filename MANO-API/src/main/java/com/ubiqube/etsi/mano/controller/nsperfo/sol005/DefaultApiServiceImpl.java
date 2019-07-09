@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.nsperfo.sol005;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Path;
@@ -42,9 +43,7 @@ public class DefaultApiServiceImpl implements DefaultApi {
 	 */
 	@Override
 	public List<Object> pmJobsGet(String accept, @Context SecurityContext securityContextn, String contentType, String filter, String allFields, String include, String exclude, String excludeDefault) {
-		// TODO: Implement...
-
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -112,9 +111,7 @@ public class DefaultApiServiceImpl implements DefaultApi {
 	 */
 	@Override
 	public List<Object> subscriptionsGet(String accept, @Context SecurityContext securityContextn, String filter) {
-		// TODO: Implement...
-
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -181,9 +178,7 @@ public class DefaultApiServiceImpl implements DefaultApi {
 	 */
 	@Override
 	public List<Object> thresholdsGet(String accept, @Context SecurityContext securityContextn, String filter) {
-		// TODO: Implement...
-
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**

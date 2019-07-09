@@ -2,18 +2,27 @@ package com.ubiqube.etsi.mano.repository;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 
 /**
- * A single way to handle subscrption storage.
+ * A single way to handle subscription storage.
  *
  * @author ovi@ubiqube.com
  *
  */
 @Repository
 public class SubscriptionRepository extends AbstractGenericRepository<SubscriptionObject> {
+	@Inject
+	public SubscriptionRepository(ObjectMapper _mapper, RepositoryService _repositoryService) {
+		super(_mapper, _repositoryService);
+	}
+
 	private static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
 
@@ -33,7 +42,7 @@ public class SubscriptionRepository extends AbstractGenericRepository<Subscripti
 	}
 
 	@Override
-	Class getClazz() {
+	Class<?> getClazz() {
 		return SubscriptionObject.class;
 	}
 

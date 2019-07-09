@@ -18,11 +18,24 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
 
+/**
+ * Landing JSON page in case of login error.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class Http403EntryPoint implements AuthenticationEntryPoint {
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(Http403EntryPoint.class);
+	/** Injected JSON object mapper. */
 	private final ObjectMapper mapper;
 
+	/**
+	 * Constructor
+	 *
+	 * @param _mapper JSON Object mapper.
+	 */
 	@Inject
 	public Http403EntryPoint(ObjectMapper _mapper) {
 		super();
@@ -34,6 +47,7 @@ public class Http403EntryPoint implements AuthenticationEntryPoint {
 		LOG.error("Auth failed");
 		_response.setContentType(MediaType.APPLICATION_JSON);
 		_response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		_response.addHeader("WWW-Authenticate", "Basic realm=\"ETSI-MANO API Realm\"");
 		final PrintWriter out = _response.getWriter();
 		final ProblemDetails problemDetails = new ProblemDetails(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized.");
 		out.print(mapper.writeValueAsString(problemDetails));

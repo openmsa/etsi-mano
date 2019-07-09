@@ -7,9 +7,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	Http403EntryPoint http403EntryPoint;
@@ -26,10 +28,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		_auth.authenticationProvider(passthroughUserProvider);
 	}
 
+	/**
+	 * All request must be authenticated, No login page.
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+				.antMatchers("/openApi*").permitAll()
 				.anyRequest().authenticated()
-				.and().httpBasic().authenticationEntryPoint(http403EntryPoint);
+				.and().httpBasic().authenticationEntryPoint(http403EntryPoint)
+				.and().csrf().disable();
 	}
 }

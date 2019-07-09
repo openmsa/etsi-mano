@@ -2,14 +2,28 @@ package com.ubiqube.etsi.mano.repository;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
+/**
+ * Implementation of a repository for a VNFPackage document.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Repository
 public class VnfPackageRepository extends AbstractGenericRepository<VnfPkgInfo> {
+	@Inject
+	public VnfPackageRepository(ObjectMapper _mapper, RepositoryService _repositoryService) {
+		super(_mapper, _repositoryService);
+	}
 
-	private final static String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
+	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 
 	@Override
 	String getUriForId(String _id) {
@@ -27,7 +41,7 @@ public class VnfPackageRepository extends AbstractGenericRepository<VnfPkgInfo> 
 	}
 
 	@Override
-	Class getClazz() {
+	Class<?> getClazz() {
 		return VnfPkgInfo.class;
 	}
 

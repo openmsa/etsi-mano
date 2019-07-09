@@ -20,13 +20,16 @@ import com.fasterxml.jackson.databind.node.ValueNode;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
 /**
+ * Naive implementation of a Patch engine.
  *
- * @author ovi@ubiqube.com
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
 public class WeakPatcher implements Patcher {
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(WeakPatcher.class);
+	/** Json object mapper. */
 	private final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
