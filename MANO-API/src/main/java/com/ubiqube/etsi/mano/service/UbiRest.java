@@ -23,6 +23,22 @@ public class UbiRest {
 		httpHeaders.add("Authorization", "Basic bmNyb290Ok9wZW5NU0E=");
 	}
 
+	public <T> T get(URI uri, Class<T> clazz) {
+		return call(uri, HttpMethod.GET, clazz);
+	}
+
+	public <T> T post(URI uri, Class<T> clazz) {
+		return call(uri, HttpMethod.POST, clazz);
+	}
+
+	public <T> T post(URI uri, Object body, Class<T> clazz) {
+		return call(uri, HttpMethod.POST, body, clazz);
+	}
+
+	public <T> T delete(URI uri, Class<T> clazz) {
+		return call(uri, HttpMethod.DELETE, clazz);
+	}
+
 	public <T> T call(URI uri, HttpMethod method, Class<T> clazz) {
 		final HttpEntity<String> request = new HttpEntity<>(httpHeaders);
 		return _call(uri, method, request, clazz);
