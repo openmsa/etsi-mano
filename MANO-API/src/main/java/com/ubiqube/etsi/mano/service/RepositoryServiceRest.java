@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.service;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
@@ -22,7 +21,7 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("URI", path)
 				.build()
 				.toUri();
-		return rest.call(uri, HttpMethod.GET, RepositoryElementModel.class);
+		return rest.get(uri, RepositoryElementModel.class);
 	}
 
 	static class RepositoryElementModel implements RepositoryElement {
@@ -47,7 +46,7 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("fileURI", ((RepositoryElementModel)repositoryElement).uri)
 				.build()
 				.toUri();
-		return rest.call(uri, HttpMethod.GET, String.class)
+		return rest.get(uri, String.class)
 			.getBytes(); // TODO: check if returned string needs decoding
 	}
 
@@ -58,7 +57,7 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("uri", path)
 				.build()
 				.toUri();
-		return rest.call(uri, HttpMethod.GET, UbiBoolModel.class)
+		return rest.get(uri, UbiBoolModel.class)
 			.exists;
 	}
 
@@ -73,7 +72,7 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("elementURI", ((RepositoryElementModel)repositoryElement).uri)
 				.build()
 				.toUri();
-		rest.call(uri, HttpMethod.DELETE, String.class);
+		rest.delete(uri, String.class);
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("content", arg4)
 				.build()
 				.toUri();
-		rest.call(uri, HttpMethod.POST, String.class);
+		rest.post(uri, String.class);
 	}
 
 	@Override
@@ -104,7 +103,7 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("tag", arg2)
 				.build()
 				.toUri();
-		rest.call(uri, HttpMethod.POST, String.class);
+		rest.post(uri, String.class);
 	}
 
 	@Override
@@ -115,6 +114,6 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("pattern", pattern)
 				.build()
 				.toUri();
-		return rest.call(uri, HttpMethod.GET, List.class);
+		return rest.get(uri, List.class);
 	}
 }
