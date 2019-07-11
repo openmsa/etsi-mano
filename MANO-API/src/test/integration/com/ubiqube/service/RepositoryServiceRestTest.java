@@ -41,5 +41,6 @@ public class RepositoryServiceRestTest {
 			"Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php");
 		final byte res[] = repositoryServiceRest.getRepositoryElementContent(element);
 		assertNotNull("The element must not be null.", res);
+		assertTrue("The element must be PHP code", new String(res).startsWith("<?php"));
 	}
 }
