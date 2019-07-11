@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Base64;
 
 import org.springframework.stereotype.Service;
 
@@ -46,8 +47,10 @@ public class RepositoryServiceRest implements RepositoryService {
 				.queryParam("fileURI", ((RepositoryElementModel)repositoryElement).uri)
 				.build()
 				.toUri();
-		return rest.get(uri, String.class)
-			.getBytes(); // TODO: check if returned string needs decoding
+		return Base64.getDecoder().decode(
+			rest.get(uri, String.class)
+				.replaceAll("\"", "")
+		);
 	}
 
 	@Override
