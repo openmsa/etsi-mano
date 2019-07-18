@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +17,23 @@ public class PropertiesConfiguration implements Configuration {
 
 	public PropertiesConfiguration() {
 		props = new Properties();
-		final String filename = System.getProperty("user.home") + "/.mano/configuration.properties";
+		final String confDirName = System.getProperty("user.home") + "/.mano/";
+		final String filename = confDirName + "configuration.properties";
+
+		File confDir = new File(confDirName);
+		if (! confDir.exists()) {
+			confDir.mkdir();
+                }
+
+		File confFile = new File(filename);
+		if (! confFile.exists()) {
+			try {
+				confFile.createNewFile();
+			} catch (final IOException e) {
+				throw new GenericException(e);
+			}
+		}
+
 		try (InputStream inStream = new FileInputStream(filename);) {
 			props.load(inStream);
 		} catch (final IOException e) {
