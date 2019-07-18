@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 import net.sf.json.JSONArray;
@@ -48,8 +44,8 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	private final VnfManagement vnfManagement;
 
 	@Inject
-	public VnfPackageSol003Api(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public VnfPackageSol003Api(VnfManagement _vnfManagement, ObjectMapper _mapper) {
+		super(_mapper);
 		vnfManagement = _vnfManagement;
 	}
 

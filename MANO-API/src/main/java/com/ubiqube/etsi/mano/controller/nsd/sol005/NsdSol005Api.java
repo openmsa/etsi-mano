@@ -24,7 +24,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,9 +62,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingNotification;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostResponse;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
@@ -95,10 +91,13 @@ public class NsdSol005Api extends BaseApi implements NsdSol005 {
 
 	private final NsdRepository nsdRepository;
 
+	private final RepositoryService repositoryService;
+
 	@Inject
-	public NsdSol005Api(NsdRepository _nsdRepository, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public NsdSol005Api(NsdRepository _nsdRepository, ObjectMapper _mapper, RepositoryService _repositoryService) {
+		super(_mapper);
 		nsdRepository = _nsdRepository;
+		repositoryService = _repositoryService;
 	}
 
 	/**

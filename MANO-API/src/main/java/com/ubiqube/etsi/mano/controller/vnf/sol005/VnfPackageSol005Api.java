@@ -63,7 +63,6 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -103,12 +102,21 @@ public class VnfPackageSol005Api extends BaseApi implements VnfPackageSol005 {
 	private final ManufacturerModel manufacturerModel;
 	private final DeviceService deviceService;
 
+	private final RepositoryService repositoryService;
+
+	private final VnfPackageRepository vnfPackageRepository;
+
+	private final Patcher patcher;
+
 	@Inject
-	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
+		super(_mapper);
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
+		patcher = _patcher;
+		vnfPackageRepository = _vnfPackageRepository;
+		repositoryService = _repositoryService;
 	}
 
 	@GET

@@ -13,8 +13,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse400;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
@@ -34,9 +31,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdCa
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPost;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPostQuery;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,8 +56,8 @@ import io.swagger.annotations.ApiResponses;
 public class NsLcmSol005Api extends BaseApi implements NsLcmSol005 {
 
 	@Inject
-	public NsLcmSol005Api(Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public NsLcmSol005Api(ObjectMapper _mapper) {
+		super(_mapper);
 	}
 
 	/**

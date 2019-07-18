@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
@@ -30,9 +29,6 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPostQuery;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -42,8 +38,8 @@ import io.swagger.annotations.ApiResponses;
 public class VnfSubscriptionApi extends BaseApi implements VnfSubscription {
 	private final VnfManagement vnfManagement;
 
-	public VnfSubscriptionApi(Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, VnfManagement _vnfManagement) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public VnfSubscriptionApi(ObjectMapper _mapper, VnfManagement _vnfManagement) {
+		super(_mapper);
 		vnfManagement = _vnfManagement;
 	}
 

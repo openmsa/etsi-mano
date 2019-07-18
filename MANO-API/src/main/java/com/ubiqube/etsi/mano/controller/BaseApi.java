@@ -1,14 +1,12 @@
 package com.ubiqube.etsi.mano.controller;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 
 /**
  * Common part to all ETSI MANO API.
@@ -27,25 +25,13 @@ public class BaseApi {
 	protected static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 	protected static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
 	protected static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";
-	/** Injected patch engine. */
-	protected final Patcher patcher;
-	/** Injected object mapper. */
+
 	protected ObjectMapper mapper;
-	/** Injected, subscription repository. */
-	protected SubscriptionRepository subscriptionRepository;
-	/** Injected vnf package repository manager. */
-	protected VnfPackageRepository vnfPackageRepository;
-	/** Injected Repository MSA Service. */
-	protected RepositoryService repositoryService;
 
 	@Inject
-	public BaseApi(Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
+	public BaseApi(ObjectMapper _mapper) {
 		super();
-		patcher = _patcher;
 		mapper = _mapper;
-		subscriptionRepository = _subscriptionRepository;
-		vnfPackageRepository = _vnfPackageRepository;
-		repositoryService = _repositoryService;
 	}
 
 	/**
@@ -60,7 +46,7 @@ public class BaseApi {
 	protected <T> T string2Object(String input, Class<T> clazz) {
 		try {
 			return mapper.readValue(input, clazz);
-		} catch (final Exception e) {
+		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}

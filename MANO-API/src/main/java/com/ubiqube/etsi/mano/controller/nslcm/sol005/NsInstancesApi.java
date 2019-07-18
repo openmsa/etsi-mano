@@ -49,9 +49,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdUpdatePos
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesPostQuery;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -71,14 +68,16 @@ public class NsInstancesApi extends BaseApi {
 	private final NsInstanceRepository nsInstanceRepository;
 
 	private final OrchestrationService orchestrationService;
+	private final RepositoryService repositoryService;
 
 	@Autowired
-	public NsInstancesApi(Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, DeviceService _deviceService, NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public NsInstancesApi(ObjectMapper _mapper, DeviceService _deviceService, NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService, RepositoryService _repRepositoryService) {
+		super(_mapper);
 		deviceService = _deviceService;
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		orchestrationService = _orchestrationService;
+		repositoryService = _repRepositoryService;
 	}
 
 	/**

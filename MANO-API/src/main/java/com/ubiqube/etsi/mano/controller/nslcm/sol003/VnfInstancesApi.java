@@ -16,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
@@ -52,10 +51,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 
 import io.swagger.annotations.ApiParam;
 
@@ -67,12 +64,16 @@ public class VnfInstancesApi extends BaseApi {
 	private static final String REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_instances";
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final OrchestrationService orchestrationService;
+	private final VnfPackageRepository vnfPackageRepository;
+	private final RepositoryService repositoryService;
 
 	@Autowired
-	public VnfInstancesApi(Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, OrchestrationService _orchestrationService, VnfInstancesRepository _vnfInstancesRepository) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	public VnfInstancesApi(ObjectMapper _mapper, OrchestrationService _orchestrationService, VnfInstancesRepository _vnfInstancesRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
+		super(_mapper);
 		vnfInstancesRepository = _vnfInstancesRepository;
 		orchestrationService = _orchestrationService;
+		vnfPackageRepository = _vnfPackageRepository;
+		repositoryService = _repositoryService;
 		LOG.debug("Registrating VnfInstanceApi");
 	}
 
