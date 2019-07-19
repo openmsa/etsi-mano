@@ -28,11 +28,6 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	private static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
 
 	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_SUBSCRIPTION_BASE_PATH + "/" + _id + ".json";
-	}
-
-	@Override
 	String setId(SubscriptionObject _entity) {
 		final String id = _entity.getSubscriptionsPkgmSubscription().getId();
 		if (null == id) {
@@ -45,6 +40,16 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	@Override
 	Class<?> getClazz() {
 		return SubscriptionObject.class;
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_SUBSCRIPTION_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "susbscription.json";
 	}
 
 }

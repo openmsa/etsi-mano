@@ -21,11 +21,6 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 	}
 
 	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH + "/" + _id + "/vnfInstance.json";
-	}
-
-	@Override
 	String setId(VnfInstance _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
@@ -43,6 +38,16 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 	@Override
 	public Object query() {
 		return null;
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "vnfInstance.json";
 	}
 
 }

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
@@ -31,14 +32,28 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		mapper = _mapper;
 	}
 
-	abstract String getUriForId(String _id);
-
 	abstract String setId(T _entity);
+
+	protected String makeRoot(String _id) {
+		final StringBuilder sb = new StringBuilder(getRoot());
+		sb.append('/').append(_id);
+		final String uri = sb.toString();
+		try {
+			if (!repositoryService.exists(uri)) {
+				repositoryService.addDirectory(uri, "", "etsi-mano", "ncroot");
+			}
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+		return uri;
+	}
+
+	abstract String getRoot();
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public final T get(String _id) {
-		final String uri = getUriForId(_id);
+		final String uri = makeRoot(_id) + '/' + getFilename();
 		LOG.debug("Loading ID: {}", _id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
@@ -52,11 +67,13 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 	}
 
+	abstract String getFilename();
+
 	abstract Class<?> getClazz();
 
 	@Override
 	public final void delete(String _id) {
-		final String uri = getUriForId(_id);
+		final String uri = makeRoot(_id);
 		verify(_id);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
@@ -66,7 +83,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	public final T save(T _entity) {
 		final String saveId = setId(_entity);
 
-		final String uri = getUriForId(saveId);
+		final String uri = makeRoot(saveId) + '/' + getFilename();
 		try {
 			final String str = mapper.writeValueAsString(_entity);
 			LOG.info("Creating entity @ {}", uri);
@@ -78,4 +95,14 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		return _entity;
 	}
 
+	public void storeObject(String _vnfPkgId, Object _object, String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
+		path.append('/').append(_filename);
+		try {
+			repositoryService.addFile(path.toString(), "", "etsi-mano", mapper.writeValueAsString(mapper.writeValueAsString(_object)), "ncroot");
+
+		} catch (final ServiceException | JsonProcessingException e) {
+			throw new GenericException(e);
+		}
+	}
 }

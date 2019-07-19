@@ -27,11 +27,6 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 
 	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_NVFO_DATAFILE_BASE_PATH + "/" + _id + "/vnfPkgInfo.json";
-	}
-
-	@Override
 	String setId(VnfPkgInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
@@ -44,6 +39,16 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 	@Override
 	Class<?> getClazz() {
 		return VnfPkgInfo.class;
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_NVFO_DATAFILE_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "vnfPkgInfo.json";
 	}
 
 }

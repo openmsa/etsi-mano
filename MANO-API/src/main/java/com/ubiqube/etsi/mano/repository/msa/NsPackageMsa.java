@@ -27,11 +27,6 @@ public class NsPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo
 	private static final String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
 
 	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH + "/" + _id + "/nsd.json";
-	}
-
-	@Override
 	String setId(NsDescriptorsNsdInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
@@ -44,6 +39,16 @@ public class NsPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo
 	@Override
 	Class<?> getClazz() {
 		return NsDescriptorsNsdInfo.class;
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "nsd.json";
 	}
 
 }
