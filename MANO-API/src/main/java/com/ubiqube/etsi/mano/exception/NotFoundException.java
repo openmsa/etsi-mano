@@ -21,4 +21,8 @@ public class NotFoundException extends WebApplicationException {
 	public NotFoundException(String _detail) {
 		super(Response.serverError().status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON_TYPE).entity(new ProblemDetails(404, _detail)).build());
 	}
+
+	public NotFoundException(String _detail, Throwable e) {
+		super(e, Response.serverError().status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON_TYPE).entity(new ProblemDetails(404, _detail)).build());
+	}
 }
