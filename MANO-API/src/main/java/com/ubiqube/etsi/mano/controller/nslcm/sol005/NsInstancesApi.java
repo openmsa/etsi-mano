@@ -17,6 +17,8 @@ import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -95,8 +97,8 @@ public class NsInstancesApi {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
-	public List<NsInstancesNsInstance> nsInstancesGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter, @QueryParam("all_fields") String allFields, @QueryParam("fields") String fields, @QueryParam("exclude_fields") String excludeFields, @QueryParam("exclude_default") String excludeDefault) {
-		return nsInstanceRepository.query();
+	public ResponseEntity<List<NsInstancesNsInstance>> nsInstancesGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter, @QueryParam("all_fields") String allFields, @QueryParam("fields") String fields, @QueryParam("exclude_fields") String excludeFields, @QueryParam("exclude_default") String excludeDefault) {
+		return new ResponseEntity<>(nsInstanceRepository.query(), HttpStatus.OK);
 	}
 
 	/**
@@ -143,12 +145,12 @@ public class NsInstancesApi {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@GetMapping(value = "/{nsInstanceId}", consumes = { "application/json" }, produces = { "application/json" })
-	public InlineResponse200 nsInstancesNsInstanceIdGet(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType) {
+	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType) {
 
 		final InlineResponse200 resp = new InlineResponse200();
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		resp.setNsInstance(nsInstance);
-		return resp;
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	/**
@@ -170,7 +172,7 @@ public class NsInstancesApi {
 			@ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class), @ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict The operation cannot be executed currently, due to a conflict with the state of the NS instance resource. Typically, this is due to the fact that the NS instance resource is in NOT-INSTANTIATED state, or that another lifecycle management operation is ongoing. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@PostMapping(value = "/{nsInstanceId}/heal", consumes = { "application/json" }, produces = { "application/json" })
-	public NsInstancesNsInstance nsInstancesNsInstanceIdHealPost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdHealPostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdHealPost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdHealPostQuery body) {
 		throw new GenericException("TODO");
 	}
 
@@ -197,7 +199,7 @@ public class NsInstancesApi {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@PostMapping(value = "/{nsInstanceId}/instantiate", consumes = { "application/json" }, produces = { "application/json" })
-	public NsInstancesNsInstance nsInstancesNsInstanceIdInstantiatePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdInstantiatePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdInstantiatePostQuery body) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstancesNsInstance.getNsdId();
@@ -219,7 +221,7 @@ public class NsInstancesApi {
 			throw new GenericException(e);
 		}
 
-		return nsInstancesNsInstance;
+		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}
 
 	/**
@@ -238,7 +240,7 @@ public class NsInstancesApi {
 			@ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class), @ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict The operation cannot be executed currently, due to a conflict with the state of the NS instance resource. Typically, this is due to the fact that the NS instance resource is in NOT-INSTANTIATED state, or that another lifecycle management operation is ongoing. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@PostMapping(value = "/{nsInstanceId}/scale", consumes = { "application/json" }, produces = { "application/json" })
-	public NsInstancesNsInstance nsInstancesNsInstanceIdScalePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdScalePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdScalePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdScalePostQuery body) {
 		throw new GenericException("TODO");
 	}
 
@@ -263,7 +265,7 @@ public class NsInstancesApi {
 			@ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class), @ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict The operation cannot be executed currently, due to a conflict with the state of the NS instance resource. Typically, this is due to the fact that the NS instance resource is in NOT-INSTANTIATED state, or that another lifecycle management operation is ongoing. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@PostMapping(value = "/{nsInstanceId}/terminate", consumes = { "application/json" }, produces = { "application/json" })
-	public NsInstancesNsInstance nsInstancesNsInstanceIdTerminatePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdTerminatePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdTerminatePostQuery body) {
 		throw new GenericException("TODO");
 	}
 
@@ -283,7 +285,7 @@ public class NsInstancesApi {
 			@ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class), @ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict The operation cannot be executed currently, due to a conflict with the state of the NS instance resource. Typically, this is due to the fact that the NS instance resource is in NOT-INSTANTIATED state, or that another lifecycle management operation is ongoing. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@PostMapping(value = "/{nsInstanceId}/update", consumes = { "application/json" }, produces = { "application/json" })
-	public NsInstancesNsInstance nsInstancesNsInstanceIdUpdatePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdUpdatePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdUpdatePost(@PathVariable("nsInstanceId") String nsInstanceId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesNsInstanceIdUpdatePostQuery body) {
 		throw new GenericException("TODO");
 	}
 
@@ -302,7 +304,7 @@ public class NsInstancesApi {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@PostMapping(consumes = { "application/json" }, produces = { "application/json" })
-	public InlineResponse200 nsInstancesPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesPostQuery body) {
+	public ResponseEntity<InlineResponse200> nsInstancesPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, NsInstancesPostQuery body) {
 		final NsInstancesCreateNsRequest req = body.getCreateNsRequest();
 		final NsDescriptorsNsdInfo nsd = nsdRepository.get(req.getNsdId());
 
@@ -327,7 +329,7 @@ public class NsInstancesApi {
 
 		final InlineResponse200 resp = new InlineResponse200();
 		resp.setNsInstance(nsInstancesNsInstance);
-		return resp;
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 }
