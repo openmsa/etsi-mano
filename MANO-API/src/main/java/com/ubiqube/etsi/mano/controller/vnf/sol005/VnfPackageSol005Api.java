@@ -41,8 +41,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
@@ -110,17 +108,14 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	private final Patcher patcher;
 
-	private final ObjectMapper mapper;
-
 	@Inject
-	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
+	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
-		mapper = _mapper;
 	}
 
 	@GET
@@ -229,23 +224,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		vnfPkgInfo.setId(vnfPkgId);
 		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
 
-		try {
-			final StringBuilder sb = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId);
-			String uri = sb.toString();
-			if (!repositoryService.exists(uri)) {
-				repositoryService.addDirectory(uri, "", SOL005, NCROOT);
-			}
-
-			uri = sb.append("/").append("Metadata.yaml").toString();
-			try {
-				repositoryService.addFile(uri, "", "Added: SOL005", mapper.writeValueAsString(jsonString), NCROOT);
-
-			} catch (final JsonProcessingException e) {
-				throw new GenericException(e);
-			}
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+		vnfPackageRepository.storeObject(vnfPkgId, jsonString, "Metadata.yaml");
 
 		vnfPkgInfo.setUserDefinedData(jsonString);
 
@@ -259,22 +238,17 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
 		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
 		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
-		String content;
-		try {
-			content = mapper.writeValueAsString(userData.get("heat"));
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+
 		checkUserData(userData);
 		vnfPackageRepository.save(vnfPkgInfo);
 		// Return.
 		URI uri;
 		try {
 			uri = new URI(self.getHref());
-			repositoryService.addFile(REPOSITORY_NVFO_DATAFILE_BASE_PATH + '/' + vnfPkgId + "/vnfd.json", SOL005, "", content, NCROOT);
-		} catch (final URISyntaxException | ServiceException e) {
+		} catch (final URISyntaxException e) {
 			throw new GenericException(e);
 		}
+		vnfPackageRepository.storeObject(vnfPkgId, userData.get("heat"), "vnfd.json");
 		return Response.status(201).contentLocation(uri).entity(vnfPackagesVnfPkgIdGetResponse).build();
 	}
 
