@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service;
 import java.net.URI;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
@@ -103,6 +104,14 @@ public class DeviceServiceRest implements DeviceService {
 	}
 
 	static class ListOfManufacturers extends HashMap<Long, Manufacturer> {
+	}
+
+	static <T> HashMap<Long, T> toHashMap(ArrayList<T> list) {
+		HashMap<Long, T> ret = new HashMap<Long, T>();
+		for (T obj : list) {
+			ret.put((long)obj.hashCode(), obj);
+		}
+		return ret;
 	}
 
 }
