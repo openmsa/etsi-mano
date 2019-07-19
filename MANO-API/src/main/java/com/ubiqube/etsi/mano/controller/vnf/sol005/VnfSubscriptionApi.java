@@ -21,7 +21,6 @@ import javax.ws.rs.Produces;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
@@ -34,7 +33,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-public class VnfSubscriptionApi extends BaseApi implements VnfSubscription {
+public class VnfSubscriptionApi implements VnfSubscription {
 	private final VnfManagement vnfManagement;
 
 	public VnfSubscriptionApi(VnfManagement _vnfManagement) {

@@ -38,7 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -86,7 +85,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/sol005/nsd/v1")
 @Api(value = "/")
-public class NsdSol005Api extends BaseApi implements NsdSol005 {
+public class NsdSol005Api implements NsdSol005 {
 	private static final String APPLICATION_ZIP = "application/zip";
 	protected static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";

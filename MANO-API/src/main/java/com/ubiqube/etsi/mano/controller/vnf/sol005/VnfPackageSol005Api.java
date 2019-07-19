@@ -46,7 +46,6 @@ import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
@@ -94,7 +93,7 @@ import net.sf.json.JSONArray;
 @RestController
 //@Path("/sol005/vnfpkgm/v1")
 @Api(value = "/sol005/vnfpkgm/v1")
-public class VnfPackageSol005Api extends BaseApi implements VnfPackageSol005 {
+public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 	private static final String NCROOT = "ncroot";

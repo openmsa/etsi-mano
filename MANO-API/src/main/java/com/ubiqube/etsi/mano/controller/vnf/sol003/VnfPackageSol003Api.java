@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
@@ -37,7 +36,7 @@ import net.sf.json.JSONArray;
  */
 @RestController
 @RequestMapping("/sol003/vnfpkgm/v1")
-public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
+public class VnfPackageSol003Api implements VnfPackageSol003 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
 	private final VnfManagement vnfManagement;

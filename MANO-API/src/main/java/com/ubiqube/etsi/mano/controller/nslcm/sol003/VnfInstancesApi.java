@@ -32,7 +32,6 @@ import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeExtVnfConnectivityRequest;
@@ -58,7 +57,7 @@ import io.swagger.annotations.ApiParam;
 //@Path("/sol003/vnflcm/v1/vnf_instances")
 @RestController
 @RequestMapping("/sol003/vnflcm/v1/vnf_instances")
-public class VnfInstancesApi extends BaseApi {
+public class VnfInstancesApi {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstancesApi.class);
 	private static final String REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_instances";
 	private final VnfInstancesRepository vnfInstancesRepository;

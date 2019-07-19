@@ -31,7 +31,6 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
@@ -58,7 +57,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/sol005/nslcm/v1/ns_instances")
 @Api(value = "/sol005/nslcm/v1/ns_instances")
-public class NsInstancesApi extends BaseApi {
+public class NsInstancesApi {
 	private static final Logger LOG = LoggerFactory.getLogger(NsLcmSol005Api.class);
 	private static final String REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/ns_instances";
 

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse400;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierDeletionNotification;
@@ -51,7 +50,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/sol005/nslcm/v1")
 @Api(value = "/")
-public class NsLcmSol005Api extends BaseApi implements NsLcmSol005 {
+public class NsLcmSol005Api implements NsLcmSol005 {
 
 	/**
 	 * Query multiple NS LCM operation occurrences.
