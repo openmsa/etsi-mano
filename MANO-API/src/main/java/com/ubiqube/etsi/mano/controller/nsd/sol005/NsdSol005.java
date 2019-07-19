@@ -11,13 +11,13 @@ import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,7 +81,7 @@ public interface NsdSol005 {
 	 * operationalState &#x3D; DISABLED). Otherwise, the DELETE method shall fail.
 	 *
 	 */
-	public void nsDescriptorsNsdInfoIdDelete(@PathParam("nsdInfoId") String nsdInfoId);
+	public void nsDescriptorsNsdInfoIdDelete(@PathVariable("nsdInfoId") String nsdInfoId);
 
 	/**
 	 * Read information about an individual NS descriptor resource.
@@ -92,7 +92,7 @@ public interface NsdSol005 {
 	 * request and response data structures, and response codes.\&quot;
 	 *
 	 */
-	public NsDescriptorsNsdInfo nsDescriptorsNsdInfoIdGet(@PathParam("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept);
+	public NsDescriptorsNsdInfo nsDescriptorsNsdInfoIdGet(@PathVariable("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Fetch the content of a NSD.
@@ -115,7 +115,7 @@ public interface NsdSol005 {
 	 * outside the scope of the present document.
 	 *
 	 */
-	public Response nsDescriptorsNsdInfoIdNsdContentGet(@PathParam("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range);
+	public Response nsDescriptorsNsdInfoIdNsdContentGet(@PathVariable("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range);
 
 	/**
 	 * Upload the content of a NSD.
@@ -148,7 +148,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 409, message = "Conflict Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact \"nsdOnboardingState\" has a value different from ONBOARDED. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@PutMapping(value = "/ns_descriptors/{nsdInfoId}/nsd_content", consumes = { "application/json" }, produces = { "application/json" })
-	public void nsDescriptorsNsdInfoIdNsdContentPut(@PathParam("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept);
+	public void nsDescriptorsNsdInfoIdNsdContentPut(@PathVariable("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Modify the operational state and/or the user defined data of an individual NS
@@ -178,7 +178,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/nsd_content", consumes = { "application/json" }, produces = { "application/json" }, method = RequestMethod.PATCH)
-	public List<Object> nsDescriptorsNsdInfoIdPatch(@PathParam("nsdInfoId") String nsdInfoId, NsDescriptorsNsdInfoIdPatchQuery body, @HeaderParam("Content-Type") String contentType);
+	public List<Object> nsDescriptorsNsdInfoIdPatch(@PathVariable("nsdInfoId") String nsdInfoId, NsDescriptorsNsdInfoIdPatchQuery body, @HeaderParam("Content-Type") String contentType);
 
 	/**
 	 * Create a new NS descriptor resource.
@@ -235,7 +235,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@DeleteMapping(value = "/pnf_descriptors/{pnfdInfoId}", consumes = { "application/json" }, produces = { "application/json" })
-	public void pnfDescriptorsPnfdInfoIdDelete(@PathParam("pnfdInfoId") String pnfdInfoId);
+	public void pnfDescriptorsPnfdInfoIdDelete(@PathVariable("pnfdInfoId") String pnfdInfoId);
 
 	/**
 	 * Read an individual PNFD resource.
@@ -258,7 +258,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@GetMapping(value = "/pnf_descriptors/{pnfdInfoId}", consumes = { "application/json" }, produces = { "application/json" })
-	public PnfDescriptorsPnfdInfoIdGetResponse pnfDescriptorsPnfdInfoIdGet(@PathParam("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept);
+	public PnfDescriptorsPnfdInfoIdGetResponse pnfDescriptorsPnfdInfoIdGet(@PathVariable("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Modify the user defined data of an individual PNF descriptor resource.
@@ -279,7 +279,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@RequestMapping(value = "/pnf_descriptors/{pnfdInfoId}", consumes = { "application/json" }, produces = { "application/json" }, method = RequestMethod.PATCH)
-	public PnfDescriptorsPnfdInfoIdPatchResponse pnfDescriptorsPnfdInfoIdPatch(@PathParam("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid PnfDescriptorsPnfdInfoIdPatchQuery body);
+	public PnfDescriptorsPnfdInfoIdPatchResponse pnfDescriptorsPnfdInfoIdPatch(@PathVariable("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid PnfDescriptorsPnfdInfoIdPatchQuery body);
 
 	/**
 	 * Fetch the content of a PNFD.
@@ -301,7 +301,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@GetMapping(value = "/pnf_descriptors/{pnfdInfoId}/pnfd_content", consumes = { "application/json" }, produces = { "application/json" })
-	public void pnfDescriptorsPnfdInfoIdPnfdContentGet(@PathParam("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept);
+	public void pnfDescriptorsPnfdInfoIdPnfdContentGet(@PathVariable("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Upload the content of a PNFD.
@@ -324,7 +324,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@PutMapping(value = "/pnf_descriptors/{pnfdInfoId}/pnfd_content", consumes = { "application/json" }, produces = { "application/json" })
-	public void pnfDescriptorsPnfdInfoIdPnfdContentPut(@PathParam("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept);
+	public void pnfDescriptorsPnfdInfoIdPnfdContentPut(@PathVariable("pnfdInfoId") String pnfdInfoId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Create a new PNF descriptor resource.
@@ -429,7 +429,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@DeleteMapping(value = "/subscriptions/{subscriptionId}", consumes = { "application/json" }, produces = { "application/json" })
-	public void subscriptionsSubscriptionIdDelete(@PathParam("subscriptionId") String subscriptionId);
+	public void subscriptionsSubscriptionIdDelete(@PathVariable("subscriptionId") String subscriptionId);
 
 	/**
 	 * Read an individual subscription resource.
@@ -454,7 +454,7 @@ public interface NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@GetMapping(value = "/subscriptions/{subscriptionId}", consumes = { "application/json" }, produces = { "application/json" })
-	public SubscriptionsPostResponse subscriptionsSubscriptionIdGet(@PathParam("subscriptionId") String subscriptionId, @HeaderParam("Accept") String accept);
+	public SubscriptionsPostResponse subscriptionsSubscriptionIdGet(@PathVariable("subscriptionId") String subscriptionId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Notify about NSD and PNFD changes

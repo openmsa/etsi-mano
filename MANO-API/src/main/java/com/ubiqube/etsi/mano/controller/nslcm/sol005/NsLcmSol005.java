@@ -4,10 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
+
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierDeletionNotification;
@@ -55,7 +54,7 @@ public interface NsLcmSol005 {
 	 * and response codes.
 	 *
 	 */
-	public void nsLcmOpOccsNsLcmOpOccIdContinuePost(@PathParam("nsLcmOpOccId") String nsLcmOpOccId);
+	public void nsLcmOpOccsNsLcmOpOccIdContinuePost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId);
 
 	/**
 	 * Read an individual NS LCM operation occurrence resource.
@@ -67,7 +66,7 @@ public interface NsLcmSol005 {
 	 * query parameters, request and response data structures, and response codes.
 	 *
 	 */
-	public NsLcmOpOccsNsLcmOpOccIdGetResponse nsLcmOpOccsNsLcmOpOccIdGet(@PathParam("nsLcmOpOccId") String nsLcmOpOccId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType);
+	public NsLcmOpOccsNsLcmOpOccIdGetResponse nsLcmOpOccsNsLcmOpOccIdGet(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType);
 
 	/**
 	 * Retry a NS lifecycle management operation occurrence.
@@ -80,7 +79,7 @@ public interface NsLcmSol005 {
 	 * data structures, and response codes.
 	 *
 	 */
-	public void nsLcmOpOccsNsLcmOpOccIdRetryPost(@PathParam("nsLcmOpOccId") String nsLcmOpOccId);
+	public void nsLcmOpOccsNsLcmOpOccIdRetryPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId);
 
 	/**
 	 * Rollback a NS lifecycle management operation occurrence.
@@ -93,7 +92,7 @@ public interface NsLcmSol005 {
 	 * and response codes.
 	 *
 	 */
-	public void nsLcmOpOccsNsLcmOpOccIdRollbackPost(@PathParam("nsLcmOpOccId") String nsLcmOpOccId);
+	public void nsLcmOpOccsNsLcmOpOccIdRollbackPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId);
 
 	/**
 	 * Cancel a NS lifecycle management operation occurrence.
@@ -107,7 +106,7 @@ public interface NsLcmSol005 {
 	 * and response codes.
 	 *
 	 */
-	public void nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(@PathParam("nsLcmOpOccId") String nsLcmOpOccId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body);
+	public void nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId, @HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @Valid NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body);
 
 	/**
 	 * Mark a NS lifecycle management operation occurrence as failed.
@@ -117,7 +116,7 @@ public interface NsLcmSol005 {
 	 * \&quot;FAILED_TEMP\&quot; state.
 	 *
 	 */
-	public NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(@PathParam("nsLcmOpOccId") String nsLcmOpOccId, @HeaderParam("Accept") String accept);
+	public NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Query multiple subscriptions.
@@ -157,7 +156,7 @@ public interface NsLcmSol005 {
 	 * response codes, as specified in the Tables 6.4.17.3.5-1 and 6.4.17.3.5-2.
 	 *
 	 */
-	public void subscriptionsSubscriptionIdDelete(@PathParam("subscriptionId") String subscriptionId);
+	public void subscriptionsSubscriptionIdDelete(@PathVariable("subscriptionId") String subscriptionId);
 
 	/**
 	 * Read an individual subscription resource.
@@ -168,7 +167,7 @@ public interface NsLcmSol005 {
 	 * specified in the Tables 6.4.17.3.2-1 and 6.4.17.3.2-2
 	 *
 	 */
-	public SubscriptionsPost subscriptionsSubscriptionIdGet(@PathParam("subscriptionId") String subscriptionId, @HeaderParam("Accept") String accept);
+	public SubscriptionsPost subscriptionsSubscriptionIdGet(@PathVariable("subscriptionId") String subscriptionId, @HeaderParam("Accept") String accept);
 
 	/**
 	 * Notify about NS lifecycle change

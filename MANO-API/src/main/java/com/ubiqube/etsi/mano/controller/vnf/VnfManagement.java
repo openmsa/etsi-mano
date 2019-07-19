@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -74,7 +73,7 @@ public class VnfManagement {
 		subscriptionRepository = _subscriptionRepository;
 	}
 
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId) {
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, false);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
