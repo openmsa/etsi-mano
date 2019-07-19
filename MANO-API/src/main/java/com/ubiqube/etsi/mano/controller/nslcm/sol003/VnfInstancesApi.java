@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
@@ -68,8 +67,7 @@ public class VnfInstancesApi extends BaseApi {
 	private final RepositoryService repositoryService;
 
 	@Autowired
-	public VnfInstancesApi(ObjectMapper _mapper, OrchestrationService _orchestrationService, VnfInstancesRepository _vnfInstancesRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
-		super(_mapper);
+	public VnfInstancesApi(OrchestrationService _orchestrationService, VnfInstancesRepository _vnfInstancesRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		orchestrationService = _orchestrationService;
 		vnfPackageRepository = _vnfPackageRepository;

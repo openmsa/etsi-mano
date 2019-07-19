@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
@@ -44,8 +43,7 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	private final VnfManagement vnfManagement;
 
 	@Inject
-	public VnfPackageSol003Api(VnfManagement _vnfManagement, ObjectMapper _mapper) {
-		super(_mapper);
+	public VnfPackageSol003Api(VnfManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
 

@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse400;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
@@ -54,11 +52,6 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sol005/nslcm/v1")
 @Api(value = "/")
 public class NsLcmSol005Api extends BaseApi implements NsLcmSol005 {
-
-	@Inject
-	public NsLcmSol005Api(ObjectMapper _mapper) {
-		super(_mapper);
-	}
 
 	/**
 	 * Query multiple NS LCM operation occurrences.

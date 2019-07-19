@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
@@ -71,8 +70,7 @@ public class NsInstancesApi extends BaseApi {
 	private final RepositoryService repositoryService;
 
 	@Autowired
-	public NsInstancesApi(ObjectMapper _mapper, DeviceService _deviceService, NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService, RepositoryService _repRepositoryService) {
-		super(_mapper);
+	public NsInstancesApi(DeviceService _deviceService, NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService, RepositoryService _repRepositoryService) {
 		deviceService = _deviceService;
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;

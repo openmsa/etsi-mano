@@ -16,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
@@ -33,8 +32,7 @@ public class VnfSubscriptionApi extends BaseApi implements VnfSubscription {
 	private final VnfManagement vnfManagement;
 	private static final String SUBSCRIPTIONS_SUBSCRIPTION_ID_GET = "subscriptionsSubscriptionIdGet";
 
-	public VnfSubscriptionApi(ObjectMapper _mapper, VnfManagement _vnfManagement) {
-		super(_mapper);
+	public VnfSubscriptionApi(VnfManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
 

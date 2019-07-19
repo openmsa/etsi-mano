@@ -93,11 +93,13 @@ public class NsdSol005Api extends BaseApi implements NsdSol005 {
 
 	private final RepositoryService repositoryService;
 
+	private final ObjectMapper mapper;
+
 	@Inject
 	public NsdSol005Api(NsdRepository _nsdRepository, ObjectMapper _mapper, RepositoryService _repositoryService) {
-		super(_mapper);
 		nsdRepository = _nsdRepository;
 		repositoryService = _repositoryService;
+		mapper = _mapper;
 	}
 
 	/**

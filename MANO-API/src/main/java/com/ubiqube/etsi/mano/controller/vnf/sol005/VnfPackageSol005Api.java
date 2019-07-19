@@ -108,15 +108,17 @@ public class VnfPackageSol005Api extends BaseApi implements VnfPackageSol005 {
 
 	private final Patcher patcher;
 
+	private final ObjectMapper mapper;
+
 	@Inject
 	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
-		super(_mapper);
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
+		mapper = _mapper;
 	}
 
 	@GET
