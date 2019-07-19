@@ -96,6 +96,8 @@ import net.sf.json.JSONArray;
 @Api(value = "/sol005/vnfpkgm/v1")
 public class VnfPackageSol005Api extends BaseApi implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
+	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
+	private static final String NCROOT = "ncroot";
 
 	private static final String SOL005 = "SOL005";
 	private final VnfManagement vnfManagement;

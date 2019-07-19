@@ -88,6 +88,8 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "/")
 public class NsdSol005Api extends BaseApi implements NsdSol005 {
 	private static final String APPLICATION_ZIP = "application/zip";
+	protected static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
+	private static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";
 
 	private final NsdRepository nsdRepository;
 
