@@ -36,6 +36,8 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -123,10 +125,10 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Consumes({ "application/json" })
 	@Produces({ "application/json" })
 	@ApiOperation(value = "Query multiple subscriptions.", tags = {})
-	public List<SubscriptionsPkgmSubscription> subscriptionsGet2(@Context UriInfo info) {
+	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@Context UriInfo info) {
 		final MultivaluedMap<String, String> queryParameter = info.getQueryParameters();
 		LOG.info("qp => {}", queryParameter);
-		return new ArrayList<>();
+		return new ResponseEntity<List<SubscriptionsPkgmSubscription>>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override

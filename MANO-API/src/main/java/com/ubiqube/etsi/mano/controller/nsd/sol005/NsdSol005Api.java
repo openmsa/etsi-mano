@@ -25,6 +25,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,7 +128,7 @@ public class NsdSol005Api implements NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@GetMapping(value = "/ns_descriptors", consumes = { "application/json" }, produces = { "application/json" })
-	public List<NsDescriptorsNsdInfoIdGetResponse> nsDescriptorsGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter, @QueryParam("all_fields") String allFields, @QueryParam("fields") String fields, @QueryParam("exclude_fields") String excludeFields, @QueryParam("exclude_default") String excludeDefault) {
+	public ResponseEntity<List<NsDescriptorsNsdInfoIdGetResponse>> nsDescriptorsGet(@HeaderParam("Accept") String accept, @QueryParam("filter") String filter, @QueryParam("all_fields") String allFields, @QueryParam("fields") String fields, @QueryParam("exclude_fields") String excludeFields, @QueryParam("exclude_default") String excludeDefault) {
 		List<String> listFilesInFolder;
 		try {
 			listFilesInFolder = repositoryService.doSearch(REPOSITORY_NSD_BASE_PATH, "");
@@ -146,7 +148,7 @@ public class NsdSol005Api implements NsdSol005 {
 				throw new GenericException(e);
 			}
 		}
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	/**
@@ -200,12 +202,12 @@ public class NsdSol005Api implements NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@GetMapping(value = "/ns_descriptors/{nsdInfoId}", consumes = { "application/json" }, produces = { "application/json" })
-	public NsDescriptorsNsdInfo nsDescriptorsNsdInfoIdGet(@PathVariable("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept) {
+	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsNsdInfoIdGet(@PathVariable("nsdInfoId") String nsdInfoId, @HeaderParam("Accept") String accept) {
 		final NsDescriptorsNsdInfo nsdIfno = nsdRepository.get(nsdInfoId);
 
 		final NsDescriptorsNsdInfoIdGetResponse nsDescriptorsNsdInfoIdGetResponse = new NsDescriptorsNsdInfoIdGetResponse();
 		nsDescriptorsNsdInfoIdGetResponse.setNsdInfo(nsdIfno);
-		return nsdIfno;
+		return new ResponseEntity<>(nsdIfno, HttpStatus.OK);
 	}
 
 	/**
@@ -327,8 +329,8 @@ public class NsdSol005Api implements NsdSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}", consumes = { "application/json" }, produces = { "application/json" }, method = RequestMethod.PATCH)
-	public List<Object> nsDescriptorsNsdInfoIdPatch(@PathVariable("nsdInfoId") String nsdInfoId, NsDescriptorsNsdInfoIdPatchQuery body, @HeaderParam("Content-Type") String contentType) {
-		return new ArrayList<>();
+	public ResponseEntity<List<Object>> nsDescriptorsNsdInfoIdPatch(@PathVariable("nsdInfoId") String nsdInfoId, NsDescriptorsNsdInfoIdPatchQuery body, @HeaderParam("Content-Type") String contentType) {
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -351,7 +353,7 @@ public class NsdSol005Api implements NsdSol005 {
 			@ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@PostMapping(value = "/ns_descriptors", consumes = { "application/json" }, produces = { "application/json" })
-	public NsDescriptorsNsdInfo nsDescriptorsPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @RequestBody NsDescriptorsPostQuery nsDescriptorsPostQuery) {
+	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(@HeaderParam("Accept") String accept, @HeaderParam("Content-Type") String contentType, @RequestBody NsDescriptorsPostQuery nsDescriptorsPostQuery) {
 		final String id = UUID.randomUUID().toString();
 		final StringBuilder sb = new StringBuilder().append(REPOSITORY_NSD_BASE_PATH).append("/").append(id);
 		final String uri = sb.toString();
@@ -372,7 +374,7 @@ public class NsdSol005Api implements NsdSol005 {
 		resp.setVnfPkgIds(vnfPkgIds);
 
 		nsdRepository.save(resp);
-		return resp;
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	/**
@@ -383,9 +385,9 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public List<Object> pnfDescriptorsGet(String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
+	public ResponseEntity<List<Object>> pnfDescriptorsGet(String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
 
-		return new ArrayList<>();
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -417,7 +419,7 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public PnfDescriptorsPnfdInfoIdGetResponse pnfDescriptorsPnfdInfoIdGet(String pnfdInfoId, String accept) {
+	public ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPnfdInfoIdGet(String pnfdInfoId, String accept) {
 		// : Implement...
 
 		return null;
@@ -431,7 +433,7 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public PnfDescriptorsPnfdInfoIdPatchResponse pnfDescriptorsPnfdInfoIdPatch(String pnfdInfoId, String accept, String contentType, PnfDescriptorsPnfdInfoIdPatchQuery body) {
+	public ResponseEntity<PnfDescriptorsPnfdInfoIdPatchResponse> pnfDescriptorsPnfdInfoIdPatch(String pnfdInfoId, String accept, String contentType, PnfDescriptorsPnfdInfoIdPatchQuery body) {
 		// : Implement...
 
 		return null;
@@ -473,7 +475,7 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public PnfDescriptorsPnfdInfoIdGetResponse pnfDescriptorsPost(String accept, String contentType, PnfDescriptorsPostQuery body) {
+	public ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPost(String accept, String contentType, PnfDescriptorsPostQuery body) {
 		// : Implement...
 
 		return null;
@@ -491,10 +493,10 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public List<Object> subscriptionsGet(String accept, String filter) {
+	public ResponseEntity<List<Object>> subscriptionsGet(String accept, String filter) {
 		// : Implement...
 
-		return new ArrayList<>();
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -518,7 +520,7 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public SubscriptionsPostResponse subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body) {
 		// : Implement...
 
 		return null;
@@ -552,7 +554,7 @@ public class NsdSol005Api implements NsdSol005 {
 	 *
 	 */
 	@Override
-	public SubscriptionsPostResponse subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
 		// : Implement...
 
 		return null;
