@@ -9,6 +9,8 @@ import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,9 +58,9 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesGet(@RequestParam Map<String, String> requestParams) throws ServiceException {
+	public ResponseEntity<?> vnfPackagesGet(@RequestParam Map<String, String> requestParams) throws ServiceException {
 		final JSONArray resp = vnfManagement.vnfPackagesGet(requestParams);
-		return Response.ok(resp).build();
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	/**
@@ -82,11 +84,11 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdGet(@PathVariable("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@PathVariable("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
-		return Response.ok(vnfPkgInfo).build();
+		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
 	/**
