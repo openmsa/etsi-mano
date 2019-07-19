@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 	}
 
 	@Override
-	public Object query() {
+	public List<VnfInstance> query() {
 		return null;
 	}
 
