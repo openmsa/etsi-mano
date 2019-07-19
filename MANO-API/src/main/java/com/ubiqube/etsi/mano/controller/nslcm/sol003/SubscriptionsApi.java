@@ -12,6 +12,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LccnSubscription;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LccnSubscriptionRequest;
@@ -19,11 +25,10 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.ProblemDetails;
 
 import io.swagger.annotations.ApiParam;
 
-@Path("/subscriptions")
-@Consumes({ "application/json" })
-@Produces({ "application/json" })
-@io.swagger.annotations.Api(description = "the subscriptions API")
+//@Path("/subscriptions")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+@RestController
+@RequestMapping("/subscriptions")
 public class SubscriptionsApi {
 
 	@GET
@@ -40,12 +45,12 @@ public class SubscriptionsApi {
 			@io.swagger.annotations.ApiResponse(code = 406, message = "Not Acceptable If the \"Accept\" HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case.         ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response subscriptionsGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
+	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
+	public Response subscriptionsGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
 	@POST
-
 	@Consumes({ "application/json" })
 	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Subscribe  The POST method creates a new subscription. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the NFVO, and might make sense only in very rare use cases. Consequently, the VNFM may either allow creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the “201 Created” response code), or may decide to not create a duplicate subscription resource (in which case it shall return a “303 See Other” response code referencing the existing subscription resource with the same filter and callbackUri). ", response = LccnSubscription.class, tags = {})
@@ -60,7 +65,8 @@ public class SubscriptionsApi {
 			@io.swagger.annotations.ApiResponse(code = 406, message = "Not Acceptable If the \"Accept\" HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case.         ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response subscriptionsPost(@ApiParam(value = "Details of the subscription to be created. ", required = true) LccnSubscriptionRequest lccnSubscriptionRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
+	@PostMapping(consumes = { "application/json" }, produces = { "application/json" })
+	public Response subscriptionsPost(@ApiParam(value = "Details of the subscription to be created. ", required = true) LccnSubscriptionRequest lccnSubscriptionRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
@@ -79,7 +85,8 @@ public class SubscriptionsApi {
 			@io.swagger.annotations.ApiResponse(code = 406, message = "Not Acceptable If the \"Accept\" HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case.         ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("subscriptionId") String subscriptionId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
+	@DeleteMapping(value = "/{subscriptionId}", consumes = { "application/json" }, produces = { "application/json" })
+	public Response subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("subscriptionId") String subscriptionId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
@@ -98,7 +105,8 @@ public class SubscriptionsApi {
 			@io.swagger.annotations.ApiResponse(code = 406, message = "Not Acceptable If the \"Accept\" HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case.         ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("subscriptionId") String subscriptionId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context SecurityContext securityContext) {
+	@GetMapping(value = "/{subscriptionId}", consumes = { "application/json" }, produces = { "application/json" })
+	public Response subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathParam("subscriptionId") String subscriptionId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 }
