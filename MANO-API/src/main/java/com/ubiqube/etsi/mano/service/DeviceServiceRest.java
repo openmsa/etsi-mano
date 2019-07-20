@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service;
 import java.net.URI;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
@@ -78,31 +79,56 @@ public class DeviceServiceRest implements DeviceService {
 				.pathSegment("device/v1/manufacturers")
 				.build()
 				.toUri();
-		return rest.get(uri, ListOfManufacturers.class);
+		return toHashMap(new ArrayList<Manufacturer>(
+			rest.get(uri, ListOfManufacturers.class)
+		));
 	}
 
 	static class ManufacturerModel implements Manufacturer {
-		public ModelModel model;
-		public String name;
+		HashMap<Long, ModelModel> _models;
+
+		public int manufacturerId;
+		public String manufacturerName;
+		public ArrayList<ModelModel> models;
 
 		public Model getModel(long modelId) {
-			return model;
+			if (_models == null) {
+				_models = toHashMap(models);
+			}
+			return _models.get(modelId);
 		}
 
 		public String getName() {
-			return name;
+			return manufacturerName;
+		}
+
+		public int hashCode() {
+			return manufacturerId;
 		}
 	}
 
 	static class ModelModel implements Model {
-		public String name;
+		public String modelName;
+		public int modelId;
 
 		public String getName() {
-			return name;
+			return modelName;
+		}
+
+		public int hashCode() {
+			return modelId;
 		}
 	}
 
-	static class ListOfManufacturers extends HashMap<Long, Manufacturer> {
+	static class ListOfManufacturers extends ArrayList<ManufacturerModel> {
+	}
+
+	static <T> HashMap<Long, T> toHashMap(ArrayList<T> list) {
+		HashMap<Long, T> ret = new HashMap<Long, T>();
+		for (T obj : list) {
+			ret.put((long)obj.hashCode(), obj);
+		}
+		return ret;
 	}
 
 }
