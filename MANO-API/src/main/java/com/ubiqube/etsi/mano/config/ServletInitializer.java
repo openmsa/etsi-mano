@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import com.ubiqube.etsi.mano.Application;
 
 @SpringBootApplication
-@ComponentScan(value = { "com.ubiqube.etsi.mano" })
+@ComponentScan("com.ubiqube.etsi.mano")
 public class ServletInitializer extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(ServletInitializer.class, args);
@@ -17,6 +17,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(JerseyConfig.class).sources(Application.class);
+		return application.sources(Application.class);
 	}
+
 }

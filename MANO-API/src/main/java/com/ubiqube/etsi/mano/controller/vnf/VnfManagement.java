@@ -3,17 +3,18 @@ package com.ubiqube.etsi.mano.controller.vnf;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.controller.vnf.sol003.VnfPkgSol003;
+import com.ubiqube.etsi.mano.controller.vnf.sol003.VnfPackageSol003Api;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -42,8 +43,8 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.repository.AbstractGenericRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.repository.msa.AbstractGenericRepository;
 import com.ubiqube.etsi.mano.utils.Notifications;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.ZipFileHandler;
@@ -54,7 +55,7 @@ import net.sf.json.JSONObject;
 @Service
 public class VnfManagement {
 	private static final String APPLICATION_ZIP = "application/zip";
-	private static final Logger LOG = LoggerFactory.getLogger(VnfPkgSol003.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
 	private static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 	private static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
@@ -90,7 +91,7 @@ public class VnfManagement {
 		final List<SubscriptionsPkgmSubscription> response = new ArrayList<>();
 		for (final String entry : listFilesInFolder) {
 			final RepositoryElement repositoryElement = repositoryService.getElement(entry);
-			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
+			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
 			try {
 				final SubscriptionObject subscriptionObject = mapper.readValue(content, SubscriptionObject.class);
 
@@ -98,7 +99,7 @@ public class VnfManagement {
 				final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
 				pack.setPkgmSubscription(subscriptionsPkgmSubscription);
 				response.add(subscriptionsPkgmSubscription);
-			} catch (final Exception e) {
+			} catch (final IOException e) {
 				throw new GenericException(e);
 			}
 		}
@@ -151,7 +152,7 @@ public class VnfManagement {
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 
-	public JSONArray vnfPackagesGet(MultivaluedMap<String, String> queryParameters) throws ServiceException {
+	public JSONArray vnfPackagesGet(Map<String, String> queryParameters) throws ServiceException {
 
 		final List<String> vnfPkgsIdsList = getVnfPkgIdsFromRepository();
 
@@ -190,8 +191,8 @@ public class VnfManagement {
 				return getZipArchive(rangeHeader, listvnfPckgFiles);
 			}
 			final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
-			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
-			return Response.ok().type(APPLICATION_ZIP).entity(new ByteArrayInputStream(content.getBytes())).build();
+			final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
+			return Response.ok().type(APPLICATION_ZIP).entity(new ByteArrayInputStream(content)).build();
 		}
 		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
@@ -211,14 +212,13 @@ public class VnfManagement {
 		if (isVnfd) {
 			if (MediaType.TEXT_PLAIN.equals(accept)) {
 				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
+				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
 				return Response.ok(content, MediaType.APPLICATION_JSON).build();
-			} else if (APPLICATION_ZIP.equals(accept)
-					|| (APPLICATION_ZIP.equals(accept) && MediaType.TEXT_PLAIN.equals(accept))) {
+			} else if (APPLICATION_ZIP.equals(accept) && MediaType.TEXT_PLAIN.equals(accept)) {
 				return getZipArchive(null, listvnfPckgFiles);
 			} else {
 				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement));
+				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
 				final String yaml = conJsonToYaml(content);
 				return Response.ok(yaml, "application/x-yaml").build();
 			}
@@ -256,13 +256,13 @@ public class VnfManagement {
 		}
 	}
 
-	private JSONArray applyAttributebasedFilteringAndSelectors(MultivaluedMap<String, String> queryParams, JSONArray vnfPkgInfos, JSONObject contentJson) {
+	private JSONArray applyAttributebasedFilteringAndSelectors(Map<String, String> queryParams, JSONArray vnfPkgInfos, JSONObject contentJson) {
 		// Get the dynamic paramaters attribute / value(s)
 		String attributesParams = "";
-		List<String> attributesValuesParams = new LinkedList<>();
 
+		String attributesValuesParams = "";
 		// Get the filter parameter from the query params object.
-		for (final Map.Entry<String, List<String>> entry : queryParams.entrySet()) {
+		for (final Entry<String, String> entry : queryParams.entrySet()) {
 			attributesParams = entry.getKey();
 			attributesValuesParams = entry.getValue();
 		}
@@ -327,14 +327,14 @@ public class VnfManagement {
 	 * @param contentJson
 	 * @return TRUE if matched and FALSE in opposite.
 	 */
-	private boolean isFilterMatched(String attributesParams, List<String> attributesValuesParams, JSONObject contentJson) {
+	private boolean isFilterMatched(String attributesParams, String attributesValuesParams, JSONObject contentJson) {
 		String filterOperator = "";
 
 		if (!("".equals(attributesParams) && attributesValuesParams.isEmpty())) {
 
 			final ArrayList<String> listOfAttribute = splitStringObj("\\.", attributesParams);
 
-			final String attributeValues = attributesValuesParams.get(0);
+			final String attributeValues = attributesValuesParams;
 			final ArrayList<String> listOfExpectedValues = splitStringObj(",", attributeValues);
 
 			// Retrieve the filter operator from filter attribute.
@@ -451,8 +451,8 @@ public class VnfManagement {
 		return false;
 	}
 
-	private void keepFieldsInVnfPckgInfo(JSONObject contentJson, List<String> attributesValuesParams, ArrayList<String> listOfDefaultExcludeFields) {
-		final String attributeValues = attributesValuesParams.get(0);
+	private void keepFieldsInVnfPckgInfo(JSONObject contentJson, String attributesValuesParams, ArrayList<String> listOfDefaultExcludeFields) {
+		final String attributeValues = attributesValuesParams;
 		final ArrayList<String> fieldsFromInput = splitStringObj(",", attributeValues);
 		final ArrayList<String> fieldsToRemove = listOfDefaultExcludeFields;
 
@@ -477,7 +477,7 @@ public class VnfManagement {
 
 		// List vnfd package from repository
 		final List<String> listFilesInFolder = repositoryService.doSearch(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "");
-		final List<String> vnfPackageIdList = new ArrayList<String>();
+		final List<String> vnfPackageIdList = new ArrayList<>();
 
 		// Split files path and store VNF Pckg Id
 		for (final String filePath : listFilesInFolder) {
