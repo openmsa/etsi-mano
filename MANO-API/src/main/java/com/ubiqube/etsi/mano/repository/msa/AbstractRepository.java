@@ -1,6 +1,6 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -19,7 +19,7 @@ public abstract class AbstractRepository<T> implements CrudRepository<T> {
 
 	protected RepositoryService repositoryService;
 
-	@Inject
+	@Autowired
 	public AbstractRepository(final RepositoryService _repositoryService) {
 		repositoryService = _repositoryService;
 	}

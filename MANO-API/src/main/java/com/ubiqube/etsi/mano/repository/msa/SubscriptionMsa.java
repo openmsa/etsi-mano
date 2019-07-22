@@ -2,8 +2,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +17,6 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
  */
 @Repository
 public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObject> implements SubscriptionRepository {
-	@Inject
 	public SubscriptionMsa(ObjectMapper _mapper, RepositoryService _repositoryService) {
 		super(_mapper, _repositoryService);
 	}
