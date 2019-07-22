@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.utils;
+package com.ubiqube.etsi.mano.service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +21,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,14 +54,15 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
  * @author ovi@ubiqube.com
  *
  */
+@Service
 public class Notifications {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(Notifications.class);
 	/** JSON mapper. */
 	private final ObjectMapper mapper;
 
-	public Notifications() {
-		mapper = ConfiguredObjectMapper.getMapper();
+	public Notifications(ObjectMapper _mapper) {
+		mapper = _mapper;
 	}
 
 	/**

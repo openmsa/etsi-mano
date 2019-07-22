@@ -46,7 +46,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.msa.AbstractGenericRepository;
-import com.ubiqube.etsi.mano.utils.Notifications;
+import com.ubiqube.etsi.mano.service.Notifications;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
@@ -65,14 +65,16 @@ public class VnfManagement {
 	private final RepositoryService repositoryService;
 	private final ObjectMapper mapper;
 	private final AbstractGenericRepository<SubscriptionObject> subscriptionRepository;
+	private final Notifications notifications;
 
-	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ObjectMapper _mapper, AbstractGenericRepository<SubscriptionObject> _subscriptionRepository) {
+	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ObjectMapper _mapper, AbstractGenericRepository<SubscriptionObject> _subscriptionRepository, Notifications _notifications) {
 		super();
 		LOG.debug("Booting VNF SOL003 SOL005 Management.");
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
 		mapper = _mapper;
 		subscriptionRepository = _subscriptionRepository;
+		notifications = _notifications;
 	}
 
 	public VnfPkgInfo vnfPackagesVnfPkgIdGet(String vnfPkgId) {
@@ -124,7 +126,6 @@ public class VnfManagement {
 	}
 
 	public void vnfPackageChangeNotificationPost(NotificationsMessage notificationsMessage, String id, String hrefVnfPackage, String hrefSubscription) {
-		final Notifications notifications = new Notifications();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -138,8 +139,6 @@ public class VnfManagement {
 	}
 
 	public void vnfPackageOnboardingNotificationPost(NotificationsMessage notificationsMessage, String id, String hrefSubscription, String hrefPackage) {
-		final Notifications notifications = new Notifications();
-
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionsPkgmSubscription req = subscriptionsRepository.getSubscriptionsPkgmSubscription();
