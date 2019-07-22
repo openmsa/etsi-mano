@@ -3,8 +3,8 @@ package com.ubiqube.etsi.mano.controller.nsd.sol005;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.ws.rs.core.Response;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,7 +108,7 @@ public interface NsdSol005 {
 	 * outside the scope of the present document.
 	 *
 	 */
-	public Response nsDescriptorsNsdInfoIdNsdContentGet(@PathVariable("nsdInfoId") String nsdInfoId, @RequestHeader("Accept") String accept, @RequestHeader("Range") String range);
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(@PathVariable("nsdInfoId") String nsdInfoId, @RequestHeader("Accept") String accept, @RequestHeader("Range") String range);
 
 	/**
 	 * Upload the content of a NSD.

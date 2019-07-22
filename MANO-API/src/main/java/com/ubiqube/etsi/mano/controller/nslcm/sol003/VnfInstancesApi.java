@@ -1,21 +1,12 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
-import java.net.URI;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,9 +68,6 @@ public class VnfInstancesApi {
 		LOG.debug("Registrating VnfInstanceApi");
 	}
 
-	@GET
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query VNF  The GET method queries information about multiple VNF instances. ", response = VnfInstance.class, responseContainer = "List", tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "OK Information about zero or more VNF instances was queried successfully. The response body shall contain representations of zero or more VNF instances. ", response = VnfInstance.class, responseContainer = "List"),
@@ -93,13 +82,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<List<VnfInstance>> vnfInstancesGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<List<VnfInstance>> vnfInstancesGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		return new ResponseEntity<>(vnfInstancesRepository.query(), HttpStatus.OK);
 	}
 
-	@POST
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Create VNF Identifier  The POST method creates a new VNF instance resource. ", response = VnfInstance.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 201, message = "A VNF Instance identifier was created successfully", response = VnfInstance.class),
@@ -115,7 +101,7 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<VnfInstance> vnfInstancesPost(@ApiParam(value = "The VNF creation parameters", required = true) CreateVnfRequest createVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context UriInfo uriInfo) {
+	public ResponseEntity<VnfInstance> vnfInstancesPost(@ApiParam(value = "The VNF creation parameters", required = true) CreateVnfRequest createVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		vnfPackageRepository.get(vnfId);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
@@ -131,26 +117,22 @@ public class VnfInstancesApi {
 			throw new GenericException(e);
 		}
 
-		final String hrefScaleToLevel = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdScaleToLevelPost")).build(id).getUri().toString();
-		final String hrefScale = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdScalePost")).build(id).getUri().toString();
-		final String hrefOperate = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdOperatePost")).build(id).getUri().toString();
-		final String hrefInstanciate = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdInstantiatePost")).build(id).getUri().toString();
+		final String hrefScaleToLevel = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdScaleToLevelPost(id, null, null, null, null)).withSelfRel().getHref();
+		final String hrefScale = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdScalePost(id, null, null, null, null)).withSelfRel().getHref();
+		final String hrefOperate = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdOperatePost(id, null, null, null, null)).withSelfRel().getHref();
+		final String hrefInstanciate = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
 		final String hrefIndicators = "";// javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(),
 											// "")).build(id).getUri().toString();
-		final String hrefHeal = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdHealPost")).build(id).getUri().toString();
-		final String hrefChangeFlavor = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdChangeFlavourPost")).build(id).getUri().toString();
-		final String hrefChangeExtConn = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdChangeExtConnPost")).build(id).getUri().toString();
-		final String hrefSelf = javax.ws.rs.core.Link.fromUriBuilder(uriInfo.getBaseUriBuilder().path(this.getClass(), "vnfInstancesVnfInstanceIdGet")).build(id).getUri().toString();
+		final String hrefHeal = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdHealPost(id, null, null, null, null)).withSelfRel().getHref();
+		final String hrefChangeFlavor = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdChangeFlavourPost(id, null, null, null, null)).withSelfRel().getHref();
+		final String hrefChangeExtConn = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null, null, null, null)).withSelfRel().getHref();
+		final String hrefSelf = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdGet(id, null, null, null)).withSelfRel().getHref();
 		final VnfInstanceLinks vnfInstanceLinks = LcmFactory.createVnfInstancesLink(hrefSelf, hrefChangeExtConn, hrefChangeFlavor, hrefHeal, hrefIndicators, hrefInstanciate, hrefOperate, hrefScale, hrefScaleToLevel);
 		vnfInstance.setLinks(vnfInstanceLinks);
 		vnfInstancesRepository.save(vnfInstance);
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/change_ext_conn")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Change External VNF Connectivity  The POST method changes the external connectivity of a VNF instance. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -164,14 +146,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/change_ext_conn", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(@ApiParam(value = "Identifier of the VNF instance of which the external connectivity is requested to be changed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Change external VNF connectivity operation. ", required = true) ChangeExtVnfConnectivityRequest changeExtVnfConnectivityRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(@ApiParam(value = "Identifier of the VNF instance of which the external connectivity is requested to be changed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Change external VNF connectivity operation. ", required = true) ChangeExtVnfConnectivityRequest changeExtVnfConnectivityRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/change_flavour")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Change VNF Flavour  The POST method changes the deployment flavour of a VNF instance. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -185,14 +163,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/change_flavour", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(@ApiParam(value = "The identifier of the VNF instance of which the deployment flavour is requested to be changed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Change VNF Flavour operation.", required = true) ChangeVnfFlavourRequest changeVnfFlavourRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(@ApiParam(value = "The identifier of the VNF instance of which the deployment flavour is requested to be changed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Change VNF Flavour operation.", required = true) ChangeVnfFlavourRequest changeVnfFlavourRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@DELETE
-	@Path("/{vnfInstanceId}")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Delete VNF Identifier  This method deletes an individual VNF instance resource. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 204, message = "No Content The VNF instance resource and the associated VNF identifier were deleted successfully. The response body shall be empty. ", response = Void.class),
@@ -207,15 +181,11 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@DeleteMapping(value = "/{vnfInstanceId}", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		vnfInstancesRepository.delete(vnfInstanceId);
 		return ResponseEntity.noContent().build();
 	}
 
-	@GET
-	@Path("/{vnfInstanceId}")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query VNF  The GET method retrieves information about a VNF instance by reading an individual VNF instance resource. ", response = VnfInstance.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "OK Information about zero or more VNF instances was queried successfully. The response body shall contain representations of zero or more VNF instances. ", response = VnfInstance.class),
@@ -230,15 +200,11 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{vnfInstanceId}", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/heal")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Heal VNF  The POST method requests to heal a VNF instance resource. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -252,14 +218,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/heal", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(@ApiParam(value = "Identifier of the VNF instance to be healed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Heal VNF operation.", required = true) HealVnfRequest healVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(@ApiParam(value = "Identifier of the VNF instance to be healed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Heal VNF operation.", required = true) HealVnfRequest healVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/instantiate")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Instantiate VNF  The POST method instantiates a VNF instance. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the  processing has not been completed. The response body shall be empty. The HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -274,8 +236,8 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/instantiate", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the VNF instantiation.", required = true) InstantiateVnfRequest instantiateVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization, @Context UriInfo uriInfo) {
-		final Map<String, String> varsMap = new HashMap<String, String>();
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the VNF instantiation.", required = true) InstantiateVnfRequest instantiateVnfRequest) {
+		final Map<String, String> varsMap = new HashMap<>();
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final String vnfPkgId = vnfInstance.getVnfdId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
@@ -301,14 +263,10 @@ public class VnfInstancesApi {
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
-		final URI uri = uriInfo.getBaseUriBuilder().path(this.getClass()).build(vnfInstanceId).normalize();
+		final String uri = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdGet(vnfInstanceId, null, null, null)).withSelfRel().getHref();
 		return ResponseEntity.noContent().build();
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/operate")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Operate VNF  The POST method changes the operational state of a VNF instance resource. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -322,14 +280,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/operate", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(@ApiParam(value = "Identifier of the VNF instance to be operated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Operate VNF operation.", required = true) OperateVnfRequest operateVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(@ApiParam(value = "Identifier of the VNF instance to be operated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the Operate VNF operation.", required = true) OperateVnfRequest operateVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@PATCH
-	@Path("/{vnfInstanceId}")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Modify VNF Information  This method modifies an individual VNF instance resource. Changes to the VNF configurable properties are applied to the configuration in the VNF instance, and are reflected in the representation of this resource. Other changes are applied to the VNF instance information managed by the VNFM, and are reflected in the representation of this resource ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. The response body shall be empty. ", response = Void.class),
@@ -344,14 +298,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{vnfInstanceId}/heal", consumes = { "application/json" }, produces = { "application/json" }, method = RequestMethod.PATCH)
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Input parameters for VNF info modification. ", required = true) VnfInfoModificationRequest vnfInfoModificationRequest, @ApiParam(value = "The Content-Type header shall be set to \"application/merge-patch+json\" according to IETF RFC 7396. ", required = true, allowableValues = "application/merge-patch+json") @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Input parameters for VNF info modification. ", required = true) VnfInfoModificationRequest vnfInfoModificationRequest, @ApiParam(value = "The Content-Type header shall be set to \"application/merge-patch+json\" according to IETF RFC 7396. ", required = true, allowableValues = "application/merge-patch+json") @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/scale")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Scale VNF  The POST method requests to scale a VNF instance resource incrementally. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -365,14 +315,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/scale", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(@ApiParam(value = "Identifier of the VNF instance to be scaled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the scale VNF operation.", required = true) ScaleVnfRequest scaleVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(@ApiParam(value = "Identifier of the VNF instance to be scaled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the scale VNF operation.", required = true) ScaleVnfRequest scaleVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/scale_to_level")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Scale VNF to Level  The POST method requests to scale a VNF instance resource to a target level. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -386,14 +332,10 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@DeleteMapping(value = "/{vnfInstanceId}/scale_to_level", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(@ApiParam(value = "Identifier of the VNF instance to be scaled to a target level. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the scale VNF to Level operation.", required = true) ScaleVnfToLevelRequest scaleVnfToLevelRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(@ApiParam(value = "Identifier of the VNF instance to be scaled to a target level. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the scale VNF to Level operation.", required = true) ScaleVnfToLevelRequest scaleVnfToLevelRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfInstanceId}/terminate")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Terminate VNF  The POST method terminates a VNF instance. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but the processing has not been completed. On success, the HTTP response shall include a \"Location\" HTTP header that contains the URI of the newly-created \"VNF LCM operation occurrence\" resource corresponding to the operation. ", response = Void.class),
@@ -407,7 +349,28 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/terminate", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(@ApiParam(value = "The identifier of the VNF instance to be terminated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the VNF termination.", required = true) TerminateVnfRequest terminateVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization) {
-		throw new GenericException("TODO");
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(@ApiParam(value = "The identifier of the VNF instance to be terminated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "Parameters for the VNF termination.", required = true) TerminateVnfRequest terminateVnfRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Content-Type") String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final String vnfPkgId = vnfInstance.getVnfPkgId();
+		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
+		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
+		final String msaProcessId = userData.get("msaProcessId");
+
+		final String processName = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Suspend";
+		final String serviceName = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
+		final long serviceId = Long.valueOf(msaProcessId);
+		final String customerId = userData.get("customerId");
+		final Map<String, String> varsMap = new HashMap<String, String>();
+
+		try {
+			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
+			userData.put("msaProcessId", String.valueOf(resp.processId.id));
+			vnfPkg.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+			vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
+			vnfPackageRepository.save(vnfPkg);
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+		return ResponseEntity.noContent().build();
 	}
 }

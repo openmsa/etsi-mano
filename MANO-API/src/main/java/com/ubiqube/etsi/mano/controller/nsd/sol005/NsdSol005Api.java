@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -221,7 +222,7 @@ public class NsdSol005Api implements NsdSol005 {
 			@ApiResponse(code = 409, message = "Conflict Error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact \"nsdOnboardingState\" has a value different from ONBOARDED. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 412, message = "Precondition Failed. A precondition given in an HTTP request header is not fulfilled. Typically, this is due to an ETag mismatch, indicating that the resource was modified by another entity.  The response body should contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = NsDescriptorsNsdInfoOnboardingFailureDetails.class) })
 	@GetMapping(value = "/ns_descriptors/{nsdInfoId}/nsd_content", consumes = { "application/json" }, produces = { "application/json" })
-	public Response nsDescriptorsNsdInfoIdNsdContentGet(@PathVariable("nsdInfoId") String nsdInfoId, @RequestHeader("Accept") String accept, @RequestHeader("Range") String range) {
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(@PathVariable("nsdInfoId") String nsdInfoId, @RequestHeader("Accept") String accept, @RequestHeader("Range") String range) {
 		try {
 			final RangeHeader rangeHeader = RangeHeader.fromValue(range);
 			final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NSD_BASE_PATH).append("/").append(nsdInfoId).toString(), "");
@@ -231,7 +232,11 @@ public class NsdSol005Api implements NsdSol005 {
 				}
 				final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
 				final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
-				return Response.ok().type(APPLICATION_ZIP).entity(new ByteArrayInputStream(content)).build();
+				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+				return ResponseEntity.ok()
+						.contentType(MediaType.APPLICATION_OCTET_STREAM)
+						.body(resource);
+
 			}
 			throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ").append(nsdInfoId).toString());
 		} catch (final ServiceException e) {
@@ -668,7 +673,7 @@ public class NsdSol005Api implements NsdSol005 {
 	 * @return
 	 *
 	 */
-	private Response getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
+	private ResponseEntity<Resource> getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
 
 		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
 		ByteArrayOutputStream bos;
@@ -676,15 +681,19 @@ public class NsdSol005Api implements NsdSol005 {
 		try {
 			if (rangeHeader == null) {
 				bos = zip.getZipFile();
-				final Response.ResponseBuilder response = Response.status(Response.Status.OK).type(APPLICATION_ZIP).entity(new ByteArrayInputStream(bos.toByteArray()));
-				return response.build();
+				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
+				return ResponseEntity.ok()
+						.contentType(MediaType.APPLICATION_OCTET_STREAM)
+						.body(resource);
 
 			}
 			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
 			final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
 					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
-			final Response.ResponseBuilder response = Response.status(Response.Status.PARTIAL_CONTENT).type(APPLICATION_ZIP).entity(new ByteArrayInputStream(bos.toByteArray())).header("Content-Range", contentRange);
-			return response.build();
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_OCTET_STREAM)
+					.body(resource);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

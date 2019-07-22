@@ -3,8 +3,7 @@ package com.ubiqube.etsi.mano.controller.vnf.sol003;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
-
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
 import com.ubiqube.api.exception.ServiceException;
@@ -32,7 +31,7 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.
@@ -54,7 +53,7 @@ public interface VnfPackageSol003 {
 	 * @throws ServiceException
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdPackageContentGet(String vnfPkgId, String accept, String range);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(String vnfPkgId, String accept, String range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.
@@ -83,6 +82,6 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException;
 
 }
