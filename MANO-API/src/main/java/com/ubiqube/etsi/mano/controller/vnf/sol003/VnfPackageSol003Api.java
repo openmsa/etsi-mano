@@ -3,12 +3,11 @@ package com.ubiqube.etsi.mano.controller.vnf.sol003;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +42,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
 	private final VnfManagement vnfManagement;
 
-	@Inject
+	@Autowired
 	public VnfPackageSol003Api(VnfManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
@@ -73,7 +72,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") String artifactPath, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) throws ServiceException {
+	public Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") String artifactPath, @RequestParam("Accept") String accept, @RequestParam("Range") String range) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
 
@@ -84,7 +83,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@PathVariable("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestParam("Accept") String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -104,7 +103,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathVariable("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) {
+	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestParam("Accept") String accept, @RequestParam("Range") String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
@@ -136,7 +135,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdVnfdGet(@PathVariable("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
+	public Response vnfPackagesVnfPkgIdVnfdGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestParam("Accept") String accept) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
 	}
 

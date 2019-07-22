@@ -1,11 +1,9 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
@@ -59,7 +58,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json", "application/zip" }, consumes = { "application/json" })
 	Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException;
 
 	@ApiOperation(value = "Read information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdGet", notes = "The GET method reads the information of a VNF package. ", response = VnfPackagesVnfPkgIdGetResponse.class, tags = {})
@@ -190,7 +189,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PutMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "multipart/form-data" })
-	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(String vnfPkgId, String accept, InputStream fileDetail, FormDataContentDisposition part);
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(String vnfPkgId, String accept, @RequestParam("file") MultipartFile file);
 
 	/**
 	 * Upload a VNF package by providing the address information of the VNF package.

@@ -74,7 +74,7 @@ public class VnfManagement {
 	}
 
 	public VnfPkgInfo vnfPackagesVnfPkgIdGet(String vnfPkgId) {
-		final VnfPkgInfo vnfPkgInfo = getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, false);
+		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return vnfPkgInfo;
