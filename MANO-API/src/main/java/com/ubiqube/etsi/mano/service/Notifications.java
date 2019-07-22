@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -99,14 +100,10 @@ public class Notifications {
 				final int status = response.getStatusLine().getStatusCode();
 				if ((status < 200) || (status >= 300)) {
 					LOG.error("An error Occured while contacting {} errorcode was: {}", status, _uri);
-					response.close();
-					httpClient.close();
 					throw new GenericException("HttpClient got an error: " + status);
 				}
-				response.close();
-				httpClient.close();
 			}
-		} catch (final Exception e) {
+		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}
