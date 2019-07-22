@@ -72,7 +72,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") String artifactPath, @RequestHeader("Accept") String accept, @RequestHeader("Range") String range) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") String artifactPath, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
 
@@ -103,7 +103,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept, @RequestHeader("Range") String range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
