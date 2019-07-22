@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.exception;
 
-import javax.ws.rs.WebApplicationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,8 +23,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	}
 
-	@ExceptionHandler({ WebApplicationException.class })
-	public ResponseEntity<ProblemDetails> handleWebApplicationException(WebApplicationException e) {
-		return new ResponseEntity<>((ProblemDetails) e.getResponse().getEntity(), HttpStatus.valueOf(e.getResponse().getStatus()));
-	}
 }
