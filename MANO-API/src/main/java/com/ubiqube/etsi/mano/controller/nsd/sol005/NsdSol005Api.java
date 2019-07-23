@@ -81,7 +81,6 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/sol005/nsd/v1")
 @Api(value = "/")
 public class NsdSol005Api implements NsdSol005 {
-	private static final String APPLICATION_ZIP = "application/zip";
 	protected static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";
 
@@ -234,7 +233,7 @@ public class NsdSol005Api implements NsdSol005 {
 				final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
 				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
 				return ResponseEntity.ok()
-						.contentType(MediaType.APPLICATION_OCTET_STREAM)
+						.contentType(MediaType.APPLICATION_JSON_UTF8)
 						.body(resource);
 
 			}
