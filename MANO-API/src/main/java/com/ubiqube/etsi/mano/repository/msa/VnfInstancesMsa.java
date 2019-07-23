@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 
 	@Override
 	public List<VnfInstance> query() {
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
