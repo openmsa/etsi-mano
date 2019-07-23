@@ -687,12 +687,13 @@ public class NsdSol005Api implements NsdSol005 {
 						.body(resource);
 
 			}
-			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
-			final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
+			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), rangeHeader.getTo());
+			final String contentRange = new StringBuilder().append("bytes ").append(rangeHeader.getFrom()).append("-")
 					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
 			return ResponseEntity.ok()
 					.contentType(MediaType.APPLICATION_OCTET_STREAM)
+					.header("Range", contentRange)
 					.body(resource);
 		} catch (final IOException e) {
 			throw new GenericException(e);

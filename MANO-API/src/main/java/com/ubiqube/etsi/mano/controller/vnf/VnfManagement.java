@@ -254,7 +254,7 @@ public class VnfManagement {
 				return ResponseEntity.ok().contentType(contentType).body(resource);
 
 			}
-			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
+			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), rangeHeader.getTo());
 			final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
 					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
