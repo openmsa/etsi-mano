@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.ByteStreams;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -104,4 +106,16 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 			throw new GenericException(e);
 		}
 	}
+
+	public void storeObject(String _vnfPkgId, InputStream _stream, String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
+		path.append('/').append(_filename);
+
+		try {
+			repositoryService.addFile(path.toString(), "", "etsi-mano", ByteStreams.toByteArray(_stream), "ncroot");
+		} catch (ServiceException | IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
 }
