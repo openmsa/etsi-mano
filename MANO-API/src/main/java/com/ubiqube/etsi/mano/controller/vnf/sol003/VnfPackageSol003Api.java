@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ import net.sf.json.JSONArray;
  *
  */
 @RestController
-@RequestMapping("/sol003/vnfpkgm/v1")
+@RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
 public class VnfPackageSol003Api implements VnfPackageSol003 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
@@ -57,6 +58,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
+	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<?> vnfPackagesGet(@RequestParam Map<String, String> requestParams) throws ServiceException {
 		final JSONArray resp = vnfManagement.vnfPackagesGet(requestParams);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -72,6 +74,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
+	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") String artifactPath, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
@@ -83,6 +86,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
+	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
@@ -103,6 +107,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
+	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
@@ -135,6 +140,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
+	@GetMapping(value = "/{vnfPkgId}/vnfd", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
 	}
