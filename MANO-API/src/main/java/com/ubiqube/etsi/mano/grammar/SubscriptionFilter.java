@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.controller;
+package com.ubiqube.etsi.mano.grammar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -8,11 +8,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.grammar.EtsiLexer;
-import com.ubiqube.etsi.mano.grammar.Etsifilter;
-import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
-import com.ubiqube.etsi.mano.grammar.TreeBuilder;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 
