@@ -32,14 +32,15 @@ import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.SubscriptionFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
@@ -85,6 +86,7 @@ public class VnfManagement {
 	}
 
 	public List<SubscriptionsPkgmSubscription> subscriptionsGet(String filter) {
+		final SubscriptionFilter subscriptionFilter = new SubscriptionFilter(filter);
 		List<String> listFilesInFolder;
 		try {
 			listFilesInFolder = repositoryService.doSearch(REPOSITORY_SUBSCRIPTION_BASE_PATH, "");
@@ -97,11 +99,12 @@ public class VnfManagement {
 			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
 			try {
 				final SubscriptionObject subscriptionObject = mapper.readValue(content, SubscriptionObject.class);
-
-				final InlineResponse2001 pack = new InlineResponse2001();
-				final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
-				pack.setPkgmSubscription(subscriptionsPkgmSubscription);
-				response.add(subscriptionsPkgmSubscription);
+				if (subscriptionFilter.apply(subscriptionObject)) {
+					final InlineResponse2001 pack = new InlineResponse2001();
+					final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
+					pack.setPkgmSubscription(subscriptionsPkgmSubscription);
+					response.add(subscriptionsPkgmSubscription);
+				}
 			} catch (final IOException e) {
 				throw new GenericException(e);
 			}
@@ -109,16 +112,16 @@ public class VnfManagement {
 		return response;
 	}
 
-	public List<InlineResponse2001> subscriptionsPost(SubscriptionsPostQuery subscriptionsPostQuery, String href, String id) {
+	public List<InlineResponse2001> subscriptionsPost(SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, String href, String id) {
 		// Response
 		final ArrayList<InlineResponse2001> response = new ArrayList<>();
-		final String callback = subscriptionsPostQuery.getPkgmSubscriptionRequest().getCallbackUri();
-		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getPkgmSubscriptionRequest().getFilter();
+		final String callback = subscriptionsPostQuery.getCallbackUri();
+		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getFilter();
 		final SubscriptionsPkgmSubscription subscription = new SubscriptionsPkgmSubscription(callback, id, href, filter);
 
 		final InlineResponse2001 pack = new InlineResponse2001();
 		pack.setPkgmSubscription(subscription);
-		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getPkgmSubscriptionRequest().getAuthentication(), subscription);
+		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
 		subscriptionRepository.save(subscriptionObject);
 
 		response.add(pack);
