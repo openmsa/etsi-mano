@@ -374,6 +374,16 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 	}
 
+	/**
+	 * Prevent directory traversal.
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	protected String sanitize(String fileName) {
+		return fileName.replaceAll("\\.\\.", "");
+	}
+
 	private static boolean isZip(String httpAccept) {
 		return ("application/zip".equals(httpAccept) || "application/x-zip-compressed".equals(httpAccept));
 	}

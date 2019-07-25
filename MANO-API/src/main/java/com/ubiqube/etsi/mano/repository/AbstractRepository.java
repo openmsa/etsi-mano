@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.repository;
 
-import javax.inject.Inject;
-
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -18,7 +16,6 @@ public abstract class AbstractRepository<T> {
 
 	protected RepositoryService repositoryService;
 
-	@Inject
 	public AbstractRepository(RepositoryService _repositoryService) {
 		repositoryService = _repositoryService;
 	}

@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -20,15 +21,22 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
  */
 public class SubscriptionFilter {
 
-	public List<Node> getFilters(String query) {
-		final TreeBuilder treeBuilder = new TreeBuilder();
-		final EtsiLexer el = new EtsiLexer(new ANTLRInputStream(query));
-		final CommonTokenStream tokens = new CommonTokenStream(el);
-		final Etsifilter parser = new Etsifilter(tokens);
-		parser.addParseListener(treeBuilder);
-		parser.filterExpr();
+	private final TreeBuilder treeBuilder;
+	private final List<Node> nodes;
 
-		return treeBuilder.getListNode();
+	public SubscriptionFilter(String filter) {
+		treeBuilder = new TreeBuilder();
+		if ((null != filter) && !filter.isEmpty()) {
+			final EtsiLexer el = new EtsiLexer(new ANTLRInputStream(filter));
+			final CommonTokenStream tokens = new CommonTokenStream(el);
+			final Etsifilter parser = new Etsifilter(tokens);
+			parser.addParseListener(treeBuilder);
+			parser.filterExpr();
+
+			nodes = treeBuilder.getListNode();
+		} else {
+			nodes = new ArrayList<>();
+		}
 	}
 
 	/**
@@ -38,7 +46,7 @@ public class SubscriptionFilter {
 	 * @param nodes
 	 * @return
 	 */
-	public boolean apply(SubscriptionObject subscriptionRepository, List<Node> nodes) {
+	public boolean apply(SubscriptionObject subscriptionRepository) {
 		final SubscriptionsPkgmSubscription pkgSub = subscriptionRepository.getSubscriptionsPkgmSubscription();
 		for (final Node node : nodes) {
 			if (!apply(pkgSub, node)) {
@@ -59,6 +67,9 @@ public class SubscriptionFilter {
 	}
 
 	private static boolean decide(String _objectValue, String _value, Operand operand) {
+		if (null == operand) {
+			return true;
+		}
 		if (Operand.EQ.equals(operand)) {
 			return _value.equals(_objectValue);
 		}
