@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,11 +28,17 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
+/**
+ *
+ * @author olivier
+ *
+ */
 @Service
 public class JsonBeanUtil {
-
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(JsonBeanUtil.class);
 	private final Set<String> simpleTypes = new HashSet<>();
+	private final Map<String, Map<String, JsonBeanProperty>> cache = new HashMap<>();
 
 	public JsonBeanUtil() {
 		simpleTypes.add("java.lang.String");
@@ -44,20 +50,20 @@ public class JsonBeanUtil {
 		simpleTypes.add("java.util.Date");
 	}
 
-	public Map<String, JsonBeanProperty> getProperties(@NotNull Object _object) {
+	public Map<String, JsonBeanProperty> getProperties(@Nonnull Object _object) {
+		Map<String, JsonBeanProperty> cached = cache.get(_object.getClass().getName());
+		if (cached != null) {
+			return cached;
+		}
 		Map<String, JsonBeanProperty> res;
 		try {
 			res = buildCache(_object.getClass());
 		} catch (final IntrospectionException e) {
 			throw new GenericException(e);
 		}
-		return rebuildProperties(res);
-	}
-
-	public void testFilter(@NotNull Object _object, String string) throws IntrospectionException {
-		final Map<String, JsonBeanProperty> res = buildCache(_object.getClass());
-		final Map<String, JsonBeanProperty> res2 = rebuildProperties(res);
-		System.out.println("" + res2);
+		cached = rebuildProperties(res);
+		cache.put(_object.getClass().getName(), cached);
+		return cached;
 	}
 
 	private Map<String, JsonBeanProperty> rebuildProperties(Map<String, JsonBeanProperty> res) {
