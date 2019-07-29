@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol003;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -21,8 +22,6 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
-
-import net.sf.json.JSONArray;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -60,7 +59,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	@Override
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<?> vnfPackagesGet(@RequestParam Map<String, String> requestParams) throws ServiceException {
-		final JSONArray resp = vnfManagement.vnfPackagesGet(requestParams);
+		final List<VnfPkgInfo> resp = vnfManagement.vnfPackagesGet(requestParams);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
