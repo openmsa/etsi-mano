@@ -2,8 +2,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,17 +17,11 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
  */
 @Repository
 public class NsPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo> implements NsdRepository {
-	@Inject
 	public NsPackageMsa(ObjectMapper _mapper, RepositoryService _repositoryService) {
 		super(_mapper, _repositoryService);
 	}
 
 	private static final String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
-
-	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH + "/" + _id + "/nsd.json";
-	}
 
 	@Override
 	String setId(NsDescriptorsNsdInfo _entity) {
@@ -44,6 +36,16 @@ public class NsPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo
 	@Override
 	Class<?> getClazz() {
 		return NsDescriptorsNsdInfo.class;
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "nsd.json";
 	}
 
 }

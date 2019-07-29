@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.repository;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +19,6 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
 
-	@Inject
 	public AbstractGenericRepository(ObjectMapper _mapper, RepositoryService _repositoryService) {
 		super(_repositoryService);
 		mapper = _mapper;

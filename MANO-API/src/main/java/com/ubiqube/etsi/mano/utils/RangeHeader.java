@@ -16,7 +16,7 @@ public class RangeHeader {
 
 	private final long from;
 
-	private final long to;
+	private Long to = null;
 
 	/**
 	 * RangeHeader class constructor.
@@ -25,10 +25,20 @@ public class RangeHeader {
 	 * @param from the start value of the range
 	 * @param to   the end value of the range
 	 */
-	public RangeHeader(Unit _unit, long _from, long _to) {
+	public RangeHeader(Unit _unit, long _from, Long _to) {
 		this.unit = _unit;
 		this.from = _from;
 		this.to = _to;
+	}
+
+	public RangeHeader(String range) {
+		final String[] tokens = range.replace("Range: ", "").split("=");
+		unit = Unit.valueOf(tokens[0].toUpperCase());
+		final String[] fromTo = tokens[1].split("-");
+		from = Long.parseLong(fromTo[0]);
+		if (fromTo.length > 1) {
+			to = Long.decode(fromTo[1]);
+		}
 	}
 
 	/**
@@ -57,7 +67,7 @@ public class RangeHeader {
 	 * @return the end value the range.
 	 *
 	 */
-	public long getTo() {
+	public Long getTo() {
 		return to;
 	}
 

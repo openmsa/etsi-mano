@@ -1,17 +1,8 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +12,11 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 
 import io.swagger.annotations.ApiParam;
 
-@Path("/vnf_lcm_op_occs")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
 @RestController
 @RequestMapping("/vnf_lcm_op_occs")
 public class VnfLcmOpOccsApi {
 
-	@GET
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Get Operation Status  The client can use this method to query status information about multiple VNF lifecycle management operation occurrences. ", response = VnfLcmOpOcc.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "OK Status information for zero or more VNF lifecycle management operation occurrences was queried successfully. The response body shall contain status information about zero or more VNF lifecycle operation occurrences. ", response = VnfLcmOpOcc.class),
@@ -42,15 +29,10 @@ public class VnfLcmOpOccsApi {
 			@io.swagger.annotations.ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfLcmOpOccsGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization)
-			throws NotFoundException {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfLcmOpOccId}/cancel")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "The POST method initiates cancelling an ongoing VNF lifecycle operation while it is being executed or rolled back, i.e. the related \"VNF LCM operation occurrence\" is either in \"PROCESSING\" or \"ROLLING_BACK\" state. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but processing has not been completed. The response shall have an empty payload body. ", response = Void.class),
@@ -63,15 +45,10 @@ public class VnfLcmOpOccsApi {
 			@io.swagger.annotations.ApiResponse(code = 409, message = "Conflict The operation cannot be executed currently, due to a conflict with the state of the VNF LCM operation occurrence resource. Typically, this is due to the fact that the operation occurrence is not in STARTING, PROCESSING or ROLLING_BACK state. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfLcmOpOccsVnfLcmOpOccIdCancelPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be cancelled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathParam("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization)
-			throws NotFoundException {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be cancelled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfLcmOpOccId}/fail")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "The POST method marks a VNF lifecycle management operation occurrence as \"finally failed\" if that operation occurrence is in \"FAILED_TEMP\" state. ", response = VnfLcmOpOcc.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "OK The state of the VNF lifecycle management operation occurrence was changed successfully. The response shall include a representation of the VNF lifecycle operation occurrence resource. ", response = VnfLcmOpOcc.class),
@@ -84,15 +61,10 @@ public class VnfLcmOpOccsApi {
 			@io.swagger.annotations.ApiResponse(code = 409, message = "The operation cannot be executed currently, due to a conflict with the state of the VNF instance resource. Typically, this is due to the fact that the VNF instance resource is not in FAILED_TEMP state, or another error handling action is starting, such as rollback or fail. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfLcmOpOccsVnfLcmOpOccIdFailPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be marked as \"failed\". This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathParam("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization)
-			throws NotFoundException {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdFailPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be marked as \"failed\". This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@GET
-	@Path("/{vnfLcmOpOccId}")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Get Operation Status  The client can use this method to retrieve status information about a VNF lifecycle management operation occurrence by reading an individual \"VNF LCM operation occurrence\" resource. ", response = VnfLcmOpOcc.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 200, message = "OK Information about an individual VNF instance was queried successfully. The response body shall contain status information about a VNF lifecycle management operation occurrence. ", response = VnfLcmOpOcc.class),
@@ -105,15 +77,10 @@ public class VnfLcmOpOccsApi {
 			@io.swagger.annotations.ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfLcmOpOccsVnfLcmOpOccIdGet(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathParam("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @HeaderParam("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization)
-			throws NotFoundException {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader("Accept") String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfLcmOpOccId}/retry")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "The POST method initiates retrying a VNF lifecycle operation if that operation has experienced a temporary failure, i.e. the related \"VNF LCM operation occurrence\" resource is in \"FAILED_TEMP\" state. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but processing has not been completed. The response shall have an empty payload body. ", response = Void.class),
@@ -126,15 +93,10 @@ public class VnfLcmOpOccsApi {
 			@io.swagger.annotations.ApiResponse(code = 409, message = "The operation cannot be executed currently, due to a conflict with the state of the VNF instance resource. Typically, this is due to the fact that the VNF instance resource is not in FAILED_TEMP state, or another error handling action is starting, such as rollback or fail. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfLcmOpOccsVnfLcmOpOccIdRetryPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be retried. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathParam("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization)
-			throws NotFoundException {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be retried. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 
-	@POST
-	@Path("/{vnfLcmOpOccId}/rollback")
-	@Consumes({ "application/json" })
-	@Produces({ "application/json" })
 	@io.swagger.annotations.ApiOperation(value = "", notes = "The POST method initiates rolling back a VNF lifecycle operation if that operation has experienced a temporary failure, i.e. the related \"VNF LCM operation occurrence\" resource is in \"FAILED_TEMP\" state. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
 			@io.swagger.annotations.ApiResponse(code = 202, message = "Accepted The request was accepted for processing, but processing has not been completed. The response shall have an empty payload body. ", response = Void.class),
@@ -147,8 +109,7 @@ public class VnfLcmOpOccsApi {
 			@io.swagger.annotations.ApiResponse(code = 409, message = "The operation cannot be executed currently, due to a conflict with the state of the VNF instance resource. Typically, this is due to the fact that the VNF instance resource is not in FAILED_TEMP state, or another error handling action is starting, such as rollback or fail. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	public Response vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be rolled back. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathParam("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @HeaderParam("Authorization") String authorization)
-			throws NotFoundException {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be rolled back. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
 		throw new GenericException("TODO");
 	}
 }

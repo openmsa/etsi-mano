@@ -1,28 +1,20 @@
 package com.ubiqube.etsi.mano.exception;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.ProblemDetails;
-
-public class NotFoundException extends WebApplicationException {
+public class NotFoundException extends ResponseStatusException {
 
 	/**
 	 * Default Serial.
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public NotFoundException() {
-		super();
-	}
-
 	public NotFoundException(String _detail) {
-		super(Response.serverError().status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON_TYPE).entity(new ProblemDetails(404, _detail)).build());
+		super(HttpStatus.NOT_FOUND, _detail);
 	}
 
 	public NotFoundException(String _detail, Throwable e) {
-		super(e, Response.serverError().status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON_TYPE).entity(new ProblemDetails(404, _detail)).build());
+		super(HttpStatus.NOT_FOUND, _detail, e);
 	}
 }

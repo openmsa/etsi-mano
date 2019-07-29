@@ -14,7 +14,7 @@ import com.ubiqube.etsi.mano.exception.RequestRangeNotSatisfiableException;
 
 public class ZipFileHandler {
 
-	private List<String> filesUri = new LinkedList<String>();
+	private List<String> filesUri = new LinkedList<>();
 	private final RepositoryService repositoryService;
 	private long zipFileByteArrayLength = 0;
 
@@ -77,13 +77,13 @@ public class ZipFileHandler {
 	 * @throws IOException
 	 * @throws RequestRangeNotSatisfiableException
 	 */
-	public ByteArrayOutputStream getByteRangeZipFile(int from, int to) throws IOException, RequestRangeNotSatisfiableException {
+	public ByteArrayOutputStream getByteRangeZipFile(int from, Long to) throws IOException, RequestRangeNotSatisfiableException {
 		final byte[] bytesInput = this.getZipFile().toByteArray();
 		zipFileByteArrayLength = bytesInput.length;
 		if ((from < 0) || (to <= 0) || (from >= zipFileByteArrayLength) || (to >= zipFileByteArrayLength)) {
 			throw new RequestRangeNotSatisfiableException("Request Range Not Satisfiable.");
 		}
-		final byte[] bytesOutput = Arrays.copyOfRange(bytesInput, from, to);
+		final byte[] bytesOutput = Arrays.copyOfRange(bytesInput, from, to.intValue());
 
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream(bytesOutput.length);
 		bos.write(bytesOutput, 0, bytesOutput.length);

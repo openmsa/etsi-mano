@@ -3,9 +3,8 @@ package com.ubiqube.etsi.mano.controller.nsperfo.sol005;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,8 +44,8 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public List<Object> pmJobsGet(String accept, String contentType, String filter, String allFields, String include, String exclude, String excludeDefault) {
-		return new ArrayList<>();
+	public ResponseEntity<List<Object>> pmJobsGet(String accept, String contentType, String filter, String allFields, String include, String exclude, String excludeDefault) {
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public PmJobsPostResponse pmJobsPmJobIdGet(String pmJobId, String accept) {
+	public ResponseEntity<PmJobsPostResponse> pmJobsPmJobIdGet(String pmJobId, String accept) {
 		// TODO: Implement...
 
 		return null;
@@ -81,7 +80,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public PmJobsPmJobIdReportsReportIdGetResponse pmJobsPmJobIdReportsReportIdGet(String pmJobId, String reportId, String accept) {
+	public ResponseEntity<PmJobsPmJobIdReportsReportIdGetResponse> pmJobsPmJobIdReportsReportIdGet(String pmJobId, String reportId, String accept) {
 		// TODO: Implement...
 
 		return null;
@@ -96,7 +95,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public PmJobsPostResponse pmJobsPost(CreatePmJobRequest createPmJobRequest, String accept, String contentType) {
+	public ResponseEntity<PmJobsPostResponse> pmJobsPost(CreatePmJobRequest createPmJobRequest, String accept, String contentType) {
 		// TODO: Implement...
 
 		return null;
@@ -113,8 +112,8 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public List<Object> subscriptionsGet(String accept, String filter) {
-		return new ArrayList<>();
+	public ResponseEntity<List<Object>> subscriptionsGet(String accept, String filter) {
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 	}
 
 	/**
@@ -136,7 +135,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public SubscriptionsPostResponse subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body) {
 		// TODO: Implement...
 
 		return null;
@@ -167,7 +166,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public SubscriptionsPostResponse subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
 		// TODO: Implement...
 
 		return null;
@@ -180,8 +179,8 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public List<Object> thresholdsGet(String accept, String filter) {
-		return new ArrayList<>();
+	public ResponseEntity<List<Object>> thresholdsGet(String accept, String filter) {
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 	}
 
 	/**
@@ -193,7 +192,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public ThresholdsPostResponse thresholdsPost(CreateThresholdRequest createThresholdRequest, String accept, String contentType) {
+	public ResponseEntity<ThresholdsPostResponse> thresholdsPost(CreateThresholdRequest createThresholdRequest, String accept, String contentType) {
 		// TODO: Implement...
 
 		return null;
@@ -221,7 +220,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public ThresholdsPostResponse thresholdsThresholdIdGet(String thresholdId, String accept) {
+	public ResponseEntity<ThresholdsPostResponse> thresholdsThresholdIdGet(String thresholdId, String accept) {
 		// TODO: Implement...
 
 		return null;

@@ -13,12 +13,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,21 +32,22 @@ import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.SubscriptionFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.msa.AbstractGenericRepository;
-import com.ubiqube.etsi.mano.utils.Notifications;
+import com.ubiqube.etsi.mano.service.Notifications;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
@@ -64,24 +66,27 @@ public class VnfManagement {
 	private final RepositoryService repositoryService;
 	private final ObjectMapper mapper;
 	private final AbstractGenericRepository<SubscriptionObject> subscriptionRepository;
+	private final Notifications notifications;
 
-	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ObjectMapper _mapper, AbstractGenericRepository<SubscriptionObject> _subscriptionRepository) {
+	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ObjectMapper _mapper, AbstractGenericRepository<SubscriptionObject> _subscriptionRepository, Notifications _notifications) {
 		super();
 		LOG.debug("Booting VNF SOL003 SOL005 Management.");
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
 		mapper = _mapper;
 		subscriptionRepository = _subscriptionRepository;
+		notifications = _notifications;
 	}
 
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId) {
-		final VnfPkgInfo vnfPkgInfo = getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, false);
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(String vnfPkgId) {
+		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return vnfPkgInfo;
 	}
 
 	public List<SubscriptionsPkgmSubscription> subscriptionsGet(String filter) {
+		final SubscriptionFilter subscriptionFilter = new SubscriptionFilter(filter);
 		List<String> listFilesInFolder;
 		try {
 			listFilesInFolder = repositoryService.doSearch(REPOSITORY_SUBSCRIPTION_BASE_PATH, "");
@@ -94,11 +99,12 @@ public class VnfManagement {
 			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
 			try {
 				final SubscriptionObject subscriptionObject = mapper.readValue(content, SubscriptionObject.class);
-
-				final InlineResponse2001 pack = new InlineResponse2001();
-				final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
-				pack.setPkgmSubscription(subscriptionsPkgmSubscription);
-				response.add(subscriptionsPkgmSubscription);
+				if (subscriptionFilter.apply(subscriptionObject)) {
+					final InlineResponse2001 pack = new InlineResponse2001();
+					final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
+					pack.setPkgmSubscription(subscriptionsPkgmSubscription);
+					response.add(subscriptionsPkgmSubscription);
+				}
 			} catch (final IOException e) {
 				throw new GenericException(e);
 			}
@@ -106,16 +112,16 @@ public class VnfManagement {
 		return response;
 	}
 
-	public List<InlineResponse2001> subscriptionsPost(SubscriptionsPostQuery subscriptionsPostQuery, String href, String id) {
+	public List<InlineResponse2001> subscriptionsPost(SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, String href, String id) {
 		// Response
 		final ArrayList<InlineResponse2001> response = new ArrayList<>();
-		final String callback = subscriptionsPostQuery.getPkgmSubscriptionRequest().getCallbackUri();
-		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getPkgmSubscriptionRequest().getFilter();
+		final String callback = subscriptionsPostQuery.getCallbackUri();
+		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getFilter();
 		final SubscriptionsPkgmSubscription subscription = new SubscriptionsPkgmSubscription(callback, id, href, filter);
 
 		final InlineResponse2001 pack = new InlineResponse2001();
 		pack.setPkgmSubscription(subscription);
-		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getPkgmSubscriptionRequest().getAuthentication(), subscription);
+		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
 		subscriptionRepository.save(subscriptionObject);
 
 		response.add(pack);
@@ -123,7 +129,6 @@ public class VnfManagement {
 	}
 
 	public void vnfPackageChangeNotificationPost(NotificationsMessage notificationsMessage, String id, String hrefVnfPackage, String hrefSubscription) {
-		final Notifications notifications = new Notifications();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -137,8 +142,6 @@ public class VnfManagement {
 	}
 
 	public void vnfPackageOnboardingNotificationPost(NotificationsMessage notificationsMessage, String id, String hrefSubscription, String hrefPackage) {
-		final Notifications notifications = new Notifications();
-
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionsPkgmSubscription req = subscriptionsRepository.getSubscriptionsPkgmSubscription();
@@ -181,7 +184,7 @@ public class VnfManagement {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, RangeHeader rangeHeader) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, RangeHeader rangeHeader) throws ServiceException {
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
 
 		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(artifactPath.trim()).toString(), "");
@@ -192,13 +195,16 @@ public class VnfManagement {
 			}
 			final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
 			final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
-			return Response.ok().type(APPLICATION_ZIP).entity(new ByteArrayInputStream(content)).build();
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_OCTET_STREAM)
+					.body(resource);
 		}
 		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
 	}
 
-	public Response vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException {
 		final List<String> listvnfPckgFiles = new LinkedList<>();
 
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
@@ -212,15 +218,19 @@ public class VnfManagement {
 		if (isVnfd) {
 			if (MediaType.TEXT_PLAIN.equals(accept)) {
 				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
-				return Response.ok(content, MediaType.APPLICATION_JSON).build();
+				final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
+				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+				return ResponseEntity.ok(resource);
 			} else if (APPLICATION_ZIP.equals(accept) && MediaType.TEXT_PLAIN.equals(accept)) {
 				return getZipArchive(null, listvnfPckgFiles);
 			} else {
 				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
 				final String yaml = conJsonToYaml(content);
-				return Response.ok(yaml, "application/x-yaml").build();
+				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(yaml.getBytes()));
+				return ResponseEntity.ok()
+						.contentType(MediaType.APPLICATION_OCTET_STREAM)
+						.body(resource);
 			}
 		}
 		throw new NotFoundException("VNFD not found for vnfPkg with id: " + vnfPkgId);
@@ -234,7 +244,7 @@ public class VnfManagement {
 	 * @return
 	 *
 	 */
-	private Response getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
+	private ResponseEntity<Resource> getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
 
 		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
 		ByteArrayOutputStream bos;
@@ -242,15 +252,20 @@ public class VnfManagement {
 		try {
 			if (rangeHeader == null) {
 				bos = zip.getZipFile();
-				final Response.ResponseBuilder response = Response.status(Response.Status.OK).type(APPLICATION_ZIP).entity(new ByteArrayInputStream(bos.toByteArray()));
-				return response.build();
+				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
+				final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+				return ResponseEntity.ok().contentType(contentType).body(resource);
 
 			}
-			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), (int) rangeHeader.getTo());
+			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), rangeHeader.getTo());
 			final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
 					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
-			final Response.ResponseBuilder response = Response.status(Response.Status.PARTIAL_CONTENT).type(APPLICATION_ZIP).entity(new ByteArrayInputStream(bos.toByteArray())).header("Content-Range", contentRange);
-			return response.build();
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
+			final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+					.header("Content-Range", contentRange)
+					.contentType(contentType)
+					.body(resource);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -398,7 +413,7 @@ public class VnfManagement {
 	 * @param vnfPackInfoJson VNFD infos
 	 * @return List of the value(s)
 	 */
-	private ArrayList<String> extractAttrMatchedValues(ArrayList<String> listOfAttrName, JSONObject vnfPackInfoJson) throws BadRequestException {
+	private ArrayList<String> extractAttrMatchedValues(ArrayList<String> listOfAttrName, JSONObject vnfPackInfoJson) {
 		final ArrayList<String> matchedValues = new ArrayList<>();
 		JSONObject vnfPackInfo = vnfPackInfoJson;
 
@@ -412,7 +427,7 @@ public class VnfManagement {
 		for (final String key : listOfAttrName) {
 			final Object object = vnfPackInfo.get(key);
 			if (object == null) {
-				throw new com.ubiqube.etsi.mano.exception.BadRequestException("Wrong filter name: " + key);
+				throw new BadRequestException("Wrong filter name: " + key);
 			}
 
 			if (((object instanceof JSONArray) || (object instanceof JSONObject)) && (index < (listOfAttrName.size() - index))) {
@@ -544,7 +559,7 @@ public class VnfManagement {
 		return subscriptionRepository.get(_subscriptionId).getSubscriptionsPkgmSubscription();
 	}
 
-	public Response vnfPackagesVnfPkgIdPackageContentGet(String _vnfPkgId, String _range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(String _vnfPkgId, String _range) {
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(_vnfPkgId, true);
 
 		// List vnfd package from repository

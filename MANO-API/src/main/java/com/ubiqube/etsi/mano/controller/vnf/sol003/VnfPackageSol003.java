@@ -3,9 +3,11 @@ package com.ubiqube.etsi.mano.controller.vnf.sol003;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
 import com.ubiqube.api.exception.ServiceException;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public interface VnfPackageSol003 {
 
@@ -18,7 +20,7 @@ public interface VnfPackageSol003 {
 	 * data structures, and response codes.
 	 *
 	 */
-	Response vnfPackagesGet(Map<String, String> requestParams) throws ServiceException;
+	ResponseEntity<?> vnfPackagesGet(Map<String, String> requestParams) throws ServiceException;
 
 	/**
 	 * Fetch individual VNF package artifact.
@@ -29,7 +31,7 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.
@@ -37,7 +39,7 @@ public interface VnfPackageSol003 {
 	 * The GET method reads the information of a VNF package.
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdGet(String vnfPkgId, String accept);
+	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(String vnfPkgId, String accept);
 
 	/**
 	 * Fetch an on-boarded VNF package.
@@ -51,7 +53,7 @@ public interface VnfPackageSol003 {
 	 * @throws ServiceException
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdPackageContentGet(String vnfPkgId, String accept, String range);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(String vnfPkgId, String accept, String range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.
@@ -80,6 +82,6 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	Response vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException;
 
 }

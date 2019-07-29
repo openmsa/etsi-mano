@@ -2,8 +2,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,18 +17,12 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
  */
 @Repository
 public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObject> implements SubscriptionRepository {
-	@Inject
 	public SubscriptionMsa(ObjectMapper _mapper, RepositoryService _repositoryService) {
 		super(_mapper, _repositoryService);
 	}
 
 	private static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
-
-	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_SUBSCRIPTION_BASE_PATH + "/" + _id + ".json";
-	}
 
 	@Override
 	String setId(SubscriptionObject _entity) {
@@ -45,6 +37,16 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	@Override
 	Class<?> getClazz() {
 		return SubscriptionObject.class;
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_SUBSCRIPTION_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "susbscription.json";
 	}
 
 }

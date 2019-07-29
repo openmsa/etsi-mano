@@ -3,27 +3,23 @@ package com.ubiqube.etsi.mano.controller.vnf.sol003;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.controller.BaseApi;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 import net.sf.json.JSONArray;
@@ -41,15 +37,14 @@ import net.sf.json.JSONArray;
  *
  */
 @RestController
-@RequestMapping("/sol003/vnfpkgm/v1")
-public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
+@RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
+public class VnfPackageSol003Api implements VnfPackageSol003 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
 	private final VnfManagement vnfManagement;
 
-	@Inject
-	public VnfPackageSol003Api(VnfManagement _vnfManagement, Patcher _patcher, ObjectMapper _mapper, SubscriptionRepository _subscriptionRepository, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
-		super(_patcher, _mapper, _subscriptionRepository, _vnfPackageRepository, _repositoryService);
+	@Autowired
+	public VnfPackageSol003Api(VnfManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
 
@@ -63,9 +58,10 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesGet(@RequestParam Map<String, String> requestParams) throws ServiceException {
+	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<?> vnfPackagesGet(@RequestParam Map<String, String> requestParams) throws ServiceException {
 		final JSONArray resp = vnfManagement.vnfPackagesGet(requestParams);
-		return Response.ok(resp).build();
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	/**
@@ -78,7 +74,8 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathParam("vnfPkgId") String vnfPkgId, @PathParam("artifactPath") String artifactPath, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) throws ServiceException {
+	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") String artifactPath, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
 
@@ -89,11 +86,12 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) {
+	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
-		return Response.ok(vnfPkgInfo).build();
+		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
 	/**
@@ -109,7 +107,8 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdPackageContentGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept, @HeaderParam("Range") String range) {
+	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
@@ -141,7 +140,8 @@ public class VnfPackageSol003Api extends BaseApi implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public Response vnfPackagesVnfPkgIdVnfdGet(@PathParam("vnfPkgId") String vnfPkgId, @HeaderParam("Accept") String accept) throws ServiceException {
+	@GetMapping(value = "/{vnfPkgId}/vnfd", produces = { "text/plain", "application/json", "application/octet-stream", "application/zip" }, consumes = { "application/json" })
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") String accept) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
 	}
 

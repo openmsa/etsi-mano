@@ -20,11 +20,6 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 	}
 
 	@Override
-	String getUriForId(String _id) {
-		return REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH + '/' + _id + "/nsInstance.json";
-	}
-
-	@Override
 	String setId(NsInstancesNsInstance _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
@@ -42,6 +37,16 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 	@Override
 	public List<NsInstancesNsInstance> query() {
 		return new ArrayList<>();
+	}
+
+	@Override
+	String getRoot() {
+		return REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH;
+	}
+
+	@Override
+	String getFilename() {
+		return "nsInstance.json";
 	}
 
 }
