@@ -161,6 +161,7 @@ public class NsdSol005Api implements NsdSol005 {
 		if (!nsdInfo.getNsdOperationalState().equals("DISABLED") || nsdInfo.getNsdUsageState().equals("IN_USE")) {
 			throw new ConflictException("Nsd in bad state " + nsdInfoId);
 		}
+		nsdRepository.delete(nsdInfoId);
 	}
 
 	/**
