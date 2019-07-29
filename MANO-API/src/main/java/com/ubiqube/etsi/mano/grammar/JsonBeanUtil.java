@@ -7,11 +7,15 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -58,8 +62,8 @@ public class JsonBeanUtil {
 
 	private Map<String, JsonBeanProperty> rebuildProperties(Map<String, JsonBeanProperty> res) {
 		final Map<String, JsonBeanProperty> ret = new HashMap<>();
-		final LinkedList<String> stack = new LinkedList<>();
-		final LinkedList<String> stackObject = new LinkedList<>();
+		final Deque<String> stack = new LinkedList<>();
+		final Deque<JsonBeanProperty> stackObject = new LinkedList<>();
 		rebuildPropertiesInner(res, stack, stackObject, ret);
 		return ret;
 	}
@@ -71,13 +75,19 @@ public class JsonBeanUtil {
 			final JsonBeanProperty jsonBeanProperty = entry.getValue();
 			final Map<String, JsonBeanProperty> right = jsonBeanProperty.getRight();
 			stackName.push(key);
+			stackObject.push(jsonBeanProperty);
 			if (right != null) {
 				rebuildPropertiesInner(right, stackName, stackObject, ret);
 			} else {
 				final String newKey = StringUtils.join(stackName.descendingIterator(), ".");
+				final Queue<JsonBeanProperty> rev = Collections.asLifoQueue(stackObject);
+				final List<JsonBeanProperty> listObject = new ArrayList<>(rev);
+				Collections.reverse(listObject);
+				jsonBeanProperty.setAccessorsList(listObject);
 				ret.put(newKey, jsonBeanProperty);
 			}
 			stackName.pop();
+			stackObject.pop();
 		}
 	}
 
@@ -93,7 +103,7 @@ public class JsonBeanUtil {
 		final PropertyDescriptor[] propDescs = beanInfo.getPropertyDescriptors();
 
 		for (final PropertyDescriptor propertyDescriptor : propDescs) {
-			if ("class".equals(propertyDescriptor.getName())) {
+			if ("class".equals(propertyDescriptor.getName()) || "declaringClass".equals(propertyDescriptor.getName())) {
 				continue;
 			}
 			LOG.info("Handling property: {}", propertyDescriptor.getName());

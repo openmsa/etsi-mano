@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -45,16 +47,50 @@ public class JsonFilter {
 			LOG.warn("Object of class {} doesn't have a {} property.", _object.getClass(), _node.getName());
 			return true;
 		}
-		final String objectValue = invokeGetter(_object, realProperty);
-		return decide(objectValue, _node.getValue(), _node.getOp());
+		final DocumentStatus documentStatus = invokeGetter(_object, realProperty, 0, _node);
+		return documentStatus.getStatus().equals(DocumentStatus.Status.VALIDATED);
 	}
 
-	private static String invokeGetter(Object _object, JsonBeanProperty realProperty) {
-		try {
-			return (String) realProperty.getPropertyDescriptor().getReadMethod().invoke(_object);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new GenericException(e);
+	private static DocumentStatus invokeGetter(Object _object, JsonBeanProperty realProperty, int index, Node _node) {
+		final List<JsonBeanProperty> access = realProperty.getListAccessors();
+		Object temp = _object;
+		for (int i = index; i < access.size(); i++) {
+			final JsonBeanProperty jsonBeanProperty = access.get(i);
+			final Method readMethod = jsonBeanProperty.getPropertyDescriptor().getReadMethod();
+			try {
+				LOG.info("Invoking {} On {}", readMethod.getName(), temp.getClass());
+				temp = readMethod.invoke(temp);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new GenericException(e);
+			}
+			if (temp == null) {
+				return new DocumentStatus(DocumentStatus.Status.NOSTATE);
+			}
+			if (List.class.isAssignableFrom(temp.getClass())) {
+				final List<?> list = (List<?>) temp;
+				final DocumentStatus status = exploreList(list, realProperty, i, _node);
+				if (!status.getStatus().equals(DocumentStatus.Status.NOSTATE)) {
+					return status;
+				}
+			}
 		}
+		// Normally we should have the latest value.
+		if (decide((String) temp, _node.getValue(), _node.getOp())) {
+			return new DocumentStatus(DocumentStatus.Status.VALIDATED);
+		}
+		return new DocumentStatus(DocumentStatus.Status.REFUSED);
+	}
+
+	private static DocumentStatus exploreList(List<?> list, JsonBeanProperty realProperty, int index, Node _node) {
+		LOG.debug("Exploring sub list.");
+		for (final Object object : list) {
+			final DocumentStatus status = invokeGetter(object, realProperty, index + 1, _node);
+			if (status.getStatus().equals(DocumentStatus.Status.NOSTATE)) {
+				continue;
+			}
+			return status;
+		}
+		return new DocumentStatus(DocumentStatus.Status.NOSTATE);
 	}
 
 	private static boolean decide(String _objectValue, String _value, Operand _operand) {
