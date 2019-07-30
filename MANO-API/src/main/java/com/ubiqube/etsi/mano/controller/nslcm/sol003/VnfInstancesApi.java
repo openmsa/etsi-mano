@@ -109,15 +109,6 @@ public class VnfInstancesApi {
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 		final String id = UUID.randomUUID().toString();
 		vnfInstance.setId(id);
-		final StringBuilder sb = new StringBuilder().append(REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH).append("/").append(id);
-		final String uri = sb.toString();
-		try {
-			if (!repositoryService.exists(uri)) {
-				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
-			}
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
 
 		final String hrefScaleToLevel = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdScaleToLevelPost(id, null, null, null, null)).withSelfRel().getHref();
 		final String hrefScale = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdScalePost(id, null, null, null, null)).withSelfRel().getHref();

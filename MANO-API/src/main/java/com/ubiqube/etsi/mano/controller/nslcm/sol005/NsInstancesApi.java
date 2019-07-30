@@ -274,15 +274,7 @@ public class NsInstancesApi {
 		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
 		final String id = UUID.randomUUID().toString();
 		nsInstancesNsInstance.setId(id);
-		final StringBuilder sb = new StringBuilder().append(REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH).append("/").append(id);
-		final String uri = sb.toString();
-		try {
-			if (!repositoryService.exists(uri)) {
-				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
-			}
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+
 		nsInstanceRepository.save(nsInstancesNsInstance);
 
 		final InlineResponse200 resp = new InlineResponse200();
