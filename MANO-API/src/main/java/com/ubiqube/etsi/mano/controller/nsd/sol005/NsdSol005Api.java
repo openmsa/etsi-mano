@@ -329,6 +329,7 @@ public class NsdSol005Api implements NsdSol005 {
 		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id, _self, _nsdContent);
 		final Map<String, Object> userDefinedData = (Map<String, Object>) nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		resp.setUserDefinedData(userDefinedData);
+		resp.setNsdName((String) userDefinedData.get("name"));
 		final List<String> vnfPkgIds = (List<String>) userDefinedData.get("vnfPkgIds");
 		resp.setVnfPkgIds(vnfPkgIds);
 
