@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeExtVnfConnectivityRequest;
@@ -42,6 +45,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInfoModificationRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -173,8 +177,14 @@ public class VnfInstancesApi {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@DeleteMapping(value = "/{vnfInstanceId}", consumes = { "application/json" }, produces = { "application/json" })
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(@ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader("Authorization") String authorization) {
-		vnfInstancesRepository.delete(vnfInstanceId);
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(
+			@Nonnull @ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState().equals(InstantiationStateEnum.NOT_INSTANTIATED)) {
+			vnfInstancesRepository.delete(vnfInstanceId);
+		} else {
+			throw new ConflictException("VNF final Instance is instantiated.");
+		}
 		return ResponseEntity.noContent().build();
 	}
 
