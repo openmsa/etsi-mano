@@ -10,13 +10,11 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 
-public class CustomSerializer extends BeanSerializerModifier {
+public class ExclusionSerializer extends BeanSerializerModifier {
 	private final List<ViewHolder> excluded;
-	private final List<ViewHolder> wanted;
 
-	public CustomSerializer(@Nonnull List<ViewHolder> _viewHolders, @Nonnull List<ViewHolder> _wantedList) {
-		excluded = _viewHolders;
-		wanted = _wantedList;
+	public ExclusionSerializer(@Nonnull List<ViewHolder> _excluded) {
+		excluded = _excluded;
 	}
 
 	@Override

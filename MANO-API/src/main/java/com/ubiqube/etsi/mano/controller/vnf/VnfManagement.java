@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -36,8 +39,9 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.json.CustomSerializer;
+import com.ubiqube.etsi.mano.json.ExclusionSerializer;
 import com.ubiqube.etsi.mano.json.ViewHolder;
+import com.ubiqube.etsi.mano.json.WantedSerializer;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
@@ -80,7 +84,7 @@ public class VnfManagement {
 		jsonFilter = _jsonFilter;
 	}
 
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(String vnfPkgId) {
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -111,7 +115,7 @@ public class VnfManagement {
 		return response;
 	}
 
-	public List<InlineResponse2001> subscriptionsPost(SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, String href, String id) {
+	public List<InlineResponse2001> subscriptionsPost(@Nonnull SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, @Nonnull String href, @Nonnull String id) {
 		// Response
 		final ArrayList<InlineResponse2001> response = new ArrayList<>();
 		final String callback = subscriptionsPostQuery.getCallbackUri();
@@ -127,7 +131,7 @@ public class VnfManagement {
 		return response;
 	}
 
-	public void vnfPackageChangeNotificationPost(NotificationsMessage notificationsMessage, String id, String hrefVnfPackage, String hrefSubscription) {
+	public void vnfPackageChangeNotificationPost(@Nonnull NotificationsMessage notificationsMessage, @Nonnull String id, @Nonnull String hrefVnfPackage, @Nonnull String hrefSubscription) {
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -140,7 +144,7 @@ public class VnfManagement {
 		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
 	}
 
-	public void vnfPackageOnboardingNotificationPost(NotificationsMessage notificationsMessage, String id, String hrefSubscription, String hrefPackage) {
+	public void vnfPackageOnboardingNotificationPost(@Nonnull NotificationsMessage notificationsMessage, @Nonnull String id, @Nonnull String hrefSubscription, @Nonnull String hrefPackage) {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionsPkgmSubscription req = subscriptionsRepository.getSubscriptionsPkgmSubscription();
@@ -154,7 +158,7 @@ public class VnfManagement {
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 
-	public List<VnfPkgInfo> vnfPackagesGet(Map<String, String> queryParameters) throws ServiceException {
+	public String vnfPackagesGet(@Nonnull Map<String, String> queryParameters) throws ServiceException {
 		final String filter = queryParameters.get("filter");
 		final AstBuilder astBuilder = new AstBuilder(filter);
 		final List<String> vnfPkgsIdsList = getVnfPkgIdsFromRepository();
@@ -166,38 +170,52 @@ public class VnfManagement {
 				vnfPkginfos.add(vnfPackage);
 			}
 		}
-		final String exclude = queryParameters.get("all_fields");
+		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
-		final String excludeFields = queryParameters.get("exclude_fields");
-		final String excludeDefault = queryParameters.get("exclude_default");
-		final ObjectMapper mapperForQuery = getMapperForView(exclude, fields, excludeDefault, excludeFields);
-		return vnfPkginfos;
+
+		final ObjectMapper mapperForQuery = getMapperForView(exclude, fields, null, null);
+
+		try {
+			return mapperForQuery.writeValueAsString(vnfPkginfos);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 	}
 
-	private ObjectMapper getMapperForView(String exclude, String fields, String excludeDefault, String excludeFields) {
+	private static ObjectMapper getMapperForView(@Nullable String exclude, @Nullable String fields, @Nullable String excludeDefault, @Nullable String excludeFields) {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		mapper.setSerializationInclusion(Include.NON_NULL);
 
-		final List<ViewHolder> excludeList = buildViewList(exclude);
-		final List<ViewHolder> wantedList = buildViewList(fields);
-		mapper.registerModule(new SimpleModule() {
-			private static final long serialVersionUID = 1L;
+		if ((null != exclude) && !exclude.isEmpty()) {
+			final List<ViewHolder> excludeList = buildViewList(exclude);
+			mapper.registerModule(new SimpleModule() {
+				private static final long serialVersionUID = 1L;
 
-			@Override
-			public void setupModule(SetupContext context) {
-				super.setupModule(context);
-				context.addBeanSerializerModifier(new CustomSerializer(excludeList, wantedList));
-			}
-		});
+				@Override
+				public void setupModule(SetupContext context) {
+					super.setupModule(context);
+					context.addBeanSerializerModifier(new ExclusionSerializer(excludeList));
+				}
+			});
+		} else if ((null != fields) && !fields.isEmpty()) {
+			final List<String> wantedList = Arrays.asList(fields.split(","));
+			mapper.registerModule(new SimpleModule() {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void setupModule(SetupContext context) {
+					super.setupModule(context);
+					context.addBeanSerializerModifier(new WantedSerializer(wantedList));
+				}
+			});
+		}
 		return mapper;
 	}
 
-	private static List<ViewHolder> buildViewList(@Nullable String fields) {
+	@Nonnull
+	private static List<ViewHolder> buildViewList(@Nonnull String fields) {
 		final List<ViewHolder> ret = new ArrayList<>();
-		if (null == fields) {
-			return ret;
-		}
 		final String[] fieldArray = fields.split(",");
 		for (final String string : fieldArray) {
 			ret.add(new ViewHolder(string));
@@ -215,7 +233,7 @@ public class VnfManagement {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, RangeHeader rangeHeader) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull String vnfPkgId, @Nonnull String artifactPath, @Nullable RangeHeader rangeHeader) throws ServiceException {
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
 
 		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(artifactPath.trim()).toString(), "");
@@ -235,7 +253,7 @@ public class VnfManagement {
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
 	}
 
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept) throws ServiceException {
 		final List<String> listvnfPckgFiles = new LinkedList<>();
 
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
@@ -257,8 +275,8 @@ public class VnfManagement {
 			} else {
 				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
-				final String yaml = conJsonToYaml(content);
-				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(yaml.getBytes()));
+				final byte[] yaml = conJsonToYaml(content);
+				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(yaml));
 				return ResponseEntity.ok()
 						.contentType(MediaType.APPLICATION_OCTET_STREAM)
 						.body(resource);
@@ -345,18 +363,18 @@ public class VnfManagement {
 		}
 	}
 
-	private String conJsonToYaml(String json) {
+	private static byte[] conJsonToYaml(String json) {
 		try {
 			final ObjectMapper jsonReader = new ObjectMapper();
 			final Object obj = jsonReader.readValue(json, Object.class);
 			final ObjectMapper yamlWriter = new ObjectMapper(new YAMLFactory());
-			return yamlWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+			return yamlWriter.writerWithDefaultPrettyPrinter().writeValueAsBytes(obj);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}
 
-	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(String vnfPkgId, boolean isCheckOnbordingStatus) {
+	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(@Nonnull String vnfPkgId, boolean isCheckOnbordingStatus) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 
 		if (isCheckOnbordingStatus) {
@@ -371,15 +389,15 @@ public class VnfManagement {
 		return vnfPkgInfo;
 	}
 
-	public void subscriptionsSubscriptionIdDelete(String _subscriptionId) {
+	public void subscriptionsSubscriptionIdDelete(@Nonnull String _subscriptionId) {
 		subscriptionRepository.delete(_subscriptionId);
 	}
 
-	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(String _subscriptionId) {
+	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(@Nonnull String _subscriptionId) {
 		return subscriptionRepository.get(_subscriptionId).getSubscriptionsPkgmSubscription();
 	}
 
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(String _vnfPkgId, String _range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull String _vnfPkgId, String _range) {
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(_vnfPkgId, true);
 
 		// List vnfd package from repository

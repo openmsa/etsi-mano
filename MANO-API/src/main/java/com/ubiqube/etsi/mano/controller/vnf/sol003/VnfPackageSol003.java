@@ -20,7 +20,7 @@ public interface VnfPackageSol003 {
 	 * data structures, and response codes.
 	 *
 	 */
-	ResponseEntity<?> vnfPackagesGet(Map<String, String> requestParams) throws ServiceException;
+	ResponseEntity<String> vnfPackagesGet(Map<String, String> requestParams) throws ServiceException;
 
 	/**
 	 * Fetch individual VNF package artifact.
