@@ -21,7 +21,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 @RestController
@@ -42,7 +41,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<List<VnfInstance>> vnfInstancesGet(Map<String, String> queryParameters) {
-		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters);
+		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters, links);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -52,8 +51,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 		final String id = UUID.randomUUID().toString();
 
 		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id);
-		final VnfInstanceLinks vnfInstanceLinks = links.getLinks(id);
-		vnfInstance.setLinks(vnfInstanceLinks);
+		vnfInstance.setLinks(links.getLinks(id));
 
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}

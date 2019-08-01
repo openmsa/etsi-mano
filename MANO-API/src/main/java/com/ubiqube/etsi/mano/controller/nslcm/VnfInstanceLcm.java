@@ -41,10 +41,15 @@ public class VnfInstanceLcm {
 		msaExecutor = _msaExecutor;
 	}
 
-	public List<VnfInstance> get(Map<String, String> queryParameters) {
+	public List<VnfInstance> get(Map<String, String> queryParameters, LcmLinkable links) {
 		final String filter = queryParameters.get("filter");
 		final AstBuilder astBuilder = new AstBuilder(filter);
-		return vnfInstancesRepository.query();
+		final List<VnfInstance> list = vnfInstancesRepository.query();
+		for (final VnfInstance vnfInstance : list) {
+			vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
+		}
+
+		return list;
 	}
 
 	public VnfInstance post(CreateVnfRequest createVnfRequest, String id) {

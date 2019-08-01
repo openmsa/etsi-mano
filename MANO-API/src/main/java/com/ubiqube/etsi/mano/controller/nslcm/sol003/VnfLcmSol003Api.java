@@ -41,7 +41,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<List<VnfInstance>> vnfInstancesGet(Map<String, String> queryParameters) {
-		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters);
+		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters, links);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -49,6 +49,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<VnfInstance> vnfInstancesPost(CreateVnfRequest createVnfRequest) {
 		final String id = UUID.randomUUID().toString();
 		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id);
+		vnfInstance.setLinks(links.getLinks(id));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
@@ -71,6 +72,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
