@@ -12,7 +12,7 @@
 
 package com.ubiqube.etsi.mano.model.nslcm.sol003;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -40,12 +40,12 @@ public class CreateVnfRequest {
 	/**
 	 * Identifier that identifies the VNFD which defines the VNF instance to be
 	 * created.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@JsonProperty("vnfdId")
 	@ApiModelProperty(required = true, value = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
-	@NotNull
+	@Nonnull
 	public String getVnfdId() {
 		return vnfdId;
 	}
@@ -61,7 +61,7 @@ public class CreateVnfRequest {
 
 	/**
 	 * Human-readable name of the VNF instance to be created.
-	 * 
+	 *
 	 * @return vnfInstanceName
 	 **/
 	@JsonProperty("vnfInstanceName")
@@ -81,7 +81,7 @@ public class CreateVnfRequest {
 
 	/**
 	 * Human-readable description of the VNF instance to be created.
-	 * 
+	 *
 	 * @return vnfInstanceDescription
 	 **/
 	@JsonProperty("vnfInstanceDescription")

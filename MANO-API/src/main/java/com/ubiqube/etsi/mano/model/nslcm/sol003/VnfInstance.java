@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -116,7 +117,7 @@ public class VnfInstance {
 
 	/**
 	 * Identifier of the VNF instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -138,7 +139,7 @@ public class VnfInstance {
 	/**
 	 * Name of the VNF instance. This attribute can be modified with the PATCH
 	 * method.
-	 * 
+	 *
 	 * @return vnfInstanceName
 	 **/
 	@JsonProperty("vnfInstanceName")
@@ -159,7 +160,7 @@ public class VnfInstance {
 	/**
 	 * Human-readable description of the VNF instance. This attribute can be
 	 * modified with the PATCH method.
-	 * 
+	 *
 	 * @return vnfInstanceDescription
 	 **/
 	@JsonProperty("vnfInstanceDescription")
@@ -179,12 +180,12 @@ public class VnfInstance {
 
 	/**
 	 * Identifier of the VNFD on which the VNF instance is based.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@JsonProperty("vnfdId")
 	@ApiModelProperty(required = true, value = "Identifier of the VNFD on which the VNF instance is based. ")
-	@NotNull
+	@Nonnull
 	public String getVnfdId() {
 		return vnfdId;
 	}
@@ -200,7 +201,7 @@ public class VnfInstance {
 
 	/**
 	 * Provider of the VNF and the VNFD. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfProvider
 	 **/
 	@JsonProperty("vnfProvider")
@@ -221,7 +222,7 @@ public class VnfInstance {
 
 	/**
 	 * Name to identify the VNF Product. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfProductName
 	 **/
 	@JsonProperty("vnfProductName")
@@ -242,7 +243,7 @@ public class VnfInstance {
 
 	/**
 	 * Software version of the VNF. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfSoftwareVersion
 	 **/
 	@JsonProperty("vnfSoftwareVersion")
@@ -263,7 +264,7 @@ public class VnfInstance {
 
 	/**
 	 * Identifies the version of the VNFD. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfdVersion
 	 **/
 	@JsonProperty("vnfdVersion")
@@ -293,7 +294,7 @@ public class VnfInstance {
 	 * current VNF&#39;s on-boarded VNF Package, the values of attributes in the
 	 * VnfInstance that have corresponding attributes in the VNFD shall be kept in
 	 * sync with the values in the VNFD.
-	 * 
+	 *
 	 * @return vnfPkgId
 	 **/
 	@JsonProperty("vnfPkgId")
@@ -331,7 +332,7 @@ public class VnfInstance {
 	 * auto-healing. If set to true, auto-healing is currently enabled. If set to
 	 * false, auto-healing is currently disabled. This attribute can be modified
 	 * with the PATCH method.
-	 * 
+	 *
 	 * @return vnfConfigurableProperties
 	 **/
 	@JsonProperty("vnfConfigurableProperties")
@@ -362,7 +363,7 @@ public class VnfInstance {
 	 * the VNF instance. This attribute shall only be supported and present if
 	 * VNF-related resource management in direct mode is applicable. This attribute
 	 * can be modified with the PATCH method.
-	 * 
+	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
@@ -382,7 +383,7 @@ public class VnfInstance {
 
 	/**
 	 * The instantiation state of the VNF.
-	 * 
+	 *
 	 * @return instantiationState
 	 **/
 	@JsonProperty("instantiationState")
@@ -403,7 +404,7 @@ public class VnfInstance {
 
 	/**
 	 * Get instantiatedVnfInfo
-	 * 
+	 *
 	 * @return instantiatedVnfInfo
 	 **/
 	@JsonProperty("instantiatedVnfInfo")
@@ -425,7 +426,7 @@ public class VnfInstance {
 	 * Additional VNF-specific metadata describing the VNF instance. Metadata that
 	 * are writeable are declared in the VNFD. This attribute can be modified with
 	 * the PATCH method.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -448,7 +449,7 @@ public class VnfInstance {
 	 * instance by the VNFM, or the lifecycle management scripts. Extensions that
 	 * are writeable are declared in the VNFD. This attribute can be modified with
 	 * the PATCH method.
-	 * 
+	 *
 	 * @return extensions
 	 **/
 	@JsonProperty("extensions")
@@ -468,7 +469,7 @@ public class VnfInstance {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@JsonProperty("_links")
