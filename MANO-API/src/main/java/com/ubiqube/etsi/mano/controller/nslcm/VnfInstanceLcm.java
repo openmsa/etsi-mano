@@ -20,7 +20,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -48,16 +47,15 @@ public class VnfInstanceLcm {
 		return vnfInstancesRepository.query();
 	}
 
-	public VnfInstance post(CreateVnfRequest createVnfRequest, String id, VnfInstanceLinks vnfInstanceLinks) {
+	public VnfInstance post(CreateVnfRequest createVnfRequest, String id) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		vnfPackageRepository.get(vnfId);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
 
-		vnfInstance.setLinks(vnfInstanceLinks);
 		vnfInstancesRepository.save(vnfInstance);
-		return null;
+		return vnfInstance;
 	}
 
 	public void delete(@Nonnull String vnfInstanceId) {
@@ -69,7 +67,7 @@ public class VnfInstanceLcm {
 		}
 	}
 
-	public void instantiate(@Nonnull String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest) {
+	public void instantiate(@Nonnull String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest, @Nonnull LcmLinkable links) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final String vnfPkgId = vnfInstance.getVnfdId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
@@ -85,9 +83,10 @@ public class VnfInstanceLcm {
 		vnfPkg.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkg);
+		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
-	public void terminate(@Nonnull String vnfInstanceId, TerminateVnfRequest terminateVnfRequest) {
+	public void terminate(@Nonnull String vnfInstanceId, TerminateVnfRequest terminateVnfRequest, @Nonnull LcmLinkable links) {
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
@@ -99,6 +98,7 @@ public class VnfInstanceLcm {
 		userData.put("msaTerminateServiceId", ret);
 		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkg);
+		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
 }

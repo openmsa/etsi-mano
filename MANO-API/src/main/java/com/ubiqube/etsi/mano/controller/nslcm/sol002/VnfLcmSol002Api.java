@@ -1,11 +1,10 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol002;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
@@ -29,6 +28,8 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 @RequestMapping("/sol002/vnflcm/v1/vnf_instances")
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);
+	@Nonnull
+	private final LcmLinkable links = new Sol002LcmLinkable();
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
 
@@ -49,17 +50,10 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	public ResponseEntity<VnfInstance> vnfInstancesPost(CreateVnfRequest createVnfRequest) {
 
 		final String id = UUID.randomUUID().toString();
-		final String hrefScaleToLevel = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdScaleToLevelPost(id)).withSelfRel().getHref();
-		final String hrefScale = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdScalePost(id)).withSelfRel().getHref();
-		final String hrefOperate = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdOperatePost(id)).withSelfRel().getHref();
-		final String hrefInstanciate = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
-		final String hrefIndicators = "";
-		final String hrefHeal = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdHealPost(id)).withSelfRel().getHref();
-		final String hrefChangeFlavor = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdChangeFlavourPost(id)).withSelfRel().getHref();
-		final String hrefChangeExtConn = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdChangeExtConnPost(id)).withSelfRel().getHref();
-		final String hrefSelf = linkTo(methodOn(getClass()).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
-		final VnfInstanceLinks vnfInstanceLinks = LcmFactory.createVnfInstancesLink(hrefSelf, hrefChangeExtConn, hrefChangeFlavor, hrefHeal, hrefIndicators, hrefInstanciate, hrefOperate, hrefScale, hrefScaleToLevel);
-		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id, vnfInstanceLinks);
+
+		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id);
+		final VnfInstanceLinks vnfInstanceLinks = links.getLinks(id);
+		vnfInstance.setLinks(vnfInstanceLinks);
 
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
@@ -83,6 +77,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	@Override
 	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
@@ -93,7 +88,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest) {
-		vnfInstanceLcm.instantiate(vnfInstanceId, instantiateVnfRequest);
+		vnfInstanceLcm.instantiate(vnfInstanceId, instantiateVnfRequest, links);
 		return ResponseEntity.accepted().build();
 	}
 
@@ -120,7 +115,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(String vnfInstanceId, TerminateVnfRequest terminateVnfRequest) {
-		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest);
+		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest, links);
 		return ResponseEntity.noContent().build();
 	}
 }
