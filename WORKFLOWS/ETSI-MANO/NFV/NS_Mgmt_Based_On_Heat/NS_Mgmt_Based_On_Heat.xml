@@ -12,8 +12,8 @@
     <poolId>0</poolId>
     <readVariableVisibility>5</readVariableVisibility>
     <showDetailedServiceInstances>true</showDetailedServiceInstances>
-    <showProcessExecConsole>false</showProcessExecConsole>
-    <showVariables>false</showVariables>
+    <showProcessExecConsole>true</showProcessExecConsole>
+    <showVariables>true</showVariables>
     <visibility>5</visibility>
   </information>  <variables frozen="0">
     <variable displayName="Device Id" displayOrder="0" editable="false" isMandatory="true" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" type="Device" visible="false">
@@ -34,71 +34,10 @@
         <section>Launch Stack</section>
       </sections>
     </variable>
-    <variable default="UBI-KEYPAIR" displayName="Key Name" displayOrder="3" maxLength="100" name="params.key_name" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-      <classes>
-        <class>keypairs</class>
-      </classes>
-    </variable>
-    <variable default="m1.small" displayName="Flavor" displayOrder="4" maxLength="100" name="params.flavor" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-      <classes>
-        <class>flavors</class>
-      </classes>
-    </variable>
-    <variable displayName="Simulator Image Id" displayOrder="5" maxLength="100" name="params.simulator_image_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-      <classes>
-        <class>images</class>
-      </classes>
-    </variable>
-    <variable displayName="Private Network Id" displayOrder="6" maxLength="100" name="params.private_network_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-      <classes>
-        <class>networks</class>
-      </classes>
-    </variable>
-    <variable displayName="Private Subnetwork" displayOrder="7" localVarNameMatch="private_network_id" maxLength="100" name="params.private_subnetwork" numberOfRowMax="0" refDeviceIdVar="params.deviceid" remoteVarNameMatch="subnet_id" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-      <classes>
-        <class>subnets</class>
-      </classes>
-    </variable>
-    <variable displayName="Public Network" displayOrder="8" maxLength="100" name="params.public_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-      <classes>
-        <class>networks</class>
-      </classes>
-    </variable>
-    <variable default="192.168.1.25" displayName="Simulator-pvt-fixed Ip" displayOrder="9" maxLength="100" name="params.simulator-pvt-fixed_ip" numberOfRowMax="0" startIncrement="0" type="String">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
     <variable cols="50" displayName="Stack Id" displayOrder="10" isUserLocked="true" maxLength="100" name="params.stackid" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Delete Stack</section>
       </sections>
-    </variable>
-    <variable displayName="Server Id" displayOrder="28" maxLength="100" name="params.server_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
-      <sections>
-        <section>Scale In</section>
-      </sections>
-      <classes>
-        <class>servers</class>
-      </classes>
     </variable>
     <variable displayName="Floatingip Id" displayOrder="43" maxLength="100" name="params.floatingip_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
@@ -121,90 +60,83 @@
     <variable default="openstack" displayName="admin_password" displayOrder="79" maxLength="100" name="params.admin_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false"/>
     <variable default="a63453acff0a46968d3f256b2df0321e" displayName="tenant_id" displayOrder="80" maxLength="100" name="params.tenant_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
     <variable default="http://eosphoros.ubiqube.com:5000/v3/" displayName="keystone_public_endpoint" displayOrder="81" maxLength="100" name="params.keystone_public_endpoint" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
-    <variable displayName="Vnfpkgid" displayOrder="83" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Fetch Mano Data</section>
-      </sections>
-    </variable>
-    <variable displayName="Var Name" displayOrder="84" maxLength="100" name="params.var_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Fetch Mano Data</section>
-      </sections>
-    </variable>
-    <variable displayName="Var Name2" displayOrder="85" maxLength="100" name="params.var_name2" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
-      <sections>
-        <section>Fetch Mano Data</section>
-      </sections>
-    </variable>
-    <variable displayName="Director Image Name" displayOrder="89" maxLength="100" name="params.director_image_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Director Flavor Name" displayOrder="90" maxLength="100" name="params.director_flavor_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Inspector Image Name" displayOrder="91" maxLength="100" name="params.inspector_image_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Inspector Flavor Name" displayOrder="92" maxLength="100" name="params.inspector_flavor_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Public Net Id" displayOrder="93" maxLength="100" name="params.public_net_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Net Mgmt Id" displayOrder="94" maxLength="100" name="params.net_mgmt_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Net Mgmt Subnet Id" displayOrder="95" maxLength="100" name="params.net_mgmt_subnet_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Net Mgmt Cidr" displayOrder="96" maxLength="100" name="params.net_mgmt_cidr" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Director Ip" displayOrder="97" maxLength="100" name="params.director_ip" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="IpAddress">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Net Sfc Id" displayOrder="98" maxLength="100" name="params.net_sfc_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="OBMFRef">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Dns Nameservers" displayOrder="99" maxLength="100" name="params.dns_nameservers" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="IpAddress">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
-    <variable displayName="Activate Code" displayOrder="100" maxLength="100" name="params.activate_code" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Launch Stack</section>
-      </sections>
-    </variable>
     <variable displayName="Nspkgid" displayOrder="102" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Fetch Mano Data</section>
       </sections>
     </variable>
+    <variable displayName="Router Name" displayOrder="103" maxLength="100" name="params.router_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Router Admin State Up" displayOrder="104" maxLength="100" name="params.router_admin_state_up" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable displayName="External Gateway Network" displayOrder="105" maxLength="100" name="params.external_gateway_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+      <classes>
+        <class>networks</class>
+      </classes>
+    </variable>
+    <variable displayName="Networks.0.network Name" displayOrder="106" maxLength="100" name="params.networks.0.network_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Networks.0.admin State Up" displayOrder="107" maxLength="100" name="params.networks.0.admin_state_up" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Networks.0.router External" displayOrder="108" maxLength="100" name="params.networks.0.router_external" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Networks.0.port Security Enabled" displayOrder="109" maxLength="100" name="params.networks.0.port_security_enabled" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>Router Config</section>
+      </sections>
+    </variable>
+    <variable displayName="Networks.0.subnet Name" displayOrder="110" maxLength="100" name="params.networks.0.subnet_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>SubnetConfig</section>
+      </sections>
+    </variable>
+    <variable displayName="Networks.0.subnet Cidr" displayOrder="111" maxLength="100" name="params.networks.0.subnet_cidr" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>SubnetConfig</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Networks.0.subnet Enable Dhcp" displayOrder="112" maxLength="100" name="params.networks.0.subnet_enable_dhcp" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>SubnetConfig</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Networks.0.subnet Attached To Router" displayOrder="113" maxLength="100" name="params.networks.0.subnet_attached_to_router" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>SubnetConfig</section>
+      </sections>
+    </variable>
+    <variable displayName="Vnfpkgs.0.vnfpkgid" displayOrder="115" isUserLocked="true" maxLength="100" name="params.vnfPkgs.0.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Get NSD from NS Catalog (NVFO)</section>
+      </sections>
+    </variable>
+    <variable displayName="Vnfpkgid" displayOrder="129" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Scale Out</section>
+      </sections>
+    </variable>
   </variables>  <example>    <content/>  </example>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack">
     <visibility>5</visibility>
-    <displayName>Execute Heat Stack</displayName>
+    <displayName>Instantiate NS</displayName>
     <icon/>
     <allowSchedule>false</allowSchedule>
     <type>CREATE</type>
@@ -233,23 +165,28 @@
     
     
     
+  
+    
+    
+    
+  
   <task name="Task_Fetch_Mano_Data.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
-      <displayName>Fetch Mano Data</displayName>
+      <displayName>Get NSD from NS Catalog (NVFO)</displayName>
     </task>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
       <processPath/>
-      <displayName>Sync to VIM</displayName>
+      <displayName>Sync VIM services inventories</displayName>
     </task>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/Task_Launch_Stack.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
-      <displayName>Launch Stack</displayName>
+      <displayName>Instantiate NS based-on NSD (Stack)</displayName>
     </task>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
       <processPath/>
       <displayName>Sync</displayName>
     </task>
-  <compensation/>
+    <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out">
     <visibility>5</visibility>
@@ -267,39 +204,19 @@
     
     
   
+  
+    
+    
+    
+    
+    
+    
+    
+  
   <task name="Task_Scale_Out.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
       <displayName>Scale Out</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
-      <processPath/>
-      <displayName>Get authentification token</displayName>
-    </task>
-    <task name="Task_Create_floating_IP.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
-      <displayName>Create floating IP</displayName>
-    </task>
-    <task name="Task_Associate_floating_IP.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
-      <displayName>Associate floating IP</displayName>
-    </task>
-    <task name="Task_Create_MSA_device.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
-      <displayName>Create MSA device</displayName>
-    </task>
-    <task name="Task_VNF_provision.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
-      <displayName>VNF provision</displayName>
-    </task>
-    <task name="Task_VNF_reachability_check.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
-      <displayName>VNF reachability check</displayName>
-    </task>
-    <task name="Task_VNF_Ping_Check.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
-      <displayName>VNF Ping Check</displayName>
-    </task>
-  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale_In">
     <visibility>5</visibility>
@@ -320,7 +237,7 @@
   </process>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack">
     <visibility>5</visibility>
-    <displayName>Delete Heat Stack</displayName>
+    <displayName>Terminate NS</displayName>
     <icon/>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
@@ -334,6 +251,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack/Tasks/</processPath>
       <displayName>Delete Stack</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Move_To_Trash">
     <visibility>5</visibility>
@@ -342,5 +260,34 @@
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
   <compensation/>
+  </process>
+<process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Add_Network">
+    <visibility>5</visibility>
+    <displayName>Add Network</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+    
+    
+    
+  <task name="Task_Router_Config.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Add_Network/Tasks/</processPath>
+      <displayName>Router Config</displayName>
+    </task>
+    <task name="Task_Network_Config.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Add_Network/Tasks/</processPath>
+      <displayName>Network Config</displayName>
+    </task>
+    <task name="Task_SubnetConfig.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Add_Network/Tasks/</processPath>
+      <displayName>SubnetConfig</displayName>
+    </task>
+    <task name="Task_Sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Add_Network/Tasks/</processPath>
+      <displayName>Sync</displayName>
+    </task>
   </process>
 </ObjectDefinition>

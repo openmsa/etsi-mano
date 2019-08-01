@@ -6,7 +6,7 @@
     <executionDetailsVisibility>5</executionDetailsVisibility>
     <executionMode>TRANSACTION</executionMode>
     <group>NFV|Network Service (NS)|Orchestration|Abstract</group>
-    <icon>/images/eclipseIcons/page_obj.gif</icon>
+    <icon>/images/repository/CommandDefinition/icons/routing_fortinet.png</icon>
     <name>Abstract NS Manager</name>
     <order>10000</order>
     <poolId>0</poolId>
@@ -16,14 +16,35 @@
     <showVariables>false</showVariables>
     <visibility>5</visibility>
   </information>  <variables frozen="0">
-    <variable displayName="Ns Package Id" displayOrder="0" maxLength="100" name="params.ns_package_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnfvo Device" displayOrder="0" keepOnImport="true" maxLength="165" name="params.vnfvo_device" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Get VNFDs IDs linked to the NSD</section>
+      </sections>
+      <sdTypes>
+        <sdType manId="14020601" modId="14020601"/>
+      </sdTypes>
+    </variable>
+    <variable displayName="Ns Package Id" displayOrder="1" maxLength="100" name="params.ns_package_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Get NSD ID from NFVO Catalogs</section>
       </sections>
     </variable>
-    <variable default="44ba518b-faaf-41af-a7d6-52c0eb64991c" displayName="Nspkgid" displayOrder="1" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable default="6c52594b-ab6d-443c-82dd-1c48e00cd4dc" displayName="Nspkgid" displayOrder="2" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" refDeviceIdVar="params.vnfvo_device" startIncrement="0" tableSizeFix="false" type="OBMFRef">
       <sections>
         <section>Get NSD ID from NFVO Catalogs</section>
+      </sections>
+      <classes>
+        <class>ns_catalogs</class>
+      </classes>
+    </variable>
+    <variable displayName="Vnfpkgid" displayOrder="3" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Terminate VNF</section>
+      </sections>
+    </variable>
+    <variable displayName="VNF Packages" displayOrder="4" isUserLocked="true" maxLength="100" name="params.vnfPkgs.0.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Get NSD from NS Catalog (NVFO)</section>
       </sections>
     </variable>
   </variables>  <example>    <content/>  </example>
@@ -89,5 +110,50 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Heal_VNF">
+    <visibility>5</visibility>
+    <displayName>Heal VNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="Task_Terminate_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Heal_VNF/Tasks/</processPath>
+      <displayName>Terminate VNF</displayName>
+    </task>
+    <task name="Task_Instantiate_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Heal_VNF/Tasks/</processPath>
+      <displayName>Instantiate VNF</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Scale_out_NS">
+    <visibility>5</visibility>
+    <displayName>Scale-out NS</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  <task name="Task_Task_Scale_Out.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Scale_out_NS/Tasks/</processPath>
+      <displayName>Task Scale Out</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Scale-in_NS">
+    <visibility>5</visibility>
+    <displayName>Scale-in NS</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  <task name="Task_Task_Scale_In.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Scale-in_NS/Tasks/</processPath>
+      <displayName>Task Scale In</displayName>
+    </task>
   </process>
 </ObjectDefinition>
