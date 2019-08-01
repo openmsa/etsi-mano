@@ -84,8 +84,9 @@ public class VnfManagement {
 		jsonFilter = _jsonFilter;
 	}
 
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId) {
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId, @Nonnull Linkable links) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return vnfPkgInfo;
@@ -158,7 +159,7 @@ public class VnfManagement {
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 
-	public String vnfPackagesGet(@Nonnull Map<String, String> queryParameters) throws ServiceException {
+	public String vnfPackagesGet(@Nonnull Map<String, String> queryParameters, @Nonnull Linkable links) throws ServiceException {
 		final String filter = queryParameters.get("filter");
 		final AstBuilder astBuilder = new AstBuilder(filter);
 		final List<String> vnfPkgsIdsList = getVnfPkgIdsFromRepository();
@@ -167,6 +168,7 @@ public class VnfManagement {
 		for (final String vnfPckId : vnfPkgsIdsList) {
 			final VnfPkgInfo vnfPackage = vnfPackageRepository.get(vnfPckId);
 			if (jsonFilter.apply(vnfPackage, astBuilder)) {
+				vnfPackage.setLinks(links.getVnfLinks(vnfPackage.getId()));
 				vnfPkginfos.add(vnfPackage);
 			}
 		}
@@ -253,7 +255,7 @@ public class VnfManagement {
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
 	}
 
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept) {
 		final List<String> listvnfPckgFiles = new LinkedList<>();
 
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
@@ -262,7 +264,12 @@ public class VnfManagement {
 		final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append("vnfd.json").toString();
 		listvnfPckgFiles.add(uri);
 
-		final boolean isVnfd = repositoryService.exists(uri);
+		boolean isVnfd;
+		try {
+			isVnfd = repositoryService.exists(uri);
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
 
 		if (isVnfd) {
 			if (MediaType.TEXT_PLAIN_VALUE.equals(accept)) {
