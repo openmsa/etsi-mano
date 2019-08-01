@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,13 +27,12 @@ public class JsonFilter {
 	}
 
 	/**
-	 * In fact this method could be more generic by taking an Object.
 	 *
-	 * @param subscriptionRepository
-	 * @param nodes
+	 * @param _object     An arbitraru not null object.
+	 * @param _astBuilder An AST Builder.
 	 * @return
 	 */
-	public boolean apply(Object _object, AstBuilder _astBuilder) {
+	public boolean apply(@Nonnull Object _object, @Nonnull AstBuilder _astBuilder) {
 		for (final Node node : _astBuilder.getNodes()) {
 			if (!apply(_object, node)) {
 				return false;

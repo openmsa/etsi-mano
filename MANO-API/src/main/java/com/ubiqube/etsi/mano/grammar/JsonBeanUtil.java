@@ -109,7 +109,9 @@ public class JsonBeanUtil {
 		final PropertyDescriptor[] propDescs = beanInfo.getPropertyDescriptors();
 
 		for (final PropertyDescriptor propertyDescriptor : propDescs) {
-			if ("class".equals(propertyDescriptor.getName()) || "declaringClass".equals(propertyDescriptor.getName())) {
+			if ("class".equals(propertyDescriptor.getName())
+					|| "declaringClass".equals(propertyDescriptor.getName())
+					|| "java.lang.ClassLoader".equals(propertyDescriptor.getName())) {
 				continue;
 			}
 			LOG.info("Handling property: {}", propertyDescriptor.getName());

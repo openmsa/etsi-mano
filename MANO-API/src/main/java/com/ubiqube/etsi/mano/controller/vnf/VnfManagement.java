@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -21,7 +23,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
@@ -31,6 +36,8 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.json.CustomSerializer;
+import com.ubiqube.etsi.mano.json.ViewHolder;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
@@ -159,7 +166,43 @@ public class VnfManagement {
 				vnfPkginfos.add(vnfPackage);
 			}
 		}
+		final String exclude = queryParameters.get("all_fields");
+		final String fields = queryParameters.get("fields");
+		final String excludeFields = queryParameters.get("exclude_fields");
+		final String excludeDefault = queryParameters.get("exclude_default");
+		final ObjectMapper mapperForQuery = getMapperForView(exclude, fields, excludeDefault, excludeFields);
 		return vnfPkginfos;
+	}
+
+	private ObjectMapper getMapperForView(String exclude, String fields, String excludeDefault, String excludeFields) {
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+
+		final List<ViewHolder> excludeList = buildViewList(exclude);
+		final List<ViewHolder> wantedList = buildViewList(fields);
+		mapper.registerModule(new SimpleModule() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void setupModule(SetupContext context) {
+				super.setupModule(context);
+				context.addBeanSerializerModifier(new CustomSerializer(excludeList, wantedList));
+			}
+		});
+		return mapper;
+	}
+
+	private static List<ViewHolder> buildViewList(@Nullable String fields) {
+		final List<ViewHolder> ret = new ArrayList<>();
+		if (null == fields) {
+			return ret;
+		}
+		final String[] fieldArray = fields.split(",");
+		for (final String string : fieldArray) {
+			ret.add(new ViewHolder(string));
+		}
+		return ret;
 	}
 
 	/**
