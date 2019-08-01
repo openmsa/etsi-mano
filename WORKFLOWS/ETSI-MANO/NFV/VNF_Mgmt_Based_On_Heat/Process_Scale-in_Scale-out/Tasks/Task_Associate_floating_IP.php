@@ -10,6 +10,8 @@ function list_args()
 
 $device_id = substr($context['deviceid'], 3);
 $server_id = $context['server_id'];
+
+
 if (isset($context['servers_scaled'])) {
         foreach ($context['servers_scaled'] as &$server) {
                 if (isset($server['server_id']) && $server['server_id'] == $server_id) {
@@ -18,6 +20,8 @@ if (isset($context['servers_scaled'])) {
 		}
         }
 }
+
+$floating_ip_address = $context['servers_scaled'][$server_id]['floating_ip_address'];
 
 // Associate floating IP to server
 $response = _nova_floating_ip_associate ($device_id, $server_id, $floating_ip_address);

@@ -8,6 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 function list_args()
 {
         create_var_def('nsPkgId', 'String');
+        create_var_def('vnfPkgs.0.vnfPkgId', 'String');
 }
 check_mandatory_param('nsPkgId');
 
@@ -23,6 +24,13 @@ file_put_contents($path . '/nsd.yaml', $heatYaml);
 $context['deviceid'] = $nsPkg['userDefinedData']['vimId'];
 $context['stackname'] = key($heatJson['resources']);
 // TODO get this IP on a NFVO
-$context['template_url'] = 'http://10.30.18.103/tech_report/ns_packages/heat/' . $context['nsPkgId'].'/nsd.yaml';
+$context['template_url'] = 'http://10.31.1.246/tech_report/ns_packages/heat/' . $context['nsPkgId'].'/nsd.yaml';
+
+
+$i=0;
+foreach ($nsPkg['vnfPkgIds'] as $vnfPkgId) {
+	$context['vnfPkgs'][$i++]['vnfPkgId']=$vnfPkgId;
+}
+
 
 task_exit(ENDED, "Task OK");

@@ -6,7 +6,9 @@ function list_args() {
 }
 
 foreach ($context['servers_scaled'] as $server) {
-
+	if(!isset($server['is_msa_device'])) {
+		continue;
+	}
 	if ($server['is_msa_device'] == "false") {
 		$device_ip_address = $server['floating_ip_address'];
 		$response = wait_for_ping_status($device_ip_address, $context);

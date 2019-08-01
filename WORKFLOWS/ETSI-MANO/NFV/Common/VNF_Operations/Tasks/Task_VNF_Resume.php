@@ -23,7 +23,7 @@ if ($response['wo_status'] !== ENDED) {
 	exit;
 }
 
-$response = wait_for_server_status($device_id, $server_id, RESUMED, $context);
+$response = wait_for_server_status($device_id, $server_id, ACTIVE, $context);
 $response = json_decode($response, true);
 if ($response['wo_status'] !== ENDED) {
 	$response = json_encode($response);
