@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ViewHolder {
 
@@ -28,5 +29,23 @@ public class ViewHolder {
 			return propertyParts.isEmpty();
 		}
 		return false;
+	}
+
+	@Nullable
+	public String get() {
+		if (propertyParts.isEmpty()) {
+			return null;
+		}
+		return propertyParts.get(0);
+	}
+
+	@Nullable
+	public String getAndRemove() {
+		if (propertyParts.isEmpty()) {
+			return null;
+		}
+		final String value = propertyParts.get(0);
+		propertyParts.remove(0);
+		return value;
 	}
 }
