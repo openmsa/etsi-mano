@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.controller.nslcm;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,10 +7,9 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-import com.ubiqube.api.entities.orchestration.ProcessInstance;
-import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import com.ubiqube.etsi.mano.controller.MsaExecutor;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -28,19 +26,20 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+@Service
 public class VnfInstanceLcm {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceLcm.class);
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageRepository vnfPackageRepository;
-	private final OrchestrationService orchestrationService;
+	private final MsaExecutor msaExecutor;
 
-	public VnfInstanceLcm(VnfInstancesRepository vnfInstancesRepository, VnfPackageRepository vnfPackageRepository, OrchestrationService orchestrationService) {
+	public VnfInstanceLcm(VnfInstancesRepository vnfInstancesRepository, VnfPackageRepository vnfPackageRepository, MsaExecutor _msaExecutor) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
-		this.orchestrationService = orchestrationService;
+		msaExecutor = _msaExecutor;
 	}
 
 	public List<VnfInstance> get(Map<String, String> queryParameters) {
@@ -71,7 +70,6 @@ public class VnfInstanceLcm {
 	}
 
 	public void instantiate(@Nonnull String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest) {
-		final Map<String, String> varsMap = new HashMap<>();
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final String vnfPkgId = vnfInstance.getVnfdId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
@@ -80,23 +78,13 @@ public class VnfInstanceLcm {
 		if (null == vimConnection) {
 			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
 		}
-		final String customerId = userData.get("customerId");
-		varsMap.put("vnfPkgId", vnfPkgId);
-		varsMap.put("customerId", customerId);
 
-		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
-		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
-		final long serviceId = 0;
+		final String ret = msaExecutor.onInstantiate(vnfPkgId, userData);
 
-		try {
-			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, SERVICE_NAME, PROCESS_NAME, varsMap);
-			userData.put("msaServiceId", String.valueOf(resp.serviceId.id));
-			vnfPkg.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
-			vnfPackageRepository.save(vnfPkg);
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+		userData.put("msaServiceId", ret);
+		vnfPkg.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
+		vnfPackageRepository.save(vnfPkg);
 	}
 
 	public void terminate(@Nonnull String vnfInstanceId, TerminateVnfRequest terminateVnfRequest) {
@@ -107,23 +95,10 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfdId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
-		final String msaServiceId = userData.get("msaServiceId");
-
-		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack";
-		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
-		final long serviceId = Long.parseLong(msaServiceId);
-		final String customerId = userData.get("customerId");
-		final Map<String, String> varsMap = new HashMap<>();
-
-		try {
-			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, SERVICE_NAME, PROCESS_NAME, varsMap);
-			userData.put("msaServiceId", String.valueOf(resp.serviceId.id));
-			vnfPkg.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
-			vnfPackageRepository.save(vnfPkg);
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+		final String ret = msaExecutor.onInstanceTerminate(userData);
+		userData.put("msaTerminateServiceId", ret);
+		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
+		vnfPackageRepository.save(vnfPkg);
 	}
 
 }
