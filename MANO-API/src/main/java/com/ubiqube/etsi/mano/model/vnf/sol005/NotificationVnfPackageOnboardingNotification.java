@@ -60,7 +60,7 @@ public class NotificationVnfPackageOnboardingNotification {
 	 **/
 	private String vnfdId = null;
 
-	@ApiModelProperty(required = true, value = "")
+	@ApiModelProperty(required = true)
 	@Valid
 	private VnfPackageOnboardingNotificationLinks links = null;
 

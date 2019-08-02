@@ -32,8 +32,8 @@ public class CreateVnfRequest {
 	@JsonProperty("vnfInstanceDescription")
 	private String vnfInstanceDescription = null;
 
-	public CreateVnfRequest vnfdId(String vnfdId) {
-		this.vnfdId = vnfdId;
+	public CreateVnfRequest vnfdId(@Nonnull String _vnfdId) {
+		this.vnfdId = _vnfdId;
 		return this;
 	}
 
