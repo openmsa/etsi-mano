@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
@@ -23,7 +22,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 @RestController
-@RequestMapping("/sol002/vnflcm/v1/vnf_instances")
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);
 	@Nonnull
