@@ -8,6 +8,10 @@ import javax.annotation.Nullable;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
@@ -23,7 +27,8 @@ public interface VnfPackageSol003 {
 	 * data structures, and response codes.
 	 *
 	 */
-	ResponseEntity<String> vnfPackagesGet(@Nonnull Map<String, String> requestParams) throws ServiceException;
+	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam Map<String, String> requestParams) throws ServiceException;
 
 	/**
 	 * Fetch individual VNF package artifact.
@@ -34,7 +39,8 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull String vnfPkgId, @Nonnull String artifactPath, @Nullable String accept, @Nullable String range) throws ServiceException;
+	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull @PathVariable("artifactPath") String artifactPath, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.
@@ -42,7 +48,8 @@ public interface VnfPackageSol003 {
 	 * The GET method reads the information of a VNF package.
 	 *
 	 */
-	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId, @Nullable String accept);
+	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader("Accept") String accept);
 
 	/**
 	 * Fetch an on-boarded VNF package.
@@ -56,7 +63,8 @@ public interface VnfPackageSol003 {
 	 * @throws ServiceException
 	 *
 	 */
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull String vnfPkgId, @Nullable String accept, @Nullable String range);
+	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") @Nullable String accept, @Nullable @RequestHeader(value = "Range", required = false) String range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.
@@ -85,6 +93,7 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept) throws ServiceException;
+	@GetMapping(value = "/{vnfPkgId}/vnfd", produces = { "text/plain", "application/json", "application/octet-stream", "application/zip" }, consumes = { "application/json" })
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader("Accept") String accept) throws ServiceException;
 
 }
