@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,7 +60,6 @@ public class NsInstancesApi {
 
 	private final OrchestrationService orchestrationService;
 
-	@Autowired
 	public NsInstancesApi(DeviceService _deviceService, NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService) {
 		deviceService = _deviceService;
 		nsdRepository = _nsdRepository;

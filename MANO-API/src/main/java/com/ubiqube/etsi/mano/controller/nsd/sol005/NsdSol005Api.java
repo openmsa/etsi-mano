@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -90,7 +89,6 @@ public class NsdSol005Api implements NsdSol005 {
 
 	private final ObjectMapper mapper;
 
-	@Autowired
 	public NsdSol005Api(NsdRepository _nsdRepository, ObjectMapper _mapper, RepositoryService _repositoryService) {
 		nsdRepository = _nsdRepository;
 		repositoryService = _repositoryService;

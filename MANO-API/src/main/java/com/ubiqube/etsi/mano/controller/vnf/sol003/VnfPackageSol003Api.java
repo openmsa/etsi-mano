@@ -7,7 +7,6 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,6 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	@Autowired
 	public VnfPackageSol003Api(VnfManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 		LOG.debug("Starting Vnf Package SOL003.");

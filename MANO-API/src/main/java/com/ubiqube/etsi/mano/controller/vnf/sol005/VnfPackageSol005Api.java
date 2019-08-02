@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,7 +88,6 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 
-	@Autowired
 	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;

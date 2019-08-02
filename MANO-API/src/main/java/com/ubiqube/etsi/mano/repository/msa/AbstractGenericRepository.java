@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +26,6 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
 
-	@Autowired
 	public AbstractGenericRepository(ObjectMapper _mapper, RepositoryService _repositoryService) {
 		super(_repositoryService);
 		mapper = _mapper;

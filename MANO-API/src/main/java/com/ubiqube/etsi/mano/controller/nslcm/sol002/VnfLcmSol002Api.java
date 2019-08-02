@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +31,6 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
 
-	@Autowired
 	public VnfLcmSol002Api(VnfInstancesRepository _vnfInstancesRepository, VnfInstanceLcm _vnfInstanceLcm) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
