@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 
 import io.swagger.annotations.ApiParam;
 
+@RequestMapping("/sol003/vnflcm/v1/vnf_instances")
 public interface VnfLcmSol003 {
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query VNF  The GET method queries information about multiple VNF instances. ", response = VnfInstance.class, responseContainer = "List", tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
