@@ -6,9 +6,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 
 public class LcmFactory {
-	public LcmFactory() {
-		// Nothing.
-	}
 
 	public static VnfInstance createVnfInstance(CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = new VnfInstance();
@@ -20,7 +17,6 @@ public class LcmFactory {
 
 	public static VnfInstanceLinks createVnfInstancesLink(String hrefSelf, String hrefChangeExtConn, String hrefChangeFlavor, String hrefHeal, String hrefIndicators, String hrefInstanciate, String hrefOperate, String hrefScale, String hrefScaleToLevel, String hrefTerminate) {
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
-		;
 		final Link self = new Link();
 		self.setHref(hrefSelf);
 		vnfInstanceLinks.self(self);

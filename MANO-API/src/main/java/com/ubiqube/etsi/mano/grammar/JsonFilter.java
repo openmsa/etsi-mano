@@ -41,7 +41,7 @@ public class JsonFilter {
 		return true;
 	}
 
-	private boolean apply(Object _object, Node _node) {
+	private boolean apply(@Nonnull Object _object, @Nonnull Node _node) {
 		final Map<String, JsonBeanProperty> props = jsonBeanUtil.getProperties(_object);
 		final JsonBeanProperty realProperty = props.get(_node.getName());
 		if (realProperty == null) {
