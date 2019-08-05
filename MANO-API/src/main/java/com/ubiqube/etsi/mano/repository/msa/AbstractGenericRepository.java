@@ -80,7 +80,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	@Override
 	public final void delete(String _id) {
 		final String uri = makeRoot(_id);
-		verify(_id);
+		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
 	}
