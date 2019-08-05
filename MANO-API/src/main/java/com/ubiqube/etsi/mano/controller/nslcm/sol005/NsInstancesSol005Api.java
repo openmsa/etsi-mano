@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +22,7 @@ import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -92,13 +91,11 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public void nsInstancesNsInstanceIdDelete(String nsInstanceId) {
-		try {
-			final User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			deviceService.deleteDevice(deviceService.getDeviceId(nsInstanceId), principal.getUsername());
-		} catch (final ServiceException e) {
-			throw new NotFoundException("Object not found.", e);
+		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
+			throw new ConflictException("The ns instance " + nsInstanceId + " is instantiated.");
 		}
-
+		nsInstanceRepository.delete(nsInstanceId);
 	}
 
 	/**
@@ -113,6 +110,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 
 		final InlineResponse200 resp = new InlineResponse200();
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		nsInstance.setLinks(makeLink(nsInstanceId));
 		resp.setNsInstance(nsInstance);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
@@ -281,6 +279,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstancesNsInstanceLinksSelf update = new NsInstancesNsInstanceLinksSelf();
 		update.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
-		return null;
+		return nsInstanceLinks;
 	}
 }
