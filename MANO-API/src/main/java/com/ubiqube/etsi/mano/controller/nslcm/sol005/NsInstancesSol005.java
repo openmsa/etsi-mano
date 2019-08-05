@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import org.springframework.http.ResponseEntity;
@@ -47,7 +45,12 @@ public interface NsInstancesSol005 {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
 	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<List<NsInstancesNsInstance>> nsInstancesGet(@RequestHeader("Accept") final String accept, @RequestParam("filter") String filter, @RequestParam("all_fields") String allFields, @RequestParam("fields") String fields, @RequestParam("exclude_fields") String excludeFields, @RequestParam("exclude_default") String excludeDefault);
+	ResponseEntity<String> nsInstancesGet(@RequestHeader("Accept") final String accept,
+			@RequestParam(value = "filter", required = false) String filter,
+			@RequestParam(value = "all_fields", required = false) String allFields,
+			@RequestParam(value = "fields", required = false) String fields,
+			@RequestParam(value = "exclude_fields", required = false) String excludeFields,
+			@RequestParam(value = "exclude_default", required = false) String excludeDefault);
 
 	/**
 	 * Delete NS instance resource.

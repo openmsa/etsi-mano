@@ -6,11 +6,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
@@ -27,9 +29,11 @@ import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
+import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdPatchQuery;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
@@ -59,12 +63,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private final RepositoryService repositoryService;
 
-	private final ObjectMapper mapper;
-
-	public NsDescriptorSol005Api(NsdRepository _nsdRepository, ObjectMapper _mapper, RepositoryService _repositoryService) {
+	public NsDescriptorSol005Api(NsdRepository _nsdRepository, RepositoryService _repositoryService) {
 		nsdRepository = _nsdRepository;
 		repositoryService = _repositoryService;
-		mapper = _mapper;
 	}
 
 	/**
@@ -77,27 +78,23 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<NsDescriptorsNsdInfoIdGetResponse>> nsDescriptorsGet(String accept, String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
-		List<String> listFilesInFolder;
+	public ResponseEntity<String> nsDescriptorsGet(String accept, String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
+		final List<NsDescriptorsNsdInfoIdGetResponse> response = new ArrayList<>();
+		final List<NsDescriptorsNsdInfo> nsds = nsdRepository.query(filter);
+		for (final NsDescriptorsNsdInfo nsDescriptorsNsdInfo : nsds) {
+			final NsDescriptorsNsdInfoIdGetResponse resp = new NsDescriptorsNsdInfoIdGetResponse();
+			nsDescriptorsNsdInfo.setLinks(makeLinks(nsDescriptorsNsdInfo.getId()));
+			resp.setNsdInfo(nsDescriptorsNsdInfo);
+			response.add(resp);
+		}
+
+		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			listFilesInFolder = repositoryService.doSearch(REPOSITORY_NSD_BASE_PATH, "");
-		} catch (final ServiceException e) {
+			return new ResponseEntity<>(mapper.writeValueAsString(response), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
-		final List<NsDescriptorsNsdInfoIdGetResponse> response = new ArrayList<>();
-		for (final String entry : listFilesInFolder) {
-			final RepositoryElement repositoryElement = repositoryService.getElement(entry);
-			final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
-			try {
-				final NsDescriptorsNsdInfo nsdInfo = mapper.readValue(content, NsDescriptorsNsdInfo.class);
-				final NsDescriptorsNsdInfoIdGetResponse resp = new NsDescriptorsNsdInfoIdGetResponse();
-				resp.setNsdInfo(nsdInfo);
-				response.add(resp);
-			} catch (final IOException e) {
-				throw new GenericException(e);
-			}
-		}
-		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 	/**
@@ -286,6 +283,12 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	private NsDescriptorsNsdInfoLinks makeLinks(@NotNull String id) {
+		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
+		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
+		return NsdFactories.createNsDescriptorsNsdInfoLinks(_self, _nsdContent);
 	}
 
 }

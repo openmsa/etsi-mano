@@ -13,7 +13,6 @@ import com.ubiqube.etsi.mano.controller.MsaExecutor;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
@@ -43,16 +42,14 @@ public class VnfInstanceLcm {
 
 	public List<VnfInstance> get(Map<String, String> queryParameters, LcmLinkable links) {
 		final String filter = queryParameters.get("filter");
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<VnfInstance> list = vnfInstancesRepository.query();
-		for (final VnfInstance vnfInstance : list) {
+		final List<VnfInstance> result = vnfInstancesRepository.query(filter);
+		for (final VnfInstance vnfInstance : result) {
 			vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
 		}
-
-		return list;
+		return result;
 	}
 
-	public VnfInstance post(CreateVnfRequest createVnfRequest, String id) {
+	public VnfInstance post(CreateVnfRequest createVnfRequest, String id, LcmLinkable links) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		vnfPackageRepository.get(vnfId);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
@@ -60,6 +57,7 @@ public class VnfInstanceLcm {
 		vnfInstance.setId(id);
 
 		vnfInstancesRepository.save(vnfInstance);
+		vnfInstance.setLinks(links.getLinks(id));
 		return vnfInstance;
 	}
 

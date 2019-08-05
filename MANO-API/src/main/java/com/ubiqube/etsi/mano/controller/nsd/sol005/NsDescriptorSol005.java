@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
@@ -60,7 +59,7 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<List<NsDescriptorsNsdInfoIdGetResponse>> nsDescriptorsGet(
+	ResponseEntity<String> nsDescriptorsGet(
 			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "\"Attribute-based filtering parameters according to clause 4.3.2. The NFVO shall support receiving filtering parameters as part of the URI query string. The OSS/BSS may supply filtering parameters. All attribute names that appear in the NsdInfo and in data types referenced from it shall be supported in attribute-based filtering parameters.\" ") @Valid @RequestParam(value = "filter", required = false) String filter,
 			@ApiParam(value = "\"Include all complex attributes in the response. See clause 4.3.3 for details.  The NFVO shall support this parameter.\" ") @Valid @RequestParam(value = "all_fields", required = false) String allFields,
