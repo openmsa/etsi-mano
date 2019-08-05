@@ -6,7 +6,9 @@ function list_args() {
 }
 
 foreach ($context['servers_scaled'] as $server) {
-
+	if(!isset($server['is_msa_device'])) {
+		continue;
+	}
 	if ($server['is_msa_device'] == "false") {
 		$device_id = substr($server['device_id'], 3);
 		$response = _device_mark_as_provisioned($device_id);

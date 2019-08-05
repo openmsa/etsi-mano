@@ -20,7 +20,18 @@ $servers_array = array();
 foreach ($resources as &$resource) {
 	// WARMING: all device is created as LINUX man and GENERIC model.
 	logToFile("Resource ID: " . $resource['resource_type'] . " ========= \n");
-
+	if ($resource['resource_type'] == "OS::Neutron::FloatingIP") {
+		$context['floating_network_id'] = $resource['physical_resource_id'];
+	}
+	if ($resource['resource_type'] == "OS::Neutron::Port") {
+		$port_id = $resource['physical_resource_id'];
+		$response = _neutron_get_port_info($context['endpoints'][NEUTRON][PUBLIC_URL], $context['token_id'], $port_id);
+		
+		logToFile(debug_dump($response, "RESPONSE ============++++++++++++>:\n"));
+		$res = json_decode($response, 1);
+		$nId = $res['wo_newparams']['port']['network_id'];
+		$context['networks_id'][0]['network'] = $nId;
+	}	
 	if ($resource['resource_type'] == "OS::Nova::Server") {
 		
 		//$instance_name = $resource['resource_name'];
@@ -49,8 +60,13 @@ foreach ($resources as &$resource) {
 		logToFile(debug_dump($response_body, "RESPONSE ============>:\n"));
 
 		$managed_device_name = $response_body['server']['name'];
-		$manufacturer_id = 14020601;
-		$model_id = 14020601;
+		$context['simulator_image_id'] = $response_body['server']['image']['id'];
+		$context['flavor_id'] = $response_body['server']['flavor']['id'];
+		//$manufacturer_id = 14020601;
+		//$model_id = 14020601;
+
+		$manufacturer_id = $context['manufacturerId'];
+		$model_id = $context['modelId'];
 		if (!isset($context['device_login']) || empty($context['device_login'])) {
 			$login =  "admin";
 		} else {

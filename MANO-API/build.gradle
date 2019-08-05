@@ -63,7 +63,7 @@ dependencies {
 }
 
 springBoot {
-	mainClassName = 'com.ubiqube.etsi.mano.config.ServletInitializer';
+	mainClassName = 'com.ubiqube.etsi.mano.Application'
 }
 
 task copyTestResources(type: Copy) {

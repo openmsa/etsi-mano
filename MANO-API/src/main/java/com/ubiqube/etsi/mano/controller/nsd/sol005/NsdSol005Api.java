@@ -161,6 +161,7 @@ public class NsdSol005Api implements NsdSol005 {
 		if (!nsdInfo.getNsdOperationalState().equals("DISABLED") || nsdInfo.getNsdUsageState().equals("IN_USE")) {
 			throw new ConflictException("Nsd in bad state " + nsdInfoId);
 		}
+		nsdRepository.delete(nsdInfoId);
 	}
 
 	/**
@@ -322,21 +323,13 @@ public class NsdSol005Api implements NsdSol005 {
 	@PostMapping(value = "/ns_descriptors", consumes = { "application/json" }, produces = { "application/json" })
 	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType, @RequestBody NsDescriptorsPostQuery nsDescriptorsPostQuery) {
 		final String id = UUID.randomUUID().toString();
-		final StringBuilder sb = new StringBuilder().append(REPOSITORY_NSD_BASE_PATH).append("/").append(id);
-		final String uri = sb.toString();
-		try {
-			if (!repositoryService.exists(uri)) {
-				repositoryService.addDirectory(uri, "", "SOL005", "ncroot");
-			}
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
 
 		final String _self = linkTo(methodOn(NsdSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
 		final String _nsdContent = linkTo(methodOn(NsdSol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
 		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id, _self, _nsdContent);
 		final Map<String, Object> userDefinedData = (Map<String, Object>) nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		resp.setUserDefinedData(userDefinedData);
+		resp.setNsdName((String) userDefinedData.get("name"));
 		final List<String> vnfPkgIds = (List<String>) userDefinedData.get("vnfPkgIds");
 		resp.setVnfPkgIds(vnfPkgIds);
 

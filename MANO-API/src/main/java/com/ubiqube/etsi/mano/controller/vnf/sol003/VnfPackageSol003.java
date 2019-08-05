@@ -3,6 +3,9 @@ package com.ubiqube.etsi.mano.controller.vnf.sol003;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
@@ -20,7 +23,7 @@ public interface VnfPackageSol003 {
 	 * data structures, and response codes.
 	 *
 	 */
-	ResponseEntity<?> vnfPackagesGet(Map<String, String> requestParams) throws ServiceException;
+	ResponseEntity<String> vnfPackagesGet(@Nonnull Map<String, String> requestParams) throws ServiceException;
 
 	/**
 	 * Fetch individual VNF package artifact.
@@ -31,7 +34,7 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull String vnfPkgId, @Nonnull String artifactPath, @Nullable String accept, @Nullable String range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.
@@ -39,7 +42,7 @@ public interface VnfPackageSol003 {
 	 * The GET method reads the information of a VNF package.
 	 *
 	 */
-	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(String vnfPkgId, String accept);
+	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId, @Nullable String accept);
 
 	/**
 	 * Fetch an on-boarded VNF package.
@@ -53,7 +56,7 @@ public interface VnfPackageSol003 {
 	 * @throws ServiceException
 	 *
 	 */
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(String vnfPkgId, String accept, String range);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull String vnfPkgId, @Nullable String accept, @Nullable String range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.
@@ -82,6 +85,6 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept) throws ServiceException;
 
 }

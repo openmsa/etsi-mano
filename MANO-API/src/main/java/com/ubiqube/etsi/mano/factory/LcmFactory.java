@@ -18,7 +18,7 @@ public class LcmFactory {
 		return vnfInstance;
 	}
 
-	public static VnfInstanceLinks createVnfInstancesLink(String hrefSelf, String hrefChangeExtConn, String hrefChangeFlavor, String hrefHeal, String hrefIndicators, String hrefInstanciate, String hrefOperate, String hrefScale, String hrefScaleToLevel) {
+	public static VnfInstanceLinks createVnfInstancesLink(String hrefSelf, String hrefChangeExtConn, String hrefChangeFlavor, String hrefHeal, String hrefIndicators, String hrefInstanciate, String hrefOperate, String hrefScale, String hrefScaleToLevel, String hrefTerminate) {
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		;
 		final Link self = new Link();
@@ -52,6 +52,10 @@ public class LcmFactory {
 		final Link scale = new Link();
 		scale.setHref(hrefScale);
 		vnfInstanceLinks.setScale(scale);
+
+		final Link terminate = new Link();
+		terminate.setHref(hrefTerminate);
+		vnfInstanceLinks.setTerminate(terminate);
 
 		final Link scaleToLevel = new Link();
 		scaleToLevel.setHref(hrefScaleToLevel);

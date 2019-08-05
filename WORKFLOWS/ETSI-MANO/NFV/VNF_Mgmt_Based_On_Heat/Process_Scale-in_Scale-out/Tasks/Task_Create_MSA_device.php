@@ -14,17 +14,30 @@ $servers_array = array();
 
 foreach ($context['servers_scaled'] as &$server) {
 	// WARMING: all device is created as LINUX man and GENERIC model.			
-	//logToFile(debug_dump($response, "RESPONSE ============>:\n"));
-	
+	//logToFile(debug_dump($server, "RESPONSE ============>:\n"));
+	if(!isset($server['is_msa_device'])) {
+		continue;
+	}
 	if ($server['is_msa_device'] == "false") {
 		// Create MSA devices
 
 		$managed_device_name = $server['name'];
 		$manufacturer_id = 14020601;
 		$model_id = 14020601;
-		$login =  $context['device_login'];
-		$password =  $context['device_password'];
-		$device_ip_address = $server['floating_ip_address'];
+		$server_id = $context['server_id'];
+		
+		if (!isset($context['device_login']) || empty($context['device_login'])) {
+                        $login =  "admin";
+                } else {
+                        $login =  $context['device_login'];
+                }
+                if (!isset($context['device_password']) || empty($context['device_password'])) {
+                        $password =  "ubiqube";
+                } else {
+                        $password =  $context['device_password'];
+                }
+
+		$device_ip_address = $context['servers_scaled'][$server_id]['floating_ip_address'];
 		if (empty($device_ip_address)) {
 			echo "Missing device management IP address (Floating IP): MSA device creation FAILED.";
 			exit;

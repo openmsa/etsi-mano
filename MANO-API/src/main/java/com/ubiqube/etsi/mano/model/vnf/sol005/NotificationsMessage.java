@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
+import javax.annotation.Nonnull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NotificationsMessage {
@@ -8,11 +10,12 @@ public class NotificationsMessage {
 	private String vnfdId;
 
 	@JsonProperty("subscriptionId")
+	@Nonnull
 	public String getSubscriptionId() {
 		return subscriptionId;
 	}
 
-	public void setSubscriptionId(String _subscriptionId) {
+	public void setSubscriptionId(@Nonnull String _subscriptionId) {
 		subscriptionId = _subscriptionId;
 	}
 

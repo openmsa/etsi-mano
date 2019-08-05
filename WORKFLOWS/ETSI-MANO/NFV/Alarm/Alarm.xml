@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>Alarm Management</group>
+    <icon>/images/repository/CommandDefinition/icons/default.png</icon>
+    <name>Alarm Handler</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>false</showDetailedServiceInstances>
+    <showProcessExecConsole>false</showProcessExecConsole>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0"/>  <example>    <content>
+      <?php?>
+    </content>  </example>
+  <process name="Process/ETSI-MANO/NFV/Alarm/Process_Initial">
+    <visibility>5</visibility>
+    <displayName>Initial</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+  <task name="Task_Configure.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Initial/Tasks/</processPath>
+      <displayName>Configure</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Move_to_trash">
+    <visibility>5</visibility>
+    <displayName>Move to trash</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>
