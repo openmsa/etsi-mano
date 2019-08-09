@@ -51,7 +51,10 @@ public class VnfInstanceLcm {
 
 	public VnfInstance post(CreateVnfRequest createVnfRequest, String id, LcmLinkable links) {
 		final String vnfId = createVnfRequest.getVnfdId();
-		vnfPackageRepository.get(vnfId);
+		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
+		if (vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
+			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
+		}
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
@@ -63,7 +66,7 @@ public class VnfInstanceLcm {
 
 	public void delete(@Nonnull String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		if (vnfInstance.getInstantiationState().equals(InstantiationStateEnum.NOT_INSTANTIATED)) {
+		if (vnfInstance.getInstantiationState() == (InstantiationStateEnum.NOT_INSTANTIATED)) {
 			vnfInstancesRepository.delete(vnfInstanceId);
 		} else {
 			throw new ConflictException("VNF final Instance is instantiated.");
@@ -72,6 +75,9 @@ public class VnfInstanceLcm {
 
 	public void instantiate(@Nonnull String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest, @Nonnull LcmLinkable links) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is already instantiated.");
+		}
 		final String vnfPkgId = vnfInstance.getVnfdId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
@@ -83,9 +89,9 @@ public class VnfInstanceLcm {
 		final String ret = msaExecutor.onInstantiate(vnfPkgId, userData);
 
 		userData.put("msaServiceId", ret);
-		vnfPkg.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkg);
+		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
@@ -95,12 +101,15 @@ public class VnfInstanceLcm {
 		}
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final String vnfPkgId = vnfInstance.getVnfdId();
+		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
 		final String ret = msaExecutor.onInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", ret);
 		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkg);
+		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 

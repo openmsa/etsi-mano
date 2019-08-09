@@ -259,7 +259,9 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final String uri = uddList.get("url");
 		final InputStream content = getUrlContent(uri);
 		try {
-			unzip(vnfPkgId, content);
+			final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefact = unzip(vnfPkgId, content);
+			artefact.stream().forEach(vnfPkgInfo::addAdditionalArtifactsItem);
+			vnfPackageRepository.save(vnfPkgInfo);
 		} catch (final ServiceException | IOException e) {
 			throw new GenericException(e);
 		}
@@ -313,7 +315,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		return ("application/zip".equals(httpAccept) || "application/x-zip-compressed".equals(httpAccept));
 	}
 
-	private VnfPackagesVnfPkgInfoChecksum getChecksum(InputStream is) {
+	private static VnfPackagesVnfPkgInfoChecksum getChecksum(InputStream is) {
 		try {
 			return getChecksum(StreamUtils.copyToByteArray(is));
 		} catch (NoSuchAlgorithmException | IOException e) {
@@ -321,7 +323,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 	}
 
-	private VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
+	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
 		final MessageDigest digest = MessageDigest.getInstance("SHA2-256");
 		final byte[] hashbytes = digest.digest(bytes);
 		final String sha3_256hex = bytesToHex(hashbytes);

@@ -14,7 +14,7 @@ public class VnfPackageFactory {
 		vnfPkgInfo.setId(vnfPkgId);
 		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
 		vnfPkgInfo.setUserDefinedData(userData);
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
+		vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
 
 		return vnfPkgInfo;

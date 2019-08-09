@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.controller.MsaExecutor;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
@@ -46,13 +46,11 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	private final NsdRepository nsdRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 
-	private final OrchestrationService orchestrationService;
 	private final MsaExecutor msaExecutor;
 
-	public NsInstancesSol005Api(NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService, MsaExecutor _msaExecutor) {
+	public NsInstancesSol005Api(NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, MsaExecutor _msaExecutor) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
-		orchestrationService = _orchestrationService;
 		msaExecutor = _msaExecutor;
 		LOG.debug("Instantiate SOL005 NS Instance.");
 	}
@@ -104,7 +102,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(String nsInstanceId) {
-
 		final InlineResponse200 resp = new InlineResponse200();
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		nsInstance.setLinks(makeLink(nsInstanceId));
@@ -123,6 +120,10 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdHealPost(String nsInstanceId, NsInstancesNsInstanceIdHealPostQuery body) {
+		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
+			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
+		}
 		throw new GenericException("TODO");
 	}
 
@@ -159,6 +160,10 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdScalePost(String nsInstanceId, String accept, String contentType, NsInstancesNsInstanceIdScalePostQuery body) {
+		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
+			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
+		}
 		throw new GenericException("TODO");
 	}
 
@@ -201,6 +206,10 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdUpdatePost(String nsInstanceId, String accept, String contentType, NsInstancesNsInstanceIdUpdatePostQuery body) {
+		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
+			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
+		}
 		throw new GenericException("TODO");
 	}
 
@@ -217,7 +226,9 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			throw new NotFoundException("NsdId field is empty.");
 		}
 		final NsDescriptorsNsdInfo nsd = nsdRepository.get(req.getNsdId());
-
+		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
+			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
+		}
 		final NsInstancesNsInstance nsInstancesNsInstance = new NsInstancesNsInstance();
 		nsInstancesNsInstance.setNsdId(req.getNsdId());
 		nsInstancesNsInstance.setNsInstanceDescription(req.getNsDescription());

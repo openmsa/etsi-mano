@@ -40,7 +40,7 @@ public class NsdFactories {
 		nsdInfo.setLinks(createNsDescriptorsNsdInfoLinks(_self, _nsdContent));
 		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.CREATED);
-		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.DISABLED);
+		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.NOT_IN_USE);
 		nsdInfo.setPnfdInfoIds(new ArrayList<String>());
 		nsdInfo.setVnfPkgIds(new ArrayList<String>());
