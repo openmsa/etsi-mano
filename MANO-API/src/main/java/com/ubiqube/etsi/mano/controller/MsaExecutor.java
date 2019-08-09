@@ -12,6 +12,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 
 @Service
 public class MsaExecutor {
+	private static final String CUSTOMER_ID = "customerId";
 	private final OrchestrationService orchestrationService;
 
 	public MsaExecutor(OrchestrationService orchestrationService) {
@@ -22,7 +23,7 @@ public class MsaExecutor {
 	public String onInstanceTerminate(Map<String, String> userData) {
 		final String msaServiceId = userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
-		final String customerId = userData.get("customerId");
+		final String customerId = userData.get(CUSTOMER_ID);
 
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
@@ -32,15 +33,37 @@ public class MsaExecutor {
 
 	public String onInstantiate(String vnfPkgId, Map<String, String> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
-		final String customerId = userData.get("customerId");
-
+		final String customerId = userData.get(CUSTOMER_ID);
 		varsMap.put("vnfPkgId", vnfPkgId);
-		varsMap.put("customerId", customerId);
+		varsMap.put(CUSTOMER_ID, customerId);
 
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
 
 		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
+	}
+
+	public String onNsInstantiate(String nsdId, Map<String, String> userData) {
+		final Map<String, String> varsMap = new HashMap<>();
+		final String customerId = userData.get(CUSTOMER_ID);
+		varsMap.put("deviceid", userData.get("vimId"));
+		varsMap.put("nsPkgId", nsdId);
+
+		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
+		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
+
+		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
+	}
+
+	public String onNsInstanceTerminate(Map<String, String> userData) {
+		final String msaServiceId = userData.get("msaServiceId");
+		final long serviceId = Long.parseLong(msaServiceId);
+		final String customerId = userData.get(CUSTOMER_ID);
+
+		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack";
+		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
+
+		return executeProcess(customerId, serviceId, SERVICE_NAME, PROCESS_NAME);
 	}
 
 	private String executeProcess(String customerId, long serviceId, String serviceName, String processName) {

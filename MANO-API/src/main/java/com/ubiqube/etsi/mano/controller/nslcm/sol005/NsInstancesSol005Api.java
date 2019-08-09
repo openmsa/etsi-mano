@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,10 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.entities.orchestration.ProcessInstance;
-import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import com.ubiqube.etsi.mano.controller.MsaExecutor;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -46,17 +43,17 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 public class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsLcmSol005Api.class);
 
-	private final DeviceService deviceService;
 	private final NsdRepository nsdRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 
 	private final OrchestrationService orchestrationService;
+	private final MsaExecutor msaExecutor;
 
-	public NsInstancesSol005Api(DeviceService _deviceService, NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService) {
-		deviceService = _deviceService;
+	public NsInstancesSol005Api(NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, OrchestrationService _orchestrationService, MsaExecutor _msaExecutor) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		orchestrationService = _orchestrationService;
+		msaExecutor = _msaExecutor;
 		LOG.debug("Instantiate SOL005 NS Instance.");
 	}
 
@@ -137,7 +134,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(String nsInstanceId, NsInstancesNsInstanceIdInstantiatePostQuery body) {
-		final Map<String, String> varsMap = new HashMap<>();
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
@@ -145,21 +141,12 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		final Map<String, String> userData = (Map<String, String>) nsdInfo.getUserDefinedData();
-		varsMap.put("deviceid", userData.get("vimId"));
-		varsMap.put("nsPkgId", nsdId);
-		final String processName = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
-		final String serviceName = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
-		final long serviceId = 0;
-		final String ubiqubeId = userData.get("customerId");
-		try {
-			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(ubiqubeId, serviceId, serviceName, processName, varsMap);
-			nsInstancesNsInstance.setNsState(NsStateEnum.INSTANTIATED);
-			nsInstanceRepository.save(nsInstancesNsInstance);
-			userData.put("msaProcessId", String.valueOf(resp.serviceId.id));
-			nsdRepository.save(nsdInfo);
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+
+		final String res = msaExecutor.onNsInstantiate(nsdId, userData);
+		nsInstancesNsInstance.setNsState(NsStateEnum.INSTANTIATED);
+		nsInstanceRepository.save(nsInstancesNsInstance);
+		userData.put("msaProcessId", res);
+		nsdRepository.save(nsdInfo);
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}
@@ -188,7 +175,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(String nsInstanceId, String accept, String contentType, NsInstancesNsInstanceIdTerminatePostQuery body) {
-		final Map<String, String> varsMap = new HashMap<>();
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.NOT_INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is not instantiated.");
@@ -196,19 +182,13 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		final Map<String, String> userData = (Map<String, String>) nsdInfo.getUserDefinedData();
-		final String processName = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack";
-		final String serviceName = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
-		final long serviceId = Long.parseLong(userData.get("msaProcessId"));
-		final String ubiqubeId = userData.get("customerId");
-		try {
-			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(ubiqubeId, serviceId, serviceName, processName, varsMap);
-			nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
-			nsInstanceRepository.save(nsInstancesNsInstance);
-			userData.remove("msaProcessId");
-			nsdRepository.save(nsdInfo);
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+
+		msaExecutor.onNsInstanceTerminate(userData);
+
+		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
+		nsInstanceRepository.save(nsInstancesNsInstance);
+		userData.remove("msaProcessId");
+		nsdRepository.save(nsdInfo);
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}
@@ -254,7 +234,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
-	private NsInstancesNsInstanceLinks makeLink(@NotNull String id) {
+	private static NsInstancesNsInstanceLinks makeLink(@NotNull String id) {
 		final NsInstancesNsInstanceLinks nsInstanceLinks = new NsInstancesNsInstanceLinks();
 		final NsInstancesNsInstanceLinksSelf heal = new NsInstancesNsInstanceLinksSelf();
 		heal.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
