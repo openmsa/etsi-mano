@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -85,7 +86,7 @@ public class VnfPkgInfo {
 	 * package content is on-boarded. Otherwise, this attribute shall be present if
 	 * the VNF package contains additional artifacts.
 	 **/
-	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts = null;
+	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts = new ArrayList<>();
 
 	@XmlType(name = "OnboardingStateEnum")
 	@XmlEnum(String.class)

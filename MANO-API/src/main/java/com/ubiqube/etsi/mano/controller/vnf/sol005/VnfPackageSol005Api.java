@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.controller.vnf.sol005;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,12 +33,13 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -219,23 +223,19 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(String vnfPkgId, String accept, MultipartFile file) {
-		final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).toString();
-		try {
-			if (!repositoryService.exists(uri)) {
-				throw new NotFoundException("No such object: " + vnfPkgId);
-			}
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 
 		if (isZip(file.getContentType())) {
 			// Normally we should do an asynchrone call
 			try {
-				unzip(vnfPkgId, file.getInputStream());
+				final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefact = unzip(vnfPkgId, file.getInputStream());
+				artefact.stream().forEach(vnfPkgInfo::addAdditionalArtifactsItem);
+				vnfPackageRepository.save(vnfPkgInfo);
 			} catch (final ServiceException | IOException e) {
 				throw new GenericException(e);
 			}
 		}
+
 		return ResponseEntity.noContent().build();
 	}
 
@@ -277,7 +277,8 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 	}
 
-	private void unzip(String vnfPkgId, InputStream fileDetail) throws IOException, ServiceException {
+	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> unzip(String vnfPkgId, InputStream fileDetail) throws IOException, ServiceException {
+		final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefacts = new ArrayList<>();
 		final ZipInputStream zis = new ZipInputStream(fileDetail);
 		ZipEntry ze;
 		while ((ze = zis.getNextEntry()) != null) {
@@ -292,9 +293,10 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 				repositoryService.addDirectory(uri, "", SOL005, NCROOT);
 				continue;
 			}
-
 			vnfPackageRepository.storeObject(vnfPkgId, zis, fileName);
+			artefacts.add(VnfPackageFactory.createArtefact(fileName, getChecksum(zis)));
 		}
+		return artefacts;
 	}
 
 	/**
@@ -309,6 +311,36 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	private static boolean isZip(String httpAccept) {
 		return ("application/zip".equals(httpAccept) || "application/x-zip-compressed".equals(httpAccept));
+	}
+
+	private VnfPackagesVnfPkgInfoChecksum getChecksum(InputStream is) {
+		try {
+			return getChecksum(StreamUtils.copyToByteArray(is));
+		} catch (NoSuchAlgorithmException | IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
+	private VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
+		final MessageDigest digest = MessageDigest.getInstance("SHA2-256");
+		final byte[] hashbytes = digest.digest(bytes);
+		final String sha3_256hex = bytesToHex(hashbytes);
+		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
+
+		checksum.algorithm("SHA2-256").hash(sha3_256hex);
+		return checksum;
+	}
+
+	private static String bytesToHex(final byte[] hash) {
+		final StringBuilder hexString = new StringBuilder();
+		for (final byte element : hash) {
+			final String hex = Integer.toHexString(0xff & element);
+			if (hex.length() == 1) {
+				hexString.append('0');
+			}
+			hexString.append(hex);
+		}
+		return hexString.toString();
 	}
 
 }
