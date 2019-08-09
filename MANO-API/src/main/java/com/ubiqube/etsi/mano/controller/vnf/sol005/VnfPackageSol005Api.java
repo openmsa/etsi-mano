@@ -31,14 +31,13 @@ import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -129,26 +128,24 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(String accept, String contentType, VnfPackagePostQuery vnfPackagePostQuery) {
 		final String vnfPkgId = UUID.randomUUID().toString();
-		final Object jsonString = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
-		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
-		vnfPkgInfo.setId(vnfPkgId);
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
-
-		vnfPackageRepository.storeObject(vnfPkgId, jsonString, "Metadata.yaml");
-
-		vnfPkgInfo.setUserDefinedData(jsonString);
+		final Object userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
+		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
+		vnfPackageRepository.storeObject(vnfPkgId, userDataObject, "Metadata.yaml");
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
-		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
 		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
 
 		checkUserData(userData);
-		vnfPackageRepository.save(vnfPkgInfo);
+
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
-		vnfPackageRepository.storeObject(vnfPkgId, userData.get("heat"), "vnfd.json");
+		final Object heatDoc = userData.get("heat");
+		if (null != heatDoc) {
+			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd.json");
+			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+		}
+		vnfPackageRepository.save(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 
