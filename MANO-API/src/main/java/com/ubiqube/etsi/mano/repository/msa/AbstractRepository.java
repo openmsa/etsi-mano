@@ -24,7 +24,7 @@ public abstract class AbstractRepository<T> implements CrudRepository<T> {
 	protected void verify(final String _uri) {
 		try {
 			if (!repositoryService.exists(_uri)) {
-				throw new NotFoundException("Object not found ");
+				throw new NotFoundException("Object not found " + _uri);
 			}
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
