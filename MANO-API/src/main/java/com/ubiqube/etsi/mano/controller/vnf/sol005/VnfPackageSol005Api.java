@@ -227,18 +227,12 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 
-		if (isZip(file.getContentType())) {
-			// Normally we should do an asynchrone call
-			try {
-				final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefact = unzip(vnfPkgId, file.getInputStream());
-				artefact.stream().forEach(vnfPkgInfo::addAdditionalArtifactsItem);
-				vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-				vnfPackageRepository.save(vnfPkgInfo);
-			} catch (final ServiceException | IOException e) {
-				throw new GenericException(e);
-			}
+		try {
+			vnfPkgInfo.setChecksum(getChecksum(file.getBytes()));
+			vnfPackageRepository.storeObject(vnfPkgId, file.getBytes(), "vnfd");
+		} catch (final NoSuchAlgorithmException | IOException e) {
+			throw new GenericException(e);
 		}
-
 		return ResponseEntity.accepted().build();
 	}
 
@@ -347,5 +341,4 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 		return hexString.toString();
 	}
-
 }
