@@ -14,15 +14,15 @@ public class Sol005Linkable implements Linkable {
 		final VnfPackagesVnfPkgInfoLinks links = new VnfPackagesVnfPkgInfoLinks();
 
 		final VnfPackagesVnfPkgInfoLinksSelf self = new VnfPackagesVnfPkgInfoLinksSelf();
-		self.setHref(linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfPackageSol005.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref());
 		links.self(self);
 
 		final VnfPackagesVnfPkgInfoLinksSelf vnfd = new VnfPackagesVnfPkgInfoLinksSelf();
-		vnfd.setHref(linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, "")).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackageSol005.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final VnfPackagesVnfPkgInfoLinksSelf packageContent = new VnfPackagesVnfPkgInfoLinksSelf();
-		packageContent.setHref(linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
+		packageContent.setHref(linkTo(methodOn(VnfPackageSol005.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
 		links.setPackageContent(packageContent);
 		return links;
 	}
