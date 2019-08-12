@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.repository;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 public interface CrudRepository<T> {
@@ -11,4 +13,6 @@ public interface CrudRepository<T> {
 
 	@Nonnull
 	T save(@Nonnull T entity);
+
+	List<T> query(String filter);
 }

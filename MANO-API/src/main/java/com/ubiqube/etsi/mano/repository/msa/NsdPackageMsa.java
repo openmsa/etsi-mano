@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
@@ -17,8 +18,8 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
  */
 @Repository
 public class NsdPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo> implements NsdRepository {
-	public NsdPackageMsa(ObjectMapper _mapper, RepositoryService _repositoryService) {
-		super(_mapper, _repositoryService);
+	public NsdPackageMsa(ObjectMapper _mapper, RepositoryService _repositoryService, JsonFilter _jsonFilter) {
+		super(_mapper, _repositoryService, _jsonFilter);
 	}
 
 	private static final String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";

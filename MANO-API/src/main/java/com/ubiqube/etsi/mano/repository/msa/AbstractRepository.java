@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -19,7 +17,6 @@ public abstract class AbstractRepository<T> implements CrudRepository<T> {
 
 	protected RepositoryService repositoryService;
 
-	@Autowired
 	public AbstractRepository(final RepositoryService _repositoryService) {
 		repositoryService = _repositoryService;
 	}
@@ -27,7 +24,7 @@ public abstract class AbstractRepository<T> implements CrudRepository<T> {
 	protected void verify(final String _uri) {
 		try {
 			if (!repositoryService.exists(_uri)) {
-				throw new NotFoundException("Object not found ");
+				throw new NotFoundException("Object not found " + _uri);
 			}
 		} catch (final ServiceException e) {
 			throw new GenericException(e);

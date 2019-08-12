@@ -8,15 +8,16 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
@@ -24,7 +25,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 @RestController
-@RequestMapping("/sol002/vnflcm/v1/vnf_instances")
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);
 	@Nonnull
@@ -32,7 +32,6 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
 
-	@Autowired
 	public VnfLcmSol002Api(VnfInstancesRepository _vnfInstancesRepository, VnfInstanceLcm _vnfInstanceLcm) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
@@ -40,9 +39,17 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	}
 
 	@Override
-	public ResponseEntity<List<VnfInstance>> vnfInstancesGet(Map<String, String> queryParameters) {
+	public ResponseEntity<String> vnfInstancesGet(Map<String, String> queryParameters) {
 		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters, links);
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		final String exclude = queryParameters.get("exclude_fields");
+		final String fields = queryParameters.get("fields");
+
+		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		try {
+			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	@Override
@@ -50,7 +57,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 		final String id = UUID.randomUUID().toString();
 
-		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id);
+		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id, links);
 		vnfInstance.setLinks(links.getLinks(id));
 
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);

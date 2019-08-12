@@ -1,12 +1,14 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,8 @@ import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.JsonFilter;
 
 /**
  * A Generic implementation of classical CRUD action around a repository.
@@ -26,11 +30,12 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 public abstract class AbstractGenericRepository<T> extends AbstractRepository<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
+	private final JsonFilter jsonFilter;
 
-	@Autowired
-	public AbstractGenericRepository(ObjectMapper _mapper, RepositoryService _repositoryService) {
+	public AbstractGenericRepository(ObjectMapper _mapper, RepositoryService _repositoryService, JsonFilter _jsonFilter) {
 		super(_repositoryService);
 		mapper = _mapper;
+		jsonFilter = _jsonFilter;
 	}
 
 	abstract String setId(T _entity);
@@ -75,7 +80,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	@Override
 	public final void delete(String _id) {
 		final String uri = makeRoot(_id);
-		verify(_id);
+		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
 	}
@@ -118,4 +123,25 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 	}
 
+	@Override
+	public List<T> query(String filter) {
+		List<String> listFilesInFolder;
+		try {
+			listFilesInFolder = repositoryService.doSearch(getRoot(), "vnfPkgInfo.json");
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+		final AstBuilder astBuilder = new AstBuilder(filter);
+		final ArrayList<T> ret = new ArrayList<>();
+		for (final String entry : listFilesInFolder) {
+			final String path = entry.substring((getRoot() + '/').length());
+			final File file = new File(path);
+			LOG.info("Retreiving: {}", file.getParent());
+			final T repoObject = get(file.getParent());
+			if (jsonFilter.apply(repoObject, astBuilder)) {
+				ret.add(repoObject);
+			}
+		}
+		return ret;
+	}
 }

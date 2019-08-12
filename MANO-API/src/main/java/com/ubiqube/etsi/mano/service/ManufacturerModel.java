@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.entities.device.Manufacturer;
@@ -22,7 +21,6 @@ public class ManufacturerModel {
 	private final DeviceService deviceBean;
 	private final Map<Long, Manufacturer> manufacturers;
 
-	@Autowired
 	public ManufacturerModel(DeviceService _devicebeService) {
 		deviceBean = _devicebeService;
 		try {

@@ -2,16 +2,12 @@ package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,11 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
@@ -37,11 +30,7 @@ import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
-import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.json.ExclusionSerializer;
-import com.ubiqube.etsi.mano.json.ViewHolder;
-import com.ubiqube.etsi.mano.json.WantedSerializer;
+import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
@@ -72,16 +61,14 @@ public class VnfManagement {
 	private final RepositoryService repositoryService;
 	private final SubscriptionRepository subscriptionRepository;
 	private final Notifications notifications;
-	private final JsonFilter jsonFilter;
 
-	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, SubscriptionRepository _subscriptionRepository, Notifications _notifications, JsonFilter _jsonFilter) {
+	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, SubscriptionRepository _subscriptionRepository, Notifications _notifications) {
 		super();
 		LOG.debug("Booting VNF SOL003 SOL005 Management.");
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
 		subscriptionRepository = _subscriptionRepository;
 		notifications = _notifications;
-		jsonFilter = _jsonFilter;
 	}
 
 	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId, @Nonnull Linkable links) {
@@ -93,25 +80,13 @@ public class VnfManagement {
 	}
 
 	public List<SubscriptionsPkgmSubscription> subscriptionsGet(String filter) {
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		List<String> listFilesInFolder;
-		try {
-			listFilesInFolder = repositoryService.doSearch(REPOSITORY_SUBSCRIPTION_BASE_PATH, "");
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+		final List<SubscriptionObject> result = subscriptionRepository.query(filter);
 		final List<SubscriptionsPkgmSubscription> response = new ArrayList<>();
-		for (final String entry : listFilesInFolder) {
-			final String path = entry.substring((REPOSITORY_SUBSCRIPTION_BASE_PATH + '/').length());
-			final File file = new File(path);
-			LOG.info("Retreiving: {}", file.getParent());
-			final SubscriptionObject subscriptionObject = subscriptionRepository.get(file.getParent());
-			if (jsonFilter.apply(subscriptionObject.getSubscriptionsPkgmSubscription(), astBuilder)) {
-				final InlineResponse2001 pack = new InlineResponse2001();
-				final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
-				pack.setPkgmSubscription(subscriptionsPkgmSubscription);
-				response.add(subscriptionsPkgmSubscription);
-			}
+		for (final SubscriptionObject subscriptionObject : result) {
+			final InlineResponse2001 pack = new InlineResponse2001();
+			final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
+			pack.setPkgmSubscription(subscriptionsPkgmSubscription);
+			response.add(subscriptionsPkgmSubscription);
 		}
 		return response;
 	}
@@ -123,11 +98,11 @@ public class VnfManagement {
 		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getFilter();
 		final SubscriptionsPkgmSubscription subscription = new SubscriptionsPkgmSubscription(callback, id, href, filter);
 
-		final InlineResponse2001 pack = new InlineResponse2001();
-		pack.setPkgmSubscription(subscription);
 		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
 		subscriptionRepository.save(subscriptionObject);
 
+		final InlineResponse2001 pack = new InlineResponse2001();
+		pack.setPkgmSubscription(subscription);
 		response.add(pack);
 		return response;
 	}
@@ -159,70 +134,24 @@ public class VnfManagement {
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 
-	public String vnfPackagesGet(@Nonnull Map<String, String> queryParameters, @Nonnull Linkable links) throws ServiceException {
+	public String vnfPackagesGet(@Nonnull Map<String, String> queryParameters, @Nonnull Linkable links) {
 		final String filter = queryParameters.get("filter");
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<String> vnfPkgsIdsList = getVnfPkgIdsFromRepository();
 
-		final List<VnfPkgInfo> vnfPkginfos = new ArrayList<>();
-		for (final String vnfPckId : vnfPkgsIdsList) {
-			final VnfPkgInfo vnfPackage = vnfPackageRepository.get(vnfPckId);
-			if (jsonFilter.apply(vnfPackage, astBuilder)) {
-				vnfPackage.setLinks(links.getVnfLinks(vnfPackage.getId()));
-				vnfPkginfos.add(vnfPackage);
-			}
+		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
+		for (final VnfPkgInfo vnfPkgInfo : vnfPkginfos) {
+			vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
 		}
+
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
 
-		final ObjectMapper mapperForQuery = getMapperForView(exclude, fields, null, null);
+		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(exclude, fields, null, null);
 
 		try {
 			return mapperForQuery.writeValueAsString(vnfPkginfos);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
-	}
-
-	private static ObjectMapper getMapperForView(@Nullable String exclude, @Nullable String fields, @Nullable String excludeDefault, @Nullable String excludeFields) {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		mapper.setSerializationInclusion(Include.NON_NULL);
-
-		if ((null != exclude) && !exclude.isEmpty()) {
-			final List<ViewHolder> excludeList = buildViewList(exclude);
-			mapper.registerModule(new SimpleModule() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void setupModule(SetupContext context) {
-					super.setupModule(context);
-					context.addBeanSerializerModifier(new ExclusionSerializer(excludeList));
-				}
-			});
-		} else if ((null != fields) && !fields.isEmpty()) {
-			final List<String> wantedList = Arrays.asList(fields.split(","));
-			mapper.registerModule(new SimpleModule() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void setupModule(SetupContext context) {
-					super.setupModule(context);
-					context.addBeanSerializerModifier(new WantedSerializer(wantedList));
-				}
-			});
-		}
-		return mapper;
-	}
-
-	@Nonnull
-	private static List<ViewHolder> buildViewList(@Nonnull String fields) {
-		final List<ViewHolder> ret = new ArrayList<>();
-		final String[] fieldArray = fields.split(",");
-		for (final String string : fieldArray) {
-			ret.add(new ViewHolder(string));
-		}
-		return ret;
 	}
 
 	/**
@@ -325,32 +254,6 @@ public class VnfManagement {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-	}
-
-	/**
-	 * Get the list of VNF Packages Information corresponding IDs.
-	 *
-	 * @return <b>vnfPackageIdList</b> VNF Packages details IDs list.
-	 * @throws ServiceException
-	 */
-	private List<String> getVnfPkgIdsFromRepository() throws ServiceException {
-
-		// List vnfd package from repository
-		final List<String> listFilesInFolder = repositoryService.doSearch(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "");
-		final List<String> vnfPackageIdList = new ArrayList<>();
-
-		// Split files path and store VNF Pckg Id
-		for (final String filePath : listFilesInFolder) {
-			final String[] splitArray = filePath.split("/", -1);
-			final String retrievedVnfPckId = splitArray[3];
-			vnfPackageIdList.add(retrievedVnfPckId);
-		}
-
-		final Set<String> set = new HashSet<>(vnfPackageIdList);
-		vnfPackageIdList.clear();
-		vnfPackageIdList.addAll(set);
-
-		return vnfPackageIdList;
 	}
 
 	/**

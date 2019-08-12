@@ -1,22 +1,21 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse400;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierDeletionNotification;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccIdGetResponse;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationOccurrenceNotification;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPost;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPostQuery;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * SOL005 - NS Lifecycle Management Interface
@@ -30,146 +29,9 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPostQuery;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
+@RequestMapping("/sol005/nslcm/v1")
+@Api(value = "/sol005/nslcm/v1")
 public interface NsLcmSol005 {
-
-	/**
-	 * Query multiple NS LCM operation occurrences.
-	 *
-	 * Get Operation Status. The client can use this method to query status
-	 * information about multiple NS lifecycle management operation occurrences.
-	 * This method shall follow the provisions specified in the Tables 6.4.9.3.2-1
-	 * and 6.4.9.3.2-2 for URI query parameters, request and response data
-	 * structures, and response codes.
-	 *
-	 */
-	public ResponseEntity<List<Object>> nsLcmOpOccsGet(@RequestHeader("Accept") String accept, @RequestParam("filter") String filter, @RequestParam("fields") String fields, @RequestParam("exclude_fields") String excludeFields, @RequestParam("exclude_default") String excludeDefault);
-
-	/**
-	 * Continue a NS lifecycle management operation occurrence.
-	 *
-	 * The POST method initiates continuing an NS lifecycle operation if that
-	 * operation has experienced a temporary failure, i.e. the related \&quot;NS LCM
-	 * operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This
-	 * method shall follow the provisions specified in the Tables 6.4.13.3.1-1 and
-	 * 6.4.13.3.1-2 for URI query parameters, request and response data structures,
-	 * and response codes.
-	 *
-	 */
-	public void nsLcmOpOccsNsLcmOpOccIdContinuePost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId);
-
-	/**
-	 * Read an individual NS LCM operation occurrence resource.
-	 *
-	 * The client can use this method to retrieve status information about a NS
-	 * lifecycle management operation occurrence by reading an individual \&quot;NS
-	 * LCM operation occurrence\&quot; resource. This method shall follow the
-	 * provisions specified in the Tables 6.4.10.3.2-1 and 6.4.10.3.2-2 for URI
-	 * query parameters, request and response data structures, and response codes.
-	 *
-	 */
-	public ResponseEntity<NsLcmOpOccsNsLcmOpOccIdGetResponse> nsLcmOpOccsNsLcmOpOccIdGet(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
-
-	/**
-	 * Retry a NS lifecycle management operation occurrence.
-	 *
-	 * The POST method initiates retrying a NS lifecycle management operation if
-	 * that operation has experienced a temporary failure, i.e. the related
-	 * \&quot;NS LCM operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot;
-	 * state. This method shall follow the provisions specified in the Tables
-	 * 6.4.11.3.1-1 and 6.4.11.3.1-2 for URI query parameters, request and response
-	 * data structures, and response codes.
-	 *
-	 */
-	public void nsLcmOpOccsNsLcmOpOccIdRetryPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId);
-
-	/**
-	 * Rollback a NS lifecycle management operation occurrence.
-	 *
-	 * The POST method initiates rolling back a NS lifecycle operation if that
-	 * operation has experienced a temporary failure, i.e. the related \&quot;NS LCM
-	 * operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This
-	 * method shall follow the provisions specified in the Tables 6.4.12.3.1-1 and
-	 * 6.4.12.3.1-2 for URI query parameters, request and response data structures,
-	 * and response codes.
-	 *
-	 */
-	public void nsLcmOpOccsNsLcmOpOccIdRollbackPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId);
-
-	/**
-	 * Cancel a NS lifecycle management operation occurrence.
-	 *
-	 * The POST method initiates canceling an ongoing NS lifecycle management
-	 * operation while it is being executed or rolled back, i.e. the related
-	 * \&quot;NS LCM operation occurrence\&quot; is either in
-	 * \&quot;PROCESSING\&quot; or \&quot;ROLLING_BACK\&quot; state. This method
-	 * shall follow the provisions specified in the Tables 6.4.15.3.1-1 and
-	 * 6.4.15.3.1-2 for URI query parameters, request and response data structures,
-	 * and response codes.
-	 *
-	 */
-	public void nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType, @Valid NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body);
-
-	/**
-	 * Mark a NS lifecycle management operation occurrence as failed.
-	 *
-	 * The POST method marks a NS lifecycle management operation occurrence as
-	 * \&quot;finally failed\&quot; if that operation occurrence is in
-	 * \&quot;FAILED_TEMP\&quot; state.
-	 *
-	 */
-	public ResponseEntity<NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse> nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(@PathVariable("nsLcmOpOccId") String nsLcmOpOccId, @RequestHeader("Accept") String accept);
-
-	/**
-	 * Query multiple subscriptions.
-	 *
-	 * Query Subscription Information. The GET method queries the list of active
-	 * subscriptions of the functional block that invokes the method. It can be used
-	 * e.g. for resynchronization after error situations.
-	 *
-	 */
-	public ResponseEntity<List<Object>> subscriptionsGet(@RequestHeader("Accept") String accept);
-
-	/**
-	 * Subscribe to NS lifecycle change notifications.
-	 *
-	 * The POST method creates a new subscription. This method shall support the URI
-	 * query parameters, request and response data structures, and response codes,
-	 * as specified in the Tables 6.4.16.3.1-1 and 6.4.16.3.1-2. Creation of two
-	 * subscription resources with the same callbackURI and the same filter can
-	 * result in performance degradation and will provide duplicates of
-	 * notifications to the OSS, and might make sense only in very rare use cases.
-	 * Consequently, the NFVO may either allow creating a subscription resource if
-	 * another subscription resource with the same filter and callbackUri already
-	 * exists (in which case it shall return the \&quot;201 Created\&quot; response
-	 * code), or may decide to not create a duplicate subscription resource (in
-	 * which case it shall return a \&quot;303 See Other\&quot; response code
-	 * referencing the existing subscription resource with the same filter and
-	 * callbackUri).
-	 *
-	 */
-	public ResponseEntity<SubscriptionsPost> subscriptionsPost(@RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType, @Valid SubscriptionsPostQuery body);
-
-	/**
-	 * Terminate a subscription.
-	 *
-	 * The DELETE method terminates an individual subscription. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Tables 6.4.17.3.5-1 and 6.4.17.3.5-2.
-	 *
-	 */
-	public void subscriptionsSubscriptionIdDelete(@PathVariable("subscriptionId") String subscriptionId);
-
-	/**
-	 * Read an individual subscription resource.
-	 *
-	 * The GET method retrieves information about a subscription by reading an
-	 * individual subscription resource. This method shall support the URI query
-	 * parameters, request and response data structures, and response codes, as
-	 * specified in the Tables 6.4.17.3.2-1 and 6.4.17.3.2-2
-	 *
-	 */
-	public ResponseEntity<SubscriptionsPost> subscriptionsSubscriptionIdGet(@PathVariable("subscriptionId") String subscriptionId, @RequestHeader("Accept") String accept);
-
 	/**
 	 * Notify about NS lifecycle change
 	 *
@@ -179,7 +41,13 @@ public interface NsLcmSol005 {
 	 * 6.4.18.3.1-2.
 	 *
 	 */
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierCreationNotificationPost(@Valid NsIdentifierCreationNotification nsIdentifierCreationNotification, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
+	@ApiOperation(value = "Notify about NS lifecycle change", tags = {})
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification was delivered successfully. "), @ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = InlineResponse400.class),
+			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = InlineResponse400.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = InlineResponse400.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class),
+			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
+			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
+	@PostMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-NsIdentifierCreationNotification", consumes = { "application/json" }, produces = { "application/json" })
+	void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierCreationNotificationPost(@Valid NsIdentifierCreationNotification nsIdentifierCreationNotification, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
 
 	/**
 	 * Test the notification endpoint.
@@ -190,7 +58,13 @@ public interface NsLcmSol005 {
 	 * 6.4.2.3.2-1 and 6.4.2.3.2-2.
 	 *
 	 */
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationGet(@RequestHeader("Accept") String accept);
+	@ApiOperation(value = "Test the notification endpoint.", tags = {})
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification endpoint was tested successfully. The response body shall be empty. "), @ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = InlineResponse400.class),
+			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = InlineResponse400.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = InlineResponse400.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class),
+			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
+			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
+	@GetMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-NsIdentifierDeletionNotification", consumes = { "application/json" }, produces = { "application/json" })
+	void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationGet(@RequestHeader("Accept") String accept);
 
 	/**
 	 * Notify about NS lifecycle change
@@ -201,7 +75,13 @@ public interface NsLcmSol005 {
 	 * 6.4.18.3.1-2.
 	 *
 	 */
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationPost(@Valid NsIdentifierDeletionNotification nsIdentifierDeletionNotification, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
+	@ApiOperation(value = "Notify about NS lifecycle change", tags = {})
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content The notification was delivered successfully. "), @ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = InlineResponse400.class),
+			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = InlineResponse400.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = InlineResponse400.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class),
+			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
+			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
+	@PostMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-NsIdentifierDeletionNotification", consumes = { "application/json" }, produces = { "application/json" })
+	void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationPost(@Valid NsIdentifierDeletionNotification nsIdentifierDeletionNotification, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
 
 	/**
 	 * Notify about NS lifecycle change
@@ -212,5 +92,11 @@ public interface NsLcmSol005 {
 	 * 6.4.18.3.1-2.
 	 *
 	 */
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsLcmOperationOccurrenceNotificationPost(@Valid NsLcmOperationOccurrenceNotification nsLcmOperationOccurrenceNotification, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
+	@ApiOperation(value = "Notify about NS lifecycle change", tags = {})
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "204 No Content           The notification was delivered successfully. "), @ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = InlineResponse400.class), @ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = InlineResponse400.class),
+			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = InlineResponse400.class), @ApiResponse(code = 404, message = "Not Found If the API producer did not find a current representation for the resource addressed by the URI passed in the request, or is not willing to disclose that one exists, it shall respond with this response code.  The \"ProblemDetails\" structure may be provided, including in the \"detail\" attribute information about the source of the problem, e.g. a wrong resource URI variable. ", response = InlineResponse400.class), @ApiResponse(code = 405, message = "Method Not Allowed If a particular HTTP method is not supported for a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure may be omitted in that case. ", response = InlineResponse400.class),
+			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = InlineResponse400.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = InlineResponse400.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = InlineResponse400.class),
+			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = InlineResponse400.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = InlineResponse400.class) })
+	@PostMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-NsLcmOperationOccurrenceNotification", consumes = { "application/json" }, produces = { "application/json" })
+	void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsLcmOperationOccurrenceNotificationPost(@Valid NsLcmOperationOccurrenceNotification nsLcmOperationOccurrenceNotification, @RequestHeader("Accept") String accept, @RequestHeader("Content-Type") String contentType);
 }
