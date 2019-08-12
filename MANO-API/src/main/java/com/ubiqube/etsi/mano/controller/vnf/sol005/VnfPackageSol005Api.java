@@ -143,13 +143,13 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		checkUserData(userData);
 
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd.json");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 		}
 		vnfPackageRepository.save(vnfPkgInfo);
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 
@@ -210,6 +210,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.OK);
 	}
 
