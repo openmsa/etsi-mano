@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.annotation.Nonnull;
 
@@ -20,14 +18,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
@@ -39,7 +35,6 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -68,26 +63,20 @@ import com.ubiqube.etsi.mano.utils.RangeHeader;
 @RestController
 public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
-	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
-	private static final String NCROOT = "ncroot";
-
-	private static final String SOL005 = "SOL005";
 	@Nonnull
 	private final Linkable links = new Sol005Linkable();
 	private final VnfManagement vnfManagement;
 	private final ManufacturerModel manufacturerModel;
 	private final DeviceService deviceService;
-	private final RepositoryService repositoryService;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 
-	public VnfPackageSol005Api(final VnfManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final RepositoryService _repositoryService, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService) {
+	public VnfPackageSol005Api(final VnfManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
-		repositoryService = _repositoryService;
 	}
 
 	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam final Map<String, String> params) {
@@ -135,7 +124,6 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final String vnfPkgId = UUID.randomUUID().toString();
 		final Object userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
 		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
-		vnfPackageRepository.storeObject(vnfPkgId, userDataObject, "Metadata.yaml");
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -143,10 +131,9 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
 
 		checkUserData(userData);
-
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
-			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd.json");
+			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 		}
 		vnfPackageRepository.save(vnfPkgInfo);
@@ -255,14 +242,10 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final LinkedHashMap<String, String> uddList = (LinkedHashMap<String, String>) vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
 		final String uri = uddList.get("url");
 		final InputStream content = getUrlContent(uri);
-		try {
-			final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefact = unzip(vnfPkgId, content);
-			artefact.stream().forEach(vnfPkgInfo::addAdditionalArtifactsItem);
-			vnfPackageRepository.save(vnfPkgInfo);
-		} catch (final ServiceException | IOException e) {
-			throw new GenericException(e);
-		}
 
+		vnfPackageRepository.storeObject(vnfPkgId, content, "vnfd");
+		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+		vnfPackageRepository.save(vnfPkgInfo);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -276,28 +259,6 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 	}
 
-	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> unzip(final String vnfPkgId, final InputStream fileDetail) throws IOException, ServiceException {
-		final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefacts = new ArrayList<>();
-		final ZipInputStream zis = new ZipInputStream(fileDetail);
-		ZipEntry ze;
-		while ((ze = zis.getNextEntry()) != null) {
-			String fileName = ze.getName();
-			fileName = sanitize(fileName);
-			if (ze.isDirectory()) {
-				// XXX/ Fix Path ending by '/'
-				if (fileName.endsWith("/")) {
-					fileName = fileName.substring(0, fileName.length() - 1);
-				}
-				final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(fileName).toString();
-				repositoryService.addDirectory(uri, "", SOL005, NCROOT);
-				continue;
-			}
-			vnfPackageRepository.storeBinary(vnfPkgId, zis, fileName);
-			artefacts.add(VnfPackageFactory.createArtefact(fileName, getChecksum(zis)));
-		}
-		return artefacts;
-	}
-
 	/**
 	 * Prevent directory traversal.
 	 *
@@ -306,18 +267,6 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	protected String sanitize(final String fileName) {
 		return fileName.replaceAll("\\.\\.", "");
-	}
-
-	private static boolean isZip(final String httpAccept) {
-		return ("application/zip".equals(httpAccept) || "application/x-zip-compressed".equals(httpAccept));
-	}
-
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final InputStream is) {
-		try {
-			return getChecksum(StreamUtils.copyToByteArray(is));
-		} catch (NoSuchAlgorithmException | IOException e) {
-			throw new GenericException(e);
-		}
 	}
 
 	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {

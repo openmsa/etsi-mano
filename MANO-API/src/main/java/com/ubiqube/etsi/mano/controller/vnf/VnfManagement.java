@@ -1,12 +1,13 @@
 package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,38 +20,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
-import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
-import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
 @Service
 public class VnfManagement {
 	private static final String APPLICATION_ZIP = "application/zip";
 	private static final Logger LOG = LoggerFactory.getLogger(VnfManagement.class);
-	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 
 	private final VnfPackageRepository vnfPackageRepository;
-	private final RepositoryService repositoryService;
 
-	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final RepositoryService _repositoryService) {
+	public VnfManagement(final VnfPackageRepository _vnfPackageRepository) {
 		super();
 		LOG.debug("Booting VNF SOL003 SOL005 Management.");
 		vnfPackageRepository = _vnfPackageRepository;
-		repositoryService = _repositoryService;
 	}
 
 	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull final String vnfPkgId, @Nonnull final Linkable links) {
@@ -91,154 +85,88 @@ public class VnfManagement {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull final String vnfPkgId, @Nonnull final String artifactPath, @Nullable final RangeHeader rangeHeader) throws ServiceException {
-		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull final String vnfPkgId, @Nonnull final String artifactPath, @Nullable final RangeHeader rangeHeader) {
+		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 
-		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(artifactPath.trim()).toString(), "");
-
-		if (!listvnfPckgFiles.isEmpty()) {
-			if (listvnfPckgFiles.size() > 1) {
-				return getZipArchive(rangeHeader, listvnfPckgFiles);
+		final InputStream bis = new ByteArrayInputStream(content);
+		final ZipInputStream zis = new ZipInputStream(bis);
+		ZipEntry entry = null;
+		try {
+			while ((entry = zis.getNextEntry()) != null) {
+				if (entry.isDirectory()) {
+					continue;
+				}
+				if (entry.getName().equals(artifactPath)) {
+					final byte[] zcontent = StreamUtils.copyToByteArray(zis);
+					if (rangeHeader != null) {
+						if (rangeHeader.getTo() > zcontent.length) {
+							return ResponseEntity.status(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE).build();
+						}
+						final byte[] finalContent = Arrays.copyOfRange(zcontent, rangeHeader.getFrom(), rangeHeader.getTo());
+						final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
+						final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+						return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+								.header("Content-Range", rangeHeader.getContentRange(zcontent.length))
+								.contentType(contentType)
+								.body(resource);
+					}
+					final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
+					final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+					return ResponseEntity.ok()
+							.contentType(contentType)
+							.body(resource);
+				}
 			}
-			final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
-			final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-			return ResponseEntity.ok()
-					.contentType(MediaType.APPLICATION_OCTET_STREAM)
-					.body(resource);
+		} catch (final IOException e) {
+			throw new GenericException(e);
 		}
 		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
 	}
 
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull final String vnfPkgId, @Nullable final String accept) {
-		final List<String> listvnfPckgFiles = new LinkedList<>();
-
-		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
+		vnfPackageRepository.get(vnfPkgId);
 
 		// - Implement VNFD multi-files support
-		final String uri = new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append("vnfd.json").toString();
-		listvnfPckgFiles.add(uri);
-
-		boolean isVnfd;
-		try {
-			isVnfd = repositoryService.exists(uri);
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
-
-		if (isVnfd) {
-			if (MediaType.TEXT_PLAIN_VALUE.equals(accept)) {
-				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-				final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
-				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-				return ResponseEntity.ok(resource);
-			} else if (APPLICATION_ZIP.equals(accept) && MediaType.TEXT_PLAIN_VALUE.equals(accept)) {
-				return getZipArchive(null, listvnfPckgFiles);
-			} else {
-				final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-				final String content = new String(repositoryService.getRepositoryElementContent(repositoryElement), StandardCharsets.UTF_8);
-				final byte[] yaml = conJsonToYaml(content);
-				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(yaml));
-				return ResponseEntity.ok()
-						.contentType(MediaType.APPLICATION_OCTET_STREAM)
-						.body(resource);
-			}
-		}
-		throw new NotFoundException("VNFD not found for vnfPkg with id: " + vnfPkgId);
-	}
-
-	/**
-	 * Method allows to archive VNF Package contents and artifacts.
-	 *
-	 * @param range
-	 * @param listvnfPckgFiles
-	 * @return
-	 *
-	 */
-	private ResponseEntity<Resource> getZipArchive(final RangeHeader rangeHeader, final List<String> listvnfPckgFiles) {
-
-		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
-		ByteArrayOutputStream bos;
-
-		try {
-			if (rangeHeader == null) {
-				bos = zip.getZipFile();
-				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
-				final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-				return ResponseEntity.ok().contentType(contentType).body(resource);
-
-			}
-			bos = zip.getByteRangeZipFile(rangeHeader.getFrom(), rangeHeader.getTo());
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
-			final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", rangeHeader.getContentRange((int) zip.zipFileByteArrayLength()))
-					.contentType(contentType)
+		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+		final String mime = MimeType.findMatch(content);
+		if (MediaType.TEXT_PLAIN_VALUE.equals(accept)) {
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+			return ResponseEntity.ok()
+					.contentType(MediaType.TEXT_PLAIN)
 					.body(resource);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	/**
-	 * Map YAML file to JsonObject.
-	 *
-	 * @param yaml VNF Package Metadata from repository
-	 * @return the JsonObject as a String
-	 */
-	private static String convertYamlToJson(final String yaml) {
-		try {
-			final ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-			final Object obj = yamlReader.readValue(yaml, Object.class);
-			final ObjectMapper jsonWriter = new ObjectMapper();
-			return jsonWriter.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private static byte[] conJsonToYaml(final String json) {
-		try {
-			final ObjectMapper jsonReader = new ObjectMapper();
-			final Object obj = jsonReader.readValue(json, Object.class);
-			final ObjectMapper yamlWriter = new ObjectMapper(new YAMLFactory());
-			return yamlWriter.writerWithDefaultPrettyPrinter().writeValueAsBytes(obj);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(@Nonnull final String vnfPkgId, final boolean isCheckOnbordingStatus) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-
-		if (isCheckOnbordingStatus) {
-			final String onboardingState = vnfPkgInfo.getOnboardingState();
-			if (OnboardingStateEnum.PROCESSING.toString().equalsIgnoreCase(onboardingState)
-					|| OnboardingStateEnum.UPLOADING.toString().equalsIgnoreCase(onboardingState.toUpperCase())) {
-				throw new ConflictException("Conflict with the current VNF Package onbording state: " + onboardingState.toUpperCase());
-			}
+		} else if (APPLICATION_ZIP.equals(accept)) {
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+			return ResponseEntity.ok()
+					.header("Content-Type", mime)
+					.body(resource);
 		} else {
-			return vnfPkgInfo;
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_OCTET_STREAM)
+					.body(resource);
 		}
-		return vnfPkgInfo;
 	}
 
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull final String _vnfPkgId, final String _range) {
-		getVnfPkgIndividualInfoOrCheckOnboardingStatus(_vnfPkgId, true);
+		final RangeHeader rangeHeader = RangeHeader.fromValue(_range);
 
-		// List vnfd package from repository
-		List<String> listvnfPckgFiles;
-		try {
-			listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(_vnfPkgId).toString(), "");
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
+		if (rangeHeader != null) {
+			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", rangeHeader.getFrom(), rangeHeader.getTo());
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+			final String mime = MimeType.findMatch(bytes);
+			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+					.header("Content-Range", rangeHeader.getContentRange(bytes.length))
+					.header("Content-Type", mime)
+					.body(resource);
 		}
+		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
+		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+		final String mime = MimeType.findMatch(bytes);
+		return ResponseEntity.status(HttpStatus.OK)
+				.header("Content-Type", mime)
+				.body(resource);
 
-		if (!listvnfPckgFiles.isEmpty()) {
-			return getZipArchive(RangeHeader.fromValue(_range), listvnfPckgFiles);
-		}
-		throw new NotFoundException("VNF package content not found for vnfPkgId: " + _vnfPkgId);
 	}
 
 }
