@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
+import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
@@ -19,15 +19,15 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
 
 @RestController
 public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
-	private final VnfManagement vnfManagement;
+	private final VnfSubscriptionManagement vnfSubscriptionManagement;
 
-	public VnfSubscriptionSol005Api(VnfManagement _vnfManagement) {
-		vnfManagement = _vnfManagement;
+	public VnfSubscriptionSol005Api(VnfSubscriptionManagement _vnfSubscriptionManagement) {
+		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 	}
 
 	@Override
 	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) String filters) {
-		return new ResponseEntity<>(vnfManagement.subscriptionsGet(filters), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsGet(filters), HttpStatus.OK);
 	}
 
 	@Override
@@ -35,17 +35,17 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 		// Job
 		final String id = UUID.randomUUID().toString();
 		final String href = linkTo(methodOn(VnfSubscriptionSol005Api.class).subscriptionsSubscriptionIdGet(id, "")).withSelfRel().getHref();
-		return new ResponseEntity<>(vnfManagement.subscriptionsPost(subscriptionsPostQuery, href, id), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, href, id), HttpStatus.OK);
 	}
 
 	@Override
 	public void subscriptionsSubscriptionIdDelete(String subscriptionId) {
-		vnfManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
+		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
 	}
 
 	@Override
 	public ResponseEntity<SubscriptionsPkgmSubscription> subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
-		return new ResponseEntity<>(vnfManagement.subscriptionsSubscriptionIdGet(subscriptionId), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId), HttpStatus.OK);
 
 	}
 
@@ -58,7 +58,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 		final String hrefVnfPackage = linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
 		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol005Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
-		vnfManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, hrefVnfPackage, hrefSubscription);
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, hrefVnfPackage, hrefSubscription);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol005Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
 		final String hrefPackage = linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
 
-		vnfManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, hrefSubscription, hrefPackage);
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, hrefSubscription, hrefPackage);
 	}
 
 }
