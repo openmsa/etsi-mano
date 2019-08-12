@@ -130,7 +130,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	public List<T> query(String filter) {
 		List<String> listFilesInFolder;
 		try {
-			listFilesInFolder = repositoryService.doSearch(getRoot(), "vnfPkgInfo.json");
+			listFilesInFolder = repositoryService.doSearch(getRoot(), getFilename());
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
