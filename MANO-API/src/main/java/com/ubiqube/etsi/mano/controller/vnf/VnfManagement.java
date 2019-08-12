@@ -46,14 +46,14 @@ public class VnfManagement {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final RepositoryService repositoryService;
 
-	public VnfManagement(VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService) {
+	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final RepositoryService _repositoryService) {
 		super();
 		LOG.debug("Booting VNF SOL003 SOL005 Management.");
 		vnfPackageRepository = _vnfPackageRepository;
 		repositoryService = _repositoryService;
 	}
 
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull String vnfPkgId, @Nonnull Linkable links) {
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull final String vnfPkgId, @Nonnull final Linkable links) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
@@ -61,7 +61,7 @@ public class VnfManagement {
 		return vnfPkgInfo;
 	}
 
-	public String vnfPackagesGet(@Nonnull Map<String, String> queryParameters, @Nonnull Linkable links) {
+	public String vnfPackagesGet(@Nonnull final Map<String, String> queryParameters, @Nonnull final Linkable links) {
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
@@ -91,7 +91,7 @@ public class VnfManagement {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull String vnfPkgId, @Nonnull String artifactPath, @Nullable RangeHeader rangeHeader) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull final String vnfPkgId, @Nonnull final String artifactPath, @Nullable final RangeHeader rangeHeader) throws ServiceException {
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
 
 		final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NVFO_DATAFILE_BASE_PATH).append("/").append(vnfPkgId).append("/").append(artifactPath.trim()).toString(), "");
@@ -111,7 +111,7 @@ public class VnfManagement {
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
 	}
 
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull final String vnfPkgId, @Nullable final String accept) {
 		final List<String> listvnfPckgFiles = new LinkedList<>();
 
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(vnfPkgId, true);
@@ -156,7 +156,7 @@ public class VnfManagement {
 	 * @return
 	 *
 	 */
-	private ResponseEntity<Resource> getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
+	private ResponseEntity<Resource> getZipArchive(final RangeHeader rangeHeader, final List<String> listvnfPckgFiles) {
 
 		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
 		ByteArrayOutputStream bos;
@@ -200,7 +200,7 @@ public class VnfManagement {
 		}
 	}
 
-	private static byte[] conJsonToYaml(String json) {
+	private static byte[] conJsonToYaml(final String json) {
 		try {
 			final ObjectMapper jsonReader = new ObjectMapper();
 			final Object obj = jsonReader.readValue(json, Object.class);
@@ -211,7 +211,7 @@ public class VnfManagement {
 		}
 	}
 
-	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(@Nonnull String vnfPkgId, boolean isCheckOnbordingStatus) {
+	private VnfPkgInfo getVnfPkgIndividualInfoOrCheckOnboardingStatus(@Nonnull final String vnfPkgId, final boolean isCheckOnbordingStatus) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 
 		if (isCheckOnbordingStatus) {
@@ -226,7 +226,7 @@ public class VnfManagement {
 		return vnfPkgInfo;
 	}
 
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull String _vnfPkgId, String _range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull final String _vnfPkgId, final String _range) {
 		getVnfPkgIndividualInfoOrCheckOnboardingStatus(_vnfPkgId, true);
 
 		// List vnfd package from repository

@@ -18,7 +18,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
 public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
 
-	public VnfSubscriptionSol003Api(VnfSubscriptionManagement _vnfSubscriptionManagement) {
+	public VnfSubscriptionSol003Api(final VnfSubscriptionManagement _vnfSubscriptionManagement) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 	}
 
@@ -32,7 +32,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 * response data structures, and response codes. ²
 	 */
 	@Override
-	public List<SubscriptionsPkgmSubscription> subscriptionsGet(String filter) {
+	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter) {
 		return vnfSubscriptionManagement.subscriptionsGet(filter);
 	}
 
@@ -56,7 +56,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public List<InlineResponse2001> subscriptionsPost(SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
+	public List<InlineResponse2001> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
 		final String id = UUID.randomUUID().toString();
 		final String href = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(id, "")).withSelfRel().getHref();
@@ -70,7 +70,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void subscriptionsSubscriptionIdDelete(String subscriptionId) {
+	public void subscriptionsSubscriptionIdDelete(final String subscriptionId) {
 		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
 	}
 
@@ -82,7 +82,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
+	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
 		return vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId);
 	}
 
@@ -96,7 +96,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionVnfPackageChangeNotificationGet(String accept) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionVnfPackageChangeNotificationGet(final String accept) {
 		// Nothing.
 	}
 
@@ -110,7 +110,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void vnfPackageChangeNotificationPost(NotificationsMessage notificationsMessage) {
+	public void vnfPackageChangeNotificationPost(final NotificationsMessage notificationsMessage) {
 
 		final String id = UUID.randomUUID().toString();
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
@@ -132,7 +132,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void vnfPackageOnboardingNotificationPost(NotificationsMessage notificationsMessage) {
+	public void vnfPackageOnboardingNotificationPost(final NotificationsMessage notificationsMessage) {
 
 		final String id = UUID.randomUUID().toString();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();

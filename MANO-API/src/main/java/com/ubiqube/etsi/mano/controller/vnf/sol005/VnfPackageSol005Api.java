@@ -80,7 +80,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 
-	public VnfPackageSol005Api(VnfManagement _vnfManagement, Patcher _patcher, VnfPackageRepository _vnfPackageRepository, RepositoryService _repositoryService, ManufacturerModel _manufacturerModel, DeviceService _deviceService) {
+	public VnfPackageSol005Api(final VnfManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final RepositoryService _repositoryService, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
@@ -89,24 +89,24 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		repositoryService = _repositoryService;
 	}
 
-	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam Map<String, String> params) {
+	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam final Map<String, String> params) {
 		LOG.info("qp => {}", params);
 		return new ResponseEntity<List<SubscriptionsPkgmSubscription>>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesGet(Map<String, String> requestParams) throws ServiceException {
+	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) throws ServiceException {
 		final String resp = vnfManagement.vnfPackagesGet(requestParams, links);
 		return ResponseEntity.ok(resp);
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(String vnfPkgId, String artifactPath, String accept, String range) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String accept, final String range) throws ServiceException {
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
 
 	@Override
-	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdGet(String vnfPkgId, String accept) {
+	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, links);
 		final VnfPackagesVnfPkgIdGetResponse resp = new VnfPackagesVnfPkgIdGetResponse();
 		resp.setVnfPkgInfo(vnfPkgInfo);
@@ -114,12 +114,12 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(String vnfPkgId, String accept, String range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept, final String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(String vnfPkgId, String accept) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
 	}
 
@@ -130,7 +130,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(String accept, String contentType, VnfPackagePostQuery vnfPackagePostQuery) {
+	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
 		final String vnfPkgId = UUID.randomUUID().toString();
 		final Object userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
 		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
@@ -153,7 +153,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 
-	private void checkUserData(Map<String, Object> userData) {
+	private void checkUserData(final Map<String, Object> userData) {
 		final String vimId = (String) userData.get("vimId");
 		if (null == vimId) {
 			throw new BadRequestException("vimId could not be null");
@@ -181,7 +181,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(String vnfPkgId) {
+	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
 			throw new ConflictException("Packaged is enabled.");
@@ -200,7 +200,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(String vnfPkgId, String body, String contentType) {
+	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
 			throw new ConflictException("Could not patch a disabled VNF Package.");
@@ -223,7 +223,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(String vnfPkgId, String accept, MultipartFile file) {
+	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 
 		if (isZip(file.getContentType())) {
@@ -250,7 +250,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(String accept, String contentType, String vnfPkgId, VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest) {
+	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("Onboarding state is not correct.");
@@ -270,7 +270,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		return ResponseEntity.noContent().build();
 	}
 
-	private static InputStream getUrlContent(String uri) {
+	private static InputStream getUrlContent(final String uri) {
 		URL url;
 		try {
 			url = new URL(uri);
@@ -280,7 +280,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 	}
 
-	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> unzip(String vnfPkgId, InputStream fileDetail) throws IOException, ServiceException {
+	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> unzip(final String vnfPkgId, final InputStream fileDetail) throws IOException, ServiceException {
 		final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefacts = new ArrayList<>();
 		final ZipInputStream zis = new ZipInputStream(fileDetail);
 		ZipEntry ze;
@@ -308,15 +308,15 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	 * @param fileName
 	 * @return
 	 */
-	protected String sanitize(String fileName) {
+	protected String sanitize(final String fileName) {
 		return fileName.replaceAll("\\.\\.", "");
 	}
 
-	private static boolean isZip(String httpAccept) {
+	private static boolean isZip(final String httpAccept) {
 		return ("application/zip".equals(httpAccept) || "application/x-zip-compressed".equals(httpAccept));
 	}
 
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(InputStream is) {
+	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final InputStream is) {
 		try {
 			return getChecksum(StreamUtils.copyToByteArray(is));
 		} catch (NoSuchAlgorithmException | IOException e) {

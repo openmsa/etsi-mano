@@ -18,7 +18,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> thresholdsGet(String accept, String filter) {
+	public ResponseEntity<List<Object>> thresholdsGet(final String accept, final String filter) {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 	}
 
@@ -31,7 +31,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<ThresholdsPostResponse> thresholdsPost(CreateThresholdRequest createThresholdRequest, String accept, String contentType) {
+	public ResponseEntity<ThresholdsPostResponse> thresholdsPost(final CreateThresholdRequest createThresholdRequest, final String accept, final String contentType) {
 		// : Implement...
 
 		return null;
@@ -44,7 +44,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	 *
 	 */
 	@Override
-	public void thresholdsThresholdIdDelete(String thresholdId, String accept) {
+	public void thresholdsThresholdIdDelete(final String thresholdId, final String accept) {
 		// : Implement...
 
 	}
@@ -59,7 +59,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<ThresholdsPostResponse> thresholdsThresholdIdGet(String thresholdId, String accept) {
+	public ResponseEntity<ThresholdsPostResponse> thresholdsThresholdIdGet(final String thresholdId, final String accept) {
 		// : Implement...
 
 		return null;

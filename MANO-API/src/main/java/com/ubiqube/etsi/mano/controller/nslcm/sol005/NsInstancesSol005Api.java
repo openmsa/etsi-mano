@@ -48,7 +48,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final MsaExecutor msaExecutor;
 
-	public NsInstancesSol005Api(NsdRepository _nsdRepository, NsInstanceRepository _nsInstanceRepository, MsaExecutor _msaExecutor) {
+	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		msaExecutor = _msaExecutor;
@@ -65,7 +65,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsInstancesGet(String accept, String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
+	public ResponseEntity<String> nsInstancesGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsInstancesNsInstance> result = nsInstanceRepository.query(filter);
 		for (final NsInstancesNsInstance nsInstancesNsInstance : result) {
 			nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
@@ -85,7 +85,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public void nsInstancesNsInstanceIdDelete(String nsInstanceId) {
+	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
 			throw new ConflictException("The ns instance " + nsInstanceId + " is instantiated.");
@@ -101,7 +101,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(String nsInstanceId) {
+	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
 		final InlineResponse200 resp = new InlineResponse200();
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		nsInstance.setLinks(makeLink(nsInstanceId));
@@ -119,7 +119,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdHealPost(String nsInstanceId, NsInstancesNsInstanceIdHealPostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final NsInstancesNsInstanceIdHealPostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
@@ -134,7 +134,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(String nsInstanceId, NsInstancesNsInstanceIdInstantiatePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
@@ -159,7 +159,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdScalePost(String nsInstanceId, String accept, String contentType, NsInstancesNsInstanceIdScalePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdScalePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
@@ -179,7 +179,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(String nsInstanceId, String accept, String contentType, NsInstancesNsInstanceIdTerminatePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdTerminatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.NOT_INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is not instantiated.");
@@ -205,7 +205,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdUpdatePost(String nsInstanceId, String accept, String contentType, NsInstancesNsInstanceIdUpdatePostQuery body) {
+	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdUpdatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
@@ -220,7 +220,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<InlineResponse200> nsInstancesPost(NsInstancesPostQuery body) {
+	public ResponseEntity<InlineResponse200> nsInstancesPost(final NsInstancesPostQuery body) {
 		final NsInstancesCreateNsRequest req = body.getCreateNsRequest();
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
@@ -245,7 +245,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
-	private static NsInstancesNsInstanceLinks makeLink(@NotNull String id) {
+	private static NsInstancesNsInstanceLinks makeLink(@NotNull final String id) {
 		final NsInstancesNsInstanceLinks nsInstanceLinks = new NsInstancesNsInstanceLinks();
 		final NsInstancesNsInstanceLinksSelf heal = new NsInstancesNsInstanceLinksSelf();
 		heal.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());

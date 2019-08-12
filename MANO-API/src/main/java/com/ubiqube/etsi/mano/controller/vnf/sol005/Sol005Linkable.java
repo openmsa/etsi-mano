@@ -10,7 +10,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoLinksSelf;
 public class Sol005Linkable implements Linkable {
 
 	@Override
-	public VnfPackagesVnfPkgInfoLinks getVnfLinks(String vnfPkgId) {
+	public VnfPackagesVnfPkgInfoLinks getVnfLinks(final String vnfPkgId) {
 		final VnfPackagesVnfPkgInfoLinks links = new VnfPackagesVnfPkgInfoLinks();
 
 		final VnfPackagesVnfPkgInfoLinksSelf self = new VnfPackagesVnfPkgInfoLinksSelf();

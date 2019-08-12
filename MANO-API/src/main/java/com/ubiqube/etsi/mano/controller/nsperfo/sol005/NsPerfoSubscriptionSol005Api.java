@@ -21,7 +21,7 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> subscriptionsGet(String accept, String filter) {
+	public ResponseEntity<List<Object>> subscriptionsGet(final String accept, final String filter) {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 	}
 
@@ -44,7 +44,7 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(final String accept, final String contentType, final SubscriptionsPostQuery body) {
 		// : Implement...
 		return null;
 	}
@@ -58,7 +58,7 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 *
 	 */
 	@Override
-	public void subscriptionsSubscriptionIdDelete(String subscriptionId, String accept) {
+	public void subscriptionsSubscriptionIdDelete(final String subscriptionId, final String accept) {
 		// : Implement...
 	}
 
@@ -73,7 +73,7 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
 		// : Implement...
 		return null;
 	}

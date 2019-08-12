@@ -34,7 +34,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPerformanceInformationAvailableNotificationPost(PerformanceInformationAvailableNotification performanceInformationAvailableNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPerformanceInformationAvailableNotificationPost(final PerformanceInformationAvailableNotification performanceInformationAvailableNotification, final String accept, final String contentType) {
 		// TODO: Implement...
 
 	}
@@ -49,7 +49,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionThresholdCrossedNotificationGet(String accept) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionThresholdCrossedNotificationGet(final String accept) {
 		// TODO: Implement...
 
 	}
@@ -63,7 +63,7 @@ public class NsPerfoSol005Api implements NsPerfoSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionThresholdCrossedNotificationPost(ThresholdCrossedNotification thresholdCrossedNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionThresholdCrossedNotificationPost(final ThresholdCrossedNotification thresholdCrossedNotification, final String accept, final String contentType) {
 		// TODO: Implement...
 
 	}
