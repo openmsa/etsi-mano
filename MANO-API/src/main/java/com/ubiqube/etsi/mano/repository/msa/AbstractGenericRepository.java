@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -112,7 +113,8 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 	}
 
-	public void storeObject(String _vnfPkgId, InputStream _stream, String _filename) {
+	@Override
+	public void storeBinary(String _vnfPkgId, InputStream _stream, String _filename) {
 		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
 		path.append('/').append(_filename);
 
@@ -144,4 +146,20 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 		return ret;
 	}
+
+	@Override
+	public byte[] getBinary(final String _vnfPkgId, final String _filename) {
+		final String uri = makeRoot(_vnfPkgId) + '/' + getFilename();
+		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
+		return repositoryService.getRepositoryElementContent(repositoryElement);
+	}
+
+	@Override
+	public byte[] getBinary(final String _vnfPkgId, final String _filename, final int min, final Integer max) {
+		final String uri = makeRoot(_vnfPkgId) + '/' + _filename;
+		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
+		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
+		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
+	}
+
 }
