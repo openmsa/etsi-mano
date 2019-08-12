@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -205,12 +205,12 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(String nsdInfoId, String accept, final MultipartFile file) {
-		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 		try {
 			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
 		nsdRepository.save(nsdInfo);
 		nsdInfo.setLinks(makeLinks(nsdInfoId));
@@ -249,8 +249,6 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(String accept, String contentType, NsDescriptorsPostQuery nsDescriptorsPostQuery) {
 		final String id = UUID.randomUUID().toString();
 
-		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
-		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
 		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id);
 		final Map<String, Object> userDefinedData = (Map<String, Object>) nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		resp.setUserDefinedData(userDefinedData);
@@ -297,7 +295,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		}
 	}
 
-	private static NsDescriptorsNsdInfoLinks makeLinks(@NotNull String id) {
+	private static NsDescriptorsNsdInfoLinks makeLinks(@Nonnull String id) {
 		final NsDescriptorsNsdInfoLinks ret = new NsDescriptorsNsdInfoLinks();
 		final NsDescriptorsNsdInfoLinksSelf nsdSelf = new NsDescriptorsNsdInfoLinksSelf();
 		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
