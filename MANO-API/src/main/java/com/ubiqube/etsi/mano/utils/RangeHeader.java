@@ -56,7 +56,7 @@ public class RangeHeader {
 	 *
 	 * @return the start value of range.
 	 */
-	public long getFrom() {
+	public int getFrom() {
 
 		return from;
 	}
@@ -97,6 +97,13 @@ public class RangeHeader {
 	@Override
 	public String toString() {
 		return String.format("Range: %s=%d-%d", unit.name().toLowerCase(), from, to);
+	}
+
+	public String getContentRange(final int length) {
+		final StringBuilder sb = new StringBuilder("bytes ");
+		sb.append(from).append('-').append(to);
+		sb.append('/').append(length);
+		return sb.toString();
 	}
 
 }
