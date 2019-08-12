@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -216,7 +217,9 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		try {
 			vnfPkgInfo.setChecksum(getChecksum(file.getBytes()));
-			vnfPackageRepository.storeObject(vnfPkgId, file.getBytes(), "vnfd");
+			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(file.getBytes()), "vnfd");
+			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+			vnfPackageRepository.save(vnfPkgInfo);
 		} catch (final NoSuchAlgorithmException | IOException e) {
 			throw new GenericException(e);
 		}
@@ -257,16 +260,6 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-	}
-
-	/**
-	 * Prevent directory traversal.
-	 *
-	 * @param fileName
-	 * @return
-	 */
-	protected String sanitize(final String fileName) {
-		return fileName.replaceAll("\\.\\.", "");
 	}
 
 	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
