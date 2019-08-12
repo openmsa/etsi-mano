@@ -237,7 +237,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 			}
 		}
 
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.accepted().build();
 	}
 
 	/**
