@@ -248,27 +248,27 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static NsInstancesNsInstanceLinks makeLink(@NotNull final String id) {
 		final NsInstancesNsInstanceLinks nsInstanceLinks = new NsInstancesNsInstanceLinks();
 		final NsInstancesNsInstanceLinksSelf heal = new NsInstancesNsInstanceLinksSelf();
-		heal.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
+		heal.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setHeal(heal);
 
 		final NsInstancesNsInstanceLinksSelf instantiate = new NsInstancesNsInstanceLinksSelf();
-		instantiate.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
+		instantiate.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setInstantiate(instantiate);
 		// nsInstanceLinks.setNestedNsInstances(nestedNsInstances);
 		final NsInstancesNsInstanceLinksSelf scale = new NsInstancesNsInstanceLinksSelf();
-		scale.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdScalePost(id, null, null, null)).withSelfRel().getHref());
+		scale.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdScalePost(id, null, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setScale(scale);
 
 		final NsInstancesNsInstanceLinksSelf self = new NsInstancesNsInstanceLinksSelf();
-		self.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
 		nsInstanceLinks.setSelf(self);
 
 		final NsInstancesNsInstanceLinksSelf terminate = new NsInstancesNsInstanceLinksSelf();
-		terminate.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null, null, null)).withSelfRel().getHref());
+		terminate.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdTerminatePost(id, null, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setTerminate(terminate);
 
 		final NsInstancesNsInstanceLinksSelf update = new NsInstancesNsInstanceLinksSelf();
-		update.setHref(linkTo(methodOn(NsInstancesSol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null, null, null)).withSelfRel().getHref());
+		update.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdUpdatePost(id, null, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
 		return nsInstanceLinks;
 	}

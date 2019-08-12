@@ -251,10 +251,10 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	private static NsDescriptorsNsdInfoLinks makeLinks(@Nonnull final String id) {
 		final NsDescriptorsNsdInfoLinks ret = new NsDescriptorsNsdInfoLinks();
 		final NsDescriptorsNsdInfoLinksSelf nsdSelf = new NsDescriptorsNsdInfoLinksSelf();
-		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
+		final String _self = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
 		nsdSelf.setHref(_self);
 
-		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
+		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
 		final NsDescriptorsNsdInfoLinksSelf nsdContent = new NsDescriptorsNsdInfoLinksSelf();
 		nsdContent.setHref(_nsdContent);
 		ret.setNsdContent(nsdContent);
