@@ -102,8 +102,9 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		return _entity;
 	}
 
-	public void storeObject(String _vnfPkgId, Object _object, String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
+	@Override
+	public void storeObject(String _id, Object _object, String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_id));
 		path.append('/').append(_filename);
 		try {
 			repositoryService.addFile(path.toString(), "", "etsi-mano", mapper.writeValueAsString(mapper.writeValueAsString(_object)), "ncroot");
@@ -114,8 +115,8 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public void storeBinary(String _vnfPkgId, InputStream _stream, String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
+	public void storeBinary(String _id, InputStream _stream, String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_id));
 		path.append('/').append(_filename);
 
 		try {
@@ -148,15 +149,15 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public byte[] getBinary(final String _vnfPkgId, final String _filename) {
-		final String uri = makeRoot(_vnfPkgId) + '/' + getFilename();
+	public byte[] getBinary(final String _id, final String _filename) {
+		final String uri = makeRoot(_id) + '/' + getFilename();
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		return repositoryService.getRepositoryElementContent(repositoryElement);
 	}
 
 	@Override
-	public byte[] getBinary(final String _vnfPkgId, final String _filename, final int min, final Integer max) {
-		final String uri = makeRoot(_vnfPkgId) + '/' + _filename;
+	public byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
+		final String uri = makeRoot(_id) + '/' + _filename;
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
