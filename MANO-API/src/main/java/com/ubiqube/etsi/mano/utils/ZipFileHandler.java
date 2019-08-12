@@ -77,7 +77,7 @@ public class ZipFileHandler {
 	 * @throws IOException
 	 * @throws RequestRangeNotSatisfiableException
 	 */
-	public ByteArrayOutputStream getByteRangeZipFile(int from, Long to) throws IOException, RequestRangeNotSatisfiableException {
+	public ByteArrayOutputStream getByteRangeZipFile(int from, Integer to) throws IOException, RequestRangeNotSatisfiableException {
 		final byte[] bytesInput = this.getZipFile().toByteArray();
 		zipFileByteArrayLength = bytesInput.length;
 		if ((from < 0) || (to <= 0) || (from >= zipFileByteArrayLength) || (to >= zipFileByteArrayLength)) {
