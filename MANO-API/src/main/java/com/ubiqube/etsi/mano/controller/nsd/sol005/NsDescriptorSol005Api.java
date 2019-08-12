@@ -4,7 +4,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +15,12 @@ import javax.annotation.Nonnull;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
@@ -38,7 +35,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
-import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
 import io.swagger.annotations.Api;
 
@@ -57,16 +53,11 @@ import io.swagger.annotations.Api;
 @RestController
 @Api(value = "/sol005/nsd/v1/ns_descriptors")
 public class NsDescriptorSol005Api implements NsDescriptorSol005 {
-	protected static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
-	private static final String REPOSITORY_NSD_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/nsd";
 
 	private final NsdRepository nsdRepository;
 
-	private final RepositoryService repositoryService;
-
-	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final RepositoryService _repositoryService) {
+	public NsDescriptorSol005Api(final NsdRepository _nsdRepository) {
 		nsdRepository = _nsdRepository;
-		repositoryService = _repositoryService;
 	}
 
 	/**
@@ -255,41 +246,6 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 		nsdRepository.save(resp);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
-	}
-
-	/**
-	 * Method allows to archive VNF Package contents and artifacts.
-	 *
-	 * @param range
-	 * @param listvnfPckgFiles
-	 * @return
-	 *
-	 */
-	private ResponseEntity<Resource> getZipArchive(final RangeHeader rangeHeader, final List<String> listvnfPckgFiles) {
-
-		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
-		ByteArrayOutputStream bos;
-
-		try {
-			if (rangeHeader == null) {
-				bos = zip.getZipFile();
-				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
-				return ResponseEntity.ok()
-						.contentType(MediaType.APPLICATION_OCTET_STREAM)
-						.body(resource);
-
-			}
-			bos = zip.getByteRangeZipFile(rangeHeader.getFrom(), rangeHeader.getTo());
-			final String contentRange = new StringBuilder().append("bytes ").append(rangeHeader.getFrom()).append("-")
-					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
-			return ResponseEntity.ok()
-					.contentType(MediaType.APPLICATION_OCTET_STREAM)
-					.header("Range", contentRange)
-					.body(resource);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
 	}
 
 	private static NsDescriptorsNsdInfoLinks makeLinks(@Nonnull final String id) {
