@@ -23,12 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.entities.repository.RepositoryElement;
-import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
@@ -39,6 +36,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 
@@ -66,7 +64,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private final RepositoryService repositoryService;
 
-	public NsDescriptorSol005Api(NsdRepository _nsdRepository, RepositoryService _repositoryService) {
+	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final RepositoryService _repositoryService) {
 		nsdRepository = _nsdRepository;
 		repositoryService = _repositoryService;
 	}
@@ -81,7 +79,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsDescriptorsGet(String accept, String filter, String allFields, String fields, String excludeFields, String excludeDefault) {
+	public ResponseEntity<String> nsDescriptorsGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsDescriptorsNsdInfoIdGetResponse> response = new ArrayList<>();
 		final List<NsDescriptorsNsdInfo> nsds = nsdRepository.query(filter);
 		for (final NsDescriptorsNsdInfo nsDescriptorsNsdInfo : nsds) {
@@ -110,7 +108,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(String nsdInfoId) {
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(final String nsdInfoId) {
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 		if (!nsdInfo.getNsdOperationalState().equals("DISABLED") || nsdInfo.getNsdUsageState().equals("IN_USE")) {
 			throw new ConflictException("Nsd in bad state " + nsdInfoId);
@@ -129,7 +127,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsNsdInfoIdGet(String nsdInfoId, String accept) {
+	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId, final String accept) {
 		final NsDescriptorsNsdInfo nsdIfno = nsdRepository.get(nsdInfoId);
 
 		final NsDescriptorsNsdInfoIdGetResponse nsDescriptorsNsdInfoIdGetResponse = new NsDescriptorsNsdInfoIdGetResponse();
@@ -162,26 +160,25 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(String nsdInfoId, String accept, String range) {
-		try {
-			final RangeHeader rangeHeader = RangeHeader.fromValue(range);
-			final List<String> listvnfPckgFiles = repositoryService.doSearch(new StringBuilder().append(REPOSITORY_NSD_BASE_PATH).append("/").append(nsdInfoId).toString(), "");
-			if (!listvnfPckgFiles.isEmpty()) {
-				if (listvnfPckgFiles.size() > 1) {
-					return getZipArchive(rangeHeader, listvnfPckgFiles);
-				}
-				final RepositoryElement repositoryElement = repositoryService.getElement(listvnfPckgFiles.get(0));
-				final byte[] content = repositoryService.getRepositoryElementContent(repositoryElement);
-				final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-				return ResponseEntity.ok()
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
-						.body(resource);
-
-			}
-			throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ").append(nsdInfoId).toString());
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
+		final RangeHeader rangeHeader = RangeHeader.fromValue(range);
+		byte[] bytes;
+		if (rangeHeader != null) {
+			bytes = nsdRepository.getBinary(nsdInfoId, "nsd", rangeHeader.getFrom(), rangeHeader.getTo());
+			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+			// Content-Range: bytes 0-1023/146515
+			final String mime = MimeType.findMatch(bytes);
+			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+					.header("Content-Range", rangeHeader.getContentRange(bytes.length))
+					.header("Content-Type", mime)
+					.body(resource);
 		}
+		bytes = nsdRepository.getBinary(nsdInfoId, "nsd");
+		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+		final String mime = MimeType.findMatch(bytes);
+		return ResponseEntity.ok()
+				.header("Content-Type", mime)
+				.body(resource);
 	}
 
 	/**
@@ -204,7 +201,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(String nsdInfoId, String accept, final MultipartFile file) {
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
 		try {
 			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
 		} catch (final IOException e) {
@@ -234,7 +231,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> nsDescriptorsNsdInfoIdPatch(String nsdInfoId, NsDescriptorsNsdInfoIdPatchQuery body, String contentType) {
+	public ResponseEntity<List<Object>> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final NsDescriptorsNsdInfoIdPatchQuery body, final String contentType) {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
@@ -246,7 +243,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(String accept, String contentType, NsDescriptorsPostQuery nsDescriptorsPostQuery) {
+	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(final String accept, final String contentType, final NsDescriptorsPostQuery nsDescriptorsPostQuery) {
 		final String id = UUID.randomUUID().toString();
 
 		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id);
@@ -268,7 +265,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 * @return
 	 *
 	 */
-	private ResponseEntity<Resource> getZipArchive(RangeHeader rangeHeader, List<String> listvnfPckgFiles) {
+	private ResponseEntity<Resource> getZipArchive(final RangeHeader rangeHeader, final List<String> listvnfPckgFiles) {
 
 		final ZipFileHandler zip = new ZipFileHandler(repositoryService, listvnfPckgFiles);
 		ByteArrayOutputStream bos;
@@ -282,7 +279,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 						.body(resource);
 
 			}
-			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), rangeHeader.getTo());
+			bos = zip.getByteRangeZipFile(rangeHeader.getFrom(), rangeHeader.getTo());
 			final String contentRange = new StringBuilder().append("bytes ").append(rangeHeader.getFrom()).append("-")
 					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
@@ -295,7 +292,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		}
 	}
 
-	private static NsDescriptorsNsdInfoLinks makeLinks(@Nonnull String id) {
+	private static NsDescriptorsNsdInfoLinks makeLinks(@Nonnull final String id) {
 		final NsDescriptorsNsdInfoLinks ret = new NsDescriptorsNsdInfoLinks();
 		final NsDescriptorsNsdInfoLinksSelf nsdSelf = new NsDescriptorsNsdInfoLinksSelf();
 		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
