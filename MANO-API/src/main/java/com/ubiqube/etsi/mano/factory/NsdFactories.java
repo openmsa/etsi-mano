@@ -16,9 +16,9 @@ public class NsdFactories {
 		// Nothing.
 	}
 
-	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse(String _id, String _self, String _nsdContent) {
+	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse(String _id) {
 		final NsDescriptorsNsdInfoIdGetResponse ret = new NsDescriptorsNsdInfoIdGetResponse();
-		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo(_id, _self, _nsdContent);
+		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo(_id);
 		ret.setNsdInfo(nsdInfo);
 		return ret;
 	}
