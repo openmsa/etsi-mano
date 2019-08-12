@@ -53,9 +53,7 @@ import com.ubiqube.etsi.mano.utils.ZipFileHandler;
 public class VnfManagement {
 	private static final String APPLICATION_ZIP = "application/zip";
 	private static final Logger LOG = LoggerFactory.getLogger(VnfManagement.class);
-	private static final String NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO";
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
-	private static final String REPOSITORY_SUBSCRIPTION_BASE_PATH = NVFO_DATAFILE_BASE_PATH + "/subscriptions";
 
 	private final VnfPackageRepository vnfPackageRepository;
 	private final RepositoryService repositoryService;
