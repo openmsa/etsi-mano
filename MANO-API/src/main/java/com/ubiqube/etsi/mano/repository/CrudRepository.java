@@ -17,9 +17,11 @@ public interface CrudRepository<T> {
 
 	List<T> query(String filter);
 
-	void storeBinary(String _vnfPkgId, InputStream _stream, String _filename);
+	void storeObject(String _id, Object _object, String _filename);
 
-	byte[] getBinary(String _vnfPkgId, String _filename);
+	void storeBinary(String _id, InputStream _stream, String _filename);
 
-	byte[] getBinary(String _vnfPkgId, String _filename, int min, Integer max);
+	byte[] getBinary(String _id, String _filename);
+
+	byte[] getBinary(String _id, String _filename, int min, Integer max);
 }
