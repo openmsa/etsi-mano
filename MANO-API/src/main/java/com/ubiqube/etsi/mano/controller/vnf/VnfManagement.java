@@ -130,12 +130,12 @@ public class VnfManagement {
 		// - Implement VNFD multi-files support
 		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 		final String mime = MimeType.findMatch(content);
-		if (MediaType.TEXT_PLAIN_VALUE.equals(accept)) {
+		if (MediaType.APPLICATION_JSON_VALUE.contentEquals(mime)) {
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
 			return ResponseEntity.ok()
-					.contentType(MediaType.TEXT_PLAIN)
+					.contentType(MediaType.APPLICATION_JSON)
 					.body(resource);
-		} else if (APPLICATION_ZIP.equals(accept)) {
+		} else if (APPLICATION_ZIP.equals(mime)) {
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
 			return ResponseEntity.ok()
 					.header("Content-Type", mime)
