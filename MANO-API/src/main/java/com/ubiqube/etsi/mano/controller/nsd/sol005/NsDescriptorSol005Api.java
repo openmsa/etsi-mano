@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboarding
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
@@ -133,6 +134,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 		final NsDescriptorsNsdInfoIdGetResponse nsDescriptorsNsdInfoIdGetResponse = new NsDescriptorsNsdInfoIdGetResponse();
 		nsDescriptorsNsdInfoIdGetResponse.setNsdInfo(nsdIfno);
+		nsdIfno.setLinks(makeLinks(nsdInfoId));
 		return new ResponseEntity<>(nsdIfno, HttpStatus.OK);
 	}
 
@@ -249,7 +251,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
 		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
-		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id, _self, _nsdContent);
+		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id);
 		final Map<String, Object> userDefinedData = (Map<String, Object>) nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		resp.setUserDefinedData(userDefinedData);
 		resp.setNsdName((String) userDefinedData.get("name"));
@@ -295,10 +297,18 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		}
 	}
 
-	private NsDescriptorsNsdInfoLinks makeLinks(@NotNull String id) {
+	private static NsDescriptorsNsdInfoLinks makeLinks(@NotNull String id) {
+		final NsDescriptorsNsdInfoLinks ret = new NsDescriptorsNsdInfoLinks();
+		final NsDescriptorsNsdInfoLinksSelf nsdSelf = new NsDescriptorsNsdInfoLinksSelf();
 		final String _self = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
+		nsdSelf.setHref(_self);
+
 		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
-		return NsdFactories.createNsDescriptorsNsdInfoLinks(_self, _nsdContent);
+		final NsDescriptorsNsdInfoLinksSelf nsdContent = new NsDescriptorsNsdInfoLinksSelf();
+		nsdContent.setHref(_nsdContent);
+		ret.setNsdContent(nsdContent);
+
+		return ret;
 	}
 
 }

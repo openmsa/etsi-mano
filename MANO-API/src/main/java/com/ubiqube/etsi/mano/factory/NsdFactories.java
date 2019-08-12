@@ -35,9 +35,8 @@ public class NsdFactories {
 		return ret;
 	}
 
-	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo(String _id, String _self, String _nsdContent) {
+	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo(String _id) {
 		final NsDescriptorsNsdInfo nsdInfo = new NsDescriptorsNsdInfo();
-		nsdInfo.setLinks(createNsDescriptorsNsdInfoLinks(_self, _nsdContent));
 		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.CREATED);
 		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
