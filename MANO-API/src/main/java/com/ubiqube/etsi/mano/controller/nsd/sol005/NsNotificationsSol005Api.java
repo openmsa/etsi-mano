@@ -25,7 +25,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdChangeNotificationPost(NsdChangeNotification nsdChangeNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdChangeNotificationPost(final NsdChangeNotification nsdChangeNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}
@@ -42,7 +42,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdDeletionNotificationPost(NsdDeletionNotification nsdDeletionNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdDeletionNotificationPost(final NsdDeletionNotification nsdDeletionNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}
@@ -59,7 +59,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdOnBoardingFailureNotificationPost(NsdOnBoardingFailureNotification nsdOnBoardingFailureNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdOnBoardingFailureNotificationPost(final NsdOnBoardingFailureNotification nsdOnBoardingFailureNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}
@@ -76,7 +76,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdOnBoardingNotificationPost(NsdOnBoardingNotification nsdOnBoardingNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsdOnBoardingNotificationPost(final NsdOnBoardingNotification nsdOnBoardingNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}
@@ -94,7 +94,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdDeletionNotificationGet(String accept) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdDeletionNotificationGet(final String accept) {
 		// : Implement...
 
 	}
@@ -111,7 +111,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdDeletionNotificationPost(PnfdDeletionNotification pnfdDeletionNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdDeletionNotificationPost(final PnfdDeletionNotification pnfdDeletionNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}
@@ -128,7 +128,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdOnBoardingFailureNotificationPost(PnfdOnBoardingFailureNotification pnfdOnBoardingFailureNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdOnBoardingFailureNotificationPost(final PnfdOnBoardingFailureNotification pnfdOnBoardingFailureNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}
@@ -145,7 +145,7 @@ public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdOnBoardingNotificationPost(PnfdOnBoardingNotification pnfdOnBoardingNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionPnfdOnBoardingNotificationPost(final PnfdOnBoardingNotification pnfdOnBoardingNotification, final String accept, final String contentType) {
 		// : Implement...
 
 	}

@@ -11,32 +11,32 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsGet(String accept) {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsGet(final String accept) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(String vnfLcmOpOccId) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdFailPost(String vnfLcmOpOccId, String accept) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String accept) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(String vnfLcmOpOccId, String accept) {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String accept) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(String vnfLcmOpOccId) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(String vnfLcmOpOccId) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
 		throw new GenericException("TODO");
 	}
 }

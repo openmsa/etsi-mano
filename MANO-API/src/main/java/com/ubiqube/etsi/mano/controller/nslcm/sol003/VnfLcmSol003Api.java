@@ -32,14 +32,14 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
 
-	public VnfLcmSol003Api(VnfInstancesRepository _vnfInstancesRepository, VnfInstanceLcm _vnfInstanceLcm) {
+	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		LOG.debug("Registrating VnfInstanceApi");
 	}
 
 	@Override
-	public ResponseEntity<String> vnfInstancesGet(Map<String, String> queryParameters) {
+	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
 		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters, links);
 
 		final String exclude = queryParameters.get("exclude_fields");
@@ -54,7 +54,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<VnfInstance> vnfInstancesPost(CreateVnfRequest createVnfRequest) {
+	public ResponseEntity<VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final String id = UUID.randomUUID().toString();
 		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id, links);
 		vnfInstance.setLinks(links.getLinks(id));
@@ -62,61 +62,61 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(final String vnfInstanceId) {
 		vnfInstanceLcm.delete(vnfInstanceId);
 		return ResponseEntity.noContent().build();
 	}
 
 	@Override
-	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(String vnfInstanceId) {
+	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
 		vnfInstanceLcm.instantiate(vnfInstanceId, instantiateVnfRequest, links);
 		return ResponseEntity.accepted().build();
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId) {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(String vnfInstanceId, TerminateVnfRequest terminateVnfRequest) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest, links);
 		return ResponseEntity.noContent().build();
 	}
