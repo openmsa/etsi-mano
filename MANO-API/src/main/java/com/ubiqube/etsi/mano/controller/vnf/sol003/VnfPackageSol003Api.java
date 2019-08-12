@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
+import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -71,7 +73,8 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String accept, @RequestHeader(value = "Range", required = false) final String range) throws ServiceException {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, final String accept, @RequestHeader(value = "Range", required = false) final String range) throws ServiceException {
+		final String artifactPath = SpringUtils.extractParams(request);
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, RangeHeader.fromValue(range));
 	}
 

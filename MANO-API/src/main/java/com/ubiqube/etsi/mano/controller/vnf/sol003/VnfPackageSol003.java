@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +40,8 @@ public interface VnfPackageSol003 {
 	 * and response codes.
 	 *
 	 */
-	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull @PathVariable("artifactPath") String artifactPath, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
+	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip", "*/*" }, consumes = { "application/json" })
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.

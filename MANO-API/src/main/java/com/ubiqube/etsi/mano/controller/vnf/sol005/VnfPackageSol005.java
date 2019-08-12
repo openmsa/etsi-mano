@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +47,8 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@GetMapping(value = "", produces = { "application/json" }, consumes = { "application/json" })
-	public ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam Map<String, String> requestParams) throws ServiceException;
+	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam Map<String, String> requestParams) throws ServiceException;
 
 	@ApiOperation(value = "Fetch individual VNF package artifact.", nickname = "vnfPackagesVnfPkgIdArtifactsArtifactPathGet", notes = "The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the  Tables 9.4.7.3.2-1 and 9.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -63,8 +64,8 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 416, message = "Requested Range Not Satisfiable The byte range passed in the \"Range\" header did not match any available byte range in the VNF package file (e.g. \"access after end of file\"). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json", "application/zip" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @PathVariable("artifactPath") @Nonnull String artifactPath, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
+	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip" }, consumes = { "application/json" })
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, HttpServletRequest request, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
 
 	@ApiOperation(value = "Read information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdGet", notes = "The GET method reads the information of a VNF package. ", response = VnfPackagesVnfPkgIdGetResponse.class, tags = {})
 	@ApiResponses(value = {
