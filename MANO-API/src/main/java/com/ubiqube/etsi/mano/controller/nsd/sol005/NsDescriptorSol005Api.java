@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
@@ -200,9 +202,17 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(String nsdInfoId, String accept) {
-		// Nothing.
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(String nsdInfoId, String accept, final MultipartFile file) {
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
+		try {
+			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
+		nsdRepository.save(nsdInfo);
+		nsdInfo.setLinks(makeLinks(nsdInfoId));
+		return ResponseEntity.accepted().build();
 	}
 
 	/**
