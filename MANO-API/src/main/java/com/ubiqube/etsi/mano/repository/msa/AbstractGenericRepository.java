@@ -18,6 +18,7 @@ import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 
@@ -152,12 +153,15 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	public byte[] getBinary(final String _id, final String _filename) {
 		final String uri = makeRoot(_id) + '/' + _filename;
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
+		if (null == repositoryElement) {
+			throw new NotFoundException("Element " + uri + " not found.");
+		}
 		return repositoryService.getRepositoryElementContent(repositoryElement);
 	}
 
 	@Override
 	public byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
-		final String uri = makeRoot(_id) + '/' + _filename;
+		// We should ask for an API.
 		final byte[] repositoryContent = getBinary(_id, _filename);
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
 	}
