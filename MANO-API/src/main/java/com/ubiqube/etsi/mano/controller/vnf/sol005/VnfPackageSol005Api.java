@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
@@ -231,6 +232,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 			try {
 				final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> artefact = unzip(vnfPkgId, file.getInputStream());
 				artefact.stream().forEach(vnfPkgInfo::addAdditionalArtifactsItem);
+				vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 				vnfPackageRepository.save(vnfPkgInfo);
 			} catch (final ServiceException | IOException e) {
 				throw new GenericException(e);
@@ -296,7 +298,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 				repositoryService.addDirectory(uri, "", SOL005, NCROOT);
 				continue;
 			}
-			vnfPackageRepository.storeObject(vnfPkgId, zis, fileName);
+			vnfPackageRepository.storeBinary(vnfPkgId, zis, fileName);
 			artefacts.add(VnfPackageFactory.createArtefact(fileName, getChecksum(zis)));
 		}
 		return artefacts;
@@ -325,12 +327,12 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
-		final MessageDigest digest = MessageDigest.getInstance("SHA2-256");
+		final MessageDigest digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
 		final byte[] hashbytes = digest.digest(bytes);
 		final String sha3_256hex = bytesToHex(hashbytes);
 		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
 
-		checksum.algorithm("SHA2-256").hash(sha3_256hex);
+		checksum.algorithm(Constants.HASH_ALGORITHM).hash(sha3_256hex);
 		return checksum;
 	}
 
