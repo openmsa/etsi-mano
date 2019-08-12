@@ -158,8 +158,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	@Override
 	public byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
 		final String uri = makeRoot(_id) + '/' + _filename;
-		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
+		final byte[] repositoryContent = getBinary(_id, _filename);
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
 	}
 
