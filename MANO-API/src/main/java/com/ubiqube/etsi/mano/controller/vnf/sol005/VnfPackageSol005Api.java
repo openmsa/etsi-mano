@@ -91,7 +91,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam final Map<String, String> params) {
 		LOG.info("qp => {}", params);
-		return new ResponseEntity<List<SubscriptionsPkgmSubscription>>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override
