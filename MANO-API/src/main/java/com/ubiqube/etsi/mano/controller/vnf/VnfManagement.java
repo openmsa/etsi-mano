@@ -169,13 +169,11 @@ public class VnfManagement {
 				return ResponseEntity.ok().contentType(contentType).body(resource);
 
 			}
-			bos = zip.getByteRangeZipFile((int) rangeHeader.getFrom(), rangeHeader.getTo());
-			final String contentRange = new StringBuilder().append("bytes").append(rangeHeader.getFrom()).append("-")
-					.append(rangeHeader.getTo()).append("/").append(zip.zipFileByteArrayLength()).toString();
+			bos = zip.getByteRangeZipFile(rangeHeader.getFrom(), rangeHeader.getTo());
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bos.toByteArray()));
 			final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
 			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", contentRange)
+					.header("Content-Range", rangeHeader.getContentRange((int) zip.zipFileByteArrayLength()))
 					.contentType(contentType)
 					.body(resource);
 		} catch (final IOException e) {
