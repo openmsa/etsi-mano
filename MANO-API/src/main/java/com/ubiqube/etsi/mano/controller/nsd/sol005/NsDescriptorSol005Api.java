@@ -105,6 +105,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 			throw new ConflictException("Nsd in bad state " + nsdInfoId);
 		}
 		nsdRepository.delete(nsdInfoId);
+		// NsdDeletionNotification OSS/BSS
 		return ResponseEntity.noContent().build();
 	}
 
@@ -202,6 +203,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
 		nsdRepository.save(nsdInfo);
 		nsdInfo.setLinks(makeLinks(nsdInfoId));
+		// NsdOnBoardingNotification to OSS/BSS
 		return ResponseEntity.accepted().build();
 	}
 
@@ -223,6 +225,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<List<Object>> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final NsDescriptorsNsdInfoIdPatchQuery body, final String contentType) {
+		// NsdChangeNotification OSS/BSS
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 

@@ -17,11 +17,13 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
+		// VnfLcmOperationOccurenceNotification(result, FAILED_TEMP) NFVO
 		throw new GenericException("TODO");
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String accept) {
+		// VnfLcmOperationOccurenceNotification(result, FAILED, changes) NFVO
 		throw new GenericException("TODO");
 	}
 
@@ -33,10 +35,18 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING, CHANGES) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING, ROLLBACK) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 }

@@ -33,14 +33,14 @@ public class VnfInstanceLcm {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final MsaExecutor msaExecutor;
 
-	public VnfInstanceLcm(VnfInstancesRepository vnfInstancesRepository, VnfPackageRepository vnfPackageRepository, MsaExecutor _msaExecutor) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
 		msaExecutor = _msaExecutor;
 	}
 
-	public List<VnfInstance> get(Map<String, String> queryParameters, LcmLinkable links) {
+	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
 		final String filter = queryParameters.get("filter");
 		final List<VnfInstance> result = vnfInstancesRepository.query(filter);
 		for (final VnfInstance vnfInstance : result) {
@@ -49,7 +49,7 @@ public class VnfInstanceLcm {
 		return result;
 	}
 
-	public VnfInstance post(CreateVnfRequest createVnfRequest, String id, LcmLinkable links) {
+	public VnfInstance post(final CreateVnfRequest createVnfRequest, final String id, final LcmLinkable links) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		if (vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
@@ -58,22 +58,23 @@ public class VnfInstanceLcm {
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
-
+		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(id));
 		return vnfInstance;
 	}
 
-	public void delete(@Nonnull String vnfInstanceId) {
+	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		if (vnfInstance.getInstantiationState() == (InstantiationStateEnum.NOT_INSTANTIATED)) {
 			vnfInstancesRepository.delete(vnfInstanceId);
 		} else {
 			throw new ConflictException("VNF final Instance is instantiated.");
 		}
+		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 
-	public void instantiate(@Nonnull String vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest, @Nonnull LcmLinkable links) {
+	public void instantiate(@Nonnull final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, @Nonnull final LcmLinkable links) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
 			throw new GenericException("Instance " + vnfInstanceId + " is already instantiated.");
@@ -95,13 +96,16 @@ public class VnfInstanceLcm {
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
-	public void terminate(@Nonnull String vnfInstanceId, TerminateVnfRequest terminateVnfRequest, @Nonnull LcmLinkable links) {
+	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest, @Nonnull final LcmLinkable links) {
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		final String vnfPkgId = vnfInstance.getVnfdId();
-		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();

@@ -49,6 +49,7 @@ public class VnfSubscriptionManagement {
 		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getFilter();
 		final SubscriptionsPkgmSubscription subscription = new SubscriptionsPkgmSubscription(callback, id, href, filter);
 
+		// TODO: Check test endpoint.
 		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
 		subscriptionRepository.save(subscriptionObject);
 

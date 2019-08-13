@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchResponse;
@@ -23,8 +24,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-
+	public ResponseEntity<List<PnfDescriptorsPnfdInfo>> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
@@ -43,7 +43,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(final String pnfdInfoId) {
-		// : Implement...
+		// PnfdDeletionNotification OSS/BSS
 		return ResponseEntity.noContent().build();
 	}
 
@@ -102,7 +102,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentPut(final String pnfdInfoId, final String accept) {
-		// : Implement...
+		// PnfdOnBoardingNotification OSS/BSS
 		return ResponseEntity.noContent().build();
 	}
 

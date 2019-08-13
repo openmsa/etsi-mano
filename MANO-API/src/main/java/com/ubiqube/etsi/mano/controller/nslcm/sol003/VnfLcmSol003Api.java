@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 @RestController
@@ -63,12 +64,28 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
@@ -86,7 +103,16 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		throw new GenericException("TODO");
+
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
@@ -97,22 +123,51 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
+		}
 		throw new GenericException("TODO");
+		// after return.
+		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
+		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
+		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
 	@Override
