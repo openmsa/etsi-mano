@@ -13,12 +13,10 @@ import com.ubiqube.etsi.mano.controller.vnf.sol003.Sol003Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.sol005.Sol005Linkable;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 @Service
@@ -41,11 +39,7 @@ public class VnfEvent {
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
 
 		for (final SubscriptionObject subscriptionObject : res) {
-			if (event == NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION) {
-				onOnboarding(vnfPkgId, subscriptionObject);
-			} else {
-				onChange(vnfPkgId, subscriptionObject);
-			}
+			sendNotification(vnfPkgId, subscriptionObject, event);
 		}
 	}
 
@@ -56,7 +50,7 @@ public class VnfEvent {
 		return subscriptionRepository.query(sb.toString());
 	}
 
-	private void onChange(final String vnfPkgId, final SubscriptionObject subscriptionObject) {
+	private void sendNotification(final String vnfPkgId, final SubscriptionObject subscriptionObject, final NotificationTypesEnum event) {
 		final Linkable links = getLinkable(subscriptionObject.getApi());
 		final SubscriptionsPkgmSubscription req = subscriptionObject.getSubscriptionsPkgmSubscription();
 		final String subscriptionId = req.getId();
@@ -64,22 +58,14 @@ public class VnfEvent {
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionObject.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
 		final String id = UUID.randomUUID().toString();
-		final VnfPackageChangeNotification vnfPackageChangeNotification = VnfPackageFactory.createVnfPackageChangeNotification(id, subscriptionId, vnfPkgId, "", links);
+		Object object;
+		if (event == NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION) {
+			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, "", links);
+		} else {
+			object = VnfPackageFactory.createVnfPackageChangeNotification(id, subscriptionId, vnfPkgId, "", links);
+		}
 
-		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
-	}
-
-	private void onOnboarding(final String vnfPkgId, final SubscriptionObject subscriptionObject) {
-		final Linkable links = getLinkable(subscriptionObject.getApi());
-		final SubscriptionsPkgmSubscription req = subscriptionObject.getSubscriptionsPkgmSubscription();
-		final String subscriptionId = req.getId();
-		final String callbackUri = req.getCallbackUri();
-		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionObject.getSubscriptionsPkgmSubscriptionRequestAuthentication();
-
-		final String id = UUID.randomUUID().toString();
-		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, "", links);
-
-		notifications.doNotification(notificationVnfPackageOnboardingNotification, callbackUri, auth);
+		notifications.doNotification(object, callbackUri, auth);
 	}
 
 	private static Linkable getLinkable(final ApiTypesEnum api) {
