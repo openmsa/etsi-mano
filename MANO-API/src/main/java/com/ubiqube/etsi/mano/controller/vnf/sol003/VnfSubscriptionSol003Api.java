@@ -62,7 +62,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 		// Job
 		final String id = UUID.randomUUID().toString();
 		final String href = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(id, "")).withSelfRel().getHref();
-		return vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, href, id);
+		return vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, id, links);
 	}
 
 	/**

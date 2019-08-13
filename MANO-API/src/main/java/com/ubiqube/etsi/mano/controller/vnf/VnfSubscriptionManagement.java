@@ -43,17 +43,18 @@ public class VnfSubscriptionManagement {
 		return response;
 	}
 
-	public List<InlineResponse2001> subscriptionsPost(@Nonnull final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, @Nonnull final String href, @Nonnull final String id) {
+	public List<InlineResponse2001> subscriptionsPost(@Nonnull final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, @Nonnull final String id, final Linkable links) {
 		// Response
 		final ArrayList<InlineResponse2001> response = new ArrayList<>();
 		final String callback = subscriptionsPostQuery.getCallbackUri();
 		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getFilter();
-		final SubscriptionsPkgmSubscription subscription = new SubscriptionsPkgmSubscription(callback, id, href, filter);
+		final SubscriptionsPkgmSubscription subscription = VnfPackageFactory.createSubscriptionsPkgmSubscription(id, callback, filter);
 
 		// TODO: Check test endpoint.
 		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
+		subscriptionObject.setApi(links.getApi());
 		subscriptionRepository.save(subscriptionObject);
-
+		subscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscription.getId()));
 		final InlineResponse2001 pack = new InlineResponse2001();
 		pack.setPkgmSubscription(subscription);
 		response.add(pack);

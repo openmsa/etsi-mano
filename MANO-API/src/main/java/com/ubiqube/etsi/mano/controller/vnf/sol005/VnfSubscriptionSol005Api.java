@@ -36,8 +36,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	public ResponseEntity<List<InlineResponse2001>> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
 		final String id = UUID.randomUUID().toString();
-		final String href = linkTo(methodOn(VnfSubscriptionSol005Api.class).subscriptionsSubscriptionIdGet(id, "")).withSelfRel().getHref();
-		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, href, id), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, id, links), HttpStatus.OK);
 	}
 
 	@Override

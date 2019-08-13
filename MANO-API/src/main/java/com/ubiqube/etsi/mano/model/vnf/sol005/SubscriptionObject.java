@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.model.vnf.sol005;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,11 +19,13 @@ public class SubscriptionObject {
 	@Valid
 	private SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = null;
 
+	private ApiTypesEnum api;
+
 	public SubscriptionObject() {
 		// Nothing.
 	}
 
-	public SubscriptionObject(SubscriptionsPkgmSubscriptionRequestAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication, SubscriptionsPkgmSubscription _subscriptionsPkgmSubscription) {
+	public SubscriptionObject(final SubscriptionsPkgmSubscriptionRequestAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication, final SubscriptionsPkgmSubscription _subscriptionsPkgmSubscription) {
 		super();
 		subscriptionsPkgmSubscriptionRequestAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
 		subscriptionsPkgmSubscription = _subscriptionsPkgmSubscription;
@@ -33,7 +36,7 @@ public class SubscriptionObject {
 		return subscriptionsPkgmSubscriptionRequestAuthentication;
 	}
 
-	public void setSubscriptionsPkgmSubscriptionRequestAuthentication(SubscriptionsPkgmSubscriptionRequestAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication) {
+	public void setSubscriptionsPkgmSubscriptionRequestAuthentication(final SubscriptionsPkgmSubscriptionRequestAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication) {
 		subscriptionsPkgmSubscriptionRequestAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
 	}
 
@@ -42,8 +45,17 @@ public class SubscriptionObject {
 		return subscriptionsPkgmSubscription;
 	}
 
-	public void setSubscriptionsPkgmSubscription(SubscriptionsPkgmSubscription _subscriptionsPkgmSubscription) {
+	public void setSubscriptionsPkgmSubscription(final SubscriptionsPkgmSubscription _subscriptionsPkgmSubscription) {
 		subscriptionsPkgmSubscription = _subscriptionsPkgmSubscription;
+	}
+
+	@JsonProperty("api")
+	public ApiTypesEnum getApi() {
+		return api;
+	}
+
+	public void setApi(final ApiTypesEnum api) {
+		this.api = api;
 	}
 
 }

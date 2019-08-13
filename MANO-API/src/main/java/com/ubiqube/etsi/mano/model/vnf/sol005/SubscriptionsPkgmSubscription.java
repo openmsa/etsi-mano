@@ -37,24 +37,6 @@ public class SubscriptionsPkgmSubscription {
 		// Nothing.
 	}
 
-	public SubscriptionsPkgmSubscription(String _callbackUri, String _id, String _href, SubscriptionsPkgmSubscriptionFilter _filter) {
-		this.callbackUri = _callbackUri;
-		this.id = _id;
-		this.links = new SubscriptionsPkgmSubscriptionLinks();
-		final VnfPackagesVnfPkgInfoLinksSelf self = new VnfPackagesVnfPkgInfoLinksSelf();
-		self.href(_href);
-		links.setSelf(self);
-		this.filter = _filter;
-	}
-
-	public SubscriptionsPkgmSubscription(String _callbackUri, String _id, String _href) {
-		this(_callbackUri, _id, _href, new SubscriptionsPkgmSubscriptionFilter());
-	}
-
-	public SubscriptionsPkgmSubscription(SubscriptionsPkgmSubscriptionRequest _subscriptionsPkgmSubscriptionRequest, String _id, String _href, SubscriptionsPkgmSubscriptionFilter _filter) {
-		this(_subscriptionsPkgmSubscriptionRequest.getCallbackUri(), _id, _href, _filter);
-	}
-
 	@ApiModelProperty(required = true, value = "")
 	@Valid
 	private SubscriptionsPkgmSubscriptionLinks links = null;
@@ -70,11 +52,11 @@ public class SubscriptionsPkgmSubscription {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public SubscriptionsPkgmSubscription id(String id) {
+	public SubscriptionsPkgmSubscription id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -89,11 +71,11 @@ public class SubscriptionsPkgmSubscription {
 		return filter;
 	}
 
-	public void setFilter(SubscriptionsPkgmSubscriptionFilter filter) {
+	public void setFilter(final SubscriptionsPkgmSubscriptionFilter filter) {
 		this.filter = filter;
 	}
 
-	public SubscriptionsPkgmSubscription filter(SubscriptionsPkgmSubscriptionFilter filter) {
+	public SubscriptionsPkgmSubscription filter(final SubscriptionsPkgmSubscriptionFilter filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -109,11 +91,11 @@ public class SubscriptionsPkgmSubscription {
 		return callbackUri;
 	}
 
-	public void setCallbackUri(String callbackUri) {
+	public void setCallbackUri(final String callbackUri) {
 		this.callbackUri = callbackUri;
 	}
 
-	public SubscriptionsPkgmSubscription callbackUri(String callbackUri) {
+	public SubscriptionsPkgmSubscription callbackUri(final String callbackUri) {
 		this.callbackUri = callbackUri;
 		return this;
 	}
@@ -129,11 +111,11 @@ public class SubscriptionsPkgmSubscription {
 		return links;
 	}
 
-	public void setLinks(SubscriptionsPkgmSubscriptionLinks links) {
+	public void setLinks(final SubscriptionsPkgmSubscriptionLinks links) {
 		this.links = links;
 	}
 
-	public SubscriptionsPkgmSubscription links(SubscriptionsPkgmSubscriptionLinks links) {
+	public SubscriptionsPkgmSubscription links(final SubscriptionsPkgmSubscriptionLinks links) {
 		this.links = links;
 		return this;
 	}
@@ -155,7 +137,7 @@ public class SubscriptionsPkgmSubscription {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(Object o) {
+	private static String toIndentedString(final Object o) {
 		if (o == null) {
 			return "null";
 		}
