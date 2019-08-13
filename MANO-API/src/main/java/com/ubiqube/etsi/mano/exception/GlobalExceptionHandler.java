@@ -30,27 +30,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ExceptionHandler({ Exception.class })
-	public ResponseEntity<ProblemDetails> handleRunTimeException(Exception e) {
+	public ResponseEntity<ProblemDetails> handleRunTimeException(final RuntimeException e) {
 		LOG.error("Exception", e);
 		final ProblemDetails problemDetails = new ProblemDetails(500, e.getMessage());
 		return new ResponseEntity<>(problemDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler({ ResponseStatusException.class })
-	public ResponseEntity<ProblemDetails> handleWebApplicationException(ResponseStatusException e) {
+	public ResponseEntity<ProblemDetails> handleWebApplicationException(final ResponseStatusException e) {
 		LOG.error("Exception", e);
 		final ProblemDetails problemDetails = new ProblemDetails(e.getStatus().value(), e.getReason());
 		return new ResponseEntity<>(problemDetails, e.getStatus());
 	}
 
 	@Override
-	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(final HttpRequestMethodNotSupportedException e, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
 		final ProblemDetails problemDetails = new ProblemDetails(status.value(), e.getMessage());
 		return new ResponseEntity<>(problemDetails, status);
 	}
 
 	@Override
-	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(final HttpMediaTypeNotAcceptableException e, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
 		final ProblemDetails problemDetails = new ProblemDetails(status.value(), e.getMessage());
 		return new ResponseEntity<>(problemDetails, status);
 	}
