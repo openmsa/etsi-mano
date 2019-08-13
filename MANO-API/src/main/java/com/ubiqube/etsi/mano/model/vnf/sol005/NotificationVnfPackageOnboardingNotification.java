@@ -68,11 +68,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		// Nothing.
 	}
 
-	public NotificationVnfPackageOnboardingNotification(String _id, String _notificationType, String _subscriptionId, String _vnfPkgId, String _vnfdId, String _hrefSubscription, String _hrefPackage) {
+	public NotificationVnfPackageOnboardingNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final String _hrefSubscription, final String _hrefPackage) {
 		super();
 		this.id = _id;
 		this.timeStamp = new Date();
-		this.notificationType = _notificationType;
+		this.notificationType = "VnfPackageOnboardingNotification";
 		this.subscriptionId = _subscriptionId;
 		this.vnfPkgId = _vnfPkgId;
 		this.vnfdId = _vnfdId;
@@ -99,11 +99,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public NotificationVnfPackageOnboardingNotification id(String id) {
+	public NotificationVnfPackageOnboardingNotification id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -120,11 +120,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return notificationType;
 	}
 
-	public void setNotificationType(String notificationType) {
+	public void setNotificationType(final String notificationType) {
 		this.notificationType = notificationType;
 	}
 
-	public NotificationVnfPackageOnboardingNotification notificationType(String notificationType) {
+	public NotificationVnfPackageOnboardingNotification notificationType(final String notificationType) {
 		this.notificationType = notificationType;
 		return this;
 	}
@@ -139,11 +139,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return subscriptionId;
 	}
 
-	public void setSubscriptionId(String subscriptionId) {
+	public void setSubscriptionId(final String subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
 
-	public NotificationVnfPackageOnboardingNotification subscriptionId(String subscriptionId) {
+	public NotificationVnfPackageOnboardingNotification subscriptionId(final String subscriptionId) {
 		this.subscriptionId = subscriptionId;
 		return this;
 	}
@@ -159,11 +159,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(final Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
-	public NotificationVnfPackageOnboardingNotification timeStamp(Date timeStamp) {
+	public NotificationVnfPackageOnboardingNotification timeStamp(final Date timeStamp) {
 		this.timeStamp = timeStamp;
 		return this;
 	}
@@ -179,11 +179,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return vnfPkgId;
 	}
 
-	public void setVnfPkgId(String vnfPkgId) {
+	public void setVnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 	}
 
-	public NotificationVnfPackageOnboardingNotification vnfPkgId(String vnfPkgId) {
+	public NotificationVnfPackageOnboardingNotification vnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 		return this;
 	}
@@ -199,11 +199,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return vnfdId;
 	}
 
-	public void setVnfdId(String vnfdId) {
+	public void setVnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 	}
 
-	public NotificationVnfPackageOnboardingNotification vnfdId(String vnfdId) {
+	public NotificationVnfPackageOnboardingNotification vnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 		return this;
 	}
@@ -219,11 +219,11 @@ public class NotificationVnfPackageOnboardingNotification {
 		return links;
 	}
 
-	public void setLinks(VnfPackageOnboardingNotificationLinks links) {
+	public void setLinks(final VnfPackageOnboardingNotificationLinks links) {
 		this.links = links;
 	}
 
-	public NotificationVnfPackageOnboardingNotification links(VnfPackageOnboardingNotificationLinks links) {
+	public NotificationVnfPackageOnboardingNotification links(final VnfPackageOnboardingNotificationLinks links) {
 		this.links = links;
 		return this;
 	}
@@ -248,7 +248,7 @@ public class NotificationVnfPackageOnboardingNotification {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(Object o) {
+	private static String toIndentedString(final Object o) {
 		if (o == null) {
 			return "null";
 		}
