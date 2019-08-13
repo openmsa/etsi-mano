@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
@@ -17,6 +18,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
 @RestController
 public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
+	private final Linkable links = new Sol003Linkable();
 
 	public VnfSubscriptionSol003Api(final VnfSubscriptionManagement _vnfSubscriptionManagement) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
@@ -119,7 +121,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 		final String hrefVnfPackage = linkTo(methodOn(VnfPackageSol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
 		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
 
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, hrefVnfPackage, hrefSubscription);
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, links);
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
 		final String hrefPackage = linkTo(methodOn(VnfPackageSol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
 
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, hrefSubscription, hrefPackage);
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, links);
 	}
 
 }

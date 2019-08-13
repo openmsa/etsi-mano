@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
@@ -59,7 +60,7 @@ public class VnfSubscriptionManagement {
 		return response;
 	}
 
-	public void vnfPackageChangeNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, @Nonnull final String id, @Nonnull final String hrefVnfPackage, @Nonnull final String hrefSubscription) {
+	public void vnfPackageChangeNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, @Nonnull final String id, final Linkable links) {
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -68,11 +69,12 @@ public class VnfSubscriptionManagement {
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 		final String callbackUri = subscriptionsRepository.getSubscriptionsPkgmSubscription().getCallbackUri();
 
-		final VnfPackageChangeNotification vnfPackageChangeNotification = new VnfPackageChangeNotification(id, vnfPkgId, vnfdId, subscriptionId, hrefVnfPackage, hrefSubscription);
+		final VnfPackageChangeNotification vnfPackageChangeNotification = VnfPackageFactory.createVnfPackageChangeNotification(id, subscriptionId, vnfPkgId, vnfdId, links);
+
 		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
 	}
 
-	public void vnfPackageOnboardingNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, @Nonnull final String id, @Nonnull final String hrefSubscription, @Nonnull final String hrefPackage) {
+	public void vnfPackageOnboardingNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, @Nonnull final String id, final Linkable links) {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionsPkgmSubscription req = subscriptionsRepository.getSubscriptionsPkgmSubscription();
@@ -81,8 +83,7 @@ public class VnfSubscriptionManagement {
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
-		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = new NotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, vnfdId, hrefSubscription, hrefPackage);
-
+		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, vnfdId, links);
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 

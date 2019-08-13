@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.controller.vnf;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageOnboardingNotificationLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoLinks;
 
 /**
@@ -14,9 +15,13 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoLinks;
 public interface Linkable {
 	/**
 	 * Create link for a VNF Package.
-	 * 
+	 *
 	 * @param vnfPkgId A Vnf ID.
 	 * @return The VNF Packages Links object.
 	 */
-	VnfPackagesVnfPkgInfoLinks getVnfLinks(@Nonnull String vnfPkgId);
+	VnfPackagesVnfPkgInfoLinks getVnfLinks(@Nonnull String _vnfPkgId);
+
+	VnfPackageOnboardingNotificationLinks createNotificationLink(String _vnfPkgId, String _subscriptionId);
+
+	VnfPackageOnboardingNotificationLinks createVnfPackageOnboardingNotificationLinks(String _vnfPkgId, String _subscriptionId);
 }

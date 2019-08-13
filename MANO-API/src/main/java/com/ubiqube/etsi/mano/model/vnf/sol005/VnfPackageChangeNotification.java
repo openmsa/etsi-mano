@@ -1,12 +1,8 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.ChangeTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,21 +14,6 @@ public class VnfPackageChangeNotification {
 
 	public VnfPackageChangeNotification() {
 		// Nothing.
-	}
-
-	public VnfPackageChangeNotification(final String _id, final String _vnfPkgId, final String _vnfdId, final String _subscriptionId, final String _hrefVnfPackage, final String _hrefSubscription) {
-		vnfPackageChangeNotification = new VnfPackageChangeNotificationVnfPackageChangeNotification();
-		vnfPackageChangeNotification.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
-		vnfPackageChangeNotification.setId(_id);
-		final VnfPackageOnboardingNotificationLinks links = new VnfPackageOnboardingNotificationLinks(_hrefVnfPackage, _hrefSubscription);
-		vnfPackageChangeNotification.setLinks(links);
-		vnfPackageChangeNotification.setNotificationType("VnfPackageChangeNotification");
-		vnfPackageChangeNotification.setOperationalState(OperationalStateEnum.ENABLED);
-		vnfPackageChangeNotification.setSubscriptionId(_subscriptionId);
-		vnfPackageChangeNotification.setTimeStamp(new Date());
-		vnfPackageChangeNotification.setVnfdId(_vnfdId);
-		vnfPackageChangeNotification.setVnfPkgId(_vnfPkgId);
-
 	}
 
 	/**

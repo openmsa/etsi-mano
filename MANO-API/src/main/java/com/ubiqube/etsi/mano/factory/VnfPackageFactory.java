@@ -1,6 +1,13 @@
 package com.ubiqube.etsi.mano.factory;
 
+import java.util.Date;
+
 import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.ChangeTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
@@ -36,5 +43,38 @@ public class VnfPackageFactory {
 		artefact.artifactPath(_filename);
 		artefact.setChecksum(_checksum);
 		return artefact;
+	}
+
+	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
+		final VnfPackageChangeNotificationVnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_id, _subscriptionId, _vnfPkgId, _vnfdId, links);
+		ret.setVnfPackageChangeNotification(obj);
+		return ret;
+	}
+
+	public static VnfPackageChangeNotificationVnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+		final VnfPackageChangeNotificationVnfPackageChangeNotification ret = new VnfPackageChangeNotificationVnfPackageChangeNotification();
+		ret.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
+		ret.setId(_id);
+		ret.setNotificationType("VnfPackageChangeNotification");
+		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum.ENABLED);
+		ret.setSubscriptionId(_subscriptionId);
+		ret.setTimeStamp(new Date());
+		ret.setVnfdId(_vnfdId);
+		ret.setVnfPkgId(_vnfPkgId);
+		ret.setLinks(links.createNotificationLink(_vnfPkgId, _subscriptionId));
+		return ret;
+	}
+
+	public static NotificationVnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+		final NotificationVnfPackageOnboardingNotification ret = new NotificationVnfPackageOnboardingNotification();
+		ret.setId(_id);
+		ret.setTimeStamp(new Date());
+		ret.setNotificationType("VnfPackageOnboardingNotification");
+		ret.setSubscriptionId(_subscriptionId);
+		ret.setVnfPkgId(_vnfPkgId);
+		ret.setVnfdId(_vnfdId);
+		ret.setLinks(links.createVnfPackageOnboardingNotificationLinks(_vnfPkgId, _subscriptionId));
+		return ret;
 	}
 }

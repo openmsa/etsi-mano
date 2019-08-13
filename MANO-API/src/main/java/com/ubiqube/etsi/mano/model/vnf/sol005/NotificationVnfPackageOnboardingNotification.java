@@ -68,26 +68,6 @@ public class NotificationVnfPackageOnboardingNotification {
 		// Nothing.
 	}
 
-	public NotificationVnfPackageOnboardingNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final String _hrefSubscription, final String _hrefPackage) {
-		super();
-		this.id = _id;
-		this.timeStamp = new Date();
-		this.notificationType = "VnfPackageOnboardingNotification";
-		this.subscriptionId = _subscriptionId;
-		this.vnfPkgId = _vnfPkgId;
-		this.vnfdId = _vnfdId;
-
-		this.links = new VnfPackageOnboardingNotificationLinks();
-
-		final VnfPackagesVnfPkgInfoLinksSelf subscription = new VnfPackagesVnfPkgInfoLinksSelf();
-		subscription.setHref(_hrefSubscription);
-		links.setSubscription(subscription);
-
-		final VnfPackagesVnfPkgInfoLinksSelf vnfPackage = new VnfPackagesVnfPkgInfoLinksSelf();
-		vnfPackage.setHref(_hrefPackage);
-		links.setVnfPackage(vnfPackage);
-	}
-
 	/**
 	 * An identifier with the intention of being globally unique.
 	 *
