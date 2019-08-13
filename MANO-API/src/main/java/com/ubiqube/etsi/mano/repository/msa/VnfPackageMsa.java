@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -18,18 +18,19 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Repository
+@Service
 public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> implements VnfPackageRepository {
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageMsa.class);
 
-	public VnfPackageMsa(ObjectMapper _mapper, RepositoryService _repositoryService, JsonFilter _jsonFilter) {
+	public VnfPackageMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		super(_mapper, _repositoryService, _jsonFilter);
+		LOG.debug("Starting VNF Package MSA.");
 	}
 
 	@Override
-	String setId(VnfPkgInfo _entity) {
+	String setId(final VnfPkgInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
