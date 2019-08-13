@@ -3,7 +3,9 @@ package com.ubiqube.etsi.mano.controller.vnf.sol005;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageOnboardingNotificationLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoLinksSelf;
@@ -59,5 +61,19 @@ public class Sol005Linkable implements Linkable {
 		final VnfPackagesVnfPkgInfoLinksSelf link = new VnfPackagesVnfPkgInfoLinksSelf();
 		link.setHref(_href);
 		return link;
+	}
+
+	@Override
+	public SubscriptionsPkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(final String _subscriptionId) {
+		final SubscriptionsPkgmSubscriptionLinks subscriptionsPkgmSubscriptionLinks = new SubscriptionsPkgmSubscriptionLinks();
+		final VnfPackagesVnfPkgInfoLinksSelf self = new VnfPackagesVnfPkgInfoLinksSelf();
+		self.setHref(linkTo(methodOn(VnfSubscriptionSol005.class).subscriptionsSubscriptionIdGet(_subscriptionId, "")).withSelfRel().getHref());
+		subscriptionsPkgmSubscriptionLinks.setSelf(self);
+		return subscriptionsPkgmSubscriptionLinks;
+	}
+
+	@Override
+	public ApiTypesEnum getApi() {
+		return ApiTypesEnum.SOL005;
 	}
 }
