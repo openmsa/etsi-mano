@@ -41,7 +41,9 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
+import com.ubiqube.etsi.mano.service.NotificationEvent;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
@@ -64,7 +66,7 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  *
  */
 @RestController
-public class VnfPackageSol005Api implements VnfPackageSol005 {
+public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
 	@Nonnull
 	private final Linkable links = new Sol005Linkable();
@@ -73,13 +75,15 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private final DeviceService deviceService;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
+	private final EventManager eventManager;
 
-	public VnfPackageSol005Api(final VnfManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService) {
+	public VnfPackageSol005Api(final VnfManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService, final EventManager _eventManager) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
+		eventManager = _eventManager;
 	}
 
 	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam final Map<String, String> params) {
@@ -194,7 +198,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
+		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
 			throw new ConflictException("Could not patch a disabled VNF Package.");
 		}
 		patcher.patch(body, vnfPkgInfo);
@@ -203,6 +207,8 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		// On change Notification
+		eventManager.sendEvent(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.OK);
 	}
 
@@ -226,6 +232,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		} catch (final NoSuchAlgorithmException | IOException e) {
 			throw new GenericException(e);
 		}
+		eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		return ResponseEntity.accepted().build();
 	}
 

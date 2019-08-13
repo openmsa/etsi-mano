@@ -172,7 +172,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
-	Object vnfPackagesVnfPkgIdPatch(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable String body, @Nullable @RequestHeader("Content-Type") String contentType);
+	Object vnfPackagesVnfPkgIdPatch(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestBody String body, @Nullable @RequestHeader("Content-Type") String contentType);
 
 	/**
 	 * Upload a VNF package by providing the content of the VNF package.

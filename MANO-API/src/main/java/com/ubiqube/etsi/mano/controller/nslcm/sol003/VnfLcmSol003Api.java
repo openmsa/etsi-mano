@@ -24,6 +24,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
+import com.ubiqube.etsi.mano.service.EventManager;
+import com.ubiqube.etsi.mano.service.NotificationEvent;
 
 @RestController
 public class VnfLcmSol003Api implements VnfLcmSol003 {
@@ -32,10 +34,12 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private final LcmLinkable links = new Sol003LcmLinkable();
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
+	private final EventManager eventManager;
 
-	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm) {
+	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final EventManager _eventManager) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
+		eventManager = _eventManager;
 		LOG.debug("Registrating VnfInstanceApi");
 	}
 
@@ -173,6 +177,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest, links);
+
+		eventManager.sendEvent(NotificationEvent.VNF_TERMINATE, vnfInstanceId);
 		return ResponseEntity.noContent().build();
 	}
 }
