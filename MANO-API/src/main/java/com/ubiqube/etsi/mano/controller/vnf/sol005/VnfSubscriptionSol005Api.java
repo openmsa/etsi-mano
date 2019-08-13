@@ -1,8 +1,5 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +26,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) final String filters) {
-		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsGet(filters), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsGet(filters, links), HttpStatus.OK);
 	}
 
 	@Override
@@ -46,32 +43,19 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public ResponseEntity<SubscriptionsPkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
-		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links), HttpStatus.OK);
 
 	}
 
 	@Override
 	public void vnfPackageChangeNotificationPost(final NotificationsMessage notificationsMessage) {
-
 		final String id = UUID.randomUUID().toString();
-		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-		final String subscriptionId = notificationsMessage.getSubscriptionId();
-
-		final String hrefVnfPackage = linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
-		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol005Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
 		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, links);
 	}
 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final NotificationsMessage notificationsMessage) {
-
 		final String id = UUID.randomUUID().toString();
-		final String subscriptionId = notificationsMessage.getSubscriptionId();
-		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-
-		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol005Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
-		final String hrefPackage = linkTo(methodOn(VnfPackageSol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
-
 		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, links);
 	}
 

@@ -31,13 +31,14 @@ public class VnfSubscriptionManagement {
 		this.subscriptionRepository = _subscriptionRepository;
 	}
 
-	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter) {
+	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter, final Linkable links) {
 		final List<SubscriptionObject> result = subscriptionRepository.query(filter);
 		final List<SubscriptionsPkgmSubscription> response = new ArrayList<>();
 		for (final SubscriptionObject subscriptionObject : result) {
 			final InlineResponse2001 pack = new InlineResponse2001();
 			final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
 			pack.setPkgmSubscription(subscriptionsPkgmSubscription);
+			subscriptionsPkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscriptionsPkgmSubscription.getId()));
 			response.add(subscriptionsPkgmSubscription);
 		}
 		return response;
@@ -92,8 +93,8 @@ public class VnfSubscriptionManagement {
 		subscriptionRepository.delete(_subscriptionId);
 	}
 
-	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(@Nonnull final String _subscriptionId) {
-		return subscriptionRepository.get(_subscriptionId).getSubscriptionsPkgmSubscription();
+	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(@Nonnull final String _subscriptionId, final Linkable links) {
+		return subscriptionRepository.get(_subscriptionId).getSubscriptionsPkgmSubscription().links(links.createSubscriptionsPkgmSubscriptionLinks(_subscriptionId));
 	}
 
 }

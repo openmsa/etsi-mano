@@ -35,7 +35,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter) {
-		return vnfSubscriptionManagement.subscriptionsGet(filter);
+		return vnfSubscriptionManagement.subscriptionsGet(filter, links);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
-		return vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId);
+		return vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links);
 	}
 
 	/**
