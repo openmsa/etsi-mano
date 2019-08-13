@@ -58,15 +58,14 @@ public class VnfEvent {
 
 	private void onChange(final String vnfPkgId, final SubscriptionObject subscriptionObject) {
 		final Linkable links = getLinkable(subscriptionObject.getApi());
-		final SubscriptionsPkgmSubscription realSubs = subscriptionObject.getSubscriptionsPkgmSubscription();
-		final String subscriptionId = realSubs.getId();
-
-		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
-		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
-		final String callbackUri = subscriptionsRepository.getSubscriptionsPkgmSubscription().getCallbackUri();
+		final SubscriptionsPkgmSubscription req = subscriptionObject.getSubscriptionsPkgmSubscription();
+		final String subscriptionId = req.getId();
+		final String callbackUri = req.getCallbackUri();
+		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionObject.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
 		final String id = UUID.randomUUID().toString();
 		final VnfPackageChangeNotification vnfPackageChangeNotification = VnfPackageFactory.createVnfPackageChangeNotification(id, subscriptionId, vnfPkgId, "", links);
+
 		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
 	}
 
@@ -74,13 +73,13 @@ public class VnfEvent {
 		final Linkable links = getLinkable(subscriptionObject.getApi());
 		final SubscriptionsPkgmSubscription req = subscriptionObject.getSubscriptionsPkgmSubscription();
 		final String subscriptionId = req.getId();
-		final String cbUrl = req.getCallbackUri();
+		final String callbackUri = req.getCallbackUri();
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionObject.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
 		final String id = UUID.randomUUID().toString();
 		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, "", links);
 
-		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
+		notifications.doNotification(notificationVnfPackageOnboardingNotification, callbackUri, auth);
 	}
 
 	private static Linkable getLinkable(final ApiTypesEnum api) {
