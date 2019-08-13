@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
 public abstract class AbstractGenericRepository<T> extends AbstractRepository<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
-	private final JsonFilter jsonFilter;
+	protected final JsonFilter jsonFilter;
 
 	public AbstractGenericRepository(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		super(_repositoryService);
