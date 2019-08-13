@@ -81,7 +81,7 @@ public class VnfSubscriptionManagement {
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
-		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = new NotificationVnfPackageOnboardingNotification(id, "", subscriptionId, vnfPkgId, vnfdId, hrefSubscription, hrefPackage);
+		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = new NotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, vnfdId, hrefSubscription, hrefPackage);
 
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
