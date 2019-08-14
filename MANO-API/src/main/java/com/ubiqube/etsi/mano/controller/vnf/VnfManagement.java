@@ -33,6 +33,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
+import com.ubiqube.etsi.mano.utils.RangeHeader.FromToBean;
 
 @Service
 public class VnfManagement {
@@ -99,11 +100,8 @@ public class VnfManagement {
 				if (entry.getName().equals(artifactPath)) {
 					final byte[] zcontent = StreamUtils.copyToByteArray(zis);
 					if (rangeHeader != null) {
-						final int to = handleRangeMax(rangeHeader.getTo(), zcontent.length);
-						if (to > zcontent.length) {
-							return ResponseEntity.status(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE).build();
-						}
-						final byte[] finalContent = Arrays.copyOfRange(zcontent, rangeHeader.getFrom(), to);
+						final FromToBean ft = rangeHeader.getValues(zcontent.length);
+						final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
 						final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
 						final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
 						return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
@@ -123,19 +121,6 @@ public class VnfManagement {
 		}
 		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
-	}
-
-	/**
-	 *
-	 * @param to
-	 * @param length
-	 * @return
-	 */
-	private static int handleRangeMax(final Integer to, final int length) {
-		if (null == to) {
-			return length;
-		}
-		return to.intValue();
 	}
 
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull final String vnfPkgId, @Nullable final String accept) {
