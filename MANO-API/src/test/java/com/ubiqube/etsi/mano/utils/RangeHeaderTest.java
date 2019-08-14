@@ -20,4 +20,27 @@ public class RangeHeaderTest {
 		assertEquals(rangeHeader.getFrom(), 200L, "Test from.");
 		assertEquals(rangeHeader.getTo(), null, "Test to.");
 	}
+
+	@Test
+	void test03() throws Exception {
+		final String txt = "Range: bytes=200-1000";
+		final RangeHeader range = RangeHeader.fromValue(txt);
+		assertEquals(txt, range.toString());
+		assertEquals("bytes 200-1000/10000", range.getContentRange(10000));
+	}
+
+	@Test
+	void testNull() throws Exception {
+		final RangeHeader range = RangeHeader.fromValue(null);
+		assertEquals(null, range);
+	}
+
+	@Test
+	public void testgetLastByte() {
+		final String range = "bytes=-1";
+		final RangeHeader rangeHeader = new RangeHeader(range);
+		assertEquals(rangeHeader.getFrom(), 200L, "Test from.");
+		assertEquals(rangeHeader.getTo(), null, "Test to.");
+	}
+
 }
