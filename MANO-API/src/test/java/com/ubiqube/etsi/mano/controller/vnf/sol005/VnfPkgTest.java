@@ -1,9 +1,17 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,17 +21,21 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.config.Http403EntryPoint;
 import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
 
 @AutoConfigureMockMvc
-@WebMvcTest(VnfPackageSol005Api.class)
+@WebMvcTest
+//@ComponentScan("com.ubiqube.etsi.mano")
 @ContextConfiguration(classes = { Http403EntryPoint.class, VnfPackageSol005Api.class })
 public class VnfPkgTest {
 	@Autowired
@@ -41,17 +53,59 @@ public class VnfPkgTest {
 	@MockBean
 	private EventManager eventManager;
 
-	@Test
-	void testName() throws Exception {
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/sol005/vnfpkgm/v1/vnf_packages")
-				.with(user("ncroot"))
+	@Test
+	void testVnfPackagePost() throws Exception {
+		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "vnf-pkg-post.json"));
+		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sol005/vnfpkgm/v1/vnf_packages")
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
+				.content(value)
+				.accept(MediaType.APPLICATION_JSON)
+				.with(csrf())
+				.with(user("ooo")))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().is2xxSuccessful())
 				.andReturn();
 
-		final String resultDOW = result.getResponse().getContentAsString();
-		System.out.println(resultDOW);
+		final String resultServ = result.getResponse().getContentAsString();
+
+		verify(vnfPackageRepository).save(Mockito.any(VnfPkgInfo.class));
+		verify(eventManager).sendEvent(Mockito.any(), Mockito.anyString());
+	}
+
+	@Test
+	void testVnfPackageDeleteNonDisabled() throws Exception {
+		final String vnfPkgId = "aaa";
+		final VnfPkgInfo value = objectMapper.readValue(new File("src/test/resources/VnfPkgInfo.json"), VnfPkgInfo.class);
+		when(vnfPackageRepository.get(vnfPkgId)).thenReturn(value);
+
+		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/sol005/vnfpkgm/v1/vnf_packages/{vnfPkgId}", vnfPkgId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.with(csrf())
+				.with(user("ooo")))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().is(409))
+				.andReturn();
+
+		final String resultServ = result.getResponse().getContentAsString();
+	}
+
+	@Test
+	void testVnfPackageDeleteDisabled() throws Exception {
+		final String vnfPkgId = "aaa";
+		final VnfPkgInfo value = objectMapper.readValue(new File("src/test/resources/VnfPkgInfo-disabled.json"), VnfPkgInfo.class);
+		when(vnfPackageRepository.get(vnfPkgId)).thenReturn(value);
+
+		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/sol005/vnfpkgm/v1/vnf_packages/{vnfPkgId}", vnfPkgId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.with(csrf())
+				.with(user("ooo")))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().is(204))
+				.andReturn();
+
 	}
 }
