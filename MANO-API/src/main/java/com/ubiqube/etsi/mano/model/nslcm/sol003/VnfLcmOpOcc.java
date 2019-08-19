@@ -19,6 +19,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ProblemDetails;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -77,14 +78,14 @@ public class VnfLcmOpOcc {
 	@JsonProperty("_links")
 	private VnfLcmOpOccLinks links = null;
 
-	public VnfLcmOpOcc id(String id) {
+	public VnfLcmOpOcc id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Identifier of this VNF lifecycle management operation occurrence.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -94,18 +95,18 @@ public class VnfLcmOpOcc {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfLcmOpOcc operationState(LcmOperationStateType operationState) {
+	public VnfLcmOpOcc operationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 		return this;
 	}
 
 	/**
 	 * The state of the LCM operation.
-	 * 
+	 *
 	 * @return operationState
 	 **/
 	@JsonProperty("operationState")
@@ -115,18 +116,18 @@ public class VnfLcmOpOcc {
 		return operationState;
 	}
 
-	public void setOperationState(LcmOperationStateType operationState) {
+	public void setOperationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 	}
 
-	public VnfLcmOpOcc stateEnteredTime(Date stateEnteredTime) {
+	public VnfLcmOpOcc stateEnteredTime(final Date stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 		return this;
 	}
 
 	/**
 	 * Date-time when the current state was entered.
-	 * 
+	 *
 	 * @return stateEnteredTime
 	 **/
 	@JsonProperty("stateEnteredTime")
@@ -136,18 +137,18 @@ public class VnfLcmOpOcc {
 		return stateEnteredTime;
 	}
 
-	public void setStateEnteredTime(Date stateEnteredTime) {
+	public void setStateEnteredTime(final Date stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
-	public VnfLcmOpOcc startTime(Date startTime) {
+	public VnfLcmOpOcc startTime(final Date startTime) {
 		this.startTime = startTime;
 		return this;
 	}
 
 	/**
 	 * Date-time of the start of the operation.
-	 * 
+	 *
 	 * @return startTime
 	 **/
 	@JsonProperty("startTime")
@@ -157,18 +158,18 @@ public class VnfLcmOpOcc {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(final Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public VnfLcmOpOcc vnfInstanceId(String vnfInstanceId) {
+	public VnfLcmOpOcc vnfInstanceId(final String vnfInstanceId) {
 		this.vnfInstanceId = vnfInstanceId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VNF instance to which the operation applies
-	 * 
+	 *
 	 * @return vnfInstanceId
 	 **/
 	@JsonProperty("vnfInstanceId")
@@ -178,11 +179,11 @@ public class VnfLcmOpOcc {
 		return vnfInstanceId;
 	}
 
-	public void setVnfInstanceId(String vnfInstanceId) {
+	public void setVnfInstanceId(final String vnfInstanceId) {
 		this.vnfInstanceId = vnfInstanceId;
 	}
 
-	public VnfLcmOpOcc grantId(String grantId) {
+	public VnfLcmOpOcc grantId(final String grantId) {
 		this.grantId = grantId;
 		return this;
 	}
@@ -190,7 +191,7 @@ public class VnfLcmOpOcc {
 	/**
 	 * Identifier of the grant related to this VNF LCM operation occurrence, if such
 	 * grant exists.
-	 * 
+	 *
 	 * @return grantId
 	 **/
 	@JsonProperty("grantId")
@@ -199,11 +200,11 @@ public class VnfLcmOpOcc {
 		return grantId;
 	}
 
-	public void setGrantId(String grantId) {
+	public void setGrantId(final String grantId) {
 		this.grantId = grantId;
 	}
 
-	public VnfLcmOpOcc operation(LcmOperationType operation) {
+	public VnfLcmOpOcc operation(final LcmOperationType operation) {
 		this.operation = operation;
 		return this;
 	}
@@ -211,7 +212,7 @@ public class VnfLcmOpOcc {
 	/**
 	 * Type of the actual LCM operation represented by this VNF LCM operation
 	 * occurrence.
-	 * 
+	 *
 	 * @return operation
 	 **/
 	@JsonProperty("operation")
@@ -221,11 +222,11 @@ public class VnfLcmOpOcc {
 		return operation;
 	}
 
-	public void setOperation(LcmOperationType operation) {
+	public void setOperation(final LcmOperationType operation) {
 		this.operation = operation;
 	}
 
-	public VnfLcmOpOcc isAutomaticInvocation(Boolean isAutomaticInvocation) {
+	public VnfLcmOpOcc isAutomaticInvocation(final Boolean isAutomaticInvocation) {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 		return this;
 	}
@@ -235,7 +236,7 @@ public class VnfLcmOpOcc {
 	 * automated procedure inside the VNFM (i.e. ScaleVnf / ScaleVnfToLevel
 	 * triggered by auto-scale, or HealVnf triggered by auto-heal). Set to false
 	 * otherwise.
-	 * 
+	 *
 	 * @return isAutomaticInvocation
 	 **/
 	@JsonProperty("isAutomaticInvocation")
@@ -245,11 +246,11 @@ public class VnfLcmOpOcc {
 		return isAutomaticInvocation;
 	}
 
-	public void setIsAutomaticInvocation(Boolean isAutomaticInvocation) {
+	public void setIsAutomaticInvocation(final Boolean isAutomaticInvocation) {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
-	public VnfLcmOpOcc operationParams(KeyValuePairs operationParams) {
+	public VnfLcmOpOcc operationParams(final KeyValuePairs operationParams) {
 		this.operationParams = operationParams;
 		return this;
 	}
@@ -263,7 +264,7 @@ public class VnfLcmOpOcc {
 	 * ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest *
 	 * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE:
 	 * TerminateVnfRequest * MODIFY_INFO: VnfInfoModificationRequest
-	 * 
+	 *
 	 * @return operationParams
 	 **/
 	@JsonProperty("operationParams")
@@ -273,11 +274,11 @@ public class VnfLcmOpOcc {
 		return operationParams;
 	}
 
-	public void setOperationParams(KeyValuePairs operationParams) {
+	public void setOperationParams(final KeyValuePairs operationParams) {
 		this.operationParams = operationParams;
 	}
 
-	public VnfLcmOpOcc isCancelPending(Boolean isCancelPending) {
+	public VnfLcmOpOcc isCancelPending(final Boolean isCancelPending) {
 		this.isCancelPending = isCancelPending;
 		return this;
 	}
@@ -287,7 +288,7 @@ public class VnfLcmOpOcc {
 	 * \&quot;PROCESSING\&quot; or \&quot;ROLLING_BACK\&quot; state and the
 	 * operation is being cancelled, this attribute shall be set to true. Otherwise,
 	 * it shall be set to false.
-	 * 
+	 *
 	 * @return isCancelPending
 	 **/
 	@JsonProperty("isCancelPending")
@@ -297,11 +298,11 @@ public class VnfLcmOpOcc {
 		return isCancelPending;
 	}
 
-	public void setIsCancelPending(Boolean isCancelPending) {
+	public void setIsCancelPending(final Boolean isCancelPending) {
 		this.isCancelPending = isCancelPending;
 	}
 
-	public VnfLcmOpOcc cancelMode(CancelModeType cancelMode) {
+	public VnfLcmOpOcc cancelMode(final CancelModeType cancelMode) {
 		this.cancelMode = cancelMode;
 		return this;
 	}
@@ -309,7 +310,7 @@ public class VnfLcmOpOcc {
 	/**
 	 * The mode of an ongoing cancellation. Shall be present when
 	 * isCancelPending&#x3D;true, and shall be absent otherwise.
-	 * 
+	 *
 	 * @return cancelMode
 	 **/
 	@JsonProperty("cancelMode")
@@ -318,11 +319,11 @@ public class VnfLcmOpOcc {
 		return cancelMode;
 	}
 
-	public void setCancelMode(CancelModeType cancelMode) {
+	public void setCancelMode(final CancelModeType cancelMode) {
 		this.cancelMode = cancelMode;
 	}
 
-	public VnfLcmOpOcc error(ProblemDetails error) {
+	public VnfLcmOpOcc error(final ProblemDetails error) {
 		this.error = error;
 		return this;
 	}
@@ -334,7 +335,7 @@ public class VnfLcmOpOcc {
 	 * \&quot;operationState\&quot; was \&quot;FAILED_TEMP\&quot;, this attribute
 	 * shall be present and contain error information, unless it has been requested
 	 * to be excluded via an attribute selector.
-	 * 
+	 *
 	 * @return error
 	 **/
 	@JsonProperty("error")
@@ -343,18 +344,18 @@ public class VnfLcmOpOcc {
 		return error;
 	}
 
-	public void setError(ProblemDetails error) {
+	public void setError(final ProblemDetails error) {
 		this.error = error;
 	}
 
-	public VnfLcmOpOcc resourceChanges(VnfLcmOpOccResourceChanges resourceChanges) {
+	public VnfLcmOpOcc resourceChanges(final VnfLcmOpOccResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
 		return this;
 	}
 
 	/**
 	 * Get resourceChanges
-	 * 
+	 *
 	 * @return resourceChanges
 	 **/
 	@JsonProperty("resourceChanges")
@@ -363,11 +364,11 @@ public class VnfLcmOpOcc {
 		return resourceChanges;
 	}
 
-	public void setResourceChanges(VnfLcmOpOccResourceChanges resourceChanges) {
+	public void setResourceChanges(final VnfLcmOpOccResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
 	}
 
-	public VnfLcmOpOcc changedInfo(VnfInfoModifications changedInfo) {
+	public VnfLcmOpOcc changedInfo(final VnfInfoModifications changedInfo) {
 		this.changedInfo = changedInfo;
 		return this;
 	}
@@ -378,7 +379,7 @@ public class VnfLcmOpOcc {
 	 * information contained in the latest \&quot;result\&quot; notification if it
 	 * has not received it due to an error or a wrongly configured subscription
 	 * filter.
-	 * 
+	 *
 	 * @return changedInfo
 	 **/
 	@JsonProperty("changedInfo")
@@ -387,18 +388,18 @@ public class VnfLcmOpOcc {
 		return changedInfo;
 	}
 
-	public void setChangedInfo(VnfInfoModifications changedInfo) {
+	public void setChangedInfo(final VnfInfoModifications changedInfo) {
 		this.changedInfo = changedInfo;
 	}
 
-	public VnfLcmOpOcc changedExtConnectivity(List<ExtVirtualLinkInfo> changedExtConnectivity) {
+	public VnfLcmOpOcc changedExtConnectivity(final List<ExtVirtualLinkInfo> changedExtConnectivity) {
 		this.changedExtConnectivity = changedExtConnectivity;
 		return this;
 	}
 
-	public VnfLcmOpOcc addChangedExtConnectivityItem(ExtVirtualLinkInfo changedExtConnectivityItem) {
+	public VnfLcmOpOcc addChangedExtConnectivityItem(final ExtVirtualLinkInfo changedExtConnectivityItem) {
 		if (this.changedExtConnectivity == null) {
-			this.changedExtConnectivity = new ArrayList<ExtVirtualLinkInfo>();
+			this.changedExtConnectivity = new ArrayList<>();
 		}
 		this.changedExtConnectivity.add(changedExtConnectivityItem);
 		return this;
@@ -409,7 +410,7 @@ public class VnfLcmOpOcc {
 	 * the NFVO to obtain the information contained in the latest
 	 * \&quot;result\&quot; notification if it has not received it due to an error
 	 * or a wrongly configured subscription filter.
-	 * 
+	 *
 	 * @return changedExtConnectivity
 	 **/
 	@JsonProperty("changedExtConnectivity")
@@ -418,18 +419,18 @@ public class VnfLcmOpOcc {
 		return changedExtConnectivity;
 	}
 
-	public void setChangedExtConnectivity(List<ExtVirtualLinkInfo> changedExtConnectivity) {
+	public void setChangedExtConnectivity(final List<ExtVirtualLinkInfo> changedExtConnectivity) {
 		this.changedExtConnectivity = changedExtConnectivity;
 	}
 
-	public VnfLcmOpOcc links(VnfLcmOpOccLinks links) {
+	public VnfLcmOpOcc links(final VnfLcmOpOccLinks links) {
 		this.links = links;
 		return this;
 	}
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@JsonProperty("_links")
@@ -438,7 +439,7 @@ public class VnfLcmOpOcc {
 		return links;
 	}
 
-	public void setLinks(VnfLcmOpOccLinks links) {
+	public void setLinks(final VnfLcmOpOccLinks links) {
 		this.links = links;
 	}
 
@@ -471,7 +472,7 @@ public class VnfLcmOpOcc {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

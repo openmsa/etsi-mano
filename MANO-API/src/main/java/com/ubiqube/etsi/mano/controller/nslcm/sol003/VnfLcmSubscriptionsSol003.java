@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LccnSubscription;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LccnSubscriptionRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ProblemDetails;
 
 import io.swagger.annotations.ApiParam;
 
