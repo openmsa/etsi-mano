@@ -135,11 +135,6 @@ public class EtsiFilter extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof EtsiFilterListener ) ((EtsiFilterListener)listener).exitSimpleFilterExpr(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EtsiFilterVisitor ) return ((EtsiFilterVisitor<? extends T>)visitor).visitSimpleFilterExpr(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final SimpleFilterExprContext simpleFilterExpr() throws RecognitionException {
@@ -238,11 +233,6 @@ public class EtsiFilter extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof EtsiFilterListener ) ((EtsiFilterListener)listener).exitFilterExpr(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EtsiFilterVisitor ) return ((EtsiFilterVisitor<? extends T>)visitor).visitFilterExpr(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final FilterExprContext filterExpr() throws RecognitionException {
@@ -304,11 +294,6 @@ public class EtsiFilter extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof EtsiFilterListener ) ((EtsiFilterListener)listener).exitOp(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EtsiFilterVisitor ) return ((EtsiFilterVisitor<? extends T>)visitor).visitOp(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final OpContext op() throws RecognitionException {
@@ -342,7 +327,7 @@ public class EtsiFilter extends Parser {
 	}
 
 	public static class AttrNameContext extends ParserRuleContext {
-		public TerminalNode STRING() { return getToken(EtsiFilter.STRING, 0); }
+		public TerminalNode ATTRIBUTE() { return getToken(EtsiFilter.ATTRIBUTE, 0); }
 		public AttrNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -355,11 +340,6 @@ public class EtsiFilter extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof EtsiFilterListener ) ((EtsiFilterListener)listener).exitAttrName(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EtsiFilterVisitor ) return ((EtsiFilterVisitor<? extends T>)visitor).visitAttrName(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final AttrNameContext attrName() throws RecognitionException {
@@ -369,7 +349,7 @@ public class EtsiFilter extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(41);
-			match(STRING);
+			match(ATTRIBUTE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -396,11 +376,6 @@ public class EtsiFilter extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof EtsiFilterListener ) ((EtsiFilterListener)listener).exitValue(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof EtsiFilterVisitor ) return ((EtsiFilterVisitor<? extends T>)visitor).visitValue(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -437,7 +412,7 @@ public class EtsiFilter extends Parser {
 		"\b\2\2\31\36\5\n\6\2\32\33\7\3\2\2\33\35\5\n\6\2\34\32\3\2\2\2\35 \3\2"+
 		"\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37\3\3\2\2\2 \36\3\2\2\2!&\5\2\2\2\""+
 		"#\7\n\2\2#%\5\2\2\2$\"\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\5\3\2"+
-		"\2\2(&\3\2\2\2)*\t\2\2\2*\7\3\2\2\2+,\7\27\2\2,\t\3\2\2\2-.\7\27\2\2."+
+		"\2\2(&\3\2\2\2)*\t\2\2\2*\7\3\2\2\2+,\7\26\2\2,\t\3\2\2\2-.\7\27\2\2."+
 		"\13\3\2\2\2\6\21\26\36&";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
