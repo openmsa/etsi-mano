@@ -87,6 +87,7 @@ public class VnfSubscriptionManagement {
 	}
 
 	public void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId) {
+		subscriptionRepository.get(_subscriptionId);
 		subscriptionRepository.delete(_subscriptionId);
 	}
 
