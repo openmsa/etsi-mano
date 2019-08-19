@@ -31,7 +31,7 @@ public class NsLcmSol005Api implements NsLcmSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierCreationNotificationPost(NsIdentifierCreationNotification nsIdentifierCreationNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierCreationNotificationPost(final NsIdentifierCreationNotification nsIdentifierCreationNotification, final String accept, final String contentType) {
 		// : Implement...
 	}
 
@@ -45,7 +45,7 @@ public class NsLcmSol005Api implements NsLcmSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationGet(String accept) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationGet(final String accept) {
 		// : Implement...
 	}
 
@@ -59,7 +59,7 @@ public class NsLcmSol005Api implements NsLcmSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationPost(NsIdentifierDeletionNotification nsIdentifierDeletionNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsIdentifierDeletionNotificationPost(final NsIdentifierDeletionNotification nsIdentifierDeletionNotification, final String accept, final String contentType) {
 		// : Implement...
 	}
 
@@ -73,7 +73,7 @@ public class NsLcmSol005Api implements NsLcmSol005 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsLcmOperationOccurrenceNotificationPost(NsLcmOperationOccurrenceNotification nsLcmOperationOccurrenceNotification, String accept, String contentType) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionNsLcmOperationOccurrenceNotificationPost(final NsLcmOperationOccurrenceNotification nsLcmOperationOccurrenceNotification, final String accept, final String contentType) {
 		// : Implement...
 	}
 

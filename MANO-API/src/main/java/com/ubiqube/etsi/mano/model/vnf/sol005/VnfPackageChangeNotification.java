@@ -1,12 +1,8 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.ChangeTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,21 +16,6 @@ public class VnfPackageChangeNotification {
 		// Nothing.
 	}
 
-	public VnfPackageChangeNotification(String _id, String _vnfPkgId, String _vnfdId, String _subscriptionId, String _hrefVnfPackage, String _hrefSubscription) {
-		vnfPackageChangeNotification = new VnfPackageChangeNotificationVnfPackageChangeNotification();
-		vnfPackageChangeNotification.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
-		vnfPackageChangeNotification.setId(_id);
-		final VnfPackageOnboardingNotificationLinks links = new VnfPackageOnboardingNotificationLinks(_hrefVnfPackage, _hrefSubscription);
-		vnfPackageChangeNotification.setLinks(links);
-		vnfPackageChangeNotification.setNotificationType("");
-		vnfPackageChangeNotification.setOperationalState(OperationalStateEnum.ENABLED);
-		vnfPackageChangeNotification.setSubscriptionId(_subscriptionId);
-		vnfPackageChangeNotification.setTimeStamp(new Date());
-		vnfPackageChangeNotification.setVnfdId(_vnfdId);
-		vnfPackageChangeNotification.setVnfPkgId(_vnfPkgId);
-
-	}
-
 	/**
 	 * Get vnfPackageChangeNotification
 	 *
@@ -45,11 +26,11 @@ public class VnfPackageChangeNotification {
 		return vnfPackageChangeNotification;
 	}
 
-	public void setVnfPackageChangeNotification(VnfPackageChangeNotificationVnfPackageChangeNotification vnfPackageChangeNotification) {
+	public void setVnfPackageChangeNotification(final VnfPackageChangeNotificationVnfPackageChangeNotification vnfPackageChangeNotification) {
 		this.vnfPackageChangeNotification = vnfPackageChangeNotification;
 	}
 
-	public VnfPackageChangeNotification vnfPackageChangeNotification(VnfPackageChangeNotificationVnfPackageChangeNotification vnfPackageChangeNotification) {
+	public VnfPackageChangeNotification vnfPackageChangeNotification(final VnfPackageChangeNotificationVnfPackageChangeNotification vnfPackageChangeNotification) {
 		this.vnfPackageChangeNotification = vnfPackageChangeNotification;
 		return this;
 	}
@@ -68,7 +49,7 @@ public class VnfPackageChangeNotification {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(Object o) {
+	private static String toIndentedString(final Object o) {
 		if (o == null) {
 			return "null";
 		}

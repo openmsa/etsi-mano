@@ -9,6 +9,9 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageState
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdOnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdUsageStateEnum;
 
 public class NsdFactories {
 
@@ -16,14 +19,14 @@ public class NsdFactories {
 		// Nothing.
 	}
 
-	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse(String _id, String _self, String _nsdContent) {
+	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse(final String _id) {
 		final NsDescriptorsNsdInfoIdGetResponse ret = new NsDescriptorsNsdInfoIdGetResponse();
-		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo(_id, _self, _nsdContent);
+		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo(_id);
 		ret.setNsdInfo(nsdInfo);
 		return ret;
 	}
 
-	public static NsDescriptorsNsdInfoLinks createNsDescriptorsNsdInfoLinks(String _self, String _nsdContent) {
+	public static NsDescriptorsNsdInfoLinks createNsDescriptorsNsdInfoLinks(final String _self, final String _nsdContent) {
 		final NsDescriptorsNsdInfoLinks ret = new NsDescriptorsNsdInfoLinks();
 		final NsDescriptorsNsdInfoLinksSelf nsdContent = new NsDescriptorsNsdInfoLinksSelf();
 		nsdContent.setHref(_nsdContent);
@@ -35,12 +38,11 @@ public class NsdFactories {
 		return ret;
 	}
 
-	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo(String _id, String _self, String _nsdContent) {
+	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo(final String _id) {
 		final NsDescriptorsNsdInfo nsdInfo = new NsDescriptorsNsdInfo();
-		nsdInfo.setLinks(createNsDescriptorsNsdInfoLinks(_self, _nsdContent));
 		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.CREATED);
-		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.DISABLED);
+		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.NOT_IN_USE);
 		nsdInfo.setPnfdInfoIds(new ArrayList<String>());
 		nsdInfo.setVnfPkgIds(new ArrayList<String>());
@@ -48,4 +50,11 @@ public class NsdFactories {
 		return nsdInfo;
 	}
 
+	public static PnfDescriptorsPnfdInfo createPnfDescriptorsPnfdInfo(final String _id) {
+		final PnfDescriptorsPnfdInfo pnfDescriptorsPnfdInfo = new PnfDescriptorsPnfdInfo();
+		pnfDescriptorsPnfdInfo.setId(_id);
+		pnfDescriptorsPnfdInfo.setPnfdOnboardingState(PnfdOnboardingStateEnum.CREATED);
+		pnfDescriptorsPnfdInfo.setPnfdUsageState(PnfdUsageStateEnum.NOT_IN_USE);
+		return pnfDescriptorsPnfdInfo;
+	}
 }

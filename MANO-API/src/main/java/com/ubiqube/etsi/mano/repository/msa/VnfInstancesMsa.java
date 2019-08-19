@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -10,16 +10,16 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
-@Repository
+@Service
 public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> implements VnfInstancesRepository {
 	private static final String REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_instances";
 
-	public VnfInstancesMsa(ObjectMapper _mapper, RepositoryService _repositoryService, JsonFilter _jsonFilter) {
+	public VnfInstancesMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		super(_mapper, _repositoryService, _jsonFilter);
 	}
 
 	@Override
-	String setId(VnfInstance _entity) {
+	String setId(final VnfInstance _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());

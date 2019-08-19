@@ -14,9 +14,9 @@ public class RangeHeader {
 
 	private final Unit unit;
 
-	private final long from;
+	private final int from;
 
-	private Long to = null;
+	private Integer to = null;
 
 	/**
 	 * RangeHeader class constructor.
@@ -25,19 +25,19 @@ public class RangeHeader {
 	 * @param from the start value of the range
 	 * @param to   the end value of the range
 	 */
-	public RangeHeader(Unit _unit, long _from, Long _to) {
+	public RangeHeader(final Unit _unit, final int _from, final Integer _to) {
 		this.unit = _unit;
 		this.from = _from;
 		this.to = _to;
 	}
 
-	public RangeHeader(String range) {
+	public RangeHeader(final String range) {
 		final String[] tokens = range.replace("Range: ", "").split("=");
 		unit = Unit.valueOf(tokens[0].toUpperCase());
 		final String[] fromTo = tokens[1].split("-");
-		from = Long.parseLong(fromTo[0]);
+		from = Integer.parseInt(fromTo[0]);
 		if (fromTo.length > 1) {
-			to = Long.decode(fromTo[1]);
+			to = Integer.decode(fromTo[1]);
 		}
 	}
 
@@ -56,7 +56,7 @@ public class RangeHeader {
 	 *
 	 * @return the start value of range.
 	 */
-	public long getFrom() {
+	public int getFrom() {
 
 		return from;
 	}
@@ -67,7 +67,7 @@ public class RangeHeader {
 	 * @return the end value the range.
 	 *
 	 */
-	public Long getTo() {
+	public Integer getTo() {
 		return to;
 	}
 
@@ -77,15 +77,15 @@ public class RangeHeader {
 	 * @param range the value of
 	 * @return the RangeHeader object instantiated with range.
 	 */
-	public static RangeHeader fromValue(String range) {
+	public static RangeHeader fromValue(final String range) {
 		if (range == null) {
 			return null;
 		}
 		final String[] tokens = range.replace("Range: ", "").split("=");
 		final Unit unit = Unit.valueOf(tokens[0].toUpperCase());
 		final String[] fromTo = tokens[1].split("-");
-		final long from = Long.parseLong(fromTo[0]);
-		final long to = Long.parseLong(fromTo[1]);
+		final int from = Integer.parseInt(fromTo[0]);
+		final Integer to = Integer.decode(fromTo[1]);
 		return new RangeHeader(unit, from, to);
 	}
 
@@ -97,6 +97,13 @@ public class RangeHeader {
 	@Override
 	public String toString() {
 		return String.format("Range: %s=%d-%d", unit.name().toLowerCase(), from, to);
+	}
+
+	public String getContentRange(final int length) {
+		final StringBuilder sb = new StringBuilder("bytes ");
+		sb.append(from).append('-').append(to);
+		sb.append('/').append(length);
+		return sb.toString();
 	}
 
 }

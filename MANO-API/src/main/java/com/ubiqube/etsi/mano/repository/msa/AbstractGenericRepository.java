@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 
@@ -30,9 +32,9 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
 public abstract class AbstractGenericRepository<T> extends AbstractRepository<T> {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
-	private final JsonFilter jsonFilter;
+	protected final JsonFilter jsonFilter;
 
-	public AbstractGenericRepository(ObjectMapper _mapper, RepositoryService _repositoryService, JsonFilter _jsonFilter) {
+	public AbstractGenericRepository(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		super(_repositoryService);
 		mapper = _mapper;
 		jsonFilter = _jsonFilter;
@@ -40,7 +42,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	abstract String setId(T _entity);
 
-	protected String makeRoot(String _id) {
+	protected String makeRoot(final String _id) {
 		final StringBuilder sb = new StringBuilder(getRoot());
 		sb.append('/').append(_id);
 		final String uri = sb.toString();
@@ -58,7 +60,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public final T get(String _id) {
+	public final T get(final String _id) {
 		final String uri = makeRoot(_id) + '/' + getFilename();
 		LOG.debug("Loading ID: {}", _id);
 		verify(uri);
@@ -78,7 +80,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	abstract Class<?> getClazz();
 
 	@Override
-	public final void delete(String _id) {
+	public final void delete(final String _id) {
 		final String uri = makeRoot(_id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
@@ -86,7 +88,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public final T save(T _entity) {
+	public final T save(final T _entity) {
 		final String saveId = setId(_entity);
 
 		final String uri = makeRoot(saveId) + '/' + getFilename();
@@ -101,8 +103,9 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		return _entity;
 	}
 
-	public void storeObject(String _vnfPkgId, Object _object, String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
+	@Override
+	public void storeObject(final String _id, final Object _object, final String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_id));
 		path.append('/').append(_filename);
 		try {
 			repositoryService.addFile(path.toString(), "", "etsi-mano", mapper.writeValueAsString(mapper.writeValueAsString(_object)), "ncroot");
@@ -112,8 +115,9 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 	}
 
-	public void storeObject(String _vnfPkgId, InputStream _stream, String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_vnfPkgId));
+	@Override
+	public void storeBinary(final String _id, final InputStream _stream, final String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_id));
 		path.append('/').append(_filename);
 
 		try {
@@ -124,10 +128,10 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public List<T> query(String filter) {
+	public List<T> query(final String filter) {
 		List<String> listFilesInFolder;
 		try {
-			listFilesInFolder = repositoryService.doSearch(getRoot(), "vnfPkgInfo.json");
+			listFilesInFolder = repositoryService.doSearch(getRoot(), getFilename());
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
@@ -144,4 +148,22 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 		return ret;
 	}
+
+	@Override
+	public byte[] getBinary(final String _id, final String _filename) {
+		final String uri = makeRoot(_id) + '/' + _filename;
+		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
+		if (null == repositoryElement) {
+			throw new NotFoundException("Element " + uri + " not found.");
+		}
+		return repositoryService.getRepositoryElementContent(repositoryElement);
+	}
+
+	@Override
+	public byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
+		// We should ask for an API.
+		final byte[] repositoryContent = getBinary(_id, _filename);
+		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
+	}
+
 }

@@ -25,7 +25,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> subscriptionsGet(String accept, String filter) {
+	public ResponseEntity<List<Object>> subscriptionsGet(final String accept, final String filter) {
 		// : Implement...
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
@@ -51,7 +51,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(String accept, String contentType, SubscriptionsPostQuery body) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(final String accept, final String contentType, final SubscriptionsPostQuery body) {
 		// : Implement...
 		return null;
 	}
@@ -67,7 +67,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(String subscriptionId) {
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
 		// : Implement...
 		return ResponseEntity.noContent().build();
 	}
@@ -84,7 +84,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(String subscriptionId, String accept) {
+	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
 		// : Implement...
 		return null;
 	}

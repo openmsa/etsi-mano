@@ -19,7 +19,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> pmJobsGet(String accept, String contentType, String filter, String allFields, String include, String exclude, String excludeDefault) {
+	public ResponseEntity<List<Object>> pmJobsGet(final String accept, final String contentType, final String filter, final String allFields, final String include, final String exclude, final String excludeDefault) {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 	}
 
@@ -30,9 +30,8 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public void pmJobsPmJobIdDelete(String pmJobId) {
+	public void pmJobsPmJobIdDelete(final String pmJobId) {
 		// TODO: Implement...
-
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPostResponse> pmJobsPmJobIdGet(String pmJobId, String accept) {
+	public ResponseEntity<PmJobsPostResponse> pmJobsPmJobIdGet(final String pmJobId, final String accept) {
 		// TODO: Implement...
 
 		return null;
@@ -55,7 +54,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPmJobIdReportsReportIdGetResponse> pmJobsPmJobIdReportsReportIdGet(String pmJobId, String reportId, String accept) {
+	public ResponseEntity<PmJobsPmJobIdReportsReportIdGetResponse> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId, final String accept) {
 		// TODO: Implement...
 
 		return null;
@@ -70,7 +69,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPostResponse> pmJobsPost(CreatePmJobRequest createPmJobRequest, String accept, String contentType) {
+	public ResponseEntity<PmJobsPostResponse> pmJobsPost(final CreatePmJobRequest createPmJobRequest, final String accept, final String contentType) {
 		// TODO: Implement...
 
 		return null;

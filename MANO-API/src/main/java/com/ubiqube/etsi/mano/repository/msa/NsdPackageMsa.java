@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -16,16 +16,16 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Repository
+@Service
 public class NsdPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo> implements NsdRepository {
-	public NsdPackageMsa(ObjectMapper _mapper, RepositoryService _repositoryService, JsonFilter _jsonFilter) {
+	public NsdPackageMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		super(_mapper, _repositoryService, _jsonFilter);
 	}
 
 	private static final String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
 
 	@Override
-	String setId(NsDescriptorsNsdInfo _entity) {
+	String setId(final NsDescriptorsNsdInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
