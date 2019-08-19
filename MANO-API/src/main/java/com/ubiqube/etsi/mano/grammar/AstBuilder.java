@@ -10,15 +10,14 @@ public class AstBuilder {
 	private final TreeBuilder treeBuilder;
 	private final List<Node> nodes;
 
-	public AstBuilder(String filter) {
+	public AstBuilder(final String filter) {
 		treeBuilder = new TreeBuilder();
 		if ((null != filter) && !filter.isEmpty()) {
 			final EtsiLexer el = new EtsiLexer(new ANTLRInputStream(filter));
 			final CommonTokenStream tokens = new CommonTokenStream(el);
-			final Etsifilter parser = new Etsifilter(tokens);
+			final EtsiFilter parser = new EtsiFilter(tokens);
 			parser.addParseListener(treeBuilder);
 			parser.filterExpr();
-
 			nodes = treeBuilder.getListNode();
 		} else {
 			nodes = new ArrayList<>();
