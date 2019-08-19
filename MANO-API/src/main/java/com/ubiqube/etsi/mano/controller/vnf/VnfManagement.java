@@ -60,9 +60,7 @@ public class VnfManagement {
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
-		for (final VnfPkgInfo vnfPkgInfo : vnfPkginfos) {
-			vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
-		}
+		vnfPkginfos.stream().forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");

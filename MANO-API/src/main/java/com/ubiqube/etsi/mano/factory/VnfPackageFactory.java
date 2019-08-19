@@ -5,6 +5,7 @@ import java.util.Date;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
@@ -87,4 +88,13 @@ public class VnfPackageFactory {
 		subscriptionsPkgmSubscription.setFilter(_filter);
 		return subscriptionsPkgmSubscription;
 	}
+
+	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
+		final SubscriptionsPkgmSubscription ret = new SubscriptionsPkgmSubscription();
+		ret.setCallbackUri(subscriptionObject.getSubscriptionsPkgmSubscription().getCallbackUri());
+		ret.setId(subscriptionObject.getSubscriptionsPkgmSubscription().getId());
+		ret.setFilter(subscriptionObject.getSubscriptionsPkgmSubscription().getFilter());
+		return ret;
+	}
+
 }

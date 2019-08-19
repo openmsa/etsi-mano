@@ -1,8 +1,10 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.util.stream.Stream;
+
 /**
  * A few event that we need to handle.
- * 
+ *
  * @author ovi@ubiqube.com
  *
  */
@@ -43,11 +45,9 @@ public enum NotificationEvent {
 	}
 
 	public static NotificationEvent fromValue(final String v) {
-		for (final NotificationEvent b : NotificationEvent.values()) {
-			if (String.valueOf(b.value).equals(v)) {
-				return b;
-			}
-		}
-		return null;
+		return Stream.of(NotificationEvent.values())
+				.filter(x -> String.valueOf(x.value).equals(v))
+				.findFirst()
+				.orElse(null);
 	}
 }

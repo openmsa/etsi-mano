@@ -33,12 +33,11 @@ public class JsonFilter {
 	 * @return
 	 */
 	public boolean apply(@Nonnull final Object _object, @Nonnull final AstBuilder _astBuilder) {
-		for (final Node node : _astBuilder.getNodes()) {
-			if (!apply(_object, node)) {
-				return false;
-			}
-		}
-		return true;
+		final Node node = _astBuilder.getNodes().stream()
+				.filter(x -> !apply(_object, x))
+				.findFirst()
+				.orElse(null);
+		return (null != node) ? false : true;
 	}
 
 	private boolean apply(@Nonnull final Object _object, @Nonnull final Node _node) {

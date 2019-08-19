@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -33,14 +34,10 @@ public class VnfSubscriptionManagement {
 
 	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter, final Linkable links) {
 		final List<SubscriptionObject> result = subscriptionRepository.query(filter);
-		final List<SubscriptionsPkgmSubscription> response = new ArrayList<>();
-		for (final SubscriptionObject subscriptionObject : result) {
-			final InlineResponse2001 pack = new InlineResponse2001();
-			final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = subscriptionObject.getSubscriptionsPkgmSubscription();
-			pack.setPkgmSubscription(subscriptionsPkgmSubscription);
-			subscriptionsPkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscriptionsPkgmSubscription.getId()));
-			response.add(subscriptionsPkgmSubscription);
-		}
+		final List<SubscriptionsPkgmSubscription> response = result.stream()
+				.map(x -> x.getSubscriptionsPkgmSubscription())
+				.collect(Collectors.toList());
+		response.stream().forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
 		return response;
 	}
 

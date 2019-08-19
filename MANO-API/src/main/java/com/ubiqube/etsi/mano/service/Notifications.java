@@ -113,21 +113,26 @@ public class Notifications {
 		final URL url = new URL(_uri);
 		final HttpHost targetHost = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
 
-		HttpClientContext context = new HttpClientContext();
-		for (final AuthTypeEnum authTypeEnum : auths) {
-			if (authTypeEnum == AuthTypeEnum.BASIC) {
-				context = createBasicContext(_auth.getParamsBasic(), targetHost);
-			} else if (authTypeEnum == AuthTypeEnum.OAUTH2_CLIENT_CREDENTIALS) {
-				context = createOAuth2Context(_auth.getParamsOauth2ClientCredentials(), targetHost);
-			} else if (authTypeEnum == AuthTypeEnum.TLS_CERT) {
-				context = createTlsCertContext(targetHost);
-			}
-		}
+		final HttpClientContext context = auths.stream()
+				.map(x -> createContext(x, _auth, targetHost))
+				.findFirst()
+				.orElse(new HttpClientContext());
 		context.setTargetHost(targetHost);
 		return context;
 	}
 
-	private HttpClientContext createTlsCertContext(HttpHost _targetHost) {
+	private HttpClientContext createContext(final AuthTypeEnum authType, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final HttpHost targetHost) {
+		if (authType == AuthTypeEnum.BASIC) {
+			return createBasicContext(_auth.getParamsBasic(), targetHost);
+		} else if (authType == AuthTypeEnum.OAUTH2_CLIENT_CREDENTIALS) {
+			return createOAuth2Context(_auth.getParamsOauth2ClientCredentials(), targetHost);
+		} else if (authType == AuthTypeEnum.TLS_CERT) {
+			return createTlsCertContext(targetHost);
+		}
+		throw new GenericException("Unknown Auth type.");
+	}
+
+	private HttpClientContext createTlsCertContext(final HttpHost _targetHost) {
 		// http://svn.apache.org/viewvc/httpcomponents/oac.hc3x/trunk/src/contrib/org/apache/commons/httpclient/contrib/ssl/AuthSSLProtocolSocketFactory.java?view=markup
 		return new HttpClientContext();
 	}

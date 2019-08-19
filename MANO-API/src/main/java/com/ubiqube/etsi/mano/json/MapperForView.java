@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.json;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,13 +46,11 @@ public class MapperForView {
 	}
 
 	@Nonnull
-	private static List<ViewHolder> buildViewList(@Nonnull String fields) {
-		final List<ViewHolder> ret = new ArrayList<>();
-		final String[] fieldArray = fields.split(",");
-		for (final String string : fieldArray) {
-			ret.add(new ViewHolder(string));
-		}
-		return ret;
+	private static List<ViewHolder> buildViewList(@Nonnull final String fields) {
+		final List<String> fieldArray = Arrays.asList(fields.split(","));
+		return fieldArray.stream()
+				.map(ViewHolder::new)
+				.collect(Collectors.toList());
 	}
 
 }
