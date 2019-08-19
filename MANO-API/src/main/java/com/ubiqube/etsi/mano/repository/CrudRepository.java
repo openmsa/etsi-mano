@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface CrudRepository<T> {
 
@@ -15,7 +16,8 @@ public interface CrudRepository<T> {
 	@Nonnull
 	T save(@Nonnull T entity);
 
-	List<T> query(String filter);
+	@Nonnull
+	List<T> query(@Nullable String filter);
 
 	void storeObject(String _id, Object _object, String _filename);
 
