@@ -1,6 +1,6 @@
-lexer grammar EtsiLexerV25;
+lexer grammar EtsiLexer;
 @header {
-	package com.ubiqube.etsi.mano.grammar.v25;
+	package com.ubiqube.etsi.mano.grammar;
 }
 
 COMMA: ',';
@@ -9,7 +9,8 @@ OPEN_BRACKET: '(';
 CLOSE_BRACKET: ')';
 SEMICOLON: ';';
 EQUAL: '=';
-
+DOT: '.';
+AMPERSAND: '&';
 
 EQ: 'eq';
 NEQ: 'neq';
@@ -25,6 +26,7 @@ CONT: 'cont';
 NCONT: 'ncont'; 
 FILTER: 'filter';
 
-ATTRIBUTE: [a-zA-Z]+;
-STRING: ~('('|')'|'.'|'='|','|'/')+;
+ATTRIBUTE: [a-zA-Z0-9]+;
+
+STRING: ~[.=,&]+;
 

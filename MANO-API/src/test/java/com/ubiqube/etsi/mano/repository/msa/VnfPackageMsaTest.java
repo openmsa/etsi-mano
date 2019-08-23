@@ -10,13 +10,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.JsonBeanUtil;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.repository.JndiWrapper;
-import com.ubiqube.etsi.mano.service.PropertiesConfiguration;
-import com.ubiqube.etsi.mano.service.RepositoryServiceEjb;
+import com.ubiqube.etsi.mano.service.RepositoryServiceRest;
 
 public class VnfPackageMsaTest {
 
@@ -25,7 +24,7 @@ public class VnfPackageMsaTest {
 	public VnfPackageMsaTest() {
 		final JsonFilter jsonFilter = new JsonFilter(new JsonBeanUtil());
 		final ObjectMapper mapper = new ObjectMapper();
-		final RepositoryServiceEjb repositoryService = new RepositoryServiceEjb(new JndiWrapper(new PropertiesConfiguration()));
+		final RepositoryService repositoryService = new RepositoryServiceRest();
 		vnfPackageMsa = new VnfPackageMsa(mapper, repositoryService, jsonFilter);
 	}
 

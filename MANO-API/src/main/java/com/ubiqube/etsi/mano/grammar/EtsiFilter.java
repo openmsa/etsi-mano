@@ -365,6 +365,7 @@ public class EtsiFilter extends Parser {
 
 	public static class ValueContext extends ParserRuleContext {
 		public TerminalNode STRING() { return getToken(EtsiFilter.STRING, 0); }
+		public TerminalNode ATTRIBUTE() { return getToken(EtsiFilter.ATTRIBUTE, 0); }
 		public ValueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -382,11 +383,20 @@ public class EtsiFilter extends Parser {
 	public final ValueContext value() throws RecognitionException {
 		ValueContext _localctx = new ValueContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_value);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(43);
-			match(STRING);
+			_la = _input.LA(1);
+			if ( !(_la==ATTRIBUTE || _la==STRING) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -405,15 +415,15 @@ public class EtsiFilter extends Parser {
 		"\t\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\7\2\20\n\2\f\2\16\2\23\13\2\3"+
 		"\2\3\2\5\2\27\n\2\3\2\3\2\3\2\3\2\7\2\35\n\2\f\2\16\2 \13\2\3\3\3\3\3"+
 		"\3\7\3%\n\3\f\3\16\3(\13\3\3\4\3\4\3\5\3\5\3\6\3\6\3\6\2\2\7\2\4\6\b\n"+
-		"\2\3\4\2\13\20\23\24\2.\2\f\3\2\2\2\4!\3\2\2\2\6)\3\2\2\2\b+\3\2\2\2\n"+
-		"-\3\2\2\2\f\21\5\b\5\2\r\16\7\t\2\2\16\20\5\b\5\2\17\r\3\2\2\2\20\23\3"+
-		"\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\26\3\2\2\2\23\21\3\2\2\2\24\25\7"+
-		"\t\2\2\25\27\5\6\4\2\26\24\3\2\2\2\26\27\3\2\2\2\27\30\3\2\2\2\30\31\7"+
-		"\b\2\2\31\36\5\n\6\2\32\33\7\3\2\2\33\35\5\n\6\2\34\32\3\2\2\2\35 \3\2"+
-		"\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37\3\3\2\2\2 \36\3\2\2\2!&\5\2\2\2\""+
-		"#\7\n\2\2#%\5\2\2\2$\"\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\5\3\2"+
-		"\2\2(&\3\2\2\2)*\t\2\2\2*\7\3\2\2\2+,\7\26\2\2,\t\3\2\2\2-.\7\27\2\2."+
-		"\13\3\2\2\2\6\21\26\36&";
+		"\2\4\4\2\13\20\23\24\3\2\26\27\2.\2\f\3\2\2\2\4!\3\2\2\2\6)\3\2\2\2\b"+
+		"+\3\2\2\2\n-\3\2\2\2\f\21\5\b\5\2\r\16\7\t\2\2\16\20\5\b\5\2\17\r\3\2"+
+		"\2\2\20\23\3\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\26\3\2\2\2\23\21\3\2"+
+		"\2\2\24\25\7\t\2\2\25\27\5\6\4\2\26\24\3\2\2\2\26\27\3\2\2\2\27\30\3\2"+
+		"\2\2\30\31\7\b\2\2\31\36\5\n\6\2\32\33\7\3\2\2\33\35\5\n\6\2\34\32\3\2"+
+		"\2\2\35 \3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37\3\3\2\2\2 \36\3\2\2\2"+
+		"!&\5\2\2\2\"#\7\n\2\2#%\5\2\2\2$\"\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2"+
+		"\2\2\'\5\3\2\2\2(&\3\2\2\2)*\t\2\2\2*\7\3\2\2\2+,\7\26\2\2,\t\3\2\2\2"+
+		"-.\t\3\2\2.\13\3\2\2\2\6\21\26\36&";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

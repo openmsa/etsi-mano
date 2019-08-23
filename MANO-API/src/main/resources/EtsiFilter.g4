@@ -1,7 +1,6 @@
 parser grammar EtsiFilter;
 
 options { tokenVocab=EtsiLexer; }
-
 @header {
 	package com.ubiqube.etsi.mano.grammar;
 }
@@ -13,5 +12,6 @@ filterExpr       : simpleFilterExpr (AMPERSAND simpleFilterExpr )*;
 
 op               : EQ | NEQ | GT | LT | GTE | LTE | CONT | NCONT; 
 attrName         : ATTRIBUTE;
-value            : STRING;
+value            : STRING | ATTRIBUTE;
+
 
