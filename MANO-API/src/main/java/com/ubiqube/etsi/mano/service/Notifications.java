@@ -62,7 +62,7 @@ public class Notifications {
 	/** JSON mapper. */
 	private final ObjectMapper mapper;
 
-	public Notifications(ObjectMapper _mapper) {
+	public Notifications(final ObjectMapper _mapper) {
 		mapper = _mapper;
 	}
 
@@ -73,7 +73,7 @@ public class Notifications {
 	 * @param _uri  The complete URL.
 	 * @param _auth Auth parameters.
 	 */
-	public void doNotification(Object obj, String _uri, SubscriptionsPkgmSubscriptionRequestAuthentication _auth) {
+	public void doNotification(final Object obj, final String _uri, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth) {
 		String content;
 		try {
 			content = mapper.writeValueAsString(obj);
@@ -84,7 +84,7 @@ public class Notifications {
 		sendRequest(content, _auth, _uri);
 	}
 
-	private void sendRequest(String _content, SubscriptionsPkgmSubscriptionRequestAuthentication _auth, String _uri) {
+	private void sendRequest(final String _content, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final String _uri) {
 		HttpClientContext context;
 		try {
 			context = createContext(_auth, _uri);
@@ -108,35 +108,40 @@ public class Notifications {
 		}
 	}
 
-	private HttpClientContext createContext(SubscriptionsPkgmSubscriptionRequestAuthentication _auth, String _uri) throws MalformedURLException {
+	private HttpClientContext createContext(final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final String _uri) throws MalformedURLException {
 		final List<AuthTypeEnum> auths = _auth.getAuthType();
 		final URL url = new URL(_uri);
 		final HttpHost targetHost = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
 
-		HttpClientContext context = new HttpClientContext();
-		for (final AuthTypeEnum authTypeEnum : auths) {
-			if (authTypeEnum == AuthTypeEnum.BASIC) {
-				context = createBasicContext(_auth.getParamsBasic(), targetHost);
-			} else if (authTypeEnum == AuthTypeEnum.OAUTH2_CLIENT_CREDENTIALS) {
-				context = createOAuth2Context(_auth.getParamsOauth2ClientCredentials(), targetHost);
-			} else if (authTypeEnum == AuthTypeEnum.TLS_CERT) {
-				context = createTlsCertContext(targetHost);
-			}
-		}
+		final HttpClientContext context = auths.stream()
+				.map(x -> createContext(x, _auth, targetHost))
+				.findFirst()
+				.orElse(new HttpClientContext());
 		context.setTargetHost(targetHost);
 		return context;
 	}
 
-	private HttpClientContext createTlsCertContext(HttpHost _targetHost) {
+	private HttpClientContext createContext(final AuthTypeEnum authType, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final HttpHost targetHost) {
+		if (authType == AuthTypeEnum.BASIC) {
+			return createBasicContext(_auth.getParamsBasic(), targetHost);
+		} else if (authType == AuthTypeEnum.OAUTH2_CLIENT_CREDENTIALS) {
+			return createOAuth2Context(_auth.getParamsOauth2ClientCredentials(), targetHost);
+		} else if (authType == AuthTypeEnum.TLS_CERT) {
+			return createTlsCertContext(targetHost);
+		}
+		throw new GenericException("Unknown Auth type.");
+	}
+
+	private HttpClientContext createTlsCertContext(final HttpHost _targetHost) {
 		// http://svn.apache.org/viewvc/httpcomponents/oac.hc3x/trunk/src/contrib/org/apache/commons/httpclient/contrib/ssl/AuthSSLProtocolSocketFactory.java?view=markup
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createOAuth2Context(SubscriptionsPkgmSubscriptionRequestAuthenticationParamsOauth2ClientCredentials _paramsOauth2ClientCredentials, HttpHost _targetHost) {
+	private HttpClientContext createOAuth2Context(final SubscriptionsPkgmSubscriptionRequestAuthenticationParamsOauth2ClientCredentials _paramsOauth2ClientCredentials, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createBasicContext(SubscriptionsPkgmSubscriptionRequestAuthenticationParamsBasic _paramsBasic, HttpHost _targetHost) {
+	private HttpClientContext createBasicContext(final SubscriptionsPkgmSubscriptionRequestAuthenticationParamsBasic _paramsBasic, final HttpHost _targetHost) {
 
 		final CredentialsProvider credsProvider = new BasicCredentialsProvider();
 		final String _username = _paramsBasic.getUserName();

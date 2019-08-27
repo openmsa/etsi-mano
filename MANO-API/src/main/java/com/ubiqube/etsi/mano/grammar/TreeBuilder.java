@@ -3,44 +3,43 @@ package com.ubiqube.etsi.mano.grammar;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.grammar.Etsifilter.AttrNameContext;
-import com.ubiqube.etsi.mano.grammar.Etsifilter.OpContext;
-import com.ubiqube.etsi.mano.grammar.Etsifilter.SimpleFilterExprContext;
-import com.ubiqube.etsi.mano.grammar.Etsifilter.ValueContext;
+import com.ubiqube.etsi.mano.grammar.EtsiFilter.AttrNameContext;
+import com.ubiqube.etsi.mano.grammar.EtsiFilter.OpContext;
+import com.ubiqube.etsi.mano.grammar.EtsiFilter.SimpleFilterExprContext;
+import com.ubiqube.etsi.mano.grammar.EtsiFilter.ValueContext;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
-public class TreeBuilder extends EtsifilterBaseListener {
+public class TreeBuilder extends EtsiFilterBaseListener {
 	private Node currentNode;
 	private final List<Node> listNode = new ArrayList<>();
 
 	@Override
-	public void exitOp(OpContext ctx) {
+	public void exitOp(final OpContext ctx) {
 		final Operand op = Operand.valueOf(ctx.getText().toUpperCase());
 		currentNode.setOp(op);
 		super.exitOp(ctx);
 	}
 
 	@Override
-	public void enterSimpleFilterExpr(SimpleFilterExprContext ctx) {
+	public void enterSimpleFilterExpr(final SimpleFilterExprContext ctx) {
 		currentNode = new Node();
 		super.enterSimpleFilterExpr(ctx);
 	}
 
 	@Override
-	public void exitValue(ValueContext ctx) {
+	public void exitValue(final ValueContext ctx) {
 		currentNode.setValue(ctx.getText());
 		super.exitValue(ctx);
 	}
 
 	@Override
-	public void exitSimpleFilterExpr(SimpleFilterExprContext ctx) {
+	public void exitSimpleFilterExpr(final SimpleFilterExprContext ctx) {
 		listNode.add(currentNode);
 		currentNode = null;
-		super.exitSimpleFilterExpr(ctx);
 	}
 
 	@Override
-	public void exitAttrName(AttrNameContext ctx) {
+	public void exitAttrName(final AttrNameContext ctx) {
 		final String currentName = currentNode.getName();
 		if (null == currentName) {
 			currentNode.setName(ctx.getText());

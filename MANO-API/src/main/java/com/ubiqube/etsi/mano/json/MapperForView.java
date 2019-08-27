@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.json;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class MapperForView {
 
-	public static ObjectMapper getMapperForView(@Nullable String exclude, @Nullable String fields, @Nullable String excludeDefault, @Nullable String excludeFields) {
+	public static ObjectMapper getMapperForView(@Nullable final String exclude, @Nullable final String fields, @Nullable final String excludeDefault, @Nullable final String excludeFields) {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		mapper.setSerializationInclusion(Include.NON_NULL);
@@ -25,7 +25,7 @@ public class MapperForView {
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void setupModule(SetupContext context) {
+				public void setupModule(final SetupContext context) {
 					super.setupModule(context);
 					context.addBeanSerializerModifier(new ExclusionSerializer(excludeList));
 				}
@@ -36,7 +36,7 @@ public class MapperForView {
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void setupModule(SetupContext context) {
+				public void setupModule(final SetupContext context) {
 					super.setupModule(context);
 					context.addBeanSerializerModifier(new WantedSerializer(wantedList));
 				}
@@ -46,13 +46,11 @@ public class MapperForView {
 	}
 
 	@Nonnull
-	private static List<ViewHolder> buildViewList(@Nonnull String fields) {
-		final List<ViewHolder> ret = new ArrayList<>();
-		final String[] fieldArray = fields.split(",");
-		for (final String string : fieldArray) {
-			ret.add(new ViewHolder(string));
-		}
-		return ret;
+	private static List<ViewHolder> buildViewList(@Nonnull final String fields) {
+		final List<String> fieldArray = Arrays.asList(fields.split(","));
+		return fieldArray.stream()
+				.map(ViewHolder::new)
+				.collect(Collectors.toList());
 	}
 
 }

@@ -67,9 +67,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<String> nsInstancesGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsInstancesNsInstance> result = nsInstanceRepository.query(filter);
-		for (final NsInstancesNsInstance nsInstancesNsInstance : result) {
-			nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
-		}
+		result.stream().forEach(x -> x.setLinks(makeLink(x.getId())));
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
 			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);

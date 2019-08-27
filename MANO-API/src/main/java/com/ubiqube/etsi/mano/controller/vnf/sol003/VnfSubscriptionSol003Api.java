@@ -1,8 +1,5 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol003;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -61,7 +58,6 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	public List<InlineResponse2001> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
 		final String id = UUID.randomUUID().toString();
-		final String href = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(id, "")).withSelfRel().getHref();
 		return vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, id, links);
 	}
 
@@ -113,14 +109,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public void vnfPackageChangeNotificationPost(final NotificationsMessage notificationsMessage) {
-
 		final String id = UUID.randomUUID().toString();
-		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-		final String subscriptionId = notificationsMessage.getSubscriptionId();
-
-		final String hrefVnfPackage = linkTo(methodOn(VnfPackageSol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
-		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
-
 		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, links);
 	}
 
@@ -135,14 +124,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final NotificationsMessage notificationsMessage) {
-
 		final String id = UUID.randomUUID().toString();
-		final String subscriptionId = notificationsMessage.getSubscriptionId();
-		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-
-		final String hrefSubscription = linkTo(methodOn(VnfSubscriptionSol003Api.class).subscriptionsSubscriptionIdGet(subscriptionId, "")).withSelfRel().getHref();
-		final String hrefPackage = linkTo(methodOn(VnfPackageSol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref();
-
 		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, links);
 	}
 

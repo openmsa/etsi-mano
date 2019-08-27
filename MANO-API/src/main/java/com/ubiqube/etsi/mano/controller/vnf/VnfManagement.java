@@ -33,6 +33,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
+import com.ubiqube.etsi.mano.utils.RangeHeader.FromToBean;
 
 @Service
 public class VnfManagement {
@@ -59,9 +60,7 @@ public class VnfManagement {
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
-		for (final VnfPkgInfo vnfPkgInfo : vnfPkginfos) {
-			vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
-		}
+		vnfPkginfos.stream().forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
@@ -99,10 +98,8 @@ public class VnfManagement {
 				if (entry.getName().equals(artifactPath)) {
 					final byte[] zcontent = StreamUtils.copyToByteArray(zis);
 					if (rangeHeader != null) {
-						if (rangeHeader.getTo() > zcontent.length) {
-							return ResponseEntity.status(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE).build();
-						}
-						final byte[] finalContent = Arrays.copyOfRange(zcontent, rangeHeader.getFrom(), rangeHeader.getTo());
+						final FromToBean ft = rangeHeader.getValues(zcontent.length);
+						final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
 						final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
 						final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
 						return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
@@ -166,7 +163,6 @@ public class VnfManagement {
 		return ResponseEntity.status(HttpStatus.OK)
 				.header("Content-Type", mime)
 				.body(resource);
-
 	}
 
 }

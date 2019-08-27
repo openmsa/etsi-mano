@@ -43,9 +43,7 @@ public class VnfInstanceLcm {
 	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
 		final String filter = queryParameters.get("filter");
 		final List<VnfInstance> result = vnfInstancesRepository.query(filter);
-		for (final VnfInstance vnfInstance : result) {
-			vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
-		}
+		result.stream().forEach(x -> x.setLinks(links.getLinks(x.getId())));
 		return result;
 	}
 

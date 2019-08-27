@@ -21,7 +21,7 @@ public class JsonFilter {
 
 	private final JsonBeanUtil jsonBeanUtil;
 
-	public JsonFilter(JsonBeanUtil jsonBeanUtil) {
+	public JsonFilter(final JsonBeanUtil jsonBeanUtil) {
 		super();
 		this.jsonBeanUtil = jsonBeanUtil;
 	}
@@ -32,16 +32,15 @@ public class JsonFilter {
 	 * @param _astBuilder An AST Builder.
 	 * @return
 	 */
-	public boolean apply(@Nonnull Object _object, @Nonnull AstBuilder _astBuilder) {
-		for (final Node node : _astBuilder.getNodes()) {
-			if (!apply(_object, node)) {
-				return false;
-			}
-		}
-		return true;
+	public boolean apply(@Nonnull final Object _object, @Nonnull final AstBuilder _astBuilder) {
+		final Node node = _astBuilder.getNodes().stream()
+				.filter(x -> !apply(_object, x))
+				.findFirst()
+				.orElse(null);
+		return (null != node) ? false : true;
 	}
 
-	private boolean apply(@Nonnull Object _object, @Nonnull Node _node) {
+	private boolean apply(@Nonnull final Object _object, @Nonnull final Node _node) {
 		final Map<String, JsonBeanProperty> props = jsonBeanUtil.getProperties(_object);
 		final JsonBeanProperty realProperty = props.get(_node.getName());
 		if (realProperty == null) {
@@ -52,7 +51,7 @@ public class JsonFilter {
 		return documentStatus.getStatus().equals(DocumentStatus.Status.VALIDATED);
 	}
 
-	private static DocumentStatus invokeGetter(Object _object, JsonBeanProperty realProperty, int index, Node _node) {
+	private static DocumentStatus invokeGetter(final Object _object, final JsonBeanProperty realProperty, final int index, final Node _node) {
 		final List<JsonBeanProperty> access = realProperty.getListAccessors();
 		Object temp = _object;
 		for (int i = index; i < access.size(); i++) {
@@ -73,6 +72,8 @@ public class JsonFilter {
 				if (!status.getStatus().equals(DocumentStatus.Status.NOSTATE)) {
 					return status;
 				}
+			} else {
+				// TODO: ???
 			}
 		}
 		// Normally we should have the latest value.
@@ -82,7 +83,7 @@ public class JsonFilter {
 		return new DocumentStatus(DocumentStatus.Status.REFUSED);
 	}
 
-	private static DocumentStatus exploreList(List<?> list, JsonBeanProperty realProperty, int index, Node _node) {
+	private static DocumentStatus exploreList(final List<?> list, final JsonBeanProperty realProperty, final int index, final Node _node) {
 		LOG.debug("Exploring sub list.");
 		for (final Object object : list) {
 			final DocumentStatus status = invokeGetter(object, realProperty, index + 1, _node);
@@ -94,7 +95,7 @@ public class JsonFilter {
 		return new DocumentStatus(DocumentStatus.Status.NOSTATE);
 	}
 
-	private static boolean decide(String _objectValue, String _value, Operand _operand) {
+	private static boolean decide(final String _objectValue, final String _value, final Operand _operand) {
 		if (null == _operand) {
 			return true;
 		}

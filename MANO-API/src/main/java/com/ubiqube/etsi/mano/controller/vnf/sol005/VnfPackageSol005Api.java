@@ -129,7 +129,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
-		final String vnfPkgId = UUID.randomUUID().toString();
+		final @Nonnull String vnfPkgId = UUID.randomUUID().toString();
 		final Object userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
 		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
 
@@ -139,10 +139,12 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
 
 		checkUserData(userData);
+
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+			eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
 		vnfPackageRepository.save(vnfPkgInfo);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));

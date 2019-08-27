@@ -38,9 +38,7 @@ public class VnfEvent {
 
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
 
-		for (final SubscriptionObject subscriptionObject : res) {
-			sendNotification(vnfPkgId, subscriptionObject, event);
-		}
+		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
 	}
 
 	private List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {

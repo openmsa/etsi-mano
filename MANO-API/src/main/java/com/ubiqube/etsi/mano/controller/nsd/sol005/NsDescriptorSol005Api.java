@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -71,14 +72,12 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsDescriptorsGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsDescriptorsNsdInfoIdGetResponse> response = new ArrayList<>();
 		final List<NsDescriptorsNsdInfo> nsds = nsdRepository.query(filter);
-		for (final NsDescriptorsNsdInfo nsDescriptorsNsdInfo : nsds) {
-			final NsDescriptorsNsdInfoIdGetResponse resp = new NsDescriptorsNsdInfoIdGetResponse();
-			nsDescriptorsNsdInfo.setLinks(makeLinks(nsDescriptorsNsdInfo.getId()));
-			resp.setNsdInfo(nsDescriptorsNsdInfo);
-			response.add(resp);
-		}
+		final List<NsDescriptorsNsdInfoIdGetResponse> response = nsds.stream()
+				.map(NsdFactories::createNsDescriptorsNsdInfoIdGetResponse)
+				.collect(Collectors.toList());
+
+		response.forEach(x -> x.getNsdInfo().setLinks(makeLinks(x.getNsdInfo().getId())));
 
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {

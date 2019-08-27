@@ -10,11 +10,12 @@ public class Node {
 		GTE("gte"),
 		LTE("lte"),
 		CONT("cont"),
-		NCONT("ncont");
-
+		NCONT("ncont"),
+		IN("in"),
+		NIN("nin");
 		public final String op;
 
-		private Operand(String _op) {
+		private Operand(final String _op) {
 			op = _op;
 		}
 	}
@@ -27,7 +28,7 @@ public class Node {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -35,7 +36,7 @@ public class Node {
 		return op;
 	}
 
-	public void setOp(Operand op) {
+	public void setOp(final Operand op) {
 		this.op = op;
 	}
 
@@ -43,7 +44,7 @@ public class Node {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(final String value) {
 		this.value = value;
 	}
 
