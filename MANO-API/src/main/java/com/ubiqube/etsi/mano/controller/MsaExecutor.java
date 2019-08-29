@@ -15,12 +15,12 @@ public class MsaExecutor {
 	private static final String CUSTOMER_ID = "customerId";
 	private final OrchestrationService orchestrationService;
 
-	public MsaExecutor(OrchestrationService orchestrationService) {
+	public MsaExecutor(final OrchestrationService orchestrationService) {
 		super();
 		this.orchestrationService = orchestrationService;
 	}
 
-	public String onInstanceTerminate(Map<String, String> userData) {
+	public String onVnfInstanceTerminate(final Map<String, String> userData) {
 		final String msaServiceId = userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
 		final String customerId = userData.get(CUSTOMER_ID);
@@ -31,7 +31,7 @@ public class MsaExecutor {
 		return executeProcess(customerId, serviceId, SERVICE_NAME, PROCESS_NAME);
 	}
 
-	public String onInstantiate(String vnfPkgId, Map<String, String> userData) {
+	public String onVnfInstantiate(final String vnfPkgId, final Map<String, String> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = userData.get(CUSTOMER_ID);
 		varsMap.put("vnfPkgId", vnfPkgId);
@@ -43,7 +43,7 @@ public class MsaExecutor {
 		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
 	}
 
-	public String onNsInstantiate(String nsdId, Map<String, String> userData) {
+	public String onNsInstantiate(final String nsdId, final Map<String, String> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = userData.get(CUSTOMER_ID);
 		varsMap.put("deviceid", userData.get("vimId"));
@@ -55,7 +55,7 @@ public class MsaExecutor {
 		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
 	}
 
-	public String onNsInstanceTerminate(Map<String, String> userData) {
+	public String onNsInstanceTerminate(final Map<String, String> userData) {
 		final String msaServiceId = userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
 		final String customerId = userData.get(CUSTOMER_ID);
@@ -66,12 +66,12 @@ public class MsaExecutor {
 		return executeProcess(customerId, serviceId, SERVICE_NAME, PROCESS_NAME);
 	}
 
-	private String executeProcess(String customerId, long serviceId, String serviceName, String processName) {
+	private String executeProcess(final String customerId, final long serviceId, final String serviceName, final String processName) {
 		final Map<String, String> varsMap = new HashMap<>();
 		return executeProcess(customerId, serviceId, serviceName, processName, varsMap);
 	}
 
-	private String executeProcess(String customerId, long serviceId, String serviceName, String processName, Map<String, String> varsMap) {
+	private String executeProcess(final String customerId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) {
 		try {
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
 			return String.valueOf(resp.serviceId.id);
