@@ -64,6 +64,7 @@ public class VnfInstanceLcm {
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
+		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(id));
@@ -72,7 +73,7 @@ public class VnfInstanceLcm {
 
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		if (vnfInstance.getInstantiationState() == (InstantiationStateEnum.NOT_INSTANTIATED)) {
+		if (vnfInstance.getInstantiationState() != (InstantiationStateEnum.INSTANTIATED)) {
 			vnfInstancesRepository.delete(vnfInstanceId);
 		} else {
 			throw new ConflictException("VNF final Instance is instantiated.");
