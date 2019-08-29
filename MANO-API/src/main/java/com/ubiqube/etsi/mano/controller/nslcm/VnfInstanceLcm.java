@@ -85,7 +85,7 @@ public class VnfInstanceLcm {
 			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
 		}
 
-		final String ret = msaExecutor.onInstantiate(vnfPkgId, userData);
+		final String ret = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 
 		userData.put("msaServiceId", ret);
 		vnfPackageRepository.save(vnfPkg);
@@ -107,7 +107,7 @@ public class VnfInstanceLcm {
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
-		final String ret = msaExecutor.onInstanceTerminate(userData);
+		final String ret = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", ret);
 		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkg);
