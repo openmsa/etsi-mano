@@ -44,7 +44,7 @@ public class VnfManagementTest {
 	void testNullParameter() throws Exception {
 		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 
 		final Map<String, String> queryParameters = new HashMap<>();
 		final String res = vnfPManagement.vnfPackagesGet(queryParameters, new Sol003Linkable());
@@ -56,7 +56,7 @@ public class VnfManagementTest {
 		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
 		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo("aaa", "myUserData"));
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 
 		final Map<String, String> queryParameters = new HashMap<>();
 		final String res = vnfPManagement.vnfPackagesGet(queryParameters, new Sol003Linkable());
@@ -78,7 +78,7 @@ public class VnfManagementTest {
 		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo("aaa", "myUserData");
 		when(vnfPackageRepository.get("aaa")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final VnfPkgInfo res = vnfPManagement.vnfPackagesVnfPkgIdGet("aaa", new Sol003Linkable());
 		assertNotNull(res);
 		assertEquals("/aaa", res.getLinks().getSelf().getHref());
@@ -89,7 +89,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "VnfPkgInfo.json"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		assertThrows(NotFoundException.class, () -> {
 			vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "artifactPath", null);
 		});
@@ -100,7 +100,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		assertThrows(NotFoundException.class, () -> {
 			vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "artifactPath", null);
 		});
@@ -111,7 +111,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", null);
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -126,7 +126,7 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
 		final RangeHeader rangeHeader = RangeHeader.fromValue("Range: bytes=200-1000");
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", rangeHeader);
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -141,7 +141,7 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
 		final RangeHeader rangeHeader = RangeHeader.fromValue("Range: bytes=200-");
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", rangeHeader);
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -155,7 +155,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "VnfPkgInfo.json"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet("aaa", "");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/json", res.getHeaders().get("Content-Type").get(0));
@@ -166,7 +166,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet("aaa", "");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
@@ -177,7 +177,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "hello.txt"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet("aaa", "");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/octet-stream", res.getHeaders().get("Content-Type").get(0));
@@ -188,7 +188,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", null);
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
@@ -199,7 +199,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, Integer.decode("1000"))).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "Range: bytes=200-1000");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
@@ -213,7 +213,7 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, null)).thenReturn(value);
 
-		final VnfManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "Range: bytes=200-");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));

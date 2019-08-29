@@ -28,7 +28,7 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
+import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -70,14 +70,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
 	@Nonnull
 	private final Linkable links = new Sol005Linkable();
-	private final VnfManagement vnfManagement;
+	private final VnfPackageManagement vnfManagement;
 	private final ManufacturerModel manufacturerModel;
 	private final DeviceService deviceService;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 	private final EventManager eventManager;
 
-	public VnfPackageSol005Api(final VnfManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService, final EventManager _eventManager) {
+	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService, final EventManager _eventManager) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
@@ -141,14 +141,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		checkUserData(userData);
 
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		vnfPackageRepository.save(vnfPkgInfo);
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 			eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
-		vnfPackageRepository.save(vnfPkgInfo);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 

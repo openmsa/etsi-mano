@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.MsaExecutor;
@@ -24,6 +25,13 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+/**
+ * NFVO+VNFM & VNFM Implementation.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Profile({ "default", "VNFM" })
 @Service
 public class VnfInstanceLcm {
 
