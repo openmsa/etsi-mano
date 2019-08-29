@@ -12,14 +12,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final Http403EntryPoint http403EntryPoint;
 
-	public WebSecurityConfig(Http403EntryPoint _http403EntryPoint) {
+	public WebSecurityConfig(final Http403EntryPoint _http403EntryPoint) {
 		super();
 		http403EntryPoint = _http403EntryPoint;
 	}
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder _auth) throws Exception {
+	protected void configure(final AuthenticationManagerBuilder _auth) throws Exception {
 		final PassthroughUserProvider passthroughUserProvider = new PassthroughUserProvider();
+		_auth.eraseCredentials(false);
 		_auth.authenticationProvider(passthroughUserProvider);
 	}
 
@@ -27,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * All request must be authenticated, No login page.
 	 */
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	protected void configure(final HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/openApi*").permitAll()
 				.anyRequest().authenticated()
