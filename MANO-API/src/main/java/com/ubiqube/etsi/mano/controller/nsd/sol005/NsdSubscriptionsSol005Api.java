@@ -3,6 +3,9 @@ package com.ubiqube.etsi.mano.controller.nsd.sol005;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostResponse;
 
+@Profile({ "default", "NFVO" })
 @RestController
 public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NsdSubscriptionsSol005Api.class);
+
+	public NsdSubscriptionsSol005Api() {
+		LOG.info("Starting NSD Subscription SOL005 Controller.");
+	}
 
 	/**
 	 * Query multiple subscriptions.

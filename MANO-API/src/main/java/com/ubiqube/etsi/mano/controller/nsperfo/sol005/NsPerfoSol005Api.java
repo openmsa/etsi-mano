@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.nsperfo.sol005;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,7 @@ import io.swagger.annotations.Api;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
+@Profile({ "default", "NFVO" })
 @RestController
 @RequestMapping("/sol005/nspm/v1")
 @Api(value = "/")

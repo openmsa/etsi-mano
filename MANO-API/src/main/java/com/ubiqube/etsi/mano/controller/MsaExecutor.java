@@ -10,6 +10,12 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
+/**
+ * NFVO+VNFM & NVFO MSA implementation.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class MsaExecutor {
 	private static final String CUSTOMER_ID = "customerId";

@@ -3,6 +3,9 @@ package com.ubiqube.etsi.mano.controller.vnf.sol003;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
@@ -12,13 +15,18 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
 
+@Profile({ "default", "VNFM" })
 @RestController
 public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscriptionSol003Api.class);
+
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
 	private final Linkable links = new Sol003Linkable();
 
 	public VnfSubscriptionSol003Api(final VnfSubscriptionManagement _vnfSubscriptionManagement) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
+		LOG.info("Starting VNF Subscription Package SOL003 Controller.");
 	}
 
 	/**

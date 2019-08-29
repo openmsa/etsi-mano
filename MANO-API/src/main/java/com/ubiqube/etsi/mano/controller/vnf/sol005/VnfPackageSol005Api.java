@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +66,7 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  * could be here and not Jackson, in this case you can use object2String.
  *
  */
+@Profile({ "default", "NFVO" })
 @RestController
 public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
