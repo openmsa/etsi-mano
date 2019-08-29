@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 
@@ -165,7 +166,7 @@ public interface VnfLcmSol003 {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/operate", consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be operated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId);
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be operated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @RequestBody OperateVnfRequest operateVnfRequest);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Modify VNF Information  This method modifies an individual VNF instance resource. Changes to the VNF configurable properties are applied to the configuration in the VNF instance, and are reflected in the representation of this resource. Other changes are applied to the VNF instance information managed by the VNFM, and are reflected in the representation of this resource ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
