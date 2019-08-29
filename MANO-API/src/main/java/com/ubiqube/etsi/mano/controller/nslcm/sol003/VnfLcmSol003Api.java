@@ -40,7 +40,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		eventManager = _eventManager;
-		LOG.debug("Registrating VnfInstanceApi");
+		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
 
 	@Override

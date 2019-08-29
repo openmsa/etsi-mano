@@ -84,6 +84,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
+		LOG.info("Starting VNF Package SOL005 Controller.");
 	}
 
 	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam final Map<String, String> params) {

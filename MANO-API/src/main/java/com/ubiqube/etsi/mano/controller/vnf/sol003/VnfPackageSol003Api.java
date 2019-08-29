@@ -45,7 +45,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 
 	public VnfPackageSol003Api(final VnfManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
-		LOG.debug("Starting Vnf Package SOL003.");
+		LOG.debug("Starting VNF Package SOL003 Controller.");
 	}
 
 	/**

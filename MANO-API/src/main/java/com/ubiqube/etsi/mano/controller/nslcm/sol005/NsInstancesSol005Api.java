@@ -52,7 +52,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		msaExecutor = _msaExecutor;
-		LOG.debug("Instantiate SOL005 NS Instance.");
+		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
 	/**

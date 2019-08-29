@@ -35,7 +35,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	public VnfLcmSol002Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
-		LOG.debug("Registrating VnfInstanceApi");
+		LOG.info("Starting Ns Instance SOL002 Controller.");
 	}
 
 	@Override

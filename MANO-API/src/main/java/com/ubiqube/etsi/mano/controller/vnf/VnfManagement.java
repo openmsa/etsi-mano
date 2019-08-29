@@ -44,7 +44,7 @@ public class VnfManagement {
 
 	public VnfManagement(final VnfPackageRepository _vnfPackageRepository) {
 		super();
-		LOG.debug("Booting VNF SOL003 SOL005 Management.");
+		LOG.info("Starting VNF Package Management For NFVO+VNFM or NFVO Only Management.");
 		vnfPackageRepository = _vnfPackageRepository;
 	}
 
