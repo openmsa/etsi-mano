@@ -18,6 +18,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -35,7 +36,7 @@ public class ExtVirtualLinkInfo {
 	@JsonProperty("extLinkPorts")
 	private List<ExtLinkPortInfo> extLinkPorts = null;
 
-	public ExtVirtualLinkInfo id(String id) {
+	public ExtVirtualLinkInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -44,7 +45,7 @@ public class ExtVirtualLinkInfo {
 	 * Identifier of the external VL and the related external VL information
 	 * instance. The identifier is assigned by the NFV-MANO entity that manages this
 	 * VL instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -54,18 +55,18 @@ public class ExtVirtualLinkInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public ExtVirtualLinkInfo resourceHandle(ResourceHandle resourceHandle) {
+	public ExtVirtualLinkInfo resourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 		return this;
 	}
 
 	/**
 	 * Reference to the resource realizing this VL.
-	 * 
+	 *
 	 * @return resourceHandle
 	 **/
 	@JsonProperty("resourceHandle")
@@ -75,18 +76,18 @@ public class ExtVirtualLinkInfo {
 		return resourceHandle;
 	}
 
-	public void setResourceHandle(ResourceHandle resourceHandle) {
+	public void setResourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 	}
 
-	public ExtVirtualLinkInfo extLinkPorts(List<ExtLinkPortInfo> extLinkPorts) {
+	public ExtVirtualLinkInfo extLinkPorts(final List<ExtLinkPortInfo> extLinkPorts) {
 		this.extLinkPorts = extLinkPorts;
 		return this;
 	}
 
-	public ExtVirtualLinkInfo addExtLinkPortsItem(ExtLinkPortInfo extLinkPortsItem) {
+	public ExtVirtualLinkInfo addExtLinkPortsItem(final ExtLinkPortInfo extLinkPortsItem) {
 		if (this.extLinkPorts == null) {
-			this.extLinkPorts = new ArrayList<ExtLinkPortInfo>();
+			this.extLinkPorts = new ArrayList<>();
 		}
 		this.extLinkPorts.add(extLinkPortsItem);
 		return this;
@@ -94,7 +95,7 @@ public class ExtVirtualLinkInfo {
 
 	/**
 	 * Link ports of this VL.
-	 * 
+	 *
 	 * @return extLinkPorts
 	 **/
 	@JsonProperty("extLinkPorts")
@@ -103,7 +104,7 @@ public class ExtVirtualLinkInfo {
 		return extLinkPorts;
 	}
 
-	public void setExtLinkPorts(List<ExtLinkPortInfo> extLinkPorts) {
+	public void setExtLinkPorts(final List<ExtLinkPortInfo> extLinkPorts) {
 		this.extLinkPorts = extLinkPorts;
 	}
 
@@ -123,7 +124,7 @@ public class ExtVirtualLinkInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

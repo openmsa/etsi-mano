@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,7 +52,7 @@ public class AffectedVirtualStorage {
 
 		private final String value;
 
-		ChangeTypeEnum(String value) {
+		ChangeTypeEnum(final String value) {
 			this.value = value;
 		}
 
@@ -61,7 +63,7 @@ public class AffectedVirtualStorage {
 		}
 
 		@JsonCreator
-		public static ChangeTypeEnum fromValue(String text) {
+		public static ChangeTypeEnum fromValue(final String text) {
 			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -80,7 +82,7 @@ public class AffectedVirtualStorage {
 	@JsonProperty("metadata")
 	private KeyValuePairs metadata = null;
 
-	public AffectedVirtualStorage id(String id) {
+	public AffectedVirtualStorage id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -89,7 +91,7 @@ public class AffectedVirtualStorage {
 	 * Identifier of the storage instance, identifying the applicable
 	 * \&quot;virtualStorageResourceInfo\&quot; entry in the
 	 * \&quot;VnfInstance\&quot; data type.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -99,18 +101,18 @@ public class AffectedVirtualStorage {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public AffectedVirtualStorage virtualStorageDescId(String virtualStorageDescId) {
+	public AffectedVirtualStorage virtualStorageDescId(final String virtualStorageDescId) {
 		this.virtualStorageDescId = virtualStorageDescId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the related VirtualStorage descriptor in the VNFD.
-	 * 
+	 *
 	 * @return virtualStorageDescId
 	 **/
 	@JsonProperty("virtualStorageDescId")
@@ -120,11 +122,11 @@ public class AffectedVirtualStorage {
 		return virtualStorageDescId;
 	}
 
-	public void setVirtualStorageDescId(String virtualStorageDescId) {
+	public void setVirtualStorageDescId(final String virtualStorageDescId) {
 		this.virtualStorageDescId = virtualStorageDescId;
 	}
 
-	public AffectedVirtualStorage changeType(ChangeTypeEnum changeType) {
+	public AffectedVirtualStorage changeType(final ChangeTypeEnum changeType) {
 		this.changeType = changeType;
 		return this;
 	}
@@ -133,7 +135,7 @@ public class AffectedVirtualStorage {
 	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
 	 * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure
 	 * exists as long as the temporary resource exists.
-	 * 
+	 *
 	 * @return changeType
 	 **/
 	@JsonProperty("changeType")
@@ -143,11 +145,11 @@ public class AffectedVirtualStorage {
 		return changeType;
 	}
 
-	public void setChangeType(ChangeTypeEnum changeType) {
+	public void setChangeType(final ChangeTypeEnum changeType) {
 		this.changeType = changeType;
 	}
 
-	public AffectedVirtualStorage storageResource(ResourceHandle storageResource) {
+	public AffectedVirtualStorage storageResource(final ResourceHandle storageResource) {
 		this.storageResource = storageResource;
 		return this;
 	}
@@ -156,7 +158,7 @@ public class AffectedVirtualStorage {
 	 * Reference to the VirtualStorage resource. Detailed information is (for new
 	 * and modified resources) or has been (for removed resources) available from
 	 * the VIM.
-	 * 
+	 *
 	 * @return storageResource
 	 **/
 	@JsonProperty("storageResource")
@@ -166,11 +168,11 @@ public class AffectedVirtualStorage {
 		return storageResource;
 	}
 
-	public void setStorageResource(ResourceHandle storageResource) {
+	public void setStorageResource(final ResourceHandle storageResource) {
 		this.storageResource = storageResource;
 	}
 
-	public AffectedVirtualStorage metadata(KeyValuePairs metadata) {
+	public AffectedVirtualStorage metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -179,7 +181,7 @@ public class AffectedVirtualStorage {
 	 * Metadata about this resource. The content of this attribute shall be a copy
 	 * of the content of the \&quot;metadata\&quot; attribute of the
 	 * VirtualStorageResourceInfo structure.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -188,7 +190,7 @@ public class AffectedVirtualStorage {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
@@ -210,7 +212,7 @@ public class AffectedVirtualStorage {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

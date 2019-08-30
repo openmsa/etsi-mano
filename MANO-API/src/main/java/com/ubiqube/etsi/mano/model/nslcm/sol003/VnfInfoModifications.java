@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -67,7 +69,7 @@ public class VnfInfoModifications {
 	@JsonProperty("vnfdVersion")
 	private String vnfdVersion = null;
 
-	public VnfInfoModifications vnfInstanceName(String vnfInstanceName) {
+	public VnfInfoModifications vnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 		return this;
 	}
@@ -75,7 +77,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of the
 	 * \&quot;vnfInstanceName\&quot; attribute in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return vnfInstanceName
 	 **/
 	@JsonProperty("vnfInstanceName")
@@ -84,11 +86,11 @@ public class VnfInfoModifications {
 		return vnfInstanceName;
 	}
 
-	public void setVnfInstanceName(String vnfInstanceName) {
+	public void setVnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
-	public VnfInfoModifications vnfInstanceDescription(String vnfInstanceDescription) {
+	public VnfInfoModifications vnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 		return this;
 	}
@@ -96,7 +98,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of the
 	 * \&quot;vnfInstanceDescription\&quot; attribute in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return vnfInstanceDescription
 	 **/
 	@JsonProperty("vnfInstanceDescription")
@@ -105,11 +107,11 @@ public class VnfInfoModifications {
 		return vnfInstanceDescription;
 	}
 
-	public void setVnfInstanceDescription(String vnfInstanceDescription) {
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 	}
 
-	public VnfInfoModifications vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+	public VnfInfoModifications vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -118,7 +120,7 @@ public class VnfInfoModifications {
 	 * If present, this attribute signals modifications of the
 	 * \&quot;vnfConfigurableProperties\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return vnfConfigurableProperties
 	 **/
 	@JsonProperty("vnfConfigurableProperties")
@@ -127,11 +129,11 @@ public class VnfInfoModifications {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public VnfInfoModifications metadata(KeyValuePairs metadata) {
+	public VnfInfoModifications metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -139,7 +141,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of the
 	 * \&quot;metadata\&quot; attribute in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -148,11 +150,11 @@ public class VnfInfoModifications {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInfoModifications extensions(KeyValuePairs extensions) {
+	public VnfInfoModifications extensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -160,7 +162,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of the
 	 * \&quot;extensions\&quot; attribute in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return extensions
 	 **/
 	@JsonProperty("extensions")
@@ -169,16 +171,16 @@ public class VnfInfoModifications {
 		return extensions;
 	}
 
-	public void setExtensions(KeyValuePairs extensions) {
+	public void setExtensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
 	}
 
-	public VnfInfoModifications vimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public VnfInfoModifications vimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 		return this;
 	}
 
-	public VnfInfoModifications addVimConnectionInfoItem(VimConnectionInfo vimConnectionInfoItem) {
+	public VnfInfoModifications addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
 			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
 		}
@@ -189,7 +191,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of certain entries in the
 	 * \&quot;vimConnectionInfo\&quot; attribute array in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
@@ -198,11 +200,11 @@ public class VnfInfoModifications {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public VnfInfoModifications vnfPkgId(String vnfPkgId) {
+	public VnfInfoModifications vnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 		return this;
 	}
@@ -210,7 +212,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of the
 	 * \&quot;vnfPkgId\&quot; attribute in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return vnfPkgId
 	 **/
 	@JsonProperty("vnfPkgId")
@@ -219,11 +221,11 @@ public class VnfInfoModifications {
 		return vnfPkgId;
 	}
 
-	public void setVnfPkgId(String vnfPkgId) {
+	public void setVnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 	}
 
-	public VnfInfoModifications vnfdId(String vnfdId) {
+	public VnfInfoModifications vnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 		return this;
 	}
@@ -235,7 +237,7 @@ public class VnfInfoModifications {
 	 * implicitly following a request to modify the \&quot;vnfPkgId\&quot;
 	 * attribute, by copying the value of this attribute from the VNFD in the VNF
 	 * Package identified by the \&quot;vnfPkgId” attribute.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@JsonProperty("vnfdId")
@@ -244,11 +246,11 @@ public class VnfInfoModifications {
 		return vnfdId;
 	}
 
-	public void setVnfdId(String vnfdId) {
+	public void setVnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 	}
 
-	public VnfInfoModifications vnfProvider(String vnfProvider) {
+	public VnfInfoModifications vnfProvider(final String vnfProvider) {
 		this.vnfProvider = vnfProvider;
 		return this;
 	}
@@ -260,7 +262,7 @@ public class VnfInfoModifications {
 	 * attribute) was modified implicitly following a request to modify the
 	 * \&quot;vnfPkgId\&quot; attribute, by copying the value of this attribute from
 	 * the VNFD in the VNF Package identified by the \&quot;vnfPkgId” attribute.
-	 * 
+	 *
 	 * @return vnfProvider
 	 **/
 	@JsonProperty("vnfProvider")
@@ -269,11 +271,11 @@ public class VnfInfoModifications {
 		return vnfProvider;
 	}
 
-	public void setVnfProvider(String vnfProvider) {
+	public void setVnfProvider(final String vnfProvider) {
 		this.vnfProvider = vnfProvider;
 	}
 
-	public VnfInfoModifications vnfProductName(String vnfProductName) {
+	public VnfInfoModifications vnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
 		return this;
 	}
@@ -286,7 +288,7 @@ public class VnfInfoModifications {
 	 * to modify the \&quot;vnfPkgId\&quot; attribute, by copying the value of this
 	 * attribute from the VNFD in the VNF Package identified by the \&quot;vnfPkgId”
 	 * attribute.
-	 * 
+	 *
 	 * @return vnfProductName
 	 **/
 	@JsonProperty("vnfProductName")
@@ -295,11 +297,11 @@ public class VnfInfoModifications {
 		return vnfProductName;
 	}
 
-	public void setVnfProductName(String vnfProductName) {
+	public void setVnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
 	}
 
-	public VnfInfoModifications vnfSoftwareVersion(String vnfSoftwareVersion) {
+	public VnfInfoModifications vnfSoftwareVersion(final String vnfSoftwareVersion) {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 		return this;
 	}
@@ -307,7 +309,7 @@ public class VnfInfoModifications {
 	/**
 	 * If present, this attribute signals modifications of the
 	 * \&quot;vnfSoftwareVersion\&quot; attribute in \&quot;VnfInstance\&quot;.
-	 * 
+	 *
 	 * @return vnfSoftwareVersion
 	 **/
 	@JsonProperty("vnfSoftwareVersion")
@@ -316,11 +318,11 @@ public class VnfInfoModifications {
 		return vnfSoftwareVersion;
 	}
 
-	public void setVnfSoftwareVersion(String vnfSoftwareVersion) {
+	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
-	public VnfInfoModifications vnfdVersion(String vnfdVersion) {
+	public VnfInfoModifications vnfdVersion(final String vnfdVersion) {
 		this.vnfdVersion = vnfdVersion;
 		return this;
 	}
@@ -332,7 +334,7 @@ public class VnfInfoModifications {
 	 * attribute) was modified implicitly following a request to modify the
 	 * \&quot;vnfPkgId\&quot; attribute, by copying the value of this attribute from
 	 * the VNFD in the VNF Package identified by the \&quot;vnfPkgId” attribute.
-	 * 
+	 *
 	 * @return vnfdVersion
 	 **/
 	@JsonProperty("vnfdVersion")
@@ -341,7 +343,7 @@ public class VnfInfoModifications {
 		return vnfdVersion;
 	}
 
-	public void setVnfdVersion(String vnfdVersion) {
+	public void setVnfdVersion(final String vnfdVersion) {
 		this.vnfdVersion = vnfdVersion;
 	}
 
@@ -370,7 +372,7 @@ public class VnfInfoModifications {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

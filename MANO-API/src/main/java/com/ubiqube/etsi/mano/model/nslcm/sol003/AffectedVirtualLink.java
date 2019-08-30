@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,7 +57,7 @@ public class AffectedVirtualLink {
 
 		private final String value;
 
-		ChangeTypeEnum(String value) {
+		ChangeTypeEnum(final String value) {
 			this.value = value;
 		}
 
@@ -66,7 +68,7 @@ public class AffectedVirtualLink {
 		}
 
 		@JsonCreator
-		public static ChangeTypeEnum fromValue(String text) {
+		public static ChangeTypeEnum fromValue(final String text) {
 			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -85,7 +87,7 @@ public class AffectedVirtualLink {
 	@JsonProperty("metadata")
 	private KeyValuePairs metadata = null;
 
-	public AffectedVirtualLink id(String id) {
+	public AffectedVirtualLink id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -104,11 +106,11 @@ public class AffectedVirtualLink {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public AffectedVirtualLink virtualLinkDescId(String virtualLinkDescId) {
+	public AffectedVirtualLink virtualLinkDescId(final String virtualLinkDescId) {
 		this.virtualLinkDescId = virtualLinkDescId;
 		return this;
 	}
@@ -125,11 +127,11 @@ public class AffectedVirtualLink {
 		return virtualLinkDescId;
 	}
 
-	public void setVirtualLinkDescId(String virtualLinkDescId) {
+	public void setVirtualLinkDescId(final String virtualLinkDescId) {
 		this.virtualLinkDescId = virtualLinkDescId;
 	}
 
-	public AffectedVirtualLink changeType(ChangeTypeEnum changeType) {
+	public AffectedVirtualLink changeType(final ChangeTypeEnum changeType) {
 		this.changeType = changeType;
 		return this;
 	}
@@ -149,11 +151,11 @@ public class AffectedVirtualLink {
 		return changeType;
 	}
 
-	public void setChangeType(ChangeTypeEnum changeType) {
+	public void setChangeType(final ChangeTypeEnum changeType) {
 		this.changeType = changeType;
 	}
 
-	public AffectedVirtualLink networkResource(ResourceHandle networkResource) {
+	public AffectedVirtualLink networkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 		return this;
 	}
@@ -172,11 +174,11 @@ public class AffectedVirtualLink {
 		return networkResource;
 	}
 
-	public void setNetworkResource(ResourceHandle networkResource) {
+	public void setNetworkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 	}
 
-	public AffectedVirtualLink metadata(KeyValuePairs metadata) {
+	public AffectedVirtualLink metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -194,7 +196,7 @@ public class AffectedVirtualLink {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
@@ -216,7 +218,7 @@ public class AffectedVirtualLink {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

@@ -18,6 +18,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,14 +49,14 @@ public class VnfVirtualLinkResourceInfo {
 	@JsonProperty("metadata")
 	private KeyValuePairs metadata = null;
 
-	public VnfVirtualLinkResourceInfo id(String id) {
+	public VnfVirtualLinkResourceInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Identifier of this VnfVirtualLinkResourceInfo instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -64,18 +66,18 @@ public class VnfVirtualLinkResourceInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfVirtualLinkResourceInfo vnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
+	public VnfVirtualLinkResourceInfo vnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD.
-	 * 
+	 *
 	 * @return vnfVirtualLinkDescId
 	 **/
 	@JsonProperty("vnfVirtualLinkDescId")
@@ -85,18 +87,18 @@ public class VnfVirtualLinkResourceInfo {
 		return vnfVirtualLinkDescId;
 	}
 
-	public void setVnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
+	public void setVnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 	}
 
-	public VnfVirtualLinkResourceInfo networkResource(ResourceHandle networkResource) {
+	public VnfVirtualLinkResourceInfo networkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 		return this;
 	}
 
 	/**
 	 * Reference to the VirtualNetwork resource.
-	 * 
+	 *
 	 * @return networkResource
 	 **/
 	@JsonProperty("networkResource")
@@ -106,11 +108,11 @@ public class VnfVirtualLinkResourceInfo {
 		return networkResource;
 	}
 
-	public void setNetworkResource(ResourceHandle networkResource) {
+	public void setNetworkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 	}
 
-	public VnfVirtualLinkResourceInfo reservationId(String reservationId) {
+	public VnfVirtualLinkResourceInfo reservationId(final String reservationId) {
 		this.reservationId = reservationId;
 		return this;
 	}
@@ -118,7 +120,7 @@ public class VnfVirtualLinkResourceInfo {
 	/**
 	 * The reservation identifier applicable to the resource. It shall be present
 	 * when an applicable reservation exists.
-	 * 
+	 *
 	 * @return reservationId
 	 **/
 	@JsonProperty("reservationId")
@@ -127,18 +129,18 @@ public class VnfVirtualLinkResourceInfo {
 		return reservationId;
 	}
 
-	public void setReservationId(String reservationId) {
+	public void setReservationId(final String reservationId) {
 		this.reservationId = reservationId;
 	}
 
-	public VnfVirtualLinkResourceInfo vnfLinkPorts(List<VnfLinkPortInfo> vnfLinkPorts) {
+	public VnfVirtualLinkResourceInfo vnfLinkPorts(final List<VnfLinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
 		return this;
 	}
 
-	public VnfVirtualLinkResourceInfo addVnfLinkPortsItem(VnfLinkPortInfo vnfLinkPortsItem) {
+	public VnfVirtualLinkResourceInfo addVnfLinkPortsItem(final VnfLinkPortInfo vnfLinkPortsItem) {
 		if (this.vnfLinkPorts == null) {
-			this.vnfLinkPorts = new ArrayList<VnfLinkPortInfo>();
+			this.vnfLinkPorts = new ArrayList<>();
 		}
 		this.vnfLinkPorts.add(vnfLinkPortsItem);
 		return this;
@@ -148,7 +150,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * Links ports of this VL. Shall be present when the linkPort is used for
 	 * external connectivity by the VNF (refer to VnfLinkPortInfo). May be present
 	 * otherwise.
-	 * 
+	 *
 	 * @return vnfLinkPorts
 	 **/
 	@JsonProperty("vnfLinkPorts")
@@ -157,18 +159,18 @@ public class VnfVirtualLinkResourceInfo {
 		return vnfLinkPorts;
 	}
 
-	public void setVnfLinkPorts(List<VnfLinkPortInfo> vnfLinkPorts) {
+	public void setVnfLinkPorts(final List<VnfLinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
 	}
 
-	public VnfVirtualLinkResourceInfo metadata(KeyValuePairs metadata) {
+	public VnfVirtualLinkResourceInfo metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
 
 	/**
 	 * Metadata about this resource.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -177,7 +179,7 @@ public class VnfVirtualLinkResourceInfo {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
@@ -200,7 +202,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

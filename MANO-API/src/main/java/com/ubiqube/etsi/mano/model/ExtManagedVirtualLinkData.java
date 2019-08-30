@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.lcmgrant.sol003;
+package com.ubiqube.etsi.mano.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

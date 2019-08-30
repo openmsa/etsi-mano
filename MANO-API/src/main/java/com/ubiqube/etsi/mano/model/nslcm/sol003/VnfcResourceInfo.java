@@ -18,6 +18,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,14 +52,14 @@ public class VnfcResourceInfo {
 	@JsonProperty("metadata")
 	private KeyValuePairs metadata = null;
 
-	public VnfcResourceInfo id(String id) {
+	public VnfcResourceInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Identifier of this VnfcResourceInfo instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -67,18 +69,18 @@ public class VnfcResourceInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfcResourceInfo vduId(String vduId) {
+	public VnfcResourceInfo vduId(final String vduId) {
 		this.vduId = vduId;
 		return this;
 	}
 
 	/**
 	 * Reference to the applicable VDU in the VNFD.
-	 * 
+	 *
 	 * @return vduId
 	 **/
 	@JsonProperty("vduId")
@@ -88,18 +90,18 @@ public class VnfcResourceInfo {
 		return vduId;
 	}
 
-	public void setVduId(String vduId) {
+	public void setVduId(final String vduId) {
 		this.vduId = vduId;
 	}
 
-	public VnfcResourceInfo computeResource(ResourceHandle computeResource) {
+	public VnfcResourceInfo computeResource(final ResourceHandle computeResource) {
 		this.computeResource = computeResource;
 		return this;
 	}
 
 	/**
 	 * Reference to the VirtualCompute resource.
-	 * 
+	 *
 	 * @return computeResource
 	 **/
 	@JsonProperty("computeResource")
@@ -109,18 +111,18 @@ public class VnfcResourceInfo {
 		return computeResource;
 	}
 
-	public void setComputeResource(ResourceHandle computeResource) {
+	public void setComputeResource(final ResourceHandle computeResource) {
 		this.computeResource = computeResource;
 	}
 
-	public VnfcResourceInfo storageResourceIds(List<String> storageResourceIds) {
+	public VnfcResourceInfo storageResourceIds(final List<String> storageResourceIds) {
 		this.storageResourceIds = storageResourceIds;
 		return this;
 	}
 
-	public VnfcResourceInfo addStorageResourceIdsItem(String storageResourceIdsItem) {
+	public VnfcResourceInfo addStorageResourceIdsItem(final String storageResourceIdsItem) {
 		if (this.storageResourceIds == null) {
-			this.storageResourceIds = new ArrayList<String>();
+			this.storageResourceIds = new ArrayList<>();
 		}
 		this.storageResourceIds.add(storageResourceIdsItem);
 		return this;
@@ -129,7 +131,7 @@ public class VnfcResourceInfo {
 	/**
 	 * References to the VirtualStorage resources. The value refers to a
 	 * VirtualStorageResourceInfo item in the VnfInstance.
-	 * 
+	 *
 	 * @return storageResourceIds
 	 **/
 	@JsonProperty("storageResourceIds")
@@ -138,11 +140,11 @@ public class VnfcResourceInfo {
 		return storageResourceIds;
 	}
 
-	public void setStorageResourceIds(List<String> storageResourceIds) {
+	public void setStorageResourceIds(final List<String> storageResourceIds) {
 		this.storageResourceIds = storageResourceIds;
 	}
 
-	public VnfcResourceInfo reservationId(String reservationId) {
+	public VnfcResourceInfo reservationId(final String reservationId) {
 		this.reservationId = reservationId;
 		return this;
 	}
@@ -150,7 +152,7 @@ public class VnfcResourceInfo {
 	/**
 	 * The reservation identifier applicable to the resource. It shall be present
 	 * when an applicable reservation exists.
-	 * 
+	 *
 	 * @return reservationId
 	 **/
 	@JsonProperty("reservationId")
@@ -159,18 +161,18 @@ public class VnfcResourceInfo {
 		return reservationId;
 	}
 
-	public void setReservationId(String reservationId) {
+	public void setReservationId(final String reservationId) {
 		this.reservationId = reservationId;
 	}
 
-	public VnfcResourceInfo vnfcCpInfo(List<VnfcResourceInfoVnfcCpInfo> vnfcCpInfo) {
+	public VnfcResourceInfo vnfcCpInfo(final List<VnfcResourceInfoVnfcCpInfo> vnfcCpInfo) {
 		this.vnfcCpInfo = vnfcCpInfo;
 		return this;
 	}
 
-	public VnfcResourceInfo addVnfcCpInfoItem(VnfcResourceInfoVnfcCpInfo vnfcCpInfoItem) {
+	public VnfcResourceInfo addVnfcCpInfoItem(final VnfcResourceInfoVnfcCpInfo vnfcCpInfoItem) {
 		if (this.vnfcCpInfo == null) {
-			this.vnfcCpInfo = new ArrayList<VnfcResourceInfoVnfcCpInfo>();
+			this.vnfcCpInfo = new ArrayList<>();
 		}
 		this.vnfcCpInfo.add(vnfcCpInfoItem);
 		return this;
@@ -180,7 +182,7 @@ public class VnfcResourceInfo {
 	 * CPs of the VNFC instance. Shall be present when that particular CP of the
 	 * VNFC instance is associated to an external CP of the VNF instance. May be
 	 * present otherwise.
-	 * 
+	 *
 	 * @return vnfcCpInfo
 	 **/
 	@JsonProperty("vnfcCpInfo")
@@ -189,18 +191,18 @@ public class VnfcResourceInfo {
 		return vnfcCpInfo;
 	}
 
-	public void setVnfcCpInfo(List<VnfcResourceInfoVnfcCpInfo> vnfcCpInfo) {
+	public void setVnfcCpInfo(final List<VnfcResourceInfoVnfcCpInfo> vnfcCpInfo) {
 		this.vnfcCpInfo = vnfcCpInfo;
 	}
 
-	public VnfcResourceInfo metadata(KeyValuePairs metadata) {
+	public VnfcResourceInfo metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
 
 	/**
 	 * Metadata about this resource.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -209,7 +211,7 @@ public class VnfcResourceInfo {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
@@ -233,7 +235,7 @@ public class VnfcResourceInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

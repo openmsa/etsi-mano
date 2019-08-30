@@ -13,6 +13,7 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol003;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,14 +28,14 @@ public class HealVnfRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public HealVnfRequest cause(String cause) {
+	public HealVnfRequest cause(final String cause) {
 		this.cause = cause;
 		return this;
 	}
 
 	/**
 	 * Indicates the reason why a healing procedure is required.
-	 * 
+	 *
 	 * @return cause
 	 **/
 	@JsonProperty("cause")
@@ -43,11 +44,11 @@ public class HealVnfRequest {
 		return cause;
 	}
 
-	public void setCause(String cause) {
+	public void setCause(final String cause) {
 		this.cause = cause;
 	}
 
-	public HealVnfRequest additionalParams(KeyValuePairs additionalParams) {
+	public HealVnfRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -56,7 +57,7 @@ public class HealVnfRequest {
 	 * Additional parameters passed by the NFVO as input to the healing process,
 	 * specific to the VNF being healed, as declared in the VNFD as part of
 	 * \&quot;HealVnfOpConfig\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -65,7 +66,7 @@ public class HealVnfRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -84,7 +85,7 @@ public class HealVnfRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

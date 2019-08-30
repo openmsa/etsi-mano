@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,7 +36,7 @@ public class ExtLinkPortInfo {
 	@JsonProperty("cpInstanceId")
 	private String cpInstanceId = null;
 
-	public ExtLinkPortInfo id(String id) {
+	public ExtLinkPortInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -43,7 +44,7 @@ public class ExtLinkPortInfo {
 	/**
 	 * Identifier of this link port as provided by the entity that has created the
 	 * link port.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -53,18 +54,18 @@ public class ExtLinkPortInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public ExtLinkPortInfo resourceHandle(ResourceHandle resourceHandle) {
+	public ExtLinkPortInfo resourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 		return this;
 	}
 
 	/**
 	 * Reference to the virtualised resource realizing this link port.
-	 * 
+	 *
 	 * @return resourceHandle
 	 **/
 	@JsonProperty("resourceHandle")
@@ -74,11 +75,11 @@ public class ExtLinkPortInfo {
 		return resourceHandle;
 	}
 
-	public void setResourceHandle(ResourceHandle resourceHandle) {
+	public void setResourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 	}
 
-	public ExtLinkPortInfo cpInstanceId(String cpInstanceId) {
+	public ExtLinkPortInfo cpInstanceId(final String cpInstanceId) {
 		this.cpInstanceId = cpInstanceId;
 		return this;
 	}
@@ -88,7 +89,7 @@ public class ExtLinkPortInfo {
 	 * shall be at most one link port associated with any external connection point
 	 * instance. The value refers to an \&quot;extCpInfo\&quot; item in the
 	 * VnfInstance.
-	 * 
+	 *
 	 * @return cpInstanceId
 	 **/
 	@JsonProperty("cpInstanceId")
@@ -97,7 +98,7 @@ public class ExtLinkPortInfo {
 		return cpInstanceId;
 	}
 
-	public void setCpInstanceId(String cpInstanceId) {
+	public void setCpInstanceId(final String cpInstanceId) {
 		this.cpInstanceId = cpInstanceId;
 	}
 
@@ -117,7 +118,7 @@ public class ExtLinkPortInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

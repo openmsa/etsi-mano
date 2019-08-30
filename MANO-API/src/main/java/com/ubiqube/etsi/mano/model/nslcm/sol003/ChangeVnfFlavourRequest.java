@@ -18,6 +18,10 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,14 +51,14 @@ public class ChangeVnfFlavourRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public ChangeVnfFlavourRequest newFlavourId(String newFlavourId) {
+	public ChangeVnfFlavourRequest newFlavourId(final String newFlavourId) {
 		this.newFlavourId = newFlavourId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VNF deployment flavour to be instantiated.
-	 * 
+	 *
 	 * @return newFlavourId
 	 **/
 	@JsonProperty("newFlavourId")
@@ -64,11 +68,11 @@ public class ChangeVnfFlavourRequest {
 		return newFlavourId;
 	}
 
-	public void setNewFlavourId(String newFlavourId) {
+	public void setNewFlavourId(final String newFlavourId) {
 		this.newFlavourId = newFlavourId;
 	}
 
-	public ChangeVnfFlavourRequest instantiationLevelId(String instantiationLevelId) {
+	public ChangeVnfFlavourRequest instantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
 		return this;
 	}
@@ -77,7 +81,7 @@ public class ChangeVnfFlavourRequest {
 	 * Identifier of the instantiation level of the deployment flavour to be
 	 * instantiated. If not present, the default instantiation level as declared in
 	 * the VNFD is instantiated.
-	 * 
+	 *
 	 * @return instantiationLevelId
 	 **/
 	@JsonProperty("instantiationLevelId")
@@ -86,18 +90,18 @@ public class ChangeVnfFlavourRequest {
 		return instantiationLevelId;
 	}
 
-	public void setInstantiationLevelId(String instantiationLevelId) {
+	public void setInstantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
 	}
 
-	public ChangeVnfFlavourRequest extVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
+	public ChangeVnfFlavourRequest extVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 		return this;
 	}
 
-	public ChangeVnfFlavourRequest addExtVirtualLinksItem(ExtVirtualLinkData extVirtualLinksItem) {
+	public ChangeVnfFlavourRequest addExtVirtualLinksItem(final ExtVirtualLinkData extVirtualLinksItem) {
 		if (this.extVirtualLinks == null) {
-			this.extVirtualLinks = new ArrayList<ExtVirtualLinkData>();
+			this.extVirtualLinks = new ArrayList<>();
 		}
 		this.extVirtualLinks.add(extVirtualLinksItem);
 		return this;
@@ -105,7 +109,7 @@ public class ChangeVnfFlavourRequest {
 
 	/**
 	 * Information about external VLs to connect the VNF to.
-	 * 
+	 *
 	 * @return extVirtualLinks
 	 **/
 	@JsonProperty("extVirtualLinks")
@@ -114,16 +118,16 @@ public class ChangeVnfFlavourRequest {
 		return extVirtualLinks;
 	}
 
-	public void setExtVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
+	public void setExtVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 	}
 
-	public ChangeVnfFlavourRequest extManagedVirtualLinks(List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
+	public ChangeVnfFlavourRequest extManagedVirtualLinks(final List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 		return this;
 	}
 
-	public ChangeVnfFlavourRequest addExtManagedVirtualLinksItem(ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
+	public ChangeVnfFlavourRequest addExtManagedVirtualLinksItem(final ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
 		if (this.extManagedVirtualLinks == null) {
 			this.extManagedVirtualLinks = new ArrayList<ExtManagedVirtualLinkData>();
 		}
@@ -133,7 +137,7 @@ public class ChangeVnfFlavourRequest {
 
 	/**
 	 * Information about internal VLs that are managed by the NFVO.
-	 * 
+	 *
 	 * @return extManagedVirtualLinks
 	 **/
 	@JsonProperty("extManagedVirtualLinks")
@@ -142,16 +146,16 @@ public class ChangeVnfFlavourRequest {
 		return extManagedVirtualLinks;
 	}
 
-	public void setExtManagedVirtualLinks(List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
+	public void setExtManagedVirtualLinks(final List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
-	public ChangeVnfFlavourRequest vimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public ChangeVnfFlavourRequest vimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 		return this;
 	}
 
-	public ChangeVnfFlavourRequest addVimConnectionInfoItem(VimConnectionInfo vimConnectionInfoItem) {
+	public ChangeVnfFlavourRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
 			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
 		}
@@ -164,7 +168,7 @@ public class ChangeVnfFlavourRequest {
 	 * the VNF instance, or refer to external / externally-managed virtual links.
 	 * This attribute shall only be supported and may be present if VNF-related
 	 * resource management in direct mode is applicable.
-	 * 
+	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
@@ -173,11 +177,11 @@ public class ChangeVnfFlavourRequest {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public ChangeVnfFlavourRequest additionalParams(KeyValuePairs additionalParams) {
+	public ChangeVnfFlavourRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -186,7 +190,7 @@ public class ChangeVnfFlavourRequest {
 	 * Additional input parameters for the instantiation process, specific to the
 	 * VNF being instantiated, as declared in the VNFD as part of
 	 * \&quot;InstantiateVnfOpConfig\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -195,7 +199,7 @@ public class ChangeVnfFlavourRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -218,7 +222,7 @@ public class ChangeVnfFlavourRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

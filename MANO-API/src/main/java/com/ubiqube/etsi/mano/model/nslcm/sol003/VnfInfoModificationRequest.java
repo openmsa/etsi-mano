@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,7 +51,7 @@ public class VnfInfoModificationRequest {
 	@JsonProperty("vimConnectionInfo")
 	private List<VimConnectionInfo> vimConnectionInfo = null;
 
-	public VnfInfoModificationRequest vnfInstanceName(String vnfInstanceName) {
+	public VnfInfoModificationRequest vnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 		return this;
 	}
@@ -57,7 +59,7 @@ public class VnfInfoModificationRequest {
 	/**
 	 * New value of the \&quot;vnfInstanceName\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;, or \&quot;null\&quot; to remove the attribute.
-	 * 
+	 *
 	 * @return vnfInstanceName
 	 **/
 	@JsonProperty("vnfInstanceName")
@@ -66,11 +68,11 @@ public class VnfInfoModificationRequest {
 		return vnfInstanceName;
 	}
 
-	public void setVnfInstanceName(String vnfInstanceName) {
+	public void setVnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
-	public VnfInfoModificationRequest vnfInstanceDescription(String vnfInstanceDescription) {
+	public VnfInfoModificationRequest vnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 		return this;
 	}
@@ -78,7 +80,7 @@ public class VnfInfoModificationRequest {
 	/**
 	 * New value of the \&quot;vnfInstanceDescription\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;, or \&quot;null\&quot; to remove the attribute.
-	 * 
+	 *
 	 * @return vnfInstanceDescription
 	 **/
 	@JsonProperty("vnfInstanceDescription")
@@ -87,11 +89,11 @@ public class VnfInfoModificationRequest {
 		return vnfInstanceDescription;
 	}
 
-	public void setVnfInstanceDescription(String vnfInstanceDescription) {
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 	}
 
-	public VnfInfoModificationRequest vnfPkgId(String vnfPkgId) {
+	public VnfInfoModificationRequest vnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 		return this;
 	}
@@ -99,7 +101,7 @@ public class VnfInfoModificationRequest {
 	/**
 	 * New value of the \&quot;vnfPkgId\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;. The value \&quot;null\&quot; is not permitted.
-	 * 
+	 *
 	 * @return vnfPkgId
 	 **/
 	@JsonProperty("vnfPkgId")
@@ -108,11 +110,11 @@ public class VnfInfoModificationRequest {
 		return vnfPkgId;
 	}
 
-	public void setVnfPkgId(String vnfPkgId) {
+	public void setVnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 	}
 
-	public VnfInfoModificationRequest vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+	public VnfInfoModificationRequest vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -121,7 +123,7 @@ public class VnfInfoModificationRequest {
 	 * Modifications of the \&quot;vnfConfigurableProperties\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;. If present, these modifications shall be applied
 	 * according to the rules of JSON Merge PATCH (see IETF RFC 7396).
-	 * 
+	 *
 	 * @return vnfConfigurableProperties
 	 **/
 	@JsonProperty("vnfConfigurableProperties")
@@ -130,11 +132,11 @@ public class VnfInfoModificationRequest {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public VnfInfoModificationRequest metadata(KeyValuePairs metadata) {
+	public VnfInfoModificationRequest metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -143,7 +145,7 @@ public class VnfInfoModificationRequest {
 	 * Modifications of the \&quot;metadata\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;. If present, these modifications shall be applied
 	 * according to the rules of JSON Merge PATCH (see IETF RFC 7396).
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -152,11 +154,11 @@ public class VnfInfoModificationRequest {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInfoModificationRequest extensions(KeyValuePairs extensions) {
+	public VnfInfoModificationRequest extensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -165,7 +167,7 @@ public class VnfInfoModificationRequest {
 	 * Modifications of the \&quot;extensions\&quot; attribute in
 	 * \&quot;VnfInstance\&quot;. If present, these modifications shall be applied
 	 * according to the rules of JSON Merge PATCH (see IETF RFC 7396).
-	 * 
+	 *
 	 * @return extensions
 	 **/
 	@JsonProperty("extensions")
@@ -174,16 +176,16 @@ public class VnfInfoModificationRequest {
 		return extensions;
 	}
 
-	public void setExtensions(KeyValuePairs extensions) {
+	public void setExtensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
 	}
 
-	public VnfInfoModificationRequest vimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public VnfInfoModificationRequest vimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 		return this;
 	}
 
-	public VnfInfoModificationRequest addVimConnectionInfoItem(VimConnectionInfo vimConnectionInfoItem) {
+	public VnfInfoModificationRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
 			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
 		}
@@ -194,7 +196,7 @@ public class VnfInfoModificationRequest {
 	/**
 	 * New content of certain entries in the \&quot;vimConnectionInfo\&quot;
 	 * attribute array in \&quot;VnfInstance\&quot;, as defined below this table.
-	 * 
+	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
@@ -203,7 +205,7 @@ public class VnfInfoModificationRequest {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
@@ -227,7 +229,7 @@ public class VnfInfoModificationRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

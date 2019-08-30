@@ -15,6 +15,8 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,14 +43,14 @@ public class VirtualStorageResourceInfo {
 	@JsonProperty("metadata")
 	private KeyValuePairs metadata = null;
 
-	public VirtualStorageResourceInfo id(String id) {
+	public VirtualStorageResourceInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Identifier of this VirtualStorageResourceInfo instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -58,18 +60,18 @@ public class VirtualStorageResourceInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VirtualStorageResourceInfo virtualStorageDescId(String virtualStorageDescId) {
+	public VirtualStorageResourceInfo virtualStorageDescId(final String virtualStorageDescId) {
 		this.virtualStorageDescId = virtualStorageDescId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VirtualStorageDesc in the VNFD.
-	 * 
+	 *
 	 * @return virtualStorageDescId
 	 **/
 	@JsonProperty("virtualStorageDescId")
@@ -79,18 +81,18 @@ public class VirtualStorageResourceInfo {
 		return virtualStorageDescId;
 	}
 
-	public void setVirtualStorageDescId(String virtualStorageDescId) {
+	public void setVirtualStorageDescId(final String virtualStorageDescId) {
 		this.virtualStorageDescId = virtualStorageDescId;
 	}
 
-	public VirtualStorageResourceInfo storageResource(ResourceHandle storageResource) {
+	public VirtualStorageResourceInfo storageResource(final ResourceHandle storageResource) {
 		this.storageResource = storageResource;
 		return this;
 	}
 
 	/**
 	 * Reference to the VirtualStorage resource.
-	 * 
+	 *
 	 * @return storageResource
 	 **/
 	@JsonProperty("storageResource")
@@ -100,11 +102,11 @@ public class VirtualStorageResourceInfo {
 		return storageResource;
 	}
 
-	public void setStorageResource(ResourceHandle storageResource) {
+	public void setStorageResource(final ResourceHandle storageResource) {
 		this.storageResource = storageResource;
 	}
 
-	public VirtualStorageResourceInfo reservationId(String reservationId) {
+	public VirtualStorageResourceInfo reservationId(final String reservationId) {
 		this.reservationId = reservationId;
 		return this;
 	}
@@ -112,7 +114,7 @@ public class VirtualStorageResourceInfo {
 	/**
 	 * The reservation identifier applicable to the resource. It shall be present
 	 * when an applicable reservation exists.
-	 * 
+	 *
 	 * @return reservationId
 	 **/
 	@JsonProperty("reservationId")
@@ -121,18 +123,18 @@ public class VirtualStorageResourceInfo {
 		return reservationId;
 	}
 
-	public void setReservationId(String reservationId) {
+	public void setReservationId(final String reservationId) {
 		this.reservationId = reservationId;
 	}
 
-	public VirtualStorageResourceInfo metadata(KeyValuePairs metadata) {
+	public VirtualStorageResourceInfo metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
 
 	/**
 	 * Metadata about this resource.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -141,7 +143,7 @@ public class VirtualStorageResourceInfo {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
@@ -163,7 +165,7 @@ public class VirtualStorageResourceInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

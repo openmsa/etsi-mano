@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -32,7 +33,7 @@ public class VnfLinkPortInfo {
 	@JsonProperty("cpInstanceId")
 	private String cpInstanceId = null;
 
-	public VnfLinkPortInfo id(String id) {
+	public VnfLinkPortInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -40,7 +41,7 @@ public class VnfLinkPortInfo {
 	/**
 	 * Identifier of this link port as provided by the entity that has created the
 	 * link port.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -50,18 +51,18 @@ public class VnfLinkPortInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfLinkPortInfo resourceHandle(ResourceHandle resourceHandle) {
+	public VnfLinkPortInfo resourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 		return this;
 	}
 
 	/**
 	 * Reference to the virtualised network resource realizing this link port.
-	 * 
+	 *
 	 * @return resourceHandle
 	 **/
 	@JsonProperty("resourceHandle")
@@ -71,11 +72,11 @@ public class VnfLinkPortInfo {
 		return resourceHandle;
 	}
 
-	public void setResourceHandle(ResourceHandle resourceHandle) {
+	public void setResourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 	}
 
-	public VnfLinkPortInfo cpInstanceId(String cpInstanceId) {
+	public VnfLinkPortInfo cpInstanceId(final String cpInstanceId) {
 		this.cpInstanceId = cpInstanceId;
 		return this;
 	}
@@ -92,7 +93,7 @@ public class VnfLinkPortInfo {
 	 * CP) instance. The value refers to an \&quot;extCpInfo\&quot; item in the
 	 * VnfInstance or a \&quot;vnfcCpInfo\&quot; item of a
 	 * \&quot;vnfcResouceInfo\&quot; item in the VnfInstance.
-	 * 
+	 *
 	 * @return cpInstanceId
 	 **/
 	@JsonProperty("cpInstanceId")
@@ -101,7 +102,7 @@ public class VnfLinkPortInfo {
 		return cpInstanceId;
 	}
 
-	public void setCpInstanceId(String cpInstanceId) {
+	public void setCpInstanceId(final String cpInstanceId) {
 		this.cpInstanceId = cpInstanceId;
 	}
 
@@ -121,7 +122,7 @@ public class VnfLinkPortInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}
