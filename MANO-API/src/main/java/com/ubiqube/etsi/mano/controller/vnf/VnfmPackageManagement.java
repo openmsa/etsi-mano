@@ -64,7 +64,17 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final RangeHeader rangeHeader) {
-		// TODO Auto-generated method stub
+		LOG.error("artifact = {}", artifactPath);
+		if (null == rangeHeader) {
+			final Map<String, Object> uriVariables = new HashMap<>();
+			uriVariables.put("vnfPkgId", vnfPkgId);
+			uriVariables.put("artifactPath", artifactPath);
+			final URI uri = nfvoRest.uriBuilder()
+					.pathSegment("vnfpkgm/v1/vnf_packages/{vnfPkgId}/artifacts/{artifactPath}")
+					.buildAndExpand(uriVariables)
+					.toUri();
+			return nfvoRest.get(uri, ResponseEntity.class);
+		}
 		return null;
 	}
 
