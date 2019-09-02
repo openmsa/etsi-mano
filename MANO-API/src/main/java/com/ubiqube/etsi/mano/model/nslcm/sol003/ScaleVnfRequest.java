@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -38,7 +39,7 @@ public class ScaleVnfRequest {
 
 		private final String value;
 
-		TypeEnum(String value) {
+		TypeEnum(final String value) {
 			this.value = value;
 		}
 
@@ -49,7 +50,7 @@ public class ScaleVnfRequest {
 		}
 
 		@JsonCreator
-		public static TypeEnum fromValue(String text) {
+		public static TypeEnum fromValue(final String text) {
 			for (final TypeEnum b : TypeEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -71,7 +72,7 @@ public class ScaleVnfRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public ScaleVnfRequest type(TypeEnum type) {
+	public ScaleVnfRequest type(final TypeEnum type) {
 		this.type = type;
 		return this;
 	}
@@ -81,7 +82,7 @@ public class ScaleVnfRequest {
 	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
 	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
 	 * capacity.
-	 * 
+	 *
 	 * @return type
 	 **/
 	@JsonProperty("type")
@@ -91,18 +92,18 @@ public class ScaleVnfRequest {
 		return type;
 	}
 
-	public void setType(TypeEnum type) {
+	public void setType(final TypeEnum type) {
 		this.type = type;
 	}
 
-	public ScaleVnfRequest aspectId(String aspectId) {
+	public ScaleVnfRequest aspectId(final String aspectId) {
 		this.aspectId = aspectId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the scaling aspect.
-	 * 
+	 *
 	 * @return aspectId
 	 **/
 	@JsonProperty("aspectId")
@@ -112,11 +113,11 @@ public class ScaleVnfRequest {
 		return aspectId;
 	}
 
-	public void setAspectId(String aspectId) {
+	public void setAspectId(final String aspectId) {
 		this.aspectId = aspectId;
 	}
 
-	public ScaleVnfRequest numberOfSteps(Integer numberOfSteps) {
+	public ScaleVnfRequest numberOfSteps(final Integer numberOfSteps) {
 		this.numberOfSteps = numberOfSteps;
 		return this;
 	}
@@ -124,7 +125,7 @@ public class ScaleVnfRequest {
 	/**
 	 * Number of scaling steps to be executed as part of this Scale VNF operation.
 	 * It shall be a positive number and the default value shall be 1.
-	 * 
+	 *
 	 * @return numberOfSteps
 	 **/
 	@JsonProperty("numberOfSteps")
@@ -133,11 +134,11 @@ public class ScaleVnfRequest {
 		return numberOfSteps;
 	}
 
-	public void setNumberOfSteps(Integer numberOfSteps) {
+	public void setNumberOfSteps(final Integer numberOfSteps) {
 		this.numberOfSteps = numberOfSteps;
 	}
 
-	public ScaleVnfRequest additionalParams(KeyValuePairs additionalParams) {
+	public ScaleVnfRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -146,7 +147,7 @@ public class ScaleVnfRequest {
 	 * Additional parameters passed by the NFVO as input to the scaling process,
 	 * specific to the VNF being scaled, as declared in the VNFD as part of
 	 * \&quot;ScaleVnfOpConfig\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -155,7 +156,7 @@ public class ScaleVnfRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -176,7 +177,7 @@ public class ScaleVnfRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

@@ -1,5 +1,8 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,8 +10,15 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+@Profile({ "default", "VNFM" })
 @RestController
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
+
+	public VnfLcmOpOccsSol003Api() {
+		LOG.info("Starting LCM OP OCCS SOL003 Controller.");
+	}
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsGet(final String accept) {

@@ -1,5 +1,8 @@
 package com.ubiqube.etsi.mano.controller.nsd.sol005;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdChangeNotification;
@@ -10,8 +13,15 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdDeletionNotification;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingFailureNotification;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingNotification;
 
+@Profile({ "default", "NFVO" })
 @RestController
 public class NsNotificationsSol005Api implements NsNotificationsSol005 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NsNotificationsSol005Api.class);
+
+	public NsNotificationsSol005Api() {
+		LOG.info("Starting NSD Notification SOL005 Controller.");
+	}
 
 	/**
 	 * Notify about NSD and PNFD changes

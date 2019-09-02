@@ -3,12 +3,14 @@ package com.ubiqube.etsi.mano.controller.nsperfo.sol005;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.ThresholdsPostResponse;
 
+@Profile({ "default", "NFVO" })
 public class ThresholdsSol005Api implements ThresholdsSol005 {
 
 	/**

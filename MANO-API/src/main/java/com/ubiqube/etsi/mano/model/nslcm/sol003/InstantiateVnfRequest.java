@@ -18,6 +18,10 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -47,14 +51,14 @@ public class InstantiateVnfRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public InstantiateVnfRequest flavourId(String flavourId) {
+	public InstantiateVnfRequest flavourId(final String flavourId) {
 		this.flavourId = flavourId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VNF deployment flavour to be instantiated.
-	 * 
+	 *
 	 * @return flavourId
 	 **/
 	@JsonProperty("flavourId")
@@ -64,11 +68,11 @@ public class InstantiateVnfRequest {
 		return flavourId;
 	}
 
-	public void setFlavourId(String flavourId) {
+	public void setFlavourId(final String flavourId) {
 		this.flavourId = flavourId;
 	}
 
-	public InstantiateVnfRequest instantiationLevelId(String instantiationLevelId) {
+	public InstantiateVnfRequest instantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
 		return this;
 	}
@@ -77,7 +81,7 @@ public class InstantiateVnfRequest {
 	 * Identifier of the instantiation level of the deployment flavour to be
 	 * instantiated. If not present, the default instantiation level as declared in
 	 * the VNFD is instantiated.
-	 * 
+	 *
 	 * @return instantiationLevelId
 	 **/
 	@JsonProperty("instantiationLevelId")
@@ -86,18 +90,18 @@ public class InstantiateVnfRequest {
 		return instantiationLevelId;
 	}
 
-	public void setInstantiationLevelId(String instantiationLevelId) {
+	public void setInstantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
 	}
 
-	public InstantiateVnfRequest extVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
+	public InstantiateVnfRequest extVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 		return this;
 	}
 
-	public InstantiateVnfRequest addExtVirtualLinksItem(ExtVirtualLinkData extVirtualLinksItem) {
+	public InstantiateVnfRequest addExtVirtualLinksItem(final ExtVirtualLinkData extVirtualLinksItem) {
 		if (this.extVirtualLinks == null) {
-			this.extVirtualLinks = new ArrayList<ExtVirtualLinkData>();
+			this.extVirtualLinks = new ArrayList<>();
 		}
 		this.extVirtualLinks.add(extVirtualLinksItem);
 		return this;
@@ -105,7 +109,7 @@ public class InstantiateVnfRequest {
 
 	/**
 	 * Information about external VLs to connect the VNF to.
-	 * 
+	 *
 	 * @return extVirtualLinks
 	 **/
 	@JsonProperty("extVirtualLinks")
@@ -114,16 +118,16 @@ public class InstantiateVnfRequest {
 		return extVirtualLinks;
 	}
 
-	public void setExtVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
+	public void setExtVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 	}
 
-	public InstantiateVnfRequest extManagedVirtualLinks(List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
+	public InstantiateVnfRequest extManagedVirtualLinks(final List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 		return this;
 	}
 
-	public InstantiateVnfRequest addExtManagedVirtualLinksItem(ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
+	public InstantiateVnfRequest addExtManagedVirtualLinksItem(final ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
 		if (this.extManagedVirtualLinks == null) {
 			this.extManagedVirtualLinks = new ArrayList<ExtManagedVirtualLinkData>();
 		}
@@ -133,7 +137,7 @@ public class InstantiateVnfRequest {
 
 	/**
 	 * Information about internal VLs that are managed by the NFVO.
-	 * 
+	 *
 	 * @return extManagedVirtualLinks
 	 **/
 	@JsonProperty("extManagedVirtualLinks")
@@ -142,16 +146,16 @@ public class InstantiateVnfRequest {
 		return extManagedVirtualLinks;
 	}
 
-	public void setExtManagedVirtualLinks(List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
+	public void setExtManagedVirtualLinks(final List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
-	public InstantiateVnfRequest vimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public InstantiateVnfRequest vimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 		return this;
 	}
 
-	public InstantiateVnfRequest addVimConnectionInfoItem(VimConnectionInfo vimConnectionInfoItem) {
+	public InstantiateVnfRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
 			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
 		}
@@ -164,7 +168,7 @@ public class InstantiateVnfRequest {
 	 * the VNF instance, or refer to external / externally-managed virtual links.
 	 * This attribute shall only be supported and may be present if VNF-related
 	 * resource management in direct mode is applicable.
-	 * 
+	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
@@ -173,11 +177,11 @@ public class InstantiateVnfRequest {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public InstantiateVnfRequest localizationLanguage(String localizationLanguage) {
+	public InstantiateVnfRequest localizationLanguage(final String localizationLanguage) {
 		this.localizationLanguage = localizationLanguage;
 		return this;
 	}
@@ -185,7 +189,7 @@ public class InstantiateVnfRequest {
 	/**
 	 * Localization language of the VNF to be instantiated. The value shall comply
 	 * with the format defined in IETF RFC 5646.
-	 * 
+	 *
 	 * @return localizationLanguage
 	 **/
 	@JsonProperty("localizationLanguage")
@@ -194,11 +198,11 @@ public class InstantiateVnfRequest {
 		return localizationLanguage;
 	}
 
-	public void setLocalizationLanguage(String localizationLanguage) {
+	public void setLocalizationLanguage(final String localizationLanguage) {
 		this.localizationLanguage = localizationLanguage;
 	}
 
-	public InstantiateVnfRequest additionalParams(KeyValuePairs additionalParams) {
+	public InstantiateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -207,7 +211,7 @@ public class InstantiateVnfRequest {
 	 * Additional input parameters for the instantiation process, specific to the
 	 * VNF being instantiated, as declared in the VNFD as part of
 	 * \&quot;InstantiateVnfOpConfig\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -216,7 +220,7 @@ public class InstantiateVnfRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -240,7 +244,7 @@ public class InstantiateVnfRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

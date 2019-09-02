@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsIdentifierCreationNotification;
@@ -18,6 +19,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationOccurrenceNotifica
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
+@Profile({ "default", "NFVO" })
 @RestController
 public class NsLcmSol005Api implements NsLcmSol005 {
 

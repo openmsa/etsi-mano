@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.config.Http403EntryPoint;
-import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
+import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.EventManager;
@@ -41,7 +41,7 @@ public class VnfPkgTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@MockBean
-	private VnfManagement vnfManagement;
+	private VnfPackageManagement vnfManagement;
 	@MockBean
 	private Patcher patcher;
 	@MockBean

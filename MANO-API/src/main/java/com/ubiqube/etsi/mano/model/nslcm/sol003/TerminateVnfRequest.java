@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -42,7 +43,7 @@ public class TerminateVnfRequest {
 
 		private final String value;
 
-		TerminationTypeEnum(String value) {
+		TerminationTypeEnum(final String value) {
 			this.value = value;
 		}
 
@@ -53,7 +54,7 @@ public class TerminateVnfRequest {
 		}
 
 		@JsonCreator
-		public static TerminationTypeEnum fromValue(String text) {
+		public static TerminationTypeEnum fromValue(final String text) {
 			for (final TerminationTypeEnum b : TerminationTypeEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -72,7 +73,7 @@ public class TerminateVnfRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public TerminateVnfRequest terminationType(TerminationTypeEnum terminationType) {
+	public TerminateVnfRequest terminationType(final TerminationTypeEnum terminationType) {
 		this.terminationType = terminationType;
 		return this;
 	}
@@ -86,7 +87,7 @@ public class TerminateVnfRequest {
 	 * it has succeeded or failed) or once the timer value specified in the
 	 * \&quot;gracefulTerminationTimeout\&quot; attribute expires, the VNFM will
 	 * shut down the VNF and release the resources.
-	 * 
+	 *
 	 * @return terminationType
 	 **/
 	@JsonProperty("terminationType")
@@ -96,11 +97,11 @@ public class TerminateVnfRequest {
 		return terminationType;
 	}
 
-	public void setTerminationType(TerminationTypeEnum terminationType) {
+	public void setTerminationType(final TerminationTypeEnum terminationType) {
 		this.terminationType = terminationType;
 	}
 
-	public TerminateVnfRequest gracefulTerminationTimeout(Integer gracefulTerminationTimeout) {
+	public TerminateVnfRequest gracefulTerminationTimeout(final Integer gracefulTerminationTimeout) {
 		this.gracefulTerminationTimeout = gracefulTerminationTimeout;
 		return this;
 	}
@@ -113,7 +114,7 @@ public class TerminateVnfRequest {
 	 * it is expected that the VNFM waits for the successful taking out of service
 	 * of the VNF, no matter how long it takes, before shutting down the VNF and
 	 * releasing the resources.
-	 * 
+	 *
 	 * @return gracefulTerminationTimeout
 	 **/
 	@JsonProperty("gracefulTerminationTimeout")
@@ -122,11 +123,11 @@ public class TerminateVnfRequest {
 		return gracefulTerminationTimeout;
 	}
 
-	public void setGracefulTerminationTimeout(Integer gracefulTerminationTimeout) {
+	public void setGracefulTerminationTimeout(final Integer gracefulTerminationTimeout) {
 		this.gracefulTerminationTimeout = gracefulTerminationTimeout;
 	}
 
-	public TerminateVnfRequest additionalParams(KeyValuePairs additionalParams) {
+	public TerminateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -135,7 +136,7 @@ public class TerminateVnfRequest {
 	 * Additional parameters passed by the NFVO as input to the termination process,
 	 * specific to the VNF being terminated, as declared in the VNFD as part of
 	 * \&quot;TerminateVnfOpConfig\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -144,7 +145,7 @@ public class TerminateVnfRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -164,7 +165,7 @@ public class TerminateVnfRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

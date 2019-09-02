@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -46,14 +47,14 @@ public class VnfLcmOpOccLinks {
 	@JsonProperty("fail")
 	private Link fail = null;
 
-	public VnfLcmOpOccLinks self(Link self) {
+	public VnfLcmOpOccLinks self(final Link self) {
 		this.self = self;
 		return this;
 	}
 
 	/**
 	 * URI of this resource.
-	 * 
+	 *
 	 * @return self
 	 **/
 	@JsonProperty("self")
@@ -63,18 +64,18 @@ public class VnfLcmOpOccLinks {
 		return self;
 	}
 
-	public void setSelf(Link self) {
+	public void setSelf(final Link self) {
 		this.self = self;
 	}
 
-	public VnfLcmOpOccLinks vnfInstance(Link vnfInstance) {
+	public VnfLcmOpOccLinks vnfInstance(final Link vnfInstance) {
 		this.vnfInstance = vnfInstance;
 		return this;
 	}
 
 	/**
 	 * Link to the VNF instance that the operation applies to.
-	 * 
+	 *
 	 * @return vnfInstance
 	 **/
 	@JsonProperty("vnfInstance")
@@ -84,18 +85,18 @@ public class VnfLcmOpOccLinks {
 		return vnfInstance;
 	}
 
-	public void setVnfInstance(Link vnfInstance) {
+	public void setVnfInstance(final Link vnfInstance) {
 		this.vnfInstance = vnfInstance;
 	}
 
-	public VnfLcmOpOccLinks grant(Link grant) {
+	public VnfLcmOpOccLinks grant(final Link grant) {
 		this.grant = grant;
 		return this;
 	}
 
 	/**
 	 * Link to the grant for this operation, if one exists.
-	 * 
+	 *
 	 * @return grant
 	 **/
 	@JsonProperty("grant")
@@ -104,11 +105,11 @@ public class VnfLcmOpOccLinks {
 		return grant;
 	}
 
-	public void setGrant(Link grant) {
+	public void setGrant(final Link grant) {
 		this.grant = grant;
 	}
 
-	public VnfLcmOpOccLinks cancel(Link cancel) {
+	public VnfLcmOpOccLinks cancel(final Link cancel) {
 		this.cancel = cancel;
 		return this;
 	}
@@ -116,7 +117,7 @@ public class VnfLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \&quot;cancel\&quot; operation
 	 * for this VNF LCM operation occurrence, if cancelling is currently allowed.
-	 * 
+	 *
 	 * @return cancel
 	 **/
 	@JsonProperty("cancel")
@@ -125,11 +126,11 @@ public class VnfLcmOpOccLinks {
 		return cancel;
 	}
 
-	public void setCancel(Link cancel) {
+	public void setCancel(final Link cancel) {
 		this.cancel = cancel;
 	}
 
-	public VnfLcmOpOccLinks retry(Link retry) {
+	public VnfLcmOpOccLinks retry(final Link retry) {
 		this.retry = retry;
 		return this;
 	}
@@ -137,7 +138,7 @@ public class VnfLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \&quot;retry\&quot; operation
 	 * for this VNF LCM operation occurrence, if retrying is currently allowed.
-	 * 
+	 *
 	 * @return retry
 	 **/
 	@JsonProperty("retry")
@@ -146,11 +147,11 @@ public class VnfLcmOpOccLinks {
 		return retry;
 	}
 
-	public void setRetry(Link retry) {
+	public void setRetry(final Link retry) {
 		this.retry = retry;
 	}
 
-	public VnfLcmOpOccLinks rollback(Link rollback) {
+	public VnfLcmOpOccLinks rollback(final Link rollback) {
 		this.rollback = rollback;
 		return this;
 	}
@@ -159,7 +160,7 @@ public class VnfLcmOpOccLinks {
 	 * Link to the task resource that represents the \&quot;rollback\&quot;
 	 * operation for this VNF LCM operation occurrence, if rolling back is currently
 	 * allowed.
-	 * 
+	 *
 	 * @return rollback
 	 **/
 	@JsonProperty("rollback")
@@ -168,11 +169,11 @@ public class VnfLcmOpOccLinks {
 		return rollback;
 	}
 
-	public void setRollback(Link rollback) {
+	public void setRollback(final Link rollback) {
 		this.rollback = rollback;
 	}
 
-	public VnfLcmOpOccLinks fail(Link fail) {
+	public VnfLcmOpOccLinks fail(final Link fail) {
 		this.fail = fail;
 		return this;
 	}
@@ -181,7 +182,7 @@ public class VnfLcmOpOccLinks {
 	 * Link to the task resource that represents the \&quot;fail\&quot; operation
 	 * for this VNF LCM operation occurrence, if declaring as failed is currently
 	 * allowed.
-	 * 
+	 *
 	 * @return fail
 	 **/
 	@JsonProperty("fail")
@@ -190,7 +191,7 @@ public class VnfLcmOpOccLinks {
 		return fail;
 	}
 
-	public void setFail(Link fail) {
+	public void setFail(final Link fail) {
 		this.fail = fail;
 	}
 
@@ -214,7 +215,7 @@ public class VnfLcmOpOccLinks {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

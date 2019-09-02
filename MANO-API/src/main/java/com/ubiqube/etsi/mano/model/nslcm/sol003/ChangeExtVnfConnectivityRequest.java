@@ -18,6 +18,9 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,7 +34,7 @@ import io.swagger.annotations.ApiModelProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
 public class ChangeExtVnfConnectivityRequest {
 	@JsonProperty("extVirtualLinks")
-	private List<ExtVirtualLinkData> extVirtualLinks = new ArrayList<ExtVirtualLinkData>();
+	private List<ExtVirtualLinkData> extVirtualLinks = new ArrayList<>();
 
 	@JsonProperty("vimConnectionInfo")
 	private List<VimConnectionInfo> vimConnectionInfo = null;
@@ -39,19 +42,19 @@ public class ChangeExtVnfConnectivityRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public ChangeExtVnfConnectivityRequest extVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
+	public ChangeExtVnfConnectivityRequest extVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 		return this;
 	}
 
-	public ChangeExtVnfConnectivityRequest addExtVirtualLinksItem(ExtVirtualLinkData extVirtualLinksItem) {
+	public ChangeExtVnfConnectivityRequest addExtVirtualLinksItem(final ExtVirtualLinkData extVirtualLinksItem) {
 		this.extVirtualLinks.add(extVirtualLinksItem);
 		return this;
 	}
 
 	/**
 	 * Information about external VLs to change (e.g. connect the VNF to).
-	 * 
+	 *
 	 * @return extVirtualLinks
 	 **/
 	@JsonProperty("extVirtualLinks")
@@ -61,16 +64,16 @@ public class ChangeExtVnfConnectivityRequest {
 		return extVirtualLinks;
 	}
 
-	public void setExtVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
+	public void setExtVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 	}
 
-	public ChangeExtVnfConnectivityRequest vimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public ChangeExtVnfConnectivityRequest vimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 		return this;
 	}
 
-	public ChangeExtVnfConnectivityRequest addVimConnectionInfoItem(VimConnectionInfo vimConnectionInfoItem) {
+	public ChangeExtVnfConnectivityRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
 			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
 		}
@@ -83,7 +86,7 @@ public class ChangeExtVnfConnectivityRequest {
 	 * the VNF instance, or refer to external virtual links. This attribute shall
 	 * only be supported and may be present if VNF-related resource management in
 	 * direct mode is applicable.
-	 * 
+	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
@@ -92,11 +95,11 @@ public class ChangeExtVnfConnectivityRequest {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public ChangeExtVnfConnectivityRequest additionalParams(KeyValuePairs additionalParams) {
+	public ChangeExtVnfConnectivityRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -105,7 +108,7 @@ public class ChangeExtVnfConnectivityRequest {
 	 * Additional input parameters for the instantiation process, specific to the
 	 * VNF being instantiated, as declared in the VNFD as part of
 	 * \&quot;ChangeExtVnfConnectivityOpConfig\&quot;.\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -114,7 +117,7 @@ public class ChangeExtVnfConnectivityRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -134,7 +137,7 @@ public class ChangeExtVnfConnectivityRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

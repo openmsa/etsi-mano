@@ -3,19 +3,26 @@ package com.ubiqube.etsi.mano.factory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
 
 public class LcmFactory {
 
-	public static VnfInstance createVnfInstance(CreateVnfRequest createVnfRequest) {
+	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
+		vnfInstance.setVnfPkgId(createVnfRequest.getVnfdId());
 		vnfInstance.setVnfInstanceDescription(createVnfRequest.getVnfInstanceDescription());
 		vnfInstance.setVnfInstanceName(createVnfRequest.getVnfInstanceName());
+
+		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
+		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STOPPED);
+		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		return vnfInstance;
 	}
 
-	public static VnfInstanceLinks createVnfInstancesLink(String hrefSelf, String hrefChangeExtConn, String hrefChangeFlavor, String hrefHeal, String hrefIndicators, String hrefInstanciate, String hrefOperate, String hrefScale, String hrefScaleToLevel, String hrefTerminate) {
+	public static VnfInstanceLinks createVnfInstancesLink(final String hrefSelf, final String hrefChangeExtConn, final String hrefChangeFlavor, final String hrefHeal, final String hrefIndicators, final String hrefInstanciate, final String hrefOperate, final String hrefScale, final String hrefScaleToLevel, final String hrefTerminate) {
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		final Link self = new Link();
 		self.setHref(hrefSelf);

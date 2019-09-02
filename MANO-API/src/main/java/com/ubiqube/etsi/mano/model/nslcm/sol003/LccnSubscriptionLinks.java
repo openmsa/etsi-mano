@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,14 +29,14 @@ public class LccnSubscriptionLinks {
 	@JsonProperty("self")
 	private Link self = null;
 
-	public LccnSubscriptionLinks self(Link self) {
+	public LccnSubscriptionLinks self(final Link self) {
 		this.self = self;
 		return this;
 	}
 
 	/**
 	 * URI of this resource.
-	 * 
+	 *
 	 * @return self
 	 **/
 	@JsonProperty("self")
@@ -45,7 +46,7 @@ public class LccnSubscriptionLinks {
 		return self;
 	}
 
-	public void setSelf(Link self) {
+	public void setSelf(final Link self) {
 		this.self = self;
 	}
 
@@ -63,7 +64,7 @@ public class LccnSubscriptionLinks {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

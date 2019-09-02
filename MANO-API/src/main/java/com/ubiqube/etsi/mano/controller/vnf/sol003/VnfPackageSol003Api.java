@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.controller.vnf.VnfManagement;
+import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
@@ -35,17 +36,18 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
+@Profile({ "default", "VNFM" })
 @RestController
 @RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
 public class VnfPackageSol003Api implements VnfPackageSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
-	private final VnfManagement vnfManagement;
+	private final VnfPackageManagement vnfManagement;
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	public VnfPackageSol003Api(final VnfManagement _vnfManagement) {
+	public VnfPackageSol003Api(final VnfPackageManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
-		LOG.debug("Starting Vnf Package SOL003.");
+		LOG.debug("Starting VNF Package SOL003 Controller.");
 	}
 
 	/**

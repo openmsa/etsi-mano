@@ -10,10 +10,10 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 public class Sol003LcmLinkable implements LcmLinkable {
 
 	@Override
-	public VnfInstanceLinks getLinks(String id) {
+	public VnfInstanceLinks getLinks(final String id) {
 		final String hrefScaleToLevel = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdScaleToLevelPost(id)).withSelfRel().getHref();
 		final String hrefScale = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdScalePost(id)).withSelfRel().getHref();
-		final String hrefOperate = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdOperatePost(id)).withSelfRel().getHref();
+		final String hrefOperate = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdOperatePost(id, null)).withSelfRel().getHref();
 		final String hrefInstanciate = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
 		final String hrefIndicators = "";
 		final String hrefHeal = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdHealPost(id)).withSelfRel().getHref();

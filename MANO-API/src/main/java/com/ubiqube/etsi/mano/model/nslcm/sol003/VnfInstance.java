@@ -21,6 +21,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -74,7 +76,7 @@ public class VnfInstance {
 
 		private final String value;
 
-		InstantiationStateEnum(String value) {
+		InstantiationStateEnum(final String value) {
 			this.value = value;
 		}
 
@@ -85,7 +87,7 @@ public class VnfInstance {
 		}
 
 		@JsonCreator
-		public static InstantiationStateEnum fromValue(String text) {
+		public static InstantiationStateEnum fromValue(final String text) {
 			for (final InstantiationStateEnum b : InstantiationStateEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -110,7 +112,7 @@ public class VnfInstance {
 	@JsonProperty("_links")
 	private VnfInstanceLinks links = null;
 
-	public VnfInstance id(String id) {
+	public VnfInstance id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -127,11 +129,11 @@ public class VnfInstance {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfInstance vnfInstanceName(String vnfInstanceName) {
+	public VnfInstance vnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 		return this;
 	}
@@ -148,11 +150,11 @@ public class VnfInstance {
 		return vnfInstanceName;
 	}
 
-	public void setVnfInstanceName(String vnfInstanceName) {
+	public void setVnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
-	public VnfInstance vnfInstanceDescription(String vnfInstanceDescription) {
+	public VnfInstance vnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 		return this;
 	}
@@ -169,11 +171,11 @@ public class VnfInstance {
 		return vnfInstanceDescription;
 	}
 
-	public void setVnfInstanceDescription(String vnfInstanceDescription) {
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 	}
 
-	public VnfInstance vnfdId(String vnfdId) {
+	public VnfInstance vnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 		return this;
 	}
@@ -190,11 +192,11 @@ public class VnfInstance {
 		return vnfdId;
 	}
 
-	public void setVnfdId(String vnfdId) {
+	public void setVnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 	}
 
-	public VnfInstance vnfProvider(String vnfProvider) {
+	public VnfInstance vnfProvider(final String vnfProvider) {
 		this.vnfProvider = vnfProvider;
 		return this;
 	}
@@ -211,11 +213,11 @@ public class VnfInstance {
 		return vnfProvider;
 	}
 
-	public void setVnfProvider(String vnfProvider) {
+	public void setVnfProvider(final String vnfProvider) {
 		this.vnfProvider = vnfProvider;
 	}
 
-	public VnfInstance vnfProductName(String vnfProductName) {
+	public VnfInstance vnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
 		return this;
 	}
@@ -232,11 +234,11 @@ public class VnfInstance {
 		return vnfProductName;
 	}
 
-	public void setVnfProductName(String vnfProductName) {
+	public void setVnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
 	}
 
-	public VnfInstance vnfSoftwareVersion(String vnfSoftwareVersion) {
+	public VnfInstance vnfSoftwareVersion(final String vnfSoftwareVersion) {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 		return this;
 	}
@@ -253,11 +255,11 @@ public class VnfInstance {
 		return vnfSoftwareVersion;
 	}
 
-	public void setVnfSoftwareVersion(String vnfSoftwareVersion) {
+	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
-	public VnfInstance vnfdVersion(String vnfdVersion) {
+	public VnfInstance vnfdVersion(final String vnfdVersion) {
 		this.vnfdVersion = vnfdVersion;
 		return this;
 	}
@@ -274,11 +276,11 @@ public class VnfInstance {
 		return vnfdVersion;
 	}
 
-	public void setVnfdVersion(String vnfdVersion) {
+	public void setVnfdVersion(final String vnfdVersion) {
 		this.vnfdVersion = vnfdVersion;
 	}
 
-	public VnfInstance vnfPkgId(String vnfPkgId) {
+	public VnfInstance vnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 		return this;
 	}
@@ -304,11 +306,11 @@ public class VnfInstance {
 		return vnfPkgId;
 	}
 
-	public void setVnfPkgId(String vnfPkgId) {
+	public void setVnfPkgId(final String vnfPkgId) {
 		this.vnfPkgId = vnfPkgId;
 	}
 
-	public VnfInstance vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+	public VnfInstance vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -341,18 +343,18 @@ public class VnfInstance {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public VnfInstance vimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public VnfInstance vimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 		return this;
 	}
 
-	public VnfInstance addVimConnectionInfoItem(VimConnectionInfo vimConnectionInfoItem) {
+	public VnfInstance addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
-			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
+			this.vimConnectionInfo = new ArrayList<>();
 		}
 		this.vimConnectionInfo.add(vimConnectionInfoItem);
 		return this;
@@ -372,11 +374,11 @@ public class VnfInstance {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public VnfInstance instantiationState(InstantiationStateEnum instantiationState) {
+	public VnfInstance instantiationState(final InstantiationStateEnum instantiationState) {
 		this.instantiationState = instantiationState;
 		return this;
 	}
@@ -393,11 +395,11 @@ public class VnfInstance {
 		return instantiationState;
 	}
 
-	public void setInstantiationState(InstantiationStateEnum instantiationState) {
+	public void setInstantiationState(final InstantiationStateEnum instantiationState) {
 		this.instantiationState = instantiationState;
 	}
 
-	public VnfInstance instantiatedVnfInfo(VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo) {
+	public VnfInstance instantiatedVnfInfo(final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo) {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 		return this;
 	}
@@ -413,11 +415,11 @@ public class VnfInstance {
 		return instantiatedVnfInfo;
 	}
 
-	public void setInstantiatedVnfInfo(VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo) {
+	public void setInstantiatedVnfInfo(final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo) {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 
-	public VnfInstance metadata(KeyValuePairs metadata) {
+	public VnfInstance metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -435,11 +437,11 @@ public class VnfInstance {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInstance extensions(KeyValuePairs extensions) {
+	public VnfInstance extensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -458,11 +460,11 @@ public class VnfInstance {
 		return extensions;
 	}
 
-	public void setExtensions(KeyValuePairs extensions) {
+	public void setExtensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
 	}
 
-	public VnfInstance links(VnfInstanceLinks links) {
+	public VnfInstance links(final VnfInstanceLinks links) {
 		this.links = links;
 		return this;
 	}
@@ -478,7 +480,7 @@ public class VnfInstance {
 		return links;
 	}
 
-	public void setLinks(VnfInstanceLinks links) {
+	public void setLinks(final VnfInstanceLinks links) {
 		this.links = links;
 	}
 
@@ -511,7 +513,7 @@ public class VnfInstance {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

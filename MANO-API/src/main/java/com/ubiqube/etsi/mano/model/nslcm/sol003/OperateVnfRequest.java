@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,14 +39,14 @@ public class OperateVnfRequest {
 	@JsonProperty("additionalParams")
 	private KeyValuePairs additionalParams = null;
 
-	public OperateVnfRequest changeStateTo(VnfOperationalStateType changeStateTo) {
+	public OperateVnfRequest changeStateTo(final VnfOperationalStateType changeStateTo) {
 		this.changeStateTo = changeStateTo;
 		return this;
 	}
 
 	/**
 	 * The desired operational state (i.e. started or stopped) to change the VNF to.
-	 * 
+	 *
 	 * @return changeStateTo
 	 **/
 	@JsonProperty("changeStateTo")
@@ -55,11 +56,11 @@ public class OperateVnfRequest {
 		return changeStateTo;
 	}
 
-	public void setChangeStateTo(VnfOperationalStateType changeStateTo) {
+	public void setChangeStateTo(final VnfOperationalStateType changeStateTo) {
 		this.changeStateTo = changeStateTo;
 	}
 
-	public OperateVnfRequest stopType(StopType stopType) {
+	public OperateVnfRequest stopType(final StopType stopType) {
 		this.stopType = stopType;
 		return this;
 	}
@@ -74,7 +75,7 @@ public class OperateVnfRequest {
 	 * “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as
 	 * if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo”
 	 * attribute is equal to “STOPPED” and the “stopType” attribute is absent.
-	 * 
+	 *
 	 * @return stopType
 	 **/
 	@JsonProperty("stopType")
@@ -83,11 +84,11 @@ public class OperateVnfRequest {
 		return stopType;
 	}
 
-	public void setStopType(StopType stopType) {
+	public void setStopType(final StopType stopType) {
 		this.stopType = stopType;
 	}
 
-	public OperateVnfRequest gracefulStopTimeout(Integer gracefulStopTimeout) {
+	public OperateVnfRequest gracefulStopTimeout(final Integer gracefulStopTimeout) {
 		this.gracefulStopTimeout = gracefulStopTimeout;
 		return this;
 	}
@@ -103,7 +104,7 @@ public class OperateVnfRequest {
 	 * “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as
 	 * if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo”
 	 * attribute is equal to “STOPPED” and the “stopType” attribute is absent.
-	 * 
+	 *
 	 * @return gracefulStopTimeout
 	 **/
 	@JsonProperty("gracefulStopTimeout")
@@ -112,11 +113,11 @@ public class OperateVnfRequest {
 		return gracefulStopTimeout;
 	}
 
-	public void setGracefulStopTimeout(Integer gracefulStopTimeout) {
+	public void setGracefulStopTimeout(final Integer gracefulStopTimeout) {
 		this.gracefulStopTimeout = gracefulStopTimeout;
 	}
 
-	public OperateVnfRequest additionalParams(KeyValuePairs additionalParams) {
+	public OperateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -125,7 +126,7 @@ public class OperateVnfRequest {
 	 * Additional parameters passed by the NFVO as input to the process, specific to
 	 * the VNF of which the operation status is changed, as declared in the VNFD as
 	 * part of \&quot;OperateVnfOpConfig\&quot;.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
@@ -134,7 +135,7 @@ public class OperateVnfRequest {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
@@ -155,7 +156,7 @@ public class OperateVnfRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

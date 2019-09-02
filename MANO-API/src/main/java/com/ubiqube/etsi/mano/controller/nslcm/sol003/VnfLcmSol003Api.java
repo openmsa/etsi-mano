@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
@@ -27,6 +29,7 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.NotificationEvent;
 
+@Profile({ "default", "VNFM" })
 @RestController
 public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol003Api.class);
@@ -40,7 +43,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		eventManager = _eventManager;
-		LOG.debug("Registrating VnfInstanceApi");
+		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
 
 	@Override
@@ -126,7 +129,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
 			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");

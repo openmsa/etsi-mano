@@ -20,6 +20,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,7 +55,7 @@ public class AffectedVnfc {
 
 		private final String value;
 
-		ChangeTypeEnum(String value) {
+		ChangeTypeEnum(final String value) {
 			this.value = value;
 		}
 
@@ -64,7 +66,7 @@ public class AffectedVnfc {
 		}
 
 		@JsonCreator
-		public static ChangeTypeEnum fromValue(String text) {
+		public static ChangeTypeEnum fromValue(final String text) {
 			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -92,7 +94,7 @@ public class AffectedVnfc {
 	@JsonProperty("removedStorageResourceIds")
 	private List<String> removedStorageResourceIds = null;
 
-	public AffectedVnfc id(String id) {
+	public AffectedVnfc id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -101,7 +103,7 @@ public class AffectedVnfc {
 	 * Identifier of the Vnfc instance, identifying the applicable
 	 * \&quot;vnfcResourceInfo\&quot; entry in the \&quot;VnfInstance\&quot; data
 	 * type.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -111,18 +113,18 @@ public class AffectedVnfc {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public AffectedVnfc vduId(String vduId) {
+	public AffectedVnfc vduId(final String vduId) {
 		this.vduId = vduId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the related VDU in the VNFD.
-	 * 
+	 *
 	 * @return vduId
 	 **/
 	@JsonProperty("vduId")
@@ -132,11 +134,11 @@ public class AffectedVnfc {
 		return vduId;
 	}
 
-	public void setVduId(String vduId) {
+	public void setVduId(final String vduId) {
 		this.vduId = vduId;
 	}
 
-	public AffectedVnfc changeType(ChangeTypeEnum changeType) {
+	public AffectedVnfc changeType(final ChangeTypeEnum changeType) {
 		this.changeType = changeType;
 		return this;
 	}
@@ -145,7 +147,7 @@ public class AffectedVnfc {
 	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
 	 * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long
 	 * as the temporary resource exists.
-	 * 
+	 *
 	 * @return changeType
 	 **/
 	@JsonProperty("changeType")
@@ -155,11 +157,11 @@ public class AffectedVnfc {
 		return changeType;
 	}
 
-	public void setChangeType(ChangeTypeEnum changeType) {
+	public void setChangeType(final ChangeTypeEnum changeType) {
 		this.changeType = changeType;
 	}
 
-	public AffectedVnfc computeResource(ResourceHandle computeResource) {
+	public AffectedVnfc computeResource(final ResourceHandle computeResource) {
 		this.computeResource = computeResource;
 		return this;
 	}
@@ -168,7 +170,7 @@ public class AffectedVnfc {
 	 * Reference to the VirtualCompute resource. Detailed information is (for new
 	 * and modified resources) or has been (for removed resources) available from
 	 * the VIM.
-	 * 
+	 *
 	 * @return computeResource
 	 **/
 	@JsonProperty("computeResource")
@@ -178,11 +180,11 @@ public class AffectedVnfc {
 		return computeResource;
 	}
 
-	public void setComputeResource(ResourceHandle computeResource) {
+	public void setComputeResource(final ResourceHandle computeResource) {
 		this.computeResource = computeResource;
 	}
 
-	public AffectedVnfc metadata(KeyValuePairs metadata) {
+	public AffectedVnfc metadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -191,7 +193,7 @@ public class AffectedVnfc {
 	 * Metadata about this resource. The content of this attribute shall be a copy
 	 * of the content of the \&quot;metadata\&quot; attribute of the
 	 * VnfcResourceInfo structure.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
@@ -200,18 +202,18 @@ public class AffectedVnfc {
 		return metadata;
 	}
 
-	public void setMetadata(KeyValuePairs metadata) {
+	public void setMetadata(final KeyValuePairs metadata) {
 		this.metadata = metadata;
 	}
 
-	public AffectedVnfc affectedVnfcCpIds(List<String> affectedVnfcCpIds) {
+	public AffectedVnfc affectedVnfcCpIds(final List<String> affectedVnfcCpIds) {
 		this.affectedVnfcCpIds = affectedVnfcCpIds;
 		return this;
 	}
 
-	public AffectedVnfc addAffectedVnfcCpIdsItem(String affectedVnfcCpIdsItem) {
+	public AffectedVnfc addAffectedVnfcCpIdsItem(final String affectedVnfcCpIdsItem) {
 		if (this.affectedVnfcCpIds == null) {
-			this.affectedVnfcCpIds = new ArrayList<String>();
+			this.affectedVnfcCpIds = new ArrayList<>();
 		}
 		this.affectedVnfcCpIds.add(affectedVnfcCpIdsItem);
 		return this;
@@ -222,7 +224,7 @@ public class AffectedVnfc {
 	 * Shall be present for those affected CPs of the VNFC instance that are
 	 * associated to an external CP of the VNF instance. May be present for further
 	 * affected CPs of the VNFC instance.
-	 * 
+	 *
 	 * @return affectedVnfcCpIds
 	 **/
 	@JsonProperty("affectedVnfcCpIds")
@@ -231,18 +233,18 @@ public class AffectedVnfc {
 		return affectedVnfcCpIds;
 	}
 
-	public void setAffectedVnfcCpIds(List<String> affectedVnfcCpIds) {
+	public void setAffectedVnfcCpIds(final List<String> affectedVnfcCpIds) {
 		this.affectedVnfcCpIds = affectedVnfcCpIds;
 	}
 
-	public AffectedVnfc addedStorageResourceIds(List<String> addedStorageResourceIds) {
+	public AffectedVnfc addedStorageResourceIds(final List<String> addedStorageResourceIds) {
 		this.addedStorageResourceIds = addedStorageResourceIds;
 		return this;
 	}
 
-	public AffectedVnfc addAddedStorageResourceIdsItem(String addedStorageResourceIdsItem) {
+	public AffectedVnfc addAddedStorageResourceIdsItem(final String addedStorageResourceIdsItem) {
 		if (this.addedStorageResourceIds == null) {
-			this.addedStorageResourceIds = new ArrayList<String>();
+			this.addedStorageResourceIds = new ArrayList<>();
 		}
 		this.addedStorageResourceIds.add(addedStorageResourceIdsItem);
 		return this;
@@ -253,7 +255,7 @@ public class AffectedVnfc {
 	 * refers to a VirtualStorageResourceInfo item in the VnfInstance that was added
 	 * to the VNFC. It shall be provided if at least one storage resource was added
 	 * to the VNFC.
-	 * 
+	 *
 	 * @return addedStorageResourceIds
 	 **/
 	@JsonProperty("addedStorageResourceIds")
@@ -262,18 +264,18 @@ public class AffectedVnfc {
 		return addedStorageResourceIds;
 	}
 
-	public void setAddedStorageResourceIds(List<String> addedStorageResourceIds) {
+	public void setAddedStorageResourceIds(final List<String> addedStorageResourceIds) {
 		this.addedStorageResourceIds = addedStorageResourceIds;
 	}
 
-	public AffectedVnfc removedStorageResourceIds(List<String> removedStorageResourceIds) {
+	public AffectedVnfc removedStorageResourceIds(final List<String> removedStorageResourceIds) {
 		this.removedStorageResourceIds = removedStorageResourceIds;
 		return this;
 	}
 
-	public AffectedVnfc addRemovedStorageResourceIdsItem(String removedStorageResourceIdsItem) {
+	public AffectedVnfc addRemovedStorageResourceIdsItem(final String removedStorageResourceIdsItem) {
 		if (this.removedStorageResourceIds == null) {
-			this.removedStorageResourceIds = new ArrayList<String>();
+			this.removedStorageResourceIds = new ArrayList<>();
 		}
 		this.removedStorageResourceIds.add(removedStorageResourceIdsItem);
 		return this;
@@ -284,7 +286,7 @@ public class AffectedVnfc {
 	 * contains the identifier of a VirtualStorageResourceInfo item that has been
 	 * removed from the VNFC, and might no longer exist in the VnfInstance. It shall
 	 * be provided if at least one storage resource was removed from the VNFC.
-	 * 
+	 *
 	 * @return removedStorageResourceIds
 	 **/
 	@JsonProperty("removedStorageResourceIds")
@@ -293,7 +295,7 @@ public class AffectedVnfc {
 		return removedStorageResourceIds;
 	}
 
-	public void setRemovedStorageResourceIds(List<String> removedStorageResourceIds) {
+	public void setRemovedStorageResourceIds(final List<String> removedStorageResourceIds) {
 		this.removedStorageResourceIds = removedStorageResourceIds;
 	}
 
@@ -318,7 +320,7 @@ public class AffectedVnfc {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

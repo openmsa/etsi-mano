@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesPostQuery;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
+@Profile({ "default", "NFVO" })
 @RestController
 public class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsLcmSol005Api.class);
@@ -52,7 +54,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		msaExecutor = _msaExecutor;
-		LOG.debug("Instantiate SOL005 NS Instance.");
+		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
 	/**

@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.MsaExecutor;
@@ -24,6 +25,13 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+/**
+ * NFVO+VNFM & VNFM Implementation.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Profile({ "default", "VNFM" })
 @Service
 public class VnfInstanceLcm {
 
@@ -56,6 +64,7 @@ public class VnfInstanceLcm {
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
+		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(id));
@@ -64,7 +73,7 @@ public class VnfInstanceLcm {
 
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		if (vnfInstance.getInstantiationState() == (InstantiationStateEnum.NOT_INSTANTIATED)) {
+		if (vnfInstance.getInstantiationState() != (InstantiationStateEnum.INSTANTIATED)) {
 			vnfInstancesRepository.delete(vnfInstanceId);
 		} else {
 			throw new ConflictException("VNF final Instance is instantiated.");
@@ -85,7 +94,7 @@ public class VnfInstanceLcm {
 			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
 		}
 
-		final String ret = msaExecutor.onInstantiate(vnfPkgId, userData);
+		final String ret = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 
 		userData.put("msaServiceId", ret);
 		vnfPackageRepository.save(vnfPkg);
@@ -107,7 +116,7 @@ public class VnfInstanceLcm {
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
-		final String ret = msaExecutor.onInstanceTerminate(userData);
+		final String ret = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", ret);
 		vnfPkg.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkg);

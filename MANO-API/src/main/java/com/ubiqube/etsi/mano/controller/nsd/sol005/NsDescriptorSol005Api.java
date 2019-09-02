@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -51,14 +54,18 @@ import io.swagger.annotations.Api;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
+@Profile({ "default", "NFVO" })
 @RestController
 @Api(value = "/sol005/nsd/v1/ns_descriptors")
 public class NsDescriptorSol005Api implements NsDescriptorSol005 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptorSol005Api.class);
 
 	private final NsdRepository nsdRepository;
 
 	public NsDescriptorSol005Api(final NsdRepository _nsdRepository) {
 		nsdRepository = _nsdRepository;
+		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
 	/**

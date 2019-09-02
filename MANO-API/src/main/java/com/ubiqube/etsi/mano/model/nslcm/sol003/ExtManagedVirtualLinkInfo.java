@@ -18,6 +18,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -38,7 +39,7 @@ public class ExtManagedVirtualLinkInfo {
 	@JsonProperty("vnfLinkPorts")
 	private List<VnfLinkPortInfo> vnfLinkPorts = null;
 
-	public ExtManagedVirtualLinkInfo id(String id) {
+	public ExtManagedVirtualLinkInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -47,7 +48,7 @@ public class ExtManagedVirtualLinkInfo {
 	 * Identifier of the externally-managed internal VL and the related
 	 * externally-managed VL information instance. The identifier is assigned by the
 	 * NFV-MANO entity that manages this VL instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -57,18 +58,18 @@ public class ExtManagedVirtualLinkInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public ExtManagedVirtualLinkInfo vnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
+	public ExtManagedVirtualLinkInfo vnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD.
-	 * 
+	 *
 	 * @return vnfVirtualLinkDescId
 	 **/
 	@JsonProperty("vnfVirtualLinkDescId")
@@ -78,18 +79,18 @@ public class ExtManagedVirtualLinkInfo {
 		return vnfVirtualLinkDescId;
 	}
 
-	public void setVnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
+	public void setVnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 	}
 
-	public ExtManagedVirtualLinkInfo networkResource(ResourceHandle networkResource) {
+	public ExtManagedVirtualLinkInfo networkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 		return this;
 	}
 
 	/**
 	 * Reference to the VirtualNetwork resource.
-	 * 
+	 *
 	 * @return networkResource
 	 **/
 	@JsonProperty("networkResource")
@@ -98,18 +99,18 @@ public class ExtManagedVirtualLinkInfo {
 		return networkResource;
 	}
 
-	public void setNetworkResource(ResourceHandle networkResource) {
+	public void setNetworkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 	}
 
-	public ExtManagedVirtualLinkInfo vnfLinkPorts(List<VnfLinkPortInfo> vnfLinkPorts) {
+	public ExtManagedVirtualLinkInfo vnfLinkPorts(final List<VnfLinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
 		return this;
 	}
 
-	public ExtManagedVirtualLinkInfo addVnfLinkPortsItem(VnfLinkPortInfo vnfLinkPortsItem) {
+	public ExtManagedVirtualLinkInfo addVnfLinkPortsItem(final VnfLinkPortInfo vnfLinkPortsItem) {
 		if (this.vnfLinkPorts == null) {
-			this.vnfLinkPorts = new ArrayList<VnfLinkPortInfo>();
+			this.vnfLinkPorts = new ArrayList<>();
 		}
 		this.vnfLinkPorts.add(vnfLinkPortsItem);
 		return this;
@@ -117,7 +118,7 @@ public class ExtManagedVirtualLinkInfo {
 
 	/**
 	 * Link ports of this VL.
-	 * 
+	 *
 	 * @return vnfLinkPorts
 	 **/
 	@JsonProperty("vnfLinkPorts")
@@ -126,7 +127,7 @@ public class ExtManagedVirtualLinkInfo {
 		return vnfLinkPorts;
 	}
 
-	public void setVnfLinkPorts(List<VnfLinkPortInfo> vnfLinkPorts) {
+	public void setVnfLinkPorts(final List<VnfLinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
 	}
 
@@ -147,7 +148,7 @@ public class ExtManagedVirtualLinkInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}
