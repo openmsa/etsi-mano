@@ -64,7 +64,6 @@ public class VnfInstanceLcm {
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
-		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(id));
