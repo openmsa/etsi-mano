@@ -19,7 +19,7 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 /**
- * This is a VNFM Only Implementation. All queries shall goes to the NFVO
+ * This is a VNFM Only Implementation. All queries shall go to the NFVO
  * (REST).
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
