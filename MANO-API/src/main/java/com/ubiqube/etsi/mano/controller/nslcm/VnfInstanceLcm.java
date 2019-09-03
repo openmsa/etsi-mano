@@ -97,10 +97,8 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
 		final List<VnfPkgInstances> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstances instance = instances.stream()
-				.filter(x -> x.getInstanceId().contentEquals(vnfInstanceId))
-				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + vnfInstanceId));
+		final VnfPkgInstances instance = getLcmOpOccsInstance(instances, vnfInstanceId);
+		lcmOpOccsMsa.delete(vnfInstanceId);
 		instances.remove(instance);
 		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
 
@@ -116,11 +114,6 @@ public class VnfInstanceLcm {
 	public void instantiate(@Nonnull final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, @Nonnull final LcmLinkable links) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
-		final List<VnfPkgInstances> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstances instance = instances.stream()
-				.filter(x -> x.getInstanceId().contentEquals(vnfInstanceId))
-				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + vnfInstanceId));
 
 		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
 			throw new GenericException("Instance " + vnfInstanceId + " is already instantiated.");
@@ -142,6 +135,8 @@ public class VnfInstanceLcm {
 		LOG.info("New MSA VNF Create job: {}", ret);
 		userData.put("msaServiceId", ret);
 		final VnfPkgOperation VnfPkgOperation = new VnfPkgOperation(lcmOpOccs.getId(), ret);
+		final List<VnfPkgInstances> instances = vnfPkgIndex.getInstances();
+		final VnfPkgInstances instance = getLcmOpOccsInstance(instances, vnfInstanceId);
 		instance.getOperations().add(VnfPkgOperation);
 
 		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
@@ -168,10 +163,7 @@ public class VnfInstanceLcm {
 
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
 		final List<VnfPkgInstances> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstances instance = instances.stream()
-				.filter(x -> x.getInstanceId().contentEquals(vnfInstanceId))
-				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + vnfInstanceId));
+		final VnfPkgInstances instance = getLcmOpOccsInstance(instances, vnfInstanceId);
 
 		instance.getOperations().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		instance.getOperations().clear();
@@ -188,4 +180,10 @@ public class VnfInstanceLcm {
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
+	private static VnfPkgInstances getLcmOpOccsInstance(final List<VnfPkgInstances> _instances, final String _id) {
+		return _instances.stream()
+				.filter(x -> x.getInstanceId().contentEquals(_id))
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + _id));
+	}
 }
