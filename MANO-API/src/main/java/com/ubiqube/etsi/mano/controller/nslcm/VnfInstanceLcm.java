@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,11 +90,26 @@ public class VnfInstanceLcm {
 
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		if (vnfInstance.getInstantiationState() != (InstantiationStateEnum.INSTANTIATED)) {
-			vnfInstancesRepository.delete(vnfInstanceId);
-		} else {
+		if (vnfInstance.getInstantiationState() == (InstantiationStateEnum.INSTANTIATED)) {
 			throw new ConflictException("VNF final Instance is instantiated.");
 		}
+		@NotNull
+		final String vnfPkgId = vnfInstance.getVnfPkgId();
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
+		final List<VnfPkgInstances> instances = vnfPkgIndex.getInstances();
+		final VnfPkgInstances instance = instances.stream()
+				.filter(x -> x.getInstanceId().contentEquals(vnfInstanceId))
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + vnfInstanceId));
+		instances.remove(instance);
+		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
+
+		if (instances.isEmpty()) {
+			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
+			vnfPkg.setUsageState(UsageStateEnum.NOT_IN_USE);
+			vnfPackageRepository.save(vnfPkg);
+		}
+		vnfInstancesRepository.delete(vnfInstanceId);
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 
@@ -165,9 +181,6 @@ public class VnfInstanceLcm {
 		final String ret = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", ret);
 		instance.getOperations().add(new VnfPkgOperation(lcmOpOccs.getId(), ret));
-		if (instances.size() <= 1) {
-			vnfPkg.setUsageState(UsageStateEnum.NOT_IN_USE);
-		}
 
 		vnfPackageRepository.save(vnfPkg);
 		vnfPackageRepository.storeObject(vnfPkg.getId(), vnfPkgIndex, "indexes.json");
