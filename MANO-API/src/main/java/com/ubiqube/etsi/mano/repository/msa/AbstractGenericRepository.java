@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,11 +111,27 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		final StringBuilder path = new StringBuilder(makeRoot(_id));
 		path.append('/').append(_filename);
 		try {
-			repositoryService.addFile(path.toString(), "", "etsi-mano", mapper.writeValueAsString(mapper.writeValueAsString(_object)), "ncroot");
-
+			repositoryService.addFile(path.toString(), "", "etsi-mano", mapper.writeValueAsString(_object), "ncroot");
 		} catch (final ServiceException | JsonProcessingException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	public final <T, U extends Class> T loadObject(@NotNull final String _id, final U t, final String _filename) {
+		final StringBuilder path = new StringBuilder(makeRoot(_id));
+		path.append('/').append(_filename);
+		final RepositoryElement repositoryElement = repositoryService.getElement(path.toString());
+		if (null == repositoryElement) {
+			LOG.error("Unable to find path: " + path.toString());
+		}
+		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
+
+		try {
+			return (T) mapper.readValue(repositoryContent, t);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+
 	}
 
 	@Override

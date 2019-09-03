@@ -1,11 +1,26 @@
 package com.ubiqube.etsi.mano.factory;
 
+import java.util.Date;
+
+import javax.annotation.Nonnull;
+
+import org.springframework.lang.NonNull;
+
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
+
+public final class LcmFactory {
+	private LcmFactory() {
+		// Nothing.
+	}
 
 public class LcmFactory {
 
@@ -66,4 +81,17 @@ public class LcmFactory {
 		return vnfInstanceLinks;
 	}
 
+	@NonNull
+	public static NsLcmOpOccsNsLcmOpOcc createNsLcmOpOccsNsLcmOpOcc(final String nsInstanceId, final LcmOperationTypeEnum lcmOperationType, final OperationParamsEnum operationParams) {
+		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOccsNsLcmOpOcc();
+		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(true);
+		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(false);
+		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
+		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
+		nsLcmOpOccsNsLcmOpOcc.setOperationParams(operationParams);
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(OperationStateEnum.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
+		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
+		return nsLcmOpOccsNsLcmOpOcc;
+	}
 }

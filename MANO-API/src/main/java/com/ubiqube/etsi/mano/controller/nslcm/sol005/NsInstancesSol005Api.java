@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,12 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.MsaExecutor;
+import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
@@ -36,9 +40,17 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdTerminate
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdUpdatePostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceLinksSelf;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesPostQuery;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.repository.msa.LcmOpOccsMsa;
 
 @Profile({ "default", "NFVO" })
 @RestController
@@ -50,10 +62,16 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final MsaExecutor msaExecutor;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor) {
+	private final LcmOpOccsMsa lcmOpOccsMsa;
+
+	private final VnfPackageRepository vnfPackageRepository;
+
+	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		msaExecutor = _msaExecutor;
+		lcmOpOccsMsa = _lcmOpOccsMsa;
+		vnfPackageRepository = _vnfPackageRepository;
 		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
@@ -124,6 +142,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL, OperationParamsEnum.HEAL);
+		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -139,11 +159,23 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE, OperationParamsEnum.INSTANTIATE);
+		lcmOpOccsMsa.save(lcmOpOccs);
+		// Contact OSS/BSS
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
-		final Map<String, String> userData = (Map<String, String>) nsdInfo.getUserDefinedData();
+		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
+		final Map<String, Object> userData = (Map<String, Object>) nsdInfo.getUserDefinedData();
+
+		List<String> opOccs = (List<String>) userData.get("lcmOpOccs");
+		if (null == opOccs) {
+			opOccs = new ArrayList<>();
+		}
+		opOccs.add(lcmOpOccs.getId());
+		userData.put("lcmOpOccs", opOccs);
 
 		final String res = msaExecutor.onNsInstantiate(nsdId, userData);
+		LOG.info("Creating a MSA Job: {}", res);
 		nsInstancesNsInstance.setNsState(NsStateEnum.INSTANTIATED);
 		nsInstanceRepository.save(nsInstancesNsInstance);
 		userData.put("msaProcessId", res);
@@ -164,6 +196,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE, OperationParamsEnum.SCALE);
+		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -184,6 +218,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.NOT_INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is not instantiated.");
 		}
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.TERMINATE, OperationParamsEnum.TERMINATE);
+		lcmOpOccsMsa.save(lcmOpOccs);
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		final Map<String, String> userData = (Map<String, String>) nsdInfo.getUserDefinedData();
@@ -210,6 +246,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE, OperationParamsEnum.UPDATE);
+		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -229,17 +267,40 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
 			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
 		}
+		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
+		nsdRepository.save(nsd);
+
 		final NsInstancesNsInstance nsInstancesNsInstance = new NsInstancesNsInstance();
 		nsInstancesNsInstance.setNsdId(req.getNsdId());
 		nsInstancesNsInstance.setNsInstanceDescription(req.getNsDescription());
 		nsInstancesNsInstance.setNsInstanceName(req.getNsName());
 		nsInstancesNsInstance.setNestedNsInstanceId(nsd.getNestedNsdInfoIds());
 		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
+		final List<NsInstancesNsInstanceVnfInstance> vnfInstance = new ArrayList<>();
+		final List<String> vnfs = nsd.getVnfPkgIds();
+		for (final String id : vnfs) {
+			final VnfPkgInfo vnf = vnfPackageRepository.get(id);
+			if (!vnf.getOnboardingState().equals("ONBOARDED")) {
+				throw new BadRequestException("VNF:" + id + " must be ONBOARDED");
+			}
+			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
+			// TODO: Completly wrong, we need to create VNF instance on the NFVM.
+			nsInstancesNsInstanceVnfInstance.setId(id);
+			nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			final Map<String, Object> userData = (Map<String, Object>) vnf.getUserDefinedData();
+			nsInstancesNsInstanceVnfInstance.setVimId((String) userData.get("vimId"));
+			nsInstancesNsInstanceVnfInstance.setVnfdId(vnf.getVnfdId());
+			nsInstancesNsInstanceVnfInstance.setVnfdVersion(vnf.getVnfdVersion());
+			nsInstancesNsInstanceVnfInstance.setVnfPkgId(id);
+			vnfInstance.add(nsInstancesNsInstanceVnfInstance);
+		}
+
+		nsInstancesNsInstance.setVnfInstance(vnfInstance);
 		final String id = UUID.randomUUID().toString();
 		nsInstancesNsInstance.setId(id);
 
 		nsInstanceRepository.save(nsInstancesNsInstance);
-
+		nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
 		final InlineResponse200 resp = new InlineResponse200();
 		resp.setNsInstance(nsInstancesNsInstance);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
