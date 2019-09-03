@@ -134,13 +134,13 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
 		final @Nonnull String vnfPkgId = UUID.randomUUID().toString();
-		final Object userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
+		final Map<String, Object> userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
 		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 
-		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
+		final Map<String, Object> userData = vnfPkgInfo.getUserDefinedData();
 
 		checkUserData(userData);
 

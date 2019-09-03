@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.factory;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
@@ -20,7 +21,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public class VnfPackageFactory {
 
-	public static VnfPkgInfo createVnfPkgInfo(final String vnfPkgId, final Object userData) {
+	public static VnfPkgInfo createVnfPkgInfo(final String vnfPkgId, final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
 		vnfPkgInfo.setId(vnfPkgId);
 		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);

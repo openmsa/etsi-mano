@@ -50,12 +50,12 @@ public class VnfInstanceLcm {
 	private final MsaExecutor msaExecutor;
 	private final LcmOpOccsRepository lcmOpOccsMsa;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor, final LcmOpOccsRepository _lcmOpOccsMsa) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor, final LcmOpOccsRepository _lcmOpOccsRepository) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
 		msaExecutor = _msaExecutor;
-		lcmOpOccsMsa = _lcmOpOccsMsa;
+		lcmOpOccsMsa = _lcmOpOccsRepository;
 	}
 
 	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
@@ -120,7 +120,7 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		vnfPkg.setUsageState(UsageStateEnum.IN_USE);
-		final Map<String, Object> userData = (Map<String, Object>) vnfPkg.getUserDefinedData();
+		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 
 		if (null == userData.get("vimId")) {
 			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
@@ -158,7 +158,7 @@ public class VnfInstanceLcm {
 		instance.getOperations().clear();
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
-		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
+		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
 		addVnfOperation(vnfPkgId, processId, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
