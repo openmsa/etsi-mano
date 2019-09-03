@@ -13,7 +13,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdUsageStateEnum;
 
-public class NsdFactories {
+public final class NsdFactories {
 
 	private NsdFactories() {
 		// Nothing.
@@ -48,7 +48,7 @@ public class NsdFactories {
 		final NsDescriptorsNsdInfo nsdInfo = new NsDescriptorsNsdInfo();
 		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.CREATED);
-		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
+		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.DISABLED);
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.NOT_IN_USE);
 		nsdInfo.setPnfdInfoIds(new ArrayList<String>());
 		nsdInfo.setVnfPkgIds(new ArrayList<String>());
