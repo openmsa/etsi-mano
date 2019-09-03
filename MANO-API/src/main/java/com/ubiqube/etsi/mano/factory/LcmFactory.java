@@ -4,8 +4,7 @@ import java.util.Date;
 
 import javax.annotation.Nonnull;
 
-import org.springframework.lang.NonNull;
-
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
@@ -83,17 +82,36 @@ public final class LcmFactory {
 		return vnfInstanceLinks;
 	}
 
-	@NonNull
-	public static NsLcmOpOccsNsLcmOpOcc createNsLcmOpOccsNsLcmOpOcc(final String nsInstanceId, final LcmOperationTypeEnum lcmOperationType, final OperationParamsEnum operationParams) {
+	@Nonnull
+	public static NsLcmOpOccsNsLcmOpOcc createNsLcmOpOccsNsLcmOpOcc(final String nsInstanceId, final LcmOperationTypeEnum lcmOperationType) {
 		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOccsNsLcmOpOcc();
 		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(true);
 		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(false);
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
-		nsLcmOpOccsNsLcmOpOcc.setOperationParams(operationParams);
+		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
 		nsLcmOpOccsNsLcmOpOcc.setOperationState(OperationStateEnum.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
 		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
+
+	public static OperationParamsEnum lcmOperationTypeToParameter(final LcmOperationTypeEnum lcmOperationType) {
+		switch (lcmOperationType) {
+		case HEAL:
+			return OperationParamsEnum.HEAL;
+		case INSTANTIATE:
+			return OperationParamsEnum.INSTANTIATE;
+		case SCALE:
+			return OperationParamsEnum.SCALE;
+		case TERMINATE:
+			return OperationParamsEnum.TERMINATE;
+		case UPDATE:
+			return OperationParamsEnum.UPDATE;
+
+		default:
+			throw new NotFoundException("Unknwon LVM Operation: " + lcmOperationType);
+		}
+	}
+
 }
