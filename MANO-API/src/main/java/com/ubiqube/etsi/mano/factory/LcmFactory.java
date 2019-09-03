@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
@@ -22,8 +23,7 @@ public final class LcmFactory {
 		// Nothing.
 	}
 
-public class LcmFactory {
-
+	@Nonnull
 	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
@@ -33,10 +33,12 @@ public class LcmFactory {
 
 		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STOPPED);
+		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		return vnfInstance;
 	}
 
+	@Nonnull
 	public static VnfInstanceLinks createVnfInstancesLink(final String hrefSelf, final String hrefChangeExtConn, final String hrefChangeFlavor, final String hrefHeal, final String hrefIndicators, final String hrefInstanciate, final String hrefOperate, final String hrefScale, final String hrefScaleToLevel, final String hrefTerminate) {
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		final Link self = new Link();
