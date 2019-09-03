@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -142,7 +141,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL, OperationParamsEnum.HEAL);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -159,7 +158,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE, OperationParamsEnum.INSTANTIATE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		// Contact OSS/BSS
 		final String nsdId = nsInstancesNsInstance.getNsdId();
@@ -196,7 +195,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE, OperationParamsEnum.SCALE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -218,7 +217,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.NOT_INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is not instantiated.");
 		}
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.TERMINATE, OperationParamsEnum.TERMINATE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
@@ -246,7 +245,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
 			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
 		}
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE, OperationParamsEnum.UPDATE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -306,7 +305,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
-	private static NsInstancesNsInstanceLinks makeLink(@NotNull final String id) {
+	private static NsInstancesNsInstanceLinks makeLink(@Nonnull final String id) {
 		final NsInstancesNsInstanceLinks nsInstanceLinks = new NsInstancesNsInstanceLinks();
 		final NsInstancesNsInstanceLinksSelf heal = new NsInstancesNsInstanceLinksSelf();
 		heal.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
