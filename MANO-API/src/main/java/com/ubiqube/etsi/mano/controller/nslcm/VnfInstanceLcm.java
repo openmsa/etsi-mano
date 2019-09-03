@@ -122,15 +122,14 @@ public class VnfInstanceLcm {
 		vnfPkg.setUsageState(UsageStateEnum.IN_USE);
 		final Map<String, Object> userData = (Map<String, Object>) vnfPkg.getUserDefinedData();
 
-		final String vimConnection = (String) userData.get("vimId");
-		if (null == vimConnection) {
+		if (null == userData.get("vimId")) {
 			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
 		}
 
-		final String ret = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
-		LOG.info("New MSA VNF Create job: {}", ret);
-		userData.put("msaServiceId", ret);
-		addVnfOperation(vnfPkgId, ret, vnfInstanceId, LcmOperationTypeEnum.INSTANTIATE);
+		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
+		LOG.info("New MSA VNF Create job: {}", processId);
+		userData.put("msaServiceId", processId);
+		addVnfOperation(vnfPkgId, processId, vnfInstanceId, LcmOperationTypeEnum.INSTANTIATE);
 
 		vnfPackageRepository.save(vnfPkg);
 
@@ -160,13 +159,12 @@ public class VnfInstanceLcm {
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = (Map<String, String>) vnfPkg.getUserDefinedData();
-		final String ret = msaExecutor.onVnfInstanceTerminate(userData);
-		userData.put("msaTerminateServiceId", ret);
-		addVnfOperation(vnfPkgId, ret, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
+		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
+		userData.put("msaTerminateServiceId", processId);
+		addVnfOperation(vnfPkgId, processId, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
 		vnfPackageRepository.save(vnfPkg);
 		vnfPackageRepository.storeObject(vnfPkg.getId(), vnfPkgIndex, "indexes.json");
 		vnfInstancesRepository.save(vnfInstance);
-		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
 	private static VnfPkgInstances getLcmOpOccsInstance(final List<VnfPkgInstances> _instances, final String _id) {
