@@ -164,7 +164,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
-		final Map<String, Object> userData = (Map<String, Object>) nsdInfo.getUserDefinedData();
+		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 
 		List<String> opOccs = (List<String>) userData.get("lcmOpOccs");
 		if (null == opOccs) {
@@ -221,7 +221,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		lcmOpOccsMsa.save(lcmOpOccs);
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
-		final Map<String, String> userData = (Map<String, String>) nsdInfo.getUserDefinedData();
+		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 
 		msaExecutor.onNsInstanceTerminate(userData);
 
@@ -286,7 +286,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			// TODO: Completly wrong, we need to create VNF instance on the NFVM.
 			nsInstancesNsInstanceVnfInstance.setId(id);
 			nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-			final Map<String, Object> userData = (Map<String, Object>) vnf.getUserDefinedData();
+			final Map<String, Object> userData = vnf.getUserDefinedData();
 			nsInstancesNsInstanceVnfInstance.setVimId((String) userData.get("vimId"));
 			nsInstancesNsInstanceVnfInstance.setVnfdId(vnf.getVnfdId());
 			nsInstancesNsInstanceVnfInstance.setVnfdVersion(vnf.getVnfdVersion());

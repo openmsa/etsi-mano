@@ -7,7 +7,6 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -260,8 +259,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 			throw new ConflictException("Onboarding state is not correct.");
 		}
 
-		final LinkedHashMap<String, String> uddList = (LinkedHashMap<String, String>) vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
-		final String uri = uddList.get("url");
+		final Map<String, Object> uddList = vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
+		final String uri = (String) uddList.get("url");
 		final InputStream content = getUrlContent(uri);
 
 		vnfPackageRepository.storeObject(vnfPkgId, content, "vnfd");

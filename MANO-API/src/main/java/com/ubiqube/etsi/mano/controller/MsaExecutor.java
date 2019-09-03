@@ -61,10 +61,10 @@ public class MsaExecutor {
 		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
 	}
 
-	public String onNsInstanceTerminate(final Map<String, String> userData) {
-		final String msaServiceId = userData.get("msaServiceId");
+	public String onNsInstanceTerminate(final Map<String, Object> userData) {
+		final String msaServiceId = (String) userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
-		final String customerId = userData.get(CUSTOMER_ID);
+		final String customerId = (String) userData.get(CUSTOMER_ID);
 
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";

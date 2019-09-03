@@ -247,7 +247,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final String id = UUID.randomUUID().toString();
 
 		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id);
-		final Map<String, Object> userDefinedData = (Map<String, Object>) nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
+		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		resp.setUserDefinedData(userDefinedData);
 		resp.setNsdName((String) userDefinedData.get("name"));
 		final List<String> vnfPkgIds = (List<String>) userDefinedData.get("vnfPkgIds");
