@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class VnfPkgIndex {
 
-	private List<VnfPkgInstances> instances = new ArrayList<>();
+	private List<VnfPkgInstance> instances = new ArrayList<>();
 
 	@JsonProperty("Instances")
-	public List<VnfPkgInstances> getInstances() {
+	public List<VnfPkgInstance> getInstances() {
 		return instances;
 	}
 
-	public void setInstances(final List<VnfPkgInstances> instances) {
+	public void setInstances(final List<VnfPkgInstance> instances) {
 		this.instances = instances;
 	}
 

@@ -128,6 +128,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		return ResponseEntity.accepted().build();
 	}
 
+	eventManager.sendEvent(NotificationEvent.VNF_TERMINATE, vnfInstanceId);
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);

@@ -5,15 +5,15 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class VnfPkgInstances {
+public class VnfPkgInstance {
 	private String instanceId;
 	private final List<VnfPkgOperation> operations = new ArrayList<>();
 
-	public VnfPkgInstances() {
+	public VnfPkgInstance() {
 		// Nothing.
 	}
 
-	public VnfPkgInstances(final String _instanceId) {
+	public VnfPkgInstance(final String _instanceId) {
 		instanceId = _instanceId;
 	}
 
