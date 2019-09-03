@@ -8,6 +8,10 @@ public class VnfPkgOperation {
 	private String id = null;
 	private String processId = null;
 
+	public VnfPkgOperation() {
+		// Nothing.
+	}
+
 	public VnfPkgOperation(@NotNull final String _id, final String _processId) {
 		id = _id;
 		processId = _processId;
