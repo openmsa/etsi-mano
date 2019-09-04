@@ -41,6 +41,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentU
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
@@ -149,6 +150,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
 			eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
@@ -235,6 +237,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 			vnfPkgInfo.setChecksum(getChecksum(file.getBytes()));
 			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(file.getBytes()), "vnfd");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
 		} catch (final NoSuchAlgorithmException | IOException e) {
 			throw new GenericException(e);
