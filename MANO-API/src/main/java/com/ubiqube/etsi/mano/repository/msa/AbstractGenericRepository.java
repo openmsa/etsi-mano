@@ -45,10 +45,13 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	abstract String setId(T _entity);
 
-	protected String makeRoot(final String _id) {
+	protected String computePath(final String _id) {
 		final StringBuilder sb = new StringBuilder(getRoot());
 		sb.append('/').append(_id);
-		final String uri = sb.toString();
+		return sb.toString();
+	}
+
+	private void mkdir(final String uri) {
 		try {
 			if (!repositoryService.exists(uri)) {
 				repositoryService.addDirectory(uri, "", "etsi-mano", "ncroot");
@@ -56,7 +59,6 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
-		return uri;
 	}
 
 	abstract String getRoot();
@@ -64,7 +66,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	@SuppressWarnings("unchecked")
 	@Override
 	public final T get(final String _id) {
-		final String uri = makeRoot(_id) + '/' + getFilename();
+		final String uri = computePath(_id) + '/' + getFilename();
 		LOG.debug("Loading ID: {}", _id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
@@ -84,7 +86,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	@Override
 	public final void delete(final String _id) {
-		final String uri = makeRoot(_id);
+		final String uri = computePath(_id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
 		repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
@@ -93,12 +95,13 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	@Override
 	public final T save(final T _entity) {
 		final String saveId = setId(_entity);
-
-		final String uri = makeRoot(saveId) + '/' + getFilename();
+		final String dir = computePath(saveId);
+		mkdir(dir);
+		final String uri = dir + '/' + getFilename();
 		try {
 			final String str = mapper.writeValueAsString(_entity);
 			LOG.info("Creating entity @ {}", uri);
-			repositoryService.addFile(uri, "SOL005", "", str, "ncroot");
+			repositoryService.addFile(uri, "etsi-mano", "etsi-mano", str, "ncroot");
 		} catch (IOException | ServiceException e) {
 			throw new GenericException(e);
 		}
@@ -108,17 +111,19 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	@Override
 	public void storeObject(final String _id, final Object _object, final String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_id));
+		final StringBuilder path = new StringBuilder(computePath(_id));
+		verify(path.toString());
 		path.append('/').append(_filename);
 		try {
-			repositoryService.addFile(path.toString(), "", "etsi-mano", mapper.writeValueAsString(_object), "ncroot");
+			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", mapper.writeValueAsString(_object), "ncroot");
 		} catch (final ServiceException | JsonProcessingException e) {
 			throw new GenericException(e);
 		}
 	}
 
 	public final <T, U extends Class> T loadObject(@NotNull final String _id, final U t, final String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_id));
+		final StringBuilder path = new StringBuilder(computePath(_id));
+		verify(path.toString());
 		path.append('/').append(_filename);
 		final RepositoryElement repositoryElement = repositoryService.getElement(path.toString());
 		if (null == repositoryElement) {
@@ -136,11 +141,12 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	@Override
 	public void storeBinary(final String _id, final InputStream _stream, final String _filename) {
-		final StringBuilder path = new StringBuilder(makeRoot(_id));
+		final StringBuilder path = new StringBuilder(computePath(_id));
+		verify(path.toString());
 		path.append('/').append(_filename);
 
 		try {
-			repositoryService.addFile(path.toString(), "", "etsi-mano", ByteStreams.toByteArray(_stream), "ncroot");
+			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", ByteStreams.toByteArray(_stream), "ncroot");
 		} catch (ServiceException | IOException e) {
 			throw new GenericException(e);
 		}
@@ -170,10 +176,11 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 
 	@Override
 	public byte[] getBinary(final String _id, final String _filename) {
-		final String uri = makeRoot(_id) + '/' + _filename;
-		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
+		final StringBuilder path = new StringBuilder(computePath(_id));
+		path.append('/').append(_filename);
+		final RepositoryElement repositoryElement = repositoryService.getElement(path.toString());
 		if (null == repositoryElement) {
-			throw new NotFoundException("Element " + uri + " not found.");
+			throw new NotFoundException("Element " + path + " not found.");
 		}
 		return repositoryService.getRepositoryElementContent(repositoryElement);
 	}
