@@ -78,8 +78,7 @@ public class VnfInstanceLcm {
 		vnfInstancesRepository.save(vnfInstance);
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfId, VnfPkgIndex.class, "indexes.json");
 		final List<VnfPkgInstance> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstance instance = new VnfPkgInstance(vnfInstance.getId());
-		instances.add(instance);
+		instances.add(new VnfPkgInstance(vnfInstance.getId()));
 		vnfPackageRepository.storeObject(vnfId, vnfPkgIndex, "indexes.json");
 
 		vnfInstance.setLinks(links.getLinks(id));
