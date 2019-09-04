@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -70,7 +71,7 @@ public class VnfPkgTest {
 
 		final String resultServ = result.getResponse().getContentAsString();
 
-		verify(vnfPackageRepository).save(Mockito.any(VnfPkgInfo.class));
+		verify(vnfPackageRepository, atLeast(2)).save(Mockito.any(VnfPkgInfo.class));
 		verify(eventManager).sendEvent(Mockito.any(), Mockito.anyString());
 	}
 
