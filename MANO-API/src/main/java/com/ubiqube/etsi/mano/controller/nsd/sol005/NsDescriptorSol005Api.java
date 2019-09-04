@@ -31,12 +31,14 @@ import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
@@ -63,8 +65,11 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private final NsdRepository nsdRepository;
 
-	public NsDescriptorSol005Api(final NsdRepository _nsdRepository) {
+	private final VnfPackageRepository vnfPackageRepository;
+
+	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository) {
 		nsdRepository = _nsdRepository;
+		vnfPackageRepository = _vnfPackageRepository;
 		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
@@ -200,13 +205,18 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
+		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
+			throw new ConflictException("NSD is already Onboarded.");
+		}
 		try {
 			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
+
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
+		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
 		nsdRepository.save(nsdInfo);
 		nsdInfo.setLinks(makeLinks(nsdInfoId));
 		// NsdOnBoardingNotification to OSS/BSS
@@ -246,15 +256,24 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(final String accept, final String contentType, final NsDescriptorsPostQuery nsDescriptorsPostQuery) {
 		final String id = UUID.randomUUID().toString();
 
-		final NsDescriptorsNsdInfo resp = NsdFactories.createNsDescriptorsNsdInfo(id);
+		final NsDescriptorsNsdInfo nsdDescriptor = NsdFactories.createNsDescriptorsNsdInfo(id);
 		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
-		resp.setUserDefinedData(userDefinedData);
-		resp.setNsdName((String) userDefinedData.get("name"));
+		nsdDescriptor.setUserDefinedData(userDefinedData);
+		nsdDescriptor.setNsdName((String) userDefinedData.get("name"));
 		final List<String> vnfPkgIds = (List<String>) userDefinedData.get("vnfPkgIds");
-		resp.setVnfPkgIds(vnfPkgIds);
+		// Verify if VNF Package exists.
+		vnfPkgIds.stream().forEach(vnfPackageRepository::get);
+		nsdDescriptor.setVnfPkgIds(vnfPkgIds);
 
-		nsdRepository.save(resp);
-		return new ResponseEntity<>(resp, HttpStatus.OK);
+		nsdRepository.save(nsdDescriptor);
+		if (null != userDefinedData.get("heat")) {
+			nsdRepository.storeObject(nsdDescriptor.getId(), userDefinedData.get("heat"), "nsd");
+			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
+			nsdDescriptor.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
+			nsdRepository.save(nsdDescriptor);
+		}
+		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
+		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
 	}
 
 	private static NsDescriptorsNsdInfoLinks makeLinks(@Nonnull final String id) {
@@ -262,6 +281,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final NsDescriptorsNsdInfoLinksSelf nsdSelf = new NsDescriptorsNsdInfoLinksSelf();
 		final String _self = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
 		nsdSelf.setHref(_self);
+		ret.setSelf(nsdSelf);
 
 		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
 		final NsDescriptorsNsdInfoLinksSelf nsdContent = new NsDescriptorsNsdInfoLinksSelf();
