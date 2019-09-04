@@ -161,9 +161,9 @@ public class VnfInstanceLcm {
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
+		vnfPackageRepository.storeObject(vnfPkg.getId(), vnfPkgIndex, "indexes.json");
 		addVnfOperation(vnfPkgId, processId, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
 		vnfPackageRepository.save(vnfPkg);
-		vnfPackageRepository.storeObject(vnfPkg.getId(), vnfPkgIndex, "indexes.json");
 		vnfInstancesRepository.save(vnfInstance);
 	}
 
