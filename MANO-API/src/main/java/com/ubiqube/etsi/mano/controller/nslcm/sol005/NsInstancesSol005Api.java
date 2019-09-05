@@ -26,6 +26,9 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nsd.NsdPkgIndex;
+import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
+import com.ubiqube.etsi.mano.model.nsd.NsdPkgOperation;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
@@ -166,19 +169,13 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 
-		List<String> opOccs = (List<String>) userData.get("lcmOpOccs");
-		if (null == opOccs) {
-			opOccs = new ArrayList<>();
-		}
-		opOccs.add(lcmOpOccs.getId());
-		userData.put("lcmOpOccs", opOccs);
-
 		final String res = msaExecutor.onNsInstantiate(nsdId, userData);
 		LOG.info("Creating a MSA Job: {}", res);
 		nsInstancesNsInstance.setNsState(NsStateEnum.INSTANTIATED);
 		nsInstanceRepository.save(nsInstancesNsInstance);
 		userData.put("msaProcessId", res);
 		nsdRepository.save(nsdInfo);
+		addNsdOperation(nsdId, res, nsInstanceId, LcmOperationTypeEnum.TERMINATE);
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}
@@ -222,6 +219,10 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
+
+		final NsdPkgIndex nsdPkgIndex = vnfPackageRepository.loadObject(nsdId, NsdPkgIndex.class, "indexes.json");
+		final List<NsdPkgInstance> instances = nsdPkgIndex.getInstances();
+		final NsdPkgInstance instance = getLcmOpOccsInstance(instances, nsdId);
 
 		msaExecutor.onNsInstanceTerminate(userData);
 
@@ -299,6 +300,12 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstancesNsInstance.setId(id);
 
 		nsInstanceRepository.save(nsInstancesNsInstance);
+
+		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(id, NsdPkgIndex.class, "indexes.json");
+		final List<NsdPkgInstance> instances = nsdIndex.getInstances();
+		instances.add(new NsdPkgInstance(id));
+		nsdRepository.storeObject(id, nsdIndex, "indexes.json");
+
 		nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
 		final InlineResponse200 resp = new InlineResponse200();
 		resp.setNsInstance(nsInstancesNsInstance);
@@ -332,4 +339,25 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstanceLinks.setUpdate(update);
 		return nsInstanceLinks;
 	}
+
+	private NsLcmOpOccsNsLcmOpOcc addNsdOperation(final String _nsdId, final String _processId, final String _nsInstanceId, final LcmOperationTypeEnum _lcmOperationType) {
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(_nsInstanceId, _lcmOperationType);
+		lcmOpOccsMsa.save(lcmOpOccs);
+		final NsdPkgIndex nsdPkgIndex = vnfPackageRepository.loadObject(_nsdId, NsdPkgIndex.class, "indexes.json");
+		final NsdPkgOperation nsdPkgOperation = new NsdPkgOperation(lcmOpOccs.getId(), _processId);
+		final List<NsdPkgInstance> instances = nsdPkgIndex.getInstances();
+		final NsdPkgInstance instance = getLcmOpOccsInstance(instances, _nsInstanceId);
+		instance.getOperations().add(nsdPkgOperation);
+
+		vnfPackageRepository.storeObject(_nsdId, nsdPkgIndex, "indexes.json");
+		return lcmOpOccs;
+	}
+
+	private static NsdPkgInstance getLcmOpOccsInstance(final List<NsdPkgInstance> _instances, final String _id) {
+		return _instances.stream()
+				.filter(x -> x.getInstanceId().contentEquals(_id))
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + _id));
+	}
+
 }
