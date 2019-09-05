@@ -19,9 +19,9 @@ public class NotificationJob extends QuartzJobBean {
 	protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
 		final JobDataMap jobDataMap = context.getMergedJobDataMap();
 		final NotificationEvent eventType = NotificationEvent.valueOf(jobDataMap.getString("eventType"));
-		final String objectIdId = jobDataMap.getString("objectId");
+		final String objectId = jobDataMap.getString("objectId");
 
-		dispatch(eventType, objectIdId);
+		dispatch(eventType, objectId);
 	}
 
 	private void dispatch(final NotificationEvent eventType, final String objectIdId) {

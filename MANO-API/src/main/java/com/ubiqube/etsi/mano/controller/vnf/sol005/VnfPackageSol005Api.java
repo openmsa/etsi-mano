@@ -7,6 +7,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,6 +44,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.ActionType;
 import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.NotificationEvent;
@@ -259,16 +261,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("Onboarding state is not correct.");
+			throw new ConflictException("The VNF Package is already onboarded");
 		}
 
 		final Map<String, Object> uddList = vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
-		final String uri = (String) uddList.get("url");
-		final InputStream content = getUrlContent(uri);
+		final Map<String, Object> parameters = new HashMap<>();
+		parameters.put("url", uddList.get("url"));
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);
 
-		vnfPackageRepository.storeObject(vnfPkgId, content, "vnfd");
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-		vnfPackageRepository.save(vnfPkgInfo);
 		return ResponseEntity.noContent().build();
 	}
 
