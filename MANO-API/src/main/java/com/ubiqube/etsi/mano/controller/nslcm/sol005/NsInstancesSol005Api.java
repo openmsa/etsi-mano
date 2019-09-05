@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgOperation;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
@@ -267,6 +268,9 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
 			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
 		}
+		if (!nsd.getNsdOperationalState().equals(NsdOperationalStateEnum.ENABLED.value())) {
+			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
+		}
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);
 
@@ -282,6 +286,9 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			final VnfPkgInfo vnf = vnfPackageRepository.get(id);
 			if (!vnf.getOnboardingState().equals("ONBOARDED")) {
 				throw new BadRequestException("VNF:" + id + " must be ONBOARDED");
+			}
+			if (!vnf.getOperationalState().equals("ENABLED")) {
+				throw new BadRequestException("VNF:" + id + " must be ENABLED");
 			}
 			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
 			// TODO: Completly wrong, we need to create VNF instance on the NFVM.
