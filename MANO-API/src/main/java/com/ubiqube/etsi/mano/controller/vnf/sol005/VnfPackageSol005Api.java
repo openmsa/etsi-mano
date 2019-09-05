@@ -152,7 +152,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
-			eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
 		vnfPackageRepository.storeObject(vnfPkgInfo.getId(), new VnfPkgIndex(), "indexes.json");
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
@@ -217,7 +217,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		// On change Notification
-		eventManager.sendEvent(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.OK);
 	}
 
@@ -242,7 +242,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		} catch (final NoSuchAlgorithmException | IOException e) {
 			throw new GenericException(e);
 		}
-		eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		return ResponseEntity.accepted().build();
 	}
 

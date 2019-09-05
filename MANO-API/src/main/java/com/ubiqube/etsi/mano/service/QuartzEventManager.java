@@ -28,7 +28,7 @@ public class QuartzEventManager implements EventManager {
 	}
 
 	@Override
-	public void sendEvent(final NotificationEvent notificationEvent, final String objectIdId) {
+	public void sendNotification(final NotificationEvent notificationEvent, final String objectIdId) {
 		LOG.info("Starting sendEvent : {}/{}", notificationEvent, objectIdId);
 		final JobDataMap jobDataMap = new JobDataMap();
 		jobDataMap.put("eventType", notificationEvent.value());
