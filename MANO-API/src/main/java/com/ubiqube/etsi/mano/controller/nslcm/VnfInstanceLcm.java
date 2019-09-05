@@ -71,6 +71,9 @@ public class VnfInstanceLcm {
 		if (!vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
 			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
 		}
+		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
+			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
+		}
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
