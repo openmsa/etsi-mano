@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
+@EnableSwagger2
 public class Application extends SpringBootServletInitializer {
 	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
@@ -31,4 +32,18 @@ public class Application extends SpringBootServletInitializer {
 		return objectMapper;
 	}
 
+	@Bean
+	public WebMvcConfigurerAdapter adapter() {
+		return new WebMvcConfigurerAdapter() {
+			@Override
+			public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+				registry.addResourceHandler("swagger-ui.html")
+						.addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
+				registry.addResourceHandler("/webjars/**")
+						.addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+				super.addResourceHandlers(registry);
+			}
+		};
+	}
 }
