@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.controller;
+package com.ubiqube.etsi.mano.service;
 
 import java.util.HashMap;
 import java.util.Map;
