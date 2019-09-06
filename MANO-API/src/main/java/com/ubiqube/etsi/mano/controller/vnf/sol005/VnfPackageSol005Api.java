@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -233,18 +232,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-
+		vnfPackageRepository.get(vnfPkgId);
+		final Map<String, Object> parameters = new HashMap<>();
 		try {
-			vnfPkgInfo.setChecksum(getChecksum(file.getBytes()));
-			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(file.getBytes()), "vnfd");
-			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
-			vnfPackageRepository.save(vnfPkgInfo);
-		} catch (final NoSuchAlgorithmException | IOException e) {
+			parameters.put("data", file.getBytes());
+		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, vnfPkgId, parameters);
 		return ResponseEntity.accepted().build();
 	}
 
