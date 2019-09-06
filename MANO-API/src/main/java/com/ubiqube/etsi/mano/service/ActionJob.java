@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
@@ -78,18 +79,24 @@ public class ActionJob extends QuartzJobBean {
 		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.PROCESSING);
 		vnfPackageRepository.save(vnfPkgInfo);
 		LOG.info("Async. Download of {}", url);
-		final InputStream content = getUrlContent(url);
-		vnfPackageRepository.storeBinary(vnfPkgId, content, "vnfd");
+		final byte[] content = getUrlContent(url);
+		try {
+			vnfPkgInfo.setChecksum(getChecksum(content));
+		} catch (final NoSuchAlgorithmException e) {
+			throw new GenericException(e);
+		}
+		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
 		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 		vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 		vnfPackageRepository.save(vnfPkgInfo);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 	}
 
-	private static InputStream getUrlContent(final String uri) {
+	private static byte[] getUrlContent(final String uri) {
 		URL url;
 		try {
 			url = new URL(uri);
-			return (InputStream) url.getContent();
+			return ByteStreams.toByteArray((InputStream) url.getContent());
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
