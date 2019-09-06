@@ -19,7 +19,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
-import com.ubiqube.etsi.mano.service.Notifications;
+import com.ubiqube.etsi.mano.service.event.Notifications;
 
 @Service
 public class VnfSubscriptionManagement {
