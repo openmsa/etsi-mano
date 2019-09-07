@@ -108,9 +108,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
-			throw new ConflictException("The ns instance " + nsInstanceId + " is instantiated.");
-		}
+		ensureNotInstantiatef(nsInstance);
+
 		nsInstanceRepository.delete(nsInstanceId);
 	}
 
@@ -142,9 +141,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final NsInstancesNsInstanceIdHealPostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
-		}
+		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
@@ -159,9 +156,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
-		}
+		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		// Contact OSS/BSS
@@ -190,9 +185,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdScalePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
-		}
+		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
@@ -212,9 +205,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdTerminatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.NOT_INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstanceId + " is not instantiated.");
-		}
+		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		final String nsdId = nsInstancesNsInstance.getNsdId();
@@ -244,9 +235,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdUpdatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstanceId + " is already instantiated.");
-		}
+		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		throw new GenericException("TODO");
@@ -265,12 +254,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			throw new NotFoundException("NsdId field is empty.");
 		}
 		final NsDescriptorsNsdInfo nsd = nsdRepository.get(req.getNsdId());
-		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
-			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
-		}
-		if (!nsd.getNsdOperationalState().equals(NsdOperationalStateEnum.ENABLED.value())) {
-			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
-		}
+		ensureOnborded(nsd);
+		ensureEnabled(nsd);
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);
 
@@ -365,6 +350,30 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 				.filter(x -> x.getInstanceId().contentEquals(_id))
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + _id));
+	}
+
+	private void ensureInstantiated(final NsInstancesNsInstance nsInstancesNsInstance) {
+		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
+			throw new GenericException("Ns Instance " + nsInstancesNsInstance.getId() + " is already instantiated.");
+		}
+	}
+
+	private void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
+		if (!nsd.getNsdOperationalState().equals(NsdOperationalStateEnum.ENABLED.value())) {
+			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
+		}
+	}
+
+	private void ensureOnborded(final NsDescriptorsNsdInfo nsd) {
+		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
+			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
+		}
+	}
+
+	private void ensureNotInstantiatef(final NsInstancesNsInstance nsInstance) {
+		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
+			throw new ConflictException("The ns instance " + nsInstance.getId() + " is instantiated.");
+		}
 	}
 
 }

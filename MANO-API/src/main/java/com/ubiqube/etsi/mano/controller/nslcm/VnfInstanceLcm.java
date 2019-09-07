@@ -68,12 +68,8 @@ public class VnfInstanceLcm {
 	public VnfInstance post(final CreateVnfRequest createVnfRequest, final String id, final LcmLinkable links) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
-		if (!vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
-		}
-		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
-		}
+		ensureIsOnboarded(vnfPkgInfo);
+		ensureIsEnabled(vnfPkgInfo);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
 		vnfInstance.setId(id);
@@ -90,9 +86,7 @@ public class VnfInstanceLcm {
 
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		if (vnfInstance.getInstantiationState() == (InstantiationStateEnum.INSTANTIATED)) {
-			throw new ConflictException("VNF final Instance is instantiated.");
-		}
+		ensureNotInstantiated(vnfInstance);
 		// Clean LCM Repository.
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
@@ -114,13 +108,11 @@ public class VnfInstanceLcm {
 
 	public void instantiate(@Nonnull final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, @Nonnull final LcmLinkable links) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-
-		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstanceId + " is already instantiated.");
-		}
+		ensureNotInstantiated(vnfInstance);
 
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
+		ensureIsEnabled(vnfPkg);
 		vnfPkg.setUsageState(UsageStateEnum.IN_USE);
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 
@@ -145,9 +137,7 @@ public class VnfInstanceLcm {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstanceId + " is not instantiated.");
-		}
+		ensureInstantiated(vnfInstance);
 
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
@@ -187,6 +177,30 @@ public class VnfInstanceLcm {
 
 		vnfPackageRepository.storeObject(_vnfPkgId, vnfPkgIndex, "indexes.json");
 		return lcmOpOccs;
+	}
+
+	private void ensureInstantiated(final VnfInstance vnfInstance) {
+		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
+		}
+	}
+
+	private void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
+		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
+			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
+		}
+	}
+
+	private void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
+		if (!vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
+			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
+		}
+	}
+
+	private void ensureNotInstantiated(final VnfInstance vnfInstance) {
+		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
+			throw new GenericException("Instance " + vnfInstance.getId() + " is already instantiated.");
+		}
 	}
 
 }

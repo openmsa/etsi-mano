@@ -113,9 +113,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(final String nsdInfoId) {
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
-		if (!nsdInfo.getNsdOperationalState().equals("DISABLED") || nsdInfo.getNsdUsageState().equals("IN_USE")) {
-			throw new ConflictException("Nsd in bad state " + nsdInfoId);
-		}
+		ensureDisabled(nsdInfo);
+		ensureNotInUse(nsdInfo);
+
 		nsdRepository.delete(nsdInfoId);
 		// NsdDeletionNotification OSS/BSS
 		return ResponseEntity.noContent().build();
@@ -132,12 +132,12 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId, final String accept) {
-		final NsDescriptorsNsdInfo nsdIfno = nsdRepository.get(nsdInfoId);
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 
 		final NsDescriptorsNsdInfoIdGetResponse nsDescriptorsNsdInfoIdGetResponse = new NsDescriptorsNsdInfoIdGetResponse();
-		nsDescriptorsNsdInfoIdGetResponse.setNsdInfo(nsdIfno);
-		nsdIfno.setLinks(makeLinks(nsdInfoId));
-		return new ResponseEntity<>(nsdIfno, HttpStatus.OK);
+		nsDescriptorsNsdInfoIdGetResponse.setNsdInfo(nsdInfo);
+		nsdInfo.setLinks(makeLinks(nsdInfoId));
+		return new ResponseEntity<>(nsdInfo, HttpStatus.OK);
 	}
 
 	/**
@@ -166,6 +166,8 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
 		final RangeHeader rangeHeader = RangeHeader.fromValue(range);
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
+		ensureOnboarded(nsdInfo);
 		byte[] bytes;
 		if (rangeHeader != null) {
 			bytes = nsdRepository.getBinary(nsdInfoId, "nsd", rangeHeader.getFrom(), rangeHeader.getTo());
@@ -207,9 +209,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
-		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
-			throw new ConflictException("NSD is already Onboarded.");
-		}
+		ensureOnboarded(nsdInfo);
 		try {
 			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
 		} catch (final IOException e) {
@@ -291,6 +291,24 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		ret.setNsdContent(nsdContent);
 
 		return ret;
+	}
+
+	private void ensureNotInUse(final NsDescriptorsNsdInfo nsdInfo) {
+		if (!nsdInfo.getNsdUsageState().equals("IN_USE")) {
+			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
+		}
+	}
+
+	private void ensureDisabled(final NsDescriptorsNsdInfo nsdInfo) {
+		if (!nsdInfo.getNsdOperationalState().equals("DISABLED")) {
+			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
+		}
+	}
+
+	private void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
+		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
+			throw new ConflictException("NSD is already Onboarded.");
+		}
 	}
 
 }

@@ -189,9 +189,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("Packaged is enabled.");
-		}
+		ensureDisabled(vnfPkgInfo);
 		vnfPackageRepository.delete(vnfPkgId);
 		return ResponseEntity.noContent().build();
 	}
@@ -208,9 +206,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("Could not patch a disabled VNF Package.");
-		}
+		ensureDisabled(vnfPkgInfo);
 		patcher.patch(body, vnfPkgInfo);
 		vnfPackageRepository.save(vnfPkgInfo);
 
@@ -232,7 +228,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
-		vnfPackageRepository.get(vnfPkgId);
+		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
+		ensureNotOnboarded(vnfPkgInfo);
 		final Map<String, Object> parameters = new HashMap<>();
 		try {
 			parameters.put("data", file.getBytes());
@@ -255,9 +252,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("The VNF Package is already onboarded");
-		}
+		ensureNotOnboarded(vnfPkgInfo);
 
 		final Map<String, Object> uddList = vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();
@@ -298,4 +293,17 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		}
 		return hexString.toString();
 	}
+
+	private void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
+		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
+			throw new ConflictException("The VNF Package is already onboarded");
+		}
+	}
+
+	private void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
+		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
+			throw new ConflictException("Packaged is enabled.");
+		}
+	}
+
 }
