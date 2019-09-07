@@ -209,7 +209,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
-		ensureOnboarded(nsdInfo);
+		ensureNotOnboarded(nsdInfo);
 		try {
 			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
 		} catch (final IOException e) {
@@ -307,6 +307,12 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
 		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
+			throw new ConflictException("NSD is already Onboarded.");
+		}
+	}
+
+	private void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
+		if (!nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
