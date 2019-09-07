@@ -1,10 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
-import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
@@ -38,7 +33,6 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
@@ -260,38 +254,6 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);
 
 		return ResponseEntity.noContent().build();
-	}
-
-	private static InputStream getUrlContent(final String uri) {
-		URL url;
-		try {
-			url = new URL(uri);
-			return (InputStream) url.getContent();
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
-		final MessageDigest digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
-		final byte[] hashbytes = digest.digest(bytes);
-		final String sha3_256hex = bytesToHex(hashbytes);
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
-
-		checksum.algorithm(Constants.HASH_ALGORITHM).hash(sha3_256hex);
-		return checksum;
-	}
-
-	private static String bytesToHex(final byte[] hash) {
-		final StringBuilder hexString = new StringBuilder();
-		for (final byte element : hash) {
-			final String hex = Integer.toHexString(0xff & element);
-			if (hex.length() == 1) {
-				hexString.append('0');
-			}
-			hexString.append(hex);
-		}
-		return hexString.toString();
 	}
 
 	private void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
