@@ -60,14 +60,11 @@ public class ActionJob extends QuartzJobBean {
 
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.PROCESSING);
-		vnfPackageRepository.save(vnfPkgInfo);
+		startOnboarding(vnfPkgInfo);
 		try {
 			vnfPkgInfo.setChecksum(getChecksum(data));
 			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(data), "vnfd");
-			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
-			vnfPackageRepository.save(vnfPkgInfo);
+			finishOnboarding(vnfPkgInfo);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new GenericException(e);
 		}
@@ -76,8 +73,7 @@ public class ActionJob extends QuartzJobBean {
 
 	private void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String vnfPkgId, final String url) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.PROCESSING);
-		vnfPackageRepository.save(vnfPkgInfo);
+		startOnboarding(vnfPkgInfo);
 		LOG.info("Async. Download of {}", url);
 		final byte[] content = getUrlContent(url);
 		try {
@@ -86,9 +82,7 @@ public class ActionJob extends QuartzJobBean {
 			throw new GenericException(e);
 		}
 		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
-		vnfPackageRepository.save(vnfPkgInfo);
+		finishOnboarding(vnfPkgInfo);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 	}
 
@@ -122,6 +116,17 @@ public class ActionJob extends QuartzJobBean {
 			hexString.append(hex);
 		}
 		return hexString.toString();
+	}
+
+	private void finishOnboarding(final VnfPkgInfo vnfPkgInfo) {
+		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
+		vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
+		vnfPackageRepository.save(vnfPkgInfo);
+	}
+
+	private void startOnboarding(final VnfPkgInfo vnfPkgInfo) {
+		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.PROCESSING);
+		vnfPackageRepository.save(vnfPkgInfo);
 	}
 
 }
