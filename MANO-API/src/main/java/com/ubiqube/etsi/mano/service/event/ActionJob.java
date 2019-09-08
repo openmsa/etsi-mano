@@ -78,11 +78,11 @@ public class ActionJob extends QuartzJobBean {
 		final byte[] content = getUrlContent(url);
 		try {
 			vnfPkgInfo.setChecksum(getChecksum(content));
+			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
+			finishOnboarding(vnfPkgInfo);
 		} catch (final NoSuchAlgorithmException e) {
 			throw new GenericException(e);
 		}
-		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
-		finishOnboarding(vnfPkgInfo);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 	}
 
