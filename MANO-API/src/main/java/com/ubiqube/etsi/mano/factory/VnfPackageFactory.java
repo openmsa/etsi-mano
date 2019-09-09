@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.factory;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
@@ -20,12 +21,12 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public class VnfPackageFactory {
 
-	public static VnfPkgInfo createVnfPkgInfo(final String vnfPkgId, final Object userData) {
+	public static VnfPkgInfo createVnfPkgInfo(final String vnfPkgId, final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
 		vnfPkgInfo.setId(vnfPkgId);
 		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
 		vnfPkgInfo.setUserDefinedData(userData);
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
+		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
 		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
 
 		return vnfPkgInfo;
@@ -60,7 +61,7 @@ public class VnfPackageFactory {
 		ret.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
 		ret.setId(_id);
 		ret.setNotificationType("VnfPackageChangeNotification");
-		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum.ENABLED);
+		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum.DISABLED);
 		ret.setSubscriptionId(_subscriptionId);
 		ret.setTimeStamp(new Date());
 		ret.setVnfdId(_vnfdId);

@@ -1,13 +1,8 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,25 +22,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
-import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
-import com.ubiqube.etsi.mano.service.NotificationEvent;
 import com.ubiqube.etsi.mano.service.Patcher;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
@@ -133,13 +129,13 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
 		final @Nonnull String vnfPkgId = UUID.randomUUID().toString();
-		final Object userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
+		final Map<String, Object> userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
 		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 
-		final Map<String, Object> userData = (Map<String, Object>) vnfPkgInfo.getUserDefinedData();
+		final Map<String, Object> userData = vnfPkgInfo.getUserDefinedData();
 
 		checkUserData(userData);
 
@@ -149,8 +145,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
+			vnfPackageRepository.save(vnfPkgInfo);
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
+		vnfPackageRepository.storeObject(vnfPkgInfo.getId(), new VnfPkgIndex(), "indexes.json");
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 
@@ -184,9 +183,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("Packaged is enabled.");
-		}
+		ensureDisabled(vnfPkgInfo);
 		vnfPackageRepository.delete(vnfPkgId);
 		return ResponseEntity.noContent().build();
 	}
@@ -203,9 +200,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("Could not patch a disabled VNF Package.");
-		}
+		ensureDisabled(vnfPkgInfo);
 		patcher.patch(body, vnfPkgInfo);
 		vnfPackageRepository.save(vnfPkgInfo);
 
@@ -213,7 +208,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		// On change Notification
-		eventManager.sendEvent(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.OK);
 	}
 
@@ -228,16 +223,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-
+		ensureNotOnboarded(vnfPkgInfo);
+		final Map<String, Object> parameters = new HashMap<>();
 		try {
-			vnfPkgInfo.setChecksum(getChecksum(file.getBytes()));
-			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(file.getBytes()), "vnfd");
-			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			vnfPackageRepository.save(vnfPkgInfo);
-		} catch (final NoSuchAlgorithmException | IOException e) {
+			parameters.put("data", file.getBytes());
+		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-		eventManager.sendEvent(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, vnfPkgId, parameters);
 		return ResponseEntity.accepted().build();
 	}
 
@@ -253,49 +246,26 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("Onboarding state is not correct.");
-		}
+		ensureNotOnboarded(vnfPkgInfo);
 
-		final LinkedHashMap<String, String> uddList = (LinkedHashMap<String, String>) vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
-		final String uri = uddList.get("url");
-		final InputStream content = getUrlContent(uri);
+		final Map<String, Object> uddList = vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
+		final Map<String, Object> parameters = new HashMap<>();
+		parameters.put("url", uddList.get("url"));
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);
 
-		vnfPackageRepository.storeObject(vnfPkgId, content, "vnfd");
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-		vnfPackageRepository.save(vnfPkgInfo);
 		return ResponseEntity.noContent().build();
 	}
 
-	private static InputStream getUrlContent(final String uri) {
-		URL url;
-		try {
-			url = new URL(uri);
-			return (InputStream) url.getContent();
-		} catch (final IOException e) {
-			throw new GenericException(e);
+	private void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
+		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
+			throw new ConflictException("The VNF Package is already onboarded");
 		}
 	}
 
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
-		final MessageDigest digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
-		final byte[] hashbytes = digest.digest(bytes);
-		final String sha3_256hex = bytesToHex(hashbytes);
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
-
-		checksum.algorithm(Constants.HASH_ALGORITHM).hash(sha3_256hex);
-		return checksum;
-	}
-
-	private static String bytesToHex(final byte[] hash) {
-		final StringBuilder hexString = new StringBuilder();
-		for (final byte element : hash) {
-			final String hex = Integer.toHexString(0xff & element);
-			if (hex.length() == 1) {
-				hexString.append('0');
-			}
-			hexString.append(hex);
+	private void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
+		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
+			throw new ConflictException("Packaged is enabled.");
 		}
-		return hexString.toString();
 	}
+
 }

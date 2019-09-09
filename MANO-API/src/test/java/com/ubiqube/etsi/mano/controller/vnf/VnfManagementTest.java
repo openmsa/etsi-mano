@@ -54,7 +54,7 @@ public class VnfManagementTest {
 	@Test
 	void testOneTupple() throws Exception {
 		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
-		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo("aaa", "myUserData"));
+		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo("aaa", new HashMap<String, Object>()));
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 
@@ -69,13 +69,13 @@ public class VnfManagementTest {
 		assertEquals("aaa", vnf.getId(), "Id should be 'aaa'");
 		assertEquals("/aaa", vnf.getLinks().getSelf().getHref());
 		assertEquals("CREATED", vnf.getOnboardingState());
-		assertEquals("ENABLED", vnf.getOperationalState());
+		assertEquals("DISABLED", vnf.getOperationalState());
 		assertEquals("NOT_IN_USE", vnf.getUsageState());
 	}
 
 	@Test
 	void testgetVnfUniq() throws Exception {
-		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo("aaa", "myUserData");
+		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo("aaa", new HashMap<String, Object>());
 		when(vnfPackageRepository.get("aaa")).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
