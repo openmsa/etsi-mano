@@ -184,6 +184,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		ensureDisabled(vnfPkgInfo);
+		ensureNotInUse(vnfPkgInfo);
 		vnfPackageRepository.delete(vnfPkgId);
 		return ResponseEntity.noContent().build();
 	}
@@ -200,7 +201,6 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		ensureDisabled(vnfPkgInfo);
 		patcher.patch(body, vnfPkgInfo);
 		vnfPackageRepository.save(vnfPkgInfo);
 
@@ -256,15 +256,21 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		return ResponseEntity.noContent().build();
 	}
 
-	private void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
+	private static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
 		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("The VNF Package is already onboarded");
 		}
 	}
 
-	private void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
+	private static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
 		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
 			throw new ConflictException("Packaged is enabled.");
+		}
+	}
+
+	private static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
+		if (!"NOT_IN_USE".equals(vnfPkgInfo.getUsageState())) {
+			throw new ConflictException("VNF Should be in Not In Use State.");
 		}
 	}
 
