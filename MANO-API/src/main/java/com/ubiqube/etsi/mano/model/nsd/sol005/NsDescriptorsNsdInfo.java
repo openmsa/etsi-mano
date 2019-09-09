@@ -476,11 +476,8 @@ public class NsDescriptorsNsdInfo {
 	 **/
 	@JsonProperty("nsdOperationalState")
 	@NotNull
-	public String getNsdOperationalState() {
-		if (nsdOperationalState == null) {
-			return null;
-		}
-		return nsdOperationalState.value();
+	public NsdOperationalStateEnum getNsdOperationalState() {
+		return nsdOperationalState;
 	}
 
 	public void setNsdOperationalState(final NsdOperationalStateEnum nsdOperationalState) {

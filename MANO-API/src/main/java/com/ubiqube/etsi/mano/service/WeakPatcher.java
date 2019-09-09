@@ -7,7 +7,8 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.OperationalStateConverter;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 
 /**
  * Naive implementation of a Patch engine.
@@ -31,9 +35,17 @@ public class WeakPatcher implements Patcher {
 	private static final Logger LOG = LoggerFactory.getLogger(WeakPatcher.class);
 	/** Json object mapper. */
 	private final ObjectMapper mapper = new ObjectMapper();
+	private final BeanUtilsBean beanUtils;
+
+	public WeakPatcher() {
+		final ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
+		convertUtilsBean.register(new OperationalStateConverter(), OperationalStateEnum.class);
+		convertUtilsBean.register(new OperationalStateConverter(), NsdOperationalStateEnum.class);
+		beanUtils = new BeanUtilsBean(convertUtilsBean);
+	}
 
 	@Override
-	public void patch(String _patchDocument, Object _entity) {
+	public void patch(final String _patchDocument, final Object _entity) {
 		try {
 			final JsonNode patch = mapper.readTree(_patchDocument);
 			walk(patch, _entity);
@@ -42,7 +54,7 @@ public class WeakPatcher implements Patcher {
 		}
 	}
 
-	private void walk(JsonNode _patch, Object _entity) {
+	private void walk(final JsonNode _patch, final Object _entity) {
 		try {
 			_walk(_patch, new ArrayDeque<String>(), _entity);
 		} catch (final Exception e) {
@@ -50,7 +62,7 @@ public class WeakPatcher implements Patcher {
 		}
 	}
 
-	private void _walk(JsonNode jsonNode, Deque<String> _stack, Object _entity) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	private void _walk(final JsonNode jsonNode, final Deque<String> _stack, final Object _entity) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		if (jsonNode.isObject()) {
 			final Iterator<Map.Entry<String, JsonNode>> iter = jsonNode.fields();
 
@@ -74,14 +86,14 @@ public class WeakPatcher implements Patcher {
 
 	}
 
-	private void patchEntity(Deque<String> _stack, String _value, Object _entity) throws IllegalAccessException, InvocationTargetException {
+	private void patchEntity(final Deque<String> _stack, final String _value, final Object _entity) throws IllegalAccessException, InvocationTargetException {
 		final String key = StringUtils.join(_stack.descendingIterator(), ".");
 		if (LOG.isDebugEnabled()) {
 			// LOG.debug("Patching object {} on field {} with value {}",
 			// _entity.getClass().getName(), key, _value);
 			LOG.debug("Patching object " + _entity.getClass().getName() + " on field " + key + " with value " + _value);
 		}
-		BeanUtils.setProperty(_entity, key, _value);
+		beanUtils.setProperty(_entity, key, _value);
 	}
 
 }

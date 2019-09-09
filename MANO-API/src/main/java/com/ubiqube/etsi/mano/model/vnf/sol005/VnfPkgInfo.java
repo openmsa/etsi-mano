@@ -474,11 +474,8 @@ public class VnfPkgInfo {
 	 **/
 	@JsonProperty("operationalState")
 	@NotNull
-	public String getOperationalState() {
-		if (operationalState == null) {
-			return null;
-		}
-		return operationalState.value();
+	public OperationalStateEnum getOperationalState() {
+		return operationalState;
 	}
 
 	public void setOperationalState(final OperationalStateEnum operationalState) {

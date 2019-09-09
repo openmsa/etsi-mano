@@ -293,25 +293,25 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		return ret;
 	}
 
-	private void ensureNotInUse(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!nsdInfo.getNsdUsageState().equals("IN_USE")) {
+	private static void ensureNotInUse(final NsDescriptorsNsdInfo nsdInfo) {
+		if (!"IN_USE".equals(nsdInfo.getNsdUsageState())) {
 			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
 		}
 	}
 
-	private void ensureDisabled(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!nsdInfo.getNsdOperationalState().equals("DISABLED")) {
+	private static void ensureDisabled(final NsDescriptorsNsdInfo nsdInfo) {
+		if (!"DISABLED".equals(nsdInfo.getNsdOperationalState().value())) {
 			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
 		}
 	}
 
-	private void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
+	private static void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
 		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
 
-	private void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
+	private static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
 		if (!nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}

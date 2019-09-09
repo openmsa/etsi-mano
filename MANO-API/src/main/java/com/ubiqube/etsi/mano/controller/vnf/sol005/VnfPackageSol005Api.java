@@ -263,7 +263,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	private static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState())) {
+		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState().value())) {
 			throw new ConflictException("Packaged is enabled.");
 		}
 	}
