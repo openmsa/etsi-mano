@@ -19,8 +19,7 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 /**
- * This is a VNFM Only Implementation. All queries shall go to the NFVO
- * (REST).
+ * This is a VNFM Only Implementation. All queries shall go to the NFVO (REST).
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -85,7 +84,7 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
 		// TODO Auto-generated method stub
 		return null;
 	}

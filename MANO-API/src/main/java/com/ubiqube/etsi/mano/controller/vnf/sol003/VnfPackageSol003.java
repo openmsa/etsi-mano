@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 public interface VnfPackageSol003 {
 
@@ -41,7 +42,7 @@ public interface VnfPackageSol003 {
 	 *
 	 */
 	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip", "*/*" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) RangeHeader range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.
@@ -65,7 +66,7 @@ public interface VnfPackageSol003 {
 	 *
 	 */
 	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") @Nullable String accept, @Nullable @RequestHeader(value = "Range", required = false) String range);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") @Nullable String accept, @Nullable @RequestHeader(value = "Range", required = false) RangeHeader range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.

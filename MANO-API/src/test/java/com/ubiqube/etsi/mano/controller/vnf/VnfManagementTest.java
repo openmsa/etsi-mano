@@ -69,7 +69,7 @@ public class VnfManagementTest {
 		assertEquals("aaa", vnf.getId(), "Id should be 'aaa'");
 		assertEquals("/aaa", vnf.getLinks().getSelf().getHref());
 		assertEquals("CREATED", vnf.getOnboardingState());
-		assertEquals("DISABLED", vnf.getOperationalState());
+		assertEquals("DISABLED", vnf.getOperationalState().value());
 		assertEquals("NOT_IN_USE", vnf.getUsageState());
 	}
 
@@ -200,7 +200,7 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, Integer.decode("1000"))).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "Range: bytes=200-1000");
+		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", RangeHeader.fromValue("Range: bytes=200-1000"));
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
 		final InputStreamResource isr = (InputStreamResource) res.getBody();
@@ -214,7 +214,7 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, null)).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "Range: bytes=200-");
+		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", RangeHeader.fromValue("Range: bytes=200-"));
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
 		final InputStreamResource isr = (InputStreamResource) res.getBody();
