@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
-import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
@@ -31,12 +30,7 @@ public class PollingJob extends QuartzJobBean {
 	@Override
 	protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
 		final long processId = context.getJobDetail().getJobDataMap().getLong("processId");
-		ProcessInstance processInstance;
-		try {
-			processInstance = orchestrationService.getProcessInstance(processId);
-		} catch (final ServiceException e) {
-			throw new GenericException(e);
-		}
+		final ProcessInstance processInstance = orchestrationService.getProcessInstance(processId);
 		LOG.debug("Polling task {} with status: {}", processId, processInstance.getStatus().getStatus());
 		if ("RUNNING".equals(processInstance.getStatus().getStatus())) {
 

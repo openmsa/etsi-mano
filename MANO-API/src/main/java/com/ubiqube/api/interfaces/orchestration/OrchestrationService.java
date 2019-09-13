@@ -10,4 +10,6 @@ import com.ubiqube.api.exception.ServiceException;
 public interface OrchestrationService {
 
 	ProcessInstance scheduleServiceImmediateMode(@Nonnull String ubiqubeId, long serviceId, String serviceName, String processName, Map<String, String> varsMap) throws ServiceException;
+
+	ProcessInstance getProcessInstance(final long processId);
 }
