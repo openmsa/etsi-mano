@@ -151,7 +151,7 @@ public interface VnfLcmSol003 {
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/instantiate", consumes = { "application/json" }, produces = { "application/json" })
 	ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId,
-			@ApiParam(value = "Parameters for the VNF instantiation.", required = true) InstantiateVnfRequest instantiateVnfRequest);
+			@ApiParam(value = "Parameters for the VNF instantiation.", required = true) @RequestBody InstantiateVnfRequest instantiateVnfRequest);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Operate VNF  The POST method changes the operational state of a VNF instance resource. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
