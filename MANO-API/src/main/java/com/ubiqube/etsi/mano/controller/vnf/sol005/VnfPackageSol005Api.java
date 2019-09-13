@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -154,6 +155,10 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	private void checkUserData(final Map<String, Object> userData) {
+		Assert.notNull(userData.get("customerId"), "customerId could not be null.");
+		// Not in camel case ???
+		Assert.notNull(userData.get("device_login"), "device_login could not be null.");
+		Assert.notNull(userData.get("device_password"), "device_password could not be null.");
 		final String vimId = (String) userData.get("vimId");
 		if (null == vimId) {
 			throw new BadRequestException("vimId could not be null");
@@ -164,9 +169,9 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 			throw new BadRequestException("vimId is not found in MSA.", e);
 		}
 		final String manufacturerId = (String) userData.get("manufacturerId");
-		assert (null != manufacturerId);
+		Assert.notNull(manufacturerId, "manufacturerId could not be null.");
 		final String modelId = (String) userData.get("modelId");
-		assert (null != modelId);
+		Assert.notNull(modelId, "modelId could not be null.");
 		// Probably not the best place to do that.
 		final String manufacturer = manufacturerModel.getManufacturerById(manufacturerId);
 		final String model = manufacturerModel.getModelById(manufacturerId, modelId);
