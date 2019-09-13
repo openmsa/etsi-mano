@@ -86,7 +86,7 @@ public class MsaExecutor {
 		try {
 			LOG.info("Calling MSA remote FW: custormerId=" + customerId + ", serviceId=" + serviceId + ", serviceName=" + serviceId + ", processName=" + processName + ", params=" + varsMap);
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
-			return String.valueOf(resp.serviceId.id);
+			return String.valueOf(resp.getServiceId().getId());
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
