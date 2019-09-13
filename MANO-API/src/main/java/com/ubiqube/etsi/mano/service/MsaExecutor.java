@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
@@ -19,6 +21,9 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 @Service
 public class MsaExecutor {
 	private static final String CUSTOMER_ID = "customerId";
+
+	private static final Logger LOG = LoggerFactory.getLogger(MsaExecutor.class);
+
 	private final OrchestrationService orchestrationService;
 
 	public MsaExecutor(final OrchestrationService orchestrationService) {
@@ -79,6 +84,7 @@ public class MsaExecutor {
 
 	private String executeProcess(final String customerId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) {
 		try {
+			LOG.info("Calling MSA remote FW: custormerId=" + customerId + ", serviceId=" + serviceId + ", serviceName=" + serviceId + ", processName=" + processName + ", params=" + varsMap);
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
 			return String.valueOf(resp.serviceId.id);
 		} catch (final ServiceException e) {
