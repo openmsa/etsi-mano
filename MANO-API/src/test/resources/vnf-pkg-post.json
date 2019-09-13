@@ -5,6 +5,8 @@
             "vimId": "TMA125",
             "manufacturerId": "18",
             "modelId": "121",
+            "device_login": "aa",
+            "device_password": "pp",
             "heat": {
                 "heat_template_version": "2015-04-30",
                 "description": "HOT template (Heat Orchestration Template) for NTR\n",
