@@ -15,18 +15,24 @@ $device_id = substr($context['deviceid'], 3);
 if (isset($context['servers'])) {
         foreach ($context['servers'] as &$server) {
 
-		$response = _neutron_floatingip_create ($device_id, $server['public_network'], $context['tenant_id']);
+	    if(!isset($server['floating_ip_address']))
+            {
+ 
+		$response = allocate_floatingip_address($device_id, $server['public_network'], $context['tenant_id']);
+
+		//$response = _neutron_floatingip_create ($device_id, $server['public_network'], $context['tenant_id']);
 		$response = json_decode($response, true);
 		if ($response['wo_status'] !== ENDED) {
 			$response = json_encode($response);
 			echo "Floating IP creation FAILED:" . $response . "\n";
 			exit;
 		}
+		$wo_comment = $response['wo_newparams'];
 
-		$wo_comment = $response['wo_comment'];
-		$wo_comment = json_decode(str_replace("\\\"", "\"", $wo_comment), true);
-		$floating_ip_id = $wo_comment['floatingip']['id'];
-		$floating_ip_address = $wo_comment['floatingip']['floating_ip_address'];
+		$floating_ip_id = $wo_comment['floating_ip_id'];
+
+                $floating_ip_address = $wo_comment['floating_ip_address'];
+
 
                 $server['floating_ip_id'] = $floating_ip_id;
                 $server['floating_ip_address'] = $floating_ip_address;
@@ -36,9 +42,11 @@ if (isset($context['servers'])) {
 		$response = json_decode($response, true);
 		if ($response['wo_status'] !== ENDED) {
 			$response = json_encode($response);
-			echo $response;
+			echo "Floating ip association failure \n".$response;
 		exit;
 		}
+                              }
+
 	}
 }
 

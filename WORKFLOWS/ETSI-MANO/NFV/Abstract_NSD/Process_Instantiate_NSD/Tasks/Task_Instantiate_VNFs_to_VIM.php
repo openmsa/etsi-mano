@@ -29,6 +29,6 @@ if (isset($vnfPack_list) && !empty($vnfPack_list)) {
 	}
 }
 $context['vnfPack_list'] = serialize($vnfArrs);
-task_exit(ENDED, "The VNF was instantiate successfully where ID: ");
+task_exit(ENDED, "The VNF was instantiate successfully with ID: ". $context['vnfPack_list'] ." .");
 
 ?>

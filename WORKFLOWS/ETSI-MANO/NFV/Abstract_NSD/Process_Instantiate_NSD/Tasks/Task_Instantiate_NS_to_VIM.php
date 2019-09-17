@@ -25,6 +25,6 @@ msa_execute_service_by_reference_and_wait_for_completion($ubiqube_id, $service_n
 # Store stack_id in $context list from the NS baseline response. 
 $context['ns_instance_id'] = $context['executed_service_id'];
 
-task_exit(ENDED, "The NS was instantiated successfully with ID: .");
+task_exit(ENDED, "The NS was instantiated successfully with ID: ". $context['ns_instance_id'] ." .");
 
 ?>
