@@ -5,7 +5,7 @@
     <displayField>service_id</displayField>
     <executionDetailsVisibility>5</executionDetailsVisibility>
     <executionMode>TRANSACTION</executionMode>
-    <group>Alarm Management</group>
+    <group>NFV|NFVO|Alarm Management</group>
     <icon>/images/repository/CommandDefinition/icons/default.png</icon>
     <name>Alarm Handler</name>
     <order>10000</order>
@@ -39,5 +39,14 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_My_Update_Activity">
+    <visibility>5</visibility>
+    <displayName>My Update Activity</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
   </process>
 </ObjectDefinition>
