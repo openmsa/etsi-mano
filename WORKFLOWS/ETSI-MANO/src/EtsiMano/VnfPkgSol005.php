@@ -11,10 +11,10 @@ class VnfPkgSol005 extends BaseApi
 	 * @param string $body
 	 * @return unknown
 	 */
-	public function vnfPackagesPost($body)
+	public function vnfPackagesPost($_body)
 	{
 		$url_frag = self::BASE_URL;
-		return json_decode($this->doPost($url_frag, $body), 1);
+		return json_decode($this->doPost($url_frag, $_body), 1);
 	}
 
 	/**
@@ -26,7 +26,7 @@ class VnfPkgSol005 extends BaseApi
 	public function vnfPackagesVnfPkgIdPatch($_vnfPkgId, $_body)
 	{
 		$url_frag = self::BASE_URL . '/' . urlencode($_vnfPkgId);
-		return json_decode($this->doPatch($url_frag, $body));
+		return json_decode($this->doPatch($url_frag, $_body), 1);
 	}
 	
 	public function vnfPackagesVnfPkgIdDelete($_vnfPkgId) {
