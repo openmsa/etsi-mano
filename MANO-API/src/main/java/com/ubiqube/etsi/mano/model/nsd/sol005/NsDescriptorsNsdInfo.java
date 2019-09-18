@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.model.nsd.sol005;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlEnum;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.exception.BadRequestException;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -84,24 +86,27 @@ public class NsDescriptorsNsdInfo {
 	public enum NsdOnboardingStateEnum {
 
 		@XmlEnumValue("CREATED")
-		CREATED(String.valueOf("CREATED")), @XmlEnumValue("UPLOADING")
-		UPLOADING(String.valueOf("UPLOADING")), @XmlEnumValue("PROCESSING")
-		PROCESSING(String.valueOf("PROCESSING")), @XmlEnumValue("ONBOARDED")
-		ONBOARDED(String.valueOf("ONBOARDED"));
+		CREATED("CREATED"), @XmlEnumValue("UPLOADING")
+		UPLOADING("UPLOADING"), @XmlEnumValue("PROCESSING")
+		PROCESSING("PROCESSING"), @XmlEnumValue("ONBOARDED")
+		ONBOARDED("ONBOARDED");
 
+		@Nonnull
 		private final String value;
 
-		NsdOnboardingStateEnum(final String v) {
+		NsdOnboardingStateEnum(@Nonnull final String v) {
 			value = v;
 		}
 
+		@Nonnull
 		public String value() {
 			return value;
 		}
 
 		@Override
+		@Nonnull
 		public String toString() {
-			return String.valueOf(value);
+			return value;
 		}
 
 		public static NsdOnboardingStateEnum fromValue(final String v) {
@@ -110,7 +115,7 @@ public class NsDescriptorsNsdInfo {
 					return b;
 				}
 			}
-			return null;
+			throw new BadRequestException("NsdOnboardingStateEnum could not be equal to [" + v + "]");
 		}
 	}
 
@@ -123,7 +128,8 @@ public class NsDescriptorsNsdInfo {
 	 * NSD content is being processed, e.g. validation. ONBOARDED = The associated
 	 * NSD content is on-boarded.\"
 	 **/
-	private NsdOnboardingStateEnum nsdOnboardingState = null;
+	@Nonnull
+	private NsdOnboardingStateEnum nsdOnboardingState = NsdOnboardingStateEnum.CREATED;
 
 	@ApiModelProperty(value = "")
 	@Valid
@@ -134,22 +140,24 @@ public class NsDescriptorsNsdInfo {
 	public enum NsdOperationalStateEnum {
 
 		@XmlEnumValue("ENABLED")
-		ENABLED(String.valueOf("ENABLED")), @XmlEnumValue("DISABLED")
-		DISABLED(String.valueOf("DISABLED"));
-
+		ENABLED("ENABLED"), @XmlEnumValue("DISABLED")
+		DISABLED("DISABLED");
+		@Nonnull
 		private final String value;
 
-		NsdOperationalStateEnum(final String v) {
+		NsdOperationalStateEnum(@Nonnull final String v) {
 			value = v;
 		}
 
+		@Nonnull
 		public String value() {
 			return value;
 		}
 
 		@Override
+		@Nonnull
 		public String toString() {
-			return String.valueOf(value);
+			return value;
 		}
 
 		public static NsdOperationalStateEnum fromValue(final String v) {
@@ -158,7 +166,7 @@ public class NsDescriptorsNsdInfo {
 					return b;
 				}
 			}
-			return null;
+			throw new BadRequestException("NsdOperationalStateEnum could not be equal to [" + v + "]");
 		}
 	}
 
@@ -169,29 +177,32 @@ public class NsDescriptorsNsdInfo {
 	 * state of the resource. ENABLED = The operational state of the resource is
 	 * enabled. DISABLED = The operational state of the resource is disabled.\"
 	 **/
-	private NsdOperationalStateEnum nsdOperationalState = null;
+	@Nonnull
+	private NsdOperationalStateEnum nsdOperationalState = NsdOperationalStateEnum.DISABLED;
 
 	@XmlType(name = "NsdUsageStateEnum")
 	@XmlEnum(String.class)
 	public enum NsdUsageStateEnum {
 
 		@XmlEnumValue("IN_USE")
-		IN_USE(String.valueOf("IN_USE")), @XmlEnumValue("NOT_IN_USE")
-		NOT_IN_USE(String.valueOf("NOT_IN_USE"));
-
+		IN_USE("IN_USE"), @XmlEnumValue("NOT_IN_USE")
+		NOT_IN_USE("NOT_IN_USE");
+		@Nonnull
 		private final String value;
 
-		NsdUsageStateEnum(final String v) {
+		NsdUsageStateEnum(@Nonnull final String v) {
 			value = v;
 		}
 
+		@Nonnull
 		public String value() {
 			return value;
 		}
 
 		@Override
+		@Nonnull
 		public String toString() {
-			return String.valueOf(value);
+			return (value);
 		}
 
 		public static NsdUsageStateEnum fromValue(final String v) {
@@ -200,7 +211,7 @@ public class NsDescriptorsNsdInfo {
 					return b;
 				}
 			}
-			return null;
+			throw new BadRequestException("NsdUsageStateEnum could not be equal to [" + v + "]");
 		}
 	}
 
@@ -211,7 +222,8 @@ public class NsDescriptorsNsdInfo {
 	 * resource.IN_USE = The resource is in use.NOT_IN_USE = The resource is
 	 * not-in-use.\"
 	 **/
-	private NsdUsageStateEnum nsdUsageState = null;
+	@Nonnull
+	private NsdUsageStateEnum nsdUsageState = NsdUsageStateEnum.NOT_IN_USE;
 
 	@ApiModelProperty(value = "This type represents a list of key-value pairs. The order of the pairs in the list is not significant. In JSON, a set of key- value pairs is represented as an object. It shall comply with the provisions  defined in clause 4 of IETF RFC 7159.  ")
 	/**
@@ -430,19 +442,17 @@ public class NsDescriptorsNsdInfo {
 	 **/
 	@JsonProperty("nsdOnboardingState")
 	@NotNull
+	@Nonnull
 	public String getNsdOnboardingState() {
-		if (nsdOnboardingState == null) {
-			return null;
-		}
 		return nsdOnboardingState.value();
 	}
 
-	public void setNsdOnboardingState(final NsdOnboardingStateEnum nsdOnboardingState) {
+	public void setNsdOnboardingState(@Nonnull final NsdOnboardingStateEnum nsdOnboardingState) {
 		this.nsdOnboardingState = nsdOnboardingState;
 	}
 
-	public NsDescriptorsNsdInfo nsdOnboardingState(final NsdOnboardingStateEnum nsdOnboardingState) {
-		this.nsdOnboardingState = nsdOnboardingState;
+	public NsDescriptorsNsdInfo nsdOnboardingState(@Nonnull final NsdOnboardingStateEnum _nsdOnboardingState) {
+		this.nsdOnboardingState = _nsdOnboardingState;
 		return this;
 	}
 
@@ -476,16 +486,17 @@ public class NsDescriptorsNsdInfo {
 	 **/
 	@JsonProperty("nsdOperationalState")
 	@NotNull
+	@Nonnull
 	public NsdOperationalStateEnum getNsdOperationalState() {
 		return nsdOperationalState;
 	}
 
-	public void setNsdOperationalState(final NsdOperationalStateEnum nsdOperationalState) {
+	public void setNsdOperationalState(@Nonnull final NsdOperationalStateEnum nsdOperationalState) {
 		this.nsdOperationalState = nsdOperationalState;
 	}
 
-	public NsDescriptorsNsdInfo nsdOperationalState(final NsdOperationalStateEnum nsdOperationalState) {
-		this.nsdOperationalState = nsdOperationalState;
+	public NsDescriptorsNsdInfo nsdOperationalState(@Nonnull final NsdOperationalStateEnum _nsdOperationalState) {
+		this.nsdOperationalState = _nsdOperationalState;
 		return this;
 	}
 
@@ -499,19 +510,17 @@ public class NsDescriptorsNsdInfo {
 	 **/
 	@JsonProperty("nsdUsageState")
 	@NotNull
+	@Nonnull
 	public String getNsdUsageState() {
-		if (nsdUsageState == null) {
-			return null;
-		}
 		return nsdUsageState.value();
 	}
 
-	public void setNsdUsageState(final NsdUsageStateEnum nsdUsageState) {
+	public void setNsdUsageState(@Nonnull final NsdUsageStateEnum nsdUsageState) {
 		this.nsdUsageState = nsdUsageState;
 	}
 
-	public NsDescriptorsNsdInfo nsdUsageState(final NsdUsageStateEnum nsdUsageState) {
-		this.nsdUsageState = nsdUsageState;
+	public NsDescriptorsNsdInfo nsdUsageState(@Nonnull final NsdUsageStateEnum _nsdUsageState) {
+		this.nsdUsageState = _nsdUsageState;
 		return this;
 	}
 
@@ -532,8 +541,8 @@ public class NsDescriptorsNsdInfo {
 		this.userDefinedData = userDefinedData;
 	}
 
-	public NsDescriptorsNsdInfo userDefinedData(final Map<String, Object> userDefinedData) {
-		this.userDefinedData = userDefinedData;
+	public NsDescriptorsNsdInfo userDefinedData(final Map<String, Object> _userDefinedData) {
+		this.userDefinedData = _userDefinedData;
 		return this;
 	}
 
@@ -552,8 +561,8 @@ public class NsDescriptorsNsdInfo {
 		this.links = links;
 	}
 
-	public NsDescriptorsNsdInfo links(final NsDescriptorsNsdInfoLinks links) {
-		this.links = links;
+	public NsDescriptorsNsdInfo links(final NsDescriptorsNsdInfoLinks _links) {
+		this.links = _links;
 		return this;
 	}
 

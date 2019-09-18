@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlEnum;
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.ubiqube.etsi.mano.exception.BadRequestException;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -94,17 +96,18 @@ public class VnfPkgInfo {
 	public enum OnboardingStateEnum {
 
 		@XmlEnumValue("CREATED")
-		CREATED(String.valueOf("CREATED")), @XmlEnumValue("UPLOADING")
-		UPLOADING(String.valueOf("UPLOADING")), @XmlEnumValue("PROCESSING")
-		PROCESSING(String.valueOf("PROCESSING")), @XmlEnumValue("ONBOARDED")
-		ONBOARDED(String.valueOf("ONBOARDED"));
-
+		CREATED("CREATED"), @XmlEnumValue("UPLOADING")
+		UPLOADING("UPLOADING"), @XmlEnumValue("PROCESSING")
+		PROCESSING("PROCESSING"), @XmlEnumValue("ONBOARDED")
+		ONBOARDED("ONBOARDED");
+		@Nonnull
 		private final String value;
 
-		OnboardingStateEnum(final String v) {
+		OnboardingStateEnum(@Nonnull final String v) {
 			value = v;
 		}
 
+		@Nonnull
 		public String value() {
 			return value;
 		}
@@ -115,13 +118,14 @@ public class VnfPkgInfo {
 		}
 
 		@JsonCreator
+		@Nonnull
 		public static OnboardingStateEnum fromValue(final String v) {
 			for (final OnboardingStateEnum b : OnboardingStateEnum.values()) {
 				if (String.valueOf(b.value).equals(v)) {
 					return b;
 				}
 			}
-			return null;
+			throw new BadRequestException("OnboardingStateEnum could not be equal to [" + v + "]");
 		}
 	}
 
@@ -141,15 +145,16 @@ public class VnfPkgInfo {
 	public enum OperationalStateEnum {
 
 		@XmlEnumValue("ENABLED")
-		ENABLED(String.valueOf("ENABLED")), @XmlEnumValue("DISABLED")
-		DISABLED(String.valueOf("DISABLED"));
-
+		ENABLED("ENABLED"), @XmlEnumValue("DISABLED")
+		DISABLED("DISABLED");
+		@Nonnull
 		private final String value;
 
-		OperationalStateEnum(final String v) {
+		OperationalStateEnum(@Nonnull final String v) {
 			value = v;
 		}
 
+		@Nonnull
 		public String value() {
 			return value;
 		}
@@ -160,13 +165,14 @@ public class VnfPkgInfo {
 		}
 
 		@JsonCreator
+		@Nonnull
 		public static OperationalStateEnum fromValue(final String v) {
 			for (final OperationalStateEnum b : OperationalStateEnum.values()) {
 				if (String.valueOf(b.value).equals(v)) {
 					return b;
 				}
 			}
-			return null;
+			throw new BadRequestException("OperationalStateEnum could not be equal to [" + v + "]");
 		}
 	}
 
@@ -179,22 +185,24 @@ public class VnfPkgInfo {
 	 * for further VNF instantiation requests (unless and until the VNF package is
 	 * re-enabled).
 	 **/
-	private OperationalStateEnum operationalState = null;
+	@Nonnull
+	private OperationalStateEnum operationalState = OperationalStateEnum.DISABLED;
 
 	@XmlType(name = "UsageStateEnum")
 	@XmlEnum(String.class)
 	public enum UsageStateEnum {
 
 		@XmlEnumValue("IN_USE")
-		IN_USE(String.valueOf("IN_USE")), @XmlEnumValue("NOT_IN_USE")
-		NOT_IN_USE(String.valueOf("NOT_IN_USE"));
-
+		IN_USE("IN_USE"), @XmlEnumValue("NOT_IN_USE")
+		NOT_IN_USE("NOT_IN_USE");
+		@Nonnull
 		private final String value;
 
-		UsageStateEnum(final String v) {
+		UsageStateEnum(@Nonnull final String v) {
 			value = v;
 		}
 
+		@Nonnull
 		public String value() {
 			return value;
 		}
@@ -210,7 +218,7 @@ public class VnfPkgInfo {
 					return b;
 				}
 			}
-			return null;
+			throw new BadRequestException("UsageStateEnum could not be equal to [" + v + "]");
 		}
 	}
 
@@ -221,7 +229,7 @@ public class VnfPkgInfo {
 	 * package exist. -NOT_IN_USE - No existing VNF instance is instantiated from
 	 * this VNF package\"
 	 **/
-	private UsageStateEnum usageState = null;
+	private UsageStateEnum usageState = UsageStateEnum.NOT_IN_USE;
 
 	@ApiModelProperty(value = "This type represents a list of key-value pairs. The order of the pairs in the list is not significant. In JSON, a set of key- value pairs is represented as an object. It shall comply with the provisions  defined in clause 4 of IETF RFC 7159.  ")
 	/**
@@ -446,19 +454,17 @@ public class VnfPkgInfo {
 	 **/
 	@JsonProperty("onboardingState")
 	@NotNull
+	@Nonnull
 	public String getOnboardingState() {
-		if (onboardingState == null) {
-			return null;
-		}
 		return onboardingState.value();
 	}
 
-	public void setOnboardingState(final OnboardingStateEnum onboardingState) {
+	public void setOnboardingState(@Nonnull final OnboardingStateEnum onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public VnfPkgInfo onboardingState(final OnboardingStateEnum onboardingState) {
-		this.onboardingState = onboardingState;
+	public VnfPkgInfo onboardingState(@Nonnull final OnboardingStateEnum _onboardingState) {
+		this.onboardingState = _onboardingState;
 		return this;
 	}
 
@@ -474,16 +480,17 @@ public class VnfPkgInfo {
 	 **/
 	@JsonProperty("operationalState")
 	@NotNull
+	@Nonnull
 	public OperationalStateEnum getOperationalState() {
 		return operationalState;
 	}
 
-	public void setOperationalState(final OperationalStateEnum operationalState) {
+	public void setOperationalState(@Nonnull final OperationalStateEnum operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public VnfPkgInfo operationalState(final OperationalStateEnum operationalState) {
-		this.operationalState = operationalState;
+	public VnfPkgInfo operationalState(@Nonnull final OperationalStateEnum _operationalState) {
+		this.operationalState = _operationalState;
 		return this;
 	}
 
@@ -497,19 +504,17 @@ public class VnfPkgInfo {
 	 **/
 	@JsonProperty("usageState")
 	@NotNull
+	@Nonnull
 	public String getUsageState() {
-		if (usageState == null) {
-			return null;
-		}
 		return usageState.value();
 	}
 
-	public void setUsageState(final UsageStateEnum usageState) {
+	public void setUsageState(@Nonnull final UsageStateEnum usageState) {
 		this.usageState = usageState;
 	}
 
-	public VnfPkgInfo usageState(final UsageStateEnum usageState) {
-		this.usageState = usageState;
+	public VnfPkgInfo usageState(@Nonnull final UsageStateEnum _usageState) {
+		this.usageState = _usageState;
 		return this;
 	}
 
