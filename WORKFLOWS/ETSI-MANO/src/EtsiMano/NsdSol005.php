@@ -69,5 +69,11 @@ class NsdSol005 extends BaseApi
 		$url_frag = self::BASE_URL . '/' . $_nsdInfoId;
 		return $this->doPost($url_frag, $_body);
 	}
+
+	public function nsDescriptorsNsdInfoIdDelete($_nsdInfoId)
+	{
+		$url_frag = self::BASE_URL . '/' . $_nsdInfoId;
+		return $this->doDelete($url_frag);
+	}
 }
 
