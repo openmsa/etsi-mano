@@ -3,8 +3,10 @@ package com.ubiqube.etsi.mano.service;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -74,11 +76,16 @@ public class WeakPatcher implements Patcher {
 			}
 		} else if (jsonNode.isArray()) {
 			final ArrayNode arrayNode = (ArrayNode) jsonNode;
-
+			final List<String> res = new ArrayList<>();
 			for (int i = 0; i < arrayNode.size(); i++) {
-				System.out.println("array node");
+				final JsonNode val = arrayNode.get(i);
+				if (val.isValueNode()) {
+					res.add(val.asText());
+				} else {
+					LOG.warn("Unable to set/walk {}", val);
+				}
 			}
-
+			patchEntity(_stack, res, _entity);
 		} else if (jsonNode.isValueNode()) {
 			final ValueNode valueNode = (ValueNode) jsonNode;
 			patchEntity(_stack, valueNode.asText(), _entity);
@@ -86,7 +93,7 @@ public class WeakPatcher implements Patcher {
 
 	}
 
-	private void patchEntity(final Deque<String> _stack, final String _value, final Object _entity) throws IllegalAccessException, InvocationTargetException {
+	private void patchEntity(final Deque<String> _stack, final Object _value, final Object _entity) throws IllegalAccessException, InvocationTargetException {
 		final String key = StringUtils.join(_stack.descendingIterator(), ".");
 		if (LOG.isDebugEnabled()) {
 			// LOG.debug("Patching object {} on field {} with value {}",
