@@ -1,6 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 use Ubiqube\EtsiMano\VnfPkgSol005;
+use Ubiqube\EtsiMano\ManoException;
 
 final class VnfPkgSol005Test extends TestCase
 {
@@ -33,6 +34,12 @@ final class VnfPkgSol005Test extends TestCase
 		$this->assertEquals('DISABLED', $res['VnfPkgInfo']['operationalState']);
 
 		$this->vnfPkg->vnfPackagesVnfPkgIdDelete($id);
+	}
+
+	public function testException()
+	{
+		$this->setExpectedException(ManoException::class);
+		$this->vnfPkg->vnfPackagesVnfPkgIdDelete('12345');
 	}
 }
 
