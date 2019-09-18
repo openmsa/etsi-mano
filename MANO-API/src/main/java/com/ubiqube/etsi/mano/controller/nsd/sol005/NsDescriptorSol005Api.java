@@ -5,7 +5,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,13 +32,13 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
@@ -65,12 +64,13 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptorSol005Api.class);
 
 	private final NsdRepository nsdRepository;
-
+	private final Patcher patcher;
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository) {
+	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository, final Patcher _patcher) {
 		nsdRepository = _nsdRepository;
 		vnfPackageRepository = _vnfPackageRepository;
+		patcher = _patcher;
 		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
@@ -241,9 +241,13 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final NsDescriptorsNsdInfoIdPatchQuery body, final String contentType) {
+	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final String body, final String contentType) {
+		final NsDescriptorsNsdInfo nsdPkgInfo = nsdRepository.get(nsdInfoId);
+		patcher.patch(body, nsdPkgInfo);
+		nsdRepository.save(nsdPkgInfo);
+		nsdPkgInfo.setLinks(makeLinks(nsdInfoId));
 		// NsdChangeNotification OSS/BSS
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
+		return new ResponseEntity<>(nsdPkgInfo, HttpStatus.OK);
 	}
 
 	/**
