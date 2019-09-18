@@ -1,14 +1,18 @@
 package com.ubiqube.json.patch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
@@ -29,12 +33,12 @@ public class WeakPatcherTest {
 
 		assertEquals("Encryption algorithm", "SHA256", vnfPkgInfo.getChecksum().getAlgorithm());
 		assertEquals("VnfId", "1234-1234-1234", vnfPkgInfo.getVnfdId());
-		assertEquals("Operation state", "ENABLED", vnfPkgInfo.getOperationalState());
+		assertEquals("Operation state", "DISABLED", vnfPkgInfo.getOperationalState().value());
 
 		assertEquals("id", "8a5878be-21c8-4123-a6a1-a9cea03123a0", vnfPkgInfo.getId());
 	}
 
-	private String readFile(String fileName) throws IOException {
+	private String readFile(final String fileName) throws IOException {
 		final InputStream is = new FileInputStream(fileName);
 		final BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 
@@ -47,5 +51,18 @@ public class WeakPatcherTest {
 		}
 
 		return sb.toString();
+	}
+
+	@Test
+	void testEnum() throws Exception {
+		final Class<?> beanClass = VnfPkgInfo.class;
+		final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
+		final PropertyDescriptor[] lpd = beanInfo.getPropertyDescriptors();
+		for (final PropertyDescriptor propertyDescriptor : lpd) {
+			if (propertyDescriptor.getName().equals("operationalState")) {
+				assertNotNull(propertyDescriptor.getWriteMethod());
+			}
+		}
+
 	}
 }

@@ -5,14 +5,14 @@
     <displayField>service_id</displayField>
     <executionDetailsVisibility>5</executionDetailsVisibility>
     <executionMode>TRANSACTION</executionMode>
-    <group>NFV|Network Service (NS)|Orchestration|Abstract</group>
+    <group>NFV|NFVO|Network Service (NS)</group>
     <icon>/images/repository/CommandDefinition/icons/routing_fortinet.png</icon>
     <name>Abstract NS Manager</name>
     <order>10000</order>
     <poolId>0</poolId>
     <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>false</showDetailedServiceInstances>
-    <showProcessExecConsole>false</showProcessExecConsole>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>true</showProcessExecConsole>
     <showVariables>false</showVariables>
     <visibility>5</visibility>
   </information>  <variables frozen="0">
@@ -29,7 +29,7 @@
         <section>Get NSD ID from NFVO Catalogs</section>
       </sections>
     </variable>
-    <variable default="6c52594b-ab6d-443c-82dd-1c48e00cd4dc" displayName="Nspkgid" displayOrder="2" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" refDeviceIdVar="params.vnfvo_device" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="Nspkgid" displayOrder="2" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" refDeviceIdVar="params.vnfvo_device" startIncrement="0" tableSizeFix="false" type="OBMFRef">
       <sections>
         <section>Get NSD ID from NFVO Catalogs</section>
       </sections>
@@ -37,10 +37,10 @@
         <class>ns_catalogs</class>
       </classes>
     </variable>
-    <variable displayName="Vnfpkgid" displayOrder="3" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Terminate VNF</section>
-      </sections>
+    <variable displayName="Vnfpkgid" displayOrder="3" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" refDeviceIdVar="params.vnfvo_device" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+      <classes>
+        <class>vnf_catalogs</class>
+      </classes>
     </variable>
     <variable displayName="VNF Packages" displayOrder="4" isUserLocked="true" maxLength="100" name="params.vnfPkgs.0.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
@@ -68,6 +68,12 @@
     
   
     
+    
+    
+  
+    
+    
+  
     
     
   <task name="Task_Get_NSD_ID_from_NFVO_Catalogs.php">
@@ -154,6 +160,23 @@
   <task name="Task_Task_Scale_In.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Scale-in_NS/Tasks/</processPath>
       <displayName>Task Scale In</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Live_Migration">
+    <visibility>5</visibility>
+    <displayName>Live Migration</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Heal_VNF/Tasks/Task_Terminate_VNF.php">
+      <processPath/>
+      <displayName>Terminate VNF</displayName>
+    </task>
+    <task name="">
+      <processPath/>
+      <displayName>Migrate VNF to another VIM</displayName>
     </task>
   </process>
 </ObjectDefinition>

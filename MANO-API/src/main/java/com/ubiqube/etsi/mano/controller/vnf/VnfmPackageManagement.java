@@ -19,8 +19,7 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 /**
- * This is a VNFM Only Implementation. All queries shall go to the NFVO
- * (REST).
+ * This is a VNFM Only Implementation. All queries shall go to the NFVO (REST).
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -64,7 +63,17 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final RangeHeader rangeHeader) {
-		// TODO Auto-generated method stub
+		LOG.error("artifact = {}", artifactPath);
+		if (null == rangeHeader) {
+			final Map<String, Object> uriVariables = new HashMap<>();
+			uriVariables.put("vnfPkgId", vnfPkgId);
+			uriVariables.put("artifactPath", artifactPath);
+			final URI uri = nfvoRest.uriBuilder()
+					.pathSegment("vnfpkgm/v1/vnf_packages/{vnfPkgId}/artifacts/{artifactPath}")
+					.buildAndExpand(uriVariables)
+					.toUri();
+			return nfvoRest.get(uri, ResponseEntity.class);
+		}
 		return null;
 	}
 
@@ -75,7 +84,7 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
 		// TODO Auto-generated method stub
 		return null;
 	}

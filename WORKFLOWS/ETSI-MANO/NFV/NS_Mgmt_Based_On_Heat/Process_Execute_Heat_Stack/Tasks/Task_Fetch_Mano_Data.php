@@ -7,12 +7,13 @@ use Symfony\Component\Yaml\Yaml;
 
 function list_args()
 {
+	create_var_def('nfvoDevice', 'Device');
         create_var_def('nsPkgId', 'String');
         create_var_def('vnfPkgs.0.vnfPkgId', 'String');
 }
 check_mandatory_param('nsPkgId');
 
-$nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano-0.0.1-SNAPSHOT/');
+$nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano/');
 $nsPkg = $nsPkgManagement->nsDescriptorsNsdInfoIdGet($context['nsPkgId']);
 $heatJson = $nsPkg['userDefinedData']['heat'];
 $heatYaml = Yaml::dump($heatJson);

@@ -24,7 +24,7 @@
         <sdType manId="14020603" modId="16051904"/>
       </sdTypes>
     </variable>
-    <variable cols="50" default="Simulator" displayName="Stack Name" displayOrder="1" editable="false" isMandatory="true" maxLength="100" name="params.stackname" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
+    <variable cols="50" default="VNF" displayName="Stack Name" displayOrder="1" editable="false" isMandatory="true" maxLength="100" name="params.stackname" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
       <sections>
         <section>Launch Stack</section>
       </sections>
@@ -34,48 +34,59 @@
         <section>Launch Stack</section>
       </sections>
     </variable>
-    <variable cols="50" displayName="Stack Id" displayOrder="10" isUserLocked="true" maxLength="100" name="params.stackid" numberOfRowMax="0" startIncrement="0" type="String">
+    <variable cols="50" displayName="Stack Id" displayOrder="3" isUserLocked="true" maxLength="100" name="params.stackid" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Delete Stack</section>
       </sections>
     </variable>
-    <variable displayName="Floatingip Id" displayOrder="43" maxLength="100" name="params.floatingip_id" numberOfRowMax="0" startIncrement="0" type="String">
+    <variable displayName="Floatingip Id" displayOrder="4" maxLength="100" name="params.floatingip_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Disassociate floating IP</section>
       </sections>
     </variable>
-    <variable default="root" displayName="Device Login" displayOrder="74" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
+    <variable default="root" displayName="Device Login" displayOrder="5" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
       <sections>
         <section>Create MSA devices from stacks resources</section>
       </sections>
     </variable>
-    <variable default="$ubiqube" displayName="Device Password" displayOrder="75" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false">
+    <variable default="$ubiqube" displayName="Device Password" displayOrder="6" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false">
       <sections>
         <section>Create MSA devices from stacks resources</section>
       </sections>
     </variable>
-    <variable default="default" displayName="user_domain_id" displayOrder="76" maxLength="100" name="params.user_domain_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
-    <variable default="Default" displayName="project_domain_id" displayOrder="77" maxLength="100" name="params.project_domain_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
-    <variable default="admin" displayName="admin_username" displayOrder="78" maxLength="100" name="params.admin_username" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
-    <variable default="openstack" displayName="admin_password" displayOrder="79" maxLength="100" name="params.admin_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false"/>
-    <variable default="a63453acff0a46968d3f256b2df0321e" displayName="tenant_id" displayOrder="80" maxLength="100" name="params.tenant_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
-    <variable default="http://eosphoros.ubiqube.com:5000/v3/" displayName="keystone_public_endpoint" displayOrder="81" maxLength="100" name="params.keystone_public_endpoint" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
-    <variable displayName="Nspkgid" displayOrder="102" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable default="default" displayName="user_domain_id" displayOrder="7" maxLength="100" name="params.user_domain_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
+    <variable default="Default" displayName="project_domain_id" displayOrder="8" maxLength="100" name="params.project_domain_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
+    <variable default="admin" displayName="admin_username" displayOrder="9" maxLength="100" name="params.admin_username" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
+    <variable default="openstack" displayName="admin_password" displayOrder="10" maxLength="100" name="params.admin_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false"/>
+    <variable default="a63453acff0a46968d3f256b2df0321e" displayName="tenant_id" displayOrder="11" maxLength="100" name="params.tenant_id" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
+    <variable default="http://eosphoros.ubiqube.com:5000/v3/" displayName="keystone_public_endpoint" displayOrder="12" maxLength="100" name="params.keystone_public_endpoint" numberOfRowMax="0" startIncrement="0" type="String" visible="false"/>
+    <variable displayName="Nfvodevice" displayOrder="13" maxLength="100" name="params.nfvoDevice" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Get NSD from NS Catalog (NVFO)</section>
+      </sections>
+      <sdTypes>
+        <sdType manId="14020601" modId="14020601"/>
+      </sdTypes>
+    </variable>
+    <variable displayName="Nspkgid" displayOrder="14" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" refDeviceIdVar="params.nfvoDevice" startIncrement="0" tableSizeFix="false" type="OBMFRef">
       <sections>
         <section>Fetch Mano Data</section>
       </sections>
+      <classes>
+        <class>ns_catalogs</class>
+      </classes>
     </variable>
-    <variable displayName="Router Name" displayOrder="103" maxLength="100" name="params.router_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Router Name" displayOrder="15" maxLength="100" name="params.router_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Router Admin State Up" displayOrder="104" maxLength="100" name="params.router_admin_state_up" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Router Admin State Up" displayOrder="16" maxLength="100" name="params.router_admin_state_up" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable displayName="External Gateway Network" displayOrder="105" maxLength="100" name="params.external_gateway_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="External Gateway Network" displayOrder="17" maxLength="100" name="params.external_gateway_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" tableSizeFix="false" type="OBMFRef">
       <sections>
         <section>Router Config</section>
       </sections>
@@ -83,52 +94,52 @@
         <class>networks</class>
       </classes>
     </variable>
-    <variable displayName="Networks.0.network Name" displayOrder="106" maxLength="100" name="params.networks.0.network_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Networks.0.network Name" displayOrder="18" maxLength="100" name="params.networks.0.network_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Networks.0.admin State Up" displayOrder="107" maxLength="100" name="params.networks.0.admin_state_up" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Networks.0.admin State Up" displayOrder="19" maxLength="100" name="params.networks.0.admin_state_up" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Networks.0.router External" displayOrder="108" maxLength="100" name="params.networks.0.router_external" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Networks.0.router External" displayOrder="20" maxLength="100" name="params.networks.0.router_external" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Networks.0.port Security Enabled" displayOrder="109" maxLength="100" name="params.networks.0.port_security_enabled" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Networks.0.port Security Enabled" displayOrder="21" maxLength="100" name="params.networks.0.port_security_enabled" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>Router Config</section>
       </sections>
     </variable>
-    <variable displayName="Networks.0.subnet Name" displayOrder="110" maxLength="100" name="params.networks.0.subnet_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Networks.0.subnet Name" displayOrder="22" maxLength="100" name="params.networks.0.subnet_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>SubnetConfig</section>
       </sections>
     </variable>
-    <variable displayName="Networks.0.subnet Cidr" displayOrder="111" maxLength="100" name="params.networks.0.subnet_cidr" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Networks.0.subnet Cidr" displayOrder="23" maxLength="100" name="params.networks.0.subnet_cidr" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>SubnetConfig</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Networks.0.subnet Enable Dhcp" displayOrder="112" maxLength="100" name="params.networks.0.subnet_enable_dhcp" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Networks.0.subnet Enable Dhcp" displayOrder="24" maxLength="100" name="params.networks.0.subnet_enable_dhcp" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>SubnetConfig</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Networks.0.subnet Attached To Router" displayOrder="113" maxLength="100" name="params.networks.0.subnet_attached_to_router" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Networks.0.subnet Attached To Router" displayOrder="25" maxLength="100" name="params.networks.0.subnet_attached_to_router" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>SubnetConfig</section>
       </sections>
     </variable>
-    <variable displayName="Vnfpkgs.0.vnfpkgid" displayOrder="115" isUserLocked="true" maxLength="100" name="params.vnfPkgs.0.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnfpkgs.0.vnfpkgid" displayOrder="26" isUserLocked="true" maxLength="100" name="params.vnfPkgs.0.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Get NSD from NS Catalog (NVFO)</section>
       </sections>
     </variable>
-    <variable displayName="Vnfpkgid" displayOrder="129" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnfpkgid" displayOrder="27" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Scale Out</section>
       </sections>
@@ -217,6 +228,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
       <displayName>Scale Out</displayName>
     </task>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale_In">
     <visibility>5</visibility>

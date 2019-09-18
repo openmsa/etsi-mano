@@ -4,6 +4,8 @@ namespace Ubiqube\EtsiMano;
 class VnfPkgSol003 extends BaseApi
 {
 
+	const BASE_URL = 'sol003/vnfpkgm/v1/vnf_packages';
+
 	/**
 	 * Get a VNF Package by ID.
 	 *
@@ -13,7 +15,7 @@ class VnfPkgSol003 extends BaseApi
 	 */
 	public function vnfPackagesVnfPkgIdGet($vnf_pkg_id)
 	{
-		$url_frag = 'sol003/vnfpkgm/v1/vnf_packages/' . urlencode($vnf_pkg_id);
+		$url_frag = self::BASE_URL . '/' . urlencode($vnf_pkg_id);
 		return json_decode($this->doGet($url_frag), 1);
 	}
 
@@ -24,7 +26,7 @@ class VnfPkgSol003 extends BaseApi
 	 */
 	public function vnfPackagesGet()
 	{
-		$url_frag = 'sol003/vnfpkgm/v1/vnf_packages';
+		$url_frag = self::BASE_URL;
 		return json_decode($this->doGet($url_frag), 1);
 	}
 
@@ -39,7 +41,7 @@ class VnfPkgSol003 extends BaseApi
 	 */
 	public function vnfPackagesVnfPkgIdArtifactsArtifactPathGet($vnfPkgId, $artifactPath)
 	{
-		$url_frag = 'sol003/vnfpkgm/v1/vnf_packages/' . $vnfPkgId . '/artifacts/' . $artifactPath;
+		$url_frag = self::BASE_URL . '/' . urlencode($vnfPkgId) . '/artifacts/' . urlencode($artifactPath);
 		return $this->doGet($url_frag);
 	}
 }

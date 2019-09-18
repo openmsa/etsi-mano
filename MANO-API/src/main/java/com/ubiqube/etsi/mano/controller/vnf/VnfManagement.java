@@ -155,15 +155,13 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
-		final RangeHeader rangeHeader = RangeHeader.fromValue(_range);
-
-		if (rangeHeader != null) {
-			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", rangeHeader.getFrom(), rangeHeader.getTo());
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
+		if (_range != null) {
+			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo());
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
 			final String mime = MimeType.findMatch(bytes);
 			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", rangeHeader.getContentRange(bytes.length))
+					.header("Content-Range", _range.getContentRange(bytes.length))
 					.header("Content-Type", mime)
 					.body(resource);
 		}

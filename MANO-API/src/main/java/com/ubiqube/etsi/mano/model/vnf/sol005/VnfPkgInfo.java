@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.model.vnf.sol005;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -100,7 +101,7 @@ public class VnfPkgInfo {
 
 		private final String value;
 
-		OnboardingStateEnum(String v) {
+		OnboardingStateEnum(final String v) {
 			value = v;
 		}
 
@@ -114,7 +115,7 @@ public class VnfPkgInfo {
 		}
 
 		@JsonCreator
-		public static OnboardingStateEnum fromValue(String v) {
+		public static OnboardingStateEnum fromValue(final String v) {
 			for (final OnboardingStateEnum b : OnboardingStateEnum.values()) {
 				if (String.valueOf(b.value).equals(v)) {
 					return b;
@@ -145,7 +146,7 @@ public class VnfPkgInfo {
 
 		private final String value;
 
-		OperationalStateEnum(String v) {
+		OperationalStateEnum(final String v) {
 			value = v;
 		}
 
@@ -159,7 +160,7 @@ public class VnfPkgInfo {
 		}
 
 		@JsonCreator
-		public static OperationalStateEnum fromValue(String v) {
+		public static OperationalStateEnum fromValue(final String v) {
 			for (final OperationalStateEnum b : OperationalStateEnum.values()) {
 				if (String.valueOf(b.value).equals(v)) {
 					return b;
@@ -190,7 +191,7 @@ public class VnfPkgInfo {
 
 		private final String value;
 
-		UsageStateEnum(String v) {
+		UsageStateEnum(final String v) {
 			value = v;
 		}
 
@@ -203,7 +204,7 @@ public class VnfPkgInfo {
 			return String.valueOf(value);
 		}
 
-		public static UsageStateEnum fromValue(String v) {
+		public static UsageStateEnum fromValue(final String v) {
 			for (final UsageStateEnum b : UsageStateEnum.values()) {
 				if (String.valueOf(b.value).equals(v)) {
 					return b;
@@ -229,7 +230,7 @@ public class VnfPkgInfo {
 	 * an object. It shall comply with the provisions defined in clause 4 of IETF
 	 * RFC 7159.
 	 **/
-	private Object userDefinedData = null;
+	private Map<String, Object> userDefinedData = null;
 
 	@ApiModelProperty(value = "")
 	@Valid
@@ -246,11 +247,11 @@ public class VnfPkgInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfPkgInfo id(String id) {
+	public VnfPkgInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -265,11 +266,11 @@ public class VnfPkgInfo {
 		return vnfdId;
 	}
 
-	public void setVnfdId(String vnfdId) {
+	public void setVnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 	}
 
-	public VnfPkgInfo vnfdId(String vnfdId) {
+	public VnfPkgInfo vnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 		return this;
 	}
@@ -286,11 +287,11 @@ public class VnfPkgInfo {
 		return vnfProvider;
 	}
 
-	public void setVnfProvider(String vnfProvider) {
+	public void setVnfProvider(final String vnfProvider) {
 		this.vnfProvider = vnfProvider;
 	}
 
-	public VnfPkgInfo vnfProvider(String vnfProvider) {
+	public VnfPkgInfo vnfProvider(final String vnfProvider) {
 		this.vnfProvider = vnfProvider;
 		return this;
 	}
@@ -307,11 +308,11 @@ public class VnfPkgInfo {
 		return vnfProductName;
 	}
 
-	public void setVnfProductName(String vnfProductName) {
+	public void setVnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
 	}
 
-	public VnfPkgInfo vnfProductName(String vnfProductName) {
+	public VnfPkgInfo vnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
 		return this;
 	}
@@ -329,11 +330,11 @@ public class VnfPkgInfo {
 		return vnfSoftwareVersion;
 	}
 
-	public void setVnfSoftwareVersion(String vnfSoftwareVersion) {
+	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
-	public VnfPkgInfo vnfSoftwareVersion(String vnfSoftwareVersion) {
+	public VnfPkgInfo vnfSoftwareVersion(final String vnfSoftwareVersion) {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 		return this;
 	}
@@ -351,11 +352,11 @@ public class VnfPkgInfo {
 		return vnfdVersion;
 	}
 
-	public void setVnfdVersion(String vnfdVersion) {
+	public void setVnfdVersion(final String vnfdVersion) {
 		this.vnfdVersion = vnfdVersion;
 	}
 
-	public VnfPkgInfo vnfdVersion(String vnfdVersion) {
+	public VnfPkgInfo vnfdVersion(final String vnfdVersion) {
 		this.vnfdVersion = vnfdVersion;
 		return this;
 	}
@@ -370,11 +371,11 @@ public class VnfPkgInfo {
 		return checksum;
 	}
 
-	public void setChecksum(VnfPackagesVnfPkgInfoChecksum checksum) {
+	public void setChecksum(final VnfPackagesVnfPkgInfoChecksum checksum) {
 		this.checksum = checksum;
 	}
 
-	public VnfPkgInfo checksum(VnfPackagesVnfPkgInfoChecksum checksum) {
+	public VnfPkgInfo checksum(final VnfPackagesVnfPkgInfoChecksum checksum) {
 		this.checksum = checksum;
 		return this;
 	}
@@ -392,16 +393,16 @@ public class VnfPkgInfo {
 		return softwareImages;
 	}
 
-	public void setSoftwareImages(List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages) {
+	public void setSoftwareImages(final List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages) {
 		this.softwareImages = softwareImages;
 	}
 
-	public VnfPkgInfo softwareImages(List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages) {
+	public VnfPkgInfo softwareImages(final List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages) {
 		this.softwareImages = softwareImages;
 		return this;
 	}
 
-	public VnfPkgInfo addSoftwareImagesItem(VnfPackagesVnfPkgInfoSoftwareImages softwareImagesItem) {
+	public VnfPkgInfo addSoftwareImagesItem(final VnfPackagesVnfPkgInfoSoftwareImages softwareImagesItem) {
 		this.softwareImages.add(softwareImagesItem);
 		return this;
 	}
@@ -419,16 +420,16 @@ public class VnfPkgInfo {
 		return additionalArtifacts;
 	}
 
-	public void setAdditionalArtifacts(List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts) {
+	public void setAdditionalArtifacts(final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts) {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
-	public VnfPkgInfo additionalArtifacts(List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts) {
+	public VnfPkgInfo additionalArtifacts(final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts) {
 		this.additionalArtifacts = additionalArtifacts;
 		return this;
 	}
 
-	public VnfPkgInfo addAdditionalArtifactsItem(VnfPackagesVnfPkgInfoAdditionalArtifacts additionalArtifactsItem) {
+	public VnfPkgInfo addAdditionalArtifactsItem(final VnfPackagesVnfPkgInfoAdditionalArtifacts additionalArtifactsItem) {
 		this.additionalArtifacts.add(additionalArtifactsItem);
 		return this;
 	}
@@ -452,11 +453,11 @@ public class VnfPkgInfo {
 		return onboardingState.value();
 	}
 
-	public void setOnboardingState(OnboardingStateEnum onboardingState) {
+	public void setOnboardingState(final OnboardingStateEnum onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public VnfPkgInfo onboardingState(OnboardingStateEnum onboardingState) {
+	public VnfPkgInfo onboardingState(final OnboardingStateEnum onboardingState) {
 		this.onboardingState = onboardingState;
 		return this;
 	}
@@ -473,18 +474,15 @@ public class VnfPkgInfo {
 	 **/
 	@JsonProperty("operationalState")
 	@NotNull
-	public String getOperationalState() {
-		if (operationalState == null) {
-			return null;
-		}
-		return operationalState.value();
+	public OperationalStateEnum getOperationalState() {
+		return operationalState;
 	}
 
-	public void setOperationalState(OperationalStateEnum operationalState) {
+	public void setOperationalState(final OperationalStateEnum operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public VnfPkgInfo operationalState(OperationalStateEnum operationalState) {
+	public VnfPkgInfo operationalState(final OperationalStateEnum operationalState) {
 		this.operationalState = operationalState;
 		return this;
 	}
@@ -506,11 +504,11 @@ public class VnfPkgInfo {
 		return usageState.value();
 	}
 
-	public void setUsageState(UsageStateEnum usageState) {
+	public void setUsageState(final UsageStateEnum usageState) {
 		this.usageState = usageState;
 	}
 
-	public VnfPkgInfo usageState(UsageStateEnum usageState) {
+	public VnfPkgInfo usageState(final UsageStateEnum usageState) {
 		this.usageState = usageState;
 		return this;
 	}
@@ -524,15 +522,15 @@ public class VnfPkgInfo {
 	 * @return userDefinedData
 	 **/
 	@JsonProperty("userDefinedData")
-	public Object getUserDefinedData() {
+	public Map<String, Object> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(Object userDefinedData) {
+	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
-	public VnfPkgInfo userDefinedData(Object userDefinedData) {
+	public VnfPkgInfo userDefinedData(final Map<String, Object> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -547,11 +545,11 @@ public class VnfPkgInfo {
 		return links;
 	}
 
-	public void setLinks(VnfPackagesVnfPkgInfoLinks links) {
+	public void setLinks(final VnfPackagesVnfPkgInfoLinks links) {
 		this.links = links;
 	}
 
-	public VnfPkgInfo links(VnfPackagesVnfPkgInfoLinks links) {
+	public VnfPkgInfo links(final VnfPackagesVnfPkgInfoLinks links) {
 		this.links = links;
 		return this;
 	}
@@ -583,7 +581,7 @@ public class VnfPkgInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(Object o) {
+	private static String toIndentedString(final Object o) {
 		if (o == null) {
 			return "null";
 		}

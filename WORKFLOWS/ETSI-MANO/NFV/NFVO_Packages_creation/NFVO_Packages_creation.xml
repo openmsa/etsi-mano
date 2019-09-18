@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>NFV|NFVO|VNF/NSD Packages creation</group>
+    <icon>/images/eclipseIcons/page_obj.gif</icon>
+    <name>NFVO Packages creation</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>true</showProcessExecConsole>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Device Id" displayOrder="0" maxLength="100" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Sync to NFVO</section>
+      </sections>
+    </variable>
+    <variable cols="100" displayName="Vnf Pkg Content" displayOrder="2" maxLength="100" name="params.vnf_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create VNF Package</section>
+      </sections>
+    </variable>
+    <variable cols="100" displayName="Nsd Pkg Content" displayOrder="5" maxLength="100" name="params.nsd_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create NS Package</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content/>  </example>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_VNF_Package">
+    <visibility>5</visibility>
+    <displayName>New service</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+  <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Sync to NFVO</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package">
+    <visibility>5</visibility>
+    <displayName>Create VNF Package</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  <task name="Task_Create_VNF_Package.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package/Tasks/</processPath>
+      <displayName>Create VNF Package</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service">
+    <visibility>5</visibility>
+    <displayName>Create NS Package</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  <task name="Task_Create_NS_Package.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service/Tasks/</processPath>
+      <displayName>Create NS Package</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>

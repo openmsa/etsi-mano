@@ -14,7 +14,7 @@ function list_args()
 logToFile(debug_dump($context, "CONTEXT ============>:\n"));
 
 $device_id = substr($context['deviceid'], 3);
-$server_name = "VNF_scale-out";
+$server_name = $context['deviceid']."_scale-out";
 $networks = $context['networks_id'];
 $availability_zone = "nova";
 $flavor_id = $context['flavor_id'];

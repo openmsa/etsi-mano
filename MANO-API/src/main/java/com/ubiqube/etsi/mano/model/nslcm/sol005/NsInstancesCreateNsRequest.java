@@ -1,108 +1,110 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol005;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
-
 import javax.validation.constraints.NotNull;
 
-public class NsInstancesCreateNsRequest  {
-  
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
- /**
-   * An identifier with the intention of being globally unique. 
-  **/
-  private String nsdId = null;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-  @ApiModelProperty(required = true, value = "Human-readable name of the NS instance to be created. ")
- /**
-   * Human-readable name of the NS instance to be created. 
-  **/
-  private String nsName = null;
+import io.swagger.annotations.ApiModelProperty;
 
-  @ApiModelProperty(required = true, value = "Human-readable description of the NS instance to be created. ")
- /**
-   * Human-readable description of the NS instance to be created. 
-  **/
-  private String nsDescription = null;
- /**
-   * An identifier with the intention of being globally unique. 
-   * @return nsdId
-  **/
-  @JsonProperty("nsdId")
-  @NotNull
-  public String getNsdId() {
-    return nsdId;
-  }
+public class NsInstancesCreateNsRequest {
 
-  public void setNsdId(String nsdId) {
-    this.nsdId = nsdId;
-  }
+	@ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+	/**
+	 * An identifier with the intention of being globally unique.
+	 **/
+	private String nsdId = null;
 
-  public NsInstancesCreateNsRequest nsdId(String nsdId) {
-    this.nsdId = nsdId;
-    return this;
-  }
+	@ApiModelProperty(required = true, value = "Human-readable name of the NS instance to be created. ")
+	/**
+	 * Human-readable name of the NS instance to be created.
+	 **/
+	private String nsName = null;
 
- /**
-   * Human-readable name of the NS instance to be created. 
-   * @return nsName
-  **/
-  @JsonProperty("nsName")
-  @NotNull
-  public String getNsName() {
-    return nsName;
-  }
+	@ApiModelProperty(required = true, value = "Human-readable description of the NS instance to be created. ")
+	/**
+	 * Human-readable description of the NS instance to be created.
+	 **/
+	private String nsDescription = null;
 
-  public void setNsName(String nsName) {
-    this.nsName = nsName;
-  }
+	/**
+	 * An identifier with the intention of being globally unique.
+	 * 
+	 * @return nsdId
+	 **/
+	@JsonProperty("nsdId")
+	public String getNsdId() {
+		return nsdId;
+	}
 
-  public NsInstancesCreateNsRequest nsName(String nsName) {
-    this.nsName = nsName;
-    return this;
-  }
+	public void setNsdId(final String nsdId) {
+		this.nsdId = nsdId;
+	}
 
- /**
-   * Human-readable description of the NS instance to be created. 
-   * @return nsDescription
-  **/
-  @JsonProperty("nsDescription")
-  @NotNull
-  public String getNsDescription() {
-    return nsDescription;
-  }
+	public NsInstancesCreateNsRequest nsdId(final String nsdId) {
+		this.nsdId = nsdId;
+		return this;
+	}
 
-  public void setNsDescription(String nsDescription) {
-    this.nsDescription = nsDescription;
-  }
+	/**
+	 * Human-readable name of the NS instance to be created.
+	 * 
+	 * @return nsName
+	 **/
+	@JsonProperty("nsName")
+	@NotNull
+	public String getNsName() {
+		return nsName;
+	}
 
-  public NsInstancesCreateNsRequest nsDescription(String nsDescription) {
-    this.nsDescription = nsDescription;
-    return this;
-  }
+	public void setNsName(final String nsName) {
+		this.nsName = nsName;
+	}
 
+	public NsInstancesCreateNsRequest nsName(final String nsName) {
+		this.nsName = nsName;
+		return this;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class NsInstancesCreateNsRequest {\n");
-    
-    sb.append("    nsdId: ").append(toIndentedString(nsdId)).append("\n");
-    sb.append("    nsName: ").append(toIndentedString(nsName)).append("\n");
-    sb.append("    nsDescription: ").append(toIndentedString(nsDescription)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	/**
+	 * Human-readable description of the NS instance to be created.
+	 * 
+	 * @return nsDescription
+	 **/
+	@JsonProperty("nsDescription")
+	@NotNull
+	public String getNsDescription() {
+		return nsDescription;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private static String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public void setNsDescription(final String nsDescription) {
+		this.nsDescription = nsDescription;
+	}
+
+	public NsInstancesCreateNsRequest nsDescription(final String nsDescription) {
+		this.nsDescription = nsDescription;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class NsInstancesCreateNsRequest {\n");
+
+		sb.append("    nsdId: ").append(toIndentedString(nsdId)).append("\n");
+		sb.append("    nsName: ").append(toIndentedString(nsName)).append("\n");
+		sb.append("    nsDescription: ").append(toIndentedString(nsDescription)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private static String toIndentedString(final Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

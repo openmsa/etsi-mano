@@ -1,14 +1,28 @@
 package com.ubiqube.etsi.mano.factory;
 
+import java.util.Date;
+
+import javax.annotation.Nonnull;
+
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
 
-public class LcmFactory {
+public final class LcmFactory {
+	private LcmFactory() {
+		// Nothing.
+	}
 
+	@Nonnull
 	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
@@ -18,10 +32,12 @@ public class LcmFactory {
 
 		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STOPPED);
+		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		return vnfInstance;
 	}
 
+	@Nonnull
 	public static VnfInstanceLinks createVnfInstancesLink(final String hrefSelf, final String hrefChangeExtConn, final String hrefChangeFlavor, final String hrefHeal, final String hrefIndicators, final String hrefInstanciate, final String hrefOperate, final String hrefScale, final String hrefScaleToLevel, final String hrefTerminate) {
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		final Link self = new Link();
@@ -64,6 +80,38 @@ public class LcmFactory {
 		scaleToLevel.setHref(hrefScaleToLevel);
 		vnfInstanceLinks.setScaleToLevel(scaleToLevel);
 		return vnfInstanceLinks;
+	}
+
+	@Nonnull
+	public static NsLcmOpOccsNsLcmOpOcc createNsLcmOpOccsNsLcmOpOcc(final String nsInstanceId, final LcmOperationTypeEnum lcmOperationType) {
+		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOccsNsLcmOpOcc();
+		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(true);
+		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(false);
+		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
+		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
+		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(OperationStateEnum.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
+		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
+		return nsLcmOpOccsNsLcmOpOcc;
+	}
+
+	public static OperationParamsEnum lcmOperationTypeToParameter(final LcmOperationTypeEnum lcmOperationType) {
+		switch (lcmOperationType) {
+		case HEAL:
+			return OperationParamsEnum.HEAL;
+		case INSTANTIATE:
+			return OperationParamsEnum.INSTANTIATE;
+		case SCALE:
+			return OperationParamsEnum.SCALE;
+		case TERMINATE:
+			return OperationParamsEnum.TERMINATE;
+		case UPDATE:
+			return OperationParamsEnum.UPDATE;
+
+		default:
+			throw new NotFoundException("Unknwon LVM Operation: " + lcmOperationType);
+		}
 	}
 
 }

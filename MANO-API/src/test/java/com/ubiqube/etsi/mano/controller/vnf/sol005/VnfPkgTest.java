@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -29,9 +30,9 @@ import com.ubiqube.etsi.mano.config.Http403EntryPoint;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.EventManager;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 
 @AutoConfigureMockMvc
 @WebMvcTest
@@ -70,8 +71,8 @@ public class VnfPkgTest {
 
 		final String resultServ = result.getResponse().getContentAsString();
 
-		verify(vnfPackageRepository).save(Mockito.any(VnfPkgInfo.class));
-		verify(eventManager).sendEvent(Mockito.any(), Mockito.anyString());
+		verify(vnfPackageRepository, atLeast(2)).save(Mockito.any(VnfPkgInfo.class));
+		verify(eventManager).sendNotification(Mockito.any(), Mockito.anyString());
 	}
 
 	@Test

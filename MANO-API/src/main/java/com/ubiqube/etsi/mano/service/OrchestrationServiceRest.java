@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -12,21 +13,33 @@ import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 @Service
 public class OrchestrationServiceRest implements OrchestrationService {
 
-	private final static UbiRest rest = new UbiRest();
+	private final UbiRest rest;
+
+	public OrchestrationServiceRest(final UbiRest _rest) {
+		this.rest = _rest;
+	}
 
 	@Override
-	public ProcessInstance scheduleServiceImmediateMode(String ubiqubeId, long serviceId, String serviceName, String processName, Map<String, String> varsMap) throws ServiceException {
+	public ProcessInstance scheduleServiceImmediateMode(final String ubiqubeId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) throws ServiceException {
 		final URI uri = rest.uriBuilder()
-				.pathSegment("orchestration/v1/scheduleImmediateMode")
+				.pathSegment("orchestration/v1/scheduleServiceImmediateMode")
 				.queryParam("ubiqubeId", ubiqubeId)
 				.queryParam("serviceId", serviceId)
 				.queryParam("serviceName", serviceName)
 				.queryParam("processName", processName)
 				.build()
 				.toUri();
-		return rest.post(uri, varsMap, ProcessInstanceModel.class);
+		return rest.post(uri, varsMap, ProcessInstance.class);
 	}
 
-	static class ProcessInstanceModel implements ProcessInstance {
+	@Override
+	public ProcessInstance getProcessInstance(final long processId) {
+		final Map<String, String> vars = new HashMap<>();
+		vars.put("processId", Long.toString(processId));
+		final URI uri = rest.uriBuilder()
+				.pathSegment("orchestration/process/instance/{processId}")
+				.buildAndExpand(vars)
+				.toUri();
+		return rest.get(uri, ProcessInstance.class);
 	}
 }

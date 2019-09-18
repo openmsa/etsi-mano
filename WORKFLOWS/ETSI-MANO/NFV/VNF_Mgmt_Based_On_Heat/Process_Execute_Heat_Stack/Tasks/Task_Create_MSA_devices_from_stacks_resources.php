@@ -36,6 +36,7 @@ foreach ($resources as &$resource) {
 		
 		//$instance_name = $resource['resource_name'];
 		$instance_id = $resource['physical_resource_id'];
+		$context['vnf_instance_id'] = $instance_id;
 		$auth_token = $context['token_id'];
 		$endpoints = $context['endpoints'];
 

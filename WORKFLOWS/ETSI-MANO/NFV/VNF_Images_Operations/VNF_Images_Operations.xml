@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>NFV|NFVO|VNF Images Manager</group>
+    <icon>/images/eclipseIcons/page_obj.gif</icon>
+    <name>VNF Images Operations</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>true</showProcessExecConsole>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Deviceid" displayOrder="0" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Sync VIM services inventories</section>
+      </sections>
+      <sdTypes>
+        <sdType manId="14020603" modId="16051904"/>
+      </sdTypes>
+    </variable>
+    <variable default="false" displayName="Select" displayOrder="1" maxLength="100" name="params.images.0.select" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Id" displayOrder="2" isUserLocked="true" maxLength="100" name="params.images.0.id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Name" displayOrder="3" maxLength="100" name="params.images.0.name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Status" displayOrder="4" isUserLocked="true" maxLength="100" name="params.images.0.status" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Disk Format" displayOrder="5" maxLength="100" name="params.images.0.disk_format" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Container Format" displayOrder="6" maxLength="100" name="params.images.0.container_format" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Size" displayOrder="7" maxLength="100" name="params.images.0.size" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Min Ram" displayOrder="8" maxLength="100" name="params.images.0.min_ram" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Min Disk" displayOrder="9" maxLength="100" name="params.images.0.min_disk" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable default="false" displayName="Protected" displayOrder="10" maxLength="100" name="params.images.0.protected" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+    <variable displayName="Visibility" displayOrder="11" maxLength="100" name="params.images.0.visibility" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>List images</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content/>  </example>
+  <process name="Process/ETSI-MANO/NFV/VNF_Images_Operations/Process_Manage_VNF_Images">
+    <visibility>5</visibility>
+    <displayName>Manage VNF Images</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    
+    
+  
+    
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
+      <processPath/>
+      <displayName>Sync VIM services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+      <processPath/>
+      <displayName>Get VIM authentification token</displayName>
+    </task>
+    <task name="Task_List_images.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Images_Operations/Process_Manage_VNF_Images/Tasks/</processPath>
+      <displayName>List images</displayName>
+    </task>
+  </process>
+  
+  
+
+
+<process name="Process/ETSI-MANO/NFV/VNF_Images_Operations/Process_Update_VNF_Images">
+    <visibility>5</visibility>
+    <displayName>Update VNF Images</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+  
+    
+  <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+      <processPath/>
+      <displayName>Get VIM authentification token</displayName>
+    </task>
+    <task name="Task_Update_images.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Images_Operations/Process_Update_VNF_Images/Tasks/</processPath>
+      <displayName>Update images</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Images_Operations/Process_Manage_VNF_Images/Tasks/Task_List_images.php">
+      <processPath/>
+      <displayName>List images</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/VNF_Images_Operations/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>

@@ -21,6 +21,8 @@ function list_args()
   create_var_def('servers.0.metadata.0.metadata_key', 'String');
   create_var_def('servers.0.metadata.0.metadata_value', 'String');
 
+ 
+
 }
 
 $device_id = substr($context['deviceid'], 3);
@@ -80,14 +82,17 @@ if ($response['wo_status'] !== ENDED) {
 
 $wo_comment = $response['wo_comment'];
 $wo_comment = json_decode(str_replace("\\\"", "\"", $wo_comment), true);
+logToFile(debug_dump($wo_comment['server'],"========SERVER CREATION=============="));
+
 $server_id = $wo_comment['server']['id'];
 
-$context['servers'][$index]['server_id'] = $server_id;
 
-if (empty($server_id)) {
+
+if (empty($wo_comment['server']['id'])) {
 	echo "Server ID is null _ can wait for server status.";
 	exit; 
 }
+$context['servers'][$index]['server_id'] = $server_id;
 $response = wait_for_server_status($device_id, $server_id, ACTIVE, $context, 1000);
 $response = json_decode($response, true);
 if ($response['wo_status'] !== ENDED) {
@@ -98,14 +103,19 @@ if ($response['wo_status'] !== ENDED) {
 
 if (!empty($server['floating_ip_id'])) {
 
-$floating_ip_id = $server['floating_ip_id'];
+$floating_ip_id= $server['floating_ip_id'];
 
 $response = _nova_floating_ip_associate($device_id, $server_id, $floating_ip_id);
 $response = json_decode($response, true);
 if ($response['wo_status'] !== ENDED) {
+
+   $response = _nova_floating_ip_associate($device_id, $server_id, $server['floating_ip_address']);
+   $response = json_decode($response, true);
+   if ($response['wo_status'] !== ENDED) {
 	$response = json_encode($response);
 	echo $response;
 	exit;
+   }
 }
 
 $response = get_floating_ip_address($device_id, $name);
@@ -116,6 +126,7 @@ if ($response['wo_status'] !== ENDED) {
 	exit;
 }
 $floating_ip_address = $response['wo_newparams']['server_floating_ip'];
+//TODO TRY ARRAYPUSH
 $context['servers'][$index]['floating_ip_address'] = $floating_ip_address;
 }
 

@@ -1,0 +1,12 @@
+{
+    "CreateVnfPkgInfoRequest": {
+        "userDefinedData": {
+            "customerId": "TMAA6",
+            "vimId": "TMA125",
+            "manufacturerId": "18",
+            "modelId": "121",
+            "device_login": "root",
+            "device_password": "ubiqube"
+        }
+    }
+}

@@ -31,6 +31,6 @@ public interface VnfPackageManagement {
 
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull String vnfPkgId, @Nullable String accept);
 
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull String _vnfPkgId, @Nullable String _range);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull String _vnfPkgId, @Nullable RangeHeader range);
 
 }

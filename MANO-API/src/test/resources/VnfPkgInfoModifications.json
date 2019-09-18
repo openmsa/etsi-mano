@@ -1,6 +1,6 @@
 {
 	"vnfdId": "1234-1234-1234",
-	"operationalState": "ENABLED",
+	"operationalState": "DISABLED",
 	"checksum": {
 		"algorithm": "SHA256"
 	}
