@@ -76,6 +76,12 @@ class NsdSol005 extends BaseApi
 		return $this->doDelete($url_frag);
 	}
 
+	public function nsDescriptorsNsdInfoIdNsdContentPut($_nsdInfoId, $_content)
+	{
+		$url_frag = self::BASE_URL . '/' . $_nsdInfoId . '/nsd_content';
+		return $this->doPut($url_frag, $_content);
+	}
+
 	public function setOperationalState($_nsdInfoId, $_state)
 	{
 		$content = '{ "nsdOperationalState": "DISABLED" }';

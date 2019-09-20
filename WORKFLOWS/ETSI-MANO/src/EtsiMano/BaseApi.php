@@ -49,6 +49,37 @@ class BaseApi
 		return $response;
 	}
 
+	protected function doPut($_url, $_body)
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
+		$this->setParameters($ch);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $_body);
+		$response = curl_exec($ch);
+		$this->checkError($ch, $_url, $response);
+		curl_close($ch);
+		return $response;
+	}
+
+	protected function doPutMp($_url, $_content)
+	{
+		// Works in php 5.3.3 but not in 7.3.x
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
+		curl_setopt($ch, CURLOPT_USERPWD, 'ncroot:ubiqube');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+			'file' => $_content
+		));
+		$response = curl_exec($ch);
+		$this->checkError($ch, $_url, $response);
+		curl_close($ch);
+		return $response;
+	}
+
 	protected function doDelete($_url)
 	{
 		$ch = curl_init();
@@ -64,10 +95,10 @@ class BaseApi
 	private function setParameters($_ch)
 	{
 		curl_setopt($_ch, CURLOPT_USERPWD, 'ncroot:ubiqube');
+		curl_setopt($_ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($_ch, CURLOPT_HTTPHEADER, array(
 			'Content-Type: application/json'
 		));
-		curl_setopt($_ch, CURLOPT_RETURNTRANSFER, 1);
 	}
 
 	private function checkError($_ch, $_url, $_response)

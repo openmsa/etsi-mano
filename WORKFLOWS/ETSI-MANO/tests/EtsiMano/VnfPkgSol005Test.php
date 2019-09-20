@@ -41,6 +41,15 @@ final class VnfPkgSol005Test extends TestCase
 		$this->setExpectedException(ManoException::class);
 		$this->vnfPkg->vnfPackagesVnfPkgIdDelete('12345');
 	}
+
+	public function testOnboarding()
+	{
+		$body = file_get_contents(__DIR__ . '/stubs/vnf-pkg.json');
+		$res = $this->vnfPkg->vnfPackagesPost($body);
+		$id = $res['VnfPkgInfo']['id'];
+
+		$this->vnfPkg->vnfPackagesVnfPkgIdPackageContentPut($id, '{}');
+	}
 }
 
 
