@@ -15,6 +15,7 @@ function list_args()
 check_mandatory_param('nsPkgId');
 
 $nsPkgId = $context['nsPkgId'];
+//$nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano-0.0.1-SNAPSHOT/');
 $nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano/');
 $nsPkgInfo = $nsPkgManagement->nsDescriptorsNsdInfoIdGet($nsPkgId);
 
