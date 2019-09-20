@@ -2,41 +2,28 @@
 <metadata>
     <map>
         <entry>
-            <key>MODEL</key>
-        </entry>
-        <entry>
             <key>FILE_TYPE</key>
             <value>text</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1568979032751</value>
+            <value>1568974148294</value>
         </entry>
         <entry>
             <key>COMMENT</key>
             <value></value>
         </entry>
         <entry>
-            <key>REPOSITORY</key>
-        </entry>
-        <entry>
             <key>DATE_CREATION</key>
-            <value>1561993287365</value>
+            <value>1568973789243</value>
         </entry>
         <entry>
-            <key>MANUFACTURER</key>
-        </entry>
-        <entry>
-            <key>CONFIGURATION_FILTER</key>
+            <key>TAG</key>
             <value></value>
         </entry>
         <entry>
             <key>TYPE</key>
             <value>UPLOAD</value>
-        </entry>
-        <entry>
-            <key>TAG</key>
-            <value>Heat_Orchestration.xml</value>
         </entry>
     </map>
 </metadata>

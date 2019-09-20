@@ -21,14 +21,84 @@
         <section>Sync to NFVO</section>
       </sections>
     </variable>
-    <variable cols="100" displayName="Vnf Pkg Content" displayOrder="2" maxLength="100" name="params.vnf_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="VNF Package IDs" displayOrder="1" maxLength="100" name="params.vnfPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
+    <variable displayName="NSD Package IDs" displayOrder="2" maxLength="100" name="params.nsdPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
+    <variable displayName="Vnfpkgid" displayOrder="3" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+      <sections>
+        <section>VNF Package ID</section>
+      </sections>
+      <classes>
+        <class>vnf_catalogs</class>
+      </classes>
+    </variable>
+    <variable displayName="Nsdpkgid" displayOrder="4" maxLength="100" name="params.nsdPkgId" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+      <sections>
+        <section>NSD Package ID</section>
+      </sections>
+      <classes>
+        <class>ns_catalogs</class>
+      </classes>
+    </variable>
+    <variable default="false" displayName="State enbled ?" displayOrder="5" maxLength="100" name="params.state" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>Enable/Disable State</section>
+      </sections>
+    </variable>
+    <variable displayName="Customerid" displayOrder="6" maxLength="100" name="params.customerId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create NS Package</section>
+      </sections>
+    </variable>
+    <variable displayName="Name" displayOrder="7" maxLength="100" name="params.name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create NS Package</section>
+      </sections>
+    </variable>
+    <variable displayName="Vimid" displayOrder="8" keepOnImport="true" maxLength="165" name="params.vimId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Create NS Package</section>
+      </sections>
+      <sdTypes>
+        <sdType manId="14020603" modId="16051904"/>
+        <sdType manId="14020603" modId="16051903"/>
+      </sdTypes>
+    </variable>
+    <variable displayName="Vnfpkgids" displayOrder="9" maxLength="100" name="params.vnfPkgIds.0.id" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+      <sections>
+        <section>Create VNF Package</section>
+      </sections>
+      <classes>
+        <class>vnf_catalogs</class>
+      </classes>
+    </variable>
+    <variable displayName="Manufacturerid" displayOrder="10" maxLength="100" name="params.manufacturerId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Create VNF Package</section>
       </sections>
     </variable>
-    <variable cols="100" displayName="Nsd Pkg Content" displayOrder="5" maxLength="100" name="params.nsd_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Modelid" displayOrder="11" maxLength="100" name="params.modelId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create VNF Package</section>
+      </sections>
+    </variable>
+    <variable cols="100" displayName="Vnf Pkg Content" displayOrder="12" editable="false" maxLength="100" name="params.vnf_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create VNF Package</section>
+      </sections>
+    </variable>
+    <variable cols="100" displayName="Nsd Pkg Content" displayOrder="13" editable="false" maxLength="100" name="params.nsd_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Create NS Package</section>
+      </sections>
+    </variable>
+    <variable displayName="Device Login" displayOrder="14" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create VNF Package</section>
+      </sections>
+    </variable>
+    <variable displayName="Device Password" displayOrder="15" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create VNF Package</section>
       </sections>
     </variable>
   </variables>  <example>    <content/>  </example>
@@ -54,9 +124,14 @@
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
   
+  
   <task name="Task_Create_VNF_Package.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package/Tasks/</processPath>
       <displayName>Create VNF Package</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service">
@@ -67,9 +142,14 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+  
   <task name="Task_Create_NS_Package.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service/Tasks/</processPath>
       <displayName>Create NS Package</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Move_To_Trash">
@@ -80,5 +160,80 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
+  </process>
+<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_VNF">
+    <visibility>5</visibility>
+    <displayName>Enable/Disable VNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+  <task name="Task_ED_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_VNF/Tasks/</processPath>
+      <displayName>ED VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_VNF">
+    <visibility>5</visibility>
+    <displayName>Delete VNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="Task_Delete_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_VNF/Tasks/</processPath>
+      <displayName>Delete VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchro</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_NSD">
+    <visibility>5</visibility>
+    <displayName>Delete NSD</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="Task_Delete_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_NSD/Tasks/</processPath>
+      <displayName>Delete NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchro</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD">
+    <visibility>5</visibility>
+    <displayName>Enable/Disable NSD</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+    
+  <task name="Task_ED_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD/Tasks/</processPath>
+      <displayName>ED NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronization</displayName>
+    </task>
   </process>
 </ObjectDefinition>

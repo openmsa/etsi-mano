@@ -21,7 +21,7 @@
         <section>Get VNFD from VNF Catalog (NFVO)</section>
       </sections>
       <sdTypes>
-        <sdType manId="14020601" modId="14020601"/>
+        <sdType manId="17010303" modId="17010305"/>
       </sdTypes>
     </variable>
     <variable displayName="Vnfpkgid" displayOrder="1" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" refDeviceIdVar="params.nfvoDevice" startIncrement="0" tableSizeFix="false" type="OBMFRef">
@@ -40,7 +40,7 @@
         <sdType manId="14020603" modId="16051904"/>
       </sdTypes>
     </variable>
-    <variable cols="50" default="Simulator" displayName="Stack Name" displayOrder="3" editable="false" isMandatory="true" maxLength="100" name="params.stackname" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
+    <variable cols="50" default="VNF" displayName="Stack Name" displayOrder="3" editable="false" isMandatory="true" maxLength="100" name="params.stackname" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
       <sections>
         <section>Launch Stack</section>
       </sections>
@@ -100,12 +100,12 @@
         <class>servers</class>
       </classes>
     </variable>
-    <variable default="root" displayName="Device Login" displayOrder="12" isUserLocked="true" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" type="String">
+    <variable default="root" displayName="Device Login" displayOrder="12" editable="false" isUserLocked="true" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
       <sections>
         <section>Create MSA devices from stacks resources</section>
       </sections>
     </variable>
-    <variable default="$ubiqube" displayName="Device Password" displayOrder="13" isUserLocked="true" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" type="Password">
+    <variable default="$ubiqube" displayName="Device Password" displayOrder="13" editable="false" isUserLocked="true" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false">
       <sections>
         <section>Create MSA devices from stacks resources</section>
       </sections>
@@ -440,6 +440,16 @@
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
   
+  
+    
+    
+  
+    
+    
+    
+  
+    
+    
   <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
       <processPath/>
       <displayName>Get VIM authentification token</displayName>
@@ -451,6 +461,27 @@
     <task name="Task_Rebuild_VNF_instance.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Heal_VNF/Tasks/</processPath>
       <displayName>Rebuild VNF instance</displayName>
+    </task>
+    <task name="Task_VNF_reachability_check.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Heal_VNF/Tasks/</processPath>
+      <displayName>VNF reachability check</displayName>
+    </task>
+    <task name="Task_VNF_Ping_Check.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Heal_VNF/Tasks/</processPath>
+      <displayName>VNF Ping Check</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_New_instance">
+    <visibility>5</visibility>
+    <displayName>New instance</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="Task_Synchronise_to_NFVO.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_New_instance/Tasks/</processPath>
+      <displayName>Synchronise to NFVO</displayName>
     </task>
   </process>
 </ObjectDefinition>
