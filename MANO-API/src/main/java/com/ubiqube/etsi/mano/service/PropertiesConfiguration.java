@@ -20,13 +20,13 @@ public class PropertiesConfiguration implements Configuration {
 		final String confDirName = System.getProperty("user.home") + "/.mano/";
 		final String filename = confDirName + "configuration.properties";
 
-		File confDir = new File(confDirName);
-		if (! confDir.exists()) {
+		final File confDir = new File(confDirName);
+		if (!confDir.exists()) {
 			confDir.mkdir();
-                }
+		}
 
-		File confFile = new File(filename);
-		if (! confFile.exists()) {
+		final File confFile = new File(filename);
+		if (!confFile.exists()) {
 			try {
 				confFile.createNewFile();
 			} catch (final IOException e) {
@@ -43,8 +43,17 @@ public class PropertiesConfiguration implements Configuration {
 	}
 
 	@Override
-	public <T> T get(String _key) {
+	public <T> T get(final String _key) {
 		return (T) props.get(_key);
+	}
+
+	public void set(final String string, final Object root) {
+		props.put(string, root);
+	}
+
+	@Override
+	public <T> ConfigurationBuilder<T> build(final String _key) {
+		return new ConfigurationBuilder<>(this, _key);
 	}
 
 }
