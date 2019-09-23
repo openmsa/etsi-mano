@@ -66,18 +66,36 @@ class BaseApi
 	protected function doPutMp($_url, $_content)
 	{
 		// Works in php 5.3.3 but not in 7.3.x
+		$boundary = '----------' . md5(microtime());
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
 		curl_setopt($ch, CURLOPT_USERPWD, 'ncroot:ubiqube');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-			'file' => $_content
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: multipart/form-data; boundary=' . $boundary
+		));
+		curl_setopt($ch, CURLOPT_POSTFIELDS,
+			$this->multipartBuildQuery(
+			array(
+				'file' => $_content
+			)
+				, $boundary
 		));
 		$response = curl_exec($ch);
 		$this->checkError($ch, $_url, $response);
 		curl_close($ch);
 		return $response;
+	}
+
+	private function multipartBuildQuery($fields, $boundary)
+	{
+		$retval = '';
+		foreach ($fields as $key => $value) {
+			$retval .= "--$boundary\r\nContent-Disposition: form-data; name=\"$key\"; filename=\"filename\"\r\n\r\n$value\r\n";
+		}
+		$retval .= "--$boundary--";
+		return $retval . "\r\n";
 	}
 
 	protected function doDelete($_url)
