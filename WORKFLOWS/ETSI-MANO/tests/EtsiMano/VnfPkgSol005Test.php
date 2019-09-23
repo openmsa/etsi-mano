@@ -10,7 +10,7 @@ final class VnfPkgSol005Test extends TestCase
 
 	public function __construct()
 	{
-		$this->vnfPkg = new VnfPkgSol005('http://localhost:8380/ubi-etsi-mano-api/');
+		$this->vnfPkg = new VnfPkgSol005('http://localhost:8380/ubi-etsi-mano/');
 	}
 
 	/**
@@ -38,6 +38,7 @@ final class VnfPkgSol005Test extends TestCase
 
 	public function testException()
 	{
+		// Not compatible with PHP 5.3 but works fine in php 7.3.x
 		$this->setExpectedException(ManoException::class);
 		$this->vnfPkg->vnfPackagesVnfPkgIdDelete('12345');
 	}
