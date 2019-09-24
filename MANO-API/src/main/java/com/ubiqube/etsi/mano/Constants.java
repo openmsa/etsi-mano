@@ -5,6 +5,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
@@ -12,6 +13,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnu
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public final class Constants {
 
@@ -22,7 +24,7 @@ public final class Constants {
 	public static final String HASH_ALGORITHM = "SHA-512";
 
 	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
+		if (!OnboardingStateEnum.CREATED.value().equals(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("The VNF Package is already onboarded");
 		}
 	}
@@ -34,13 +36,13 @@ public final class Constants {
 	}
 
 	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
-		if (!"NOT_IN_USE".equals(vnfPkgInfo.getUsageState())) {
+		if (!UsageStateEnum.NOT_IN_USE.value().equals(vnfPkgInfo.getUsageState())) {
 			throw new ConflictException("VNF Should be in Not In Use State.");
 		}
 	}
 
 	public static void ensureInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
+		if (InstantiationStateEnum.INSTANTIATED != vnfInstance.getInstantiationState()) {
 			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
 		}
 	}
@@ -52,19 +54,19 @@ public final class Constants {
 	}
 
 	public static void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
+		if (!OnboardingStateEnum.ONBOARDED.value().equals(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
 		}
 	}
 
 	public static void ensureNotInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
+		if (InstantiationStateEnum.INSTANTIATED == vnfInstance.getInstantiationState()) {
 			throw new GenericException("Instance " + vnfInstance.getId() + " is already instantiated.");
 		}
 	}
 
 	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!"IN_USE".equals(nsdInfo.getNsdUsageState())) {
+		if (!NsdUsageStateEnum.IN_USE.value().equals(nsdInfo.getNsdUsageState())) {
 			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
 		}
 	}
@@ -76,38 +78,38 @@ public final class Constants {
 	}
 
 	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.value())) {
+		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsdInfo.getNsdOnboardingState())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
 
-	public static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.value())) {
+	public static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsd) {
+		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
 
 	public static void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
-		if (nsd.getNsdOperationalState() != NsdOperationalStateEnum.ENABLED) {
+		if (NsdOperationalStateEnum.ENABLED != nsd.getNsdOperationalState()) {
 			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
 		}
 	}
 
 	public static void ensureOnborded(final NsDescriptorsNsdInfo nsd) {
-		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
+		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
 			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
 		}
 	}
 
 	public static void ensureNotInstantiated(final NsInstancesNsInstance nsInstance) {
 		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
-			throw new ConflictException("The ns instance " + nsInstance.getId() + " is instantiated.");
+			throw new ConflictException("The Ns instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
 
 	public static void ensureInstantiated(final NsInstancesNsInstance nsInstancesNsInstance) {
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstancesNsInstance.getId() + " is already instantiated.");
+		if (NsStateEnum.INSTANTIATED.value().equals(nsInstancesNsInstance.getNsState())) {
+			throw new GenericException("The Ns Instance " + nsInstancesNsInstance.getId() + " is instantiated.");
 		}
 	}
 
