@@ -11,6 +11,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 
 public final class Constants {
 
@@ -27,7 +28,7 @@ public final class Constants {
 	}
 
 	public static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState().value())) {
+		if (OperationalStateEnum.DISABLED != vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("Packaged is enabled.");
 		}
 	}
@@ -45,7 +46,7 @@ public final class Constants {
 	}
 
 	public static void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
-		if ("DISABLED".equals(vnfPkgInfo.getOperationalState().value())) {
+		if (OperationalStateEnum.DISABLED == vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
 		}
 	}
@@ -69,25 +70,25 @@ public final class Constants {
 	}
 
 	public static void ensureDisabled(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!"DISABLED".equals(nsdInfo.getNsdOperationalState().value())) {
+		if (NsdOperationalStateEnum.DISABLED != nsdInfo.getNsdOperationalState()) {
 			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
 		}
 	}
 
 	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
+		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.value())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
+		if (!nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.value())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
 
 	public static void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
-		if (!nsd.getNsdOperationalState().equals(NsdOperationalStateEnum.ENABLED.value())) {
+		if (nsd.getNsdOperationalState() != NsdOperationalStateEnum.ENABLED) {
 			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
 		}
 	}
