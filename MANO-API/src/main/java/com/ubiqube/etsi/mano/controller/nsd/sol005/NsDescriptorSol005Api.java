@@ -316,7 +316,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	}
 
 	private static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
+		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
