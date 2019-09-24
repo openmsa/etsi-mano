@@ -1,5 +1,10 @@
 package com.ubiqube.etsi.mano.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
+import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
+import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -26,7 +30,6 @@ import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgInstance;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgOperation;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -177,30 +180,6 @@ public class VnfInstanceLcm {
 
 		vnfPackageRepository.storeObject(_vnfPkgId, vnfPkgIndex, "indexes.json");
 		return lcmOpOccs;
-	}
-
-	private void ensureInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
-		}
-	}
-
-	private void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
-		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
-		}
-	}
-
-	private void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
-		}
-	}
-
-	private void ensureNotInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is already instantiated.");
-		}
 	}
 
 }

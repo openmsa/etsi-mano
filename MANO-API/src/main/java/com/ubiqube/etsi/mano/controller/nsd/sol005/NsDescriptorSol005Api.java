@@ -1,5 +1,9 @@
 package com.ubiqube.etsi.mano.controller.nsd.sol005;
 
+import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
+import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
+import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
+import static com.ubiqube.etsi.mano.Constants.ensureOnboarded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -24,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -295,30 +298,6 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		ret.setNsdContent(nsdContent);
 
 		return ret;
-	}
-
-	private static void ensureNotInUse(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!"IN_USE".equals(nsdInfo.getNsdUsageState())) {
-			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
-		}
-	}
-
-	private static void ensureDisabled(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!"DISABLED".equals(nsdInfo.getNsdOperationalState().value())) {
-			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
-		}
-	}
-
-	private static void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
-			throw new ConflictException("NSD is already Onboarded.");
-		}
-	}
-
-	private static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (nsdInfo.getNsdOnboardingState().contentEquals(NsdOnboardingStateEnum.ONBOARDED.name())) {
-			throw new ConflictException("NSD is already Onboarded.");
-		}
 	}
 
 }

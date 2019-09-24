@@ -1,5 +1,9 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
+import static com.ubiqube.etsi.mano.Constants.ensureEnabled;
+import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiatef;
+import static com.ubiqube.etsi.mano.Constants.ensureOnborded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -20,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
-import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -29,8 +32,6 @@ import com.ubiqube.etsi.mano.model.nsd.NsdPkgIndex;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgOperation;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
@@ -350,30 +351,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 				.filter(x -> x.getInstanceId().contentEquals(_id))
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + _id));
-	}
-
-	private void ensureInstantiated(final NsInstancesNsInstance nsInstancesNsInstance) {
-		if (nsInstancesNsInstance.getNsState().equals(NsStateEnum.INSTANTIATED.value())) {
-			throw new GenericException("Ns Instance " + nsInstancesNsInstance.getId() + " is already instantiated.");
-		}
-	}
-
-	private void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
-		if (!nsd.getNsdOperationalState().equals(NsdOperationalStateEnum.ENABLED.value())) {
-			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
-		}
-	}
-
-	private void ensureOnborded(final NsDescriptorsNsdInfo nsd) {
-		if (!nsd.getNsdOnboardingState().equals(NsdOnboardingStateEnum.ONBOARDED.value())) {
-			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
-		}
-	}
-
-	private void ensureNotInstantiatef(final NsInstancesNsInstance nsInstance) {
-		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
-			throw new ConflictException("The ns instance " + nsInstance.getId() + " is instantiated.");
-		}
 	}
 
 }
