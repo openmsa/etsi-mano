@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol002;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -56,11 +55,8 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
-
-		final String id = UUID.randomUUID().toString();
-
-		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id, links);
-		vnfInstance.setLinks(links.getLinks(id));
+		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest);
+		vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
 
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}

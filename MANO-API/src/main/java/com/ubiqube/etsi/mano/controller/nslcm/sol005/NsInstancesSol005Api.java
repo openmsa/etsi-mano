@@ -1,11 +1,9 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
-import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
-import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -34,6 +32,7 @@ import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgOperation;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
@@ -56,6 +55,7 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.msa.LcmOpOccsMsa;
 import com.ubiqube.etsi.mano.service.MsaExecutor;
+import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 @Profile({ "default", "NFVO" })
 @RestController
@@ -69,14 +69,16 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final LcmOpOccsMsa lcmOpOccsMsa;
 
+	private final VnfmInterface vnfm;
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository) {
+	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		msaExecutor = _msaExecutor;
 		lcmOpOccsMsa = _lcmOpOccsMsa;
 		vnfPackageRepository = _vnfPackageRepository;
+		vnfm = _vnfm;
 		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
@@ -267,35 +269,36 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstancesNsInstance.setNsInstanceName(req.getNsName());
 		nsInstancesNsInstance.setNestedNsInstanceId(nsd.getNestedNsdInfoIds());
 		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
-		final List<NsInstancesNsInstanceVnfInstance> vnfInstance = new ArrayList<>();
+		nsInstanceRepository.save(nsInstancesNsInstance);
+
+		final List<NsInstancesNsInstanceVnfInstance> vnfInstances = new ArrayList<>();
 		final List<String> vnfs = nsd.getVnfPkgIds();
 		for (final String id : vnfs) {
 			final VnfPkgInfo vnf = vnfPackageRepository.get(id);
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
-
+			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstancesNsInstance.getId(), id);
 			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
-			// TODO: Completly wrong, we need to create VNF instance on the NFVM.
-			nsInstancesNsInstanceVnfInstance.setId(id);
+			nsInstancesNsInstanceVnfInstance.setId(vnfInstance.getId());
 			nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 			final Map<String, Object> userData = vnf.getUserDefinedData();
 			nsInstancesNsInstanceVnfInstance.setVimId((String) userData.get("vimId"));
 			nsInstancesNsInstanceVnfInstance.setVnfdId(vnf.getVnfdId());
 			nsInstancesNsInstanceVnfInstance.setVnfdVersion(vnf.getVnfdVersion());
 			nsInstancesNsInstanceVnfInstance.setVnfPkgId(id);
-			vnfInstance.add(nsInstancesNsInstanceVnfInstance);
+			vnfInstances.add(nsInstancesNsInstanceVnfInstance);
 		}
 
-		nsInstancesNsInstance.setVnfInstance(vnfInstance);
+		nsInstancesNsInstance.setVnfInstance(vnfInstances);
 		final String id = UUID.randomUUID().toString();
 		nsInstancesNsInstance.setId(id);
 
 		nsInstanceRepository.save(nsInstancesNsInstance);
 
-		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(id, NsdPkgIndex.class, "indexes.json");
+		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(req.getNsdId(), NsdPkgIndex.class, "indexes.json");
 		final List<NsdPkgInstance> instances = nsdIndex.getInstances();
 		instances.add(new NsdPkgInstance(id));
-		nsdRepository.storeObject(id, nsdIndex, "indexes.json");
+		nsdRepository.storeObject(req.getNsdId(), nsdIndex, "indexes.json");
 
 		nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
 		final InlineResponse200 resp = new InlineResponse200();

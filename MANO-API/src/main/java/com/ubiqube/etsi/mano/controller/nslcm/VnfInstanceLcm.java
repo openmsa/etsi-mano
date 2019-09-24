@@ -7,6 +7,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -68,7 +69,8 @@ public class VnfInstanceLcm {
 		return result;
 	}
 
-	public VnfInstance post(final CreateVnfRequest createVnfRequest, final String id, final LcmLinkable links) {
+	public VnfInstance post(final CreateVnfRequest createVnfRequest) {
+		final String id = UUID.randomUUID().toString();
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		ensureIsOnboarded(vnfPkgInfo);
@@ -83,7 +85,6 @@ public class VnfInstanceLcm {
 		instances.add(new VnfPkgInstance(vnfInstance.getId()));
 		vnfPackageRepository.storeObject(vnfId, vnfPkgIndex, "indexes.json");
 
-		vnfInstance.setLinks(links.getLinks(id));
 		return vnfInstance;
 	}
 
