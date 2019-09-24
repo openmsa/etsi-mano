@@ -3,7 +3,7 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 import static com.ubiqube.etsi.mano.Constants.ensureEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
-import static com.ubiqube.etsi.mano.Constants.ensureOnborded;
+import static com.ubiqube.etsi.mano.Constants.ensureOnboarded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -255,7 +255,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			throw new NotFoundException("NsdId field is empty.");
 		}
 		final NsDescriptorsNsdInfo nsd = nsdRepository.get(req.getNsdId());
-		ensureOnborded(nsd);
+		ensureOnboarded(nsd);
 		ensureEnabled(nsd);
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);

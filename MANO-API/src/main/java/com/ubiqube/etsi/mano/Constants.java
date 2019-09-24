@@ -23,21 +23,9 @@ public final class Constants {
 
 	public static final String HASH_ALGORITHM = "SHA-512";
 
-	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!OnboardingStateEnum.CREATED.value().equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is already ONBOARDED");
-		}
-	}
-
 	public static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
 		if (OperationalStateEnum.DISABLED != vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is ENABLED.");
-		}
-	}
-
-	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
-		if (!UsageStateEnum.NOT_IN_USE.value().equals(vnfPkgInfo.getUsageState())) {
-			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is Not In Use State.");
 		}
 	}
 
@@ -47,9 +35,21 @@ public final class Constants {
 		}
 	}
 
+	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
+		if (!UsageStateEnum.NOT_IN_USE.value().equals(vnfPkgInfo.getUsageState())) {
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is Not In Use State.");
+		}
+	}
+
 	public static void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
 		if (!OnboardingStateEnum.ONBOARDED.value().equals(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ONBOARDED state.");
+		}
+	}
+
+	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
+		if (!OnboardingStateEnum.CREATED.value().equals(vnfPkgInfo.getOnboardingState())) {
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is already ONBOARDED");
 		}
 	}
 
@@ -77,6 +77,12 @@ public final class Constants {
 		}
 	}
 
+	public static void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
+		if (NsdOperationalStateEnum.ENABLED != nsd.getNsdOperationalState()) {
+			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ENABLED state.");
+		}
+	}
+
 	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsd) {
 		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
 			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
@@ -86,18 +92,6 @@ public final class Constants {
 	public static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsd) {
 		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
 			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
-		}
-	}
-
-	public static void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
-		if (NsdOperationalStateEnum.ENABLED != nsd.getNsdOperationalState()) {
-			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ENABLED state.");
-		}
-	}
-
-	public static void ensureOnborded(final NsDescriptorsNsdInfo nsd) {
-		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
-			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
