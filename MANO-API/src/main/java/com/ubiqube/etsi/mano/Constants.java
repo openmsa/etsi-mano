@@ -25,79 +25,79 @@ public final class Constants {
 
 	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
 		if (!OnboardingStateEnum.CREATED.value().equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("The VNF Package is already onboarded");
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is already ONBOARDED");
 		}
 	}
 
 	public static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
 		if (OperationalStateEnum.DISABLED != vnfPkgInfo.getOperationalState()) {
-			throw new ConflictException("Packaged is enabled.");
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is ENABLED.");
 		}
 	}
 
 	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
 		if (!UsageStateEnum.NOT_IN_USE.value().equals(vnfPkgInfo.getUsageState())) {
-			throw new ConflictException("VNF Should be in Not In Use State.");
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is Not In Use State.");
 		}
 	}
 
 	public static void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
 		if (OperationalStateEnum.DISABLED == vnfPkgInfo.getOperationalState()) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ENABLED state.");
 		}
 	}
 
 	public static void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
 		if (!OnboardingStateEnum.ONBOARDED.value().equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
+			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
 	public static void ensureInstantiated(final VnfInstance vnfInstance) {
 		if (InstantiationStateEnum.INSTANTIATED != vnfInstance.getInstantiationState()) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
+			throw new GenericException("The VNF Instance " + vnfInstance.getId() + " is not in INSTANTIATED state.");
 		}
 	}
 
 	public static void ensureNotInstantiated(final VnfInstance vnfInstance) {
 		if (InstantiationStateEnum.INSTANTIATED == vnfInstance.getInstantiationState()) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is already instantiated.");
+			throw new GenericException("The VNF Instance " + vnfInstance.getId() + " is already in INSTANTIATED state.");
 		}
 	}
 
 	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsd) {
 		if (!NsdUsageStateEnum.IN_USE.value().equals(nsd.getNsdUsageState())) {
-			throw new ConflictException("Nsd Should be disabled. " + nsd.getId());
+			throw new ConflictException("The NSD package " + nsd.getId() + "Should be in disabled state.");
 		}
 	}
 
 	public static void ensureDisabled(final NsDescriptorsNsdInfo nsd) {
 		if (NsdOperationalStateEnum.DISABLED != nsd.getNsdOperationalState()) {
-			throw new ConflictException("Nsd Should be disabled. " + nsd.getId());
+			throw new ConflictException("The NSD package " + nsd.getId() + "Should be in disabled state.");
 		}
 	}
 
 	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsd) {
 		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
-			throw new ConflictException("NSD is already Onboarded.");
+			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsd) {
 		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
-			throw new ConflictException("NSD is already Onboarded.");
+			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
 		}
 	}
 
 	public static void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
 		if (NsdOperationalStateEnum.ENABLED != nsd.getNsdOperationalState()) {
-			throw new ConflictException("NSD " + nsd.getId() + " is not ENABLED state.");
+			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ENABLED state.");
 		}
 	}
 
 	public static void ensureOnborded(final NsDescriptorsNsdInfo nsd) {
 		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
-			throw new ConflictException("NSD " + nsd.getId() + " is not in OBBOARDED state.");
+			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
