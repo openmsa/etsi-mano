@@ -41,12 +41,6 @@ public final class Constants {
 		}
 	}
 
-	public static void ensureInstantiated(final VnfInstance vnfInstance) {
-		if (InstantiationStateEnum.INSTANTIATED != vnfInstance.getInstantiationState()) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
-		}
-	}
-
 	public static void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
 		if (OperationalStateEnum.DISABLED == vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
@@ -59,26 +53,32 @@ public final class Constants {
 		}
 	}
 
+	public static void ensureInstantiated(final VnfInstance vnfInstance) {
+		if (InstantiationStateEnum.INSTANTIATED != vnfInstance.getInstantiationState()) {
+			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
+		}
+	}
+
 	public static void ensureNotInstantiated(final VnfInstance vnfInstance) {
 		if (InstantiationStateEnum.INSTANTIATED == vnfInstance.getInstantiationState()) {
 			throw new GenericException("Instance " + vnfInstance.getId() + " is already instantiated.");
 		}
 	}
 
-	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsdInfo) {
-		if (!NsdUsageStateEnum.IN_USE.value().equals(nsdInfo.getNsdUsageState())) {
-			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
+	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsd) {
+		if (!NsdUsageStateEnum.IN_USE.value().equals(nsd.getNsdUsageState())) {
+			throw new ConflictException("Nsd Should be disabled. " + nsd.getId());
 		}
 	}
 
-	public static void ensureDisabled(final NsDescriptorsNsdInfo nsdInfo) {
-		if (NsdOperationalStateEnum.DISABLED != nsdInfo.getNsdOperationalState()) {
-			throw new ConflictException("Nsd Should be disabled. " + nsdInfo.getId());
+	public static void ensureDisabled(final NsDescriptorsNsdInfo nsd) {
+		if (NsdOperationalStateEnum.DISABLED != nsd.getNsdOperationalState()) {
+			throw new ConflictException("Nsd Should be disabled. " + nsd.getId());
 		}
 	}
 
-	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsdInfo) {
-		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsdInfo.getNsdOnboardingState())) {
+	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsd) {
+		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
 			throw new ConflictException("NSD is already Onboarded.");
 		}
 	}
@@ -107,9 +107,9 @@ public final class Constants {
 		}
 	}
 
-	public static void ensureInstantiated(final NsInstancesNsInstance nsInstancesNsInstance) {
-		if (NsStateEnum.INSTANTIATED.value().equals(nsInstancesNsInstance.getNsState())) {
-			throw new GenericException("The Ns Instance " + nsInstancesNsInstance.getId() + " is instantiated.");
+	public static void ensureInstantiated(final NsInstancesNsInstance nsInstance) {
+		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
+			throw new GenericException("The Ns Instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
 
