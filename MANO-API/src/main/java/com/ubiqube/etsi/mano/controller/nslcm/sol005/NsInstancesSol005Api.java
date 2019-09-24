@@ -2,6 +2,8 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
 import static com.ubiqube.etsi.mano.Constants.ensureEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
+import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureOnboarded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -270,12 +271,9 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final List<String> vnfs = nsd.getVnfPkgIds();
 		for (final String id : vnfs) {
 			final VnfPkgInfo vnf = vnfPackageRepository.get(id);
-			if (!vnf.getOnboardingState().equals("ONBOARDED")) {
-				throw new BadRequestException("VNF:" + id + " must be ONBOARDED");
-			}
-			if (!vnf.getOperationalState().equals("ENABLED")) {
-				throw new BadRequestException("VNF:" + id + " must be ENABLED");
-			}
+			ensureIsOnboarded(vnf);
+			ensureIsEnabled(vnf);
+
 			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
 			// TODO: Completly wrong, we need to create VNF instance on the NFVM.
 			nsInstancesNsInstanceVnfInstance.setId(id);
