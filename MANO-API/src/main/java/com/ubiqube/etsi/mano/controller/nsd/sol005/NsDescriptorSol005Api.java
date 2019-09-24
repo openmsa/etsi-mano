@@ -3,7 +3,7 @@ package com.ubiqube.etsi.mano.controller.nsd.sol005;
 import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
-import static com.ubiqube.etsi.mano.Constants.ensureOnboarded;
+import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -170,7 +170,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
 		final RangeHeader rangeHeader = RangeHeader.fromValue(range);
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
-		ensureOnboarded(nsdInfo);
+		ensureIsOnboarded(nsdInfo);
 		byte[] bytes;
 		if (rangeHeader != null) {
 			bytes = nsdRepository.getBinary(nsdInfoId, "nsd", rangeHeader.getFrom(), rangeHeader.getTo());

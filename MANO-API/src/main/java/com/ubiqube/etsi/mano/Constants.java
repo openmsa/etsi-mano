@@ -77,13 +77,13 @@ public final class Constants {
 		}
 	}
 
-	public static void ensureEnabled(final NsDescriptorsNsdInfo nsd) {
+	public static void ensureIsEnabled(final NsDescriptorsNsdInfo nsd) {
 		if (NsdOperationalStateEnum.ENABLED != nsd.getNsdOperationalState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ENABLED state.");
 		}
 	}
 
-	public static void ensureOnboarded(final NsDescriptorsNsdInfo nsd) {
+	public static void ensureIsOnboarded(final NsDescriptorsNsdInfo nsd) {
 		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
 			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
 		}
