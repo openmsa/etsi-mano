@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
 import static com.ubiqube.etsi.mano.Constants.ensureEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
-import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiatef;
+import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureOnborded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -109,7 +109,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
 		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureNotInstantiatef(nsInstance);
+		ensureNotInstantiated(nsInstance);
 
 		nsInstanceRepository.delete(nsInstanceId);
 	}

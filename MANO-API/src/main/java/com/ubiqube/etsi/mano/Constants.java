@@ -99,7 +99,7 @@ public final class Constants {
 		}
 	}
 
-	public static void ensureNotInstantiatef(final NsInstancesNsInstance nsInstance) {
+	public static void ensureNotInstantiated(final NsInstancesNsInstance nsInstance) {
 		if (NsStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
 			throw new ConflictException("The ns instance " + nsInstance.getId() + " is instantiated.");
 		}
