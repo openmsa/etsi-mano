@@ -10,7 +10,7 @@ final class NsdSol005Test extends TestCase
 
 	public function __construct()
 	{
-		$this->nsdApi = new NsdSol005('http://localhost:8380/ubi-etsi-mano/');
+		$this->nsdApi = new NsdSol005('http://localhost:8666/ubi-etsi-mano/');
 	}
 
 	public function testCrud()
