@@ -19,8 +19,8 @@ final class NsdSol005Test extends TestCase
 			'CreateNsdInfoRequest' => array(
 				'userDefinedData' => array(
 					'name' => 'MyName',
-					'customerId' => 'TMA12',
-					'vimId' => 'TMA213',
+					'customerId' => 'TMAA6',
+					'vimId' => 'TMA125',
 					'vnfPkgIds' => array()
 				)
 			)
