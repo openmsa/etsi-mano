@@ -30,7 +30,7 @@ public final class Constants {
 	}
 
 	public static void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
-		if (OperationalStateEnum.DISABLED == vnfPkgInfo.getOperationalState()) {
+		if (OperationalStateEnum.ENABLED != vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ENABLED state.");
 		}
 	}
