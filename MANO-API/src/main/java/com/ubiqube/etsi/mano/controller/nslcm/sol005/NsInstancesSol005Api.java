@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
+import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgIndex;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
@@ -45,7 +46,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdUpdatePos
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceLinksSelf;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
@@ -263,12 +263,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);
 
-		final NsInstancesNsInstance nsInstancesNsInstance = new NsInstancesNsInstance();
-		nsInstancesNsInstance.setNsdId(req.getNsdId());
-		nsInstancesNsInstance.setNsInstanceDescription(req.getNsDescription());
-		nsInstancesNsInstance.setNsInstanceName(req.getNsName());
-		nsInstancesNsInstance.setNestedNsInstanceId(nsd.getNestedNsdInfoIds());
-		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
+		final NsInstancesNsInstance nsInstancesNsInstance = NsInstanceFactory.createNsInstancesNsInstance(req.getNsdId(), req.getNsDescription(), req.getNsName(), nsd.getNestedNsdInfoIds());
 		nsInstanceRepository.save(nsInstancesNsInstance);
 
 		final List<NsInstancesNsInstanceVnfInstance> vnfInstances = new ArrayList<>();
@@ -278,14 +273,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
 			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstancesNsInstance.getId(), id);
-			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
-			nsInstancesNsInstanceVnfInstance.setId(vnfInstance.getId());
-			nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-			final Map<String, Object> userData = vnf.getUserDefinedData();
-			nsInstancesNsInstanceVnfInstance.setVimId((String) userData.get("vimId"));
-			nsInstancesNsInstanceVnfInstance.setVnfdId(vnf.getVnfdId());
-			nsInstancesNsInstanceVnfInstance.setVnfdVersion(vnf.getVnfdVersion());
-			nsInstancesNsInstanceVnfInstance.setVnfPkgId(id);
+			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance.getId(),
+					(String) vnf.getUserDefinedData().get("vimId"), vnf.getId(), vnf.getVnfdVersion(), vnf.getVnfdId());
 			vnfInstances.add(nsInstancesNsInstanceVnfInstance);
 		}
 
