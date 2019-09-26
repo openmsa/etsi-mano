@@ -1,0 +1,8 @@
+{*
+<variables>
+  <variable name="HTTP_PORT" type="String" displayOrder="0" tableSizeFix="false" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="BASE_URL" type="String" displayOrder="0" default="/" tableSizeFix="false" numberOfRowMax="0" maxLength="100">  </variable>
+</variables>
+*}
+{$HTTP_PORT}
+{$BASE_URL}
