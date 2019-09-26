@@ -17,7 +17,5 @@ COPY docker/msa/license/* /opt/ubiqube/
 RUN process-license.sh /opt/ubiqube/license{.lic,}
 RUN chown ncuser: /opt/ubiqube/license*
 
-RUN ln -s /opt/sms/bin/check_services_status.sh /usr/bin/
-
 
 CMD ["/sbin/init"]
