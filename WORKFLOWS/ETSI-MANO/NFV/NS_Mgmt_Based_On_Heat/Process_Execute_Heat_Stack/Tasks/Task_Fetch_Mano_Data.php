@@ -20,15 +20,28 @@ try {
 } catch (ManoException $e) {
 	task_error($e->getMessage());
 }
-$heatJson = $nsPkg['userDefinedData']['heat'];
-$heatYaml = Yaml::dump($heatJson);
-
-$path = '/opt/ses/share/htdocs/tech_report/ns_packages/heat/' . $context['nsPkgId'];
-@mkdir($path);
-file_put_contents($path . '/nsd.yaml', $heatYaml);
 
 $context['deviceid'] = $nsPkg['userDefinedData']['vimId'];
-$context['stackname'] = key($heatJson['resources']);
+$path = '/opt/ses/share/htdocs/tech_report/ns_packages/heat/' . $context['nsPkgId'];
+@mkdir($path);
+
+if(array_key_exists('heat', $nsPkg['userDefinedData']))
+{
+	$heatJson = $nsPkg['userDefinedData']['heat'];
+	$heatYaml = Yaml::dump($heatJson);
+	file_put_contents($path . '/nsd.yaml', $heatYaml);
+
+	$context['stackname'] = key($heatJson['resources']);
+} else {
+	try {
+		$content = $nsPkgManagement->nsDescriptorsNsdInfoIdNsdContentGet($context['nsPkgId']);
+		file_put_contents($path . '/nsd.yaml', $content);
+		$context['stackname'] = $nsPkg['nsdName'];
+	} catch (ManoException $e) {
+		task_error($e->getMessage());
+	}
+}
+
 // TODO get this IP on a NFVO
 $context['template_url'] = 'http://10.31.1.246/tech_report/ns_packages/heat/' . $context['nsPkgId'].'/nsd.yaml';
 
