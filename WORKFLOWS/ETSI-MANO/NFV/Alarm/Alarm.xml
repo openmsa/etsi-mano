@@ -15,7 +15,33 @@
     <showProcessExecConsole>false</showProcessExecConsole>
     <showVariables>false</showVariables>
     <visibility>5</visibility>
-  </information>  <variables frozen="0"/>  <example>    <content>
+  </information>  <variables frozen="0">
+    <variable displayName="Var Name" displayOrder="0" maxLength="100" name="params.var_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>VNF Scale-up</section>
+      </sections>
+    </variable>
+    <variable displayName="Var Name2" displayOrder="1" maxLength="100" name="params.var_name2" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
+      <sections>
+        <section>VNF Scale-up</section>
+      </sections>
+    </variable>
+    <variable displayName="Customer Id" displayOrder="2" maxLength="100" name="params.customer_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>VNF Scale-out</section>
+      </sections>
+    </variable>
+    <variable displayName="Device Id" displayOrder="3" maxLength="100" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>VNF Scale-out</section>
+      </sections>
+    </variable>
+    <variable displayName="Alarm Subtype" displayOrder="10" maxLength="100" name="params.alarm_subtype" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Configure</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content>
       <?php?>
     </content>  </example>
   <process name="Process/ETSI-MANO/NFV/Alarm/Process_Initial">
@@ -40,13 +66,44 @@
     <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
   </process>
-<process name="Process/ETSI-MANO/NFV/Alarm/Process_My_Update_Activity">
+
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scaling">
     <visibility>5</visibility>
-    <displayName>My Update Activity</displayName>
+    <displayName>Auto-Scale-up</displayName>
     <icon/>
     <poolId>0</poolId>
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+    <task name="Task_VNF_Scale-up.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scaling/Tasks/</processPath>
+      <displayName>VNF Scale-up</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scale_out">
+    <visibility>5</visibility>
+    <displayName>Auto-Scale out</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    <task name="Task_VNF_Scale-out.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scale_out/Tasks/</processPath>
+      <displayName>VNF Scale-out</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Auto-Heal">
+    <visibility>5</visibility>
+    <displayName>Auto-Healing</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="Task_VNF_Auto-Healing.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Heal/Tasks/</processPath>
+      <displayName>VNF Auto-Healing</displayName>
+    </task>
   </process>
 </ObjectDefinition>

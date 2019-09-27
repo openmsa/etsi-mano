@@ -2,7 +2,7 @@
 <ObjectDefinition>  <information>
     <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
     <description/>
-    <displayField>service_id</displayField>
+    <displayField>device_id</displayField>
     <executionDetailsVisibility>5</executionDetailsVisibility>
     <executionMode>TRANSACTION</executionMode>
     <group>NFV|NFVO|VNF/NSD Packages creation</group>
@@ -20,6 +20,9 @@
       <sections>
         <section>Sync to NFVO</section>
       </sections>
+      <sdTypes>
+        <sdType manId="17010303" modId="17010305"/>
+      </sdTypes>
     </variable>
     <variable displayName="VNF Package IDs" displayOrder="1" maxLength="100" name="params.vnfPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
     <variable displayName="NSD Package IDs" displayOrder="2" maxLength="100" name="params.nsdPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
@@ -230,6 +233,44 @@
   <task name="Task_ED_NSD.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD/Tasks/</processPath>
       <displayName>ED NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronization</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_VNF">
+    <visibility>5</visibility>
+    <displayName>Onboard VNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="Task_Onboard_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_VNF/Tasks/</processPath>
+      <displayName>Onboard VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronization</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_NSD">
+    <visibility>5</visibility>
+    <displayName>Onboard NSD</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="Task_Onboard_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_NSD/Tasks/</processPath>
+      <displayName>Onboard NSD</displayName>
     </task>
     <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
       <processPath/>
