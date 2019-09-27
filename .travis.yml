@@ -18,8 +18,7 @@ matrix:
       script:
         - ./bin/build_docker_containers.sh
         - ./bin/run_docker_compose.sh
-        - ./tests/test_login.sh
-        - ./tests/test_lookup_devices.sh
+        - ./bin/run_tests.sh
 
 
 # use travis cache for gradle or risk maven-central blacklisting
