@@ -10,7 +10,8 @@ function list_args()
 	create_var_def('vnfPkgId', 'string');
 }
 $id = $context['vnfPkgId'];
-$vnfPkgApi = new VnfPkgSol005('http://localhost:8380/ubi-etsi-mano/'); 
+$url = get_url_from_device($context['device_id']);
+$vnfPkgApi = new VnfPkgSol005($url); 
 try {
 	$vnfPkgApi->vnfPackagesVnfPkgIdDelete($id);
 } catch (ManoException $e) {

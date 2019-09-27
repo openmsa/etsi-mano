@@ -28,7 +28,8 @@ $payload = array('CreateNsdInfoRequest' => array(
 	)
 );
 $payJson = json_encode($payload);
-$nsdApi = new NsdSol005('http://localhost:8380/ubi-etsi-mano/');
+$url = get_url_from_device($context['device_id']);
+$nsdApi = new NsdSol005($url);
 $response= '';
 try {
 	$response = $nsdApi->nsDescriptorsPost($payJson);
@@ -38,6 +39,5 @@ try {
 
 $context['nsdPkgIds'][] = $response['id'];
 
-task_exit(ENDED, "NSD Package is created successfully. ". $response['id']);
+task_exit(ENDED, 'NSD Package created successfully. '. $response['id']);
 
-?>

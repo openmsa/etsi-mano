@@ -12,9 +12,8 @@ function list_args()
         create_var_def('vnfPkgId', 'String');
 }
 check_mandatory_param('vnfPkgId');
-
-//$vnfPkgManagement = new VnfPkgSol003('http://localhost:8380/ubi-etsi-mano-0.0.1-SNAPSHOT/');
-$vnfPkgManagement = new VnfPkgSol003('http://localhost:8380/ubi-etsi-mano/');
+$url = get_url_from_device($context['nfvoDevice']);
+$vnfPkgManagement = new VnfPkgSol003($url);
 try {
 	$vnfPkg = $vnfPkgManagement->vnfPackagesVnfPkgIdGet($context['vnfPkgId']);
 } catch (ManoException $e) {

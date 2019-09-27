@@ -27,7 +27,8 @@ $payload = array('CreateVnfPkgInfoRequest' => array(
 		'heat' => $context['vnf_pkg_content']?$context['vnf_pkg_content']:null
 	)
 ));
-$vnfPkgApi = new VnfPkgSol005('http://localhost:8380/ubi-etsi-mano/');
+$url = get_url_from_device($context['device_id']);
+$vnfPkgApi = new VnfPkgSol005($url);
 try {
 	$response = $vnfPkgApi->vnfPackagesPost(json_encode($payload));
 	if($context['vnf_pkg_content'] != null) {

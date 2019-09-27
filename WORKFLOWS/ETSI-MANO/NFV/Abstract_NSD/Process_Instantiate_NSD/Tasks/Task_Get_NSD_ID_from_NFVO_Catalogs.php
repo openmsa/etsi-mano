@@ -15,8 +15,8 @@ function list_args()
 check_mandatory_param('nsPkgId');
 
 $nsPkgId = $context['nsPkgId'];
-//$nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano-0.0.1-SNAPSHOT/');
-$nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano/');
+$url = get_url_from_device($context['vnfvo_device']);
+$nsPkgManagement = new NsdSol005($url);
 $nsPkgInfo = $nsPkgManagement->nsDescriptorsNsdInfoIdGet($nsPkgId);
 
 $vnfPkgIds = $nsPkgInfo['userDefinedData']['vnfPkgIds'];

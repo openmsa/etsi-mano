@@ -10,8 +10,9 @@ function list_args()
 	create_var_def('vnfPkgId', 'string');
 	create_var_def('state', 'Boolean');
 }
- 
-$vnfPkgApi = new VnfPkgSol005('http://localhost:8380/ubi-etsi-mano/');
+
+$url = get_url_from_device($context['device_id']);
+$vnfPkgApi = new VnfPkgSol005($url);
 $state = $context['state'];
 try {
 	$vnfPkgApi->setOperationalState($context['vnfPkgId'], $state);
