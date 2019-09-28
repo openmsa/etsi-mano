@@ -10,7 +10,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -217,8 +216,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 
 		final NsdPkgIndex nsdPkgIndex = vnfPackageRepository.loadObject(nsdId, NsdPkgIndex.class, "indexes.json");
-		final List<NsdPkgInstance> instances = nsdPkgIndex.getInstances();
-		final NsdPkgInstance instance = getLcmOpOccsInstance(instances, nsdId);
+		final NsdPkgInstance instance = nsdPkgIndex.getNsdPkgInstance(nsdId);
 
 		msaExecutor.onNsInstanceTerminate(userData);
 
@@ -278,14 +276,10 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		}
 
 		nsInstancesNsInstance.setVnfInstance(vnfInstances);
-		final String id = UUID.randomUUID().toString();
-		nsInstancesNsInstance.setId(id);
-
 		nsInstanceRepository.save(nsInstancesNsInstance);
 
 		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(req.getNsdId(), NsdPkgIndex.class, "indexes.json");
-		final List<NsdPkgInstance> instances = nsdIndex.getInstances();
-		instances.add(new NsdPkgInstance(id));
+		nsdIndex.addNsdPkgInstance(new NsdPkgInstance(nsInstancesNsInstance.getId()));
 		nsdRepository.storeObject(req.getNsdId(), nsdIndex, "indexes.json");
 
 		nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
@@ -327,19 +321,11 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		lcmOpOccsMsa.save(lcmOpOccs);
 		final NsdPkgIndex nsdPkgIndex = vnfPackageRepository.loadObject(_nsdId, NsdPkgIndex.class, "indexes.json");
 		final NsdPkgOperation nsdPkgOperation = new NsdPkgOperation(lcmOpOccs.getId(), _processId);
-		final List<NsdPkgInstance> instances = nsdPkgIndex.getInstances();
-		final NsdPkgInstance instance = getLcmOpOccsInstance(instances, _nsInstanceId);
+		final NsdPkgInstance instance = nsdPkgIndex.getNsdPkgInstance(_nsInstanceId);
 		instance.getOperations().add(nsdPkgOperation);
 
 		vnfPackageRepository.storeObject(_nsdId, nsdPkgIndex, "indexes.json");
 		return lcmOpOccs;
-	}
-
-	private static NsdPkgInstance getLcmOpOccsInstance(final List<NsdPkgInstance> _instances, final String _id) {
-		return _instances.stream()
-				.filter(x -> x.getInstanceId().contentEquals(_id))
-				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + _id));
 	}
 
 }

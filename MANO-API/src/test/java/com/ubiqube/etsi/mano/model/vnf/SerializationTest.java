@@ -15,10 +15,10 @@ public class SerializationTest {
 		vnfInstance.setInstanceId("DEADBEEF");
 		final VnfPkgOperation operation = new VnfPkgOperation("ID", "processId");
 		vnfInstance.getOperations().add(operation);
-		index.getInstances().add(vnfInstance);
+		index.addVnfPkgInstance(vnfInstance);
 
 		final String str = mapper.writeValueAsString(index);
-
+		System.out.println(str);
 		final VnfPkgIndex vnfPkgIndex = mapper.readValue(str.getBytes(), VnfPkgIndex.class);
 	}
 }
