@@ -14,10 +14,9 @@ RUN	cd /opt/fmc_repository &&\
 RUN cd /opt/fmc_repository/etsi-mano/WORKFLOWS/ETSI-MANO && composer install
 
 COPY docker/msa/license/* /opt/ubiqube/
-RUN process-license.sh /opt/ubiqube/license{.lic,}
+RUN process-license.sh /opt/ubiqube/license{.lic,}		;\
+	ls -l /opt/ubiqube/license*
 RUN chown ncuser: /opt/ubiqube/license*
-
-RUN ln -s /opt/sms/bin/check_services_status.sh /usr/bin/
 
 
 CMD ["/sbin/init"]
