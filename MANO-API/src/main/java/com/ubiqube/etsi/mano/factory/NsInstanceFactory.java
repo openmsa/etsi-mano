@@ -5,10 +5,12 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public class NsInstanceFactory {
 
@@ -24,15 +26,15 @@ public class NsInstanceFactory {
 	}
 
 	@Nonnull
-	public static NsInstancesNsInstanceVnfInstance createNsInstancesNsInstanceVnfInstance(final String _vnfInstanceId, final String _vimId, final String _vnfdId, final String _vnfdVersion, final String _vnfPkgid) {
+	public static NsInstancesNsInstanceVnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance _vnfInstance, final VnfPkgInfo _vnfPkgInfo) {
 		final String id = UUID.randomUUID().toString();
 		final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
-		nsInstancesNsInstanceVnfInstance.setId(_vnfInstanceId);
+		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-		nsInstancesNsInstanceVnfInstance.setVimId(_vimId);
-		nsInstancesNsInstanceVnfInstance.setVnfdId(_vnfdId);
-		nsInstancesNsInstanceVnfInstance.setVnfdVersion(_vnfdVersion);
-		nsInstancesNsInstanceVnfInstance.setVnfPkgId(_vnfPkgid);
+		nsInstancesNsInstanceVnfInstance.setVimId((String) _vnfPkgInfo.getUserDefinedData().get("vimId"));
+		nsInstancesNsInstanceVnfInstance.setVnfdId(_vnfPkgInfo.getVnfdId());
+		nsInstancesNsInstanceVnfInstance.setVnfdVersion(_vnfPkgInfo.getVnfdVersion());
+		nsInstancesNsInstanceVnfInstance.setVnfPkgId(_vnfPkgInfo.getId());
 		return nsInstancesNsInstanceVnfInstance;
 	}
 }

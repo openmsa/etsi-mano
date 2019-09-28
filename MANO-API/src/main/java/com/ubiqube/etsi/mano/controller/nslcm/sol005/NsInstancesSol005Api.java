@@ -273,8 +273,7 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
 			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstancesNsInstance.getId(), id);
-			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance.getId(),
-					(String) vnf.getUserDefinedData().get("vimId"), vnf.getId(), vnf.getVnfdVersion(), vnf.getVnfdId());
+			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, vnf);
 			vnfInstances.add(nsInstancesNsInstanceVnfInstance);
 		}
 
