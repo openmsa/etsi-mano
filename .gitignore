@@ -6,5 +6,4 @@ vendor
 composer.lock
 build/
 .gradle/
-bin/
 target/
