@@ -8,7 +8,7 @@ RUN	cd /opt/fmc_repository &&\
 	PACKAGE=ETSI-MANO					;\
 	PKG_DIR=../etsi-mano/WORKFLOWS/$PACKAGE			;\
 	ln -s $PKG_DIR			Process/$PACKAGE	;\
-	ln -s $PKG_DIR/Configuration	Configuration/$PACKAGE	;\
+	ln -s $PKG_DIR/conf		Configuration/$PACKAGE	;\
 	:
 
 RUN cd /opt/fmc_repository/etsi-mano/WORKFLOWS/ETSI-MANO && composer install
