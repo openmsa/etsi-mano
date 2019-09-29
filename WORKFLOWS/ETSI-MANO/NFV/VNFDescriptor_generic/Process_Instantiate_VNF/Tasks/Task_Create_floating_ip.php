@@ -15,9 +15,10 @@ $device_id = substr($context['deviceid'], 3);
 if (isset($context['servers'])) {
         foreach ($context['servers'] as &$server) {
 
+
 	    if(!isset($server['floating_ip_address']))
             {
- 
+          
 		$response = allocate_floatingip_address($device_id, $server['public_network'], $context['tenant_id']);
 
 		//$response = _neutron_floatingip_create ($device_id, $server['public_network'], $context['tenant_id']);
@@ -28,15 +29,16 @@ if (isset($context['servers'])) {
 			exit;
 		}
 		$wo_comment = $response['wo_newparams'];
-
+	
 		$floating_ip_id = $wo_comment['floating_ip_id'];
-
+		
                 $floating_ip_address = $wo_comment['floating_ip_address'];
 
 
                 $server['floating_ip_id'] = $floating_ip_id;
                 $server['floating_ip_address'] = $floating_ip_address;
 
+//logToFile("******FURTHER $floating_ip_id");
 		// Associate floating IP to server
 		$response = _nova_floating_ip_associate ($device_id, $server['server_id'], $floating_ip_address);
 		$response = json_decode($response, true);

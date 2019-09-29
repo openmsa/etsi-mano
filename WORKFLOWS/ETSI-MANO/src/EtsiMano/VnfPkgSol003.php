@@ -44,5 +44,11 @@ class VnfPkgSol003 extends BaseApi
 		$url_frag = self::BASE_URL . '/' . urlencode($vnfPkgId) . '/artifacts/' . urlencode($artifactPath);
 		return $this->doGet($url_frag);
 	}
+
+	public function vnfPackagesVnfPkgIdPackageContentGet($_vnfPkgId)
+	{
+		$url_frag = self::BASE_URL . '/' . urlencode($_vnfPkgId) . '/package_content';
+		return $this->doGet($url_frag);
+	}
 }
 

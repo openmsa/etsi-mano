@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Base64;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,14 @@ import com.ubiqube.api.interfaces.repository.RepositoryService;
 
 @Service
 public class RepositoryServiceRest implements RepositoryService {
+	private final UbiRest rest;
 
-	private final static UbiRest rest = new UbiRest();
+	public RepositoryServiceRest(final UbiRest _ubiRest) {
+		rest = _ubiRest;
+	}
 
 	@Override
-	public RepositoryElement getElement(String path) {
+	public RepositoryElement getElement(final String path) {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/element")
 				.queryParam("URI", path)
@@ -35,33 +38,32 @@ public class RepositoryServiceRest implements RepositoryService {
 		public String parentURI;
 		public String fileType;
 
+		@Override
 		public String getName() {
 			return name;
 		}
 	}
 
 	@Override
-	public byte[] getRepositoryElementContent(RepositoryElement repositoryElement) {
+	public byte[] getRepositoryElementContent(final RepositoryElement repositoryElement) {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/repository-content")
-				.queryParam("fileURI", ((RepositoryElementModel)repositoryElement).uri)
+				.queryParam("fileURI", ((RepositoryElementModel) repositoryElement).uri)
 				.build()
 				.toUri();
 		return Base64.getDecoder().decode(
-			rest.get(uri, String.class)
-				.replaceAll("\"", "")
-		);
+				rest.get(uri, String.class)
+						.replaceAll("\"", ""));
 	}
 
 	@Override
-	public boolean exists(String path) throws ServiceException {
+	public boolean exists(final String path) throws ServiceException {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/exists")
 				.queryParam("uri", path)
 				.build()
 				.toUri();
-		return rest.get(uri, UbiBoolModel.class)
-			.exists;
+		return rest.get(uri, UbiBoolModel.class).exists;
 	}
 
 	static class UbiBoolModel {
@@ -69,17 +71,17 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public void deleteRepositoryElement(RepositoryElement repositoryElement, String user) {
+	public void deleteRepositoryElement(final RepositoryElement repositoryElement, final String user) {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/repository")
-				.queryParam("elementURI", ((RepositoryElementModel)repositoryElement).uri)
+				.queryParam("elementURI", ((RepositoryElementModel) repositoryElement).uri)
 				.build()
 				.toUri();
 		rest.delete(uri, String.class);
 	}
 
 	@Override
-	public void addFile(String path, String arg2, String arg3, String arg4, String user) throws ServiceException {
+	public void addFile(final String path, final String arg2, final String arg3, final String arg4, final String user) throws ServiceException {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/file")
 				.queryParam("uri", path)
@@ -93,12 +95,12 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public void addFile(String uri, String arg2, String arg3, byte[] arg4, String user) throws ServiceException {
+	public void addFile(final String uri, final String arg2, final String arg3, final byte[] arg4, final String user) throws ServiceException {
 		addFile(uri, arg2, arg3, new String(arg4), user);
 	}
 
 	@Override
-	public void addDirectory(String path, String arg1, String arg2, String user) {
+	public void addDirectory(final String path, final String arg1, final String arg2, final String user) {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/directory")
 				.queryParam("uri", path)
@@ -110,7 +112,7 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	@Override
-	public List<String> doSearch(String path, String pattern) throws ServiceException {
+	public List<String> doSearch(final String path, final String pattern) throws ServiceException {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("repository/v1/search")
 				.queryParam("URI", path)

@@ -1,5 +1,9 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
+import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
+import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
+import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +30,6 @@ import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
-import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
@@ -259,24 +262,6 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);
 
 		return ResponseEntity.noContent().build();
-	}
-
-	private static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!"CREATED".equals(vnfPkgInfo.getOnboardingState())) {
-			throw new ConflictException("The VNF Package is already onboarded");
-		}
-	}
-
-	private static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
-		if (!"DISABLED".equals(vnfPkgInfo.getOperationalState().value())) {
-			throw new ConflictException("Packaged is enabled.");
-		}
-	}
-
-	private static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
-		if (!"NOT_IN_USE".equals(vnfPkgInfo.getUsageState())) {
-			throw new ConflictException("VNF Should be in Not In Use State.");
-		}
 	}
 
 }

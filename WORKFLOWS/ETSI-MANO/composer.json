@@ -1,5 +1,5 @@
 {
-	"name" : "ubiqube/etsi-mano",
+	"name" : "ubiqube/php-etsi-mano",
 	"description" : "ETSI MANO client API",
 	"type" : "library",
 	"license" : "LGPL-3.0",
@@ -11,7 +11,12 @@
 			"Ubiqube\\" : "src"
 		}
 	},
-	"require-dev": {
-		"phpunit/phpunit": "^4"
+	"require-dev" : {
+		"phpunit/phpunit" : "^4"
+	},
+	"config" : {
+		"platform" : {
+			"php" : "5.3.3"
+		}
 	}
 }

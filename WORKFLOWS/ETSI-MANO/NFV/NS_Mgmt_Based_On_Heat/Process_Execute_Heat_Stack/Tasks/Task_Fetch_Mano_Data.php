@@ -2,6 +2,7 @@
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
 include "/opt/fmc_repository/Process/ETSI-MANO/vendor/autoload.php";
 use Ubiqube\EtsiMano\NsdSol005;
+use Ubiqube\EtsiMano\ManoException;
 
 use Symfony\Component\Yaml\Yaml;
 
@@ -12,18 +13,35 @@ function list_args()
         create_var_def('vnfPkgs.0.vnfPkgId', 'String');
 }
 check_mandatory_param('nsPkgId');
-
-$nsPkgManagement = new NsdSol005('http://localhost:8380/ubi-etsi-mano/');
-$nsPkg = $nsPkgManagement->nsDescriptorsNsdInfoIdGet($context['nsPkgId']);
-$heatJson = $nsPkg['userDefinedData']['heat'];
-$heatYaml = Yaml::dump($heatJson);
-
-$path = '/opt/ses/share/htdocs/tech_report/ns_packages/heat/' . $context['nsPkgId'];
-@mkdir($path);
-file_put_contents($path . '/nsd.yaml', $heatYaml);
+$url = get_url_from_device($context['nfvoDevice']);
+$nsPkgManagement = new NsdSol005($url);
+try {
+	$nsPkg = $nsPkgManagement->nsDescriptorsNsdInfoIdGet($context['nsPkgId']);
+} catch (ManoException $e) {
+	task_error($e->getMessage());
+}
 
 $context['deviceid'] = $nsPkg['userDefinedData']['vimId'];
-$context['stackname'] = key($heatJson['resources']);
+$path = '/opt/ses/share/htdocs/tech_report/ns_packages/heat/' . $context['nsPkgId'];
+@mkdir($path);
+
+if(array_key_exists('heat', $nsPkg['userDefinedData']))
+{
+	$heatJson = $nsPkg['userDefinedData']['heat'];
+	$heatYaml = Yaml::dump($heatJson);
+	file_put_contents($path . '/nsd.yaml', $heatYaml);
+
+	$context['stackname'] = key($heatJson['resources']);
+} else {
+	try {
+		$content = $nsPkgManagement->nsDescriptorsNsdInfoIdNsdContentGet($context['nsPkgId']);
+		file_put_contents($path . '/nsd.yaml', $content);
+		$context['stackname'] = $nsPkg['nsdName'];
+	} catch (ManoException $e) {
+		task_error($e->getMessage());
+	}
+}
+
 // TODO get this IP on a NFVO
 $context['template_url'] = 'http://10.31.1.246/tech_report/ns_packages/heat/' . $context['nsPkgId'].'/nsd.yaml';
 

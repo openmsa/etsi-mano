@@ -1,8 +1,6 @@
 <?php
 namespace Ubiqube\EtsiMano;
 
-use Exception;
-
 class BaseApi
 {
 
@@ -19,10 +17,8 @@ class BaseApi
 		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
 		$this->setParameters($ch);
 		$response = curl_exec($ch);
-		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$error = curl_error($ch);
+		$this->checkError($ch, $_url, $response);
 		curl_close($ch);
-		$this->checkError($ch, $httpCode, $_url, $error);
 		return $response;
 	}
 
@@ -34,10 +30,8 @@ class BaseApi
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $_body);
 		$response = curl_exec($ch);
-		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$error = curl_error($ch);
+		$this->checkError($ch, $_url, $response);
 		curl_close($ch);
-		$this->checkError($ch, $httpCode, $_url, $error);
 		return $response;
 	}
 
@@ -50,11 +44,50 @@ class BaseApi
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $_body);
 		$response = curl_exec($ch);
-		$error = curl_error($ch);
-		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$this->checkError($ch, $_url, $response);
 		curl_close($ch);
-		$this->checkError($ch, $httpCode, $_url, $error);
 		return $response;
+	}
+
+	protected function doPut($_url, $_body)
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
+		$this->setParameters($ch);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $_body);
+		$response = curl_exec($ch);
+		$this->checkError($ch, $_url, $response);
+		curl_close($ch);
+		return $response;
+	}
+
+	protected function doPutMp($_url, $_content)
+	{
+		// Works in php 5.3.3 but not in 7.3.x
+		$boundary = '----------' . md5(microtime());
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
+		curl_setopt($ch, CURLOPT_USERPWD, 'ncroot:ubiqube');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: multipart/form-data; boundary=' . $boundary
+		));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->multipartBuildQuery('file' , $_content, $boundary));
+		$response = curl_exec($ch);
+		$this->checkError($ch, $_url, $response);
+		curl_close($ch);
+		return $response;
+	}
+
+	private function multipartBuildQuery($_key, $_value, $boundary)
+	{
+		$retval = '';
+		$retval .= "--$boundary\r\nContent-Disposition: form-data; name=\"$_key\"; filename=\"filename\"\r\n\r\n$_value\r\n";
+		$retval .= "--$boundary--";
+		return $retval . "\r\n";
 	}
 
 	protected function doDelete($_url)
@@ -64,27 +97,32 @@ class BaseApi
 		$this->setParameters($ch);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		$response = curl_exec($ch);
-		$error = curl_error($ch);
-		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$this->checkError($ch, $_url, $response);
 		curl_close($ch);
-		$this->checkError($ch, $httpCode, $_url, $error);
 		return $response;
 	}
 
 	private function setParameters($_ch)
 	{
 		curl_setopt($_ch, CURLOPT_USERPWD, 'ncroot:ubiqube');
+		curl_setopt($_ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($_ch, CURLOPT_HTTPHEADER, array(
 			'Content-Type: application/json'
 		));
-		curl_setopt($_ch, CURLOPT_RETURNTRANSFER, 1);
 	}
 
-	private function checkError($_ch, $_httpCode, $_url, $_error)
+	private function checkError($_ch, $_url, $_response)
 	{
-		if ($_httpCode < 200 || $_httpCode > 299) {
-			throw new Exception('Error ' . $this->baseUrl . $_url . ' Code: ' . $_httpCode . ' Error: ' . $_error);
+		$httpCode = curl_getinfo($_ch, CURLINFO_HTTP_CODE);
+		$error = curl_error($_ch);
+		if ($httpCode < 200 || $httpCode > 299) {
+			if ($httpCode == 0) {
+				curl_close($_ch);
+				throw new \Exception('Error ' . $this->baseUrl . $_url . ' Code: ' . $httpCode . ' Error: ' . $error);
+			} else {
+				curl_close($_ch);
+				throw new ManoException($_response);
+			}
 		}
-		;
 	}
 }

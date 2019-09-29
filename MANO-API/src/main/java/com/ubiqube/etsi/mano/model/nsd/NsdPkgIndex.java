@@ -1,21 +1,29 @@
 package com.ubiqube.etsi.mano.model.nsd;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NsdPkgIndex {
 
-	private List<NsdPkgInstance> instances = new ArrayList<>();
+	private Map<String, NsdPkgInstance> instances = new HashedMap();
 
 	@JsonProperty("Instances")
-	public List<NsdPkgInstance> getInstances() {
+	public Map<String, NsdPkgInstance> getInstances() {
 		return instances;
 	}
 
-	public void setInstances(final List<NsdPkgInstance> instances) {
+	public void setInstances(final Map<String, NsdPkgInstance> instances) {
 		this.instances = instances;
 	}
 
+	public NsdPkgInstance getNsdPkgInstance(final String _id) {
+		return instances.get(_id);
+	}
+
+	public void addNsdPkgInstance(final NsdPkgInstance _nNsdPkgInstance) {
+		instances.put(_nNsdPkgInstance.getInstanceId(), _nNsdPkgInstance);
+	}
 }

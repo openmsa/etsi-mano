@@ -10,6 +10,10 @@ function list_args()
 
 $device_id = substr($context['deviceid'], 3);
 
+//if (isset($context['user_data']) && !empty($context['user_data'])) {
+//	$user_data = base64_encode($context['user_data']);
+//}
+
 foreach ($context['servers'] as $key => $server) {
 
 	$server_id = $server['instance_id'];

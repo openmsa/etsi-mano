@@ -1,7 +1,13 @@
 package com.ubiqube.etsi.mano.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
+import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
+import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
+
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -10,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
@@ -26,7 +30,6 @@ import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgInstance;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgOperation;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -65,7 +68,8 @@ public class VnfInstanceLcm {
 		return result;
 	}
 
-	public VnfInstance post(final CreateVnfRequest createVnfRequest, final String id, final LcmLinkable links) {
+	public VnfInstance post(final CreateVnfRequest createVnfRequest) {
+		final String id = UUID.randomUUID().toString();
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		ensureIsOnboarded(vnfPkgInfo);
@@ -76,11 +80,9 @@ public class VnfInstanceLcm {
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfId, VnfPkgIndex.class, "indexes.json");
-		final List<VnfPkgInstance> instances = vnfPkgIndex.getInstances();
-		instances.add(new VnfPkgInstance(vnfInstance.getId()));
+		vnfPkgIndex.addVnfPkgInstance(new VnfPkgInstance(vnfInstance.getId()));
 		vnfPackageRepository.storeObject(vnfId, vnfPkgIndex, "indexes.json");
 
-		vnfInstance.setLinks(links.getLinks(id));
 		return vnfInstance;
 	}
 
@@ -90,14 +92,13 @@ public class VnfInstanceLcm {
 		// Clean LCM Repository.
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
-		final List<VnfPkgInstance> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstance instance = getLcmOpOccsInstance(instances, vnfInstanceId);
+		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 		instance.getOperations().stream().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		lcmOpOccsMsa.delete(vnfInstanceId);
-		instances.remove(instance);
+		vnfPkgIndex.remove(instance);
 		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
 
-		if (instances.isEmpty()) {
+		if (vnfPkgIndex.isEmpty()) {
 			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 			vnfPkg.setUsageState(UsageStateEnum.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
@@ -143,8 +144,7 @@ public class VnfInstanceLcm {
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
-		final List<VnfPkgInstance> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstance instance = getLcmOpOccsInstance(instances, vnfInstanceId);
+		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 
 		instance.getOperations().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		instance.getOperations().clear();
@@ -159,48 +159,16 @@ public class VnfInstanceLcm {
 		vnfInstancesRepository.save(vnfInstance);
 	}
 
-	private static VnfPkgInstance getLcmOpOccsInstance(final List<VnfPkgInstance> _instances, final String _id) {
-		return _instances.stream()
-				.filter(x -> x.getInstanceId().contentEquals(_id))
-				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find indexes for Instance " + _id));
-	}
-
 	private NsLcmOpOccsNsLcmOpOcc addVnfOperation(final String _vnfPkgId, final String _processId, final String _vnfInstanceId, final LcmOperationTypeEnum _lcmOperationType) {
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(_vnfPkgId, VnfPkgIndex.class, "indexes.json");
 		final VnfPkgOperation VnfPkgOperation = new VnfPkgOperation(lcmOpOccs.getId(), _processId);
-		final List<VnfPkgInstance> instances = vnfPkgIndex.getInstances();
-		final VnfPkgInstance instance = getLcmOpOccsInstance(instances, _vnfInstanceId);
+		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(_vnfInstanceId);
 		instance.getOperations().add(VnfPkgOperation);
 
 		vnfPackageRepository.storeObject(_vnfPkgId, vnfPkgIndex, "indexes.json");
 		return lcmOpOccs;
-	}
-
-	private void ensureInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
-		}
-	}
-
-	private void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
-		if ("DISABLED".equals(vnfPkgInfo.getOperationalState())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ENABLED.");
-		}
-	}
-
-	private void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!vnfPkgInfo.getOnboardingState().equals(OnboardingStateEnum.ONBOARDED.value())) {
-			throw new ConflictException("VNF Package " + vnfPkgInfo.getId() + " is not ONBOARDED.");
-		}
-	}
-
-	private void ensureNotInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is already instantiated.");
-		}
 	}
 
 }

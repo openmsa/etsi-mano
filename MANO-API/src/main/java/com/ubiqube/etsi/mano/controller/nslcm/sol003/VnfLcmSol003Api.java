@@ -1,8 +1,9 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
+import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +25,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
@@ -63,9 +63,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
-		final String id = UUID.randomUUID().toString();
-		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest, id, links);
-		vnfInstance.setLinks(links.getLinks(id));
+		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest);
+		vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
 
@@ -172,12 +171,6 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstanceId);
 		return ResponseEntity.noContent().build();
-	}
-
-	private void ensureInstantiated(final VnfInstance vnfInstance) {
-		if (vnfInstance.getInstantiationState() != InstantiationStateEnum.INSTANTIATED) {
-			throw new GenericException("Instance " + vnfInstance.getId() + " is not instantiated.");
-		}
 	}
 
 }

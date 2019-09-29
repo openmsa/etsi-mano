@@ -11,8 +11,8 @@ function list_args()
 }
 
 check_mandatory_param('vnfPkgId');
-
-$vnfPkgManagement = new VnfPkgSol003('http://localhost:8380/ubi-etsi-mano/');
+$url = get_url_from_device($context['device_id']);
+$vnfPkgManagement = new VnfPkgSol003($url);
 $vnfPkg = $vnfPkgManagement->vnfPackagesVnfPkgIdGet($context['vnfPkgId']);
 
 // Check VNFPkg operational state

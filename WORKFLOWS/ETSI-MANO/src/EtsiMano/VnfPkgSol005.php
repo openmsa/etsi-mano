@@ -28,9 +28,25 @@ class VnfPkgSol005 extends BaseApi
 		$url_frag = self::BASE_URL . '/' . urlencode($_vnfPkgId);
 		return json_decode($this->doPatch($url_frag, $_body), 1);
 	}
-	
-	public function vnfPackagesVnfPkgIdDelete($_vnfPkgId) {
-		$url_frag = self::BASE_URL .'/' . $_vnfPkgId;
+
+	public function vnfPackagesVnfPkgIdDelete($_vnfPkgId)
+	{
+		$url_frag = self::BASE_URL . '/' . $_vnfPkgId;
 		return $this->doDelete($url_frag);
+	}
+	
+	public function vnfPackagesVnfPkgIdPackageContentPut($_vnfPkgId, $_content) {
+		$url_frag = self::BASE_URL . '/' . $_vnfPkgId. '/package_content';
+		return $this->doPutMp($url_frag, $_content);
+	}
+	
+	
+	public function setOperationalState($_vnfPkgId, $_state)
+	{
+		$content = '{ "operationalState": "DISABLED" }';
+		if ($_state == 'true') {
+			$content = '{ "operationalState": "ENABLED" }';
+		}
+		$this->vnfPackagesVnfPkgIdPatch($_vnfPkgId, $content);
 	}
 }

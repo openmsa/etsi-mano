@@ -127,7 +127,7 @@ foreach ($resources as &$resource) {
 //$context['servers'] = $server_serialized;
 $context['servers'] = $servers_array;
 
-$response = prepare_json_response(ENDED, "MSA Devices created successfully.", $context, true);
+$response = prepare_json_response(ENDED, "MSA Devices created successfully with ID:" . $device_id, $context, true);
 echo $response;
 
 ?>

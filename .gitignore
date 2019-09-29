@@ -2,4 +2,9 @@ vendor
 .buildpath
 .project
 .settings
+.classpath
 composer.lock
+build/
+.gradle/
+bin/
+target/
