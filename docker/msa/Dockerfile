@@ -11,12 +11,13 @@ RUN	cd /opt/fmc_repository &&\
 	ln -s $PKG_DIR/conf		Configuration/$PACKAGE	;\
 	:
 
-RUN cd /opt/fmc_repository/etsi-mano/WORKFLOWS/ETSI-MANO && composer install
+RUN	cd /opt/fmc_repository/etsi-mano/WORKFLOWS/ETSI-MANO	&&\
+	composer install
 
-COPY docker/msa/license/* /opt/ubiqube/
-RUN process-license.sh /opt/ubiqube/license{.lic,}		;\
-	ls -l /opt/ubiqube/license*
-RUN chown ncuser: /opt/ubiqube/license*
+COPY	docker/msa/license/*	/opt/ubiqube/
+RUN	process-license.sh	/opt/ubiqube/license{.lic,}	;\
+	chown ncuser:		/opt/ubiqube/license*		;\
+	ls -l			/opt/ubiqube/license*
 
 
 CMD ["/sbin/init"]
