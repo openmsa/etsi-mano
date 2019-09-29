@@ -19,5 +19,12 @@ RUN	process-license.sh	/opt/ubiqube/license{.lic,}	;\
 	chown ncuser:		/opt/ubiqube/license*		;\
 	ls -l			/opt/ubiqube/license*
 
+RUN	rm /etc/yum.repos.d/{centos-68,ubiqube,msa-}*
+
+RUN	yum install -y epel-release ;\
+	rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm ;\
+	yum install --enablerepo remi-php72 -y php ;\
+	:
+
 
 CMD ["/sbin/init"]
