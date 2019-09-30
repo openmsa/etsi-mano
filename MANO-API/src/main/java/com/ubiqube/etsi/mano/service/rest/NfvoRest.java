@@ -5,15 +5,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.ubiqube.etsi.mano.service.Configuration;
 
 @Service
 public class NfvoRest extends AbstractRest {
-	private final String url;
+
+	@Value("${nfvo.url}")
+	private String url;
 
 	public NfvoRest(final Configuration _conf) {
-		url = _conf.get("nfvo.url");
 		Assert.notNull(url, "nfvo.url is not declared in property file.");
 	}
 

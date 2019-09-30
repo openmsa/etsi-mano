@@ -9,10 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Service
 public class UbiRest {
-	private final static String URL = "http://localhost:8181/ubi-api-rest";
+
+	@Value("${msa.rest-api.url}")
+	private String URL;
 
 	private final RestTemplate restTemplate;
 
