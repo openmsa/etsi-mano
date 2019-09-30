@@ -10,6 +10,7 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import javax.annotation.PostConstruct;
 
 /**
  *
@@ -19,10 +20,14 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 @Service
 public class ManufacturerModel {
 	private final DeviceService deviceBean;
-	private final Map<Long, Manufacturer> manufacturers;
+	private Map<Long, Manufacturer> manufacturers;
 
 	public ManufacturerModel(DeviceService _devicebeService) {
 		deviceBean = _devicebeService;
+	}
+
+	@PostConstruct
+	private void init() {
 		try {
 			manufacturers = deviceBean.getAvailableManufacturers();
 		} catch (final ServiceException e) {
