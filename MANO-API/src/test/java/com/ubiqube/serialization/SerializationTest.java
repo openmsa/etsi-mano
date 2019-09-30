@@ -21,8 +21,7 @@ public class SerializationTest {
 		createNsRequest.setNsdId("nsd-id");
 		createNsRequest.setNsName("name");
 		nsp.createNsRequest(createNsRequest);
-
-		System.out.println(mapper.writeValueAsString(nsp));
+		mapper.writeValueAsString(nsp);
 	}
 
 	@Test

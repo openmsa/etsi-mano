@@ -1,5 +1,10 @@
 package com.ubiqube.etsi.mano.model.vnf;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +23,11 @@ public class SerializationTest {
 		index.addVnfPkgInstance(vnfInstance);
 
 		final String str = mapper.writeValueAsString(index);
-		System.out.println(str);
 		final VnfPkgIndex vnfPkgIndex = mapper.readValue(str.getBytes(), VnfPkgIndex.class);
+		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance("DEADBEEF");
+		assertNotNull(instance);
+		final List<VnfPkgOperation> ope = instance.getOperations();
+		assertEquals(1, ope.size());
+
 	}
 }
