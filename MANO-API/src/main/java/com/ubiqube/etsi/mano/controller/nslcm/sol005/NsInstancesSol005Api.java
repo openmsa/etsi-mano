@@ -8,6 +8,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,8 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.msa.LcmOpOccsMsa;
 import com.ubiqube.etsi.mano.service.MsaExecutor;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 
 @Profile({ "default", "NFVO" })
 @RestController
@@ -70,14 +73,16 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final VnfmInterface vnfm;
 	private final VnfPackageRepository vnfPackageRepository;
+	private final EventManager eventManager;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm) {
+	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm, final EventManager _eventManager) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		msaExecutor = _msaExecutor;
 		lcmOpOccsMsa = _lcmOpOccsMsa;
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfm = _vnfm;
+		eventManager = _eventManager;
 		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
@@ -159,22 +164,27 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureInstantiated(nsInstancesNsInstance);
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
-		lcmOpOccsMsa.save(lcmOpOccs);
+		ensureNotInstantiated(nsInstancesNsInstance);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
+
+		final Map<String, Object> params = new HashMap<>();
+		params.put("lcmOpOccsId", lcmOpOccs.getId());
+		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, params);
+
 		// Contact OSS/BSS
 		final String nsdId = nsInstancesNsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 
-		final String res = msaExecutor.onNsInstantiate(nsdId, userData);
-		LOG.info("Creating a MSA Job: {}", res);
+		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
+		LOG.info("Creating a MSA Job: {}", processId);
 		nsInstancesNsInstance.setNsState(NsStateEnum.INSTANTIATED);
 		nsInstanceRepository.save(nsInstancesNsInstance);
-		userData.put("msaProcessId", res);
 		nsdRepository.save(nsdInfo);
-		addNsdOperation(nsdId, res, nsInstanceId, LcmOperationTypeEnum.TERMINATE);
+
+		addNsdOperation(nsdId, processId, nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
+
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}

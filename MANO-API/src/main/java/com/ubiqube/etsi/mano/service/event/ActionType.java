@@ -4,7 +4,8 @@ import java.util.stream.Stream;
 
 public enum ActionType {
 	VNF_PKG_ONBOARD_FROM_URI(String.valueOf("VNF_PKG_ONBOARD_FROM_URI")),
-	VNF_PKG_ONBOARD_FROM_BYTES(String.valueOf("VNF_PKG_ONBOARD_FROM_BYTES"));
+	VNF_PKG_ONBOARD_FROM_BYTES(String.valueOf("VNF_PKG_ONBOARD_FROM_BYTES")),
+	NS_INSTANTIATE("NS_INSTANTIATE");
 
 	private String value;
 

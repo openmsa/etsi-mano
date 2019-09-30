@@ -17,6 +17,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -52,10 +53,24 @@ public class ActionJob extends QuartzJobBean {
 		case VNF_PKG_ONBOARD_FROM_BYTES:
 			vnfPackagesVnfPkgIdPackageContentPut(objectId, (byte[]) jobDataMap.get("data"));
 			break;
+		case NS_INSTANTIATE:
+			nsInstantiate(objectId, (String) jobDataMap.get("lcmOpOccsId"));
+			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);
 			break;
 		}
+	}
+
+	private void nsInstantiate(final String nsInstanceId, final String lcmOpOccsId) {
+		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+		// Create Ns.
+		// wait it's done.
+		// foreach VNF
+		// event->cretate (we have lcm op occs.)
+		// wait for completion
+		// update lcm op occs
+		// send events.
 	}
 
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {
