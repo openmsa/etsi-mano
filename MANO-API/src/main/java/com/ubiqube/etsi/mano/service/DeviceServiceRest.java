@@ -13,11 +13,13 @@ import com.ubiqube.api.entities.device.Model;
 import com.ubiqube.api.entities.device.SimpleDevice;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class DeviceServiceRest implements DeviceService {
 
-	private final static UbiRest rest = new UbiRest();
+	@Autowired
+	private UbiRest rest;
 
 	@Override
 	public DeviceId getDeviceId(String nsInstanceId) throws ServiceException {
