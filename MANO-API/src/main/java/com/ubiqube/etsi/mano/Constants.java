@@ -67,13 +67,13 @@ public final class Constants {
 
 	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsd) {
 		if (!NsdUsageStateEnum.IN_USE.value().equals(nsd.getNsdUsageState())) {
-			throw new ConflictException("The NSD package " + nsd.getId() + "Should be in disabled state.");
+			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in disabled state.");
 		}
 	}
 
 	public static void ensureDisabled(final NsDescriptorsNsdInfo nsd) {
-		if (NsdOperationalStateEnum.DISABLED != nsd.getNsdOperationalState()) {
-			throw new ConflictException("The NSD package " + nsd.getId() + "Should be in disabled state.");
+		if (NsdOperationalStateEnum.DISABLED == nsd.getNsdOperationalState()) {
+			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in disabled state.");
 		}
 	}
 
