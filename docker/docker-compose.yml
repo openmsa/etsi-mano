@@ -35,8 +35,6 @@ services:
     ports:
     - "80:80"
     - "443:443"
-    - "1090:1090"
-    - "8080:9080"
     networks:
       ubi.network:
         ipv4_address: 172.18.0.2
