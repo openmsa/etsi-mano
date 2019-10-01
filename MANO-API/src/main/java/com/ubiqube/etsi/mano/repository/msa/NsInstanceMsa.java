@@ -2,6 +2,8 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +61,12 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 		nsInstanceIndex.addLcmOpOccs(lcmOpOccs.getId());
 		storeObject(nsInstanceId, nsInstanceIndex, "indexes.json");
 		return lcmOpOccs;
+	}
+
+	@Override
+	public void attachProcessIdToLcmOpOccs(@NotNull final String id, final String processId) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

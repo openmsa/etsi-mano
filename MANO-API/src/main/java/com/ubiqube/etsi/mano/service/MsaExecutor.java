@@ -92,4 +92,9 @@ public class MsaExecutor {
 		}
 	}
 
+	public void waitForProcess(final String processId) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

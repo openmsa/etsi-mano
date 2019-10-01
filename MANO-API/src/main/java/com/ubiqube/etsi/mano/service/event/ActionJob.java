@@ -6,6 +6,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -17,23 +24,45 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
+import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
+import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
+import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.MsaExecutor;
+import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 public class ActionJob extends QuartzJobBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActionJob.class);
 	private final VnfPackageRepository vnfPackageRepository;
 	private final EventManager eventManager;
+	private final NsInstanceRepository nsInstanceRepository;
+	private final NsdRepository nsdRepository;
+	private final MsaExecutor msaExecutor;
+	private final VnfmInterface vnfm;
+	private final LcmOpOccsRepository lcmOpOccsRepository;
 
-	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager) {
+	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final LcmOpOccsRepository _lcmOpOccsRepository) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
+		nsInstanceRepository = _nsInstanceRepository;
+		nsdRepository = _nsdRepository;
+		msaExecutor = _msaExecutor;
+		vnfm = _vnfm;
+		lcmOpOccsRepository = _lcmOpOccsRepository;
 	}
 
 	@Override
@@ -54,7 +83,7 @@ public class ActionJob extends QuartzJobBean {
 			vnfPackagesVnfPkgIdPackageContentPut(objectId, (byte[]) jobDataMap.get("data"));
 			break;
 		case NS_INSTANTIATE:
-			nsInstantiate(objectId, (String) jobDataMap.get("lcmOpOccsId"));
+			nsInstantiate(objectId);
 			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);
@@ -62,15 +91,113 @@ public class ActionJob extends QuartzJobBean {
 		}
 	}
 
-	private void nsInstantiate(final String nsInstanceId, final String lcmOpOccsId) {
-		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+	private void nsInstantiate(final String nsInstanceId) {
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
+		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+
+		final String nsdId = nsInstance.getNsdId();
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
+		changeNsdUpdateState(nsdInfo, NsdUsageStateEnum.IN_USE);
 		// Create Ns.
-		// wait it's done.
-		// foreach VNF
-		// event->cretate (we have lcm op occs.)
+		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
+		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
+		LOG.info("Creating a MSA Job: {}", processId);
+		// Save Process Id with lcm
+		nsInstanceRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		// Wait it's done.
+		msaExecutor.waitForProcess(processId);
+		// Instantiate each VNF.
+		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
+		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
+		for (final String vnfId : vnfPkgIds) {
+			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.VnfInstatiate(nsInstanceId, vnfId);
+			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
+		}
+		// Link VNF lcm OP OCCS to this operation.
+		lcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		// wait for completion
+		waitForCompletion(vnfLcmOpOccsIds);
 		// update lcm op occs
-		// send events.
+		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
+		lcmOpOccsRepository.save(vnfLcmOpOccsIds);
+		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
+		lcmOpOccs.setStateEnteredTime(new Date());
+		lcmOpOccs.setOperationState(status);
+		lcmOpOccsRepository.save(lcmOpOccs);
+		// event->create (we have lcm op occs.)
+		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
+
+	}
+
+	private static OperationStateEnum computeStatus(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
+		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccsIds) {
+			if (LcmOperationStateType.COMPLETED != vnfLcmOpOcc.getOperationState()) {
+				return convertToNsLcmOpOccsState(vnfLcmOpOcc.getOperationState());
+			}
+		}
+		return OperationStateEnum.COMPLETED;
+	}
+
+	private static OperationStateEnum convertToNsLcmOpOccsState(@NotNull final LcmOperationStateType operationState) {
+		// No starting convertion ?
+		switch (operationState) {
+		case COMPLETED:
+			return OperationStateEnum.COMPLETED;
+		case FAILED:
+			return OperationStateEnum.FAILED;
+		case FAILED_TEMP:
+			return OperationStateEnum.FAILED_TEMP;
+		case PROCESSING:
+			return OperationStateEnum.PROCESSING;
+		case ROLLED_BACK:
+			return OperationStateEnum.ROLLED_BACK;
+		case ROLLING_BACK:
+			return OperationStateEnum.ROLLING_BACK;
+		default:
+			throw new GenericException("Unknown operation state : " + operationState);
+		}
+	}
+
+	private List<VnfLcmOpOcc> refreshVnfLcmOpOccsIds(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
+		final List<VnfLcmOpOcc> res = new ArrayList<>();
+		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccsIds) {
+			final VnfLcmOpOcc newLcmOpOc = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
+			res.add(newLcmOpOc);
+		}
+		return res;
+	}
+
+	private void waitForCompletion(@Nonnull final List<VnfLcmOpOcc> vnfLcmOpOccss) {
+		List<VnfLcmOpOcc> ret = new ArrayList<>(vnfLcmOpOccss);
+		while (true) {
+			ret = vnfCycle(ret);
+			if (ret.isEmpty()) {
+				break;
+			}
+			try {
+				Thread.sleep(5 * 60 * 1000);
+			} catch (final InterruptedException e) {
+				LOG.warn("Interrupted exception.", e);
+				Thread.currentThread().interrupt();
+			}
+		}
+
+	}
+
+	private List<VnfLcmOpOcc> vnfCycle(final List<VnfLcmOpOcc> vnfLcmOpOccss) {
+		final List<VnfLcmOpOcc> ret = new ArrayList<>(vnfLcmOpOccss);
+		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccss) {
+			final VnfLcmOpOcc res = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
+			if (res.getOperationState() == LcmOperationStateType.PROCESSING) {
+				ret.add(vnfLcmOpOcc);
+			}
+		}
+		return ret;
+	}
+
+	private void changeNsdUpdateState(@NotNull final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum inUse) {
+		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
+		nsdRepository.save(nsdInfo);
 	}
 
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {

@@ -171,20 +171,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		params.put("lcmOpOccsId", lcmOpOccs.getId());
 		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, params);
 
-		// Contact OSS/BSS
-		final String nsdId = nsInstancesNsInstance.getNsdId();
-		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
-		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
-		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
-
-		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
-		LOG.info("Creating a MSA Job: {}", processId);
-		nsInstancesNsInstance.setNsState(NsStateEnum.INSTANTIATED);
-		nsInstanceRepository.save(nsInstancesNsInstance);
-		nsdRepository.save(nsdInfo);
-
-		addNsdOperation(nsdId, processId, nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
-
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}
