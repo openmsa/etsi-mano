@@ -133,7 +133,7 @@ public class VnfInstanceLcm {
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
-	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest, @Nonnull final LcmLinkable links) {
+	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}

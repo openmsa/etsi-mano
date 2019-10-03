@@ -167,7 +167,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest, links);
+		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest);
 
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstanceId);
 		return ResponseEntity.noContent().build();
