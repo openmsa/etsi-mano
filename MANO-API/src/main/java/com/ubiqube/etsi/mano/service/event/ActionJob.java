@@ -27,6 +27,8 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
@@ -37,9 +39,11 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.MsaExecutor;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -47,6 +51,7 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
 public class ActionJob extends QuartzJobBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActionJob.class);
+	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final EventManager eventManager;
 	private final NsInstanceRepository nsInstanceRepository;
@@ -55,7 +60,7 @@ public class ActionJob extends QuartzJobBean {
 	private final VnfmInterface vnfm;
 	private final LcmOpOccsRepository lcmOpOccsRepository;
 
-	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final LcmOpOccsRepository _lcmOpOccsRepository) {
+	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final LcmOpOccsRepository _lcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
@@ -64,6 +69,7 @@ public class ActionJob extends QuartzJobBean {
 		msaExecutor = _msaExecutor;
 		vnfm = _vnfm;
 		lcmOpOccsRepository = _lcmOpOccsRepository;
+		vnfInstancesRepository = _vnfInstancesRepository;
 	}
 
 	@Override
@@ -83,6 +89,9 @@ public class ActionJob extends QuartzJobBean {
 		case VNF_PKG_ONBOARD_FROM_BYTES:
 			vnfPackagesVnfPkgIdPackageContentPut(objectId, (byte[]) jobDataMap.get("data"));
 			break;
+		case VNF_INSTANTIATE:
+			vnfInstantiate(objectId);
+			break;
 		case NS_INSTANTIATE:
 			nsInstantiate(objectId);
 			break;
@@ -93,6 +102,35 @@ public class ActionJob extends QuartzJobBean {
 			LOG.warn("Unknown event: {}", eventType);
 			break;
 		}
+	}
+
+	private void vnfInstantiate(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		// Maybe e need additional parameters to say STARTING / PROCESSING ...
+		final VnfLcmOpOcc lcmOpOccs = vnfInstancesRepository.createLcmOpOccs(vnfInstanceId, LcmOperationTypeEnum.INSTANTIATE);
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
+		// Send Grant.
+		// Send processing notification.
+		vnfInstancesRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
+		final String vnfPkgId = vnfInstance.getVnfPkgId();
+		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
+		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
+		if (null == userData.get("vimId")) {
+			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
+		}
+
+		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
+		LOG.info("New MSA VNF Create job: {}", processId);
+		vnfInstancesRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		final List<VnfLcmOpOcc> vnfLcmOpOccss = new ArrayList<>();
+		vnfLcmOpOccss.add(lcmOpOccs);
+		waitForCompletion(vnfLcmOpOccss);
+		vnfInstancesRepository.updateState(lcmOpOccs, lcmOpOccs.getOperationState());
+		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+		vnfInstancesRepository.save(vnfInstance);
+
+		vnfPkg.setUsageState(UsageStateEnum.IN_USE);
+		vnfPackageRepository.save(vnfPkg);
 	}
 
 	private void nsTerminate(final String nsInstanceId) {

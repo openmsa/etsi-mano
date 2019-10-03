@@ -5,6 +5,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
@@ -35,6 +35,8 @@ import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.MsaExecutor;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 
 /**
  * NFVO+VNFM & VNFM Implementation.
@@ -52,13 +54,15 @@ public class VnfInstanceLcm {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final MsaExecutor msaExecutor;
 	private final LcmOpOccsRepository lcmOpOccsMsa;
+	private final EventManager eventManager;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor, final LcmOpOccsRepository _lcmOpOccsRepository) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor, final LcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
 		msaExecutor = _msaExecutor;
 		lcmOpOccsMsa = _lcmOpOccsRepository;
+		eventManager = _eventManager;
 	}
 
 	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
@@ -114,22 +118,8 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
-		vnfPkg.setUsageState(UsageStateEnum.IN_USE);
-		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
+		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
 
-		if (null == userData.get("vimId")) {
-			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
-		}
-
-		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
-		LOG.info("New MSA VNF Create job: {}", processId);
-		userData.put("msaServiceId", processId);
-		addVnfOperation(vnfPkgId, processId, vnfInstanceId, LcmOperationTypeEnum.INSTANTIATE);
-
-		vnfPackageRepository.save(vnfPkg);
-
-		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
-		vnfInstancesRepository.save(vnfInstance);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
