@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageState
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
@@ -85,10 +86,42 @@ public class ActionJob extends QuartzJobBean {
 		case NS_INSTANTIATE:
 			nsInstantiate(objectId);
 			break;
+		case NS_TERMINATE:
+			nsTerminate(objectId);
+			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);
 			break;
 		}
+	}
+
+	private void nsTerminate(final String nsInstanceId) {
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
+		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+
+		final String nsdId = nsInstance.getNsdId();
+		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
+		// Delete VNF
+		final List<String> vnfs = nsdInfo.getVnfPkgIds();
+		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
+		for (final String vnfId : vnfs) {
+			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.VnfTerminate(nsInstanceId, vnfId);
+			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
+		}
+		waitForCompletion(vnfLcmOpOccsIds);
+		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
+		lcmOpOccsRepository.save(vnfLcmOpOccsIds);
+		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
+		if (OperationStateEnum.COMPLETED != status) {
+			lcmOpOccs.setOperationState(status);
+			lcmOpOccsRepository.save(lcmOpOccs);
+			eventManager.sendNotification(NotificationEvent.NS_TERMINATE, nsInstanceId);
+			return;
+		}
+		// Release the NS.
+		msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
+		nsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
+		nsInstanceRepository.save(nsInstance);
 	}
 
 	private void nsInstantiate(final String nsInstanceId) {

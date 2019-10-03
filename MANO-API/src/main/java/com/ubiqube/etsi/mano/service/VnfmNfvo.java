@@ -39,4 +39,10 @@ public class VnfmNfvo implements VnfmInterface {
 		return null;
 	}
 
+	@Override
+	public VnfLcmOpOcc VnfTerminate(final String nsInstanceId, final String vnfId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

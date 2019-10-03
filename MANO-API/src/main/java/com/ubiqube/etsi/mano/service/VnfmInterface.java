@@ -14,4 +14,6 @@ public interface VnfmInterface {
 
 	VnfLcmOpOcc getVnfLcmOpOccs(@NotNull String id);
 
+	VnfLcmOpOcc VnfTerminate(String nsInstanceId, String vnfId);
+
 }

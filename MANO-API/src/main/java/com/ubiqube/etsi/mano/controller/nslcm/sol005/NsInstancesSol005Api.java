@@ -10,7 +10,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -30,14 +29,12 @@ import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgIndex;
 import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
-import com.ubiqube.etsi.mano.model.nsd.NsdPkgOperation;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdHealPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdInstantiatePostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdScalePostQuery;
@@ -54,20 +51,17 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.msa.LcmOpOccsMsa;
-import com.ubiqube.etsi.mano.service.MsaExecutor;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
 @Profile({ "default", "NFVO" })
 @RestController
-public class NsInstancesSol005Api implements NsInstancesSol005 {
-	private static final Logger LOG = LoggerFactory.getLogger(NsLcmSol005Api.class);
+public final class NsInstancesSol005Api implements NsInstancesSol005 {
+	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);
 
 	private final NsdRepository nsdRepository;
 	private final NsInstanceRepository nsInstanceRepository;
-
-	private final MsaExecutor msaExecutor;
 
 	private final LcmOpOccsMsa lcmOpOccsMsa;
 
@@ -75,10 +69,9 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final EventManager eventManager;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final MsaExecutor _msaExecutor, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm, final EventManager _eventManager) {
+	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final LcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm, final EventManager _eventManager) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
-		msaExecutor = _msaExecutor;
 		lcmOpOccsMsa = _lcmOpOccsMsa;
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfm = _vnfm;
@@ -165,11 +158,8 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureNotInstantiated(nsInstancesNsInstance);
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
 
-		final Map<String, Object> params = new HashMap<>();
-		params.put("lcmOpOccsId", lcmOpOccs.getId());
-		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, params);
+		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, new HashMap<String, Object>());
 
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
@@ -205,21 +195,9 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdTerminatePostQuery body) {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
-		lcmOpOccsMsa.save(lcmOpOccs);
-		final String nsdId = nsInstancesNsInstance.getNsdId();
-		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
-		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 
-		final NsdPkgIndex nsdPkgIndex = vnfPackageRepository.loadObject(nsdId, NsdPkgIndex.class, "indexes.json");
-		final NsdPkgInstance instance = nsdPkgIndex.getNsdPkgInstance(nsdId);
+		eventManager.sendAction(ActionType.NS_TERMINATE, nsInstanceId, new HashMap<String, Object>());
 
-		msaExecutor.onNsInstanceTerminate(userData);
-
-		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
-		nsInstanceRepository.save(nsInstancesNsInstance);
-		userData.remove("msaProcessId");
-		nsdRepository.save(nsdInfo);
 		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
 	}
@@ -310,18 +288,6 @@ public class NsInstancesSol005Api implements NsInstancesSol005 {
 		update.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdUpdatePost(id, null, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
 		return nsInstanceLinks;
-	}
-
-	private NsLcmOpOccsNsLcmOpOcc addNsdOperation(final String _nsdId, final String _processId, final String _nsInstanceId, final LcmOperationTypeEnum _lcmOperationType) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(_nsInstanceId, _lcmOperationType);
-		lcmOpOccsMsa.save(lcmOpOccs);
-		final NsdPkgIndex nsdPkgIndex = vnfPackageRepository.loadObject(_nsdId, NsdPkgIndex.class, "indexes.json");
-		final NsdPkgOperation nsdPkgOperation = new NsdPkgOperation(lcmOpOccs.getId(), _processId);
-		final NsdPkgInstance instance = nsdPkgIndex.getNsdPkgInstance(_nsInstanceId);
-		instance.getOperations().add(nsdPkgOperation);
-
-		vnfPackageRepository.storeObject(_nsdId, nsdPkgIndex, "indexes.json");
-		return lcmOpOccs;
 	}
 
 }
