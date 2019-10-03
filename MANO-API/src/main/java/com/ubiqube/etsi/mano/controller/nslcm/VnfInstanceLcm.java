@@ -97,7 +97,8 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
-		instance.getOperations().stream().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
+		// instance.getOperations().stream().forEach(x ->
+		// lcmOpOccsMsa.delete(x.getId()));
 		lcmOpOccsMsa.delete(vnfInstanceId);
 		vnfPkgIndex.remove(instance);
 		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
@@ -129,6 +130,7 @@ public class VnfInstanceLcm {
 		}
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
+		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
 
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
@@ -136,7 +138,7 @@ public class VnfInstanceLcm {
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 
-		instance.getOperations().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
+		// instance.getOperations().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		instance.getOperations().clear();
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
@@ -155,7 +157,7 @@ public class VnfInstanceLcm {
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(_vnfPkgId, VnfPkgIndex.class, "indexes.json");
 		final VnfPkgOperation VnfPkgOperation = new VnfPkgOperation(lcmOpOccs.getId(), _processId);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(_vnfInstanceId);
-		instance.getOperations().add(VnfPkgOperation);
+		instance.addOperation(VnfPkgOperation);
 
 		vnfPackageRepository.storeObject(_vnfPkgId, vnfPkgIndex, "indexes.json");
 		return lcmOpOccs;

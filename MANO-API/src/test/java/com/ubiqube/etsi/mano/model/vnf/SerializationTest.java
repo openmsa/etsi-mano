@@ -3,7 +3,7 @@ package com.ubiqube.etsi.mano.model.vnf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,14 +19,14 @@ public class SerializationTest {
 		final VnfPkgInstance vnfInstance = new VnfPkgInstance();
 		vnfInstance.setInstanceId("DEADBEEF");
 		final VnfPkgOperation operation = new VnfPkgOperation("ID", "processId");
-		vnfInstance.getOperations().add(operation);
+		vnfInstance.addOperation(operation);
 		index.addVnfPkgInstance(vnfInstance);
 
 		final String str = mapper.writeValueAsString(index);
 		final VnfPkgIndex vnfPkgIndex = mapper.readValue(str.getBytes(), VnfPkgIndex.class);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance("DEADBEEF");
 		assertNotNull(instance);
-		final List<VnfPkgOperation> ope = instance.getOperations();
+		final Map<String, VnfPkgOperation> ope = instance.getOperations();
 		assertEquals(1, ope.size());
 
 	}

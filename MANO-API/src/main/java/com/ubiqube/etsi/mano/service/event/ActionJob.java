@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
@@ -107,11 +108,11 @@ public class ActionJob extends QuartzJobBean {
 	private void vnfInstantiate(final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		// Maybe e need additional parameters to say STARTING / PROCESSING ...
-		final VnfLcmOpOcc lcmOpOccs = vnfInstancesRepository.createLcmOpOccs(vnfInstanceId, LcmOperationTypeEnum.INSTANTIATE);
+		final VnfLcmOpOcc lcmOpOccs = vnfPackageRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		// Send Grant.
 		// Send processing notification.
-		vnfInstancesRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
+		vnfPackageRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
@@ -121,11 +122,13 @@ public class ActionJob extends QuartzJobBean {
 
 		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 		LOG.info("New MSA VNF Create job: {}", processId);
-		vnfInstancesRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		vnfPackageRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+
 		final List<VnfLcmOpOcc> vnfLcmOpOccss = new ArrayList<>();
 		vnfLcmOpOccss.add(lcmOpOccs);
 		waitForCompletion(vnfLcmOpOccss);
-		vnfInstancesRepository.updateState(lcmOpOccs, lcmOpOccs.getOperationState());
+
+		vnfPackageRepository.updateState(lcmOpOccs, lcmOpOccs.getOperationState());
 		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
 		vnfInstancesRepository.save(vnfInstance);
 

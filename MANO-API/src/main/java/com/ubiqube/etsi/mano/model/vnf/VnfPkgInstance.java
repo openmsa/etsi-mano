@@ -1,13 +1,15 @@
 package com.ubiqube.etsi.mano.model.vnf;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class VnfPkgInstance {
 	private String instanceId;
-	private final List<VnfPkgOperation> operations = new ArrayList<>();
+	private Map<String, VnfPkgOperation> operations = new HashMap<>();
 
 	public VnfPkgInstance() {
 		// Nothing.
@@ -27,8 +29,19 @@ public class VnfPkgInstance {
 	}
 
 	@JsonProperty("Operations")
-	public List<VnfPkgOperation> getOperations() {
+	public Map<String, VnfPkgOperation> getOperations() {
 		return operations;
 	}
 
+	public void setOperations(final Map<String, VnfPkgOperation> operations) {
+		this.operations = operations;
+	}
+
+	public VnfPkgOperation getOperation(@NotNull final String id) {
+		return operations.get(id);
+	}
+
+	public void addOperation(final VnfPkgOperation vnfPackageOperation) {
+		operations.put(vnfPackageOperation.getId(), vnfPackageOperation);
+	}
 }
