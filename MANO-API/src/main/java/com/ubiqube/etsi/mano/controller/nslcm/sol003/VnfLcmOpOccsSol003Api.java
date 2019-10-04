@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
 @Profile({ "default", "VNFM" })
@@ -16,9 +16,9 @@ import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
-	private final LcmOpOccsRepository lcmOpOccsRepository;
+	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 
-	public VnfLcmOpOccsSol003Api(final LcmOpOccsRepository _lcmOpOccsRepository) {
+	public VnfLcmOpOccsSol003Api(final NsLcmOpOccsRepository _lcmOpOccsRepository) {
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		LOG.info("Starting LCM OP OCCS SOL003 Controller.");
 	}

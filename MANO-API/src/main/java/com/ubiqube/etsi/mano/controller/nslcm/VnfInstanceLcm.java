@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.model.vnf.VnfPkgInstance;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgOperation;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
-import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.MsaExecutor;
@@ -53,10 +53,10 @@ public class VnfInstanceLcm {
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final MsaExecutor msaExecutor;
-	private final LcmOpOccsRepository lcmOpOccsMsa;
+	private final NsLcmOpOccsRepository lcmOpOccsMsa;
 	private final EventManager eventManager;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor, final LcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final MsaExecutor _msaExecutor, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;

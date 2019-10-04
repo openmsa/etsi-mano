@@ -14,15 +14,15 @@ import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
-import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 
 @Service
 public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstance> implements NsInstanceRepository {
 	private static final String REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/ns_instances";
-	private final LcmOpOccsRepository lcmOpOccsRepository;
+	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 
-	public NsInstanceMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final LcmOpOccsRepository _lcmOpOccsRepository) {
+	public NsInstanceMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final NsLcmOpOccsRepository _lcmOpOccsRepository) {
 		super(_mapper, _repositoryService, _jsonFilter);
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 	}

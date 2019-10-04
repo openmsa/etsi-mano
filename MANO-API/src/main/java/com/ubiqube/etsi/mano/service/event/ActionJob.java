@@ -41,7 +41,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
-import com.ubiqube.etsi.mano.repository.LcmOpOccsRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -59,9 +59,9 @@ public class ActionJob extends QuartzJobBean {
 	private final NsdRepository nsdRepository;
 	private final MsaExecutor msaExecutor;
 	private final VnfmInterface vnfm;
-	private final LcmOpOccsRepository lcmOpOccsRepository;
+	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 
-	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final LcmOpOccsRepository _lcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository) {
+	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
