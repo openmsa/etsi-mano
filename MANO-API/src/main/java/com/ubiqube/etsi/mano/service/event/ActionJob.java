@@ -41,16 +41,26 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
-import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
+import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.MsaExecutor;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 
+/**
+ * this class handle job reception.
+ *
+ * TODO: - This class is currently too big. - Does too many things - VNF Methods
+ * are allmost all the same.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ActionJob extends QuartzJobBean {
-
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(ActionJob.class);
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageRepository vnfPackageRepository;
@@ -60,8 +70,9 @@ public class ActionJob extends QuartzJobBean {
 	private final MsaExecutor msaExecutor;
 	private final VnfmInterface vnfm;
 	private final NsLcmOpOccsRepository lcmOpOccsRepository;
+	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 
-	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository) {
+	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final MsaExecutor _msaExecutor, final VnfmInterface _vnfm, final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
@@ -71,6 +82,7 @@ public class ActionJob extends QuartzJobBean {
 		vnfm = _vnfm;
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfInstancesRepository = _vnfInstancesRepository;
+		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 	}
 
 	@Override
@@ -151,7 +163,7 @@ public class ActionJob extends QuartzJobBean {
 		}
 		waitForCompletion(vnfLcmOpOccsIds);
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
-		lcmOpOccsRepository.save(vnfLcmOpOccsIds);
+		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
 		if (OperationStateEnum.COMPLETED != status) {
 			lcmOpOccs.setOperationState(status);
@@ -188,12 +200,12 @@ public class ActionJob extends QuartzJobBean {
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.
-		lcmOpOccsRepository.save(vnfLcmOpOccsIds);
+		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		// wait for completion
 		waitForCompletion(vnfLcmOpOccsIds);
 		// update lcm op occs
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
-		lcmOpOccsRepository.save(vnfLcmOpOccsIds);
+		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
 		lcmOpOccs.setStateEnteredTime(new Date());
 		lcmOpOccs.setOperationState(status);

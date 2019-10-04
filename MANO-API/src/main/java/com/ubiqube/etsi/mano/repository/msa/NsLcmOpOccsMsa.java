@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
@@ -42,12 +40,6 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOp
 	@Override
 	Class<?> getClazz() {
 		return NsLcmOpOccsNsLcmOpOcc.class;
-	}
-
-	@Override
-	public void save(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -84,7 +84,7 @@ public class MsaExecutor {
 
 	private String executeProcess(final String customerId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) {
 		try {
-			LOG.info("Calling MSA remote FW: custormerId=" + customerId + ", serviceId=" + serviceId + ", serviceName=" + serviceId + ", processName=" + processName + ", params=" + varsMap);
+			LOG.info("Calling MSA remote FW: custormerId={}, serviceId={}, serviceName={}, processName={}, params={}", customerId, serviceId, serviceName, processName, varsMap);
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
 			return String.valueOf(resp.getServiceId().getId());
 		} catch (final ServiceException e) {
@@ -93,7 +93,7 @@ public class MsaExecutor {
 	}
 
 	public void waitForProcess(final String processId) {
-		// TODO Auto-generated method stub
+		// TODO This one is probably the same as Polling job.
 
 	}
 

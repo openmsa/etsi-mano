@@ -17,11 +17,17 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+/**
+ * Simple implementation using Quartz.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class QuartzEventManager implements EventManager {
-
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(QuartzEventManager.class);
-
+	/** Scheduler instance injection point. */
 	private final Scheduler scheduler;
 
 	public QuartzEventManager(final Scheduler scheduler, final VnfPackageRepository vnfPackageRepository) {

@@ -17,15 +17,8 @@ import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
-/**
- * Polling job. This job poll orchestration service and re-schedule it self
- * while the MSA state is in RUNNING.
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 public class PollingJob extends QuartzJobBean {
-	/** Logger instance. */
+
 	private static final Logger LOG = LoggerFactory.getLogger(PollingJob.class);
 
 	private final OrchestrationService orchestrationService;

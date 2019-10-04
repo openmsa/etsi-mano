@@ -11,6 +11,13 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+/**
+ * A kind of VNF rollback. We need to kepp track of the state while uploading.
+ * This service will switch back the VNF state on failure.
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class UriUploadListener implements JobListener {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UriUploadListener.class);

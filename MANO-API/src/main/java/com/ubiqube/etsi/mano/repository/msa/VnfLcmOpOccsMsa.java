@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -42,6 +43,11 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 	@Override
 	Class<?> getClazz() {
 		return VnfLcmOpOcc.class;
+	}
+
+	@Override
+	public void save(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
+		vnfLcmOpOccsIds.forEach(this::save);
 	}
 
 }

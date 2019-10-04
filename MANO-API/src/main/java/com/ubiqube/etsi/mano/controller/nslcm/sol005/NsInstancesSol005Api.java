@@ -48,9 +48,9 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.repository.msa.NsLcmOpOccsMsa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -63,16 +63,16 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private final NsdRepository nsdRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 
-	private final NsLcmOpOccsMsa lcmOpOccsMsa;
+	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 
 	private final VnfmInterface vnfm;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final EventManager eventManager;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final NsLcmOpOccsMsa _lcmOpOccsMsa, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm, final EventManager _eventManager) {
+	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfPackageRepository _vnfPackageRepository, final VnfmInterface _vnfm, final EventManager _eventManager) {
 		nsdRepository = _nsdRepository;
 		nsInstanceRepository = _nsInstanceRepository;
-		lcmOpOccsMsa = _lcmOpOccsMsa;
+		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfm = _vnfm;
 		eventManager = _eventManager;
@@ -144,7 +144,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL);
-		lcmOpOccsMsa.save(lcmOpOccs);
+		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -176,7 +176,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE);
-		lcmOpOccsMsa.save(lcmOpOccs);
+		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -213,7 +213,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE);
-		lcmOpOccsMsa.save(lcmOpOccs);
+		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 

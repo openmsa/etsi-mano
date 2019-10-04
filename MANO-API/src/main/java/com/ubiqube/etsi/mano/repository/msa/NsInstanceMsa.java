@@ -14,8 +14,8 @@ import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
-import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Service
 public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstance> implements NsInstanceRepository {
@@ -65,7 +65,7 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 
 	@Override
 	public void attachProcessIdToLcmOpOccs(@NotNull final String id, final String processId) {
-		// TODO Auto-generated method stub
+		// TODO @see Vnf Lcm Op Occs.
 
 	}
 
