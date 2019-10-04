@@ -97,8 +97,7 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
-		// instance.getOperations().stream().forEach(x ->
-		// lcmOpOccsMsa.delete(x.getId()));
+		instance.getOperations().values().stream().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		lcmOpOccsMsa.delete(vnfInstanceId);
 		vnfPkgIndex.remove(instance);
 		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
@@ -138,7 +137,7 @@ public class VnfInstanceLcm {
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 
-		// instance.getOperations().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
+		instance.getOperations().values().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		instance.getOperations().clear();
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
