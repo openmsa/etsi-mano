@@ -135,7 +135,6 @@ public class ActionJob extends QuartzJobBean {
 		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 		LOG.info("New MSA VNF Create job: {}", processId);
 		vnfPackageRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
-
 		waitForCompletion(lcmOpOccs);
 
 		vnfPackageRepository.updateState(lcmOpOccs, lcmOpOccs.getOperationState());
@@ -154,6 +153,7 @@ public class ActionJob extends QuartzJobBean {
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Delete VNF
 		final List<String> vnfs = nsdInfo.getVnfPkgIds();
+		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfs) {
 			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId);
@@ -169,8 +169,9 @@ public class ActionJob extends QuartzJobBean {
 			return;
 		}
 		// Release the NS.
-		msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
-		// wait for process ??
+		final String processId = msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
+		msaExecutor.waitForCompletion(processId, 5 * 60);
+
 		nsInstanceRepository.changeNsdUpdateState(nsInstance, NsStateEnum.NOT_INSTANTIATED);
 	}
 
@@ -193,8 +194,7 @@ public class ActionJob extends QuartzJobBean {
 		LOG.info("Creating a MSA Job: {}", processId);
 		// Save Process Id with lcm
 		nsInstanceRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
-		// Wait it's done.
-		msaExecutor.waitForProcess(processId);
+		msaExecutor.waitForCompletion(processId, 5 * 60);
 		// Instantiate each VNF.
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();

@@ -92,8 +92,8 @@ public class MsaExecutor {
 		}
 	}
 
-	public void waitForProcess(final String processId) {
-		// TODO This one is probably the same as Polling job.
+	public void waitForCompletion(final String processId, final int seconds) {
+		// TODO Auto-generated method stub
 
 	}
 
