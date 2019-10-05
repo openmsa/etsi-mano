@@ -296,8 +296,8 @@ public class ActionJob extends QuartzJobBean {
 		return ret;
 	}
 
-	private void changeNsdUpdateState(@NotNull final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum inUse) {
-		nsdInfo.setNsdUsageState(NsdUsageStateEnum.IN_USE);
+	private void changeNsdUpdateState(@NotNull final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum state) {
+		nsdInfo.setNsdUsageState(state);
 		nsdRepository.save(nsdInfo);
 	}
 
