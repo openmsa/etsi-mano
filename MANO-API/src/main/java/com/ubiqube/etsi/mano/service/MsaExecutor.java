@@ -19,7 +19,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
  *
  */
 @Service
-public class MsaExecutor {
+public class MsaExecutor implements Vim {
 	private static final String CUSTOMER_ID = "customerId";
 
 	private static final Logger LOG = LoggerFactory.getLogger(MsaExecutor.class);
@@ -31,6 +31,7 @@ public class MsaExecutor {
 		this.orchestrationService = orchestrationService;
 	}
 
+	@Override
 	public String onVnfInstanceTerminate(final Map<String, Object> userData) {
 		final String msaServiceId = (String) userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
@@ -42,6 +43,7 @@ public class MsaExecutor {
 		return executeProcess(customerId, serviceId, SERVICE_NAME, PROCESS_NAME);
 	}
 
+	@Override
 	public String onVnfInstantiate(final String vnfPkgId, final Map<String, Object> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = (String) userData.get(CUSTOMER_ID);
@@ -54,6 +56,7 @@ public class MsaExecutor {
 		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
 	}
 
+	@Override
 	public String onNsInstantiate(final String nsdId, final Map<String, Object> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = (String) userData.get(CUSTOMER_ID);
@@ -66,6 +69,7 @@ public class MsaExecutor {
 		return executeProcess(customerId, 0, SERVICE_NAME, PROCESS_NAME, varsMap);
 	}
 
+	@Override
 	public String onNsInstanceTerminate(final Map<String, Object> userData) {
 		final String msaServiceId = (String) userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
@@ -92,6 +96,7 @@ public class MsaExecutor {
 		}
 	}
 
+	@Override
 	public void waitForCompletion(final String processId, final int seconds) {
 		// TODO Auto-generated method stub
 
