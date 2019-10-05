@@ -136,9 +136,7 @@ public class ActionJob extends QuartzJobBean {
 		LOG.info("New MSA VNF Create job: {}", processId);
 		vnfPackageRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
 
-		final List<VnfLcmOpOcc> vnfLcmOpOccss = new ArrayList<>();
-		vnfLcmOpOccss.add(lcmOpOccs);
-		waitForCompletion(vnfLcmOpOccss);
+		waitForCompletion(lcmOpOccs);
 
 		vnfPackageRepository.updateState(lcmOpOccs, lcmOpOccs.getOperationState());
 		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
@@ -260,14 +258,28 @@ public class ActionJob extends QuartzJobBean {
 			if (ret.isEmpty()) {
 				break;
 			}
-			try {
-				Thread.sleep(5 * 60 * 1000);
-			} catch (final InterruptedException e) {
-				LOG.warn("Interrupted exception.", e);
-				Thread.currentThread().interrupt();
-			}
+			sleepSeconds(5 * 60);
 		}
 
+	}
+
+	private void sleepSeconds(final int seconds) {
+		try {
+			Thread.sleep(seconds * 1000);
+		} catch (final InterruptedException e) {
+			LOG.warn("Interrupted exception.", e);
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	private void waitForCompletion(final VnfLcmOpOcc vnfLcmOpOcc) {
+		while (true) {
+			final VnfLcmOpOcc res = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
+			if (res.getOperationState() == LcmOperationStateType.PROCESSING) {
+				return;
+			}
+			sleepSeconds(5 * 60);
+		}
 	}
 
 	private List<VnfLcmOpOcc> vnfCycle(final List<VnfLcmOpOcc> vnfLcmOpOccss) {
