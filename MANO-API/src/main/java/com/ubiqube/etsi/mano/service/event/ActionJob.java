@@ -156,7 +156,7 @@ public class ActionJob extends QuartzJobBean {
 		final List<String> vnfs = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfs) {
-			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.VnfTerminate(nsInstanceId, vnfId);
+			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		waitForCompletion(vnfLcmOpOccsIds);
@@ -170,8 +170,8 @@ public class ActionJob extends QuartzJobBean {
 		}
 		// Release the NS.
 		msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
-		nsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
-		nsInstanceRepository.save(nsInstance);
+		// wait for process ??
+		nsInstanceRepository.changeNsdUpdateState(nsInstance, NsStateEnum.NOT_INSTANTIATED);
 	}
 
 	private void updateOperationState(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs, final OperationStateEnum status) {
@@ -186,7 +186,7 @@ public class ActionJob extends QuartzJobBean {
 
 		final String nsdId = nsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
-		changeNsdUpdateState(nsdInfo, NsdUsageStateEnum.IN_USE);
+		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateEnum.IN_USE);
 		// Create Ns.
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
@@ -199,7 +199,7 @@ public class ActionJob extends QuartzJobBean {
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfPkgIds) {
-			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.VnfInstatiate(nsInstanceId, vnfId);
+			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfInstatiate(nsInstanceId, vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.
@@ -294,11 +294,6 @@ public class ActionJob extends QuartzJobBean {
 			}
 		}
 		return ret;
-	}
-
-	private void changeNsdUpdateState(@NotNull final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum state) {
-		nsdInfo.setNsdUsageState(state);
-		nsdRepository.save(nsdInfo);
 	}
 
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {

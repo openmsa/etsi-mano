@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
 /**
@@ -47,6 +48,12 @@ public class NsdPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInf
 	@Override
 	String getFilename() {
 		return "nsd.json";
+	}
+
+	@Override
+	public void changeNsdUpdateState(final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum state) {
+		nsdInfo.setNsdUsageState(state);
+		save(nsdInfo);
 	}
 
 }

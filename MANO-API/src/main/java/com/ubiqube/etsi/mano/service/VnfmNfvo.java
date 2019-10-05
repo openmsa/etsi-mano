@@ -28,7 +28,7 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOcc VnfInstatiate(final String nsInstanceId, final String vnfId) {
+	public VnfLcmOpOcc vnfInstatiate(final String nsInstanceId, final String vnfId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -40,7 +40,7 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOcc VnfTerminate(final String nsInstanceId, final String vnfId) {
+	public VnfLcmOpOcc vnfTerminate(final String nsInstanceId, final String vnfId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

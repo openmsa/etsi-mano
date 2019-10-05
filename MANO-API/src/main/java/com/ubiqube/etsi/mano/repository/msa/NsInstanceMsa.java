@@ -11,7 +11,9 @@ import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpOccsIndex;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
@@ -53,20 +55,29 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 	}
 
 	@Override
-	public NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final LcmOperationTypeEnum instantiate) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE);
+	public NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final LcmOperationTypeEnum state) {
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, state);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		// Add newly created instance to Indexes.json
 		final NsInstanceIndex nsInstanceIndex = loadObject(nsInstanceId, NsInstanceIndex.class, "indexes.json");
-		nsInstanceIndex.addLcmOpOccs(lcmOpOccs.getId());
+		nsInstanceIndex.addLcmOpOccs(lcmOpOccs);
 		storeObject(nsInstanceId, nsInstanceIndex, "indexes.json");
 		return lcmOpOccs;
 	}
 
 	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String id, final String processId) {
-		// TODO @see Vnf Lcm Op Occs.
+	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = lcmOpOccsRepository.get(lcmOpOccsId);
+		final NsInstanceIndex nsInstanceIndex = loadObject(lcmOpOccs.getNsInstanceId(), NsInstanceIndex.class, "indexes.json");
+		final NsLcmOpOccsIndex lcmIdx = nsInstanceIndex.getLcmOpOccs(lcmOpOccsId);
+		lcmIdx.setProcessId(processId);
+		storeObject(lcmOpOccs.getNsInstanceId(), nsInstanceIndex, "indexes.json");
+	}
 
+	@Override
+	public void changeNsdUpdateState(final NsInstancesNsInstance nsInstance, final NsStateEnum state) {
+		nsInstance.setNsState(state);
+		save(nsInstance);
 	}
 
 }
