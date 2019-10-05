@@ -304,27 +304,27 @@ public class ActionJob extends QuartzJobBean {
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		startOnboarding(vnfPkgInfo);
+		uploadAndFinishOnboarding(vnfPkgInfo, data);
+	}
+
+	private void uploadAndFinishOnboarding(final VnfPkgInfo vnfPkgInfo, final byte[] data) {
 		vnfPkgInfo.setChecksum(getChecksum(data));
-		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(data), "vnfd");
+		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), new ByteArrayInputStream(data), "vnfd");
 		finishOnboarding(vnfPkgInfo);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgInfo.getId());
 	}
 
 	private void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String vnfPkgId, final String url) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		startOnboarding(vnfPkgInfo);
 		LOG.info("Async. Download of {}", url);
-		final byte[] content = getUrlContent(url);
-		vnfPkgInfo.setChecksum(getChecksum(content));
-		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
-		finishOnboarding(vnfPkgInfo);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		final byte[] data = getUrlContent(url);
+		uploadAndFinishOnboarding(vnfPkgInfo, data);
 	}
 
 	private static byte[] getUrlContent(final String uri) {
-		URL url;
 		try {
-			url = new URL(uri);
+			final URL url = new URL(uri);
 			return ByteStreams.toByteArray((InputStream) url.getContent());
 		} catch (final IOException e) {
 			throw new GenericException(e);
