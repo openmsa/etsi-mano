@@ -164,8 +164,7 @@ public class ActionJob extends QuartzJobBean {
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
 		if (OperationStateEnum.COMPLETED != status) {
-			lcmOpOccs.setOperationState(status);
-			lcmOpOccsRepository.save(lcmOpOccs);
+			updateOperationState(lcmOpOccs, status);
 			eventManager.sendNotification(NotificationEvent.NS_TERMINATE, nsInstanceId);
 			return;
 		}
@@ -173,6 +172,12 @@ public class ActionJob extends QuartzJobBean {
 		msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
 		nsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
 		nsInstanceRepository.save(nsInstance);
+	}
+
+	private void updateOperationState(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs, final OperationStateEnum status) {
+		lcmOpOccs.setOperationState(status);
+		lcmOpOccs.setStateEnteredTime(new Date());
+		lcmOpOccsRepository.save(lcmOpOccs);
 	}
 
 	private void nsInstantiate(final String nsInstanceId) {
@@ -205,9 +210,7 @@ public class ActionJob extends QuartzJobBean {
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
-		lcmOpOccs.setStateEnteredTime(new Date());
-		lcmOpOccs.setOperationState(status);
-		lcmOpOccsRepository.save(lcmOpOccs);
+		updateOperationState(lcmOpOccs, status);
 		// event->create (we have lcm op occs.)
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
 
