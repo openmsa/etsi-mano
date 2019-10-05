@@ -304,13 +304,9 @@ public class ActionJob extends QuartzJobBean {
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		startOnboarding(vnfPkgInfo);
-		try {
-			vnfPkgInfo.setChecksum(getChecksum(data));
-			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(data), "vnfd");
-			finishOnboarding(vnfPkgInfo);
-		} catch (final NoSuchAlgorithmException e) {
-			throw new GenericException(e);
-		}
+		vnfPkgInfo.setChecksum(getChecksum(data));
+		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(data), "vnfd");
+		finishOnboarding(vnfPkgInfo);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 	}
 
@@ -319,13 +315,9 @@ public class ActionJob extends QuartzJobBean {
 		startOnboarding(vnfPkgInfo);
 		LOG.info("Async. Download of {}", url);
 		final byte[] content = getUrlContent(url);
-		try {
-			vnfPkgInfo.setChecksum(getChecksum(content));
-			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
-			finishOnboarding(vnfPkgInfo);
-		} catch (final NoSuchAlgorithmException e) {
-			throw new GenericException(e);
-		}
+		vnfPkgInfo.setChecksum(getChecksum(content));
+		vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
+		finishOnboarding(vnfPkgInfo);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 	}
 
@@ -339,8 +331,13 @@ public class ActionJob extends QuartzJobBean {
 		}
 	}
 
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
-		final MessageDigest digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
+	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) {
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
+		} catch (final NoSuchAlgorithmException e) {
+			throw new GenericException(e);
+		}
 		final byte[] hashbytes = digest.digest(bytes);
 		final String sha3_256hex = bytesToHex(hashbytes);
 		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
