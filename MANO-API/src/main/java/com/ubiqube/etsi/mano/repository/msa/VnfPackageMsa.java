@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;

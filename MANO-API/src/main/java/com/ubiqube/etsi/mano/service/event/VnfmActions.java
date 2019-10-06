@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;

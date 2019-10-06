@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,43 +28,6 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 **/
 	private String id = null;
 
-	@XmlType(name = "OperationStateEnum")
-	@XmlEnum(String.class)
-	public enum OperationStateEnum {
-
-		@XmlEnumValue("PROCESSING")
-		PROCESSING(String.valueOf("PROCESSING")), @XmlEnumValue("COMPLETED")
-		COMPLETED(String.valueOf("COMPLETED")), @XmlEnumValue("FAILED_TEMP")
-		FAILED_TEMP(String.valueOf("FAILED_TEMP")), @XmlEnumValue("FAILED")
-		FAILED(String.valueOf("FAILED")), @XmlEnumValue("ROLLING_BACK")
-		ROLLING_BACK(String.valueOf("ROLLING_BACK")), @XmlEnumValue("ROLLED_BACK")
-		ROLLED_BACK(String.valueOf("ROLLED_BACK"));
-
-		private final String value;
-
-		OperationStateEnum(final String v) {
-			value = v;
-		}
-
-		public String value() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		public static OperationStateEnum fromValue(final String v) {
-			for (final OperationStateEnum b : OperationStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
 	@ApiModelProperty(required = true, value = "The enumeration NsLcmOperationStateType shall comply with the provisions defined in Table 6.5.4.4-1. Value | Description ------|------------ PROCESSING | The LCM operation is currently in execution. COMPLETED | The LCM operation has been completed successfully. PARTIALLY_COMPLETED | The LCM operation has been partially completed with accepTable errors. FAILED_TEMP | The LCM operation has failed and execution has stopped, but the execution of the operation is not considered to be closed. FAILED | The LCM operation has failed and it cannot be retried or rolled back, as it is determined that such action won't succeed. OLLING_BACK | The LCM operation is currently being rolled back. ROLLED_BACK | The LCM operation has been successfully rolled back, i.e. The state of the VNF prior to the original operation invocation has been restored as closely as possible. ")
 	/**
 	 * The enumeration NsLcmOperationStateType shall comply with the provisions
@@ -79,7 +43,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * back, i.e. The state of the VNF prior to the original operation invocation
 	 * has been restored as closely as possible.
 	 **/
-	private OperationStateEnum operationState = null;
+	private LcmOperationStateType operationState = null;
 
 	@ApiModelProperty(required = true, value = "Date-time when the current state was entered. ")
 	/**
@@ -273,7 +237,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -304,7 +268,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * rolled back. ROLLED_BACK | The LCM operation has been successfully rolled
 	 * back, i.e. The state of the VNF prior to the original operation invocation
 	 * has been restored as closely as possible.
-	 * 
+	 *
 	 * @return operationState
 	 **/
 	@JsonProperty("operationState")
@@ -316,18 +280,18 @@ public class NsLcmOpOccsNsLcmOpOcc {
 		return operationState.value();
 	}
 
-	public void setOperationState(final OperationStateEnum operationState) {
+	public void setOperationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 	}
 
-	public NsLcmOpOccsNsLcmOpOcc operationState(final OperationStateEnum operationState) {
+	public NsLcmOpOccsNsLcmOpOcc operationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 		return this;
 	}
 
 	/**
 	 * Date-time when the current state was entered.
-	 * 
+	 *
 	 * @return stateEnteredTime
 	 **/
 	@JsonProperty("stateEnteredTime")
@@ -347,7 +311,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return nsInstanceId
 	 **/
 	@JsonProperty("nsInstanceId")
@@ -374,7 +338,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * NS\&quot; LCM operation. TERMINATE | Represents the \&quot;Terminate
 	 * NS\&quot; LCM operation. HEAL | Represents the \&quot;Heal NS\&quot; LCM
 	 * operation.
-	 * 
+	 *
 	 * @return lcmOperationType
 	 **/
 	@JsonProperty("lcmOperationType")
@@ -397,7 +361,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 
 	/**
 	 * Date-time of the start of the operation.
-	 * 
+	 *
 	 * @return startTime
 	 **/
 	@JsonProperty("startTime")
@@ -420,7 +384,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * triggered by the NFVO. This occurs in the case of auto-scaling, auto-healing
 	 * and when a nested NS is modified as a result of an operation on its composite
 	 * NS. Set to false otherwise.
-	 * 
+	 *
 	 * @return isAutomaticInvocation
 	 **/
 	@JsonProperty("isAutomaticInvocation")
@@ -445,7 +409,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * attribute shall apply: - INSTANTIATE: InstantiateNsRequest - SCALE:
 	 * ScaleNsRequest - UPDATE: UpdateNsRequest - HEAL: HealNsRequest - TERMINATE:
 	 * TerminateNsRequest
-	 * 
+	 *
 	 * @return operationParams
 	 **/
 	@JsonProperty("operationParams")
@@ -470,7 +434,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * If the LCM operation occurrence is in \&quot;PROCESSING\&quot; or
 	 * \&quot;ROLLING_BACK\&quot; state and the operation is being cancelled, this
 	 * attribute shall be set to true. Otherwise, it shall be set to false.
-	 * 
+	 *
 	 * @return isCancelPending
 	 **/
 	@JsonProperty("isCancelPending")
@@ -499,7 +463,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 	 * resource management operations in the underlying system, typically the VNFM
 	 * and VIM, and shall wait for the cancellation to finish or to time out. After
 	 * that, the NFVO shall put the operation occurrence into the FAILED_TEMP state.
-	 * 
+	 *
 	 * @return cancelMode
 	 **/
 	@JsonProperty("cancelMode")
@@ -521,7 +485,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 
 	/**
 	 * Get error
-	 * 
+	 *
 	 * @return error
 	 **/
 	@JsonProperty("error")
@@ -540,7 +504,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 
 	/**
 	 * Get resourceChanges
-	 * 
+	 *
 	 * @return resourceChanges
 	 **/
 	@JsonProperty("resourceChanges")
@@ -559,7 +523,7 @@ public class NsLcmOpOccsNsLcmOpOcc {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@JsonProperty("_links")

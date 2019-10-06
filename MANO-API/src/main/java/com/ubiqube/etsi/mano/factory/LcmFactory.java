@@ -6,8 +6,8 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
@@ -18,7 +18,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
 
 public final class LcmFactory {
 	private LcmFactory() {
@@ -93,7 +92,7 @@ public final class LcmFactory {
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
-		nsLcmOpOccsNsLcmOpOcc.setOperationState(OperationStateEnum.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
 		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
 		return nsLcmOpOccsNsLcmOpOcc;

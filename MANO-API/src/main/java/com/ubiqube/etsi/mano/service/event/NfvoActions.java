@@ -6,22 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -70,8 +67,8 @@ public class NfvoActions {
 		waitForCompletion(vnfLcmOpOccsIds);
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
-		if (OperationStateEnum.COMPLETED != status) {
+		final LcmOperationStateType status = computeStatus(vnfLcmOpOccsIds);
+		if (LcmOperationStateType.COMPLETED != status) {
 			updateOperationState(lcmOpOccs, status);
 			eventManager.sendNotification(NotificationEvent.NS_TERMINATE, nsInstanceId);
 			return;
@@ -83,36 +80,16 @@ public class NfvoActions {
 		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
 	}
 
-	private static OperationStateEnum computeStatus(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
+	private static LcmOperationStateType computeStatus(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
 		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccsIds) {
 			if (LcmOperationStateType.COMPLETED != vnfLcmOpOcc.getOperationState()) {
-				return convertToNsLcmOpOccsState(vnfLcmOpOcc.getOperationState());
+				return vnfLcmOpOcc.getOperationState();
 			}
 		}
-		return OperationStateEnum.COMPLETED;
+		return LcmOperationStateType.COMPLETED;
 	}
 
-	private static OperationStateEnum convertToNsLcmOpOccsState(@NotNull final LcmOperationStateType operationState) {
-		// No starting convertion ?
-		switch (operationState) {
-		case COMPLETED:
-			return OperationStateEnum.COMPLETED;
-		case FAILED:
-			return OperationStateEnum.FAILED;
-		case FAILED_TEMP:
-			return OperationStateEnum.FAILED_TEMP;
-		case PROCESSING:
-			return OperationStateEnum.PROCESSING;
-		case ROLLED_BACK:
-			return OperationStateEnum.ROLLED_BACK;
-		case ROLLING_BACK:
-			return OperationStateEnum.ROLLING_BACK;
-		default:
-			throw new GenericException("Unknown operation state : " + operationState);
-		}
-	}
-
-	private void updateOperationState(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs, final OperationStateEnum status) {
+	private void updateOperationState(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs, final LcmOperationStateType status) {
 		lcmOpOccs.setOperationState(status);
 		lcmOpOccs.setStateEnteredTime(new Date());
 		lcmOpOccsRepository.save(lcmOpOccs);
@@ -146,7 +123,7 @@ public class NfvoActions {
 		// update lcm op occs
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		final OperationStateEnum status = computeStatus(vnfLcmOpOccsIds);
+		final LcmOperationStateType status = computeStatus(vnfLcmOpOccsIds);
 		updateOperationState(lcmOpOccs, status);
 		// event->create (we have lcm op occs.)
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
