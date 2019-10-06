@@ -18,11 +18,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -65,37 +64,6 @@ public class VnfInstance {
 
 	@JsonProperty("vimConnectionInfo")
 	private List<VimConnectionInfo> vimConnectionInfo = null;
-
-	/**
-	 * The instantiation state of the VNF.
-	 */
-	public enum InstantiationStateEnum {
-		NOT_INSTANTIATED("NOT_INSTANTIATED"),
-
-		INSTANTIATED("INSTANTIATED");
-
-		private final String value;
-
-		InstantiationStateEnum(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static InstantiationStateEnum fromValue(final String text) {
-			for (final InstantiationStateEnum b : InstantiationStateEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
 
 	@JsonProperty("instantiationState")
 	private InstantiationStateEnum instantiationState = null;

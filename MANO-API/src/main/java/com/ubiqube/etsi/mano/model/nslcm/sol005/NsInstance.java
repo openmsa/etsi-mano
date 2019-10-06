@@ -5,11 +5,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -101,46 +99,13 @@ public class NsInstance {
 	 **/
 	private List<String> nestedNsInstanceId = null;
 
-	@XmlType(name = "NsStateEnum")
-	@XmlEnum(String.class)
-	public enum NsStateEnum {
-
-		@XmlEnumValue("NOT_INSTANTIATED")
-		NOT_INSTANTIATED(String.valueOf("NOT_INSTANTIATED")), @XmlEnumValue("INSTANTIATED")
-		INSTANTIATED(String.valueOf("INSTANTIATED"));
-
-		private final String value;
-
-		NsStateEnum(final String v) {
-			value = v;
-		}
-
-		public String value() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		public static NsStateEnum fromValue(final String v) {
-			for (final NsStateEnum b : NsStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
 	@ApiModelProperty(required = true, value = "The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS instance is terminated or not instantiated. INSTANTIATED: The NS instance is instantiated. ")
 	/**
 	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS
 	 * instance is terminated or not instantiated. INSTANTIATED: The NS instance is
 	 * instantiated.
 	 **/
-	private NsStateEnum nsState = null;
+	private InstantiationStateEnum nsState = null;
 
 	@ApiModelProperty(value = "Status of each NS scaling aspect declared in the applicable DF, how \"big\" the NS instance has been scaled w.r.t. that aspect. This attribute shall be present if the nsState attribute value is INSTANTIATED. ")
 	@Valid
@@ -166,7 +131,7 @@ public class NsInstance {
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -187,7 +152,7 @@ public class NsInstance {
 
 	/**
 	 * Human readable name of the NS instance.
-	 * 
+	 *
 	 * @return nsInstanceName
 	 **/
 	@JsonProperty("nsInstanceName")
@@ -207,7 +172,7 @@ public class NsInstance {
 
 	/**
 	 * Human readable description of the NS instance.
-	 * 
+	 *
 	 * @return nsInstanceDescription
 	 **/
 	@JsonProperty("nsInstanceDescription")
@@ -227,7 +192,7 @@ public class NsInstance {
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return nsdId
 	 **/
 	@JsonProperty("nsdId")
@@ -247,7 +212,7 @@ public class NsInstance {
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return nsdInfoId
 	 **/
 	@JsonProperty("nsdInfoId")
@@ -268,7 +233,7 @@ public class NsInstance {
 	/**
 	 * An identifier that is unique within a NS descriptor. Representation: string
 	 * of variable length.
-	 * 
+	 *
 	 * @return flavourId
 	 **/
 	@JsonProperty("flavourId")
@@ -287,7 +252,7 @@ public class NsInstance {
 
 	/**
 	 * Information on constituent VNF(s) of the NS instance.
-	 * 
+	 *
 	 * @return vnfInstance
 	 **/
 	@JsonProperty("vnfInstance")
@@ -311,7 +276,7 @@ public class NsInstance {
 
 	/**
 	 * Information on the PNF(s) that are part of the NS instance.
-	 * 
+	 *
 	 * @return pnfInfo
 	 **/
 	@JsonProperty("pnfInfo")
@@ -337,7 +302,7 @@ public class NsInstance {
 	 * Information on the VL(s) of the NS instance. This attribute shall be present
 	 * if the nsState attribute value is INSTANTIATED and if the NS instance has
 	 * specified connectivity.
-	 * 
+	 *
 	 * @return virtualLinkInfo
 	 **/
 	@JsonProperty("virtualLinkInfo")
@@ -361,7 +326,7 @@ public class NsInstance {
 
 	/**
 	 * Information on the VNFFG(s) of the NS instance.
-	 * 
+	 *
 	 * @return vnffgInfo
 	 **/
 	@JsonProperty("vnffgInfo")
@@ -385,7 +350,7 @@ public class NsInstance {
 
 	/**
 	 * Information on the SAP(s) of the NS instance.
-	 * 
+	 *
 	 * @return sapInfo
 	 **/
 	@JsonProperty("sapInfo")
@@ -409,7 +374,7 @@ public class NsInstance {
 
 	/**
 	 * Identifier of the nested NS(s) of the NS instance.
-	 * 
+	 *
 	 * @return nestedNsInstanceId
 	 **/
 	@JsonProperty("nestedNsInstanceId")
@@ -435,7 +400,7 @@ public class NsInstance {
 	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS
 	 * instance is terminated or not instantiated. INSTANTIATED: The NS instance is
 	 * instantiated.
-	 * 
+	 *
 	 * @return nsState
 	 **/
 	@JsonProperty("nsState")
@@ -447,11 +412,11 @@ public class NsInstance {
 		return nsState.value();
 	}
 
-	public void setNsState(final NsStateEnum nsState) {
+	public void setNsState(final InstantiationStateEnum nsState) {
 		this.nsState = nsState;
 	}
 
-	public NsInstance nsState(final NsStateEnum nsState) {
+	public NsInstance nsState(final InstantiationStateEnum nsState) {
 		this.nsState = nsState;
 		return this;
 	}
@@ -460,7 +425,7 @@ public class NsInstance {
 	 * Status of each NS scaling aspect declared in the applicable DF, how
 	 * \&quot;big\&quot; the NS instance has been scaled w.r.t. that aspect. This
 	 * attribute shall be present if the nsState attribute value is INSTANTIATED.
-	 * 
+	 *
 	 * @return nsScaleStatus
 	 **/
 	@JsonProperty("nsScaleStatus")
@@ -486,7 +451,7 @@ public class NsInstance {
 	 * Information on the additional affinity or anti-affinity rule from NS
 	 * instantiation operation. Shall not conflict with rules already specified in
 	 * the NSD.
-	 * 
+	 *
 	 * @return additionalAffinityOrAntiAffinityRule
 	 **/
 	@JsonProperty("additionalAffinityOrAntiAffinityRule")
@@ -510,7 +475,7 @@ public class NsInstance {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@JsonProperty("_links")

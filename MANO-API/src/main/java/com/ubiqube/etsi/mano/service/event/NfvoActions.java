@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
@@ -80,7 +80,7 @@ public class NfvoActions {
 		final String processId = msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
 		msaExecutor.waitForCompletion(processId, 5 * 60);
 
-		nsInstanceRepository.changeNsdUpdateState(nsInstance, NsStateEnum.NOT_INSTANTIATED);
+		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
 	}
 
 	private static OperationStateEnum computeStatus(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {

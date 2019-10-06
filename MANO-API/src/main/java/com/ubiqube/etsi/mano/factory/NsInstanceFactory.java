@@ -5,11 +5,10 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public class NsInstanceFactory {
@@ -21,7 +20,7 @@ public class NsInstanceFactory {
 		nsInstancesNsInstance.setNsInstanceDescription(_description);
 		nsInstancesNsInstance.setNsInstanceName(_name);
 		nsInstancesNsInstance.setNestedNsInstanceId(nestedNsdInfoIds);
-		nsInstancesNsInstance.setNsState(NsStateEnum.NOT_INSTANTIATED);
+		nsInstancesNsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
 		return nsInstancesNsInstance;
 	}
 

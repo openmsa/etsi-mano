@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpOccsIndex;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
@@ -75,7 +75,7 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstance> impleme
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsInstance nsInstance, final NsStateEnum state) {
+	public void changeNsdUpdateState(final NsInstance nsInstance, final InstantiationStateEnum state) {
 		nsInstance.setNsState(state);
 		save(nsInstance);
 	}
