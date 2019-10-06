@@ -3,6 +3,8 @@
 set -x
 set -e
 
+start_msa() {
+
 cd docker
 
 docker-compose up -d
@@ -18,3 +20,28 @@ time ../bin/check_login.sh --wait || {
 
 docker exec -it $MSA check_services_status.sh
 docker exec $MSA service elasticsearch status
+
+}
+
+start_mano_api() {
+	docker ps | grep ubimano_mano-api || {
+		: "WARNING: restarting mano-api"
+		docker-compose up -d mano-api
+	}
+	time wait_for_mano_api || {
+		: "WARNING: wait_for_mano_api timeout"
+	}
+
+	docker-compose logs mano-api
+}
+
+check_mano_api() {
+	curl -sL  -u x:x localhost:8666/ubi-etsi-mano/ | grep -q swagger-ui
+}
+
+wait_for_mano_api() {
+	while ! check_mano_api; do
+		sleep 1
+		[ $(( ++nb )) -lt 30 ] || return 1
+	done
+}
