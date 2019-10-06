@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -x
 set -e
 
 start_msa() {
@@ -43,3 +42,11 @@ wait_for_mano_api() {
 		[ $(( ++nb )) -lt 30 ] || return 1
 	done
 }
+
+
+echo -e "travis_fold:start:$0\r"
+(set -x
+start_msa
+start_mano_api
+)
+echo -e "travis_fold:end:$0\r"
