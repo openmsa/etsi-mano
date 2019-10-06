@@ -15,13 +15,13 @@ public class NsInstanceFactory {
 
 	@Nonnull
 	public static NsInstance createNsInstancesNsInstance(final String _nsdId, final String _description, final String _name, final List<String> nestedNsdInfoIds) {
-		final NsInstance nsInstancesNsInstance = new NsInstance();
-		nsInstancesNsInstance.setNsdId(_nsdId);
-		nsInstancesNsInstance.setNsInstanceDescription(_description);
-		nsInstancesNsInstance.setNsInstanceName(_name);
-		nsInstancesNsInstance.setNestedNsInstanceId(nestedNsdInfoIds);
-		nsInstancesNsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
-		return nsInstancesNsInstance;
+		final NsInstance nsInstance = new NsInstance();
+		nsInstance.setNsdId(_nsdId);
+		nsInstance.setNsInstanceDescription(_description);
+		nsInstance.setNsInstanceName(_name);
+		nsInstance.setNestedNsInstanceId(nestedNsdInfoIds);
+		nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
+		return nsInstance;
 	}
 
 	@Nonnull

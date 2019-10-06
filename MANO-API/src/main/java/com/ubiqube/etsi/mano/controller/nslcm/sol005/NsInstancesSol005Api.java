@@ -33,8 +33,8 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdHealPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdInstantiatePostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdScalePostQuery;
@@ -141,8 +141,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final NsInstancesNsInstanceIdHealPostQuery body) {
-		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureInstantiated(nsInstancesNsInstance);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		ensureInstantiated(nsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
@@ -156,13 +156,13 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
-		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureNotInstantiated(nsInstancesNsInstance);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		ensureNotInstantiated(nsInstance);
 
 		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, new HashMap<String, Object>());
 
-		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
-		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
+		nsInstance.setLinks(makeLink(nsInstanceId));
+		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
 	}
 
 	/**
@@ -173,8 +173,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdScalePostQuery body) {
-		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureInstantiated(nsInstancesNsInstance);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		ensureInstantiated(nsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
@@ -193,13 +193,13 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdTerminatePostQuery body) {
-		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureInstantiated(nsInstancesNsInstance);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		ensureInstantiated(nsInstance);
 
 		eventManager.sendAction(ActionType.NS_TERMINATE, nsInstanceId, new HashMap<String, Object>());
 
-		nsInstancesNsInstance.setLinks(makeLink(nsInstanceId));
-		return new ResponseEntity<>(nsInstancesNsInstance, HttpStatus.OK);
+		nsInstance.setLinks(makeLink(nsInstanceId));
+		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
 	}
 
 	/**
@@ -210,8 +210,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdUpdatePostQuery body) {
-		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
-		ensureInstantiated(nsInstancesNsInstance);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		ensureInstantiated(nsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
@@ -235,8 +235,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);
 
-		final NsInstance nsInstancesNsInstance = NsInstanceFactory.createNsInstancesNsInstance(req.getNsdId(), req.getNsDescription(), req.getNsName(), nsd.getNestedNsdInfoIds());
-		nsInstanceRepository.save(nsInstancesNsInstance);
+		final NsInstance nsInstance = NsInstanceFactory.createNsInstancesNsInstance(req.getNsdId(), req.getNsDescription(), req.getNsName(), nsd.getNestedNsdInfoIds());
+		nsInstanceRepository.save(nsInstance);
 
 		final List<NsInstancesNsInstanceVnfInstance> vnfInstances = new ArrayList<>();
 		final List<String> vnfs = nsd.getVnfPkgIds();
@@ -244,21 +244,21 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 			final VnfPkgInfo vnf = vnfPackageRepository.get(id);
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
-			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstancesNsInstance.getId(), id);
+			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstance.getId(), id);
 			final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, vnf);
 			vnfInstances.add(nsInstancesNsInstanceVnfInstance);
 		}
 
-		nsInstancesNsInstance.setVnfInstance(vnfInstances);
-		nsInstanceRepository.save(nsInstancesNsInstance);
+		nsInstance.setVnfInstance(vnfInstances);
+		nsInstanceRepository.save(nsInstance);
 
 		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(req.getNsdId(), NsdPkgIndex.class, "indexes.json");
-		nsdIndex.addNsdPkgInstance(new NsdPkgInstance(nsInstancesNsInstance.getId()));
+		nsdIndex.addNsdPkgInstance(new NsdPkgInstance(nsInstance.getId()));
 		nsdRepository.storeObject(req.getNsdId(), nsdIndex, "indexes.json");
 
-		nsInstancesNsInstance.setLinks(makeLink(nsInstancesNsInstance.getId()));
+		nsInstance.setLinks(makeLink(nsInstance.getId()));
 		final InlineResponse200 resp = new InlineResponse200();
-		resp.setNsInstance(nsInstancesNsInstance);
+		resp.setNsInstance(nsInstance);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
