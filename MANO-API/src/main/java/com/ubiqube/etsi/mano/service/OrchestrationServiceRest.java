@@ -9,15 +9,13 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class OrchestrationServiceRest implements OrchestrationService {
 
-	private final UbiRest rest;
-
-	public OrchestrationServiceRest(final UbiRest _rest) {
-		this.rest = _rest;
-	}
+	@Autowired
+	private UbiRest rest;
 
 	@Override
 	public ProcessInstance scheduleServiceImmediateMode(final String ubiqubeId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) throws ServiceException {

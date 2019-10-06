@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class RepositoryServiceRest implements RepositoryService {
-	private final UbiRest rest;
 
-	public RepositoryServiceRest(final UbiRest _ubiRest) {
-		rest = _ubiRest;
-	}
+	@Autowired
+	private UbiRest rest;
 
 	@Override
 	public RepositoryElement getElement(final String path) {
