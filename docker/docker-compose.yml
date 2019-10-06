@@ -12,7 +12,6 @@ services:
     ports:
     - "8666:8666"
     networks: [ ubi.network ]
-    volumes: [ "~/.gradle/caches:/home/gradle/.gradle/caches" ]
     depends_on: [ "msa" ]
 
   tests:
