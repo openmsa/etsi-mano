@@ -12,15 +12,15 @@ import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpOccsIndex;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Service
-public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstance> implements NsInstanceRepository {
+public class NsInstanceMsa extends AbstractGenericRepository<NsInstance> implements NsInstanceRepository {
 	private static final String REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/ns_instances";
 	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 
@@ -30,7 +30,7 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 	}
 
 	@Override
-	String setId(final NsInstancesNsInstance _entity) {
+	String setId(final NsInstance _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
@@ -41,7 +41,7 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 
 	@Override
 	Class<?> getClazz() {
-		return NsInstancesNsInstance.class;
+		return NsInstance.class;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsInstancesNsInstan
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsInstancesNsInstance nsInstance, final NsStateEnum state) {
+	public void changeNsdUpdateState(final NsInstance nsInstance, final NsStateEnum state) {
 		nsInstance.setNsState(state);
 		save(nsInstance);
 	}

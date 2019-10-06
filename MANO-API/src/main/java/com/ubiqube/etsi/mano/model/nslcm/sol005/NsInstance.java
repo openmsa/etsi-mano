@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * the provisions defined in Table 6.5.2.10-1.
  **/
 @ApiModel(description = "This type represents a response for Query NS operation.  It shall comply with the provisions defined in Table 6.5.2.10-1. ")
-public class NsInstancesNsInstance {
+public class NsInstance {
 
 	@ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
 	/**
@@ -180,7 +180,7 @@ public class NsInstancesNsInstance {
 		this.id = id;
 	}
 
-	public NsInstancesNsInstance id(final String id) {
+	public NsInstance id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -200,7 +200,7 @@ public class NsInstancesNsInstance {
 		this.nsInstanceName = nsInstanceName;
 	}
 
-	public NsInstancesNsInstance nsInstanceName(final String nsInstanceName) {
+	public NsInstance nsInstanceName(final String nsInstanceName) {
 		this.nsInstanceName = nsInstanceName;
 		return this;
 	}
@@ -220,7 +220,7 @@ public class NsInstancesNsInstance {
 		this.nsInstanceDescription = nsInstanceDescription;
 	}
 
-	public NsInstancesNsInstance nsInstanceDescription(final String nsInstanceDescription) {
+	public NsInstance nsInstanceDescription(final String nsInstanceDescription) {
 		this.nsInstanceDescription = nsInstanceDescription;
 		return this;
 	}
@@ -240,7 +240,7 @@ public class NsInstancesNsInstance {
 		this.nsdId = nsdId;
 	}
 
-	public NsInstancesNsInstance nsdId(final String nsdId) {
+	public NsInstance nsdId(final String nsdId) {
 		this.nsdId = nsdId;
 		return this;
 	}
@@ -260,7 +260,7 @@ public class NsInstancesNsInstance {
 		this.nsdInfoId = nsdInfoId;
 	}
 
-	public NsInstancesNsInstance nsdInfoId(final String nsdInfoId) {
+	public NsInstance nsdInfoId(final String nsdInfoId) {
 		this.nsdInfoId = nsdInfoId;
 		return this;
 	}
@@ -280,7 +280,7 @@ public class NsInstancesNsInstance {
 		this.flavourId = flavourId;
 	}
 
-	public NsInstancesNsInstance flavourId(final String flavourId) {
+	public NsInstance flavourId(final String flavourId) {
 		this.flavourId = flavourId;
 		return this;
 	}
@@ -299,12 +299,12 @@ public class NsInstancesNsInstance {
 		this.vnfInstance = vnfInstance;
 	}
 
-	public NsInstancesNsInstance vnfInstance(final List<NsInstancesNsInstanceVnfInstance> vnfInstance) {
+	public NsInstance vnfInstance(final List<NsInstancesNsInstanceVnfInstance> vnfInstance) {
 		this.vnfInstance = vnfInstance;
 		return this;
 	}
 
-	public NsInstancesNsInstance addVnfInstanceItem(final NsInstancesNsInstanceVnfInstance vnfInstanceItem) {
+	public NsInstance addVnfInstanceItem(final NsInstancesNsInstanceVnfInstance vnfInstanceItem) {
 		this.vnfInstance.add(vnfInstanceItem);
 		return this;
 	}
@@ -323,12 +323,12 @@ public class NsInstancesNsInstance {
 		this.pnfInfo = pnfInfo;
 	}
 
-	public NsInstancesNsInstance pnfInfo(final List<NsInstancesNsInstancePnfInfo> pnfInfo) {
+	public NsInstance pnfInfo(final List<NsInstancesNsInstancePnfInfo> pnfInfo) {
 		this.pnfInfo = pnfInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addPnfInfoItem(final NsInstancesNsInstancePnfInfo pnfInfoItem) {
+	public NsInstance addPnfInfoItem(final NsInstancesNsInstancePnfInfo pnfInfoItem) {
 		this.pnfInfo.add(pnfInfoItem);
 		return this;
 	}
@@ -349,12 +349,12 @@ public class NsInstancesNsInstance {
 		this.virtualLinkInfo = virtualLinkInfo;
 	}
 
-	public NsInstancesNsInstance virtualLinkInfo(final List<NsInstancesNsInstanceVirtualLinkInfo> virtualLinkInfo) {
+	public NsInstance virtualLinkInfo(final List<NsInstancesNsInstanceVirtualLinkInfo> virtualLinkInfo) {
 		this.virtualLinkInfo = virtualLinkInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addVirtualLinkInfoItem(final NsInstancesNsInstanceVirtualLinkInfo virtualLinkInfoItem) {
+	public NsInstance addVirtualLinkInfoItem(final NsInstancesNsInstanceVirtualLinkInfo virtualLinkInfoItem) {
 		this.virtualLinkInfo.add(virtualLinkInfoItem);
 		return this;
 	}
@@ -373,12 +373,12 @@ public class NsInstancesNsInstance {
 		this.vnffgInfo = vnffgInfo;
 	}
 
-	public NsInstancesNsInstance vnffgInfo(final List<NsInstancesNsInstanceVnffgInfo> vnffgInfo) {
+	public NsInstance vnffgInfo(final List<NsInstancesNsInstanceVnffgInfo> vnffgInfo) {
 		this.vnffgInfo = vnffgInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addVnffgInfoItem(final NsInstancesNsInstanceVnffgInfo vnffgInfoItem) {
+	public NsInstance addVnffgInfoItem(final NsInstancesNsInstanceVnffgInfo vnffgInfoItem) {
 		this.vnffgInfo.add(vnffgInfoItem);
 		return this;
 	}
@@ -397,12 +397,12 @@ public class NsInstancesNsInstance {
 		this.sapInfo = sapInfo;
 	}
 
-	public NsInstancesNsInstance sapInfo(final List<NsInstancesNsInstanceSapInfo> sapInfo) {
+	public NsInstance sapInfo(final List<NsInstancesNsInstanceSapInfo> sapInfo) {
 		this.sapInfo = sapInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addSapInfoItem(final NsInstancesNsInstanceSapInfo sapInfoItem) {
+	public NsInstance addSapInfoItem(final NsInstancesNsInstanceSapInfo sapInfoItem) {
 		this.sapInfo.add(sapInfoItem);
 		return this;
 	}
@@ -421,12 +421,12 @@ public class NsInstancesNsInstance {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 	}
 
-	public NsInstancesNsInstance nestedNsInstanceId(final List<String> nestedNsInstanceId) {
+	public NsInstance nestedNsInstanceId(final List<String> nestedNsInstanceId) {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 		return this;
 	}
 
-	public NsInstancesNsInstance addNestedNsInstanceIdItem(final String nestedNsInstanceIdItem) {
+	public NsInstance addNestedNsInstanceIdItem(final String nestedNsInstanceIdItem) {
 		this.nestedNsInstanceId.add(nestedNsInstanceIdItem);
 		return this;
 	}
@@ -451,7 +451,7 @@ public class NsInstancesNsInstance {
 		this.nsState = nsState;
 	}
 
-	public NsInstancesNsInstance nsState(final NsStateEnum nsState) {
+	public NsInstance nsState(final NsStateEnum nsState) {
 		this.nsState = nsState;
 		return this;
 	}
@@ -472,12 +472,12 @@ public class NsInstancesNsInstance {
 		this.nsScaleStatus = nsScaleStatus;
 	}
 
-	public NsInstancesNsInstance nsScaleStatus(final List<NsInstancesNsInstanceNsScaleStatus> nsScaleStatus) {
+	public NsInstance nsScaleStatus(final List<NsInstancesNsInstanceNsScaleStatus> nsScaleStatus) {
 		this.nsScaleStatus = nsScaleStatus;
 		return this;
 	}
 
-	public NsInstancesNsInstance addNsScaleStatusItem(final NsInstancesNsInstanceNsScaleStatus nsScaleStatusItem) {
+	public NsInstance addNsScaleStatusItem(final NsInstancesNsInstanceNsScaleStatus nsScaleStatusItem) {
 		this.nsScaleStatus.add(nsScaleStatusItem);
 		return this;
 	}
@@ -498,12 +498,12 @@ public class NsInstancesNsInstance {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 	}
 
-	public NsInstancesNsInstance additionalAffinityOrAntiAffinityRule(final List<NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule) {
+	public NsInstance additionalAffinityOrAntiAffinityRule(final List<NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule) {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 		return this;
 	}
 
-	public NsInstancesNsInstance addAdditionalAffinityOrAntiAffinityRuleItem(final NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule additionalAffinityOrAntiAffinityRuleItem) {
+	public NsInstance addAdditionalAffinityOrAntiAffinityRuleItem(final NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule additionalAffinityOrAntiAffinityRuleItem) {
 		this.additionalAffinityOrAntiAffinityRule.add(additionalAffinityOrAntiAffinityRuleItem);
 		return this;
 	}
@@ -522,7 +522,7 @@ public class NsInstancesNsInstance {
 		this.links = links;
 	}
 
-	public NsInstancesNsInstance links(final NsInstancesNsInstanceLinks links) {
+	public NsInstance links(final NsInstancesNsInstanceLinks links) {
 		this.links = links;
 		return this;
 	}

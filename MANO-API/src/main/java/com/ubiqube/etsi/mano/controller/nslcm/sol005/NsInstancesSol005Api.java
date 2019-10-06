@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageState
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdHealPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdInstantiatePostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceIdScalePostQuery;
@@ -90,7 +90,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsInstancesGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsInstancesNsInstance> result = nsInstanceRepository.query(filter);
+		final List<NsInstance> result = nsInstanceRepository.query(filter);
 		result.stream().forEach(x -> x.setLinks(makeLink(x.getId())));
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
@@ -108,7 +108,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
-		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureNotInstantiated(nsInstance);
 
 		nsInstanceRepository.delete(nsInstanceId);
@@ -124,7 +124,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
 		final InlineResponse200 resp = new InlineResponse200();
-		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		nsInstance.setLinks(makeLink(nsInstanceId));
 		resp.setNsInstance(nsInstance);
 		return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -140,8 +140,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final NsInstancesNsInstanceIdHealPostQuery body) {
-		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final NsInstancesNsInstanceIdHealPostQuery body) {
+		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.HEAL);
 		lcmOpOccsRepository.save(lcmOpOccs);
@@ -155,8 +155,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
-		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final NsInstancesNsInstanceIdInstantiatePostQuery body) {
+		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureNotInstantiated(nsInstancesNsInstance);
 
 		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, new HashMap<String, Object>());
@@ -172,8 +172,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdScalePostQuery body) {
-		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdScalePostQuery body) {
+		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.SCALE);
 		lcmOpOccsRepository.save(lcmOpOccs);
@@ -192,8 +192,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdTerminatePostQuery body) {
-		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdTerminatePostQuery body) {
+		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 
 		eventManager.sendAction(ActionType.NS_TERMINATE, nsInstanceId, new HashMap<String, Object>());
@@ -209,8 +209,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstancesNsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdUpdatePostQuery body) {
-		final NsInstancesNsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final NsInstancesNsInstanceIdUpdatePostQuery body) {
+		final NsInstance nsInstancesNsInstance = nsInstanceRepository.get(nsInstanceId);
 		ensureInstantiated(nsInstancesNsInstance);
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, LcmOperationTypeEnum.UPDATE);
 		lcmOpOccsRepository.save(lcmOpOccs);
@@ -235,7 +235,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);
 
-		final NsInstancesNsInstance nsInstancesNsInstance = NsInstanceFactory.createNsInstancesNsInstance(req.getNsdId(), req.getNsDescription(), req.getNsName(), nsd.getNestedNsdInfoIds());
+		final NsInstance nsInstancesNsInstance = NsInstanceFactory.createNsInstancesNsInstance(req.getNsdId(), req.getNsDescription(), req.getNsName(), nsd.getNestedNsdInfoIds());
 		nsInstanceRepository.save(nsInstancesNsInstance);
 
 		final List<NsInstancesNsInstanceVnfInstance> vnfInstances = new ArrayList<>();

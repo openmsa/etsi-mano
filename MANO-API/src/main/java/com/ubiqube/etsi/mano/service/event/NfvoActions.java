@@ -17,8 +17,8 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance.NsStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance.NsStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationStateEnum;
@@ -55,7 +55,7 @@ public class NfvoActions {
 
 	public void nsTerminate(final String nsInstanceId) {
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
-		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
@@ -120,7 +120,7 @@ public class NfvoActions {
 
 	public void nsInstantiate(final String nsInstanceId) {
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
-		final NsInstancesNsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
