@@ -11,35 +11,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * InlineResponse200
+ * InlineResponse2001
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
 
-public class InlineResponse200 {
-	@JsonProperty("NsInstance")
-	private NsInstance nsInstance = null;
+public class InlineResponse2001 {
+	@JsonProperty("NsLcmOpOcc")
+	private NsLcmOpOcc nsLcmOpOcc = null;
 
-	public InlineResponse200 nsInstance(final NsInstance nsInstance) {
-		this.nsInstance = nsInstance;
+	public InlineResponse2001 nsLcmOpOcc(final NsLcmOpOcc nsLcmOpOcc) {
+		this.nsLcmOpOcc = nsLcmOpOcc;
 		return this;
 	}
 
 	/**
-	 * Get nsInstance
+	 * Get nsLcmOpOcc
 	 * 
-	 * @return nsInstance
+	 * @return nsLcmOpOcc
 	 **/
 	@ApiModelProperty(value = "")
 
 	@Valid
 
-	public NsInstance getNsInstance() {
-		return nsInstance;
+	public NsLcmOpOcc getNsLcmOpOcc() {
+		return nsLcmOpOcc;
 	}
 
-	public void setNsInstance(final NsInstance nsInstance) {
-		this.nsInstance = nsInstance;
+	public void setNsLcmOpOcc(final NsLcmOpOcc nsLcmOpOcc) {
+		this.nsLcmOpOcc = nsLcmOpOcc;
 	}
 
 	@Override
@@ -50,21 +50,21 @@ public class InlineResponse200 {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		final InlineResponse200 inlineResponse200 = (InlineResponse200) o;
-		return Objects.equals(this.nsInstance, inlineResponse200.nsInstance);
+		final InlineResponse2001 inlineResponse2001 = (InlineResponse2001) o;
+		return Objects.equals(this.nsLcmOpOcc, inlineResponse2001.nsLcmOpOcc);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(nsInstance);
+		return Objects.hash(nsLcmOpOcc);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class InlineResponse200 {\n");
+		sb.append("class InlineResponse2001 {\n");
 
-		sb.append("    nsInstance: ").append(toIndentedString(nsInstance)).append("\n");
+		sb.append("    nsLcmOpOcc: ").append(toIndentedString(nsLcmOpOcc)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
