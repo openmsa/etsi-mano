@@ -1,20 +1,19 @@
 package com.ubiqube.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import com.ubiqube.etsi.mano.service.RepositoryServiceRest;
-
 import com.ubiqube.api.entities.repository.RepositoryElement;
-
+import com.ubiqube.etsi.mano.service.RepositoryServiceRest;
+import com.ubiqube.etsi.mano.service.UbiRest;
 
 public class RepositoryServiceRestTest {
-	RepositoryServiceRest repositoryServiceRest = new RepositoryServiceRest();
+	RepositoryServiceRest repositoryServiceRest = new RepositoryServiceRest(new UbiRest());
 
 	@Test
 	public void testDoSearch() throws Exception {
@@ -38,7 +37,7 @@ public class RepositoryServiceRestTest {
 	@Test
 	public void testGetRepositoryElementContent() throws Exception {
 		final RepositoryElement element = repositoryServiceRest.getElement(
-			"Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php");
+				"Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php");
 		final byte res[] = repositoryServiceRest.getRepositoryElementContent(element);
 		assertNotNull("The element must not be null", res);
 		assertTrue("The element must be PHP code", new String(res).startsWith("<?php"));
