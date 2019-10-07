@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 
 public class NsInstanceIndex {
 	private Map<String, NsLcmOpOccsIndex> lcmOpOccsIndex = new HashMap<>();
@@ -26,7 +26,7 @@ public class NsInstanceIndex {
 		return lcmOpOccsIndex.get(lcmOpOccsId);
 	}
 
-	public void addLcmOpOccs(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs) {
+	public void addLcmOpOccs(final NsLcmOpOcc lcmOpOccs) {
 		final NsLcmOpOccsIndex lcmIdx = new NsLcmOpOccsIndex();
 		lcmIdx.setLcmOpOccsId(lcmOpOccs.getId());
 		lcmOpOccsIndex.put(lcmOpOccs.getId(), lcmIdx);

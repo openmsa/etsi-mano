@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,7 +38,7 @@ public class ParamsForNestedNs {
 
 	/**
 	 * Identifier of a NsProfile to which the additional parameters apply.
-	 * 
+	 *
 	 * @return nsProfileId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of a NsProfile to which the additional parameters apply. ")
@@ -66,7 +67,7 @@ public class ParamsForNestedNs {
 
 	/**
 	 * Additional parameters that are to be applied on a per nested NS instance.
-	 * 
+	 *
 	 * @return additionalParam
 	 **/
 	@ApiModelProperty(value = "Additional parameters that are to be applied on a per nested NS instance. ")

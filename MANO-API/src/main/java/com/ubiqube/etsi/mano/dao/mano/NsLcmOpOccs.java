@@ -18,10 +18,10 @@ import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.CancelModeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccResourceChanges;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.CancelModeType;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccResourceChanges;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -45,7 +45,7 @@ public class NsLcmOpOccs implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private LcmOperationTypeEnum lcmOperationType = null;
+	private NsLcmOpType lcmOperationType = null;
 
 	@Field
 	private Date startTime = null;
@@ -64,14 +64,14 @@ public class NsLcmOpOccs implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private CancelModeEnum cancelMode = null;
+	private CancelModeType cancelMode = null;
 
 	private FailureDetails error = null;
 
 	private String externalProcessId;
 
 	@Transient
-	private NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges = null;
+	private NsLcmOpOccResourceChanges resourceChanges = null;
 
 	@Override
 	public UUID getId() {
@@ -106,11 +106,11 @@ public class NsLcmOpOccs implements BaseEntity {
 		this.nsInstance = nsInstanceId;
 	}
 
-	public LcmOperationTypeEnum getLcmOperationType() {
+	public NsLcmOpType getLcmOperationType() {
 		return lcmOperationType;
 	}
 
-	public void setLcmOperationType(final LcmOperationTypeEnum lcmOperationType) {
+	public void setLcmOperationType(final NsLcmOpType lcmOperationType) {
 		this.lcmOperationType = lcmOperationType;
 	}
 
@@ -146,11 +146,11 @@ public class NsLcmOpOccs implements BaseEntity {
 		this.isCancelPending = isCancelPending;
 	}
 
-	public CancelModeEnum getCancelMode() {
+	public CancelModeType getCancelMode() {
 		return cancelMode;
 	}
 
-	public void setCancelMode(final CancelModeEnum cancelMode) {
+	public void setCancelMode(final CancelModeType cancelMode) {
 		this.cancelMode = cancelMode;
 	}
 
@@ -162,11 +162,11 @@ public class NsLcmOpOccs implements BaseEntity {
 		this.error = error;
 	}
 
-	public NsLcmOpOccsNsLcmOpOccResourceChanges getResourceChanges() {
+	public NsLcmOpOccResourceChanges getResourceChanges() {
 		return resourceChanges;
 	}
 
-	public void setResourceChanges(final NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges) {
+	public void setResourceChanges(final NsLcmOpOccResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
 	}
 

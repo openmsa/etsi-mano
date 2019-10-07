@@ -10,23 +10,20 @@
  * Do not edit the class manually.
  */
 
-package com.ubiqube.etsi.mano.model.nslcm.sol003;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents information about a link port of an external VL, i.e. a
- * port providing connectivity for the VNF to an NS VL.
+ * VnfLinkPortInfo
  */
-@ApiModel(description = "This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL.  ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
-public class ExtLinkPortInfo {
+public class VnfLinkPortInfo {
 	@JsonProperty("id")
 	private String id = null;
 
@@ -36,7 +33,7 @@ public class ExtLinkPortInfo {
 	@JsonProperty("cpInstanceId")
 	private String cpInstanceId = null;
 
-	public ExtLinkPortInfo id(final String id) {
+	public VnfLinkPortInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -58,18 +55,18 @@ public class ExtLinkPortInfo {
 		this.id = id;
 	}
 
-	public ExtLinkPortInfo resourceHandle(final ResourceHandle resourceHandle) {
+	public VnfLinkPortInfo resourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 		return this;
 	}
 
 	/**
-	 * Reference to the virtualised resource realizing this link port.
+	 * Reference to the virtualised network resource realizing this link port.
 	 *
 	 * @return resourceHandle
 	 **/
 	@JsonProperty("resourceHandle")
-	@ApiModelProperty(required = true, value = "Reference to the virtualised resource realizing this link port. ")
+	@ApiModelProperty(required = true, value = "Reference to the virtualised network resource realizing this link port. ")
 	@NotNull
 	public ResourceHandle getResourceHandle() {
 		return resourceHandle;
@@ -79,21 +76,28 @@ public class ExtLinkPortInfo {
 		this.resourceHandle = resourceHandle;
 	}
 
-	public ExtLinkPortInfo cpInstanceId(final String cpInstanceId) {
+	public VnfLinkPortInfo cpInstanceId(final String cpInstanceId) {
 		this.cpInstanceId = cpInstanceId;
 		return this;
 	}
 
 	/**
-	 * Identifier of the external CP of the VNF connected to this link port. There
-	 * shall be at most one link port associated with any external connection point
-	 * instance. The value refers to an \&quot;extCpInfo\&quot; item in the
-	 * VnfInstance.
+	 * When the link port is used for external connectivity by the VNF, this
+	 * attribute represents the identifier of the external CP of the VNF to be
+	 * connected to this link port. When the link port is used for internal
+	 * connectivity in the VNF, this attribute represents the VNFC CP to be
+	 * connected to this link port. Shall be present when the link port is used for
+	 * external connectivity by the VNF. May be present if used to reference a VNFC
+	 * CP instance. There shall be at most one link port associated with any
+	 * external connection point instance or internal connection point (i.e. VNFC
+	 * CP) instance. The value refers to an \&quot;extCpInfo\&quot; item in the
+	 * VnfInstance or a \&quot;vnfcCpInfo\&quot; item of a
+	 * \&quot;vnfcResouceInfo\&quot; item in the VnfInstance.
 	 *
 	 * @return cpInstanceId
 	 **/
 	@JsonProperty("cpInstanceId")
-	@ApiModelProperty(value = "Identifier of the external CP of the VNF connected to this link port. There shall be at most one link port associated with any external connection point instance. The value refers to an \"extCpInfo\" item in the VnfInstance. ")
+	@ApiModelProperty(value = "When the link port is used for external connectivity by the VNF, this attribute represents the identifier of the external CP of the VNF to be connected to this link port. When the link port is used for internal connectivity in the VNF, this attribute represents the VNFC CP to be connected to this link port. Shall be present when the link port is used for external connectivity by the VNF. May be present if used to reference a VNFC CP instance. There shall be at most one link port associated with any external connection point instance or internal connection point (i.e. VNFC CP) instance. The value refers to an \"extCpInfo\" item in the VnfInstance or a \"vnfcCpInfo\" item of a \"vnfcResouceInfo\" item in the VnfInstance. ")
 	public String getCpInstanceId() {
 		return cpInstanceId;
 	}
@@ -105,7 +109,7 @@ public class ExtLinkPortInfo {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class ExtLinkPortInfo {\n");
+		sb.append("class VnfLinkPortInfo {\n");
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    resourceHandle: ").append(toIndentedString(resourceHandle)).append("\n");

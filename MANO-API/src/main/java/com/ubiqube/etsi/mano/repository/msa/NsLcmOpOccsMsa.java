@@ -13,13 +13,14 @@ import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpOccsIndex;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Profile("!RDBMS")
 @Service
-public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOpOcc> implements NsLcmOpOccsRepository {
+public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOcc> implements NsLcmOpOccsRepository {
+
 	private final NsdPackageMsa nsdPackageMsa;
 
 	public NsLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final NsdPackageMsa _nsdPackageMsa) {
@@ -28,7 +29,7 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOp
 	}
 
 	@Override
-	String setId(final NsLcmOpOccsNsLcmOpOcc _entity) {
+	String setId(final NsLcmOpOcc _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
@@ -49,12 +50,12 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOp
 
 	@Override
 	Class<?> getClazz() {
-		return NsLcmOpOccsNsLcmOpOcc.class;
+		return NsLcmOpOcc.class;
 	}
 
 	@Override
-	public NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final LcmOperationTypeEnum state) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, state);
+	public NsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final NsLcmOpType state) {
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, state);
 		save(lcmOpOccs);
 		// Add newly created instance to Indexes.json
 		final NsInstanceIndex nsInstanceIndex = nsdPackageMsa.loadObject(nsInstanceId, "indexes.json", NsInstanceIndex.class);
@@ -65,7 +66,7 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOp
 
 	@Override
 	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = get(lcmOpOccsId);
+		final NsLcmOpOcc lcmOpOccs = get(lcmOpOccsId);
 		final NsInstanceIndex nsInstanceIndex = nsdPackageMsa.loadObject(lcmOpOccs.getNsInstanceId(), "indexes.json", NsInstanceIndex.class);
 		final NsLcmOpOccsIndex lcmIdx = nsInstanceIndex.getLcmOpOccs(lcmOpOccsId);
 		lcmIdx.setProcessId(processId);

@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,14 +56,14 @@ public class VnfInstanceLinks {
 	@JsonProperty("changeExtConn")
 	private Link changeExtConn = null;
 
-	public VnfInstanceLinks self(Link self) {
+	public VnfInstanceLinks self(final Link self) {
 		this.self = self;
 		return this;
 	}
 
 	/**
 	 * URI of this resource.
-	 * 
+	 *
 	 * @return self
 	 **/
 	@JsonProperty("self")
@@ -72,18 +73,18 @@ public class VnfInstanceLinks {
 		return self;
 	}
 
-	public void setSelf(Link self) {
+	public void setSelf(final Link self) {
 		this.self = self;
 	}
 
-	public VnfInstanceLinks indicators(Link indicators) {
+	public VnfInstanceLinks indicators(final Link indicators) {
 		this.indicators = indicators;
 		return this;
 	}
 
 	/**
 	 * Indicators related to this VNF instance, if applicable.
-	 * 
+	 *
 	 * @return indicators
 	 **/
 	@JsonProperty("indicators")
@@ -92,11 +93,11 @@ public class VnfInstanceLinks {
 		return indicators;
 	}
 
-	public void setIndicators(Link indicators) {
+	public void setIndicators(final Link indicators) {
 		this.indicators = indicators;
 	}
 
-	public VnfInstanceLinks instantiate(Link instantiate) {
+	public VnfInstanceLinks instantiate(final Link instantiate) {
 		this.instantiate = instantiate;
 		return this;
 	}
@@ -105,7 +106,7 @@ public class VnfInstanceLinks {
 	 * Link to the \&quot;instantiate\&quot; task resource, if the related operation
 	 * is possible based on the current status of this VNF instance resource (i.e.
 	 * VNF instance in NOT_INSTANTIATED state).
-	 * 
+	 *
 	 * @return instantiate
 	 **/
 	@JsonProperty("instantiate")
@@ -114,11 +115,11 @@ public class VnfInstanceLinks {
 		return instantiate;
 	}
 
-	public void setInstantiate(Link instantiate) {
+	public void setInstantiate(final Link instantiate) {
 		this.instantiate = instantiate;
 	}
 
-	public VnfInstanceLinks terminate(Link terminate) {
+	public VnfInstanceLinks terminate(final Link terminate) {
 		this.terminate = terminate;
 		return this;
 	}
@@ -127,7 +128,7 @@ public class VnfInstanceLinks {
 	 * Link to the \&quot;terminate\&quot; task resource, if the related operation
 	 * is possible based on the current status of this VNF instance resource (i.e.
 	 * VNF instance is in INSTANTIATED state).
-	 * 
+	 *
 	 * @return terminate
 	 **/
 	@JsonProperty("terminate")
@@ -136,11 +137,11 @@ public class VnfInstanceLinks {
 		return terminate;
 	}
 
-	public void setTerminate(Link terminate) {
+	public void setTerminate(final Link terminate) {
 		this.terminate = terminate;
 	}
 
-	public VnfInstanceLinks scale(Link scale) {
+	public VnfInstanceLinks scale(final Link scale) {
 		this.scale = scale;
 		return this;
 	}
@@ -149,7 +150,7 @@ public class VnfInstanceLinks {
 	 * Link to the \&quot;scale\&quot; task resource, if the related operation is
 	 * supported for this VNF instance, and is possible based on the current status
 	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
-	 * 
+	 *
 	 * @return scale
 	 **/
 	@JsonProperty("scale")
@@ -158,11 +159,11 @@ public class VnfInstanceLinks {
 		return scale;
 	}
 
-	public void setScale(Link scale) {
+	public void setScale(final Link scale) {
 		this.scale = scale;
 	}
 
-	public VnfInstanceLinks scaleToLevel(Link scaleToLevel) {
+	public VnfInstanceLinks scaleToLevel(final Link scaleToLevel) {
 		this.scaleToLevel = scaleToLevel;
 		return this;
 	}
@@ -172,7 +173,7 @@ public class VnfInstanceLinks {
 	 * operation is supported for this VNF instance, and is possible based on the
 	 * current status of this VNF instance resource (i.e. VNF instance is in
 	 * INSTANTIATED state).
-	 * 
+	 *
 	 * @return scaleToLevel
 	 **/
 	@JsonProperty("scaleToLevel")
@@ -181,11 +182,11 @@ public class VnfInstanceLinks {
 		return scaleToLevel;
 	}
 
-	public void setScaleToLevel(Link scaleToLevel) {
+	public void setScaleToLevel(final Link scaleToLevel) {
 		this.scaleToLevel = scaleToLevel;
 	}
 
-	public VnfInstanceLinks changeFlavour(Link changeFlavour) {
+	public VnfInstanceLinks changeFlavour(final Link changeFlavour) {
 		this.changeFlavour = changeFlavour;
 		return this;
 	}
@@ -195,7 +196,7 @@ public class VnfInstanceLinks {
 	 * operation is supported for this VNF instance, and is possible based on the
 	 * current status of this VNF instance resource (i.e. VNF instance is in
 	 * INSTANTIATED state).
-	 * 
+	 *
 	 * @return changeFlavour
 	 **/
 	@JsonProperty("changeFlavour")
@@ -204,11 +205,11 @@ public class VnfInstanceLinks {
 		return changeFlavour;
 	}
 
-	public void setChangeFlavour(Link changeFlavour) {
+	public void setChangeFlavour(final Link changeFlavour) {
 		this.changeFlavour = changeFlavour;
 	}
 
-	public VnfInstanceLinks heal(Link heal) {
+	public VnfInstanceLinks heal(final Link heal) {
 		this.heal = heal;
 		return this;
 	}
@@ -217,7 +218,7 @@ public class VnfInstanceLinks {
 	 * Link to the \&quot;heal\&quot; task resource, if the related operation is
 	 * supported for this VNF instance, and is possible based on the current status
 	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
-	 * 
+	 *
 	 * @return heal
 	 **/
 	@JsonProperty("heal")
@@ -226,11 +227,11 @@ public class VnfInstanceLinks {
 		return heal;
 	}
 
-	public void setHeal(Link heal) {
+	public void setHeal(final Link heal) {
 		this.heal = heal;
 	}
 
-	public VnfInstanceLinks operate(Link operate) {
+	public VnfInstanceLinks operate(final Link operate) {
 		this.operate = operate;
 		return this;
 	}
@@ -239,7 +240,7 @@ public class VnfInstanceLinks {
 	 * Link to the \&quot;operate\&quot; task resource, if the related operation is
 	 * supported for this VNF instance, and is possible based on the current status
 	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
-	 * 
+	 *
 	 * @return operate
 	 **/
 	@JsonProperty("operate")
@@ -248,11 +249,11 @@ public class VnfInstanceLinks {
 		return operate;
 	}
 
-	public void setOperate(Link operate) {
+	public void setOperate(final Link operate) {
 		this.operate = operate;
 	}
 
-	public VnfInstanceLinks changeExtConn(Link changeExtConn) {
+	public VnfInstanceLinks changeExtConn(final Link changeExtConn) {
 		this.changeExtConn = changeExtConn;
 		return this;
 	}
@@ -261,7 +262,7 @@ public class VnfInstanceLinks {
 	 * Link to the \&quot;change_ext_conn\&quot; task resource, if the related
 	 * operation is possible based on the current status of this VNF instance
 	 * resource (i.e. VNF instance is in INSTANTIATED state).
-	 * 
+	 *
 	 * @return changeExtConn
 	 **/
 	@JsonProperty("changeExtConn")
@@ -270,7 +271,7 @@ public class VnfInstanceLinks {
 		return changeExtConn;
 	}
 
-	public void setChangeExtConn(Link changeExtConn) {
+	public void setChangeExtConn(final Link changeExtConn) {
 		this.changeExtConn = changeExtConn;
 	}
 
@@ -297,7 +298,7 @@ public class VnfInstanceLinks {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

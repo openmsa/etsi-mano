@@ -7,7 +7,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboarding
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -95,13 +95,13 @@ public final class Constants {
 	}
 
 	public static void ensureNotInstantiated(final NsInstance nsInstance) {
-		if (InstantiationStateEnum.INSTANTIATED == InstantiationStateEnum.fromValue(nsInstance.getNsState())) {
+		if (InstantiationStateEnum.INSTANTIATED == nsInstance.getNsState()) {
 			throw new ConflictException("The Ns instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
 
 	public static void ensureInstantiated(final NsInstance nsInstance) {
-		if (InstantiationStateEnum.INSTANTIATED != InstantiationStateEnum.fromValue(nsInstance.getNsState())) {
+		if (InstantiationStateEnum.INSTANTIATED != nsInstance.getNsState()) {
 			throw new GenericException("The Ns Instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}

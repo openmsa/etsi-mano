@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -51,7 +52,7 @@ public class ChangeVnfFlavourData {
 
 	/**
 	 * Identifier of the VNF instance to be modified.
-	 * 
+	 *
 	 * @return vnfInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF instance to be modified. ")
@@ -72,7 +73,7 @@ public class ChangeVnfFlavourData {
 
 	/**
 	 * Identifier of the VNF deployment flavor to be instantiated.
-	 * 
+	 *
 	 * @return newFlavourId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavor to be instantiated. ")
@@ -95,7 +96,7 @@ public class ChangeVnfFlavourData {
 	 * Identifier of the instantiation level of the deployment flavor to be
 	 * instantiated. If not present, the default instantiation level as declared in
 	 * the VNFD is instantiated.
-	 * 
+	 *
 	 * @return instantiationLevelId
 	 **/
 	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavor to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
@@ -123,7 +124,7 @@ public class ChangeVnfFlavourData {
 
 	/**
 	 * Information about external VLs to connect the VNF to.
-	 * 
+	 *
 	 * @return extVirtualLinks
 	 **/
 	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
@@ -153,7 +154,7 @@ public class ChangeVnfFlavourData {
 
 	/**
 	 * information about internal VLs that are managed by NFVO.
-	 * 
+	 *
 	 * @return extManagedVirtualLinks
 	 **/
 	@ApiModelProperty(value = "information about internal VLs that are managed by NFVO. ")
@@ -177,7 +178,7 @@ public class ChangeVnfFlavourData {
 	 * Additional input parameters for the flavor change process, specific to the
 	 * VNF being modified, as declared in the VNFD as part of
 	 * \"ChangeVnfFlavourOpConfig\".
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@ApiModelProperty(value = "Additional input parameters for the flavor change process, specific to the VNF being modified, as declared in the VNFD as part of \"ChangeVnfFlavourOpConfig\". ")

@@ -8,10 +8,10 @@ import java.util.Set;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 /**
@@ -25,7 +25,7 @@ public class ClassPathConverter {
 
 	public ClassPathConverter() {
 		path.put(NsDescriptorsNsdInfo.class, "nsd");
-		path.put(NsLcmOpOccsNsLcmOpOcc.class, "nsd-lcm-op-occs");
+		path.put(NsLcmOpOcc.class, "nsd-lcm-op-occs");
 		path.put(NsInstance.class, "nsd-instances");
 
 		path.put(VnfPkgInfo.class, "vnf-packages");

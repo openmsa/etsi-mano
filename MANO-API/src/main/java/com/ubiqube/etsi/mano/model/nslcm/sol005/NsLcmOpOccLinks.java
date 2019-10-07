@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -48,7 +49,7 @@ public class NsLcmOpOccLinks {
 
 	/**
 	 * URI of this resource.
-	 * 
+	 *
 	 * @return self
 	 **/
 	@ApiModelProperty(required = true, value = "URI of this resource. ")
@@ -71,7 +72,7 @@ public class NsLcmOpOccLinks {
 
 	/**
 	 * Link to the NS instance that the operation applies to.
-	 * 
+	 *
 	 * @return nsInstance
 	 **/
 	@ApiModelProperty(required = true, value = "Link to the NS instance that the operation applies to. ")
@@ -95,7 +96,7 @@ public class NsLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \"cancel\" operation for this
 	 * LCM operation occurrence, if cancelling is currently allowed.
-	 * 
+	 *
 	 * @return cancel
 	 **/
 	@ApiModelProperty(value = "Link to the task resource that represents the \"cancel\" operation for this LCM operation occurrence, if cancelling is currently allowed. ")
@@ -118,7 +119,7 @@ public class NsLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \"cancel\" operation for this
 	 * LCM operation occurrence, if cancelling is currently allowed.
-	 * 
+	 *
 	 * @return retry
 	 **/
 	@ApiModelProperty(value = "Link to the task resource that represents the \"cancel\" operation for this LCM operation occurrence, if cancelling is currently allowed. ")
@@ -141,7 +142,7 @@ public class NsLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \"rollback\" operation for this
 	 * LCM operation occurrence, if rolling back is currently allowed.
-	 * 
+	 *
 	 * @return rollback
 	 **/
 	@ApiModelProperty(value = "Link to the task resource that represents the \"rollback\" operation for this LCM operation occurrence, if rolling back is currently allowed. ")
@@ -164,7 +165,7 @@ public class NsLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \"continue\" operation for this
 	 * LCM operation occurrence, if rolling back is currently allowed.
-	 * 
+	 *
 	 * @return _continue
 	 **/
 	@ApiModelProperty(value = "Link to the task resource that represents the \"continue\" operation for this LCM operation occurrence, if rolling back is currently allowed. ")
@@ -187,7 +188,7 @@ public class NsLcmOpOccLinks {
 	/**
 	 * Link to the task resource that represents the \"fail\" operation for this LCM
 	 * operation occurrence, if rolling back is currently allowed.
-	 * 
+	 *
 	 * @return fail
 	 **/
 	@ApiModelProperty(value = "Link to the task resource that represents the \"fail\" operation for this LCM operation occurrence, if rolling back is currently allowed. ")

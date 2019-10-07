@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
@@ -121,12 +121,12 @@ public class VnfInstanceLcm {
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
-		addVnfOperation(processId, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
+		addVnfOperation(processId, vnfInstanceId, NsLcmOpType.TERMINATE);
 		vnfInstancesRepository.save(vnfInstance);
 	}
 
-	private NsLcmOpOccsNsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final LcmOperationTypeEnum _lcmOperationType) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
+	private NsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final NsLcmOpType _lcmOperationType) {
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		lcmOpOccsMsa.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), _processId);
 		return lcmOpOccs;

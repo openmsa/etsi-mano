@@ -10,46 +10,45 @@
  * Do not edit the class manually.
  */
 
-package com.ubiqube.etsi.mano.model.nslcm.sol003;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * ExtVirtualLinkInfo
+ * This type represents information about a link port of an external VL, i.e. a
+ * port providing connectivity for the VNF to an NS VL.
  */
+@ApiModel(description = "This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL.  ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
-public class ExtVirtualLinkInfo {
+public class ExtLinkPortInfo {
 	@JsonProperty("id")
 	private String id = null;
 
 	@JsonProperty("resourceHandle")
 	private ResourceHandle resourceHandle = null;
 
-	@JsonProperty("extLinkPorts")
-	private List<ExtLinkPortInfo> extLinkPorts = null;
+	@JsonProperty("cpInstanceId")
+	private String cpInstanceId = null;
 
-	public ExtVirtualLinkInfo id(final String id) {
+	public ExtLinkPortInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
-	 * Identifier of the external VL and the related external VL information
-	 * instance. The identifier is assigned by the NFV-MANO entity that manages this
-	 * VL instance.
+	 * Identifier of this link port as provided by the entity that has created the
+	 * link port.
 	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
+	@ApiModelProperty(required = true, value = "Identifier of this link port as provided by the entity that has created the link port. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -59,18 +58,18 @@ public class ExtVirtualLinkInfo {
 		this.id = id;
 	}
 
-	public ExtVirtualLinkInfo resourceHandle(final ResourceHandle resourceHandle) {
+	public ExtLinkPortInfo resourceHandle(final ResourceHandle resourceHandle) {
 		this.resourceHandle = resourceHandle;
 		return this;
 	}
 
 	/**
-	 * Reference to the resource realizing this VL.
+	 * Reference to the virtualised resource realizing this link port.
 	 *
 	 * @return resourceHandle
 	 **/
 	@JsonProperty("resourceHandle")
-	@ApiModelProperty(required = true, value = "Reference to the resource realizing this VL. ")
+	@ApiModelProperty(required = true, value = "Reference to the virtualised resource realizing this link port. ")
 	@NotNull
 	public ResourceHandle getResourceHandle() {
 		return resourceHandle;
@@ -80,42 +79,37 @@ public class ExtVirtualLinkInfo {
 		this.resourceHandle = resourceHandle;
 	}
 
-	public ExtVirtualLinkInfo extLinkPorts(final List<ExtLinkPortInfo> extLinkPorts) {
-		this.extLinkPorts = extLinkPorts;
-		return this;
-	}
-
-	public ExtVirtualLinkInfo addExtLinkPortsItem(final ExtLinkPortInfo extLinkPortsItem) {
-		if (this.extLinkPorts == null) {
-			this.extLinkPorts = new ArrayList<>();
-		}
-		this.extLinkPorts.add(extLinkPortsItem);
+	public ExtLinkPortInfo cpInstanceId(final String cpInstanceId) {
+		this.cpInstanceId = cpInstanceId;
 		return this;
 	}
 
 	/**
-	 * Link ports of this VL.
+	 * Identifier of the external CP of the VNF connected to this link port. There
+	 * shall be at most one link port associated with any external connection point
+	 * instance. The value refers to an \&quot;extCpInfo\&quot; item in the
+	 * VnfInstance.
 	 *
-	 * @return extLinkPorts
+	 * @return cpInstanceId
 	 **/
-	@JsonProperty("extLinkPorts")
-	@ApiModelProperty(value = "Link ports of this VL. ")
-	public List<ExtLinkPortInfo> getExtLinkPorts() {
-		return extLinkPorts;
+	@JsonProperty("cpInstanceId")
+	@ApiModelProperty(value = "Identifier of the external CP of the VNF connected to this link port. There shall be at most one link port associated with any external connection point instance. The value refers to an \"extCpInfo\" item in the VnfInstance. ")
+	public String getCpInstanceId() {
+		return cpInstanceId;
 	}
 
-	public void setExtLinkPorts(final List<ExtLinkPortInfo> extLinkPorts) {
-		this.extLinkPorts = extLinkPorts;
+	public void setCpInstanceId(final String cpInstanceId) {
+		this.cpInstanceId = cpInstanceId;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class ExtVirtualLinkInfo {\n");
+		sb.append("class ExtLinkPortInfo {\n");
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    resourceHandle: ").append(toIndentedString(resourceHandle)).append("\n");
-		sb.append("    extLinkPorts: ").append(toIndentedString(extLinkPorts)).append("\n");
+		sb.append("    cpInstanceId: ").append(toIndentedString(cpInstanceId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

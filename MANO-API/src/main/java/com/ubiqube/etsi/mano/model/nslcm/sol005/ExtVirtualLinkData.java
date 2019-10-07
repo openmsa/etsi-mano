@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.VnfExtCpData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,7 +51,7 @@ public class ExtVirtualLinkData {
 
 	/**
 	 * The identifier of the external VL instance, if provided.
-	 * 
+	 *
 	 * @return extVirtualLinkId
 	 **/
 	@ApiModelProperty(value = "The identifier of the external VL instance, if provided. ")
@@ -72,7 +73,7 @@ public class ExtVirtualLinkData {
 	 * Identifier of the VIM that manages this resource. This attribute shall only
 	 * be supported and present if VNFrelated resource management in direct mode is
 	 * applicable.
-	 * 
+	 *
 	 * @return vimId
 	 **/
 	@ApiModelProperty(value = "Identifier of the VIM that manages this resource. This attribute shall only be supported and present if VNFrelated resource management in direct mode is applicable. ")
@@ -95,7 +96,7 @@ public class ExtVirtualLinkData {
 	 * attribute shall only be supported and present if VNF-related resource
 	 * management in indirect mode is applicable. The identification scheme is
 	 * outside the scope of the present document.
-	 * 
+	 *
 	 * @return resourceProviderId
 	 **/
 	@ApiModelProperty(value = "Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
@@ -116,7 +117,7 @@ public class ExtVirtualLinkData {
 	/**
 	 * The identifier of the resource in the scope of the VIM or the resource
 	 * provider.
-	 * 
+	 *
 	 * @return resourceId
 	 **/
 	@ApiModelProperty(required = true, value = "The identifier of the resource in the scope of the VIM or the resource provider. ")
@@ -142,7 +143,7 @@ public class ExtVirtualLinkData {
 
 	/**
 	 * External CPs of the VNF to be connected to this external VL.
-	 * 
+	 *
 	 * @return extCps
 	 **/
 	@ApiModelProperty(required = true, value = "External CPs of the VNF to be connected to this external VL. ")
@@ -174,7 +175,7 @@ public class ExtVirtualLinkData {
 	/**
 	 * Externally provided link ports to be used to connect external connection
 	 * points to this external VL.
-	 * 
+	 *
 	 * @return extLinkPorts
 	 **/
 	@ApiModelProperty(value = "Externally provided link ports to be used to connect external connection points to this external VL. ")

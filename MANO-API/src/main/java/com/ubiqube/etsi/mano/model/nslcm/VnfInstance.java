@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.nslcm.sol005;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import java.util.Objects;
 
@@ -7,9 +7,9 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,37 +55,6 @@ public class VnfInstance {
 	@JsonProperty("vimId")
 	private String vimId = null;
 
-	/**
-	 * The instantiation state of the VNF.
-	 */
-	public enum InstantiationStateEnum {
-		NOT_INSTANTIATED("NOT_INSTANTIATED"),
-
-		INSTANTIATED("INSTANTIATED");
-
-		private final String value;
-
-		InstantiationStateEnum(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static InstantiationStateEnum fromValue(final String text) {
-			for (final InstantiationStateEnum b : InstantiationStateEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
 	@JsonProperty("instantiationState")
 	private InstantiationStateEnum instantiationState = null;
 
@@ -98,6 +67,9 @@ public class VnfInstance {
 	@JsonProperty("extensions")
 	private KeyValuePairs extensions = null;
 
+	@JsonProperty("_links")
+	private VnfInstanceLinks links = null;
+
 	public VnfInstance id(final String id) {
 		this.id = id;
 		return this;
@@ -105,7 +77,7 @@ public class VnfInstance {
 
 	/**
 	 * Identifier of the VNF instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
@@ -127,7 +99,7 @@ public class VnfInstance {
 	/**
 	 * Name of the VNF instance. This attribute can be modified with the PATCH
 	 * method.
-	 * 
+	 *
 	 * @return vnfInstanceName
 	 **/
 	@ApiModelProperty(value = "Name of the VNF instance. This attribute can be modified with the PATCH method. ")
@@ -148,7 +120,7 @@ public class VnfInstance {
 	/**
 	 * Human-readable description of the VNF instance. This attribute can be
 	 * modified with the PATCH method.
-	 * 
+	 *
 	 * @return vnfInstanceDescription
 	 **/
 	@ApiModelProperty(value = "Human-readable description of the VNF instance. This attribute can be modified with the PATCH method. ")
@@ -168,7 +140,7 @@ public class VnfInstance {
 
 	/**
 	 * Identifier of the VNFD on which the VNF instance is based.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNFD on which the VNF instance is based. ")
@@ -189,7 +161,7 @@ public class VnfInstance {
 
 	/**
 	 * Provider of the VNF and the VNFD. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfProvider
 	 **/
 	@ApiModelProperty(required = true, value = "Provider of the VNF and the VNFD. The value is copied from the VNFD. ")
@@ -210,7 +182,7 @@ public class VnfInstance {
 
 	/**
 	 * Name to identify the VNF Product. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfProductName
 	 **/
 	@ApiModelProperty(required = true, value = "Name to identify the VNF Product. The value is copied from the VNFD. ")
@@ -231,7 +203,7 @@ public class VnfInstance {
 
 	/**
 	 * Software version of the VNF. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfSoftwareVersion
 	 **/
 	@ApiModelProperty(required = true, value = "Software version of the VNF. The value is copied from the VNFD. ")
@@ -252,7 +224,7 @@ public class VnfInstance {
 
 	/**
 	 * Identifies the version of the VNFD. The value is copied from the VNFD.
-	 * 
+	 *
 	 * @return vnfdVersion
 	 **/
 	@ApiModelProperty(required = true, value = "Identifies the version of the VNFD. The value is copied from the VNFD. ")
@@ -275,7 +247,7 @@ public class VnfInstance {
 	 * Identifier of information held by the NFVO about the specific VNF package on
 	 * which the VNF is based. This identifier has been allocated by the NFVO. This
 	 * attribute can be modified with the PATCH method.
-	 * 
+	 *
 	 * @return vnfPkgId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of information held by the NFVO about the specific VNF package on which the VNF is based. This identifier has been allocated by the NFVO. This attribute can be modified with the PATCH method. ")
@@ -320,7 +292,7 @@ public class VnfInstance {
 	 * auto-healing. If set to true, auto-healing is currently enabled. If set to
 	 * false, auto-healing is currently disabled. These attributea can be modified
 	 * with the PATCH method.
-	 * 
+	 *
 	 * @return vnfConfigurableProperties
 	 **/
 	@ApiModelProperty(value = "Additional VNF-specific attributes that provide the current values of the configurable properties of the VNF instance. These attributes represent values that are stored persistently in the VnfInstance structure and that correspond to configuration parameters of the VNF instance. Modifying these attributes affects the configuration of the VNF instance either directly(if the VNF instance is in INSTANTIATED state at the time of the modification) or as part of the subsequent VNF instantiation operation (if the VNF instance is in NOT_INSTANTIATED state at the time of the modification). Configurable properties referred in these attributes are declared in the VNFD. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications. VNF configurable properties are sometimes also referred to as configuration parameters applicable to a VNF. Some of these are set prior to instantiation and cannot be modified if the VNF is instantiated, some are set prior to instantiation (are part of initial configuration) and can be modified later, and others can be set only after instantiation. The applicability of certain configuration may depend on the VNF and the required operation of the VNF at a certain point in time. These configurable properties include the following standard attributes, which are declared in the VNFD if auto-scaling and/or auto-healing are supported by the VNF:    - isAutoscaleEnabled: If present, the VNF supports auto-scaling. If     set to true, auto-scaling is currently enabled. If set to false,     auto-scaling is currently disabled.   - isAutohealEnabled: If present, the VNF supports auto-healing. If     set to true, auto-healing is currently enabled. If set to false,     auto-healing is currently disabled.  These attributea can be modified with the PATCH method. ")
@@ -342,7 +314,7 @@ public class VnfInstance {
 
 	/**
 	 * Identifier of a VIM that manages resources for the VNF instance.
-	 * 
+	 *
 	 * @return vimId
 	 **/
 	@ApiModelProperty(value = "Identifier of a VIM that manages resources for the VNF instance. ")
@@ -362,7 +334,7 @@ public class VnfInstance {
 
 	/**
 	 * The instantiation state of the VNF.
-	 * 
+	 *
 	 * @return instantiationState
 	 **/
 	@ApiModelProperty(required = true, value = "The instantiation state of the VNF. ")
@@ -383,7 +355,7 @@ public class VnfInstance {
 
 	/**
 	 * Get instantiatedVnfInfo
-	 * 
+	 *
 	 * @return instantiatedVnfInfo
 	 **/
 	@ApiModelProperty(value = "")
@@ -414,7 +386,7 @@ public class VnfInstance {
 	 * declared in the VNFD . These attributes can be modified with the PATCH
 	 * method. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD
 	 * based on TOSCA specifications.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@ApiModelProperty(value = "Additional VNF-specific attributes that provide metadata describing the VNF instance. These attributes represent values that are stored persistently in the VnfInstance structure for consumption by functional blocks that invoke the VNF lifecycle management interface. They are not consumed by the VNFM, or the lifecycle management scripts. Modifying the values of these attributes has no effect on the VNF instance, it only affects the information represented in the VnfInstance structure. Metadata that are writeable are declared in the VNFD . These attributes can be modified with the PATCH method. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications. ")
@@ -447,7 +419,7 @@ public class VnfInstance {
 	 * attribute These attributes can be modified with the PATCH method. ETSI GS
 	 * NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA
 	 * specifications.
-	 * 
+	 *
 	 * @return extensions
 	 **/
 	@ApiModelProperty(value = "Additional VNF-specific attributes that affect the lifecycle management of this VNF instance. These attributes represent values that are stored persistently in the VnfInstance structure for consumption by the VNFM, or by the lifecycle management scripts.  during the execution of VNF lifecycle management operations. Modifying the values of these attributes has no direct effect on the VNF instance; however, the modified attribute values can be considered during subsequent VNF lifecycle management operations, which means that the modified values can indirectly affect the configuration of the VNF instance. Extensions that are writeable are declared in the VNFD. This attribute These attributes can be modified with the PATCH method. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications. ")
@@ -460,6 +432,26 @@ public class VnfInstance {
 
 	public void setExtensions(final KeyValuePairs extensions) {
 		this.extensions = extensions;
+	}
+
+	public VnfInstance links(final VnfInstanceLinks links) {
+		this.links = links;
+		return this;
+	}
+
+	/**
+	 * Get links
+	 *
+	 * @return links
+	 **/
+	@JsonProperty("_links")
+	@ApiModelProperty(value = "")
+	public VnfInstanceLinks getLinks() {
+		return links;
+	}
+
+	public void setLinks(final VnfInstanceLinks links) {
+		this.links = links;
 	}
 
 	@Override

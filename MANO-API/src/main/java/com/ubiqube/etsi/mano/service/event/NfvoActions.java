@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +16,11 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
@@ -60,7 +59,7 @@ public class NfvoActions {
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
+		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
@@ -98,16 +97,16 @@ public class NfvoActions {
 		return LcmOperationStateType.COMPLETED;
 	}
 
-	private void updateOperationState(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs, final LcmOperationStateType status) {
-		lcmOpOccs.setOperationState(status);
-		lcmOpOccs.setStateEnteredTime(new Date());
+	private void updateOperationState(final NsLcmOpOcc lcmOpOccs, final LcmOperationStateType status) {
+		// TODO: Convert ? lcmOpOccs.setOperationState(status);
+		lcmOpOccs.setStateEnteredTime(OffsetDateTime.now());
 		lcmOpOccsRepository.save(lcmOpOccs);
 	}
 
 	public void nsInstantiate(final String nsInstanceId) {
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstance.getNsdId();
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, LcmOperationTypeEnum.INSTANTIATE);
+		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
 
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Create Ns.
@@ -128,7 +127,7 @@ public class NfvoActions {
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfPkgIds) {
-			NsInstancesNsInstanceVnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkgId().equals(vnfId)).findFirst().orElse(null);
+			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkgId().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
 				final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPkgInfo, "", "Sub-instance " + nsInstanceId);

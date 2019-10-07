@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -88,7 +89,7 @@ public class HealNsData {
 	 * failure occurred - HEAL_QOS: Complete the healing of the NS based on the
 	 * newest QoS values - HEAL_RESET: Complete the healing of the NS resetting to
 	 * the original instantiation state of the NS - PARTIAL_HEALING
-	 * 
+	 *
 	 * @return degreeHealing
 	 **/
 	@ApiModelProperty(required = true, value = "Indicates the degree of healing. Possible values include: - HEAL_RESTORE: Complete the healing of the NS restoring the state of the NS before the failure occurred - HEAL_QOS: Complete the healing of the NS based on the newest QoS values - HEAL_RESET: Complete the healing of the NS resetting to the original instantiation state of the NS - PARTIAL_HEALING ")
@@ -120,7 +121,7 @@ public class HealNsData {
 	 * script). The actionsHealing attribute can be used to provide a specific
 	 * script whose content and actions might only be possible to be derived during
 	 * runtime.
-	 * 
+	 *
 	 * @return actionsHealing
 	 **/
 	@ApiModelProperty(value = "Used to specify dedicated healing actions in a particular order (e.g. as a script). The actionsHealing attribute can be used to provide a specific script whose content and actions might only be possible to be derived during runtime. ")
@@ -143,7 +144,7 @@ public class HealNsData {
 	 * healing actions in a particular order. The healScript, since it refers to a
 	 * script in the NSD, can be used to execute healing actions which are defined
 	 * during NS design time.
-	 * 
+	 *
 	 * @return healScript
 	 **/
 	@ApiModelProperty(value = "Reference to a script from the NSD that shall be used to execute dedicated healing actions in a particular order. The healScript, since it refers to a script in the NSD, can be used to execute healing actions which are defined during NS design time. ")
@@ -164,7 +165,7 @@ public class HealNsData {
 	/**
 	 * Allows the OSS/BSS to provide additional parameter(s) to the healing process
 	 * at the NS level.
-	 * 
+	 *
 	 * @return additionalParamsforNs
 	 **/
 	@ApiModelProperty(value = "Allows the OSS/BSS to provide additional parameter(s) to the healing process at the NS level. ")

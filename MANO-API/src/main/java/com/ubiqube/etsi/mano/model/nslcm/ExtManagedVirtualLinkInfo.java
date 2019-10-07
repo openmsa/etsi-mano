@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package com.ubiqube.etsi.mano.model.nslcm.sol003;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +18,15 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the information that allows addressing a virtualised
- * resource that is used by an internal VL instance in a VNF instance.
+ * ExtManagedVirtualLinkInfo
  */
-@ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
-public class VnfVirtualLinkResourceInfo {
+public class ExtManagedVirtualLinkInfo {
 	@JsonProperty("id")
 	private String id = null;
 
@@ -40,27 +36,23 @@ public class VnfVirtualLinkResourceInfo {
 	@JsonProperty("networkResource")
 	private ResourceHandle networkResource = null;
 
-	@JsonProperty("reservationId")
-	private String reservationId = null;
-
 	@JsonProperty("vnfLinkPorts")
 	private List<VnfLinkPortInfo> vnfLinkPorts = null;
 
-	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
-
-	public VnfVirtualLinkResourceInfo id(final String id) {
+	public ExtManagedVirtualLinkInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
-	 * Identifier of this VnfVirtualLinkResourceInfo instance.
+	 * Identifier of the externally-managed internal VL and the related
+	 * externally-managed VL information instance. The identifier is assigned by the
+	 * NFV-MANO entity that manages this VL instance.
 	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of this VnfVirtualLinkResourceInfo instance. ")
+	@ApiModelProperty(required = true, value = "Identifier of the externally-managed internal VL and the related externally-managed VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -70,7 +62,7 @@ public class VnfVirtualLinkResourceInfo {
 		this.id = id;
 	}
 
-	public VnfVirtualLinkResourceInfo vnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
+	public ExtManagedVirtualLinkInfo vnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 		return this;
 	}
@@ -91,7 +83,7 @@ public class VnfVirtualLinkResourceInfo {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 	}
 
-	public VnfVirtualLinkResourceInfo networkResource(final ResourceHandle networkResource) {
+	public ExtManagedVirtualLinkInfo networkResource(final ResourceHandle networkResource) {
 		this.networkResource = networkResource;
 		return this;
 	}
@@ -102,8 +94,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return networkResource
 	 **/
 	@JsonProperty("networkResource")
-	@ApiModelProperty(required = true, value = "Reference to the VirtualNetwork resource. ")
-	@NotNull
+	@ApiModelProperty(value = "Reference to the VirtualNetwork resource. ")
 	public ResourceHandle getNetworkResource() {
 		return networkResource;
 	}
@@ -112,33 +103,12 @@ public class VnfVirtualLinkResourceInfo {
 		this.networkResource = networkResource;
 	}
 
-	public VnfVirtualLinkResourceInfo reservationId(final String reservationId) {
-		this.reservationId = reservationId;
-		return this;
-	}
-
-	/**
-	 * The reservation identifier applicable to the resource. It shall be present
-	 * when an applicable reservation exists.
-	 *
-	 * @return reservationId
-	 **/
-	@JsonProperty("reservationId")
-	@ApiModelProperty(value = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
-	public String getReservationId() {
-		return reservationId;
-	}
-
-	public void setReservationId(final String reservationId) {
-		this.reservationId = reservationId;
-	}
-
-	public VnfVirtualLinkResourceInfo vnfLinkPorts(final List<VnfLinkPortInfo> vnfLinkPorts) {
+	public ExtManagedVirtualLinkInfo vnfLinkPorts(final List<VnfLinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
 		return this;
 	}
 
-	public VnfVirtualLinkResourceInfo addVnfLinkPortsItem(final VnfLinkPortInfo vnfLinkPortsItem) {
+	public ExtManagedVirtualLinkInfo addVnfLinkPortsItem(final VnfLinkPortInfo vnfLinkPortsItem) {
 		if (this.vnfLinkPorts == null) {
 			this.vnfLinkPorts = new ArrayList<>();
 		}
@@ -147,14 +117,12 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * Links ports of this VL. Shall be present when the linkPort is used for
-	 * external connectivity by the VNF (refer to VnfLinkPortInfo). May be present
-	 * otherwise.
+	 * Link ports of this VL.
 	 *
 	 * @return vnfLinkPorts
 	 **/
 	@JsonProperty("vnfLinkPorts")
-	@ApiModelProperty(value = "Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise. ")
+	@ApiModelProperty(value = "Link ports of this VL. ")
 	public List<VnfLinkPortInfo> getVnfLinkPorts() {
 		return vnfLinkPorts;
 	}
@@ -163,37 +131,15 @@ public class VnfVirtualLinkResourceInfo {
 		this.vnfLinkPorts = vnfLinkPorts;
 	}
 
-	public VnfVirtualLinkResourceInfo metadata(final KeyValuePairs metadata) {
-		this.metadata = metadata;
-		return this;
-	}
-
-	/**
-	 * Metadata about this resource.
-	 *
-	 * @return metadata
-	 **/
-	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Metadata about this resource. ")
-	public KeyValuePairs getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final KeyValuePairs metadata) {
-		this.metadata = metadata;
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class VnfVirtualLinkResourceInfo {\n");
+		sb.append("class ExtManagedVirtualLinkInfo {\n");
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    vnfVirtualLinkDescId: ").append(toIndentedString(vnfVirtualLinkDescId)).append("\n");
 		sb.append("    networkResource: ").append(toIndentedString(networkResource)).append("\n");
-		sb.append("    reservationId: ").append(toIndentedString(reservationId)).append("\n");
 		sb.append("    vnfLinkPorts: ").append(toIndentedString(vnfLinkPorts)).append("\n");
-		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

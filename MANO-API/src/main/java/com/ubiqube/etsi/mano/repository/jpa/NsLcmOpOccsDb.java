@@ -17,8 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
@@ -27,7 +27,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @Profile("RDBMS")
 @Service
-public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOccsNsLcmOpOcc, NsLcmOpOccs> implements NsLcmOpOccsRepository {
+public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOcc, NsLcmOpOccs> implements NsLcmOpOccsRepository {
 	private final MapperFacade mapper;
 
 	private final CrudRepository<NsLcmOpOccs, UUID> repository;
@@ -39,8 +39,8 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOccsNsLcmOpOcc, NsLcmOpOcc
 	}
 
 	@Override
-	protected Class<NsLcmOpOccsNsLcmOpOcc> getFrontClass() {
-		return NsLcmOpOccsNsLcmOpOcc.class;
+	protected Class<NsLcmOpOcc> getFrontClass() {
+		return NsLcmOpOcc.class;
 	}
 
 	@Override
@@ -54,8 +54,8 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOccsNsLcmOpOcc, NsLcmOpOcc
 	}
 
 	@Override
-	public NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final LcmOperationTypeEnum state) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, state);
+	public NsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final NsLcmOpType state) {
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, state);
 		return save(lcmOpOccs);
 	}
 

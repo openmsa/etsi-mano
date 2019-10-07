@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,7 +31,7 @@ public class LccnSubscriptionLinks {
 
 	/**
 	 * URI of this resource.
-	 * 
+	 *
 	 * @return self
 	 **/
 	@ApiModelProperty(required = true, value = "URI of this resource. ")

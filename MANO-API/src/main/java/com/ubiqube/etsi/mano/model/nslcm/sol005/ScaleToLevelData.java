@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,7 +45,7 @@ public class ScaleToLevelData {
 	/**
 	 * Identifier of the target instantiation level of the current deployment flavor
 	 * to which the VNF is requested to be scaled.
-	 * 
+	 *
 	 * @return vnfInstantiationLevelId
 	 **/
 	@ApiModelProperty(value = "Identifier of the target instantiation level of the current deployment flavor to which the VNF is requested to be scaled. ")
@@ -73,7 +74,7 @@ public class ScaleToLevelData {
 	/**
 	 * For each scaling aspect of the current deployment flavor, indicates the
 	 * target scale level to which the VNF is to be scaled.
-	 * 
+	 *
 	 * @return vnfScaleInfo
 	 **/
 	@ApiModelProperty(value = "For each scaling aspect of the current deployment flavor, indicates the target scale level to which the VNF is to be scaled. ")
@@ -96,7 +97,7 @@ public class ScaleToLevelData {
 	/**
 	 * Additional parameters passed by the NFVO as input to the scaling process,
 	 * specific to the VNF being scaled.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled. ")

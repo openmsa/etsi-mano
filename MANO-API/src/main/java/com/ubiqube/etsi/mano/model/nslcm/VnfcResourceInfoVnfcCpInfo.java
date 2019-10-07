@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.nslcm.sol005;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -46,7 +48,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 
 	/**
 	 * Identifier of this VNFC CP instance and the associated array entry.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of this VNFC CP instance and the associated array entry. ")
@@ -67,7 +69,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 
 	/**
 	 * Identifier of the VDU CPD, cpdId, in the VNFD.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
@@ -89,7 +91,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	/**
 	 * When the VNFC CP is exposed as external CP of the VNF, the identifier of this
 	 * external VNF CP.
-	 * 
+	 *
 	 * @return vnfExtCpId
 	 **/
 	@ApiModelProperty(value = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
@@ -117,7 +119,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 
 	/**
 	 * Network protocol information for this CP.
-	 * 
+	 *
 	 * @return cpProtocolInfo
 	 **/
 	@ApiModelProperty(value = "Network protocol information for this CP. ")
@@ -141,7 +143,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 * Identifier of the \"vnfLinkPorts\" structure in the
 	 * \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is
 	 * associated to a link port.
-	 * 
+	 *
 	 * @return vnfLinkPortId
 	 **/
 	@ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
@@ -161,7 +163,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 
 	/**
 	 * Metadata about this CP.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@ApiModelProperty(value = "Metadata about this CP. ")

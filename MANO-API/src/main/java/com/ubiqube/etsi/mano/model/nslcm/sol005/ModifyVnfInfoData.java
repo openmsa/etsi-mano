@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -52,7 +53,7 @@ public class ModifyVnfInfoData {
 
 	/**
 	 * Identifier of the VNF instance.
-	 * 
+	 *
 	 * @return vnfInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
@@ -74,7 +75,7 @@ public class ModifyVnfInfoData {
 	/**
 	 * New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or
 	 * \"null\" to remove the attribute.
-	 * 
+	 *
 	 * @return vnfInstanceName
 	 **/
 	@ApiModelProperty(value = "New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. ")
@@ -95,7 +96,7 @@ public class ModifyVnfInfoData {
 	/**
 	 * New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or
 	 * \"null\" to remove the attribute.
-	 * 
+	 *
 	 * @return vnfInstanceDescription
 	 **/
 	@ApiModelProperty(value = "New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. ")
@@ -116,7 +117,7 @@ public class ModifyVnfInfoData {
 	/**
 	 * New value of the \"vnfdId\" attribute in \"VnfInstance\". The value \"null\"
 	 * is not permitted
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@ApiModelProperty(value = "New value of the \"vnfdId\" attribute in \"VnfInstance\". The value \"null\" is not permitted ")
@@ -137,7 +138,7 @@ public class ModifyVnfInfoData {
 	/**
 	 * Modifications to entries in the \"vnfConfigurableProperties\" attribute in
 	 * \"VnfInstance\", as defined below in clause 6.5.3.57.
-	 * 
+	 *
 	 * @return vnfConfigurableProperties
 	 **/
 	@ApiModelProperty(value = "Modifications to entries in the \"vnfConfigurableProperties\" attribute in \"VnfInstance\", as defined below in clause 6.5.3.57. ")
@@ -160,7 +161,7 @@ public class ModifyVnfInfoData {
 	/**
 	 * Modifications to entries in the \"metadata\" attribute in \"VnfInstance\", as
 	 * defined below in clause 6.5.3.57.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@ApiModelProperty(value = "Modifications to entries in the \"metadata\" attribute in \"VnfInstance\", as defined below in clause 6.5.3.57. ")
@@ -183,7 +184,7 @@ public class ModifyVnfInfoData {
 	/**
 	 * Modifications to entries in the \"extensions\" attribute in \"VnfInstance\",
 	 * as defined below in clause 6.5.3.57.
-	 * 
+	 *
 	 * @return extensions
 	 **/
 	@ApiModelProperty(value = "Modifications to entries in the \"extensions\" attribute in \"VnfInstance\", as defined below in clause 6.5.3.57. ")

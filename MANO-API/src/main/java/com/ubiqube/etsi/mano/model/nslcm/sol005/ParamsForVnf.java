@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +37,7 @@ public class ParamsForVnf {
 	/**
 	 * Identifier of (reference to) a vnfProfile to which the additional parameters
 	 * apply.
-	 * 
+	 *
 	 * @return vnfProfileId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of (reference to) a vnfProfile to which the additional parameters apply. ")
@@ -57,7 +58,7 @@ public class ParamsForVnf {
 
 	/**
 	 * Additional parameters that are applied for the VNF instance to be created.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@ApiModelProperty(value = "Additional parameters that are applied for the VNF instance to be created. ")

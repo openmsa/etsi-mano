@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,7 +54,7 @@ public class VnfExtCpInfo {
 
 	/**
 	 * Identifier of the external CP instance and the related information instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the external CP instance and the related information instance. ")
@@ -74,7 +75,7 @@ public class VnfExtCpInfo {
 
 	/**
 	 * Identifier of the external CPD, VnfExtCpd, in the VNFD.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
@@ -103,7 +104,7 @@ public class VnfExtCpInfo {
 
 	/**
 	 * Network protocol information for this CP.
-	 * 
+	 *
 	 * @return cpProtocolInfo
 	 **/
 	@ApiModelProperty(value = "Network protocol information for this CP. ")
@@ -127,7 +128,7 @@ public class VnfExtCpInfo {
 	 * Identifier of the \"extLinkPortInfo\" structure inside the
 	 * \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to
 	 * a link port.
-	 * 
+	 *
 	 * @return extLinkPortId
 	 **/
 	@ApiModelProperty(value = "Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\"  structure. Shall be present if the CP is associated to a link port. ")
@@ -149,7 +150,7 @@ public class VnfExtCpInfo {
 
 	/**
 	 * Metadata about this external CP.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@ApiModelProperty(value = "Metadata about this external CP. ")
@@ -175,7 +176,7 @@ public class VnfExtCpInfo {
 	 * Shall be present in case this CP instance maps to a VNFC CP(s). The
 	 * attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are
 	 * mutually exclusive. One and only one shall be present.
-	 * 
+	 *
 	 * @return associatedVnfcCpId
 	 **/
 	@ApiModelProperty(value = "Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure  that represents the VNFC CP which is exposed by this external CP instance.  Shall be present in case this CP instance maps to a VNFC CP(s). The attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are  mutually exclusive. One and only one shall be present. ")
@@ -199,7 +200,7 @@ public class VnfExtCpInfo {
 	 * present in case this CP instance maps to an internal VL. The attributes
 	 * \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are mutually
 	 * exclusive. One and only one shall be present.
-	 * 
+	 *
 	 * @return associatedVnfVirtualLinkId
 	 **/
 	@ApiModelProperty(value = "Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents  the internal VL, which is exposed by this external CP instance. Shall be  present in case this CP instance maps to an internal VL. The attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are  mutually exclusive. One and only one shall be present. ")

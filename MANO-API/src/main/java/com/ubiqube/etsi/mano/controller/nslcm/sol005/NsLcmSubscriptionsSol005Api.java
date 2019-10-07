@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPost;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionsPostQuery;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.LccnSubscription;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.LccnSubscriptionRequest;
 
 @Profile({ "!VNFM" })
 @RestController
@@ -24,7 +24,7 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> subscriptionsGet(final String accept) {
+	public ResponseEntity<List<LccnSubscription>> subscriptionsGet(final String accept) {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
 	}
 
@@ -47,7 +47,7 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPost> subscriptionsPost(final String accept, final String contentType, final SubscriptionsPostQuery body) {
+	public ResponseEntity<LccnSubscription> subscriptionsPost(final String accept, final String contentType, final LccnSubscriptionRequest body) {
 		// : Implement...
 		return null;
 	}
@@ -75,7 +75,7 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPost> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
+	public ResponseEntity<LccnSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
 		// : Implement...
 		return null;
 	}

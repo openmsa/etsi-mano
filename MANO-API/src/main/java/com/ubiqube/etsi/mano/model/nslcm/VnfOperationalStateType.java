@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package com.ubiqube.etsi.mano.model.nslcm.sol003;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

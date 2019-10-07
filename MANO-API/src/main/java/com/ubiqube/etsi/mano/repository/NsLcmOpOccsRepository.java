@@ -3,12 +3,14 @@ package com.ubiqube.etsi.mano.repository;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 
-public interface NsLcmOpOccsRepository extends CrudRepository<NsLcmOpOccsNsLcmOpOcc>, BinaryRepository {
+public interface NsLcmOpOccsRepository extends CrudRepository<NsLcmOpOcc> {
 
-	NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(String nsInstanceId, @Nonnull LcmOperationTypeEnum instantiate);
+	NsLcmOpOcc createLcmOpOccs(String nsInstanceId, @Nonnull NsLcmOpType instantiate);
 
 	void attachProcessIdToLcmOpOccs(@NotNull String lcmOpOccsId, String processId);
+
 }
