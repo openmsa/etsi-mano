@@ -43,10 +43,12 @@ check_mano_api() {
 }
 
 wait_for_mano_api() {
+	set +x
 	while ! check_mano_api; do
 		sleep 1
-		[ $(( ++nb )) -lt 30 ] || return 1
+		[ $(( ++nb )) -lt 60 ] || return 1
 	done
+	set -x
 }
 
 
