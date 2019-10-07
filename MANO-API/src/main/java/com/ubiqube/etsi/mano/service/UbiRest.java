@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.service;
 import java.net.URI;
 import java.util.Base64;
 
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-@PropertySource("classpath:ubi-mano.properties")
 public class UbiRest {
 
 	private final String url;
