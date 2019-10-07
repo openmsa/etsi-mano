@@ -11,13 +11,15 @@ start_msa() {
 
 	docker-compose exec $MSA ifconfig eth0
 
-	time ../bin/check_login.sh --wait || {
+	time wait_for_msa_api || {
 		: "WARNING: check_login --wait timeout"
 		docker-compose exec $MSA service tomcat restart
 	}
 
 	docker-compose exec $MSA check_services_status.sh
 	docker-compose exec $MSA service elasticsearch status
+
+	time wait_for_msa_api
 }
 
 start_mano_api() {
@@ -30,6 +32,10 @@ start_mano_api() {
 	}
 
 	docker-compose logs mano-api
+}
+
+wait_for_msa_api() {
+	../bin/check_login.sh --wait
 }
 
 check_mano_api() {
