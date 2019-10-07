@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
 import java.util.Base64;

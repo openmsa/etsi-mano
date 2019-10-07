@@ -9,8 +9,8 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
-import com.ubiqube.etsi.mano.service.RepositoryServiceRest;
-import com.ubiqube.etsi.mano.service.UbiRest;
+import com.ubiqube.etsi.mano.service.rest.RepositoryServiceRest;
+import com.ubiqube.etsi.mano.service.rest.UbiRest;
 
 public class RepositoryServiceRestTest {
 	RepositoryServiceRest repositoryServiceRest = new RepositoryServiceRest(new UbiRest());

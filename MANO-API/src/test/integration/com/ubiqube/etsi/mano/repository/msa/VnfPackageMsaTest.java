@@ -26,8 +26,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
-import com.ubiqube.etsi.mano.service.RepositoryServiceRest;
-import com.ubiqube.etsi.mano.service.UbiRest;
+import com.ubiqube.etsi.mano.service.rest.RepositoryServiceRest;
+import com.ubiqube.etsi.mano.service.rest.UbiRest;
 
 public class VnfPackageMsaTest {
 
