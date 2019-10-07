@@ -2,6 +2,8 @@ package com.ubiqube.etsi.mano.service;
 
 import java.net.URI;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,25 +11,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-
 
 @Service
 @PropertySource("classpath:ubi-mano.properties")
 public class UbiRest {
 
-	@Value("${msa.rest-api.url}")
-	private String URL;
+	private final String URL;
 
 	private final RestTemplate restTemplate;
 
 	private final HttpHeaders httpHeaders;
 
-	public UbiRest() {
+	public UbiRest(@Value("${msa.rest-api.url}") final String _url) {
 		restTemplate = new RestTemplate();
 		httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Basic bmNyb290Ok9wZW5NU0E=");
+		URL = _url;
 	}
 
 	public <T> T get(final URI uri, final Class<T> clazz) {
