@@ -29,13 +29,13 @@ public class NsInstanceFactory {
 
 	@Nonnull
 	public static NsInstancesNsInstanceVnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance _vnfInstance, final VnfPkgInfo _vnfPkgInfo) {
-		final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
-		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
-		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-		nsInstancesNsInstanceVnfInstance.setVimId((String) _vnfPkgInfo.getUserDefinedData().get("vimId"));
-		nsInstancesNsInstanceVnfInstance.setVnfdId(_vnfPkgInfo.getVnfdId());
-		nsInstancesNsInstanceVnfInstance.setVnfdVersion(_vnfPkgInfo.getVnfdVersion());
-		nsInstancesNsInstanceVnfInstance.setVnfPkgId(_vnfPkgInfo.getId());
-		return nsInstancesNsInstanceVnfInstance;
+		final NsInstancesNsInstanceVnfInstance VnfInstance = new NsInstancesNsInstanceVnfInstance();
+		VnfInstance.setId(_vnfInstance.getId());
+		VnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+		VnfInstance.setVimId((String) _vnfPkgInfo.getUserDefinedData().get("vimId"));
+		VnfInstance.setVnfdId(_vnfPkgInfo.getVnfdId());
+		VnfInstance.setVnfdVersion(_vnfPkgInfo.getVnfdVersion());
+		VnfInstance.setVnfPkgId(_vnfPkgInfo.getId());
+		return VnfInstance;
 	}
 }
