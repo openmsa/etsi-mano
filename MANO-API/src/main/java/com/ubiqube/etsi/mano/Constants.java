@@ -95,13 +95,13 @@ public final class Constants {
 	}
 
 	public static void ensureNotInstantiated(final NsInstance nsInstance) {
-		if (InstantiationStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
+		if (InstantiationStateEnum.INSTANTIATED == InstantiationStateEnum.fromValue(nsInstance.getNsState())) {
 			throw new ConflictException("The Ns instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
 
 	public static void ensureInstantiated(final NsInstance nsInstance) {
-		if (InstantiationStateEnum.INSTANTIATED.value().equals(nsInstance.getNsState())) {
+		if (InstantiationStateEnum.INSTANTIATED != InstantiationStateEnum.fromValue(nsInstance.getNsState())) {
 			throw new GenericException("The Ns Instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
