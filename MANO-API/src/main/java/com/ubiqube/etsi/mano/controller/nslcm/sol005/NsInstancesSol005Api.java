@@ -235,7 +235,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		nsdRepository.save(nsd);
 
-		final NsInstance nsInstance = NsInstanceFactory.createNsInstancesNsInstance(req.getNsdId(), req.getNsDescription(), req.getNsName(), nsd.getNestedNsdInfoIds());
+		final NsInstance nsInstance = NsInstanceFactory.createNsInstancesNsInstance(req, nsd);
 		nsInstanceRepository.save(nsInstance);
 
 		final List<NsInstancesNsInstanceVnfInstance> vnfInstances = new ArrayList<>();
