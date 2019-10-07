@@ -35,19 +35,19 @@ public final class Constants {
 	}
 
 	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
-		if (!UsageStateEnum.NOT_IN_USE.value().equals(vnfPkgInfo.getUsageState())) {
+		if (UsageStateEnum.NOT_IN_USE != UsageStateEnum.fromValue(vnfPkgInfo.getUsageState())) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is Not In Use State.");
 		}
 	}
 
 	public static void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!OnboardingStateEnum.ONBOARDED.value().equals(vnfPkgInfo.getOnboardingState())) {
+		if (OnboardingStateEnum.ONBOARDED != OnboardingStateEnum.fromValue(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (!OnboardingStateEnum.CREATED.value().equals(vnfPkgInfo.getOnboardingState())) {
+		if (OnboardingStateEnum.ONBOARDED == OnboardingStateEnum.fromValue(vnfPkgInfo.getOnboardingState())) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is already ONBOARDED");
 		}
 	}
@@ -65,7 +65,7 @@ public final class Constants {
 	}
 
 	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsd) {
-		if (!NsdUsageStateEnum.NOT_IN_USE.value().equals(nsd.getNsdUsageState())) {
+		if (NsdUsageStateEnum.NOT_IN_USE == NsdUsageStateEnum.fromValue(nsd.getNsdUsageState())) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in NOT_IN_USE state.");
 		}
 	}
