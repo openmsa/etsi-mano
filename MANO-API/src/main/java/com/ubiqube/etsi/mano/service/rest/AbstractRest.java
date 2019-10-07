@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
-import java.util.Base64;
 import java.util.Collections;
 
 import org.springframework.http.HttpEntity;
