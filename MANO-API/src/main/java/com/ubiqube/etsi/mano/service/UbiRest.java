@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @PropertySource("classpath:ubi-mano.properties")
 public class UbiRest {
 
-	private final String URL;
+	private final String url;
 
 	private final RestTemplate restTemplate;
 
@@ -26,7 +26,7 @@ public class UbiRest {
 		restTemplate = new RestTemplate();
 		httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Basic bmNyb290Ok9wZW5NU0E=");
-		URL = _url;
+		url = _url;
 	}
 
 	public <T> T get(final URI uri, final Class<T> clazz) {
@@ -56,7 +56,7 @@ public class UbiRest {
 	}
 
 	public UriComponentsBuilder uriBuilder() {
-		return UriComponentsBuilder.fromHttpUrl(URL);
+		return UriComponentsBuilder.fromHttpUrl(url);
 	}
 
 	private <T, Tbody> T _call(final URI uri, final HttpMethod method, final HttpEntity<Tbody> request, final Class<T> clazz) {
