@@ -9,8 +9,9 @@ services:
       dockerfile: docker/mano-api/Dockerfile
 
     hostname: mano
+    ports:
+    - "8666:8666"
     networks: [ ubi.network ]
-    volumes: [ "~/.gradle/caches:/home/gradle/.gradle/caches" ]
     depends_on: [ "msa" ]
 
   tests:
@@ -28,16 +29,14 @@ services:
     build:
       context: ..
       dockerfile: docker/msa/Dockerfile
-    networks:
-      ubi.network:
-        ipv4_address: 172.18.0.2
 
     hostname: msa
     ports:
     - "80:80"
     - "443:443"
-    - "1090:1090"
-    - "8080:9080"
+    networks:
+      ubi.network:
+        ipv4_address: 172.18.0.2
 
 
 networks:
