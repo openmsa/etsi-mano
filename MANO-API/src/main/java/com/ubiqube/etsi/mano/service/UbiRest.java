@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.net.URI;
+import java.util.Base64;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,11 +22,16 @@ public class UbiRest {
 
 	private final HttpHeaders httpHeaders;
 
-	public UbiRest(@Value("${msa.rest-api.url}") final String _url) {
+	public UbiRest(final Configuration _conf) {
 		restTemplate = new RestTemplate();
 		httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", "Basic bmNyb290Ok9wZW5NU0E=");
-		url = _url;
+		url = _conf.build("msa.rest-api.url").notNull().build();
+		final String user = _conf.get("msa.rest-api.user");
+		if (null != user) {
+			final String password = _conf.build("msa.rest-api.password").withDefault("").build();
+			final String toEncode = user + ':' + password;
+			httpHeaders.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(toEncode.getBytes()));
+		}
 	}
 
 	public <T> T get(final URI uri, final Class<T> clazz) {
