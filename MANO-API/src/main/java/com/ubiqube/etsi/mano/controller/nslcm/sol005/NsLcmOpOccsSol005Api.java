@@ -1,20 +1,34 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccIdGetResponse;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Profile({ "default", "NFVO" })
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
+
+	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
+
+	public NsLcmOpOccsSol005Api(final NsLcmOpOccsRepository _nsLcmOpOccsRepository) {
+		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
+	}
 
 	/**
 	 * Query multiple NS LCM operation occurrences.
@@ -27,8 +41,15 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+	public ResponseEntity<String> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
+		final List<NsLcmOpOccsNsLcmOpOcc> result = nsLcmOpOccsRepository.query(filter);
+		result.stream().forEach(x -> x.setLinks(makeLink(x.getId())));
+		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		try {
+			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	/**
@@ -59,8 +80,11 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsLcmOpOccsNsLcmOpOccIdGetResponse> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
-		// : Implement...
-		return null;
+		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccs = nsLcmOpOccsRepository.get(nsLcmOpOccId);
+		final NsLcmOpOccsNsLcmOpOccIdGetResponse nsLcmOpOccIdGetResponse = new NsLcmOpOccsNsLcmOpOccIdGetResponse();
+		nsLcmOpOccIdGetResponse.setNsLcmOpOcc(nsLcmOpOccs);
+
+		return new ResponseEntity<>(nsLcmOpOccIdGetResponse, HttpStatus.OK);
 	}
 
 	/**
@@ -123,6 +147,11 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	@Override
 	public ResponseEntity<NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse> nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(final String nsLcmOpOccId, final String accept) {
 		// : Implement...
+		return null;
+	}
+
+	private NsLcmOpOccsNsLcmOpOccLinks makeLink(@NotNull final String id) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
