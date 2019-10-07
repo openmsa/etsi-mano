@@ -29,7 +29,7 @@ public class NfvoRest extends AbstractRest {
 	}
 
 	@Override
-	MultiValueMap<String, String> getAutorization() {
+	protected MultiValueMap<String, String> getAutorization() {
 		return auth;
 	}
 
