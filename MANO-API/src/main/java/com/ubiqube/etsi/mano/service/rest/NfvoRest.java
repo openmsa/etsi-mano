@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.service.rest;
 
-import java.util.Base64;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -18,8 +16,7 @@ public class NfvoRest extends AbstractRest {
 		final String user = _conf.get("nfvo.user");
 		if (null != user) {
 			final String password = _conf.build("nfvo.password").withDefault("").build();
-			final String toEncode = user + ':' + password;
-			auth.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(toEncode.getBytes()));
+			auth.add("Authorization", authBasic(user, password));
 		}
 	}
 
