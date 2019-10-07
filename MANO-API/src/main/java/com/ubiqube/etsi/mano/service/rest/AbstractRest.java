@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
-import java.util.Base64;
 import java.util.Collections;
 
 import org.springframework.http.HttpEntity;
@@ -9,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,7 +21,7 @@ public abstract class AbstractRest {
 
 	protected abstract String getUrl();
 
-	abstract UserPass getAutorization();
+	abstract MultiValueMap<String, String> getAutorization();
 
 	public <T> T get(final URI uri, final Class<T> clazz) {
 		return call(uri, HttpMethod.GET, clazz);
@@ -60,21 +60,10 @@ public abstract class AbstractRest {
 
 	private HttpHeaders getHttpHeaders() {
 		final HttpHeaders httpHeaders = new HttpHeaders();
-		final UserPass userPass = getAutorization();
-		final String basic = userPass.user + ":" + userPass.pass;
-		httpHeaders.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(basic.getBytes()));
+		final MultiValueMap<String, String> auth = getAutorization();
+		httpHeaders.addAll(auth);
 		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		return httpHeaders;
-	}
-
-	protected class UserPass {
-		public UserPass(final String username, final String password) {
-			user = username;
-			pass = password;
-		}
-
-		String user;
-		String pass;
 	}
 }
