@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.factory;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -12,6 +11,10 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public class NsInstanceFactory {
+
+	private NsInstanceFactory() {
+		// Nothing.
+	}
 
 	@Nonnull
 	public static NsInstance createNsInstancesNsInstance(final String _nsdId, final String _description, final String _name, final List<String> nestedNsdInfoIds) {
@@ -26,7 +29,6 @@ public class NsInstanceFactory {
 
 	@Nonnull
 	public static NsInstancesNsInstanceVnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance _vnfInstance, final VnfPkgInfo _vnfPkgInfo) {
-		final String id = UUID.randomUUID().toString();
 		final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
 		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);

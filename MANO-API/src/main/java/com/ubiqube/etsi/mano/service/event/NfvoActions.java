@@ -149,22 +149,12 @@ public class NfvoActions {
 		}
 	}
 
-	private void sleepSeconds(final int seconds) {
+	private void sleepSeconds(final long seconds) {
 		try {
-			Thread.sleep(seconds * 1000);
+			Thread.sleep(seconds * 1000L);
 		} catch (final InterruptedException e) {
 			LOG.warn("Interrupted exception.", e);
 			Thread.currentThread().interrupt();
-		}
-	}
-
-	private void waitForCompletion(final VnfLcmOpOcc vnfLcmOpOcc) {
-		while (true) {
-			final VnfLcmOpOcc res = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
-			if (res.getOperationState() == LcmOperationStateType.PROCESSING) {
-				return;
-			}
-			sleepSeconds(5 * 60);
 		}
 	}
 
