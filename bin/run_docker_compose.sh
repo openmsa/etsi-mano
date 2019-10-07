@@ -7,21 +7,21 @@ start_msa() {
 
 	docker-compose up -d
 
-	MSA="ubimano_msa_1"
+	MSA="msa"
 
-	docker exec $MSA ifconfig eth0
+	docker-compose exec $MSA ifconfig eth0
 
 	time ../bin/check_login.sh --wait || {
 		: "WARNING: check_login --wait timeout"
-		docker exec $MSA service tomcat restart
+		docker-compose exec $MSA service tomcat restart
 	}
 
-	docker exec -it $MSA check_services_status.sh
-	docker exec $MSA service elasticsearch status
+	docker-compose exec $MSA check_services_status.sh
+	docker-compose exec $MSA service elasticsearch status
 }
 
 start_mano_api() {
-	docker ps | grep ubimano_mano-api || {
+	docker-compose ps | grep ubimano_mano-api || {
 		: "WARNING: restarting mano-api"
 		docker-compose up -d mano-api
 	}
