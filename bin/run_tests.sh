@@ -4,17 +4,16 @@ set -e
 
 run_tests() {
 	for test in $@; do
-		: ========================================= $((++nb)) / $#
-		./$test
+		echo ====================================== $((++nb)) / $#
+		echo :: $test
+		echo --------------------------------------
+		./$test >/dev/null || { echo "[FAILED]"; failed=1; }
 	done
 }
 
-travis_fold() {
-	local func=$1
-	shift
-	echo -e "travis_fold:start:$func\r"
-	( set -x; $func "$@")
-	echo -e "travis_fold:end:$func\r"
-}
+cd tests
 
-travis_fold run_tests tests/test_*
+echo -e "travis_fold:start:$0\r"
+run_tests test_*
+echo -e "travis_fold:end:$0\r"
+exit $failed
