@@ -1,10 +1,6 @@
 #!/bin/bash
 
-set -e
-set -x
+source .test-env.sh
 
-curl	--fail \
-	--user x: \
-	-X GET \
-	-H  "Content-Type: application/json" \
-	"http://localhost:8666/ubi-etsi-mano/sol003/vnfpkgm/v1/vnf_packages"
+$curl	-H  "Content-Type: application/json" \
+	$mano_api/sol003/vnfpkgm/v1/vnf_packages
