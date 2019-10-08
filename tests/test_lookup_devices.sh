@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
-set -x
+source .test-env.sh
 
-curl -u ncroot:OpenMSA http://localhost/ubi-api-rest/lookup/devices
+$curl $msa_api/lookup/devices

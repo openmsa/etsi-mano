@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
-set -x
+source .test-env.sh
 
-curl -u ncroot:OpenMSA http://localhost/ubi-api-rest/'repository/v1/search&URI=Process/ETSI-MANO&pattern='
+$curl $msa_api/'repository/v1/search&URI=Process/ETSI-MANO&pattern=' \
+	|| : "IGNORING FAILED: $0"
