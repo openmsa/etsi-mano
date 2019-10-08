@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -144,43 +145,6 @@ public class SubscriptionNsLcmOperationOccurrenceNotificationNsLcmOperationOccur
 	 **/
 	private NotificationStatusEnum notificationStatus = null;
 
-	@XmlType(name = "OperationStateEnum")
-	@XmlEnum(String.class)
-	public enum OperationStateEnum {
-
-		@XmlEnumValue("PROCESSING")
-		PROCESSING(String.valueOf("PROCESSING")), @XmlEnumValue("COMPLETED")
-		COMPLETED(String.valueOf("COMPLETED")), @XmlEnumValue("FAILED_TEMP")
-		FAILED_TEMP(String.valueOf("FAILED_TEMP")), @XmlEnumValue("FAILED")
-		FAILED(String.valueOf("FAILED")), @XmlEnumValue("ROLLING_BACK")
-		ROLLING_BACK(String.valueOf("ROLLING_BACK")), @XmlEnumValue("ROLLED_BACK")
-		ROLLED_BACK(String.valueOf("ROLLED_BACK"));
-
-		private final String value;
-
-		OperationStateEnum(final String v) {
-			value = v;
-		}
-
-		public String value() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		public static OperationStateEnum fromValue(final String v) {
-			for (final OperationStateEnum b : OperationStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
 	@ApiModelProperty(value = "The enumeration NsLcmOperationStateType shall comply with the provisions defined in Table 6.5.4.4-1. Value | Description ------|------------ PROCESSING | The LCM operation is currently in execution. COMPLETED | The LCM operation has been completed successfully. PARTIALLY_COMPLETED | The LCM operation has been partially completed with accepTable errors. FAILED_TEMP | The LCM operation has failed and execution has stopped, but the execution of the operation is not considered to be closed. FAILED | The LCM operation has failed and it cannot be retried or rolled back, as it is determined that such action won't succeed. OLLING_BACK | The LCM operation is currently being rolled back. ROLLED_BACK | The LCM operation has been successfully rolled back, i.e. The state of the VNF prior to the original operation invocation has been restored as closely as possible. ")
 	/**
 	 * The enumeration NsLcmOperationStateType shall comply with the provisions
@@ -196,7 +160,7 @@ public class SubscriptionNsLcmOperationOccurrenceNotificationNsLcmOperationOccur
 	 * back, i.e. The state of the VNF prior to the original operation invocation
 	 * has been restored as closely as possible.
 	 **/
-	private OperationStateEnum operationState = null;
+	private LcmOperationStateType operationState = null;
 
 	@ApiModelProperty(value = "Set to true if this NS LCM operation occurrence has been automatically triggered by the NFVO. This occurs in case of auto-scaling, auto-healing and when a nested NS is modified as a result of an operation on its composite NS. Set to false otherwise. ")
 	/**
@@ -494,11 +458,11 @@ public class SubscriptionNsLcmOperationOccurrenceNotificationNsLcmOperationOccur
 		return operationState.value();
 	}
 
-	public void setOperationState(final OperationStateEnum operationState) {
+	public void setOperationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 	}
 
-	public SubscriptionNsLcmOperationOccurrenceNotificationNsLcmOperationOccurrenceNotification operationState(final OperationStateEnum operationState) {
+	public SubscriptionNsLcmOperationOccurrenceNotificationNsLcmOperationOccurrenceNotification operationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 		return this;
 	}

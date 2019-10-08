@@ -71,6 +71,11 @@ springBoot {
 	mainClassName = 'com.ubiqube.etsi.mano.Application'
 }
 
+test {
+	useJUnitPlatform() {
+		excludeTags 'Remote'
+	}
+}
 task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/src/test/resources"

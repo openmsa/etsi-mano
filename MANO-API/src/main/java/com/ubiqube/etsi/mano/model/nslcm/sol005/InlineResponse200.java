@@ -9,21 +9,21 @@ public class InlineResponse200  {
   
   @ApiModelProperty(value = "")
   @Valid
-  private NsInstancesNsInstance nsInstance = null;
+  private NsInstance nsInstance = null;
  /**
    * Get nsInstance
    * @return nsInstance
   **/
   @JsonProperty("NsInstance")
-  public NsInstancesNsInstance getNsInstance() {
+  public NsInstance getNsInstance() {
     return nsInstance;
   }
 
-  public void setNsInstance(NsInstancesNsInstance nsInstance) {
+  public void setNsInstance(NsInstance nsInstance) {
     this.nsInstance = nsInstance;
   }
 
-  public InlineResponse200 nsInstance(NsInstancesNsInstance nsInstance) {
+  public InlineResponse200 nsInstance(NsInstance nsInstance) {
     this.nsInstance = nsInstance;
     return this;
   }

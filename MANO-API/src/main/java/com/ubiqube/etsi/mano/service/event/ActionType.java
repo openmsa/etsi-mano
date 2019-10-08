@@ -2,9 +2,20 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.util.stream.Stream;
 
+/**
+ * Enum for all asynchronous event.
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public enum ActionType {
 	VNF_PKG_ONBOARD_FROM_URI(String.valueOf("VNF_PKG_ONBOARD_FROM_URI")),
-	VNF_PKG_ONBOARD_FROM_BYTES(String.valueOf("VNF_PKG_ONBOARD_FROM_BYTES"));
+	VNF_PKG_ONBOARD_FROM_BYTES(String.valueOf("VNF_PKG_ONBOARD_FROM_BYTES")),
+	NS_INSTANTIATE("NS_INSTANTIATE"),
+	NS_TERMINATE("NS_TERMINATE"),
+	VNF_INSTANTIATE("VNF_INSTANTIATE"),
+	VNF_TERMINATE("VNF_TERMINATE"),
+	;
 
 	private String value;
 

@@ -17,6 +17,10 @@ public class VnfPkgOperation {
 		processId = _processId;
 	}
 
+	public VnfPkgOperation(@NotNull final String _id) {
+		id = _id;
+	}
+
 	@JsonProperty("Id")
 	public String getId() {
 		return id;

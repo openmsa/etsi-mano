@@ -1,8 +1,18 @@
 package com.ubiqube.etsi.mano.repository;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstance;
+import javax.validation.constraints.NotNull;
 
-public interface NsInstanceRepository extends CrudRepository<NsInstancesNsInstance> {
-	// ns Instance.
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+
+public interface NsInstanceRepository extends CrudRepository<NsInstance> {
+
+	NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(String nsInstanceId, LcmOperationTypeEnum instantiate);
+
+	void attachProcessIdToLcmOpOccs(@NotNull String lcmOpOccsId, String processId);
+
+	void changeNsdUpdateState(NsInstance nsInstance, InstantiationStateEnum notInstantiated);
 
 }

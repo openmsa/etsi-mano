@@ -5,11 +5,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * the provisions defined in Table 6.5.2.10-1.
  **/
 @ApiModel(description = "This type represents a response for Query NS operation.  It shall comply with the provisions defined in Table 6.5.2.10-1. ")
-public class NsInstancesNsInstance {
+public class NsInstance {
 
 	@ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
 	/**
@@ -101,46 +99,13 @@ public class NsInstancesNsInstance {
 	 **/
 	private List<String> nestedNsInstanceId = null;
 
-	@XmlType(name = "NsStateEnum")
-	@XmlEnum(String.class)
-	public enum NsStateEnum {
-
-		@XmlEnumValue("NOT_INSTANTIATED")
-		NOT_INSTANTIATED(String.valueOf("NOT_INSTANTIATED")), @XmlEnumValue("INSTANTIATED")
-		INSTANTIATED(String.valueOf("INSTANTIATED"));
-
-		private final String value;
-
-		NsStateEnum(final String v) {
-			value = v;
-		}
-
-		public String value() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		public static NsStateEnum fromValue(final String v) {
-			for (final NsStateEnum b : NsStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
-
 	@ApiModelProperty(required = true, value = "The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS instance is terminated or not instantiated. INSTANTIATED: The NS instance is instantiated. ")
 	/**
 	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS
 	 * instance is terminated or not instantiated. INSTANTIATED: The NS instance is
 	 * instantiated.
 	 **/
-	private NsStateEnum nsState = null;
+	private InstantiationStateEnum nsState = null;
 
 	@ApiModelProperty(value = "Status of each NS scaling aspect declared in the applicable DF, how \"big\" the NS instance has been scaled w.r.t. that aspect. This attribute shall be present if the nsState attribute value is INSTANTIATED. ")
 	@Valid
@@ -166,7 +131,7 @@ public class NsInstancesNsInstance {
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -180,14 +145,14 @@ public class NsInstancesNsInstance {
 		this.id = id;
 	}
 
-	public NsInstancesNsInstance id(final String id) {
+	public NsInstance id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Human readable name of the NS instance.
-	 * 
+	 *
 	 * @return nsInstanceName
 	 **/
 	@JsonProperty("nsInstanceName")
@@ -200,14 +165,14 @@ public class NsInstancesNsInstance {
 		this.nsInstanceName = nsInstanceName;
 	}
 
-	public NsInstancesNsInstance nsInstanceName(final String nsInstanceName) {
+	public NsInstance nsInstanceName(final String nsInstanceName) {
 		this.nsInstanceName = nsInstanceName;
 		return this;
 	}
 
 	/**
 	 * Human readable description of the NS instance.
-	 * 
+	 *
 	 * @return nsInstanceDescription
 	 **/
 	@JsonProperty("nsInstanceDescription")
@@ -220,14 +185,14 @@ public class NsInstancesNsInstance {
 		this.nsInstanceDescription = nsInstanceDescription;
 	}
 
-	public NsInstancesNsInstance nsInstanceDescription(final String nsInstanceDescription) {
+	public NsInstance nsInstanceDescription(final String nsInstanceDescription) {
 		this.nsInstanceDescription = nsInstanceDescription;
 		return this;
 	}
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return nsdId
 	 **/
 	@JsonProperty("nsdId")
@@ -240,14 +205,14 @@ public class NsInstancesNsInstance {
 		this.nsdId = nsdId;
 	}
 
-	public NsInstancesNsInstance nsdId(final String nsdId) {
+	public NsInstance nsdId(final String nsdId) {
 		this.nsdId = nsdId;
 		return this;
 	}
 
 	/**
 	 * An identifier with the intention of being globally unique.
-	 * 
+	 *
 	 * @return nsdInfoId
 	 **/
 	@JsonProperty("nsdInfoId")
@@ -260,7 +225,7 @@ public class NsInstancesNsInstance {
 		this.nsdInfoId = nsdInfoId;
 	}
 
-	public NsInstancesNsInstance nsdInfoId(final String nsdInfoId) {
+	public NsInstance nsdInfoId(final String nsdInfoId) {
 		this.nsdInfoId = nsdInfoId;
 		return this;
 	}
@@ -268,7 +233,7 @@ public class NsInstancesNsInstance {
 	/**
 	 * An identifier that is unique within a NS descriptor. Representation: string
 	 * of variable length.
-	 * 
+	 *
 	 * @return flavourId
 	 **/
 	@JsonProperty("flavourId")
@@ -280,14 +245,14 @@ public class NsInstancesNsInstance {
 		this.flavourId = flavourId;
 	}
 
-	public NsInstancesNsInstance flavourId(final String flavourId) {
+	public NsInstance flavourId(final String flavourId) {
 		this.flavourId = flavourId;
 		return this;
 	}
 
 	/**
 	 * Information on constituent VNF(s) of the NS instance.
-	 * 
+	 *
 	 * @return vnfInstance
 	 **/
 	@JsonProperty("vnfInstance")
@@ -299,19 +264,19 @@ public class NsInstancesNsInstance {
 		this.vnfInstance = vnfInstance;
 	}
 
-	public NsInstancesNsInstance vnfInstance(final List<NsInstancesNsInstanceVnfInstance> vnfInstance) {
+	public NsInstance vnfInstance(final List<NsInstancesNsInstanceVnfInstance> vnfInstance) {
 		this.vnfInstance = vnfInstance;
 		return this;
 	}
 
-	public NsInstancesNsInstance addVnfInstanceItem(final NsInstancesNsInstanceVnfInstance vnfInstanceItem) {
+	public NsInstance addVnfInstanceItem(final NsInstancesNsInstanceVnfInstance vnfInstanceItem) {
 		this.vnfInstance.add(vnfInstanceItem);
 		return this;
 	}
 
 	/**
 	 * Information on the PNF(s) that are part of the NS instance.
-	 * 
+	 *
 	 * @return pnfInfo
 	 **/
 	@JsonProperty("pnfInfo")
@@ -323,12 +288,12 @@ public class NsInstancesNsInstance {
 		this.pnfInfo = pnfInfo;
 	}
 
-	public NsInstancesNsInstance pnfInfo(final List<NsInstancesNsInstancePnfInfo> pnfInfo) {
+	public NsInstance pnfInfo(final List<NsInstancesNsInstancePnfInfo> pnfInfo) {
 		this.pnfInfo = pnfInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addPnfInfoItem(final NsInstancesNsInstancePnfInfo pnfInfoItem) {
+	public NsInstance addPnfInfoItem(final NsInstancesNsInstancePnfInfo pnfInfoItem) {
 		this.pnfInfo.add(pnfInfoItem);
 		return this;
 	}
@@ -337,7 +302,7 @@ public class NsInstancesNsInstance {
 	 * Information on the VL(s) of the NS instance. This attribute shall be present
 	 * if the nsState attribute value is INSTANTIATED and if the NS instance has
 	 * specified connectivity.
-	 * 
+	 *
 	 * @return virtualLinkInfo
 	 **/
 	@JsonProperty("virtualLinkInfo")
@@ -349,19 +314,19 @@ public class NsInstancesNsInstance {
 		this.virtualLinkInfo = virtualLinkInfo;
 	}
 
-	public NsInstancesNsInstance virtualLinkInfo(final List<NsInstancesNsInstanceVirtualLinkInfo> virtualLinkInfo) {
+	public NsInstance virtualLinkInfo(final List<NsInstancesNsInstanceVirtualLinkInfo> virtualLinkInfo) {
 		this.virtualLinkInfo = virtualLinkInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addVirtualLinkInfoItem(final NsInstancesNsInstanceVirtualLinkInfo virtualLinkInfoItem) {
+	public NsInstance addVirtualLinkInfoItem(final NsInstancesNsInstanceVirtualLinkInfo virtualLinkInfoItem) {
 		this.virtualLinkInfo.add(virtualLinkInfoItem);
 		return this;
 	}
 
 	/**
 	 * Information on the VNFFG(s) of the NS instance.
-	 * 
+	 *
 	 * @return vnffgInfo
 	 **/
 	@JsonProperty("vnffgInfo")
@@ -373,19 +338,19 @@ public class NsInstancesNsInstance {
 		this.vnffgInfo = vnffgInfo;
 	}
 
-	public NsInstancesNsInstance vnffgInfo(final List<NsInstancesNsInstanceVnffgInfo> vnffgInfo) {
+	public NsInstance vnffgInfo(final List<NsInstancesNsInstanceVnffgInfo> vnffgInfo) {
 		this.vnffgInfo = vnffgInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addVnffgInfoItem(final NsInstancesNsInstanceVnffgInfo vnffgInfoItem) {
+	public NsInstance addVnffgInfoItem(final NsInstancesNsInstanceVnffgInfo vnffgInfoItem) {
 		this.vnffgInfo.add(vnffgInfoItem);
 		return this;
 	}
 
 	/**
 	 * Information on the SAP(s) of the NS instance.
-	 * 
+	 *
 	 * @return sapInfo
 	 **/
 	@JsonProperty("sapInfo")
@@ -397,19 +362,19 @@ public class NsInstancesNsInstance {
 		this.sapInfo = sapInfo;
 	}
 
-	public NsInstancesNsInstance sapInfo(final List<NsInstancesNsInstanceSapInfo> sapInfo) {
+	public NsInstance sapInfo(final List<NsInstancesNsInstanceSapInfo> sapInfo) {
 		this.sapInfo = sapInfo;
 		return this;
 	}
 
-	public NsInstancesNsInstance addSapInfoItem(final NsInstancesNsInstanceSapInfo sapInfoItem) {
+	public NsInstance addSapInfoItem(final NsInstancesNsInstanceSapInfo sapInfoItem) {
 		this.sapInfo.add(sapInfoItem);
 		return this;
 	}
 
 	/**
 	 * Identifier of the nested NS(s) of the NS instance.
-	 * 
+	 *
 	 * @return nestedNsInstanceId
 	 **/
 	@JsonProperty("nestedNsInstanceId")
@@ -421,12 +386,12 @@ public class NsInstancesNsInstance {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 	}
 
-	public NsInstancesNsInstance nestedNsInstanceId(final List<String> nestedNsInstanceId) {
+	public NsInstance nestedNsInstanceId(final List<String> nestedNsInstanceId) {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 		return this;
 	}
 
-	public NsInstancesNsInstance addNestedNsInstanceIdItem(final String nestedNsInstanceIdItem) {
+	public NsInstance addNestedNsInstanceIdItem(final String nestedNsInstanceIdItem) {
 		this.nestedNsInstanceId.add(nestedNsInstanceIdItem);
 		return this;
 	}
@@ -435,7 +400,7 @@ public class NsInstancesNsInstance {
 	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS
 	 * instance is terminated or not instantiated. INSTANTIATED: The NS instance is
 	 * instantiated.
-	 * 
+	 *
 	 * @return nsState
 	 **/
 	@JsonProperty("nsState")
@@ -447,11 +412,11 @@ public class NsInstancesNsInstance {
 		return nsState.value();
 	}
 
-	public void setNsState(final NsStateEnum nsState) {
+	public void setNsState(final InstantiationStateEnum nsState) {
 		this.nsState = nsState;
 	}
 
-	public NsInstancesNsInstance nsState(final NsStateEnum nsState) {
+	public NsInstance nsState(final InstantiationStateEnum nsState) {
 		this.nsState = nsState;
 		return this;
 	}
@@ -460,7 +425,7 @@ public class NsInstancesNsInstance {
 	 * Status of each NS scaling aspect declared in the applicable DF, how
 	 * \&quot;big\&quot; the NS instance has been scaled w.r.t. that aspect. This
 	 * attribute shall be present if the nsState attribute value is INSTANTIATED.
-	 * 
+	 *
 	 * @return nsScaleStatus
 	 **/
 	@JsonProperty("nsScaleStatus")
@@ -472,12 +437,12 @@ public class NsInstancesNsInstance {
 		this.nsScaleStatus = nsScaleStatus;
 	}
 
-	public NsInstancesNsInstance nsScaleStatus(final List<NsInstancesNsInstanceNsScaleStatus> nsScaleStatus) {
+	public NsInstance nsScaleStatus(final List<NsInstancesNsInstanceNsScaleStatus> nsScaleStatus) {
 		this.nsScaleStatus = nsScaleStatus;
 		return this;
 	}
 
-	public NsInstancesNsInstance addNsScaleStatusItem(final NsInstancesNsInstanceNsScaleStatus nsScaleStatusItem) {
+	public NsInstance addNsScaleStatusItem(final NsInstancesNsInstanceNsScaleStatus nsScaleStatusItem) {
 		this.nsScaleStatus.add(nsScaleStatusItem);
 		return this;
 	}
@@ -486,7 +451,7 @@ public class NsInstancesNsInstance {
 	 * Information on the additional affinity or anti-affinity rule from NS
 	 * instantiation operation. Shall not conflict with rules already specified in
 	 * the NSD.
-	 * 
+	 *
 	 * @return additionalAffinityOrAntiAffinityRule
 	 **/
 	@JsonProperty("additionalAffinityOrAntiAffinityRule")
@@ -498,19 +463,19 @@ public class NsInstancesNsInstance {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 	}
 
-	public NsInstancesNsInstance additionalAffinityOrAntiAffinityRule(final List<NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule) {
+	public NsInstance additionalAffinityOrAntiAffinityRule(final List<NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule) {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 		return this;
 	}
 
-	public NsInstancesNsInstance addAdditionalAffinityOrAntiAffinityRuleItem(final NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule additionalAffinityOrAntiAffinityRuleItem) {
+	public NsInstance addAdditionalAffinityOrAntiAffinityRuleItem(final NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule additionalAffinityOrAntiAffinityRuleItem) {
 		this.additionalAffinityOrAntiAffinityRule.add(additionalAffinityOrAntiAffinityRuleItem);
 		return this;
 	}
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@JsonProperty("_links")
@@ -522,7 +487,7 @@ public class NsInstancesNsInstance {
 		this.links = links;
 	}
 
-	public NsInstancesNsInstance links(final NsInstancesNsInstanceLinks links) {
+	public NsInstance links(final NsInstancesNsInstanceLinks links) {
 		this.links = links;
 		return this;
 	}

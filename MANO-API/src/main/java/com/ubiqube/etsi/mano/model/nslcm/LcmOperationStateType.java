@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package com.ubiqube.etsi.mano.model.nslcm.sol003;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -44,7 +44,7 @@ public enum LcmOperationStateType {
 
 	private String value;
 
-	LcmOperationStateType(String value) {
+	LcmOperationStateType(final String value) {
 		this.value = value;
 	}
 
@@ -54,7 +54,7 @@ public enum LcmOperationStateType {
 	}
 
 	@JsonCreator
-	public static LcmOperationStateType fromValue(String text) {
+	public static LcmOperationStateType fromValue(final String text) {
 		for (final LcmOperationStateType b : LcmOperationStateType.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
@@ -62,4 +62,9 @@ public enum LcmOperationStateType {
 		}
 		return null;
 	}
+
+	public String value() {
+		return value;
+	}
+
 }

@@ -3,11 +3,16 @@ package com.ubiqube.etsi.mano.service.event;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter.NotificationTypesEnum;
 
 public class NotificationJob extends QuartzJobBean {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NotificationJob.class);
+
 	private final VnfEvent vnfEvent;
 
 	public NotificationJob(final VnfEvent vnfEvent) {
@@ -33,11 +38,7 @@ public class NotificationJob extends QuartzJobBean {
 			vnfEvent.onEvent(objectIdId, NotificationTypesEnum.VNFPACKAGECHANGENOTIFICATION);
 			break;
 		default:
-			try {
-				Thread.sleep(1000);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
+			LOG.warn("Could not find event: {}", eventType);
 			break;
 		}
 	}

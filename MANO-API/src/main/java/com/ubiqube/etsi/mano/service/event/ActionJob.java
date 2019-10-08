@@ -23,16 +23,29 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+/**
+ * this class handle job reception.
+ *
+ * TODO: I keep Package here for the momment.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ActionJob extends QuartzJobBean {
-
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(ActionJob.class);
+
 	private final VnfPackageRepository vnfPackageRepository;
 	private final EventManager eventManager;
+	private final VnfmActions vnfmActions;
+	private final NfvoActions nfvoActions;
 
-	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager) {
+	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final VnfmActions _vnfmActions, final NfvoActions _nfvoActions) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
+		vnfmActions = _vnfmActions;
+		nfvoActions = _nfvoActions;
 	}
 
 	@Override
@@ -52,6 +65,15 @@ public class ActionJob extends QuartzJobBean {
 		case VNF_PKG_ONBOARD_FROM_BYTES:
 			vnfPackagesVnfPkgIdPackageContentPut(objectId, (byte[]) jobDataMap.get("data"));
 			break;
+		case VNF_INSTANTIATE:
+			vnfmActions.vnfInstantiate(objectId);
+			break;
+		case NS_INSTANTIATE:
+			nfvoActions.nsInstantiate(objectId);
+			break;
+		case NS_TERMINATE:
+			nfvoActions.nsTerminate(objectId);
+			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);
 			break;
@@ -61,43 +83,40 @@ public class ActionJob extends QuartzJobBean {
 	private void vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final byte[] data) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		startOnboarding(vnfPkgInfo);
-		try {
-			vnfPkgInfo.setChecksum(getChecksum(data));
-			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(data), "vnfd");
-			finishOnboarding(vnfPkgInfo);
-		} catch (final NoSuchAlgorithmException e) {
-			throw new GenericException(e);
-		}
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		uploadAndFinishOnboarding(vnfPkgInfo, data);
+	}
+
+	private void uploadAndFinishOnboarding(final VnfPkgInfo vnfPkgInfo, final byte[] data) {
+		vnfPkgInfo.setChecksum(getChecksum(data));
+		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), new ByteArrayInputStream(data), "vnfd");
+		finishOnboarding(vnfPkgInfo);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgInfo.getId());
 	}
 
 	private void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String vnfPkgId, final String url) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		startOnboarding(vnfPkgInfo);
 		LOG.info("Async. Download of {}", url);
-		final byte[] content = getUrlContent(url);
-		try {
-			vnfPkgInfo.setChecksum(getChecksum(content));
-			vnfPackageRepository.storeBinary(vnfPkgId, new ByteArrayInputStream(content), "vnfd");
-			finishOnboarding(vnfPkgInfo);
-		} catch (final NoSuchAlgorithmException e) {
-			throw new GenericException(e);
-		}
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
+		final byte[] data = getUrlContent(url);
+		uploadAndFinishOnboarding(vnfPkgInfo, data);
 	}
 
 	private static byte[] getUrlContent(final String uri) {
-		URL url;
 		try {
-			url = new URL(uri);
+			final URL url = new URL(uri);
 			return ByteStreams.toByteArray((InputStream) url.getContent());
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}
 
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) throws NoSuchAlgorithmException {
-		final MessageDigest digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
+	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) {
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
+		} catch (final NoSuchAlgorithmException e) {
+			throw new GenericException(e);
+		}
 		final byte[] hashbytes = digest.digest(bytes);
 		final String sha3_256hex = bytesToHex(hashbytes);
 		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();

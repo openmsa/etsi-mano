@@ -22,10 +22,8 @@ public interface VnfPackageManagement {
 	 *
 	 * @param vnfPkgId
 	 * @param artifactPath
-	 * @param _accept
 	 * @param rangeHeader
 	 * @return
-	 * @throws ServiceException
 	 */
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull String vnfPkgId, @Nonnull String artifactPath, @Nullable RangeHeader rangeHeader);
 

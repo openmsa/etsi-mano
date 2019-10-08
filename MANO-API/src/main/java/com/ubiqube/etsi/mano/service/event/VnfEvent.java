@@ -19,9 +19,16 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilte
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
+/**
+ * TODO: we cannot use the MANO filter query language, instead of this use AST
+ * node directly.
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfEvent {
-
+	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(VnfEvent.class);
 
 	private final SubscriptionRepository subscriptionRepository;

@@ -138,7 +138,7 @@ public class VnfPkgInfo {
 	 * processed, e.g. validation. - ONBOARDED: The associated VNF package content
 	 * is successfully on-boarded.
 	 **/
-	private OnboardingStateEnum onboardingState = null;
+	private OnboardingStateEnum onboardingState = OnboardingStateEnum.CREATED;
 
 	@XmlType(name = "OperationalStateEnum")
 	@XmlEnum(String.class)
