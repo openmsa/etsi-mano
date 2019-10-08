@@ -26,5 +26,7 @@ RUN	yum install -y epel-release ;\
 	yum install --enablerepo remi-php72 -y php ;\
 	:
 
+RUN	sed -i 's/^#/;/' /opt/dms/templates/conf/db.conf ;\
+	/opt/dms/configure
 
 CMD ["/sbin/init"]
