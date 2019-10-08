@@ -33,7 +33,7 @@ public class ProblemDetails {
 	 * the problem (e.g. using HTML) when dereferenced. When this member is not
 	 * present, its value is assumed to be \"about:blank\".
 	 **/
-	private String type = null;
+	private String type = "about:blank";
 
 	@ApiModelProperty(value = "A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization. If type is given and other than \"about:blank\", this attribute shall also be provided. A short, human-readable summary of the problem type.  It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation; see [RFC7231], Section 3.4). ")
 	/**
