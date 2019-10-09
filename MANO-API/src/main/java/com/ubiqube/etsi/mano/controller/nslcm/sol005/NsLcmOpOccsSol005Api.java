@@ -1,5 +1,8 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceLinksSelf;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccIdGetResponse;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccLinks;
@@ -43,7 +47,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsLcmOpOccsNsLcmOpOcc> result = nsLcmOpOccsRepository.query(filter);
-		result.stream().forEach(x -> x.setLinks(makeLink(x.getId())));
+		result.stream().forEach(x -> x.setLinks(makeLink(x)));
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
 			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
@@ -64,8 +68,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nsLcmOpOccsNsLcmOpOccIdContinuePost(final String nsLcmOpOccId) {
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdContinuePost(final String nsLcmOpOccId) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -81,6 +86,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	@Override
 	public ResponseEntity<NsLcmOpOccsNsLcmOpOccIdGetResponse> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
 		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccs = nsLcmOpOccsRepository.get(nsLcmOpOccId);
+		nsLcmOpOccs.setLinks(makeLink(nsLcmOpOccs));
 		final NsLcmOpOccsNsLcmOpOccIdGetResponse nsLcmOpOccIdGetResponse = new NsLcmOpOccsNsLcmOpOccIdGetResponse();
 		nsLcmOpOccIdGetResponse.setNsLcmOpOcc(nsLcmOpOccs);
 
@@ -99,8 +105,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nsLcmOpOccsNsLcmOpOccIdRetryPost(final String nsLcmOpOccId) {
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdRetryPost(final String nsLcmOpOccId) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -115,8 +122,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nsLcmOpOccsNsLcmOpOccIdRollbackPost(final String nsLcmOpOccId) {
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdRollbackPost(final String nsLcmOpOccId) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -132,8 +140,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(final String nsLcmOpOccId, final String accept, final String contentType, final NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body) {
+	public ResponseEntity<Void> nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(final String nsLcmOpOccId, final String accept, final String contentType, final NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -147,12 +156,41 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	@Override
 	public ResponseEntity<NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse> nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(final String nsLcmOpOccId, final String accept) {
 		// : Implement...
-		return null;
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	private NsLcmOpOccsNsLcmOpOccLinks makeLink(@NotNull final String id) {
-		// TODO Auto-generated method stub
-		return null;
+	private NsLcmOpOccsNsLcmOpOccLinks makeLink(@NotNull final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccs) {
+		@NotNull
+		final String id = nsLcmOpOccs.getId();
+		final NsLcmOpOccsNsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccsNsLcmOpOccLinks();
+		final NsInstancesNsInstanceLinksSelf cancel = new NsInstancesNsInstanceLinksSelf();
+		cancel.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(id, null, null, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setCancel(cancel);
+
+		final NsInstancesNsInstanceLinksSelf _continue = new NsInstancesNsInstanceLinksSelf();
+		_continue.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setContinue(_continue);
+
+		final NsInstancesNsInstanceLinksSelf fail = new NsInstancesNsInstanceLinksSelf();
+		fail.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(id, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setFail(fail);
+
+		final NsInstancesNsInstanceLinksSelf nsInstance = new NsInstancesNsInstanceLinksSelf();
+		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesGet(nsLcmOpOccs.getNsInstanceId(), null, null, null, null, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setNsInstance(nsInstance);
+
+		final NsInstancesNsInstanceLinksSelf retry = new NsInstancesNsInstanceLinksSelf();
+		retry.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setRetry(retry);
+
+		final NsInstancesNsInstanceLinksSelf rollback = new NsInstancesNsInstanceLinksSelf();
+		rollback.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setRollback(rollback);
+
+		final NsInstancesNsInstanceLinksSelf self = new NsInstancesNsInstanceLinksSelf();
+		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setSelf(self);
+		return nsLcmOpOccLinks;
 	}
 
 }
