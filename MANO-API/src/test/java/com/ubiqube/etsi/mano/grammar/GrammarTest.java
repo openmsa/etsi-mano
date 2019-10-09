@@ -1,11 +1,11 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
@@ -36,14 +36,15 @@ public class GrammarTest {
 	}
 
 	/**
-	 * This is a multivalue, it will failed.
+	 * This is a multivalue.
 	 */
+	@Disabled("code currently does handle multivalues")
 	@Test
 	public void testMultiValueIssue() {
 		final AstBuilder astBuilder = new AstBuilder("id.eq=fce04624-6f92-42b1-bf50-437b682288a5,OOOOOOO");
 		final List<Node> nodes = astBuilder.getNodes();
 		final Node node = nodes.get(0);
-		assertNotEquals("fce04624-6f92-42b1-bf50-437b682288a5", node.getValue());
+		assertEquals("fce04624-6f92-42b1-bf50-437b682288a5", node.getValue());
 	}
 
 	/**
