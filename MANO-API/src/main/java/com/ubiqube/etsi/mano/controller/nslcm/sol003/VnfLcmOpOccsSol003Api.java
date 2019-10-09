@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.lcmgrant.sol003.LcmGrantsSol003;
-import com.ubiqube.etsi.mano.controller.vnf.sol003.VnfPackageSol003;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
@@ -40,7 +39,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final String accept, final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
 		final List<VnfLcmOpOcc> result = vnfLcmOpOccsRepository.query(filter);
-		result.stream().forEach(x -> x.setLinks(makeLink(x.getId(), x.getVnfInstanceId(), x.getGrantId())));
+		result.stream().forEach(x -> x.setLinks(makeLink(x)));
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
 			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
@@ -63,6 +62,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String accept, final String version) {
 		final VnfLcmOpOcc entity = vnfLcmOpOccsRepository.get(vnfLcmOpOccId);
+		entity.setLinks(makeLink(entity));
 		return new ResponseEntity<>(entity, HttpStatus.OK);
 	}
 
@@ -84,7 +84,9 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
 	}
 
-	private static VnfLcmOpOccLinks makeLink(@NotNull final String id, final String vnfPkgId, final String grantId) {
+	private static VnfLcmOpOccLinks makeLink(@NotNull final VnfLcmOpOcc vnfLcmOpOcc) {
+		@NotNull
+		final String id = vnfLcmOpOcc.getId();
 		final VnfLcmOpOccLinks link = new VnfLcmOpOccLinks();
 		final Link cancel = new Link();
 		cancel.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id, "")).withSelfRel().getHref());
@@ -95,7 +97,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		link.setFail(fail);
 
 		final Link grant = new Link();
-		grant.setHref(linkTo(methodOn(LcmGrantsSol003.class).grantsGrantIdGet(grantId, "")).withSelfRel().getHref());
+		grant.setHref(linkTo(methodOn(LcmGrantsSol003.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(), "")).withSelfRel().getHref());
 		link.setGrant(grant);
 
 		final Link retry = new Link();
@@ -111,7 +113,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		link.setSelf(self);
 
 		final Link vnfInstance = new Link();
-		vnfInstance.setHref(linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
+		vnfInstance.setHref(linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
 		link.setVnfInstance(vnfInstance);
 
 		return link;
