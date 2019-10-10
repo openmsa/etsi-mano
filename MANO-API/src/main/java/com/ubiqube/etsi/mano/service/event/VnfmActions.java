@@ -11,7 +11,9 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -54,13 +56,19 @@ public class VnfmActions {
 		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 		LOG.info("New MSA VNF Create job: {}", processId);
 		vnfPackageRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
-		msaExecutor.waitForCompletion(processId, 5 * 60);
+		final LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
+		vnfPackageRepository.updateState(lcmOpOccs, status);
 
-		vnfPackageRepository.updateState(lcmOpOccs, lcmOpOccs.getOperationState());
-		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+		if (status == LcmOperationStateType.COMPLETED) {
+			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+			vnfPkg.setUsageState(UsageStateEnum.IN_USE);
+			final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
+			instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);
+			vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
+		} else {
+			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+		}
 		vnfInstancesRepository.save(vnfInstance);
-
-		vnfPkg.setUsageState(UsageStateEnum.IN_USE);
 		vnfPackageRepository.save(vnfPkg);
 	}
 

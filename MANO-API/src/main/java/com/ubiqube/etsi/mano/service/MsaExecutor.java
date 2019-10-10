@@ -11,6 +11,7 @@ import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
 /**
  * NFVO+VNFM & NVFO MSA implementation.
@@ -49,7 +50,8 @@ public class MsaExecutor implements Vim {
 		final String customerId = (String) userData.get(CUSTOMER_ID);
 		varsMap.put("vnfPkgId", vnfPkgId);
 		varsMap.put(CUSTOMER_ID, customerId);
-
+		// TODO My NFVO
+		varsMap.put("nfvoDevice", "TMA299");
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
 
@@ -90,16 +92,42 @@ public class MsaExecutor implements Vim {
 		try {
 			LOG.info("Calling MSA remote FW: custormerId={}, serviceId={}, serviceName={}, processName={}, params={}", customerId, serviceId, serviceName, processName, varsMap);
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
-			return String.valueOf(resp.getServiceId().getId());
+			return String.valueOf(resp.getProcessId().getId());
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
 	}
 
 	@Override
-	public void waitForCompletion(final String processId, final int seconds) {
-		// TODO Auto-generated method stub
+	public LcmOperationStateType waitForCompletion(final String processId, final int seconds) {
+		LOG.debug("Entering Wait for Completion.");
+		while (true) {
+			try {
+				final ProcessInstance res = orchestrationService.getProcessInstance(new Long(processId));
+				final String status = res.getStatus().getStatus();
+				if (!"RUNNING".equals(status)) {
+					LOG.debug("Wait for completion done with result: {}", status);
+					return convert(status);
+				}
+				Thread.sleep(30 * 1000);
+			} catch (NumberFormatException | ServiceException | InterruptedException e) {
+				throw new GenericException(e);
+			}
+		}
 
+	}
+
+	private static LcmOperationStateType convert(final String status) {
+
+		if ("FAIL".equals(status)) {
+			return LcmOperationStateType.FAILED;
+		} else if ("ENDED".equals(status)) {
+			return LcmOperationStateType.COMPLETED;
+		} else if ("RUNNING".equals(status)) {
+			return LcmOperationStateType.PROCESSING;
+		}
+		LOG.warn("Unknown status: {}", status);
+		return null;
 	}
 
 }
