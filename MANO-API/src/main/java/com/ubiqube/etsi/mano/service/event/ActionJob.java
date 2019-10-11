@@ -39,13 +39,15 @@ public class ActionJob extends QuartzJobBean {
 	private final EventManager eventManager;
 	private final VnfmActions vnfmActions;
 	private final NfvoActions nfvoActions;
+	private final PackageManager packageManager;
 
-	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final VnfmActions _vnfmActions, final NfvoActions _nfvoActions) {
+	public ActionJob(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final VnfmActions _vnfmActions, final NfvoActions _nfvoActions, final PackageManager _packageProvider) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
 		vnfmActions = _vnfmActions;
 		nfvoActions = _nfvoActions;
+		packageManager = _packageProvider;
 	}
 
 	@Override
@@ -86,19 +88,23 @@ public class ActionJob extends QuartzJobBean {
 		uploadAndFinishOnboarding(vnfPkgInfo, data);
 	}
 
-	private void uploadAndFinishOnboarding(final VnfPkgInfo vnfPkgInfo, final byte[] data) {
-		vnfPkgInfo.setChecksum(getChecksum(data));
-		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), new ByteArrayInputStream(data), "vnfd");
-		finishOnboarding(vnfPkgInfo);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgInfo.getId());
-	}
-
 	private void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String vnfPkgId, final String url) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		startOnboarding(vnfPkgInfo);
 		LOG.info("Async. Download of {}", url);
 		final byte[] data = getUrlContent(url);
 		uploadAndFinishOnboarding(vnfPkgInfo, data);
+	}
+
+	private void uploadAndFinishOnboarding(final VnfPkgInfo vnfPkgInfo, final byte[] data) {
+		vnfPkgInfo.setChecksum(getChecksum(data));
+		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), new ByteArrayInputStream(data), "vnfd");
+		final PackageProvider packageProvider = packageManager.getProviderFor(data);
+		if (null != packageProvider) {
+			vnfPkgInfo.setSoftwareImages(packageProvider.getSoftwareImages());
+		}
+		finishOnboarding(vnfPkgInfo);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgInfo.getId());
 	}
 
 	private static byte[] getUrlContent(final String uri) {

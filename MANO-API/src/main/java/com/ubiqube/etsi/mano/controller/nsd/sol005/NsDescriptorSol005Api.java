@@ -274,6 +274,10 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		vnfPkgIds.stream().forEach(vnfPackageRepository::get);
 		nsdDescriptor.setVnfPkgIds(vnfPkgIds);
 		userDefinedData.remove("vnfPkgIds");
+
+		final List<String> pnfPkgIds = (List<String>) userDefinedData.get("pnfPkgIds");
+		// TODO: verify PNF ids.
+		nsdDescriptor.setPnfdInfoIds(pnfPkgIds);
 		nsdRepository.save(nsdDescriptor);
 
 		if (null != userDefinedData.get("heat")) {
