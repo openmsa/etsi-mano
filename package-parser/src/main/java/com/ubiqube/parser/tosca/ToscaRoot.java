@@ -1,26 +1,25 @@
 package com.ubiqube.parser.tosca;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ToscaRoot {
-	private List<HashMap<String, String>> imports;
+	private Imports imports;
 	private TopologyTemplate topologyTemplate;
 	private String version;
 	private String description;
-	private Map<String, ToscaClass> capabilityTypes;
-	private Map<String, ToscaClass> artifactTypes;
-	private Map<String, ToscaClass> relationshipTypes;
-	private Map<String, ToscaClass> nodeTypes;
+	private Map<String, CapabilityTypes> capabilityTypes = new HashMap<>();
+	private Map<String, ToscaClass> artifactTypes = new HashMap<>();
+	private Map<String, RelationshipTypes> relationshipTypes = new HashMap<>();
+	private Map<String, ToscaClass> nodeTypes = new HashMap<>();
 
-	public List<HashMap<String, String>> getImports() {
+	public Imports getImports() {
 		return imports;
 	}
 
-	public void setImports(final List<HashMap<String, String>> imports) {
+	public void setImports(final Imports imports) {
 		this.imports = imports;
 	}
 
@@ -51,11 +50,11 @@ public class ToscaRoot {
 	}
 
 	@JsonProperty("capability_types")
-	public Map<String, ToscaClass> getCapabilityTypes() {
+	public Map<String, CapabilityTypes> getCapabilityTypes() {
 		return capabilityTypes;
 	}
 
-	public void setCapabilityTypes(final Map<String, ToscaClass> capabilityTypes) {
+	public void setCapabilityTypes(final Map<String, CapabilityTypes> capabilityTypes) {
 		this.capabilityTypes = capabilityTypes;
 	}
 
@@ -69,11 +68,11 @@ public class ToscaRoot {
 	}
 
 	@JsonProperty("relationship_types")
-	public Map<String, ToscaClass> getRelationshipTypes() {
+	public Map<String, RelationshipTypes> getRelationshipTypes() {
 		return relationshipTypes;
 	}
 
-	public void setRelationshipTypes(final Map<String, ToscaClass> relationshipTypes) {
+	public void setRelationshipTypes(final Map<String, RelationshipTypes> relationshipTypes) {
 		this.relationshipTypes = relationshipTypes;
 	}
 

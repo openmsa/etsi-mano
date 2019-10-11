@@ -28,12 +28,12 @@ public class ToscaContext {
 	private String version;
 	private TopologyTemplate topologies;
 	private Map<String, ToscaClass> nodeType = new HashMap<>();
-	private Map<String, ToscaClass> relationship = new HashMap<>();
+	private Map<String, RelationshipTypes> relationship = new HashMap<>();
 	private Map<String, ToscaClass> artifacts = new HashMap<>();
-	private Map<String, ToscaClass> capabilities = new HashMap<>();
+	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
 	private final Resolver resolver = new Resolver();
 
-	public ToscaContext() {
+	private void init() {
 		nodeType.put("tosca.nodes.Root", new Root());
 		nodeType.put("tosca.nodes.Compute", new Compute());
 		nodeType.put("tosca.nodes.SoftwareComponent", new SoftwareComponent());
@@ -47,6 +47,20 @@ public class ToscaContext {
 		nodeType.put("tosca.nodes.Container.Runtime", new DBMS());
 		nodeType.put("tosca.nodes.Container.Application.Docker", new DBMS());
 		nodeType.put("tosca.nodes.LoadBalancer", new LoadBalancer());
+	}
+
+	public ToscaContext(final ToscaRoot root) {
+
+		artifacts = root.getArtifactTypes();
+		capabilities = root.getCapabilityTypes();
+		description = root.getDescription();
+		imports = root.getImports();
+		nodeType = root.getNodeTypes();
+		relationship = root.getRelationshipTypes();
+		topologies = root.getTopologyTemplate();
+		version = root.getVersion();
+
+		init();
 	}
 
 	public void setImports(final Imports _imports) {
@@ -69,7 +83,7 @@ public class ToscaContext {
 		nodeType = nodesType;
 	}
 
-	public void setRelationship(final Map<String, ToscaClass> rels) {
+	public void setRelationship(final Map<String, RelationshipTypes> rels) {
 		relationship = rels;
 	}
 
@@ -77,7 +91,7 @@ public class ToscaContext {
 		artifacts = arts;
 	}
 
-	public void setCapabilities(final Map<String, ToscaClass> caps) {
+	public void setCapabilities(final Map<String, CapabilityTypes> caps) {
 		capabilities = caps;
 	}
 
@@ -101,7 +115,7 @@ public class ToscaContext {
 		return nodeType;
 	}
 
-	public Map<String, ToscaClass> getRelationship() {
+	public Map<String, RelationshipTypes> getRelationship() {
 		return relationship;
 	}
 
@@ -109,7 +123,7 @@ public class ToscaContext {
 		return artifacts;
 	}
 
-	public Map<String, ToscaClass> getCapabilities() {
+	public Map<String, CapabilityTypes> getCapabilities() {
 		return capabilities;
 	}
 
@@ -124,20 +138,20 @@ public class ToscaContext {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 		sb.append(", relationship=\n");
-		entry = nodeType.entrySet();
-		for (final Entry<String, ToscaClass> toscaClass : entry) {
+		final Set<Entry<String, RelationshipTypes>> entry3 = relationship.entrySet();
+		for (final Entry<String, RelationshipTypes> toscaClass : entry3) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 
 		sb.append(", artifacts=\n");
-		entry = nodeType.entrySet();
+		entry = artifacts.entrySet();
 		for (final Entry<String, ToscaClass> toscaClass : entry) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 
 		sb.append(", capabilities=\n");
-		entry = capabilities.entrySet();
-		for (final Entry<String, ToscaClass> toscaClass : entry) {
+		final Set<Entry<String, CapabilityTypes>> entry2 = capabilities.entrySet();
+		for (final Entry<String, CapabilityTypes> toscaClass : entry2) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 
@@ -151,20 +165,20 @@ public class ToscaContext {
 			LOG.info("Resolving: {}", entry2.getKey());
 			final Import value = entry2.getValue();
 			final String content = resolver.getContent(value.getUrl());
-			final Main2 main = new Main2();
-			final ToscaContext context = main.parseYamlContent(content);
+			final ToscaParser main = new ToscaParser();
+			final ToscaContext context = main.parseContent(content);
 			context.resolvImports();
-			value.setContext(context);
 			mergeContext(context);
 		}
+
 	}
 
 	private void mergeContext(final ToscaContext context) {
 		mergeHash(artifacts, context.getArtifacts());
-		mergeHash(capabilities, context.getCapabilities());
+		// mergeHash(capabilities, context.getCapabilities());
 		mergeHash(nodeType, context.getNodeType());
-		mergeHash(relationship, context.getRelationship());
-		topologies.merge(context.getTopologies());
+		// mergeHash(relationship, context.getRelationship());
+		// topologies.merge(context.getTopologies());
 	}
 
 	private static void mergeHash(final Map<String, ToscaClass> dst, final Map<String, ToscaClass> src) {
@@ -205,7 +219,7 @@ public class ToscaContext {
 				// Throw exception unresolvable external/.
 				System.out.println(derived + " not a Node Type.");
 			} else {
-				clazz.setDerived(nodeType.get(derived));
+				// clazz.setDerived(nodeType.get(derived));
 			}
 		}
 	}

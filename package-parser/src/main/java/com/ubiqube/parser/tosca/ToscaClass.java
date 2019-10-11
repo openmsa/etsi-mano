@@ -1,35 +1,25 @@
 package com.ubiqube.parser.tosca;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.yaml.snakeyaml.introspector.Property;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ToscaClass {
 
-	private Object properties = new ArrayList<>();
+	private Object properties;
 	private String derivedFrom;
-	private Object attributes = new ArrayList<>();
+	private Object attributes;
 	private String description;
 	private String mimeType;
-	private List<String> fileExt = new ArrayList<>();
-	private Object requirements = new HashMap<>();
-	private Object capabilities = new HashMap<>();
-	private Object artifacts = new HashMap<>();
-	private String name;
-	private ToscaClass derived;
+	private List<String> fileExt;
+	private Object requirements;
+	private Object interfaces;
 
-	public void setProperties(final List<Property> _properties) {
-		properties = _properties;
-	}
+	private Object capabilities;
+	private Object artifacts;
 
 	public void setDerivedFrom(final String _derivedFrom) {
 		derivedFrom = _derivedFrom;
-	}
-
-	public void setAttributes(final List<Property> _attributes) {
-		attributes = _attributes;
 	}
 
 	public void setDescription(final String _description) {
@@ -65,10 +55,12 @@ public class ToscaClass {
 		this.requirements = requirements;
 	}
 
+	@JsonProperty("properties")
 	public Object getProperties() {
 		return properties;
 	}
 
+	@JsonProperty("derived_from")
 	public String getDerivedFrom() {
 		return derivedFrom;
 	}
@@ -81,10 +73,12 @@ public class ToscaClass {
 		return description;
 	}
 
+	@JsonProperty("mime_type")
 	public String getMimeType() {
 		return mimeType;
 	}
 
+	@JsonProperty("file_ext")
 	public List<String> getFileExt() {
 		return fileExt;
 	}
@@ -97,19 +91,20 @@ public class ToscaClass {
 		return artifacts;
 	}
 
-	public void setName(final String _name) {
-		name = _name;
+	public Object getInterfaces() {
+		return interfaces;
 	}
 
-	public String getName() {
-		return name;
+	public void setInterfaces(final Object interfaces) {
+		this.interfaces = interfaces;
 	}
 
-	public void setDerived(final ToscaClass _derived) {
-		derived = _derived;
+	public void setProperties(final Object properties) {
+		this.properties = properties;
 	}
 
-	public ToscaClass getDerived() {
-		return derived;
+	public void setAttributes(final Object attributes) {
+		this.attributes = attributes;
 	}
+
 }
