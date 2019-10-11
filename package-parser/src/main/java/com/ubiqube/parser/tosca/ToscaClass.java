@@ -17,6 +17,7 @@ public class ToscaClass {
 
 	private Object capabilities;
 	private Object artifacts;
+	private Object metadata;
 
 	public void setDerivedFrom(final String _derivedFrom) {
 		derivedFrom = _derivedFrom;
@@ -105,6 +106,14 @@ public class ToscaClass {
 
 	public void setAttributes(final Object attributes) {
 		this.attributes = attributes;
+	}
+
+	public Object getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Object metadata) {
+		this.metadata = metadata;
 	}
 
 }

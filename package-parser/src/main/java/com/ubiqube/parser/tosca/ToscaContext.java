@@ -28,9 +28,9 @@ public class ToscaContext {
 	private String version;
 	private TopologyTemplate topologies;
 	private Map<String, ToscaClass> nodeType = new HashMap<>();
-	private Map<String, RelationshipTypes> relationship = new HashMap<>();
+	private Map<String, ToscaClass> relationship = new HashMap<>();
 	private Map<String, ToscaClass> artifacts = new HashMap<>();
-	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
+	private Map<String, ToscaClass> capabilities = new HashMap<>();
 	private final Resolver resolver = new Resolver();
 
 	private void init() {
@@ -83,7 +83,7 @@ public class ToscaContext {
 		nodeType = nodesType;
 	}
 
-	public void setRelationship(final Map<String, RelationshipTypes> rels) {
+	public void setRelationship(final Map<String, ToscaClass> rels) {
 		relationship = rels;
 	}
 
@@ -91,7 +91,7 @@ public class ToscaContext {
 		artifacts = arts;
 	}
 
-	public void setCapabilities(final Map<String, CapabilityTypes> caps) {
+	public void setCapabilities(final Map<String, ToscaClass> caps) {
 		capabilities = caps;
 	}
 
@@ -115,7 +115,7 @@ public class ToscaContext {
 		return nodeType;
 	}
 
-	public Map<String, RelationshipTypes> getRelationship() {
+	public Map<String, ToscaClass> getRelationship() {
 		return relationship;
 	}
 
@@ -123,7 +123,7 @@ public class ToscaContext {
 		return artifacts;
 	}
 
-	public Map<String, CapabilityTypes> getCapabilities() {
+	public Map<String, ToscaClass> getCapabilities() {
 		return capabilities;
 	}
 
@@ -138,8 +138,8 @@ public class ToscaContext {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 		sb.append(", relationship=\n");
-		final Set<Entry<String, RelationshipTypes>> entry3 = relationship.entrySet();
-		for (final Entry<String, RelationshipTypes> toscaClass : entry3) {
+		final Set<Entry<String, ToscaClass>> entry3 = relationship.entrySet();
+		for (final Entry<String, ToscaClass> toscaClass : entry3) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 
@@ -150,16 +150,18 @@ public class ToscaContext {
 		}
 
 		sb.append(", capabilities=\n");
-		final Set<Entry<String, CapabilityTypes>> entry2 = capabilities.entrySet();
-		for (final Entry<String, CapabilityTypes> toscaClass : entry2) {
+		final Set<Entry<String, ToscaClass>> entry2 = capabilities.entrySet();
+		for (final Entry<String, ToscaClass> toscaClass : entry2) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
-
 		sb.append("]");
 		return sb.toString();
 	}
 
 	public void resolvImports() {
+		if (null == imports) {
+			return;
+		}
 		final Set<Entry<String, Import>> entry = imports.entrySet();
 		for (final Entry<String, Import> entry2 : entry) {
 			LOG.info("Resolving: {}", entry2.getKey());
@@ -170,14 +172,13 @@ public class ToscaContext {
 			context.resolvImports();
 			mergeContext(context);
 		}
-
 	}
 
 	private void mergeContext(final ToscaContext context) {
 		mergeHash(artifacts, context.getArtifacts());
-		// mergeHash(capabilities, context.getCapabilities());
+		mergeHash(capabilities, context.getCapabilities());
 		mergeHash(nodeType, context.getNodeType());
-		// mergeHash(relationship, context.getRelationship());
+		mergeHash(relationship, context.getRelationship());
 		// topologies.merge(context.getTopologies());
 	}
 

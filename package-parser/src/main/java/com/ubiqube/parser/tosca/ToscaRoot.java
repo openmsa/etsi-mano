@@ -10,9 +10,9 @@ public class ToscaRoot {
 	private TopologyTemplate topologyTemplate;
 	private String version;
 	private String description;
-	private Map<String, CapabilityTypes> capabilityTypes = new HashMap<>();
+	private Map<String, ToscaClass> capabilityTypes = new HashMap<>();
 	private Map<String, ToscaClass> artifactTypes = new HashMap<>();
-	private Map<String, RelationshipTypes> relationshipTypes = new HashMap<>();
+	private Map<String, ToscaClass> relationshipTypes = new HashMap<>();
 	private Map<String, ToscaClass> nodeTypes = new HashMap<>();
 
 	public Imports getImports() {
@@ -50,11 +50,11 @@ public class ToscaRoot {
 	}
 
 	@JsonProperty("capability_types")
-	public Map<String, CapabilityTypes> getCapabilityTypes() {
+	public Map<String, ToscaClass> getCapabilityTypes() {
 		return capabilityTypes;
 	}
 
-	public void setCapabilityTypes(final Map<String, CapabilityTypes> capabilityTypes) {
+	public void setCapabilityTypes(final Map<String, ToscaClass> capabilityTypes) {
 		this.capabilityTypes = capabilityTypes;
 	}
 
@@ -68,11 +68,11 @@ public class ToscaRoot {
 	}
 
 	@JsonProperty("relationship_types")
-	public Map<String, RelationshipTypes> getRelationshipTypes() {
+	public Map<String, ToscaClass> getRelationshipTypes() {
 		return relationshipTypes;
 	}
 
-	public void setRelationshipTypes(final Map<String, RelationshipTypes> relationshipTypes) {
+	public void setRelationshipTypes(final Map<String, ToscaClass> relationshipTypes) {
 		this.relationshipTypes = relationshipTypes;
 	}
 
