@@ -11,10 +11,10 @@ public class ToscaRoot {
 	private TopologyTemplate topologyTemplate;
 	private String version;
 	private String description;
-	private Map<String, CapabilityTypes> capabilityTypes;
-	private Map<String, ArtifactTypes> artifactTypes;
-	private Map<String, RelationshipTypes> relationshipTypes;
-	private Map<String, NodeTypes> nodeTypes;
+	private Map<String, ToscaClass> capabilityTypes;
+	private Map<String, ToscaClass> artifactTypes;
+	private Map<String, ToscaClass> relationshipTypes;
+	private Map<String, ToscaClass> nodeTypes;
 
 	public List<HashMap<String, String>> getImports() {
 		return imports;
@@ -51,39 +51,44 @@ public class ToscaRoot {
 	}
 
 	@JsonProperty("capability_types")
-	public Map<String, CapabilityTypes> getCapabilityTypes() {
+	public Map<String, ToscaClass> getCapabilityTypes() {
 		return capabilityTypes;
 	}
 
-	public void setCapabilityTypes(final Map<String, CapabilityTypes> capabilityTypes) {
+	public void setCapabilityTypes(final Map<String, ToscaClass> capabilityTypes) {
 		this.capabilityTypes = capabilityTypes;
 	}
 
 	@JsonProperty("artifact_types")
-	public Map<String, ArtifactTypes> getArtifactTypes() {
+	public Map<String, ToscaClass> getArtifactTypes() {
 		return artifactTypes;
 	}
 
-	public void setArtifactTypes(final Map<String, ArtifactTypes> artifactTypes) {
+	public void setArtifactTypes(final Map<String, ToscaClass> artifactTypes) {
 		this.artifactTypes = artifactTypes;
 	}
 
 	@JsonProperty("relationship_types")
-	public Map<String, RelationshipTypes> getRelationshipTypes() {
+	public Map<String, ToscaClass> getRelationshipTypes() {
 		return relationshipTypes;
 	}
 
-	public void setRelationshipTypes(final Map<String, RelationshipTypes> relationshipTypes) {
+	public void setRelationshipTypes(final Map<String, ToscaClass> relationshipTypes) {
 		this.relationshipTypes = relationshipTypes;
 	}
 
 	@JsonProperty("node_types")
-	public Map<String, NodeTypes> getNodeTypes() {
+	public Map<String, ToscaClass> getNodeTypes() {
 		return nodeTypes;
 	}
 
-	public void setNodeTypes(final Map<String, NodeTypes> nodeTypes) {
+	public void setNodeTypes(final Map<String, ToscaClass> nodeTypes) {
 		this.nodeTypes = nodeTypes;
+	}
+
+	@Override
+	public String toString() {
+		return "ToscaRoot [imports=" + imports + ",\n topologyTemplate=" + topologyTemplate + ",\n version=" + version + ",\n description=" + description + ",\n capabilityTypes=" + capabilityTypes + ",\n artifactTypes=" + artifactTypes + ",\n relationshipTypes=" + relationshipTypes + ",\n nodeTypes=" + nodeTypes + "]";
 	}
 
 }
