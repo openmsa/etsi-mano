@@ -1,9 +1,9 @@
 package com.ubiqube.etsi.mano.controller.nsd.sol005;
 
 import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
+import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
-import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -214,6 +214,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 		ensureNotOnboarded(nsdInfo);
 		try {
+			// Must be Async.
 			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
 		} catch (final IOException e) {
 			throw new GenericException(e);
@@ -272,8 +273,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		// Verify if VNF Package exists.
 		vnfPkgIds.stream().forEach(vnfPackageRepository::get);
 		nsdDescriptor.setVnfPkgIds(vnfPkgIds);
-
+		userDefinedData.remove("vnfPkgIds");
 		nsdRepository.save(nsdDescriptor);
+
 		if (null != userDefinedData.get("heat")) {
 			nsdRepository.storeObject(nsdDescriptor.getId(), userDefinedData.get("heat"), "nsd");
 			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);

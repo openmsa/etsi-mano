@@ -51,7 +51,7 @@ public class MsaExecutor implements Vim {
 		varsMap.put("vnfPkgId", vnfPkgId);
 		varsMap.put(CUSTOMER_ID, customerId);
 		// TODO My NFVO
-		varsMap.put("nfvoDevice", "TMA299");
+		varsMap.put("nfvoDevice", "TMA129");
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
 
@@ -64,7 +64,8 @@ public class MsaExecutor implements Vim {
 		final String customerId = (String) userData.get(CUSTOMER_ID);
 		varsMap.put("deviceid", (String) userData.get("vimId"));
 		varsMap.put("nsPkgId", nsdId);
-
+		// TODO My NFVO
+		varsMap.put("nfvoDevice", "TMA129");
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
 

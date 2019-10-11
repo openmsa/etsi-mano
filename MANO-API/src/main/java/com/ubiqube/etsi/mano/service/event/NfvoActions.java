@@ -51,7 +51,7 @@ public class NfvoActions {
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsdRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
@@ -96,19 +96,25 @@ public class NfvoActions {
 	}
 
 	public void nsInstantiate(final String nsInstanceId) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsInstanceRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.INSTANTIATE);
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-
 		final String nsdId = nsInstance.getNsdId();
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsdRepository.createLcmOpOccs(nsdId, LcmOperationTypeEnum.INSTANTIATE);
+
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
-		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateEnum.IN_USE);
 		// Create Ns.
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
 		LOG.info("Creating a MSA Job: {}", processId);
 		// Save Process Id with lcm
-		nsInstanceRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
-		msaExecutor.waitForCompletion(processId, 5 * 60);
+		nsdRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
+		if (status != LcmOperationStateType.COMPLETED) {
+			// update Lcm OpOccs
+			// send Notification.
+			LOG.warn("Instance #{} => {}", nsInstance.getId(), status);
+			return;
+		}
+		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateEnum.IN_USE);
 		// Instantiate each VNF.
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
@@ -123,7 +129,7 @@ public class NfvoActions {
 		// update lcm op occs
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		final LcmOperationStateType status = computeStatus(vnfLcmOpOccsIds);
+		status = computeStatus(vnfLcmOpOccsIds);
 		updateOperationState(lcmOpOccs, status);
 		// event->create (we have lcm op occs.)
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);

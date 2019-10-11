@@ -29,6 +29,6 @@ public class NsInstanceIndex {
 	public void addLcmOpOccs(final NsLcmOpOccsNsLcmOpOcc lcmOpOccs) {
 		final NsLcmOpOccsIndex lcmIdx = new NsLcmOpOccsIndex();
 		lcmIdx.setLcmOpOccsId(lcmOpOccs.getId());
-
+		lcmOpOccsIndex.put(lcmOpOccs.getId(), lcmIdx);
 	}
 }
