@@ -1,7 +1,7 @@
 package com.ubiqube.parser.tosca;
 
 public class ArtifactTypes {
-	private Object properties;
+	private ToscaProperties properties;
 	private String derived_from;
 	private Object attributes;
 	private String description;
@@ -12,11 +12,11 @@ public class ArtifactTypes {
 	private Object capabilities;
 	private Object artifacts;
 
-	public Object getProperties() {
+	public ToscaProperties getProperties() {
 		return properties;
 	}
 
-	public void setProperties(final Object properties) {
+	public void setProperties(final ToscaProperties properties) {
 		this.properties = properties;
 	}
 

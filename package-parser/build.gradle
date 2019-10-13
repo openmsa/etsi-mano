@@ -24,6 +24,7 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
 	// Use JUnit test framework
 	testImplementation('org.junit.jupiter:junit-jupiter:5.5.0')
 }

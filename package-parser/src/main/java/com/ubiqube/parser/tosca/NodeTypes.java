@@ -1,7 +1,9 @@
 package com.ubiqube.parser.tosca;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class NodeTypes {
-	private Object properties;
+	private ToscaProperties properties;
 	private String derived_from;
 	private Object attributes;
 	private String description;
@@ -12,19 +14,20 @@ public class NodeTypes {
 	private Object capabilities;
 	private Object artifacts;
 
-	public Object getProperties() {
+	public ToscaProperties getProperties() {
 		return properties;
 	}
 
-	public void setProperties(final Object properties) {
+	public void setProperties(final ToscaProperties properties) {
 		this.properties = properties;
 	}
 
-	public String getDerived_from() {
+	@JsonProperty("derived_from")
+	public String getDerivedFrom() {
 		return derived_from;
 	}
 
-	public void setDerived_from(final String derived_from) {
+	public void setDerivedFrom(final String derived_from) {
 		this.derived_from = derived_from;
 	}
 

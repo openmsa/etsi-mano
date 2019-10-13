@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ToscaClass {
 
-	private Object properties;
+	private ToscaProperties properties;
 	private String derivedFrom;
 	private Object attributes;
 	private String description;
@@ -18,6 +18,9 @@ public class ToscaClass {
 	private Object capabilities;
 	private Object artifacts;
 	private Object metadata;
+	// Used in relation ship only
+	private List<String> valid_target_types;
+	private Object credential;
 
 	public void setDerivedFrom(final String _derivedFrom) {
 		derivedFrom = _derivedFrom;
@@ -57,7 +60,7 @@ public class ToscaClass {
 	}
 
 	@JsonProperty("properties")
-	public Object getProperties() {
+	public ToscaProperties getProperties() {
 		return properties;
 	}
 
@@ -100,7 +103,7 @@ public class ToscaClass {
 		this.interfaces = interfaces;
 	}
 
-	public void setProperties(final Object properties) {
+	public void setProperties(final ToscaProperties properties) {
 		this.properties = properties;
 	}
 
@@ -114,6 +117,22 @@ public class ToscaClass {
 
 	public void setMetadata(final Object metadata) {
 		this.metadata = metadata;
+	}
+
+	public List<String> getValid_target_types() {
+		return valid_target_types;
+	}
+
+	public void setValid_target_types(final List<String> valid_target_types) {
+		this.valid_target_types = valid_target_types;
+	}
+
+	public Object getCredential() {
+		return credential;
+	}
+
+	public void setCredential(final Object credential) {
+		this.credential = credential;
 	}
 
 }

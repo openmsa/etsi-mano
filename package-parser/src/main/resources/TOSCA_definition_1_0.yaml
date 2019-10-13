@@ -870,8 +870,6 @@ artifact_types:
   tosca.artifacts.Root:
     description: >
       The TOSCA Artifact Type all other TOSCA Artifact Types derive from
-    properties:
-      version: version
 
   tosca.artifacts.File:
     derived_from: tosca.artifacts.Root

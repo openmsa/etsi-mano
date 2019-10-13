@@ -31,6 +31,7 @@ public class ToscaContext {
 	private Map<String, ToscaClass> relationship = new HashMap<>();
 	private Map<String, ToscaClass> artifacts = new HashMap<>();
 	private Map<String, ToscaClass> capabilities = new HashMap<>();
+	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
 	private final Resolver resolver = new Resolver();
 
 	private void init() {
@@ -154,6 +155,11 @@ public class ToscaContext {
 		for (final Entry<String, ToscaClass> toscaClass : entry2) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
+		sb.append(", classHierarchy=\n");
+		final Set<Entry<String, ToscaClassHolder>> entry4 = classHierarchy.entrySet();
+		for (final Entry<String, ToscaClassHolder> toscaClass : entry4) {
+			sb.append(" - ").append(toscaClass).append("\n");
+		}
 		sb.append("]");
 		return sb.toString();
 	}
@@ -219,9 +225,29 @@ public class ToscaContext {
 			if ((null != derived) && !nodeType.containsKey(derived)) {
 				// Throw exception unresolvable external/.
 				System.out.println(derived + " not a Node Type.");
-			} else {
-				// clazz.setDerived(nodeType.get(derived));
+			} else if (derived != null) {
+				final ToscaClassHolder parent = resolvDerived(derived);
+				final ToscaClassHolder tch = new ToscaClassHolder(clazz);
+				tch.setParent(parent);
+				classHierarchy.put(derived, tch);
 			}
 		}
 	}
+
+	private ToscaClassHolder resolvDerived(final String derived) {
+		final ToscaClassHolder parent = classHierarchy.get(derived);
+		if (null != parent) {
+			return parent;
+		}
+		final ToscaClass node = nodeType.get(derived);
+		LOG.debug("Node {} value={}", derived, node);
+		final ToscaClassHolder tch = new ToscaClassHolder(node);
+		classHierarchy.put(derived, tch);
+		if (node.getDerivedFrom() != null) {
+			final ToscaClassHolder newParent = resolvDerived(node.getDerivedFrom());
+			tch.setParent(newParent);
+		}
+		return tch;
+	}
+
 }

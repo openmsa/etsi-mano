@@ -26,4 +26,9 @@ public class TopologyTemplate {
 		this.nodeTemplate = nodeTemplate;
 	}
 
+	@Override
+	public String toString() {
+		return "TopologyTemplate [inputs=" + inputs + ", nodeTemplate=" + nodeTemplate + "]";
+	}
+
 }
