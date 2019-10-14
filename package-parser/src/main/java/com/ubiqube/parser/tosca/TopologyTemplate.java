@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TopologyTemplate {
 
 	private Object inputs;
-	private Map<String, NodeTemplate> nodeTemplate;
+	private Map<String, NodeTemplate> nodeTemplate = new HashMap<>();
 	private Map<String, GroupDefinition> groups = new HashMap<>();
 
 	public Object getInputs() {
@@ -39,6 +39,11 @@ public class TopologyTemplate {
 	@Override
 	public String toString() {
 		return "TopologyTemplate [inputs=" + inputs + ", nodeTemplate=" + nodeTemplate + "]";
+	}
+
+	public void putAll(final TopologyTemplate topologyTemplate) {
+		nodeTemplate.putAll(topologyTemplate.getNodeTemplate());
+		groups.putAll(topologyTemplate.getGroups());
 	}
 
 }

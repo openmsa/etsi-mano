@@ -459,9 +459,10 @@ relationship_types:
   tosca.relationships.ConnectsTo:
     derived_from: tosca.relationships.Root
     valid_target_types: [ tosca.capabilities.Endpoint ]
-    credential:
-      type: tosca.datatypes.Credential
-      required: false
+    properties:
+      credential:
+        type: tosca.datatypes.Credential
+        required: false
 
   tosca.relationships.AttachesTo:
     derived_from: tosca.relationships.Root

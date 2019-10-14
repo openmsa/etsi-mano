@@ -2,20 +2,24 @@ package com.ubiqube.parser.tosca;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.parser.tosca.deserializer.ImportDeserializer;
-import com.ubiqube.parser.tosca.deserializer.PropertyDeserializer;
 
 public class ToscaParser {
 
 	public ToscaContext parse(final String filename) {
 		final ObjectMapper mapper = getMapper();
 		try {
-			final ToscaRoot root = mapper.readValue(new File(filename), ToscaRoot.class);
+			final ToscaRoot root = loadToscaBase();
 			final ToscaContext ctx = new ToscaContext(root);
+			final ToscaRoot root2 = mapper.readValue(new File(filename), ToscaRoot.class);
+			ctx.addRoot(root2);
 			ctx.resolvImports();
 			ctx.resolvSymbols();
 			return ctx;
@@ -37,14 +41,23 @@ public class ToscaParser {
 		}
 	}
 
+	private ToscaRoot loadToscaBase() {
+		final InputStream stream = this.getClass().getClassLoader().getResourceAsStream("TOSCA_definition_1_0.yaml");
+		String content;
+		try {
+			content = IOUtils.toString(stream, Charset.defaultCharset());
+			final ObjectMapper mapper = getMapper();
+			return mapper.readValue(content.getBytes(), ToscaRoot.class);
+		} catch (final IOException e) {
+			throw new ParseException(e);
+		}
+	}
+
 	private ObjectMapper getMapper() {
 		final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		// mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		final SimpleModule module = new SimpleModule();
 		mapper.registerModule(module);
-
-		module.addDeserializer(Imports.class, new ImportDeserializer());
-		module.addDeserializer(ToscaProperties.class, new PropertyDeserializer());
 
 		return mapper;
 	}

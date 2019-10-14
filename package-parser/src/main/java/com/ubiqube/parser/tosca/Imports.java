@@ -19,4 +19,8 @@ public class Imports {
 	public Set<Entry<String, Import>> entrySet() {
 		return imports.entrySet();
 	}
+
+	public void putAll(final Imports imports2) {
+		imports.putAll(imports2.imports);
+	}
 }

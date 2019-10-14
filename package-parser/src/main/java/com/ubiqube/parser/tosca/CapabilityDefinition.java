@@ -9,7 +9,7 @@ public class CapabilityDefinition {
 	private ToscaProperties properties;
 	private Map<String, ValueObject> attributes;
 	private List<String> valid_source_types;
-	List<String> occurrences;
+	private Occurrences occurrences;
 
 	public String getType() {
 		return type;
@@ -51,11 +51,11 @@ public class CapabilityDefinition {
 		this.valid_source_types = valid_source_types;
 	}
 
-	public List<String> getOccurrences() {
+	public Occurrences getOccurrences() {
 		return occurrences;
 	}
 
-	public void setOccurrences(final List<String> occurrences) {
+	public void setOccurrences(final Occurrences occurrences) {
 		this.occurrences = occurrences;
 	}
 

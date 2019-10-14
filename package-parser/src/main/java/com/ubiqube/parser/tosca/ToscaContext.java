@@ -8,17 +8,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tosca.nodes.BlockStorage;
-import tosca.nodes.Compute;
-import tosca.nodes.DBMS;
-import tosca.nodes.Database;
-import tosca.nodes.LoadBalancer;
-import tosca.nodes.ObjectStorage;
-import tosca.nodes.Root;
-import tosca.nodes.SoftwareComponent;
-import tosca.nodes.WebApplication;
-import tosca.nodes.WebServer;
-
 public class ToscaContext {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaContext.class);
@@ -34,22 +23,6 @@ public class ToscaContext {
 	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
 	private final Resolver resolver = new Resolver();
 
-	private void init() {
-		nodeType.put("tosca.nodes.Root", new Root());
-		nodeType.put("tosca.nodes.Compute", new Compute());
-		nodeType.put("tosca.nodes.SoftwareComponent", new SoftwareComponent());
-		nodeType.put("tosca.nodes.WebServer", new WebServer());
-		nodeType.put("tosca.nodes.WebApplication", new WebApplication());
-		nodeType.put("tosca.nodes.DBMS", new DBMS());
-		nodeType.put("tosca.nodes.Database", new Database());
-
-		nodeType.put("tosca.nodes.ObjectStorage", new ObjectStorage());
-		nodeType.put("tosca.nodes.BlockStorage", new BlockStorage());
-		nodeType.put("tosca.nodes.Container.Runtime", new DBMS());
-		nodeType.put("tosca.nodes.Container.Application.Docker", new DBMS());
-		nodeType.put("tosca.nodes.LoadBalancer", new LoadBalancer());
-	}
-
 	public ToscaContext(final ToscaRoot root) {
 
 		artifacts = root.getArtifactTypes();
@@ -61,7 +34,6 @@ public class ToscaContext {
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
 
-		init();
 	}
 
 	public void setImports(final Imports _imports) {
@@ -248,6 +220,28 @@ public class ToscaContext {
 			tch.setParent(newParent);
 		}
 		return tch;
+	}
+
+	public void addRoot(final ToscaRoot root2) {
+		if (null != root2.getArtifactTypes()) {
+			artifacts.putAll(root2.getArtifactTypes());
+		}
+		if (null != root2.getCapabilityTypes()) {
+			capabilities.putAll(root2.getCapabilityTypes());
+		}
+		if ((null != root2.getImports()) && (null != imports)) {
+			imports.putAll(root2.getImports());
+		}
+		if (null != root2.getNodeTypes()) {
+			nodeType.putAll(root2.getNodeTypes());
+		}
+		if (null != root2.getRelationshipTypes()) {
+			relationship.putAll(root2.getRelationshipTypes());
+		}
+		if ((null != root2.getTopologyTemplate()) && (topologies != null)) {
+			topologies.putAll(root2.getTopologyTemplate());
+		}
+
 	}
 
 }
