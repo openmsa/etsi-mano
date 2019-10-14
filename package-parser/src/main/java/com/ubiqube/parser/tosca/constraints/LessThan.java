@@ -1,6 +1,4 @@
-package com.ubiqube.parser.tosca.deserializer;
-
-import com.ubiqube.parser.tosca.constraints.Constraint;
+package com.ubiqube.parser.tosca.constraints;
 
 public class LessThan implements Constraint {
 

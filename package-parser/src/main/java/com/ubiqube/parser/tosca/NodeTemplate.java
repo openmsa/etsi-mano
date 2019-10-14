@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class NodeTemplate {
 	private String type;
+	private String description;
 	private Object capabilities;
 	private Map<String, Object> properties;
 	private Object requirements;
@@ -65,6 +66,14 @@ public class NodeTemplate {
 
 	public void setInterfaces(final Object interfaces) {
 		this.interfaces = interfaces;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+		this.description = description;
 	}
 
 }

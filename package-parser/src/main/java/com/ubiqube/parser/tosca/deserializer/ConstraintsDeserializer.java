@@ -16,6 +16,7 @@ import com.ubiqube.parser.tosca.constraints.Constraint;
 import com.ubiqube.parser.tosca.constraints.Equal;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
 import com.ubiqube.parser.tosca.constraints.GreaterThan;
+import com.ubiqube.parser.tosca.constraints.LessThan;
 import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
 

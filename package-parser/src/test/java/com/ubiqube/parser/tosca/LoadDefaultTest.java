@@ -10,8 +10,8 @@ public class LoadDefaultTest {
 		final ToscaRoot root = def.load();
 		def.resolvProperties(root.getNodeTypes());
 		def.resolvProperties(root.getArtifactTypes());
-		def.resolvProperties(root.getCapabilityTypes());
-		def.resolvProperties(root.getRelationshipTypes());
+		// def.resolvProperties(root.getCapabilityTypes());
+		// def.resolvProperties(root.getRelationshipTypes());
 		System.out.println("" + root);
 	}
 }

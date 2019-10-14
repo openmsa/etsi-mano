@@ -4,6 +4,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ubiqube.parser.tosca.deserializer.ImportDeserializer;
+
+@JsonDeserialize(using = ImportDeserializer.class)
 public class Imports {
 
 	private final Map<String, Import> imports;
