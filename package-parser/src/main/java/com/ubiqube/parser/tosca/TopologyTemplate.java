@@ -7,15 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TopologyTemplate {
 
-	private Object inputs;
+	private Map<String, InputBean> inputs = new HashMap<>();;
 	private Map<String, NodeTemplate> nodeTemplate = new HashMap<>();
 	private Map<String, GroupDefinition> groups = new HashMap<>();
 
-	public Object getInputs() {
+	public Map<String, InputBean> getInputs() {
 		return inputs;
 	}
 
-	public void setInputs(final Object inputs) {
+	public void setInputs(final Map<String, InputBean> inputs) {
 		this.inputs = inputs;
 	}
 
