@@ -1,5 +1,7 @@
 package com.ubiqube.parser.tosca;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @doc 3.7.1 Entity Type Schema
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -7,17 +9,18 @@ package com.ubiqube.parser.tosca;
  */
 public class ToscaBaseEntity {
 
-	private String derived_from;
+	private String derivedFrom;
 	private String version;
 	private Object metadata;
 	private String description;
 
-	public final String getDerived_from() {
-		return derived_from;
+	@JsonProperty("derived_from")
+	public final String getDerivedFrom() {
+		return derivedFrom;
 	}
 
-	public final void setDerived_from(final String derived_from) {
-		this.derived_from = derived_from;
+	public final void setDerivedFrom(final String derivedFrom) {
+		this.derivedFrom = derivedFrom;
 	}
 
 	public final String getVersion() {
@@ -42,6 +45,24 @@ public class ToscaBaseEntity {
 
 	public final void setDescription(final String description) {
 		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("\tToscaBaseEntity [");
+		sb.append("\t\tderived_from: ").append(derivedFrom).append("\n");
+		if (null != description) {
+			sb.append("\t\tdescription: ").append(description).append("\n");
+		}
+		if (null != version) {
+			sb.append("\t\tversion: ").append(version).append("\n");
+		}
+		if (null != metadata) {
+			sb.append("metadata=" + metadata + ", ");
+		}
+		sb.append("]\n");
+		return super.toString();
 	}
 
 }

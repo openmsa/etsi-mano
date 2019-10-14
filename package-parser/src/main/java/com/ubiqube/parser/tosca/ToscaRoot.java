@@ -12,7 +12,7 @@ public class ToscaRoot {
 	private String description;
 	private Map<String, CapabilityTypes> capabilityTypes = new HashMap<>();
 	private Map<String, ToscaClass> artifactTypes = new HashMap<>();
-	private Map<String, RelationShip> relationshipTypes = new HashMap<>();
+	private Map<String, RelationshipType> relationshipTypes = new HashMap<>();
 	private Map<String, ToscaClass> nodeTypes = new HashMap<>();
 	private Map<String, Object> interface_types;
 	private Map<String, Object> data_types;
@@ -72,11 +72,11 @@ public class ToscaRoot {
 	}
 
 	@JsonProperty("relationship_types")
-	public Map<String, RelationShip> getRelationshipTypes() {
+	public Map<String, RelationshipType> getRelationshipTypes() {
 		return relationshipTypes;
 	}
 
-	public void setRelationshipTypes(final Map<String, RelationShip> relationshipTypes) {
+	public void setRelationshipTypes(final Map<String, RelationshipType> relationshipTypes) {
 		this.relationshipTypes = relationshipTypes;
 	}
 

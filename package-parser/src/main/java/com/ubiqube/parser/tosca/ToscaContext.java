@@ -17,7 +17,7 @@ public class ToscaContext {
 	private String version;
 	private TopologyTemplate topologies;
 	private Map<String, ToscaClass> nodeType = new HashMap<>();
-	private Map<String, RelationShip> relationship = new HashMap<>();
+	private Map<String, RelationshipType> relationship = new HashMap<>();
 	private Map<String, ToscaClass> artifacts = new HashMap<>();
 	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
 	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
@@ -56,7 +56,7 @@ public class ToscaContext {
 		nodeType = nodesType;
 	}
 
-	public void setRelationship(final Map<String, RelationShip> rels) {
+	public void setRelationship(final Map<String, RelationshipType> rels) {
 		relationship = rels;
 	}
 
@@ -88,7 +88,7 @@ public class ToscaContext {
 		return nodeType;
 	}
 
-	public Map<String, RelationShip> getRelationship() {
+	public Map<String, RelationshipType> getRelationship() {
 		return relationship;
 	}
 
@@ -111,8 +111,8 @@ public class ToscaContext {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 		sb.append(", relationship=\n");
-		final Set<Entry<String, RelationShip>> entry3 = relationship.entrySet();
-		for (final Entry<String, RelationShip> toscaClass : entry3) {
+		final Set<Entry<String, RelationshipType>> entry3 = relationship.entrySet();
+		for (final Entry<String, RelationshipType> toscaClass : entry3) {
 			sb.append(" - ").append(toscaClass).append("\n");
 		}
 

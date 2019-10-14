@@ -5,12 +5,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ToscaClass {
+public class ToscaClass extends ToscaBaseEntity {
 
 	private ToscaProperties properties;
-	private String derivedFrom;
 	private Map<String, ValueObject> attributes;
-	private String description;
 	private String mimeType;
 	private List<String> fileExt;
 	private RequirementDefinition requirements;
@@ -18,18 +16,9 @@ public class ToscaClass {
 
 	private Map<String, CapabilityDefinition> capabilities;
 	private Map<String, Artifact> artifacts;
-	private Object metadata;
 	// Used in relation ship only
 	private List<String> valid_target_types;
 	private Object credential;
-
-	public void setDerivedFrom(final String _derivedFrom) {
-		derivedFrom = _derivedFrom;
-	}
-
-	public void setDescription(final String _description) {
-		description = _description;
-	}
 
 	public void setMimeType(final String _mimeType) {
 		mimeType = _mimeType;
@@ -63,19 +52,6 @@ public class ToscaClass {
 	@JsonProperty("properties")
 	public ToscaProperties getProperties() {
 		return properties;
-	}
-
-	@JsonProperty("derived_from")
-	public String getDerivedFrom() {
-		return derivedFrom;
-	}
-
-	public Map<String, ValueObject> getAttributes() {
-		return attributes;
-	}
-
-	public String getDescription() {
-		return description;
 	}
 
 	@JsonProperty("mime_type")
@@ -112,14 +88,6 @@ public class ToscaClass {
 		this.attributes = attributes;
 	}
 
-	public Object getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final Object metadata) {
-		this.metadata = metadata;
-	}
-
 	public List<String> getValid_target_types() {
 		return valid_target_types;
 	}
@@ -140,17 +108,15 @@ public class ToscaClass {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ToscaClass [");
+		sb.append(super.toString());
 		if (null != properties) {
 			sb.append("properties=" + properties + ", ");
 		}
 
-		sb.append("derivedFrom=" + derivedFrom + ", ");
 		if (null != attributes) {
 			sb.append(", attributes=" + attributes + ", ");
 		}
-		if (null != description) {
-			sb.append("description=" + description + ", ");
-		}
+
 		if (null != mimeType) {
 			sb.append("mimeType=" + mimeType + ", ");
 		}
@@ -169,14 +135,12 @@ public class ToscaClass {
 		if (null != artifacts) {
 			sb.append("artifacts=" + artifacts + ", ");
 		}
-		if (null != metadata) {
-			sb.append("metadata=" + metadata + ", ");
-		}
+
 		if (null != valid_target_types) {
 			sb.append("valid_target_types=" + valid_target_types + ", ");
 		}
 		if (null != credential) {
-			sb.append("credential=" + credential);
+			sb.append("credential=" + credential).append(", ");
 		}
 		sb.append("]");
 		return sb.toString();

@@ -3,47 +3,11 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 import java.util.Map;
 
-public class RelationShip {
-	private String derived_from;
-	private String version;
-	private Object metadata;
-	private String description;
+public class RelationshipType extends ToscaBaseEntity {
 	private ToscaProperties properties;
 	private Map<String, ValueObject> attributes;
 	private Object interfaces;
 	private List<String> valid_target_types;
-
-	public String getDerived_from() {
-		return derived_from;
-	}
-
-	public void setDerived_from(final String derived_from) {
-		this.derived_from = derived_from;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(final String version) {
-		this.version = version;
-	}
-
-	public Object getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final Object metadata) {
-		this.metadata = metadata;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
 
 	public ToscaProperties getProperties() {
 		return properties;
