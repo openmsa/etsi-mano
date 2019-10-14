@@ -3,6 +3,7 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.parser.tosca.constraints.Constraint;
 
 public class ValueObject {
 	private String type;
@@ -10,7 +11,7 @@ public class ValueObject {
 	private Object def;
 	private String description;
 	private Object entrySchema;
-	private List<Object> constraints;
+	private List<Constraint> constraints;
 	private String status;
 
 	public String getType() {
@@ -55,11 +56,11 @@ public class ValueObject {
 		this.entrySchema = entrySchema;
 	}
 
-	public List<Object> getConstraints() {
+	public List<Constraint> getConstraints() {
 		return constraints;
 	}
 
-	public void setConstraints(final List<Object> constraints) {
+	public void setConstraints(final List<Constraint> constraints) {
 		this.constraints = constraints;
 	}
 

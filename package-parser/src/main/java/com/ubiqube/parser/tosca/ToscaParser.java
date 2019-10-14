@@ -6,6 +6,8 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.parser.tosca.deserializer.ImportDeserializer;
+import com.ubiqube.parser.tosca.deserializer.PropertyDeserializer;
 
 public class ToscaParser {
 

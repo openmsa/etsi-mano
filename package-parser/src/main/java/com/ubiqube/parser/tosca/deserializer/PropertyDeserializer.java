@@ -1,4 +1,4 @@
-package com.ubiqube.parser.tosca;
+package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,10 +12,12 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.ubiqube.parser.tosca.ToscaProperties;
+import com.ubiqube.parser.tosca.ValueObject;
 
 public class PropertyDeserializer extends StdDeserializer<ToscaProperties> {
 
-	protected PropertyDeserializer() {
+	public PropertyDeserializer() {
 		this(null);
 	}
 

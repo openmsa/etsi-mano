@@ -2,6 +2,7 @@ package com.ubiqube.parser.tosca;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,7 +13,6 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.parser.tosca.ir.FieldDefinition;
 
 public class LoadDefault {
 
@@ -20,7 +20,7 @@ public class LoadDefault {
 		final InputStream stream = this.getClass().getClassLoader().getResourceAsStream("TOSCA_definition_1_0.yaml");
 		String content;
 		try {
-			content = IOUtils.toString(stream);
+			content = IOUtils.toString(stream, Charset.defaultCharset());
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
@@ -45,19 +45,7 @@ public class LoadDefault {
 			final ToscaProperties props = val.getProperties();
 			if (null != props) {
 				final HashMap<String, ValueObject> vo = props.getProperties();
-				System.out.println(">> " + vo);
-				handleValueObject(vo);
 			}
-		}
-	}
-
-	private void handleValueObject(final HashMap<String, ValueObject> vo) {
-		final Set<Entry<String, ValueObject>> entries = vo.entrySet();
-		if (null != vo.get("type")) {
-			System.out.println(">> " + vo);
-			new FieldDefinition(entries);
-		} else {
-			// TODO a basic value.
 		}
 	}
 }

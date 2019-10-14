@@ -3,6 +3,7 @@ package com.ubiqube.parser.tosca;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ubiqube.parser.tosca.deserializer.PropertyDeserializer;
 
 @JsonDeserialize(using = PropertyDeserializer.class)
 public class ToscaProperties {

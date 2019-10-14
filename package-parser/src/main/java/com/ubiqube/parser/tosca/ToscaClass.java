@@ -135,4 +135,9 @@ public class ToscaClass {
 		this.credential = credential;
 	}
 
+	@Override
+	public String toString() {
+		return "ToscaClass [properties=" + properties + ", derivedFrom=" + derivedFrom + ", attributes=" + attributes + ", description=" + description + ", mimeType=" + mimeType + ", fileExt=" + fileExt + ", requirements=" + requirements + ", interfaces=" + interfaces + ", capabilities=" + capabilities + ", artifacts=" + artifacts + ", metadata=" + metadata + ", valid_target_types=" + valid_target_types + ", credential=" + credential + "]";
+	}
+
 }
