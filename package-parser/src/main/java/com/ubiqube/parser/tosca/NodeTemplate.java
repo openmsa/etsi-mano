@@ -7,9 +7,9 @@ public class NodeTemplate {
 	private String description;
 	private Object capabilities;
 	private Map<String, Object> properties;
-	private Object requirements;
-	private Object attributes;
-	private Object artifacts;
+	private RequirementDefinition requirements;
+	private Map<String, ValueObject> attributes;
+	private Map<String, Artifact> artifacts;
 	private Object interfaces;
 
 	public String getType() {
@@ -20,11 +20,11 @@ public class NodeTemplate {
 		this.type = type;
 	}
 
-	public Object getRequirements() {
+	public RequirementDefinition getRequirements() {
 		return requirements;
 	}
 
-	public void setRequirements(final Object requirements) {
+	public void setRequirements(final RequirementDefinition requirements) {
 		this.requirements = requirements;
 	}
 
@@ -44,19 +44,19 @@ public class NodeTemplate {
 		this.properties = properties;
 	}
 
-	public Object getAttributes() {
+	public Map<String, ValueObject> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(final Object attributes) {
+	public void setAttributes(final Map<String, ValueObject> attributes) {
 		this.attributes = attributes;
 	}
 
-	public Object getArtifacts() {
+	public Map<String, Artifact> getArtifacts() {
 		return artifacts;
 	}
 
-	public void setArtifacts(final Object artifacts) {
+	public void setArtifacts(final Map<String, Artifact> artifacts) {
 		this.artifacts = artifacts;
 	}
 

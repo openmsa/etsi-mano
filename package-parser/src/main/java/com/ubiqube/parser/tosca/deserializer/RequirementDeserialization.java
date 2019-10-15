@@ -47,9 +47,14 @@ public class RequirementDeserialization extends StdDeserializer<RequirementDefin
 		while (fields.hasNext()) {
 			final Map.Entry<String, JsonNode> entry = fields.next();
 			try {
-				final Requirement req = objectCodec.treeToValue(entry.getValue(), Requirement.class);
+				Requirement req;
+				if (entry.getValue().isTextual()) {
+					req = new Requirement();
+					req.setCapability(entry.getValue().asText());
+				} else {
+					req = objectCodec.treeToValue(entry.getValue(), Requirement.class);
+				}
 				reqMap.put(entry.getKey(), req);
-				;
 			} catch (final JsonProcessingException e) {
 				throw new ParseException(e);
 			}

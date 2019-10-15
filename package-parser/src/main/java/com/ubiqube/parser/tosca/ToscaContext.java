@@ -142,13 +142,15 @@ public class ToscaContext {
 		}
 		final Set<Entry<String, Import>> entry = imports.entrySet();
 		for (final Entry<String, Import> entry2 : entry) {
-			LOG.info("Resolving: {}", entry2.getKey());
+			LOG.info("Resolving: {} -> {}", entry2.getKey(), entry2.getValue());
 			final Import value = entry2.getValue();
 			final String content = resolver.getContent(value.getUrl());
 			final ToscaParser main = new ToscaParser();
 			final ToscaContext context = main.parseContent(content);
 			context.resolvImports();
+			LOG.debug("Before new CTX={}, current={}", context.nodeType.size(), nodeType.size());
 			mergeContext(context);
+			LOG.debug("After new CTX={}, current={}", context.nodeType.size(), nodeType.size());
 		}
 	}
 
@@ -190,18 +192,48 @@ public class ToscaContext {
 	}
 
 	public void resolvSymbols() {
+		LOG.debug("Resolv symbol of CTX={}", nodeType.size());
 		final Set<Entry<String, ToscaClass>> entries = nodeType.entrySet();
 		for (final Entry<String, ToscaClass> entry : entries) {
 			final ToscaClass clazz = entry.getValue();
 			final String derived = clazz.getDerivedFrom();
 			if ((null != derived) && !nodeType.containsKey(derived)) {
 				// Throw exception unresolvable external/.
-				System.out.println(derived + " not a Node Type.");
+				LOG.error("{} not a Node Type.", derived);
 			} else if (derived != null) {
 				final ToscaClassHolder parent = resolvDerived(derived);
 				final ToscaClassHolder tch = new ToscaClassHolder(clazz);
 				tch.setParent(parent);
-				classHierarchy.put(derived, tch);
+
+				registerTch(entry.getKey(), tch);
+			} else {
+				final ToscaClassHolder tch = new ToscaClassHolder(clazz);
+				registerTch(entry.getKey(), tch);
+			}
+		}
+		resolvTopology();
+	}
+
+	private void registerTch(final String key, final ToscaClassHolder tch) {
+		classHierarchy.put(key, tch);
+		if (key.startsWith("tosca.nodes.")) {
+			classHierarchy.put(key.substring("tosca.nodes.".length()), tch);
+		}
+	}
+
+	private void resolvTopology() {
+		if (null == topologies) {
+			LOG.info("No Topology.");
+			return;
+		}
+		final Set<Entry<String, NodeTemplate>> nodes = topologies.getNodeTemplate().entrySet();
+		for (final Entry<String, NodeTemplate> entry : nodes) {
+			LOG.debug("Analyzing Entry {}", entry.getKey());
+			final NodeTemplate nodeTmpl = entry.getValue();
+			final String type = nodeTmpl.getType();
+			final ToscaClassHolder tch = classHierarchy.get(type);
+			if (null == tch) {
+				throw new ParseException("Unable to find implementation of: " + type + " in: " + entry.getKey());
 			}
 		}
 	}
@@ -212,7 +244,7 @@ public class ToscaContext {
 			return parent;
 		}
 		final ToscaClass node = nodeType.get(derived);
-		LOG.debug("Node {} value={}", derived, node);
+		LOG.debug("Building Tree Node {} ", derived);
 		final ToscaClassHolder tch = new ToscaClassHolder(node);
 		classHierarchy.put(derived, tch);
 		if (node.getDerivedFrom() != null) {
@@ -229,8 +261,12 @@ public class ToscaContext {
 		if (null != root2.getCapabilityTypes()) {
 			capabilities.putAll(root2.getCapabilityTypes());
 		}
-		if ((null != root2.getImports()) && (null != imports)) {
-			imports.putAll(root2.getImports());
+		if ((null != root2.getImports())) {
+			if (null == imports) {
+				imports = root2.getImports();
+			} else {
+				imports.putAll(root2.getImports());
+			}
 		}
 		if (null != root2.getNodeTypes()) {
 			nodeType.putAll(root2.getNodeTypes());
@@ -238,8 +274,12 @@ public class ToscaContext {
 		if (null != root2.getRelationshipTypes()) {
 			relationship.putAll(root2.getRelationshipTypes());
 		}
-		if ((null != root2.getTopologyTemplate()) && (topologies != null)) {
-			topologies.putAll(root2.getTopologyTemplate());
+		if ((null != root2.getTopologyTemplate())) {
+			if (null == topologies) {
+				topologies = root2.getTopologyTemplate();
+			} else {
+				topologies.putAll(root2.getTopologyTemplate());
+			}
 		}
 
 	}

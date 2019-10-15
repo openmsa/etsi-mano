@@ -18,7 +18,6 @@ public class ToscaClass extends ToscaBaseEntity {
 	private Map<String, Artifact> artifacts;
 	// Used in relation ship only
 	private List<String> valid_target_types;
-	private Object credential;
 
 	public void setMimeType(final String _mimeType) {
 		mimeType = _mimeType;
@@ -96,14 +95,6 @@ public class ToscaClass extends ToscaBaseEntity {
 		this.valid_target_types = valid_target_types;
 	}
 
-	public Object getCredential() {
-		return credential;
-	}
-
-	public void setCredential(final Object credential) {
-		this.credential = credential;
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -138,9 +129,6 @@ public class ToscaClass extends ToscaBaseEntity {
 
 		if (null != valid_target_types) {
 			sb.append("valid_target_types=" + valid_target_types + ", ");
-		}
-		if (null != credential) {
-			sb.append("credential=" + credential).append(", ");
 		}
 		sb.append("]");
 		return sb.toString();

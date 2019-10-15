@@ -34,7 +34,6 @@ public class ToscaParser {
 			final ToscaRoot root = mapper.readValue(content, ToscaRoot.class);
 			final ToscaContext ctx = new ToscaContext(root);
 			ctx.resolvImports();
-			ctx.resolvSymbols();
 			return ctx;
 		} catch (final IOException e) {
 			throw new ParseException(e);

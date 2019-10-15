@@ -105,11 +105,12 @@ topology_template:
         - local_storage:
             # capability is provided by Compute Node Type
             node: my_block_storage           
-            relationship:
-              type: AttachesTo
-              properties:
-                location: /mnt/disk
-                device: hdb
+            # OVI: The spec say String, maybe we should allow that.
+            #relationship:
+            #  type: AttachesTo
+            #  properties:
+            #    location: /mnt/disk
+            #    device: hdb
 
     my_block_storage:
       type: BlockStorage
