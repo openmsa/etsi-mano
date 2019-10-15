@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -32,12 +33,18 @@ public class ImportDeserializer extends StdDeserializer<Imports> {
 		final Map<String, Import> imports = new HashMap<>();
 		final ArrayNode value = p.getCodec().readTree(p);
 		for (final JsonNode jsonNode : value) {
-			final ObjectNode node = (ObjectNode) jsonNode;
-			final Iterator<Entry<String, JsonNode>> fields = node.fields();
-			while (fields.hasNext()) {
-				final Entry<String, JsonNode> entry = fields.next();
-				final Import imprt = new Import(entry.getKey(), entry.getValue().asText());
-				imports.put(entry.getKey(), imprt);
+			if (jsonNode.isObject()) {
+				final ObjectNode node = (ObjectNode) jsonNode;
+				final Iterator<Entry<String, JsonNode>> fields = node.fields();
+				while (fields.hasNext()) {
+					final Entry<String, JsonNode> entry = fields.next();
+					final Import imprt = new Import(entry.getKey(), entry.getValue().asText());
+					imports.put(entry.getKey(), imprt);
+				}
+			} else if (jsonNode.isTextual()) {
+				final String key = UUID.randomUUID().toString();
+				final Import imprt = new Import(key, jsonNode.asText());
+				imports.put(key, imprt);
 			}
 		}
 

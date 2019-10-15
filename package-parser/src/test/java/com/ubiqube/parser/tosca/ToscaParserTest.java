@@ -38,4 +38,25 @@ public class ToscaParserTest {
 		final ToscaContext root = tp.parse("src/test/resources/TOSCA_nfv_definition_1_0_0.yaml");
 		System.out.println("" + root);
 	}
+
+	@Test
+	void testName6() throws Exception {
+		final ToscaParser tp = new ToscaParser();
+		final ToscaContext root = tp.parse("src/test/resources/etsi_nfv_sol001_nsd_types.yaml");
+		System.out.println("" + root);
+	}
+
+	@Test
+	void testName7() throws Exception {
+		final ToscaParser tp = new ToscaParser();
+		final ToscaContext root = tp.parse("src/test/resources/etsi_nfv_sol001_pnfd_types.yaml");
+		System.out.println("" + root);
+	}
+
+	@Test
+	void testName8() throws Exception {
+		final ToscaParser tp = new ToscaParser();
+		final ToscaContext root = tp.parse("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml");
+		System.out.println("" + root);
+	}
 }

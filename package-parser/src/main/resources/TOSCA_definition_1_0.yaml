@@ -808,8 +808,7 @@ data_types:
           type: string
 
   tosca.datatypes.network.PortDef:
-    derived_from: tosca.datatypes.Root
-    type: integer
+    derived_from: integer
     constraints:
       - in_range: [ 1, 65535 ]
 

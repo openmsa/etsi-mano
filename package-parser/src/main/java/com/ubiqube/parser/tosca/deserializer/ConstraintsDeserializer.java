@@ -16,6 +16,7 @@ import com.ubiqube.parser.tosca.constraints.Constraint;
 import com.ubiqube.parser.tosca.constraints.Equal;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
 import com.ubiqube.parser.tosca.constraints.GreaterThan;
+import com.ubiqube.parser.tosca.constraints.InRange;
 import com.ubiqube.parser.tosca.constraints.LessThan;
 import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
@@ -49,6 +50,8 @@ public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
 				return new GreaterThan(entry.getKey());
 			} else if ("less_than".equals(key)) {
 				return new LessThan(entry.getKey());
+			} else if ("in_range".equals(key)) {
+				return new InRange(entry.getValue());
 			} else {
 				throw new ParseException("Unknow Constraint: " + key);
 			}

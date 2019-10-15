@@ -15,9 +15,10 @@ public class ToscaRoot {
 	private Map<String, RelationshipType> relationshipTypes = new HashMap<>();
 	private Map<String, ToscaClass> nodeTypes = new HashMap<>();
 	private Map<String, Object> interface_types;
-	private Map<String, Object> data_types;
-	private Map<String, Object> policy_types;
-	private Map<String, Object> group_types;
+	private Map<String, DataType> data_types;
+	private Map<String, PolicyType> policy_types;
+	private Map<String, GroupType> group_types;
+	private Map<String, String> metadata;
 
 	public Imports getImports() {
 		return imports;
@@ -97,28 +98,36 @@ public class ToscaRoot {
 		this.interface_types = interface_type;
 	}
 
-	public Map<String, Object> getData_types() {
+	public Map<String, DataType> getData_types() {
 		return data_types;
 	}
 
-	public void setData_types(final Map<String, Object> data_types) {
+	public void setData_types(final Map<String, DataType> data_types) {
 		this.data_types = data_types;
 	}
 
-	public Map<String, Object> getPolicy_types() {
+	public Map<String, PolicyType> getPolicy_types() {
 		return policy_types;
 	}
 
-	public void setPolicy_types(final Map<String, Object> policy_types) {
+	public void setPolicy_types(final Map<String, PolicyType> policy_types) {
 		this.policy_types = policy_types;
 	}
 
-	public Map<String, Object> getGroup_types() {
+	public Map<String, GroupType> getGroup_types() {
 		return group_types;
 	}
 
-	public void setGroup_types(final Map<String, Object> group_types) {
+	public void setGroup_types(final Map<String, GroupType> group_types) {
 		this.group_types = group_types;
+	}
+
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 
 	@Override

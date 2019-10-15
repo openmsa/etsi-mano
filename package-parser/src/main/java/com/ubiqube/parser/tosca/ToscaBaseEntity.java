@@ -1,5 +1,7 @@
 package com.ubiqube.parser.tosca;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -11,7 +13,7 @@ public class ToscaBaseEntity {
 
 	private String derivedFrom;
 	private String version;
-	private Object metadata;
+	private Map<String, String> metadata;
 	private String description;
 
 	@JsonProperty("derived_from")
@@ -31,11 +33,11 @@ public class ToscaBaseEntity {
 		this.version = version;
 	}
 
-	public final Object getMetadata() {
+	public final Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public final void setMetadata(final Object metadata) {
+	public final void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

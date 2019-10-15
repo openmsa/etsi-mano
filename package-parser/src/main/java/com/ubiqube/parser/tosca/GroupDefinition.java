@@ -1,11 +1,13 @@
 package com.ubiqube.parser.tosca;
 
 import java.util.List;
+import java.util.Map;
 
 public class GroupDefinition {
 	private String type;
 	private String description;
-	private Object metadata;
+	private Map<String, String> metadata;
+	// Normally it should be a ToscaProperties.
 	private Object properties;
 	private List<String> members;
 
@@ -25,11 +27,11 @@ public class GroupDefinition {
 		this.description = description;
 	}
 
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final Object metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
