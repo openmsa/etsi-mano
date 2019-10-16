@@ -11,18 +11,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Vim;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 
@@ -38,8 +43,9 @@ public class NfvoActions {
 	private final VnfmInterface vnfm;
 	private final Vim msaExecutor;
 	private final EventManager eventManager;
+	private final VnfPackageRepository vnfPackageRepository;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -48,6 +54,7 @@ public class NfvoActions {
 		vnfm = _vnfm;
 		msaExecutor = _msaExecutor;
 		eventManager = _eventManager;
+		vnfPackageRepository = _vnfPackageRepository;
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
@@ -119,7 +126,15 @@ public class NfvoActions {
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfPkgIds) {
-			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfInstatiate(nsInstanceId, vnfId);
+			NsInstancesNsInstanceVnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkgId().equals(vnfId)).findFirst().orElse(null);
+			if (null == nsVnfInstance) {
+				final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
+				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPkgInfo, "", "Sub-instance " + nsInstanceId);
+				nsVnfInstance = VnfInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, "vimId?");
+				nsInstance.addVnfInstanceItem(nsVnfInstance);
+				nsInstanceRepository.save(nsInstance);
+			}
+			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId(), vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.
