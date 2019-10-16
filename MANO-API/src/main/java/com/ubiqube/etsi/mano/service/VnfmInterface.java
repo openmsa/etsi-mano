@@ -10,7 +10,7 @@ public interface VnfmInterface {
 
 	VnfInstance createVnfInstance(final VnfPkgInfo vnf, String vnfInstanceDescription, String vnfInstanceName);
 
-	VnfLcmOpOcc vnfInstatiate(String nsInstanceId, String vnfId);
+	VnfLcmOpOcc vnfInstatiate(String vnfInstanceId, String vnfId);
 
 	VnfLcmOpOcc getVnfLcmOpOccs(@NotNull String id);
 
