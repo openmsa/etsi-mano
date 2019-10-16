@@ -31,8 +31,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 
-@Api(value = "vnf_packages")
+@Api(value = "vnf_packages", authorizations = { @Authorization(value = "basicAuth") }, produces = "application/json", consumes = "application/json")
 @RequestMapping("/sol005/vnfpkgm/v1/vnf_packages")
 public interface VnfPackageSol005 {
 
