@@ -111,7 +111,7 @@ public class MsaExecutor implements Vim {
 					return convert(status);
 				}
 				Thread.sleep(30 * 1000);
-			} catch (NumberFormatException | ServiceException | InterruptedException e) {
+			} catch (NumberFormatException | InterruptedException e) {
 				throw new GenericException(e);
 			}
 		}
