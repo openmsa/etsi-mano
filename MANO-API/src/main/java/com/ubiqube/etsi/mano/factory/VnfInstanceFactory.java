@@ -9,6 +9,13 @@ public class VnfInstanceFactory {
 		// Nothing
 	}
 
+	/**
+	 * Duplicate of NsInstanceFactory.
+	 * 
+	 * @param vnfInstance
+	 * @param vimId
+	 * @return
+	 */
 	public static NsInstancesNsInstanceVnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance vnfInstance, final String vimId) {
 		final NsInstancesNsInstanceVnfInstance nsInstancesNsInstanceVnfInstance = new NsInstancesNsInstanceVnfInstance();
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
