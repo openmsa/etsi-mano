@@ -22,4 +22,13 @@ public class ToscaClassHolder {
 		return "ToscaClassHolder [parent=" + parent + ", node=" + node + "]\n";
 	}
 
+	public boolean isInstanceOf(final String clazz) {
+		if (node.getDerivedFrom().equals(clazz)) {
+			return true;
+		}
+		if (parent != null) {
+			return parent.isInstanceOf(clazz);
+		}
+		return false;
+	}
 }
