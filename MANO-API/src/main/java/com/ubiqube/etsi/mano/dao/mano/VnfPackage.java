@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -24,8 +25,9 @@ public class VnfPackage {
 	private String vnfSoftwareVersion;
 	private String vnfdVersion;
 	private Checksum checksum;
-
+	@OneToMany
 	private Set<SoftwareImage> softwareImages;
+	@OneToMany
 	private Set<AdditionalArtifact> additionalArtifacts;
 	private OnboardingStateEnum onboardingState;
 	private OperationalStateEnum operationalState;
