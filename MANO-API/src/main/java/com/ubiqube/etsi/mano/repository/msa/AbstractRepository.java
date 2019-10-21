@@ -4,6 +4,7 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
 
 /**
@@ -13,7 +14,7 @@ import com.ubiqube.etsi.mano.repository.CrudRepository;
  *
  * @param <T> A storable object.
  */
-public abstract class AbstractRepository<T> implements CrudRepository<T> {
+public abstract class AbstractRepository<T> implements CrudRepository<T>, BinaryRepository {
 
 	protected RepositoryService repositoryService;
 

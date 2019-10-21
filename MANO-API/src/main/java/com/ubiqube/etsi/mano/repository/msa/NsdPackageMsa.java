@@ -66,19 +66,19 @@ public class NsdPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInf
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, state);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		// Add newly created instance to Indexes.json
-		final NsInstanceIndex nsInstanceIndex = loadObject(nsInstanceId, NsInstanceIndex.class, "indexes.json");
+		final NsInstanceIndex nsInstanceIndex = loadObject(nsInstanceId, "indexes.json", NsInstanceIndex.class);
 		nsInstanceIndex.addLcmOpOccs(lcmOpOccs);
-		storeObject(nsInstanceId, nsInstanceIndex, "indexes.json");
+		storeObject(nsInstanceId, "indexes.json", nsInstanceIndex);
 		return lcmOpOccs;
 	}
 
 	@Override
 	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = lcmOpOccsRepository.get(lcmOpOccsId);
-		final NsInstanceIndex nsInstanceIndex = loadObject(lcmOpOccs.getNsInstanceId(), NsInstanceIndex.class, "indexes.json");
+		final NsInstanceIndex nsInstanceIndex = loadObject(lcmOpOccs.getNsInstanceId(), "indexes.json", NsInstanceIndex.class);
 		final NsLcmOpOccsIndex lcmIdx = nsInstanceIndex.getLcmOpOccs(lcmOpOccsId);
 		lcmIdx.setProcessId(processId);
-		storeObject(lcmOpOccs.getNsInstanceId(), nsInstanceIndex, "indexes.json");
+		storeObject(lcmOpOccs.getNsInstanceId(), "indexes.json", nsInstanceIndex);
 	}
 
 	@Override

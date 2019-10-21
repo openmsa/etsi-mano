@@ -83,9 +83,9 @@ public class VnfInstanceLcm {
 		vnfInstance.setId(id);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfId, VnfPkgIndex.class, "indexes.json");
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfId, "indexes.json", VnfPkgIndex.class);
 		vnfPkgIndex.addVnfPkgInstance(new VnfPkgInstance(vnfInstance.getId()));
-		vnfPackageRepository.storeObject(vnfId, vnfPkgIndex, "indexes.json");
+		vnfPackageRepository.storeObject(vnfId, "indexes.json", vnfPkgIndex);
 
 		return vnfInstance;
 	}
@@ -95,12 +95,12 @@ public class VnfInstanceLcm {
 		ensureNotInstantiated(vnfInstance);
 		// Clean LCM Repository.
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, VnfPkgIndex.class, "indexes.json");
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, "indexes.json", VnfPkgIndex.class);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 		instance.getOperations().values().stream().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
 		lcmOpOccsMsa.delete(vnfInstanceId);
 		vnfPkgIndex.remove(instance);
-		vnfPackageRepository.storeObject(vnfPkgId, vnfPkgIndex, "indexes.json");
+		vnfPackageRepository.storeObject(vnfPkgId, "indexes.json", vnfPkgIndex);
 
 		if (vnfPkgIndex.isEmpty()) {
 			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
@@ -134,7 +134,7 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), "indexes.json", VnfPkgIndex.class);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 
 		instance.getOperations().values().forEach(x -> lcmOpOccsMsa.delete(x.getId()));
@@ -144,7 +144,7 @@ public class VnfInstanceLcm {
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
-		vnfPackageRepository.storeObject(vnfPkg.getId(), vnfPkgIndex, "indexes.json");
+		vnfPackageRepository.storeObject(vnfPkg.getId(), "indexes.json", vnfPkgIndex);
 		addVnfOperation(vnfPkgId, processId, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
 		vnfPackageRepository.save(vnfPkg);
 		vnfInstancesRepository.save(vnfInstance);
@@ -153,12 +153,12 @@ public class VnfInstanceLcm {
 	private NsLcmOpOccsNsLcmOpOcc addVnfOperation(final String _vnfPkgId, final String _processId, final String _vnfInstanceId, final LcmOperationTypeEnum _lcmOperationType) {
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
 		lcmOpOccsMsa.save(lcmOpOccs);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(_vnfPkgId, VnfPkgIndex.class, "indexes.json");
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(_vnfPkgId, "indexes.json", VnfPkgIndex.class);
 		final VnfPkgOperation VnfPkgOperation = new VnfPkgOperation(lcmOpOccs.getId(), _processId);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(_vnfInstanceId);
 		instance.addOperation(VnfPkgOperation);
 
-		vnfPackageRepository.storeObject(_vnfPkgId, vnfPkgIndex, "indexes.json");
+		vnfPackageRepository.storeObject(_vnfPkgId, "indexes.json", vnfPkgIndex);
 		return lcmOpOccs;
 	}
 

@@ -81,13 +81,13 @@ public class NsdPackageFacade implements NsdRepository {
 	}
 
 	@Override
-	public void storeObject(final String _id, final Object _object, final String _filename) {
+	public void storeObject(final String _id, final String _filename, final Object _object) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void storeBinary(final String _id, final InputStream _stream, final String _filename) {
+	public void storeBinary(final String _id, final String _filename, final InputStream _stream) {
 		// TODO Auto-generated method stub
 
 	}
@@ -111,7 +111,7 @@ public class NsdPackageFacade implements NsdRepository {
 	}
 
 	@Override
-	public <T, U extends Class> T loadObject(@NotNull final String _id, final U t, final String _filename) {
+	public <T, U extends Class> T loadObject(@NotNull final String _id, final String _filename, final U t) {
 		// TODO Auto-generated method stub
 		return null;
 	}

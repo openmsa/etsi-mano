@@ -147,13 +147,13 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		vnfPackageRepository.save(vnfPkgInfo);
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
-			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
+			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
-		vnfPackageRepository.storeObject(vnfPkgInfo.getId(), new VnfPkgIndex(), "indexes.json");
+		vnfPackageRepository.storeObject(vnfPkgInfo.getId(), "indexes.json", new VnfPkgIndex());
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 

@@ -252,9 +252,9 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstance.setVnfInstance(vnfInstances);
 		nsInstanceRepository.save(nsInstance);
 
-		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(req.getNsdId(), NsdPkgIndex.class, "indexes.json");
+		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(req.getNsdId(), "indexes.json", NsdPkgIndex.class);
 		nsdIndex.addNsdPkgInstance(new NsdPkgInstance(nsInstance.getId()));
-		nsdRepository.storeObject(req.getNsdId(), nsdIndex, "indexes.json");
+		nsdRepository.storeObject(req.getNsdId(), "indexes.json", nsdIndex);
 
 		nsInstance.setLinks(makeLink(nsInstance.getId()));
 		final InlineResponse200 resp = new InlineResponse200();

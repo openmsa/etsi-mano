@@ -77,12 +77,12 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 		vnfLcmOpOccsRepository.save(vnfLcmOpOcc);
 
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		final VnfPkgIndex vnfPkgIndex = loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
+		final VnfPkgIndex vnfPkgIndex = loadObject(vnfInstance.getVnfPkgId(), "indexes.json", VnfPkgIndex.class);
 		final VnfPkgInstance instance = new VnfPkgInstance(vnfInstanceId);
 		final VnfPkgOperation vnfPackageOperation = new VnfPkgOperation(vnfLcmOpOcc.getId());
 		instance.addOperation(vnfPackageOperation);
 		vnfPkgIndex.addVnfPkgInstance(instance);
-		storeObject(vnfInstance.getVnfPkgId(), vnfPkgIndex, "indexes.json");
+		storeObject(vnfInstance.getVnfPkgId(), "indexes.json", vnfPkgIndex);
 		return vnfLcmOpOcc;
 	}
 
@@ -99,10 +99,10 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 		@NotNull
 		final String vnfInstanceId = lcmOpOccs.getVnfInstanceId();
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		final VnfPkgIndex vnfPkgIndex = loadObject(vnfInstance.getVnfPkgId(), VnfPkgIndex.class, "indexes.json");
+		final VnfPkgIndex vnfPkgIndex = loadObject(vnfInstance.getVnfPkgId(), "indexes.json", VnfPkgIndex.class);
 		final VnfPkgInstance indexInstance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 		final VnfPkgOperation operation = indexInstance.getOperation(id);
 		operation.setProcessId(processId);
-		storeObject(vnfInstance.getVnfPkgId(), vnfPkgIndex, "indexes.json");
+		storeObject(vnfInstance.getVnfPkgId(), "indexes.json", vnfPkgIndex);
 	}
 }

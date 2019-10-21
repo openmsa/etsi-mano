@@ -215,7 +215,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		ensureNotOnboarded(nsdInfo);
 		try {
 			// Must be Async.
-			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
+			nsdRepository.storeBinary(nsdInfoId, "nsd", file.getInputStream());
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -281,12 +281,12 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdRepository.save(nsdDescriptor);
 
 		if (null != userDefinedData.get("heat")) {
-			nsdRepository.storeObject(nsdDescriptor.getId(), userDefinedData.get("heat"), "nsd");
+			nsdRepository.storeObject(nsdDescriptor.getId(), "nsd", userDefinedData.get("heat"));
 			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
 			nsdDescriptor.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
 			nsdRepository.save(nsdDescriptor);
 		}
-		nsdRepository.storeObject(nsdDescriptor.getId(), new VnfPkgIndex(), "indexes.json");
+		nsdRepository.storeObject(nsdDescriptor.getId(), "indexes.json", new VnfPkgIndex());
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
 		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
 	}

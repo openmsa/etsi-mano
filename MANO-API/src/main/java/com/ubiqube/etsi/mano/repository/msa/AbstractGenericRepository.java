@@ -110,7 +110,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public void storeObject(final String _id, final Object _object, final String _filename) {
+	public void storeObject(final String _id, final String _filename, final Object _object) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -121,7 +121,8 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 	}
 
-	public final <T, U extends Class> T loadObject(@NotNull final String _id, final U t, final String _filename) {
+	@Override
+	public final <T, U extends Class> T loadObject(@NotNull final String _id, final String _filename, final U t) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -140,7 +141,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public void storeBinary(final String _id, final InputStream _stream, final String _filename) {
+	public void storeBinary(final String _id, final String _filename, final InputStream _stream) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);

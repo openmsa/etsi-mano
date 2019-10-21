@@ -20,6 +20,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
 import com.ubiqube.etsi.mano.repository.Low;
 
@@ -28,7 +29,7 @@ import com.ubiqube.etsi.mano.repository.Low;
  * @author Olivier
  *
  */
-public abstract class GenaricBinaryRepository<T> implements CrudRepository<T> {
+public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, BinaryRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GenaricBinaryRepository.class);
 
@@ -81,17 +82,12 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T> {
 		final String id = setId(entity);
 		final Path path = getRoot(id);
 		path.toFile().mkdirs();
-		storeObject(id, entity, getFilename());
+		storeObject(id, getFilename(), entity);
 		return entity;
 	}
 
-	public <T, U extends Class> T loadObject(@NotNull final String _id, final U t, final String _filename) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
-	public final void storeObject(final String _id, final Object _object, final String _filename) {
+	public final void storeObject(final String _id, final String _filename, final Object _object) {
 		Path path = getRoot(_id);
 		verifyPath(path);
 		try {
@@ -104,7 +100,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T> {
 	}
 
 	@Override
-	public final void storeBinary(final String _id, final InputStream _stream, final String _filename) {
+	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
 		Path path = getRoot(_id);
 		verifyPath(path);
 		try {
@@ -135,6 +131,12 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T> {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	@Override
+	public <T, U extends Class> T loadObject(@NotNull final String _id, @NotNull final String _filename, final U t) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	protected abstract String setId(T entity);
