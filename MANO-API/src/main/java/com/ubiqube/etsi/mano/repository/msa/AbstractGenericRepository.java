@@ -24,6 +24,8 @@ import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
+import com.ubiqube.etsi.mano.repository.CrudRepository;
 
 /**
  * A Generic implementation of classical CRUD action around a repository.
@@ -32,13 +34,14 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
  *
  * @param <T>
  */
-public abstract class AbstractGenericRepository<T> extends AbstractRepository<T> {
+public abstract class AbstractGenericRepository<T> implements CrudRepository<T>, BinaryRepository {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
 	protected final JsonFilter jsonFilter;
+	private final RepositoryService repositoryService;
 
 	public AbstractGenericRepository(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
-		super(_repositoryService);
+		repositoryService = _repositoryService;
 		mapper = _mapper;
 		jsonFilter = _jsonFilter;
 	}
@@ -196,4 +199,13 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
 	}
 
+	protected void verify(final String _uri) {
+		try {
+			if (!repositoryService.exists(_uri)) {
+				throw new NotFoundException("Object not found " + _uri);
+			}
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+	}
 }
