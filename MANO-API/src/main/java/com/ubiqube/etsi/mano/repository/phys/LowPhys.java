@@ -7,9 +7,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.util.FileSystemUtils;
 
@@ -72,12 +72,13 @@ public class LowPhys implements Low {
 	@Override
 	public List<String> find(final String _path, final String _pattern) {
 		final Path path = Paths.get(_path);
-		final File directory = path.toFile();
-		return Arrays.stream(directory.list())
-				.map(x -> new File(directory, x))
-				.filter(File::isDirectory)
-				.map(File::getName)
-				.collect(Collectors.toList());
+		try (final Stream<Path> walk = Files.walk(path)) {
+			return walk.filter(x -> x.toString().endsWith(_pattern))
+					.map(x -> x.toString())
+					.collect(Collectors.toList());
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	@Override
