@@ -1,7 +1,9 @@
 package com.ubiqube.etsi.mano.repository.phys;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +36,15 @@ public class LowPhys implements Low {
 			throw new GenericException(e);
 		}
 
+	}
+
+	@Override
+	public void add(final String _path, final InputStream _stream) {
+		try {
+			Files.copy(_stream, Paths.get(_path));
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	@Override
@@ -72,6 +83,17 @@ public class LowPhys implements Low {
 	@Override
 	public boolean isDirectory(final String _path) {
 		return new File(_path).isDirectory();
+	}
+
+	@Override
+	public byte[] get(final Path path, final int min, final Integer max) {
+		try (InputStream fis = new FileInputStream(path.toFile())) {
+			final byte[] res = new byte[max - min];
+			fis.read(res, min, max - min);
+			return res;
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 }

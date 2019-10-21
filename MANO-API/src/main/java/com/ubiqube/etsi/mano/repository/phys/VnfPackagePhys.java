@@ -13,6 +13,7 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Configuration;
 
@@ -20,8 +21,8 @@ import com.ubiqube.etsi.mano.service.Configuration;
 @Service
 public class VnfPackagePhys extends GenaricBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
 
-	public VnfPackagePhys(final Configuration _conf, final ObjectMapper objectMapper, final JsonFilter jsonFilter) {
-		super(_conf.get("repository.phys.root"), objectMapper, jsonFilter);
+	public VnfPackagePhys(final Configuration _conf, final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low) {
+		super(_conf.get("repository.phys.root"), objectMapper, jsonFilter, low);
 	}
 
 	@Override

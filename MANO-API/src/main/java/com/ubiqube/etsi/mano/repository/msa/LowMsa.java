@@ -1,12 +1,19 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.entities.repository.RepositoryElement.RepositoryElementType;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.repository.Low;
 
 public class LowMsa implements Low {
@@ -46,6 +53,7 @@ public class LowMsa implements Low {
 	@Override
 	public byte[] get(final String _path) {
 		final RepositoryElement repositoryElement = repositoryService.getElement(_path);
+		System.out.println("_path=" + _path);
 		return repositoryService.getRepositoryElementContent(repositoryElement);
 	}
 
@@ -68,5 +76,25 @@ public class LowMsa implements Low {
 	public boolean isDirectory(final String _path) {
 		final RepositoryElement element = repositoryService.getElement(_path);
 		return (element.getType() == RepositoryElementType.DIRECTORY) || (element.getType() == RepositoryElementType.FOLDER);
+	}
+
+	@Override
+	public void add(final String _path, final InputStream _stream) {
+		byte[] content;
+		try {
+			content = IOUtils.toByteArray(_stream);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+		add(_path, content);
+	}
+
+	@Override
+	public byte[] get(final Path _path, final int min, final Integer max) {
+		final byte[] repositoryContent = get(_path.toString());
+		if (min >= repositoryContent.length) {
+			throw new NotAcceptableException("Could not retreive a min > lenght of file.");
+		}
+		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
 	}
 }

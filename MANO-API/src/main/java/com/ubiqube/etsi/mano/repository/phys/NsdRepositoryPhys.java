@@ -10,12 +10,13 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
 public class NsdRepositoryPhys extends GenaricBinaryRepository<NsDescriptorsNsdInfo> implements NsdRepository {
 
-	public NsdRepositoryPhys(final String _root, final ObjectMapper _objectMapper, final JsonFilter _jsonFilter) {
-		super(_root, _objectMapper, _jsonFilter);
+	public NsdRepositoryPhys(final String _root, final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low low) {
+		super(_root, _objectMapper, _jsonFilter, low);
 	}
 
 	@Override

@@ -1,10 +1,8 @@
 package com.ubiqube.etsi.mano.repository.phys;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -35,22 +33,23 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	private final String root;
 	private final ObjectMapper objectMapper;
 	private final JsonFilter jsonFilter;
-	private final Low lowDriver = new LowPhys();
+	private final Low lowDriver;
 
-	public GenaricBinaryRepository(final String _root, final ObjectMapper _objectMapper, final JsonFilter _jsonFilter) {
+	public GenaricBinaryRepository(final String _root, final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low _lowDriver) {
 		root = _root;
 		new File(_root).mkdirs();
 		objectMapper = _objectMapper;
 		jsonFilter = _jsonFilter;
+		lowDriver = _lowDriver;
 		LOG.info("Physival backend at: {}", _root);
 	}
 
 	@Override
 	public final List<T> query(final String filter) {
-		final List<String> listFilesInFolder = lowDriver.find(Paths.get(root, getDir()).toString(), filter);
+		final List<String> listFilesInFolder = lowDriver.find(Paths.get(root, getDir()).toString(), getFilename());
 		final AstBuilder astBuilder = new AstBuilder(filter);
 		return listFilesInFolder.stream()
-				.map(this::get)
+				.map(this::rawGetObject)
 				.filter(x -> jsonFilter.apply(x, astBuilder))
 				.collect(Collectors.toList());
 	}
@@ -72,15 +71,14 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	public final void delete(final String _id) {
 		final Path path = getRoot(_id);
 		verifyPath(path);
-		final File fileToDel = path.toFile().getAbsoluteFile();
-		lowDriver.delete(fileToDel.getAbsolutePath());
+		lowDriver.delete(path.toString());
 	}
 
 	@Override
 	public final T save(final T entity) {
 		final String id = setId(entity);
 		final Path path = getRoot(id);
-		path.toFile().mkdirs();
+		lowDriver.mkdir(path.toString());
 		storeObject(id, getFilename(), entity);
 		return entity;
 	}
@@ -102,12 +100,8 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
 		Path path = getRoot(_id);
 		verifyPath(path);
-		try {
-			path = combine(path, _filename);
-			Files.copy(_stream, path);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
+		path = combine(path, _filename);
+		lowDriver.add(path.toString(), _stream);
 	}
 
 	@Override
@@ -123,13 +117,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 		Path path = getRoot(_id);
 		path = combine(path, _filename);
 		verifyPath(path);
-		try (FileInputStream fis = new FileInputStream(path.toFile())) {
-			final byte[] res = new byte[max - min];
-			fis.read(res, min, max - min);
-			return res;
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
+		return lowDriver.get(path, min, max);
 	}
 
 	@Override
@@ -169,4 +157,12 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 		return Paths.get(path.toString(), sanitize(_filename));
 	}
 
+	private T rawGetObject(final String _path) {
+		final byte[] bytes = lowDriver.get(_path);
+		try {
+			return objectMapper.readValue(bytes, getClazz());
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+	}
 }
