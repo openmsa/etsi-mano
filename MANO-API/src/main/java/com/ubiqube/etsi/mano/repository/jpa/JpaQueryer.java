@@ -85,6 +85,6 @@ public class JpaQueryer {
 
 	private class Attr {
 		String name;
-		Optional<From<?, ?>> parent = Optional.ofNullable(null);
+		Optional<From<?, ?>> parent = Optional.empty();
 	}
 }
