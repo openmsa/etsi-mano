@@ -30,7 +30,6 @@ import com.ubiqube.etsi.mano.repository.Low;
  *
  */
 public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, BinaryRepository {
-
 	private static final Logger LOG = LoggerFactory.getLogger(GenaricBinaryRepository.class);
 
 	private final String root;
@@ -48,7 +47,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 
 	@Override
 	public final List<T> query(final String filter) {
-		final List<String> listFilesInFolder = lowDriver.find(getDir(), filter);
+		final List<String> listFilesInFolder = lowDriver.find(Paths.get(root, getDir()).toString(), filter);
 		final AstBuilder astBuilder = new AstBuilder(filter);
 		return listFilesInFolder.stream()
 				.map(this::get)
@@ -135,8 +134,12 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 
 	@Override
 	public <T, U extends Class> T loadObject(@NotNull final String _id, @NotNull final String _filename, final U t) {
-		// TODO Auto-generated method stub
-		return null;
+		final byte[] bytes = getBinary(_id, _filename);
+		try {
+			return (T) objectMapper.readValue(bytes, t);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	protected abstract String setId(T entity);
