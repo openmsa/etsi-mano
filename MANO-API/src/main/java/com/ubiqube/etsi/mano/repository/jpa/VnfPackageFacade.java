@@ -56,8 +56,7 @@ public class VnfPackageFacade implements VnfPackageRepository {
 	@Override
 	public VnfPkgInfo get(final String id) {
 		final Optional<VnfPackage> vnfPackage = repository.findById(UUID.fromString(id));
-		vnfPackage.orElseThrow(() -> new NotFoundException("VNF Package " + id + " not found."));
-		return mapper.map(vnfPackage, VnfPkgInfo.class);
+		return mapper.map(vnfPackage.orElseThrow(() -> new NotFoundException("VNF Package " + id + " not found.")), VnfPkgInfo.class);
 	}
 
 	@Override
