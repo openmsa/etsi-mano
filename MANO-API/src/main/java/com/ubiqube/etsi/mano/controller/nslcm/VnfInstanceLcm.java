@@ -8,7 +8,6 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -73,14 +72,12 @@ public class VnfInstanceLcm {
 	}
 
 	public VnfInstance post(final CreateVnfRequest createVnfRequest) {
-		final String id = UUID.randomUUID().toString();
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
 
-		vnfInstance.setId(id);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfId, "indexes.json", VnfPkgIndex.class);

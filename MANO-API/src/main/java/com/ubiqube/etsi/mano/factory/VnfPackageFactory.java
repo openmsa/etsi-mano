@@ -48,17 +48,16 @@ public class VnfPackageFactory {
 		return artefact;
 	}
 
-	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
-		final VnfPackageChangeNotificationVnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_id, _subscriptionId, _vnfPkgId, _vnfdId, links);
+		final VnfPackageChangeNotificationVnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_subscriptionId, _vnfPkgId, _vnfdId, links);
 		ret.setVnfPackageChangeNotification(obj);
 		return ret;
 	}
 
-	public static VnfPackageChangeNotificationVnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+	public static VnfPackageChangeNotificationVnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageChangeNotificationVnfPackageChangeNotification ret = new VnfPackageChangeNotificationVnfPackageChangeNotification();
 		ret.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
-		ret.setId(_id);
 		ret.setNotificationType("VnfPackageChangeNotification");
 		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum.DISABLED);
 		ret.setSubscriptionId(_subscriptionId);
@@ -69,9 +68,8 @@ public class VnfPackageFactory {
 		return ret;
 	}
 
-	public static NotificationVnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _id, final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+	public static NotificationVnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final NotificationVnfPackageOnboardingNotification ret = new NotificationVnfPackageOnboardingNotification();
-		ret.setId(_id);
 		ret.setTimeStamp(new Date());
 		ret.setNotificationType("VnfPackageOnboardingNotification");
 		ret.setSubscriptionId(_subscriptionId);
@@ -81,10 +79,9 @@ public class VnfPackageFactory {
 		return ret;
 	}
 
-	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final String _id, final String _callbackUri, final SubscriptionsPkgmSubscriptionFilter _filter) {
+	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final SubscriptionsPkgmSubscriptionFilter _filter) {
 		final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = new SubscriptionsPkgmSubscription();
 		subscriptionsPkgmSubscription.setCallbackUri(_callbackUri);
-		subscriptionsPkgmSubscription.setId(_id);
 		subscriptionsPkgmSubscription.setFilter(_filter);
 		return subscriptionsPkgmSubscription;
 	}
