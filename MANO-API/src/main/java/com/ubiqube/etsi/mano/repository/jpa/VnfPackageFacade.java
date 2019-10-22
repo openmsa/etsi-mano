@@ -15,11 +15,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,21 +38,23 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
+@Service
 public class VnfPackageFacade implements VnfPackageRepository {
 	private final EntityManager em;
 	private final VnfPackageJpa repository;
 	private final MapperFacade mapper;
 	private final ContentManager contentManager;
 	private final ObjectMapper jsonMapper;
-	private final JpaQueryer queryer = new JpaQueryer();
+	private final JpaQueryer queryer;
 
-	public VnfPackageFacade(final VnfPackageJpa _repository, final MapperFacade _orikaMapperFacade, final ContentManager _contentManager, final ObjectMapper _jsonMapper, final EntityManager _em) {
+	public VnfPackageFacade(final VnfPackageJpa _repository, final MapperFacade _orikaMapperFacade, final ContentManager _contentManager, final ObjectMapper _jsonMapper, final EntityManager _em, final JpaQueryer _queryer) {
 		super();
 		this.repository = _repository;
 		mapper = _orikaMapperFacade;
 		jsonMapper = _jsonMapper;
 		contentManager = _contentManager;
 		em = _em;
+		queryer = _queryer;
 	}
 
 	@Override
@@ -68,7 +72,9 @@ public class VnfPackageFacade implements VnfPackageRepository {
 	public VnfPkgInfo save(final VnfPkgInfo entity) {
 		final VnfPackage vnf = mapper.map(entity, VnfPackage.class);
 		repository.save(vnf);
-		return mapper.map(vnf, VnfPkgInfo.class);
+		final VnfPkgInfo tmp = mapper.map(vnf, VnfPkgInfo.class);
+		mapper.map(tmp, entity);
+		return entity;
 	}
 
 	@Override
@@ -79,14 +85,18 @@ public class VnfPackageFacade implements VnfPackageRepository {
 		final Root<VnfPackage> root = q.from(VnfPackage.class);
 		final Map<String, From<?, ?>> joins = new HashMap<>();
 		joins.put("ROOT", root);
-		Join<Object, Object> jTmp = root.join("softwareImages");
+		Join<Object, Object> jTmp = root.join("softwareImages", JoinType.LEFT);
 		joins.put("softwareImages", jTmp);
 		jTmp = jTmp.join("checksum");
 		joins.put("checksum", jTmp);
-		jTmp = root.join("additionalArtifacts");
+		jTmp = root.join("additionalArtifacts", JoinType.LEFT);
 		joins.put("additionalArtifacts", jTmp);
 		final Predicate p = queryer.getCriteria(astBuilder.getNodes(), VnfPackage.class, joins);
-		q.select(root).where(p);
+		if (null == p) {
+			q.select(root);
+		} else {
+			q.select(root).where(p);
+		}
 		final List<VnfPackage> res = em.createQuery(q).getResultList();
 		return res.stream().map(x -> mapper.map(x, VnfPkgInfo.class)).collect(Collectors.toList());
 	}
