@@ -25,9 +25,10 @@ public final class NsdFactories {
 		return ret;
 	}
 
-	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse(final String _id) {
+	// Not Used?
+	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse() {
 		final NsDescriptorsNsdInfoIdGetResponse ret = new NsDescriptorsNsdInfoIdGetResponse();
-		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo(_id);
+		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo();
 		ret.setNsdInfo(nsdInfo);
 		return ret;
 	}
@@ -44,7 +45,7 @@ public final class NsdFactories {
 		return ret;
 	}
 
-	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo(final String _id) {
+	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo() {
 		final NsDescriptorsNsdInfo nsdInfo = new NsDescriptorsNsdInfo();
 		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.CREATED);
@@ -52,7 +53,6 @@ public final class NsdFactories {
 		nsdInfo.setNsdUsageState(NsdUsageStateEnum.NOT_IN_USE);
 		nsdInfo.setPnfdInfoIds(new ArrayList<String>());
 		nsdInfo.setVnfPkgIds(new ArrayList<String>());
-		nsdInfo.setId(_id);
 		return nsdInfo;
 	}
 

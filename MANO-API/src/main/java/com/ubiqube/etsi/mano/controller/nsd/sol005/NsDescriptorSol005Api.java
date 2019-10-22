@@ -11,7 +11,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -263,9 +262,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(final String accept, final String contentType, final NsDescriptorsPostQuery nsDescriptorsPostQuery) {
-		final String id = UUID.randomUUID().toString();
-
-		final NsDescriptorsNsdInfo nsdDescriptor = NsdFactories.createNsDescriptorsNsdInfo(id);
+		final NsDescriptorsNsdInfo nsdDescriptor = NsdFactories.createNsDescriptorsNsdInfo();
 		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		nsdDescriptor.setUserDefinedData(userDefinedData);
 		nsdDescriptor.setNsdName((String) userDefinedData.get("name"));
