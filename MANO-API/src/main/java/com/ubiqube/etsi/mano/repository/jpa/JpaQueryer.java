@@ -13,10 +13,19 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
+/**
+ * Maybe more an Abstract.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
 public class JpaQueryer {
 	@PersistenceContext
 	private EntityManager em;
@@ -31,7 +40,7 @@ public class JpaQueryer {
 			}
 		}
 		if (!predicates.isEmpty()) {
-			return cb.and((Predicate[]) predicates.toArray());
+			return cb.and(predicates.toArray(new Predicate[0]));
 		}
 		return null;
 	}
@@ -79,7 +88,7 @@ public class JpaQueryer {
 			final String key = Arrays.asList(ro).stream().collect(Collectors.joining("."));
 			attr.parent = Optional.ofNullable(joins.get(key));
 		}
-		attr.name = arr[arr.length];
+		attr.name = arr[arr.length - 1];
 		return attr;
 	}
 
