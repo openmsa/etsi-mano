@@ -22,7 +22,7 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 /**
  * TODO: we cannot use the MANO filter query language, instead of this use AST
  * node directly.
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -65,9 +65,9 @@ public class VnfEvent {
 		final String id = UUID.randomUUID().toString();
 		Object object;
 		if (event == NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION) {
-			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, "", links);
+			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, "", links);
 		} else {
-			object = VnfPackageFactory.createVnfPackageChangeNotification(id, subscriptionId, vnfPkgId, "", links);
+			object = VnfPackageFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, "", links);
 		}
 
 		notifications.doNotification(object, callbackUri, auth);
