@@ -3,7 +3,9 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,9 +27,9 @@ public class VnfPackage {
 	private String vnfSoftwareVersion;
 	private String vnfdVersion;
 	private Checksum checksum;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<SoftwareImage> softwareImages;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<AdditionalArtifact> additionalArtifacts;
 	private OnboardingStateEnum onboardingState;
 	private OperationalStateEnum operationalState;
