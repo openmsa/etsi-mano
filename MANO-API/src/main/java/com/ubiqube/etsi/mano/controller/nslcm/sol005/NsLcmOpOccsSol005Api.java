@@ -1,20 +1,38 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol005;
 
-import java.util.ArrayList;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceLinksSelf;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccIdGetResponse;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse;
+import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Profile({ "default", "NFVO" })
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
+
+	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
+
+	public NsLcmOpOccsSol005Api(final NsLcmOpOccsRepository _nsLcmOpOccsRepository) {
+		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
+	}
 
 	/**
 	 * Query multiple NS LCM operation occurrences.
@@ -27,8 +45,15 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+	public ResponseEntity<String> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
+		final List<NsLcmOpOccsNsLcmOpOcc> result = nsLcmOpOccsRepository.query(filter);
+		result.stream().forEach(x -> x.setLinks(makeLink(x)));
+		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		try {
+			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	/**
@@ -43,8 +68,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nsLcmOpOccsNsLcmOpOccIdContinuePost(final String nsLcmOpOccId) {
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdContinuePost(final String nsLcmOpOccId) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -59,8 +85,12 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsLcmOpOccsNsLcmOpOccIdGetResponse> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
-		// : Implement...
-		return null;
+		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccs = nsLcmOpOccsRepository.get(nsLcmOpOccId);
+		nsLcmOpOccs.setLinks(makeLink(nsLcmOpOccs));
+		final NsLcmOpOccsNsLcmOpOccIdGetResponse nsLcmOpOccIdGetResponse = new NsLcmOpOccsNsLcmOpOccIdGetResponse();
+		nsLcmOpOccIdGetResponse.setNsLcmOpOcc(nsLcmOpOccs);
+
+		return new ResponseEntity<>(nsLcmOpOccIdGetResponse, HttpStatus.OK);
 	}
 
 	/**
@@ -75,8 +105,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nsLcmOpOccsNsLcmOpOccIdRetryPost(final String nsLcmOpOccId) {
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdRetryPost(final String nsLcmOpOccId) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -91,8 +122,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nsLcmOpOccsNsLcmOpOccIdRollbackPost(final String nsLcmOpOccId) {
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdRollbackPost(final String nsLcmOpOccId) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -108,8 +140,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public void nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(final String nsLcmOpOccId, final String accept, final String contentType, final NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body) {
+	public ResponseEntity<Void> nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(final String nsLcmOpOccId, final String accept, final String contentType, final NslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPostQuery body) {
 		// : Implement...
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	/**
@@ -123,7 +156,41 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	@Override
 	public ResponseEntity<NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse> nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(final String nsLcmOpOccId, final String accept) {
 		// : Implement...
-		return null;
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	private NsLcmOpOccsNsLcmOpOccLinks makeLink(@NotNull final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccs) {
+		@NotNull
+		final String id = nsLcmOpOccs.getId();
+		final NsLcmOpOccsNsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccsNsLcmOpOccLinks();
+		final NsInstancesNsInstanceLinksSelf cancel = new NsInstancesNsInstanceLinksSelf();
+		cancel.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(id, null, null, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setCancel(cancel);
+
+		final NsInstancesNsInstanceLinksSelf _continue = new NsInstancesNsInstanceLinksSelf();
+		_continue.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setContinue(_continue);
+
+		final NsInstancesNsInstanceLinksSelf fail = new NsInstancesNsInstanceLinksSelf();
+		fail.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(id, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setFail(fail);
+
+		final NsInstancesNsInstanceLinksSelf nsInstance = new NsInstancesNsInstanceLinksSelf();
+		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesGet(nsLcmOpOccs.getNsInstanceId(), null, null, null, null, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setNsInstance(nsInstance);
+
+		final NsInstancesNsInstanceLinksSelf retry = new NsInstancesNsInstanceLinksSelf();
+		retry.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setRetry(retry);
+
+		final NsInstancesNsInstanceLinksSelf rollback = new NsInstancesNsInstanceLinksSelf();
+		rollback.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setRollback(rollback);
+
+		final NsInstancesNsInstanceLinksSelf self = new NsInstancesNsInstanceLinksSelf();
+		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null, null)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setSelf(self);
+		return nsLcmOpOccLinks;
 	}
 
 }

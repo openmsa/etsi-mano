@@ -82,7 +82,7 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 		final VnfPkgOperation vnfPackageOperation = new VnfPkgOperation(vnfLcmOpOcc.getId());
 		instance.addOperation(vnfPackageOperation);
 		vnfPkgIndex.addVnfPkgInstance(instance);
-		storeObject(vnfInstanceId, vnfPkgIndex, "indexes.json");
+		storeObject(vnfInstance.getVnfPkgId(), vnfPkgIndex, "indexes.json");
 		return vnfLcmOpOcc;
 	}
 

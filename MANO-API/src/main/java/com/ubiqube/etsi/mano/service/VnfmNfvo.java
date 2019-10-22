@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.controller.nslcm.sol003.Sol003LcmLinkable;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
@@ -28,8 +29,11 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOcc vnfInstatiate(final String nsInstanceId, final String vnfId) {
-		// TODO Auto-generated method stub
+	public VnfLcmOpOcc vnfInstatiate(final String vnfInstanceId, final String vnfId) {
+		lcm.instantiate(vnfInstanceId, null, new Sol003LcmLinkable());
+		// TODO It's a little more complex, we need to subscribe and wait for the URL to
+		// be called.
+		// Or we may need an other way.
 		return null;
 	}
 

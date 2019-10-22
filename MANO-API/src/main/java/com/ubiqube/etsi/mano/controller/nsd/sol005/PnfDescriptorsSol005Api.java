@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.controller.nsd.sol005;
 
-import java.util.ArrayList;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,19 +12,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.factory.PnfFactory;
+import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchResponse;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPostQuery;
+import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
 
 @Profile({ "default", "NFVO" })
 @RestController
 public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptorsSol005Api.class);
+	private final PnfdInfoRepository pnfdInfoRepository;
 
-	public PnfDescriptorsSol005Api() {
+	public PnfDescriptorsSol005Api(final PnfdInfoRepository _pnfdInfoRepository) {
+		pnfdInfoRepository = _pnfdInfoRepository;
 		LOG.info("Starting PNF Management SOL005 Controller.");
 	}
 
@@ -34,8 +46,15 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<PnfDescriptorsPnfdInfo>> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
+	public ResponseEntity<String> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
+		final List<PnfDescriptorsPnfdInfo> pnfs = pnfdInfoRepository.query(filter);
+		pnfs.forEach(x -> x.setLinks(makeLinks(x)));
+		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		try {
+			return new ResponseEntity<>(mapper.writeValueAsString(pnfs), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	/**
@@ -53,7 +72,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(final String pnfdInfoId) {
-		// PnfdDeletionNotification OSS/BSS
+		pnfdInfoRepository.delete(pnfdInfoId);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -68,9 +87,11 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId, final String accept) {
-		// : Implement...
-
-		return null;
+		final PnfDescriptorsPnfdInfo pnfdInfo = pnfdInfoRepository.get(pnfdInfoId);
+		pnfdInfo.setLinks(makeLinks(pnfdInfo));
+		final PnfDescriptorsPnfdInfoIdGetResponse resp = new PnfDescriptorsPnfdInfoIdGetResponse();
+		resp.setPnfdInfo(pnfdInfo);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	/**
@@ -124,7 +145,22 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPost(final String accept, final String contentType, final PnfDescriptorsPostQuery body) {
-		// : Implement...
+		final PnfDescriptorsPnfdInfo pnfd = PnfFactory.createPnfDescriptorsPnfdInfo(body);
+		pnfdInfoRepository.save(pnfd);
+		pnfd.setLinks(makeLinks(pnfd));
+		final PnfDescriptorsPnfdInfoIdGetResponse resp = new PnfDescriptorsPnfdInfoIdGetResponse();
+		resp.setPnfdInfo(pnfd);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
+	}
+
+	private static PnfDescriptorsPnfdInfoLinks makeLinks(final PnfDescriptorsPnfdInfo x) {
+		final PnfDescriptorsPnfdInfoLinks links = new PnfDescriptorsPnfdInfoLinks();
+		final NsDescriptorsNsdInfoLinksSelf pnfdContent = new NsDescriptorsNsdInfoLinksSelf();
+		pnfdContent.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdPnfdContentGet(x.getId(), "")).withSelfRel().getHref());
+		links.setPnfdContent(pnfdContent);
+		final NsDescriptorsNsdInfoLinksSelf self = new NsDescriptorsNsdInfoLinksSelf();
+		self.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdGet(x.getId(), "")).withSelfRel().getHref());
+		links.setSelf(self);
 
 		return null;
 	}
