@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.repository.jpa;
+package com.ubiqube.etsi.mano.jpa;
 
 import java.util.UUID;
 
