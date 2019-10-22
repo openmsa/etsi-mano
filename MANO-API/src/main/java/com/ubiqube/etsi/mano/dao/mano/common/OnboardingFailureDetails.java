@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 public class OnboardingFailureDetails {
 	private String type;
 	private String title;
-	private long status;
+	private Long status;
 	private String detail;
 	private String instance;
 
