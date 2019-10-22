@@ -47,14 +47,14 @@ public class VnfPackageFacade implements VnfPackageRepository {
 	private final ObjectMapper jsonMapper;
 	private final JpaQueryer queryer;
 
-	public VnfPackageFacade(final VnfPackageJpa _repository, final MapperFacade _orikaMapperFacade, final ContentManager _contentManager, final ObjectMapper _jsonMapper, final EntityManager _em, final JpaQueryer _queryer) {
+	public VnfPackageFacade(final VnfPackageJpa _repository, final MapperFacade _orikaMapperFacade, final ContentManager _contentManager, final ObjectMapper _jsonMapper, final EntityManager _em) {
 		super();
 		this.repository = _repository;
 		mapper = _orikaMapperFacade;
 		jsonMapper = _jsonMapper;
 		contentManager = _contentManager;
 		em = _em;
-		queryer = _queryer;
+		queryer = new JpaQueryer(_em);
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class VnfPackageFacade implements VnfPackageRepository {
 
 	}
 
-	Map<String, From<?, ?>> getJoins(final Root<VnfPackage> root) {
+	protected Map<String, From<?, ?>> getJoins(final Root<VnfPackage> root) {
 		final Map<String, From<?, ?>> joins = new HashMap<>();
 		joins.put("ROOT", root);
 		Join<Object, Object> jTmp = root.join("softwareImages", JoinType.LEFT);

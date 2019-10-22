@@ -8,12 +8,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.grammar.Node;
@@ -25,10 +22,13 @@ import com.ubiqube.etsi.mano.grammar.Node.Operand;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
 public class JpaQueryer {
-	@PersistenceContext
-	private EntityManager em;
+	private final EntityManager em;
+
+	public JpaQueryer(final EntityManager em) {
+		super();
+		this.em = em;
+	}
 
 	public Predicate getCriteria(final List<Node> nodes, final Class<?> clazz, final Map<String, From<?, ?>> joins) {
 		final CriteriaBuilder cb = em.getCriteriaBuilder();
