@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,9 +132,9 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
-		final @Nonnull String vnfPkgId = UUID.randomUUID().toString();
 		final Map<String, Object> userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
-		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
+
+		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userDataObject);
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -143,8 +143,10 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		checkUserData(userData);
 
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		vnfPackageRepository.save(vnfPkgInfo);
+		@NotNull
+		final String vnfPkgId = vnfPkgInfo.getId();
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
