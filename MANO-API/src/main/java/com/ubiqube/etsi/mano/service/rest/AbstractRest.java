@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.Collections;
 
 import org.springframework.http.HttpEntity;
@@ -65,6 +66,11 @@ public abstract class AbstractRest {
 		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		return httpHeaders;
+	}
+
+	protected final static String authBasic(final String user, final String password) {
+		final String toEncode = user + ':' + password;
+		return "Basic " + Base64.getEncoder().encodeToString(toEncode.getBytes());
 	}
 
 	protected final static String authBasic(final String user, final String password) {
