@@ -159,4 +159,15 @@ public class VnfPackageFacade implements VnfPackageRepository {
 
 	}
 
+	Map<String, From<?, ?>> getJoins(final Root<VnfPackage> root) {
+		final Map<String, From<?, ?>> joins = new HashMap<>();
+		joins.put("ROOT", root);
+		Join<Object, Object> jTmp = root.join("softwareImages", JoinType.LEFT);
+		joins.put("softwareImages", jTmp);
+		jTmp = jTmp.join("checksum");
+		joins.put("checksum", jTmp);
+		jTmp = root.join("additionalArtifacts", JoinType.LEFT);
+		joins.put("additionalArtifacts", jTmp);
+		return joins;
+	}
 }
