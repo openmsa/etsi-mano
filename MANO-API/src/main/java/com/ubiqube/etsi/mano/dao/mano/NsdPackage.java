@@ -4,10 +4,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.search.annotations.Field;
 
 import com.ubiqube.etsi.mano.dao.mano.common.OnboardingFailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -19,20 +23,35 @@ public class NsdPackage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+	@Field
 	private String nsdId;
+	@Field
 	private String nsdName;
+	@Field
 	private String nsdVersion;
+	@Field
 	private String nsdDesigner;
+	@Field
 	private String nsdInvariantId;
 	@OneToMany
+	@Field
 	private Set<VnfPackage> vnfPkgIds;
 	@OneToMany
+	@Field
 	private Set<PnfDescriptor> pnfdInfoIds;
 	@OneToMany
+	@Field
 	private Set<NsdPackage> nestedNsdInfoIds;
+	@Enumerated(EnumType.STRING)
+	@Field
 	private OnboardingStateEnum nsdOnboardingState;
+	@Field
 	private OnboardingFailureDetails onboardingFailureDetails;
+	@Enumerated(EnumType.STRING)
+	@Field
 	OperationalStateEnum nsdOperationalState;
+	@Enumerated(EnumType.STRING)
+	@Field
 	UsageStateEnum nsdUsageState;
 
 	public UUID getId() {

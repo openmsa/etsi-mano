@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,9 +24,11 @@ public class PnfDescriptor {
 	private String pnfdersion;
 	private String pnfdProvider;
 	private String pnfdInvariantId;
+	@Enumerated(EnumType.STRING)
 	private OnboardingStateEnum pnfdOnboardingState;
 	@Embedded
 	private OnboardingFailureDetails onboardingFailureDetails;
+	@Enumerated(EnumType.STRING)
 	private UsageStateEnum pnfdUsageState;
 	private String userDefinedData;
 

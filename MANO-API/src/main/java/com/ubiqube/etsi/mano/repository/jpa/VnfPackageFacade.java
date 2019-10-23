@@ -11,12 +11,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
@@ -28,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
@@ -80,26 +76,9 @@ public class VnfPackageFacade implements VnfPackageRepository {
 
 	@Override
 	public List<VnfPkgInfo> query(final String filter) {
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final CriteriaBuilder builder = em.getCriteriaBuilder();
-		final CriteriaQuery<VnfPackage> q = builder.createQuery(VnfPackage.class);
-		final Root<VnfPackage> root = q.from(VnfPackage.class);
-		final Map<String, From<?, ?>> joins = new HashMap<>();
-		joins.put("ROOT", root);
-		Join<Object, Object> jTmp = root.join("softwareImages", JoinType.LEFT);
-		joins.put("softwareImages", jTmp);
-		jTmp = jTmp.join("checksum");
-		joins.put("checksum", jTmp);
-		jTmp = root.join("additionalArtifacts", JoinType.LEFT);
-		joins.put("additionalArtifacts", jTmp);
-		final Predicate p = queryer.getCriteria(astBuilder.getNodes(), VnfPackage.class, joins);
-		if (null == p) {
-			q.select(root);
-		} else {
-			q.select(root).where(p);
-		}
-		final List<VnfPackage> res = em.createQuery(q).getResultList();
-		return res.stream().map(x -> mapper.map(x, VnfPkgInfo.class)).collect(Collectors.toList());
+		final SearchQueryer sq = new SearchQueryer(em);
+		return (List<VnfPkgInfo>) sq.getCriteria(filter, VnfPackage.class)
+				.getResultStream().map(x -> mapper.map(x, VnfPkgInfo.class)).collect(Collectors.toList());
 	}
 
 	@Override
