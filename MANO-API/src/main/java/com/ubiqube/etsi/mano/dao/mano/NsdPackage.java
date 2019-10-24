@@ -12,11 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 
 import com.ubiqube.etsi.mano.dao.mano.common.OnboardingFailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 public class NsdPackage {
@@ -43,14 +45,17 @@ public class NsdPackage {
 	@Field
 	private Set<NsdPackage> nestedNsdInfoIds;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private OnboardingStateEnum nsdOnboardingState;
 	@Field
 	private OnboardingFailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	OperationalStateEnum nsdOperationalState;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	UsageStateEnum nsdUsageState;
 

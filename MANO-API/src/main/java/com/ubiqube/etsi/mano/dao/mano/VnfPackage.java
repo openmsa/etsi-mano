@@ -14,12 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
@@ -44,11 +46,14 @@ public class VnfPackage {
 	private Set<AdditionalArtifact> additionalArtifacts;
 	@Enumerated(EnumType.STRING)
 	@Field
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateEnum onboardingState;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private OperationalStateEnum operationalState;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private UsageStateEnum usageState;
 

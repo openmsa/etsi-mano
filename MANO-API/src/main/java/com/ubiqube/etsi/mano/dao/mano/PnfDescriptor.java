@@ -10,9 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.search.annotations.FieldBridge;
+
 import com.ubiqube.etsi.mano.dao.mano.common.OnboardingFailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 public class PnfDescriptor {
@@ -25,10 +28,12 @@ public class PnfDescriptor {
 	private String pnfdProvider;
 	private String pnfdInvariantId;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateEnum pnfdOnboardingState;
 	@Embedded
 	private OnboardingFailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private UsageStateEnum pnfdUsageState;
 	private String userDefinedData;
 
