@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.dao.mano.common.OnboardingFailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
@@ -33,7 +33,7 @@ public class PnfDescriptor {
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateEnum pnfdOnboardingState;
 	@Embedded
-	private OnboardingFailureDetails onboardingFailureDetails;
+	private FailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private UsageStateEnum pnfdUsageState;
@@ -95,11 +95,11 @@ public class PnfDescriptor {
 		this.pnfdOnboardingState = pnfdOnboardingState;
 	}
 
-	public OnboardingFailureDetails getOnboardingFailureDetails() {
+	public FailureDetails getOnboardingFailureDetails() {
 		return onboardingFailureDetails;
 	}
 
-	public void setOnboardingFailureDetails(final OnboardingFailureDetails onboardingFailureDetails) {
+	public void setOnboardingFailureDetails(final FailureDetails onboardingFailureDetails) {
 		this.onboardingFailureDetails = onboardingFailureDetails;
 	}
 
