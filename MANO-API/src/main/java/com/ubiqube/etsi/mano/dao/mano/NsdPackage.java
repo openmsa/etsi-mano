@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.OnboardingFailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
@@ -21,6 +23,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
+@Indexed
 public class NsdPackage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,19 +39,16 @@ public class NsdPackage {
 	@Field
 	private String nsdInvariantId;
 	@OneToMany
-	@Field
 	private Set<VnfPackage> vnfPkgIds;
 	@OneToMany
-	@Field
 	private Set<PnfDescriptor> pnfdInfoIds;
 	@OneToMany
-	@Field
 	private Set<NsdPackage> nestedNsdInfoIds;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private OnboardingStateEnum nsdOnboardingState;
-	@Field
+	@IndexedEmbedded
 	private OnboardingFailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
