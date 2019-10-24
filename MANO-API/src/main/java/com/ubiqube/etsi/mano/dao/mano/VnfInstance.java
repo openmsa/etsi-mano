@@ -13,11 +13,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 
 @Entity
+@Indexed
+
 public class VnfInstance {
 
 	@Id
@@ -28,6 +33,7 @@ public class VnfInstance {
 	private VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
+	@Field
 	private InstantiationStateEnum instantiationState = null;
 	@Transient
 	private final KeyValuePairs metadata = null;
@@ -38,19 +44,26 @@ public class VnfInstance {
 	@Transient
 	private final KeyValuePairs vnfConfigurableProperties = null;
 
+	@Field
 	private String vnfdId = null;
 
+	@Field
 	private String vnfdVersion = null;
 
+	@Field
 	private String vnfInstanceDescription = null;
+	@Field
 	private String vnfInstanceName = null;
 	@OneToOne
 	private VnfPackage vnfPkgId = null;
 
+	@Field
 	private String vnfProductName = null;
 
+	@Field
 	private String vnfProvider = null;
 
+	@Field
 	private String vnfSoftwareVersion = null;
 	@Transient
 	private final KeyValuePairs extensions = null;

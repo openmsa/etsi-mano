@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -23,7 +25,7 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-//@Service
+@Service
 public class NsdPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo> implements NsdRepository {
 	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 

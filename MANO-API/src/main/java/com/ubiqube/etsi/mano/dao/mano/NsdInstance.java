@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule;
@@ -23,19 +24,25 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVirtualLink
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnffgInfo;
 
 @Entity
+@Indexed
 public class NsdInstance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
-
+	@Field
+	@Field
 	private String nsInstanceName = null;
 
+	@Field
 	private String nsInstanceDescription = null;
 
+	@Field
 	private String nsdId = null;
 
+	@Field
 	private String nsdInfoId = null;
 
+	@Field
 	private String flavourId = null;
 
 	@OneToMany

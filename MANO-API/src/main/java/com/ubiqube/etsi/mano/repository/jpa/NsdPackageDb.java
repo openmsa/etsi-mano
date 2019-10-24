@@ -8,8 +8,6 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
@@ -22,10 +20,9 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Service
-public class NsdPackageFacade extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> implements NsdRepository {
+public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> implements NsdRepository {
 
-	public NsdPackageFacade(final NsdPackageJpa repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final EntityManager _em) {
+	public NsdPackageDb(final NsdPackageJpa repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final EntityManager _em) {
 		super(_em, repository, mapper, contentManager, jsonMapper);
 	}
 

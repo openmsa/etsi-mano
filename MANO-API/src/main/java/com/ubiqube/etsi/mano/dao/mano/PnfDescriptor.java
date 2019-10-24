@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
@@ -24,10 +25,15 @@ public class PnfDescriptor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+	@Field
 	private String pnfdId;
+	@Field
 	private String pnfdName;
+	@Field
 	private String pnfdersion;
+	@Field
 	private String pnfdProvider;
+	@Field
 	private String pnfdInvariantId;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)

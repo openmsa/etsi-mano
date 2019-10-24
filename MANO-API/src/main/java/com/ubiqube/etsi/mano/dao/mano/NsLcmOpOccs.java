@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.Date;
-import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
@@ -18,20 +17,20 @@ import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ExtVirtualLinkInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInfoModifications;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOccResourceChanges;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.CancelModeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfLcmOpOccs {
+public class NsLcmOpOccs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String id = null;
+	private UUID id = null;
 	@Enumerated(EnumType.STRING)
+	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private LcmOperationStateType operationState = null;
 
@@ -39,42 +38,42 @@ public class VnfLcmOpOccs {
 	private Date stateEnteredTime = null;
 
 	@Field
-	private Date startTime = null;
+	private String nsInstanceId = null;
 
-	@OneToOne
-	private VnfInstance vnfInstanceId = null;
-
-	@Field
-	private String grantId = null;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private LcmOperationType operation = null;
+	@Field
+	private LcmOperationTypeEnum lcmOperationType = null;
+
+	@Field
+	private Date startTime = null;
 
 	@Field
 	private Boolean isAutomaticInvocation = null;
 
-	@Field
-	private Boolean isCancelPending = null;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private CancelModeType cancelMode = null;
+	@Field
+	private OperationParamsEnum operationParams = null;
+
+	@Field
+	private Boolean isCancelPending = null;
+
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
+	@Field
+	private CancelModeEnum cancelMode = null;
 
 	private FailureDetails error = null;
 
 	@Transient
-	private VnfLcmOpOccResourceChanges resourceChanges = null;
+	private NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges = null;
 
-	@Transient
-	private VnfInfoModifications changedInfo = null;
-
-	@Transient
-	private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
-
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final UUID id) {
 		this.id = id;
 	}
 
@@ -94,36 +93,28 @@ public class VnfLcmOpOccs {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
+	public String getNsInstanceId() {
+		return nsInstanceId;
+	}
+
+	public void setNsInstanceId(final String nsInstanceId) {
+		this.nsInstanceId = nsInstanceId;
+	}
+
+	public LcmOperationTypeEnum getLcmOperationType() {
+		return lcmOperationType;
+	}
+
+	public void setLcmOperationType(final LcmOperationTypeEnum lcmOperationType) {
+		this.lcmOperationType = lcmOperationType;
+	}
+
 	public Date getStartTime() {
 		return startTime;
 	}
 
 	public void setStartTime(final Date startTime) {
 		this.startTime = startTime;
-	}
-
-	public VnfInstance getVnfInstanceId() {
-		return vnfInstanceId;
-	}
-
-	public void setVnfInstanceId(final VnfInstance vnfInstanceId) {
-		this.vnfInstanceId = vnfInstanceId;
-	}
-
-	public String getGrantId() {
-		return grantId;
-	}
-
-	public void setGrantId(final String grantId) {
-		this.grantId = grantId;
-	}
-
-	public LcmOperationType getOperation() {
-		return operation;
-	}
-
-	public void setOperation(final LcmOperationType operation) {
-		this.operation = operation;
 	}
 
 	public Boolean getIsAutomaticInvocation() {
@@ -134,6 +125,14 @@ public class VnfLcmOpOccs {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
+	public OperationParamsEnum getOperationParams() {
+		return operationParams;
+	}
+
+	public void setOperationParams(final OperationParamsEnum operationParams) {
+		this.operationParams = operationParams;
+	}
+
 	public Boolean getIsCancelPending() {
 		return isCancelPending;
 	}
@@ -142,11 +141,11 @@ public class VnfLcmOpOccs {
 		this.isCancelPending = isCancelPending;
 	}
 
-	public CancelModeType getCancelMode() {
+	public CancelModeEnum getCancelMode() {
 		return cancelMode;
 	}
 
-	public void setCancelMode(final CancelModeType cancelMode) {
+	public void setCancelMode(final CancelModeEnum cancelMode) {
 		this.cancelMode = cancelMode;
 	}
 
@@ -158,28 +157,12 @@ public class VnfLcmOpOccs {
 		this.error = error;
 	}
 
-	public VnfLcmOpOccResourceChanges getResourceChanges() {
+	public NsLcmOpOccsNsLcmOpOccResourceChanges getResourceChanges() {
 		return resourceChanges;
 	}
 
-	public void setResourceChanges(final VnfLcmOpOccResourceChanges resourceChanges) {
+	public void setResourceChanges(final NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
-	}
-
-	public VnfInfoModifications getChangedInfo() {
-		return changedInfo;
-	}
-
-	public void setChangedInfo(final VnfInfoModifications changedInfo) {
-		this.changedInfo = changedInfo;
-	}
-
-	public List<ExtVirtualLinkInfo> getChangedExtConnectivity() {
-		return changedExtConnectivity;
-	}
-
-	public void setChangedExtConnectivity(final List<ExtVirtualLinkInfo> changedExtConnectivity) {
-		this.changedExtConnectivity = changedExtConnectivity;
 	}
 
 }

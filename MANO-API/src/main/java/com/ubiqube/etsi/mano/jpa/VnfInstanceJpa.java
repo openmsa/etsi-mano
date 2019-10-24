@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 
-public interface VnfPackageJpa extends CrudRepository<VnfPackage, UUID> {
+public interface VnfInstanceJpa extends CrudRepository<VnfInstance, UUID> {
 	// Empty.
 }
