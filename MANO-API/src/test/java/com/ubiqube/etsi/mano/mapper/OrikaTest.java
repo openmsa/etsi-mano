@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
@@ -17,17 +18,20 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class OrikaTest {
 
+	private final DefaultMapperFactory mapperFactory;
+
+	public OrikaTest() {
+		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		mapperFactory = new DefaultMapperFactory.Builder().build();
+		orikaConfiguration.configure(mapperFactory);
+	}
+
 	@Test
-	void testName() throws Exception {
-		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new UuidConverter());
+	void testMapVnfArtifactChecksum() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 
 		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
@@ -43,15 +47,6 @@ public class OrikaTest {
 
 	@Test
 	void testListIdObjectId() {
-		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder()
-				.build();
-		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new UuidConverter());
-		mapperFactory.classMap(NsDescriptorsNsdInfo.class, NsdPackage.class)
-				.field("vnfPkgIds{}", "vnfPkgIds{id}")
-				.byDefault()
-				.register();
-
 		final NsDescriptorsNsdInfo nsd = NsdFactories.createNsDescriptorsNsdInfo();
 		nsd.addVnfPkgIdsItem("d5bbe3c1-23a2-4e72-8e00-66cc6ba2061f");
 		nsd.addVnfPkgIdsItem("17372129-0590-4532-ace3-7c35eaf0c7c4");
