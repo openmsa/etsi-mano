@@ -72,9 +72,4 @@ public abstract class AbstractRest {
 		final String toEncode = user + ':' + password;
 		return "Basic " + Base64.getEncoder().encodeToString(toEncode.getBytes());
 	}
-
-	protected final static String authBasic(final String user, final String password) {
-		final String toEncode = user + ':' + password;
-		return "Basic " + Base64.getEncoder().encodeToString(toEncode.getBytes());
-	}
 }

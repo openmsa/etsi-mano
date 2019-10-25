@@ -17,19 +17,17 @@ import javax.xml.bind.DatatypeConverter;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.JsonBeanUtil;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.repository.JndiWrapper;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.repository.phys.LowPhys;
 import com.ubiqube.etsi.mano.repository.phys.VnfPackagePhys;
 import com.ubiqube.etsi.mano.service.Configuration;
 import com.ubiqube.etsi.mano.service.PropertiesConfiguration;
-import com.ubiqube.etsi.mano.service.RepositoryServiceEjb;
 
 public class VnfPackageGenTest {
 
@@ -39,10 +37,8 @@ public class VnfPackageGenTest {
 		final JsonFilter jsonFilter = new JsonFilter(new JsonBeanUtil());
 		final ObjectMapper mapper = new ObjectMapper();
 		final Configuration conf = new PropertiesConfiguration();
-		final JndiWrapper _jndiWrapper = new JndiWrapper(conf);
-		final RepositoryService _repositoryService = new RepositoryServiceEjb(_jndiWrapper);
-		vnfPackage = new VnfPackagePhys(conf, mapper, jsonFilter, new LowMsa(_repositoryService));
-		// vnfPackage = new VnfPackagePhys(conf, mapper, jsonFilter, new LowPhys());
+
+		vnfPackage = new VnfPackagePhys(conf, mapper, jsonFilter, new LowPhys());
 	}
 
 	@Test

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.factory.NsdFactories;
+import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoOnboardingFailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
@@ -41,4 +42,15 @@ public class TestFactory {
 		si.setSize(12345);
 		return si;
 	}
+
+	public static ProblemDetails createProblemDetails() {
+		final ProblemDetails pd = new ProblemDetails();
+		pd.setDetail("detail");
+		pd.setInstance("instance");
+		pd.setStatus(123);
+		pd.setTitle("title");
+		pd.setType("type");
+		return pd;
+	}
+
 }

@@ -31,7 +31,7 @@ public class RepositoryServiceRest implements RepositoryService {
 	}
 
 	static class RepositoryElementModel implements RepositoryElement {
-		public String type;
+		public RepositoryElementType type;
 		public String name;
 		public String displayName;
 		public Boolean file;
@@ -43,6 +43,11 @@ public class RepositoryServiceRest implements RepositoryService {
 		@Override
 		public String getName() {
 			return name;
+		}
+
+		@Override
+		public RepositoryElementType getType() {
+			return type;
 		}
 	}
 
