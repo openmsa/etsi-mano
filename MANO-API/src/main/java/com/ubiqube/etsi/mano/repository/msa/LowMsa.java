@@ -17,6 +17,8 @@ import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.repository.Low;
 
 public class LowMsa implements Low {
+	private static final String NCROOT = "ncroot";
+	private static final String ETSI_MANO = "etsi-mano";
 	private final RepositoryService repositoryService;
 
 	public LowMsa(final RepositoryService _repositoryService) {
@@ -35,7 +37,7 @@ public class LowMsa implements Low {
 	@Override
 	public void mkdir(final String _path) {
 		try {
-			repositoryService.addDirectory(_path, "", "etsi-mano", "ncroot");
+			repositoryService.addDirectory(_path, "", ETSI_MANO, NCROOT);
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
@@ -44,7 +46,7 @@ public class LowMsa implements Low {
 	@Override
 	public void add(final String _path, final byte[] _content) {
 		try {
-			repositoryService.addFile(_path, "etsi-mano", "etsi-mano", _content, "ncroot");
+			repositoryService.addFile(_path, ETSI_MANO, ETSI_MANO, _content, NCROOT);
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
 		}
@@ -53,14 +55,13 @@ public class LowMsa implements Low {
 	@Override
 	public byte[] get(final String _path) {
 		final RepositoryElement repositoryElement = repositoryService.getElement(_path);
-		System.out.println("_path=" + _path);
 		return repositoryService.getRepositoryElementContent(repositoryElement);
 	}
 
 	@Override
 	public void delete(final String _path) {
 		final RepositoryElement repositoryElement = repositoryService.getElement(_path);
-		repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
+		repositoryService.deleteRepositoryElement(repositoryElement, NCROOT);
 	}
 
 	@Override
