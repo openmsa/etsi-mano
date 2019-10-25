@@ -29,14 +29,11 @@ public abstract class AbstractJpa<T, U> extends BinaryRepositoryImpl implements 
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
 	private final MapperFacade mapper;
 
-	private final JpaQueryer queryer;
-
 	public AbstractJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
 		super(contentManager, jsonMapper);
 		this.em = em;
 		this.repository = repository;
 		this.mapper = mapper;
-		queryer = new JpaQueryer(em);
 	}
 
 	@Override
