@@ -160,4 +160,20 @@ public class VnfInstance {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
+	public KeyValuePairs getMetadata() {
+		return metadata;
+	}
+
+	public KeyValuePairs getVnfConfigurableProperties() {
+		return vnfConfigurableProperties;
+	}
+
+	public VnfPackage getVnfPkgId() {
+		return vnfPkgId;
+	}
+
+	public KeyValuePairs getExtensions() {
+		return extensions;
+	}
+
 }

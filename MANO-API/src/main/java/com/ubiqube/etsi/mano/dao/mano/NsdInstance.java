@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
@@ -39,8 +40,8 @@ public class NsdInstance {
 	@Field
 	private String nsdId = null;
 
-	@Field
-	private String nsdInfoId = null;
+	@OneToOne
+	private NsdPackage nsdInfoId = null;
 
 	@Field
 	private String flavourId = null;
@@ -99,11 +100,11 @@ public class NsdInstance {
 		this.nsdId = nsdId;
 	}
 
-	public String getNsdInfoId() {
+	public NsdPackage getNsdInfoId() {
 		return nsdInfoId;
 	}
 
-	public void setNsdInfoId(final String nsdInfoId) {
+	public void setNsdInfoId(final NsdPackage nsdInfoId) {
 		this.nsdInfoId = nsdInfoId;
 	}
 

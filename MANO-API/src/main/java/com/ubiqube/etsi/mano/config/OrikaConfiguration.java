@@ -2,9 +2,15 @@ package com.ubiqube.etsi.mano.config;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -19,6 +25,19 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfPkgIds{}", "vnfPkgIds{id}")
 				.field("pnfdInfoIds{}", "pnfdInfoIds{id}")
 				.field("nestedNsdInfoIds{}", "nestedNsdInfoIds{id}")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(NsInstancesNsInstanceVnfInstance.class, VnfInstance.class)
+				.field("vnfPkgId", "vnfPkgId.id")
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfLcmOpOccs.class)
+				.field("vnfInstanceId", "vnfInstanceId.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(NsInstance.class, NsdInstance.class)
+				.field("nestedNsInstanceId{}", "nestedNsInstanceId{id}")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
@@ -37,8 +38,8 @@ public class NsLcmOpOccs {
 	@Field
 	private Date stateEnteredTime = null;
 
-	@Field
-	private String nsInstanceId = null;
+	@OneToOne
+	private NsdInstance nsInstanceId = null;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -93,11 +94,11 @@ public class NsLcmOpOccs {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
-	public String getNsInstanceId() {
+	public NsdInstance getNsInstanceId() {
 		return nsInstanceId;
 	}
 
-	public void setNsInstanceId(final String nsInstanceId) {
+	public void setNsInstanceId(final NsdInstance nsInstanceId) {
 		this.nsInstanceId = nsInstanceId;
 	}
 
