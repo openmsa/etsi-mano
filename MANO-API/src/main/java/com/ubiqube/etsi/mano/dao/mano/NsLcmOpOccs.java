@@ -67,6 +67,8 @@ public class NsLcmOpOccs {
 
 	private FailureDetails error = null;
 
+	private String externalProcessId;
+
 	@Transient
 	private NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges = null;
 
@@ -164,6 +166,14 @@ public class NsLcmOpOccs {
 
 	public void setResourceChanges(final NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
+	}
+
+	public String getExternalProcessId() {
+		return externalProcessId;
+	}
+
+	public void setExternalProcessId(final String externalProcessId) {
+		this.externalProcessId = externalProcessId;
 	}
 
 }

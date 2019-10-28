@@ -2,14 +2,10 @@ package com.ubiqube.etsi.mano.repository.phys;
 
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
@@ -46,18 +42,6 @@ public class NsdRepositoryPhys extends GenaricBinaryRepository<NsDescriptorsNsdI
 
 	@Override
 	public void changeNsdUpdateState(final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum inUse) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final LcmOperationTypeEnum instantiate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
 		// TODO Auto-generated method stub
 
 	}

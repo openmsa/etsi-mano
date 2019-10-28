@@ -44,8 +44,9 @@ public class NfvoActions {
 	private final Vim msaExecutor;
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
+	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -55,10 +56,11 @@ public class NfvoActions {
 		msaExecutor = _msaExecutor;
 		eventManager = _eventManager;
 		vnfPackageRepository = _vnfPackageRepository;
+		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsdRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, LcmOperationTypeEnum.TERMINATE);
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
@@ -105,7 +107,7 @@ public class NfvoActions {
 	public void nsInstantiate(final String nsInstanceId) {
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstance.getNsdId();
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsdRepository.createLcmOpOccs(nsdId, LcmOperationTypeEnum.INSTANTIATE);
+		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, LcmOperationTypeEnum.INSTANTIATE);
 
 		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Create Ns.
@@ -113,7 +115,7 @@ public class NfvoActions {
 		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
 		LOG.info("Creating a MSA Job: {}", processId);
 		// Save Process Id with lcm
-		nsdRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
 		LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
 		if (status != LcmOperationStateType.COMPLETED) {
 			// update Lcm OpOccs

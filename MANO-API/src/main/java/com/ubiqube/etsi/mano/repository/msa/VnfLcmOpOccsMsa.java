@@ -24,14 +24,12 @@ import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 @Service
 public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> implements VnfLcmOpOccsRepository {
-	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 	private final VnfInstancesRepository vnfInstancesRepository;
 
 	private static final String REPOSITORY_VNF_LCM_OP_OCCS_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf-lcm-op-occs";
 
-	public VnfLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository) {
+	public VnfLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfInstancesRepository _vnfInstancesRepository) {
 		super(_mapper, _repositoryService, _jsonFilter);
-		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		vnfInstancesRepository = _vnfInstancesRepository;
 	}
 
@@ -68,7 +66,7 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 	@Override
 	public VnfLcmOpOcc createLcmOpOccs(final String vnfInstanceId, final LcmOperationType operation) {
 		final VnfLcmOpOcc vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
-		vnfLcmOpOccsRepository.save(vnfLcmOpOcc);
+		save(vnfLcmOpOcc);
 
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final VnfPkgIndex vnfPkgIndex = loadObject(vnfInstance.getVnfPkgId(), "indexes.json", VnfPkgIndex.class);
@@ -84,12 +82,12 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 	public void updateState(final VnfLcmOpOcc lcmOpOccs, final LcmOperationStateType operationState) {
 		lcmOpOccs.setOperationState(operationState);
 		lcmOpOccs.setStateEnteredTime(new Date());
-		vnfLcmOpOccsRepository.save(lcmOpOccs);
+		save(lcmOpOccs);
 	}
 
 	@Override
 	public void attachProcessIdToLcmOpOccs(final String id, final String processId) {
-		final VnfLcmOpOcc lcmOpOccs = vnfLcmOpOccsRepository.get(id);
+		final VnfLcmOpOcc lcmOpOccs = get(id);
 		@NotNull
 		final String vnfInstanceId = lcmOpOccs.getVnfInstanceId();
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);

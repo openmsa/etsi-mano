@@ -11,8 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
-import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 /**
@@ -27,13 +25,9 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageMsa.class);
-	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
-	private final VnfInstancesRepository vnfInstancesRepository;
 
-	public VnfPackageMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final VnfInstancesRepository _vnfInstancesRepository) {
+	public VnfPackageMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		super(_mapper, _repositoryService, _jsonFilter);
-		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
-		vnfInstancesRepository = _vnfInstancesRepository;
 		LOG.debug("Starting VNF Package MSA.");
 	}
 

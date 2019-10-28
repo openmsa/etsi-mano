@@ -6,15 +6,12 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
@@ -44,21 +41,9 @@ public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> 
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum inUse) {
-		nsdInfo.setNsdUsageState(inUse);
+	public void changeNsdUpdateState(final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum state) {
+		nsdInfo.setNsdUsageState(state);
 		save(nsdInfo);
-	}
-
-	@Override
-	public NsLcmOpOccsNsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final LcmOperationTypeEnum instantiate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
