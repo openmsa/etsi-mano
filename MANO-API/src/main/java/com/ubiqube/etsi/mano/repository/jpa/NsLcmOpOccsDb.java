@@ -35,7 +35,6 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOccsNsLcmOpOcc, NsLcmOpOcc
 
 	@Override
 	Map<String, From<?, ?>> getJoin(final Root<NsLcmOpOccs> root) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
