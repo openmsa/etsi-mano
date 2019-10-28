@@ -41,7 +41,7 @@ public class VnfLcmOpOccs {
 	@Field
 	private Date startTime = null;
 
-	@OneToOne
+	@OneToOne(optional = false)
 	private VnfInstance vnfInstanceId = null;
 
 	@Field
@@ -60,6 +60,8 @@ public class VnfLcmOpOccs {
 	private CancelModeType cancelMode = null;
 
 	private FailureDetails error = null;
+
+	private String externalProcessId;
 
 	@Transient
 	private VnfLcmOpOccResourceChanges resourceChanges = null;
@@ -180,6 +182,14 @@ public class VnfLcmOpOccs {
 
 	public void setChangedExtConnectivity(final List<ExtVirtualLinkInfo> changedExtConnectivity) {
 		this.changedExtConnectivity = changedExtConnectivity;
+	}
+
+	public String getExternalProcessId() {
+		return externalProcessId;
+	}
+
+	public void setExternalProcessId(final String externalProcessId) {
+		this.externalProcessId = externalProcessId;
 	}
 
 }

@@ -67,6 +67,7 @@ public abstract class AbstractJpa<T, U> extends BinaryRepositoryImpl implements 
 				.getResultStream().map(x -> mapper.map(x, getFrontClass())).collect(Collectors.toList());
 	}
 
+	/** TODO Not used any more. */
 	abstract Map<String, From<?, ?>> getJoin(Root<U> root);
 
 }

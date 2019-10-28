@@ -2,16 +2,11 @@ package com.ubiqube.etsi.mano.repository.phys;
 
 import java.util.UUID;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -48,24 +43,6 @@ public class VnfPackagePhys extends GenaricBinaryRepository<VnfPkgInfo> implemen
 	@Override
 	protected String getDir() {
 		return "vnf_packages";
-	}
-
-	@Override
-	public VnfLcmOpOcc createLcmOpOccs(final String vnfInstanceId, final LcmOperationType terminate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateState(final VnfLcmOpOcc lcmOpOccs, final LcmOperationStateType processing) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String id, final String processId) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

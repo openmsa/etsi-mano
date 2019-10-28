@@ -38,7 +38,7 @@ public class NsLcmOpOccs {
 	@Field
 	private Date stateEnteredTime = null;
 
-	@OneToOne
+	@OneToOne(optional = false)
 	private NsdInstance nsInstanceId = null;
 
 	@Enumerated(EnumType.STRING)

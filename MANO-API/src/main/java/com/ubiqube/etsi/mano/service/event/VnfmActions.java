@@ -17,35 +17,41 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
+import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Vim;
 
 @Service
 public class VnfmActions {
-
 	private static final Logger LOG = LoggerFactory.getLogger(VnfmActions.class);
 
 	private final VnfInstancesRepository vnfInstancesRepository;
+
 	private final Vim msaExecutor;
+
 	private final VnfPackageRepository vnfPackageRepository;
+
 	private final EventManager eventManager;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final Vim _vim, final VnfPackageRepository _vnfPackageRepository, final EventManager _eventManager) {
+	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
+
+	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final Vim _vim, final VnfPackageRepository _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
 		msaExecutor = _vim;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
+		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 	}
 
 	public void vnfInstantiate(final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		// Maybe e need additional parameters to say STARTING / PROCESSING ...
-		final VnfLcmOpOcc lcmOpOccs = vnfPackageRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
+		final VnfLcmOpOcc lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		// Send Grant.
 		// Send processing notification.
-		vnfPackageRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
+		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 		final String vnfPkgId = vnfInstance.getVnfPkgId();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
@@ -55,9 +61,9 @@ public class VnfmActions {
 
 		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 		LOG.info("New MSA VNF Create job: {}", processId);
-		vnfPackageRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		vnfLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
 		final LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
-		vnfPackageRepository.updateState(lcmOpOccs, status);
+		vnfLcmOpOccsRepository.updateState(lcmOpOccs, status);
 
 		if (status == LcmOperationStateType.COMPLETED) {
 			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
