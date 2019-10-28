@@ -6,6 +6,9 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdUsageSt
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPostQuery;
 
 public class PnfFactory {
+	private PnfFactory() {
+		// Nothing.
+	}
 
 	public static PnfDescriptorsPnfdInfo createPnfDescriptorsPnfdInfo(final PnfDescriptorsPostQuery query) {
 		final PnfDescriptorsPnfdInfo pnfd = new PnfDescriptorsPnfdInfo();

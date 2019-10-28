@@ -10,10 +10,34 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
 
 @Embeddable
 public class VnfLcmResourceChanges {
-	private final List<AffectedVnfc> affectedVnfcs = null;
+	private List<AffectedVnfc> affectedVnfcs = null;
 
-	private final List<AffectedVirtualLink> affectedVirtualLinks = null;
+	private List<AffectedVirtualLink> affectedVirtualLinks = null;
 
-	private final List<AffectedVirtualStorage> affectedVirtualStorages = null;
+	private List<AffectedVirtualStorage> affectedVirtualStorages = null;
+
+	public List<AffectedVnfc> getAffectedVnfcs() {
+		return affectedVnfcs;
+	}
+
+	public void setAffectedVnfcs(final List<AffectedVnfc> affectedVnfcs) {
+		this.affectedVnfcs = affectedVnfcs;
+	}
+
+	public List<AffectedVirtualLink> getAffectedVirtualLinks() {
+		return affectedVirtualLinks;
+	}
+
+	public void setAffectedVirtualLinks(final List<AffectedVirtualLink> affectedVirtualLinks) {
+		this.affectedVirtualLinks = affectedVirtualLinks;
+	}
+
+	public List<AffectedVirtualStorage> getAffectedVirtualStorages() {
+		return affectedVirtualStorages;
+	}
+
+	public void setAffectedVirtualStorages(final List<AffectedVirtualStorage> affectedVirtualStorages) {
+		this.affectedVirtualStorages = affectedVirtualStorages;
+	}
 
 }

@@ -15,22 +15,86 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 public class LcmAffectedVnfc {
 	@Id
-	private final String id = null;
+	private String id = null;
 	// Probably a vdu instance.
-	private final String vduId = null;
+	private String vduId = null;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private final ChangeTypeEnum changeType = null;
+	private ChangeTypeEnum changeType = null;
 
-	private final VimResource computeResource = null;
+	private VimResource computeResource = null;
 
 	@JsonProperty("metadata")
-	private final KeyValuePairs metadata = null;
+	private KeyValuePairs metadata = null;
 // Those are also instances.
-	private final List<String> affectedVnfcCpIds = null;
+	private List<String> affectedVnfcCpIds = null;
 
-	private final List<String> addedStorageResourceIds = null;
+	private List<String> addedStorageResourceIds = null;
 
-	private final List<String> removedStorageResourceIds = null;
+	private List<String> removedStorageResourceIds = null;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
+	}
+
+	public String getVduId() {
+		return vduId;
+	}
+
+	public void setVduId(final String vduId) {
+		this.vduId = vduId;
+	}
+
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
+
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
+
+	public VimResource getComputeResource() {
+		return computeResource;
+	}
+
+	public void setComputeResource(final VimResource computeResource) {
+		this.computeResource = computeResource;
+	}
+
+	public KeyValuePairs getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+	}
+
+	public List<String> getAffectedVnfcCpIds() {
+		return affectedVnfcCpIds;
+	}
+
+	public void setAffectedVnfcCpIds(final List<String> affectedVnfcCpIds) {
+		this.affectedVnfcCpIds = affectedVnfcCpIds;
+	}
+
+	public List<String> getAddedStorageResourceIds() {
+		return addedStorageResourceIds;
+	}
+
+	public void setAddedStorageResourceIds(final List<String> addedStorageResourceIds) {
+		this.addedStorageResourceIds = addedStorageResourceIds;
+	}
+
+	public List<String> getRemovedStorageResourceIds() {
+		return removedStorageResourceIds;
+	}
+
+	public void setRemovedStorageResourceIds(final List<String> removedStorageResourceIds) {
+		this.removedStorageResourceIds = removedStorageResourceIds;
+	}
 
 }

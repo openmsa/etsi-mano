@@ -20,6 +20,9 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public class VnfPackageFactory {
+	private VnfPackageFactory() {
+		// Nothing.
+	}
 
 	public static VnfPkgInfo createVnfPkgInfo(final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();

@@ -8,11 +8,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.Module.SetupContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class MapperForView {
+	private MapperForView() {
+		// Nothing.
+	}
 
 	public static ObjectMapper getMapperForView(@Nullable final String exclude, @Nullable final String fields, @Nullable final String excludeDefault, @Nullable final String excludeFields) {
 		final ObjectMapper mapper = new ObjectMapper();
