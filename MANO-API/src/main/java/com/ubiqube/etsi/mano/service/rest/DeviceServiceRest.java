@@ -1,9 +1,9 @@
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -13,16 +13,19 @@ import com.ubiqube.api.entities.device.Model;
 import com.ubiqube.api.entities.device.SimpleDevice;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class DeviceServiceRest implements DeviceService {
 
-	@Autowired
-	private UbiRest rest;
+	private final UbiRest rest;
+
+	public DeviceServiceRest(final UbiRest rest) {
+		super();
+		this.rest = rest;
+	}
 
 	@Override
-	public DeviceId getDeviceId(String nsInstanceId) throws ServiceException {
+	public DeviceId getDeviceId(final String nsInstanceId) throws ServiceException {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("device/v1/reference/" + nsInstanceId)
 				.build()
@@ -31,22 +34,23 @@ public class DeviceServiceRest implements DeviceService {
 	}
 
 	static class DeviceIdModel implements DeviceId {
-		public long id;			// : 125,
-		public String prefix;		// : "TST",
-		public String ubiId;		// : "TST125",
-		public String name;		// : "self",
+		public long id; // : 125,
+		public String prefix; // : "TST",
+		public String ubiId; // : "TST125",
+		public String name; // : "self",
 		public String externalReference; // : "TST125",
-		public long operatorId;		// : 0,
-		public String displayName;	// : "self - TST125",
+		public long operatorId; // : 0,
+		public String displayName; // : "self - TST125",
 		public String displayNameForJsps; // : "self - TST125"
 
+		@Override
 		public String getUbiId() {
 			return ubiId;
 		}
 	}
 
 	@Override
-	public void deleteDevice(DeviceId deviceId, String name) throws ServiceException {
+	public void deleteDevice(final DeviceId deviceId, final String name) throws ServiceException {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("device/reference/" + deviceId.getUbiId())
 				.build()
@@ -55,7 +59,7 @@ public class DeviceServiceRest implements DeviceService {
 	}
 
 	@Override
-	public SimpleDevice getDeviceModeleAndManId(DeviceId deviceId) throws ServiceException {
+	public SimpleDevice getDeviceModeleAndManId(final DeviceId deviceId) throws ServiceException {
 		final URI uri = rest.uriBuilder()
 				.pathSegment("device/v1/device")
 				.queryParam("deviceId", deviceId)
@@ -66,10 +70,12 @@ public class DeviceServiceRest implements DeviceService {
 
 	static class SimpleDeviceModel implements SimpleDevice {
 
+		@Override
 		public DeviceId getUbiqubeId() {
 			return null;
 		}
 
+		@Override
 		public String getName() {
 			return null;
 		}
@@ -82,8 +88,7 @@ public class DeviceServiceRest implements DeviceService {
 				.build()
 				.toUri();
 		return toHashMap(new ArrayList<Manufacturer>(
-			rest.get(uri, ListOfManufacturers.class)
-		));
+				rest.get(uri, ListOfManufacturers.class)));
 	}
 
 	static class ManufacturerModel implements Manufacturer {
@@ -93,17 +98,20 @@ public class DeviceServiceRest implements DeviceService {
 		public String manufacturerName;
 		public ArrayList<ModelModel> models;
 
-		public Model getModel(long modelId) {
+		@Override
+		public Model getModel(final long modelId) {
 			if (_models == null) {
 				_models = toHashMap(models);
 			}
 			return _models.get(modelId);
 		}
 
+		@Override
 		public String getName() {
 			return manufacturerName;
 		}
 
+		@Override
 		public int hashCode() {
 			return manufacturerId;
 		}
@@ -113,10 +121,12 @@ public class DeviceServiceRest implements DeviceService {
 		public String modelName;
 		public int modelId;
 
+		@Override
 		public String getName() {
 			return modelName;
 		}
 
+		@Override
 		public int hashCode() {
 			return modelId;
 		}
@@ -125,10 +135,10 @@ public class DeviceServiceRest implements DeviceService {
 	static class ListOfManufacturers extends ArrayList<ManufacturerModel> {
 	}
 
-	static <T> HashMap<Long, T> toHashMap(ArrayList<T> list) {
-		HashMap<Long, T> ret = new HashMap<Long, T>();
-		for (T obj : list) {
-			ret.put((long)obj.hashCode(), obj);
+	static <T> HashMap<Long, T> toHashMap(final ArrayList<T> list) {
+		final HashMap<Long, T> ret = new HashMap<>();
+		for (final T obj : list) {
+			ret.put((long) obj.hashCode(), obj);
 		}
 		return ret;
 	}

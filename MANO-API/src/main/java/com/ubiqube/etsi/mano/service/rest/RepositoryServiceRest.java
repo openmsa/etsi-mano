@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
 import java.util.Base64;
@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class RepositoryServiceRest implements RepositoryService {
 
-	@Autowired
-	private UbiRest rest;
+	private final UbiRest rest;
+
+	public RepositoryServiceRest(final UbiRest rest) {
+		super();
+		this.rest = rest;
+	}
 
 	@Override
 	public RepositoryElement getElement(final String path) {
