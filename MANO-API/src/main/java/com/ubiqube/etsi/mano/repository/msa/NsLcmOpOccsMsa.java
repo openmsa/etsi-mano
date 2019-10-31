@@ -18,9 +18,11 @@ import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Service
 public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOpOcc> implements NsLcmOpOccsRepository {
+	private final NsdPackageMsa nsdPackageMsa;
 
-	public NsLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
+	public NsLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final NsdPackageMsa _nsdPackageMsa) {
 		super(_mapper, _repositoryService, _jsonFilter);
+		nsdPackageMsa = _nsdPackageMsa;
 	}
 
 	@Override
@@ -53,19 +55,19 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOp
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(nsInstanceId, state);
 		save(lcmOpOccs);
 		// Add newly created instance to Indexes.json
-		final NsInstanceIndex nsInstanceIndex = loadObject(nsInstanceId, "indexes.json", NsInstanceIndex.class);
+		final NsInstanceIndex nsInstanceIndex = nsdPackageMsa.loadObject(nsInstanceId, "indexes.json", NsInstanceIndex.class);
 		nsInstanceIndex.addLcmOpOccs(lcmOpOccs);
-		storeObject(nsInstanceId, "indexes.json", nsInstanceIndex);
+		nsdPackageMsa.storeObject(nsInstanceId, "indexes.json", nsInstanceIndex);
 		return lcmOpOccs;
 	}
 
 	@Override
 	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
 		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = get(lcmOpOccsId);
-		final NsInstanceIndex nsInstanceIndex = loadObject(lcmOpOccs.getNsInstanceId(), "indexes.json", NsInstanceIndex.class);
+		final NsInstanceIndex nsInstanceIndex = nsdPackageMsa.loadObject(lcmOpOccs.getNsInstanceId(), "indexes.json", NsInstanceIndex.class);
 		final NsLcmOpOccsIndex lcmIdx = nsInstanceIndex.getLcmOpOccs(lcmOpOccsId);
 		lcmIdx.setProcessId(processId);
-		storeObject(lcmOpOccs.getNsInstanceId(), "indexes.json", nsInstanceIndex);
+		nsdPackageMsa.storeObject(lcmOpOccs.getNsInstanceId(), "indexes.json", nsInstanceIndex);
 
 	}
 
