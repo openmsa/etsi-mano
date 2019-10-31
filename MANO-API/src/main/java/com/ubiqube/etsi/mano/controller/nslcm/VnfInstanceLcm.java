@@ -40,7 +40,7 @@ import com.ubiqube.etsi.mano.service.event.EventManager;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @Service
 public class VnfInstanceLcm {
 

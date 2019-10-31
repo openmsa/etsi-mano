@@ -7,6 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
@@ -17,6 +20,8 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
+@Profile("RDBMS")
+@Service
 public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> implements NsdRepository {
 
 	public NsdPackageDb(final NsdPackageJpa repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final EntityManager _em) {

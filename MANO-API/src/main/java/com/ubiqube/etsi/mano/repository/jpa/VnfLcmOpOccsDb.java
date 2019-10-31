@@ -12,7 +12,9 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
@@ -26,6 +28,8 @@ import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
+@Profile("RDBMS")
+@Service
 public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private final CrudRepository<VnfLcmOpOccs, UUID> repository;
 
