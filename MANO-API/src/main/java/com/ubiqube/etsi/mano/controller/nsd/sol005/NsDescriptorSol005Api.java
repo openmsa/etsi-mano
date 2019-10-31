@@ -57,7 +57,7 @@ import io.swagger.annotations.Api;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 @Api(value = "/sol005/nsd/v1/ns_descriptors")
 public class NsDescriptorSol005Api implements NsDescriptorSol005 {

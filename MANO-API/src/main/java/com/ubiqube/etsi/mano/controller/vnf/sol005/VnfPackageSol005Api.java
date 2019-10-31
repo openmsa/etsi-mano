@@ -65,7 +65,7 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  * could be here and not Jackson, in this case you can use object2String.
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);

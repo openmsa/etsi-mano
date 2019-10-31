@@ -39,7 +39,7 @@ import com.ubiqube.etsi.mano.utils.RangeHeader.FromToBean;
  * @author ovi@ubiqube.com
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @Service
 public class VnfManagement implements VnfPackageManagement {
 	private static final String APPLICATION_ZIP = "application/zip";

@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 @RequestMapping("/sol005/nspm/v1")
 @Api(value = "/")

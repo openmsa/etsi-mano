@@ -11,7 +11,7 @@ import com.ubiqube.etsi.mano.model.nsperfo.sol005.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.PmJobsPmJobIdReportsReportIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.PmJobsPostResponse;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 public class PmJobsSol005Api implements PmJobsSol005 {
 	/**
 	 * Query PM jobs.

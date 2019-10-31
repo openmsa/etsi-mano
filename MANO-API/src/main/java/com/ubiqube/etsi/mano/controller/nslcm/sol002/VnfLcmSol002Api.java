@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @RestController
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);

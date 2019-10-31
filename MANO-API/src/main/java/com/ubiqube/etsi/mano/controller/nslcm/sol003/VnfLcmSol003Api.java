@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @RestController
 public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol003Api.class);

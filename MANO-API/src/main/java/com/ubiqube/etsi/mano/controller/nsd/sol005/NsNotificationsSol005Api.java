@@ -13,7 +13,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdDeletionNotification;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingFailureNotification;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingNotification;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 

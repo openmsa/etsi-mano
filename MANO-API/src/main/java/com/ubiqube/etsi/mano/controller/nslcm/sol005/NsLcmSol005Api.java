@@ -19,7 +19,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationOccurrenceNotifica
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public class NsLcmSol005Api implements NsLcmSol005 {
 

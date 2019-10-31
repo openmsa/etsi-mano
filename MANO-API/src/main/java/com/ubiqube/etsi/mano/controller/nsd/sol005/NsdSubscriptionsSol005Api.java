@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostResponse;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 

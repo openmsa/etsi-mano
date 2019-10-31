@@ -36,7 +36,7 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @RestController
 @RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
 public class VnfPackageSol003Api implements VnfPackageSol003 {
