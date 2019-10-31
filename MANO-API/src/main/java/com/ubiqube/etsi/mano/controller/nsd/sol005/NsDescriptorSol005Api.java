@@ -37,7 +37,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
-import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -283,7 +282,6 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 			nsdDescriptor.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
 			nsdRepository.save(nsdDescriptor);
 		}
-		nsdRepository.storeObject(nsdDescriptor.getId(), "indexes.json", new VnfPkgIndex());
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
 		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
 	}

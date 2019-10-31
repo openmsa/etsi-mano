@@ -88,7 +88,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	abstract Class<?> getClazz();
 
 	@Override
-	public final void delete(final String _id) {
+	public void delete(final String _id) {
 		final String uri = computePath(_id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
@@ -96,7 +96,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public final T save(final T _entity) {
+	public T save(final T _entity) {
 		final String saveId = setId(_entity);
 		final String dir = computePath(saveId);
 		mkdir(dir);

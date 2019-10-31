@@ -7,5 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 
 public interface VnfInstanceJpa extends CrudRepository<VnfInstance, UUID> {
-	// Empty.
+
+	int countByVnfPkgId(UUID fromString);
 }

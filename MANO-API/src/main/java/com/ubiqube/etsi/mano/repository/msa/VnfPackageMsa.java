@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
@@ -54,6 +55,13 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 	@Override
 	String getFilename() {
 		return "vnfPkgInfo.json";
+	}
+
+	@Override
+	public VnfPkgInfo save(final VnfPkgInfo _entity) {
+		final VnfPkgInfo vnfPkgInfo = super.save(_entity);
+		storeObject(vnfPkgInfo.getId(), "indexes.json", new VnfPkgIndex());
+		return vnfPkgInfo;
 	}
 
 }

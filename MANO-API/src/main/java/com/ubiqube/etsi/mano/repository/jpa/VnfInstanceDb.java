@@ -6,10 +6,10 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
-
-import org.springframework.data.repository.CrudRepository;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -18,8 +18,11 @@ import ma.glasnost.orika.MapperFacade;
 
 public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance> implements VnfInstancesRepository {
 
-	public VnfInstanceDb(final EntityManager em, final CrudRepository<com.ubiqube.etsi.mano.dao.mano.VnfInstance, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
-		super(em, repository, mapper, contentManager, jsonMapper);
+	private final VnfInstanceJpa repository;
+
+	public VnfInstanceDb(final EntityManager em, final VnfInstanceJpa _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
+		super(em, _repository, mapper, contentManager, jsonMapper);
+		repository = _repository;
 	}
 
 	@Override
@@ -35,6 +38,11 @@ public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.man
 	@Override
 	Map<String, From<?, ?>> getJoin(final Root<com.ubiqube.etsi.mano.dao.mano.VnfInstance> root) {
 		return null;
+	}
+
+	@Override
+	public boolean isInstantiate(@NotNull final String vnfPkgId) {
+		return 0 == repository.countByVnfPkgId(UUID.fromString(vnfPkgId));
 	}
 
 }
