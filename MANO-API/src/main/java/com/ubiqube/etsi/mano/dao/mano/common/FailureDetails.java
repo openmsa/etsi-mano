@@ -3,10 +3,10 @@ package com.ubiqube.etsi.mano.dao.mano.common;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class OnboardingFailureDetails {
+public class FailureDetails {
 	private String type;
 	private String title;
-	private long status;
+	private Long status;
 	private String detail;
 	private String instance;
 

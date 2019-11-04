@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,6 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
@@ -132,9 +131,9 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
-		final @Nonnull String vnfPkgId = UUID.randomUUID().toString();
 		final Map<String, Object> userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
-		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(vnfPkgId, userDataObject);
+
+		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userDataObject);
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -143,17 +142,18 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		checkUserData(userData);
 
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		vnfPackageRepository.save(vnfPkgInfo);
+		@NotNull
+		final String vnfPkgId = vnfPkgInfo.getId();
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
-			vnfPackageRepository.storeObject(vnfPkgId, heatDoc, "vnfd");
+			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
 			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
 			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
-		vnfPackageRepository.storeObject(vnfPkgInfo.getId(), new VnfPkgIndex(), "indexes.json");
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 

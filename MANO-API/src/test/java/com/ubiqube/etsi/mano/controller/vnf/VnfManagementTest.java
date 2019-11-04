@@ -54,7 +54,7 @@ public class VnfManagementTest {
 	@Test
 	void testOneTupple() throws Exception {
 		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
-		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo("aaa", new HashMap<String, Object>()));
+		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>()));
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 
@@ -75,7 +75,7 @@ public class VnfManagementTest {
 
 	@Test
 	void testgetVnfUniq() throws Exception {
-		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo("aaa", new HashMap<String, Object>());
+		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
 		when(vnfPackageRepository.get("aaa")).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);

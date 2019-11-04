@@ -3,34 +3,58 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Indexed;
+
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
+@Indexed
 public class VnfPackage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+	@Field
 	private String vnfdId;
+	@Field
 	private String vnfProvider;
+	@Field
 	private String vnfProductName;
+	@Field
 	private String vnfSoftwareVersion;
+	@Field
 	private String vnfdVersion;
 	private Checksum checksum;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<SoftwareImage> softwareImages;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<AdditionalArtifact> additionalArtifacts;
+	@Enumerated(EnumType.STRING)
+	@Field
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateEnum onboardingState;
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
+	@Field
 	private OperationalStateEnum operationalState;
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
+	@Field
 	private UsageStateEnum usageState;
 
 	public UUID getId() {

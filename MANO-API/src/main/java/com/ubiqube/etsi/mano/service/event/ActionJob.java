@@ -98,7 +98,7 @@ public class ActionJob extends QuartzJobBean {
 
 	private void uploadAndFinishOnboarding(final VnfPkgInfo vnfPkgInfo, final byte[] data) {
 		vnfPkgInfo.setChecksum(getChecksum(data));
-		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), new ByteArrayInputStream(data), "vnfd");
+		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), "vnfd", new ByteArrayInputStream(data));
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			vnfPkgInfo.setSoftwareImages(packageProvider.getSoftwareImages());

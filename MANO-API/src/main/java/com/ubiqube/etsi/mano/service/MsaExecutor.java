@@ -104,31 +104,18 @@ public class MsaExecutor implements Vim {
 		LOG.debug("Entering Wait for Completion.");
 		while (true) {
 			try {
-				final ProcessInstance res = orchestrationService.getProcessInstance(new Long(processId));
+				final ProcessInstance res = orchestrationService.getProcessInstance(Long.parseLong(processId));
 				final String status = res.getStatus().getStatus();
 				if (!"RUNNING".equals(status)) {
 					LOG.debug("Wait for completion done with result: {}", status);
-					return convert(status);
+					return LcmOperationStateType.fromValue(status);
 				}
-				Thread.sleep(30 * 1000);
+				Thread.sleep(15 * 1000);
 			} catch (NumberFormatException | InterruptedException e) {
 				throw new GenericException(e);
 			}
 		}
 
-	}
-
-	private static LcmOperationStateType convert(final String status) {
-
-		if ("FAIL".equals(status)) {
-			return LcmOperationStateType.FAILED;
-		} else if ("ENDED".equals(status)) {
-			return LcmOperationStateType.COMPLETED;
-		} else if ("RUNNING".equals(status)) {
-			return LcmOperationStateType.PROCESSING;
-		}
-		LOG.warn("Unknown status: {}", status);
-		return null;
 	}
 
 }

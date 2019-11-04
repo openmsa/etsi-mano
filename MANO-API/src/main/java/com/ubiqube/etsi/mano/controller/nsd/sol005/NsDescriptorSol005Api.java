@@ -11,7 +11,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -38,7 +37,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsPostQuery;
-import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -215,7 +213,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		ensureNotOnboarded(nsdInfo);
 		try {
 			// Must be Async.
-			nsdRepository.storeBinary(nsdInfoId, file.getInputStream(), "nsd");
+			nsdRepository.storeBinary(nsdInfoId, "nsd", file.getInputStream());
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -263,9 +261,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsDescriptorsNsdInfo> nsDescriptorsPost(final String accept, final String contentType, final NsDescriptorsPostQuery nsDescriptorsPostQuery) {
-		final String id = UUID.randomUUID().toString();
-
-		final NsDescriptorsNsdInfo nsdDescriptor = NsdFactories.createNsDescriptorsNsdInfo(id);
+		final NsDescriptorsNsdInfo nsdDescriptor = NsdFactories.createNsDescriptorsNsdInfo();
 		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getCreateNsdInfoRequest().getUserDefinedData();
 		nsdDescriptor.setUserDefinedData(userDefinedData);
 		nsdDescriptor.setNsdName((String) userDefinedData.get("name"));
@@ -281,12 +277,11 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdRepository.save(nsdDescriptor);
 
 		if (null != userDefinedData.get("heat")) {
-			nsdRepository.storeObject(nsdDescriptor.getId(), userDefinedData.get("heat"), "nsd");
+			nsdRepository.storeObject(nsdDescriptor.getId(), "nsd", userDefinedData.get("heat"));
 			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
 			nsdDescriptor.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
 			nsdRepository.save(nsdDescriptor);
 		}
-		nsdRepository.storeObject(nsdDescriptor.getId(), new VnfPkgIndex(), "indexes.json");
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
 		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
 	}

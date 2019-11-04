@@ -24,6 +24,8 @@ import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
+import com.ubiqube.etsi.mano.repository.CrudRepository;
 
 /**
  * A Generic implementation of classical CRUD action around a repository.
@@ -32,13 +34,14 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
  *
  * @param <T>
  */
-public abstract class AbstractGenericRepository<T> extends AbstractRepository<T> {
+public abstract class AbstractGenericRepository<T> implements CrudRepository<T>, BinaryRepository {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
 	protected final JsonFilter jsonFilter;
+	private final RepositoryService repositoryService;
 
 	public AbstractGenericRepository(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
-		super(_repositoryService);
+		repositoryService = _repositoryService;
 		mapper = _mapper;
 		jsonFilter = _jsonFilter;
 	}
@@ -85,7 +88,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	abstract Class<?> getClazz();
 
 	@Override
-	public final void delete(final String _id) {
+	public void delete(final String _id) {
 		final String uri = computePath(_id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
@@ -93,7 +96,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public final T save(final T _entity) {
+	public T save(final T _entity) {
 		final String saveId = setId(_entity);
 		final String dir = computePath(saveId);
 		mkdir(dir);
@@ -110,7 +113,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public void storeObject(final String _id, final Object _object, final String _filename) {
+	public void storeObject(final String _id, final String _filename, final Object _object) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -121,7 +124,8 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		}
 	}
 
-	public final <T, U extends Class> T loadObject(@NotNull final String _id, final U t, final String _filename) {
+	@Override
+	public final <T, U extends Class> T loadObject(@NotNull final String _id, final String _filename, final U t) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -140,7 +144,7 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 	}
 
 	@Override
-	public void storeBinary(final String _id, final InputStream _stream, final String _filename) {
+	public void storeBinary(final String _id, final String _filename, final InputStream _stream) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -195,4 +199,13 @@ public abstract class AbstractGenericRepository<T> extends AbstractRepository<T>
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
 	}
 
+	protected void verify(final String _uri) {
+		try {
+			if (!repositoryService.exists(_uri)) {
+				throw new NotFoundException("Object not found " + _uri);
+			}
+		} catch (final ServiceException e) {
+			throw new GenericException(e);
+		}
+	}
 }

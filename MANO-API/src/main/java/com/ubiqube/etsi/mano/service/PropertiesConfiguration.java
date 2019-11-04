@@ -27,11 +27,7 @@ public class PropertiesConfiguration implements Configuration {
 
 		final File confFile = new File(filename);
 		if (!confFile.exists()) {
-			try {
-				confFile.createNewFile();
-			} catch (final IOException e) {
-				throw new GenericException(e);
-			}
+			throw new GenericException("Unable to find " + confFile);
 		}
 
 		try (InputStream inStream = new FileInputStream(filename);) {

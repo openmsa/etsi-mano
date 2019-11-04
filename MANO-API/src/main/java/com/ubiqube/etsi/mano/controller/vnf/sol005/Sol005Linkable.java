@@ -57,7 +57,7 @@ public class Sol005Linkable implements Linkable {
 		return null;
 	}
 
-	public static VnfPackagesVnfPkgInfoLinksSelf createVnfPackagesVnfPkgInfoLinksSelf(final String _href) {
+	private static VnfPackagesVnfPkgInfoLinksSelf createVnfPackagesVnfPkgInfoLinksSelf(final String _href) {
 		final VnfPackagesVnfPkgInfoLinksSelf link = new VnfPackagesVnfPkgInfoLinksSelf();
 		link.setHref(_href);
 		return link;

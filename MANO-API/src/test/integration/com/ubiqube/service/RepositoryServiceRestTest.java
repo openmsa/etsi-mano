@@ -9,11 +9,18 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
+import com.ubiqube.etsi.mano.service.Configuration;
+import com.ubiqube.etsi.mano.service.PropertiesConfiguration;
 import com.ubiqube.etsi.mano.service.rest.RepositoryServiceRest;
 import com.ubiqube.etsi.mano.service.rest.UbiRest;
 
 public class RepositoryServiceRestTest {
-	RepositoryServiceRest repositoryServiceRest = new RepositoryServiceRest(new UbiRest());
+	RepositoryServiceRest repositoryServiceRest;
+
+	public RepositoryServiceRestTest() {
+		final Configuration conf = new PropertiesConfiguration();
+		repositoryServiceRest = new RepositoryServiceRest(new UbiRest(conf));
+	}
 
 	@Test
 	public void testDoSearch() throws Exception {

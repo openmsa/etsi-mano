@@ -98,6 +98,7 @@ public final class LcmFactory {
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
 
+	@Nonnull
 	public static VnfLcmOpOcc createVnfLcmOpOccs(final LcmOperationType operation, final String vnfInstanceId) {
 		final VnfLcmOpOcc vnfLcmOpOcc = new VnfLcmOpOcc();
 		vnfLcmOpOcc.setOperation(operation);

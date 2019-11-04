@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +39,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	@Override
 	public ResponseEntity<List<InlineResponse2001>> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
-		final String id = UUID.randomUUID().toString();
-		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, id, links), HttpStatus.OK);
+		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, links), HttpStatus.OK);
 	}
 
 	@Override
@@ -57,14 +55,12 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public void vnfPackageChangeNotificationPost(final NotificationsMessage notificationsMessage) {
-		final String id = UUID.randomUUID().toString();
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, id, links);
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, links);
 	}
 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final NotificationsMessage notificationsMessage) {
-		final String id = UUID.randomUUID().toString();
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, id, links);
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, links);
 	}
 
 }

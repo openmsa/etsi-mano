@@ -41,12 +41,12 @@ public class VnfSubscriptionManagement {
 		return response;
 	}
 
-	public List<InlineResponse2001> subscriptionsPost(@Nonnull final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, @Nonnull final String id, final Linkable links) {
+	public List<InlineResponse2001> subscriptionsPost(@Nonnull final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery, final Linkable links) {
 		// Response
 		final ArrayList<InlineResponse2001> response = new ArrayList<>();
 		final String callback = subscriptionsPostQuery.getCallbackUri();
 		final SubscriptionsPkgmSubscriptionFilter filter = subscriptionsPostQuery.getFilter();
-		final SubscriptionsPkgmSubscription subscription = VnfPackageFactory.createSubscriptionsPkgmSubscription(id, callback, filter);
+		final SubscriptionsPkgmSubscription subscription = VnfPackageFactory.createSubscriptionsPkgmSubscription(callback, filter);
 
 		// TODO: Check test endpoint.
 		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
@@ -59,7 +59,7 @@ public class VnfSubscriptionManagement {
 		return response;
 	}
 
-	public void vnfPackageChangeNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, @Nonnull final String id, final Linkable links) {
+	public void vnfPackageChangeNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, final Linkable links) {
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -68,12 +68,12 @@ public class VnfSubscriptionManagement {
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 		final String callbackUri = subscriptionsRepository.getSubscriptionsPkgmSubscription().getCallbackUri();
 
-		final VnfPackageChangeNotification vnfPackageChangeNotification = VnfPackageFactory.createVnfPackageChangeNotification(id, subscriptionId, vnfPkgId, vnfdId, links);
+		final VnfPackageChangeNotification vnfPackageChangeNotification = VnfPackageFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, vnfdId, links);
 
 		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
 	}
 
-	public void vnfPackageOnboardingNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, @Nonnull final String id, final Linkable links) {
+	public void vnfPackageOnboardingNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, final Linkable links) {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionsPkgmSubscription req = subscriptionsRepository.getSubscriptionsPkgmSubscription();
@@ -82,7 +82,7 @@ public class VnfSubscriptionManagement {
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionsRepository.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
-		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(id, subscriptionId, vnfPkgId, vnfdId, links);
+		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, vnfdId, links);
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 

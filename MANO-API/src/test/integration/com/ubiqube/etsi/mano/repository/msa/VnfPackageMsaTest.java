@@ -26,6 +26,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
+import com.ubiqube.etsi.mano.service.Configuration;
+import com.ubiqube.etsi.mano.service.PropertiesConfiguration;
 import com.ubiqube.etsi.mano.service.rest.RepositoryServiceRest;
 import com.ubiqube.etsi.mano.service.rest.UbiRest;
 
@@ -36,7 +38,8 @@ public class VnfPackageMsaTest {
 	public VnfPackageMsaTest() {
 		final JsonFilter jsonFilter = new JsonFilter(new JsonBeanUtil());
 		final ObjectMapper mapper = new ObjectMapper();
-		final RepositoryService repositoryService = new RepositoryServiceRest(new UbiRest());
+		final Configuration conf = new PropertiesConfiguration();
+		final RepositoryService repositoryService = new RepositoryServiceRest(new UbiRest(conf));
 		final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository = new VnfLcmOpOccsMsa(mapper, repositoryService, jsonFilter);
 		final VnfInstancesRepository _vnfInstancesRepository = new VnfInstancesMsa(mapper, repositoryService, jsonFilter);
 		vnfPackageMsa = new VnfPackageMsa(mapper, repositoryService, jsonFilter, _vnfLcmOpOccsRepository, _vnfInstancesRepository);
@@ -74,7 +77,7 @@ public class VnfPackageMsaTest {
 	@Test
 	public void testStoreError() {
 		assertThrows(NotFoundException.class, () -> {
-			vnfPackageMsa.storeObject("BAD", new Grant(), "grant");
+			vnfPackageMsa.storeObject("BAD", "grant", new Grant());
 		});
 	}
 
@@ -84,15 +87,15 @@ public class VnfPackageMsaTest {
 		vnfPackageMsa.save(entity);
 		assertNotNull(entity.getId());
 
-		vnfPackageMsa.storeObject(entity.getId(), new Grant(), "grant");
-		vnfPackageMsa.loadObject(entity.getId(), Grant.class, "grant");
+		vnfPackageMsa.storeObject(entity.getId(), "grant", new Grant());
+		vnfPackageMsa.loadObject(entity.getId(), "grant", Grant.class);
 		vnfPackageMsa.delete(entity.getId());
 	}
 
 	@Test
 	public void testLoadObjectError() {
 		assertThrows(NotFoundException.class, () -> {
-			vnfPackageMsa.loadObject("BAD", NsInstancesCreateNsRequest.class, "grant");
+			vnfPackageMsa.loadObject("BAD", "grant", NsInstancesCreateNsRequest.class);
 		});
 	}
 
@@ -103,7 +106,7 @@ public class VnfPackageMsaTest {
 		assertNotNull(entity.getId());
 
 		final InputStream stream = new FileInputStream("src/test/resources/pack.zip");
-		vnfPackageMsa.storeBinary(entity.getId(), stream, "file");
+		vnfPackageMsa.storeBinary(entity.getId(), "file", stream);
 
 		byte[] bytes = vnfPackageMsa.getBinary(entity.getId(), "file");
 		final MessageDigest md5 = MessageDigest.getInstance("MD5");

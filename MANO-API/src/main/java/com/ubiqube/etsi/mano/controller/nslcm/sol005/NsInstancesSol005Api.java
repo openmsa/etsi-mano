@@ -27,8 +27,6 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.nsd.NsdPkgIndex;
-import com.ubiqube.etsi.mano.model.nsd.NsdPkgInstance;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
@@ -251,10 +249,6 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 
 		nsInstance.setVnfInstance(vnfInstances);
 		nsInstanceRepository.save(nsInstance);
-
-		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(req.getNsdId(), NsdPkgIndex.class, "indexes.json");
-		nsdIndex.addNsdPkgInstance(new NsdPkgInstance(nsInstance.getId()));
-		nsdRepository.storeObject(req.getNsdId(), nsdIndex, "indexes.json");
 
 		nsInstance.setLinks(makeLink(nsInstance.getId()));
 		final InlineResponse200 resp = new InlineResponse200();

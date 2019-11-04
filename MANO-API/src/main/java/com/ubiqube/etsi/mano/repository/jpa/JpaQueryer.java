@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
@@ -17,9 +16,19 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
+/**
+ * Maybe more an Abstract.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class JpaQueryer {
-	@PersistenceContext
-	private EntityManager em;
+	private final EntityManager em;
+
+	public JpaQueryer(final EntityManager em) {
+		super();
+		this.em = em;
+	}
 
 	public Predicate getCriteria(final List<Node> nodes, final Class<?> clazz, final Map<String, From<?, ?>> joins) {
 		final CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -31,7 +40,7 @@ public class JpaQueryer {
 			}
 		}
 		if (!predicates.isEmpty()) {
-			return cb.and((Predicate[]) predicates.toArray());
+			return cb.and(predicates.toArray(new Predicate[0]));
 		}
 		return null;
 	}
@@ -79,12 +88,12 @@ public class JpaQueryer {
 			final String key = Arrays.asList(ro).stream().collect(Collectors.joining("."));
 			attr.parent = Optional.ofNullable(joins.get(key));
 		}
-		attr.name = arr[arr.length];
+		attr.name = arr[arr.length - 1];
 		return attr;
 	}
 
 	private class Attr {
 		String name;
-		Optional<From<?, ?>> parent = Optional.ofNullable(null);
+		Optional<From<?, ?>> parent = Optional.empty();
 	}
 }
