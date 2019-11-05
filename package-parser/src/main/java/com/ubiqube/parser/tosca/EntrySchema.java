@@ -2,10 +2,12 @@ package com.ubiqube.parser.tosca;
 
 import java.util.List;
 
+import com.ubiqube.parser.tosca.constraints.Constraint;
+
 public class EntrySchema {
 	private String type;
 	private String description;
-	private List<Object> constraints;
+	private List<Constraint> constraints;
 
 	public String getType() {
 		return type;
@@ -23,11 +25,11 @@ public class EntrySchema {
 		this.description = description;
 	}
 
-	public List<Object> getConstraints() {
+	public List<Constraint> getConstraints() {
 		return constraints;
 	}
 
-	public void setConstraints(final List<Object> constraints) {
+	public void setConstraints(final List<Constraint> constraints) {
 		this.constraints = constraints;
 	}
 
