@@ -23,6 +23,8 @@ public class ToscaContext {
 	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
 	private final Resolver resolver = new Resolver();
 
+	private Map<String, DataType> dataTypes = new HashMap<>();
+
 	public ToscaContext(final ToscaRoot root) {
 
 		artifacts = root.getArtifactTypes();
@@ -33,6 +35,7 @@ public class ToscaContext {
 		relationship = root.getRelationshipTypes();
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
+		dataTypes = root.getData_types();
 
 	}
 
@@ -98,6 +101,10 @@ public class ToscaContext {
 
 	public Map<String, CapabilityTypes> getCapabilities() {
 		return capabilities;
+	}
+
+	public Map<String, DataType> getDataTypes() {
+		return dataTypes;
 	}
 
 	@Override

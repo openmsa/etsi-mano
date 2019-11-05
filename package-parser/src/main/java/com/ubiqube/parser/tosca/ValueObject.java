@@ -1,5 +1,6 @@
 package com.ubiqube.parser.tosca;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,8 +11,8 @@ public class ValueObject {
 	private Boolean required;
 	private Object def;
 	private String description;
-	private Object entrySchema;
-	private List<Constraint> constraints;
+	private EntrySchema entrySchema;
+	private List<Constraint> constraints = new ArrayList<>();
 	private String status;
 
 	public String getType() {
@@ -48,11 +49,11 @@ public class ValueObject {
 	}
 
 	@JsonProperty("entry_schema")
-	public Object getEntrySchema() {
+	public EntrySchema getEntrySchema() {
 		return entrySchema;
 	}
 
-	public void setEntrySchema(final Object entrySchema) {
+	public void setEntrySchema(final EntrySchema entrySchema) {
 		this.entrySchema = entrySchema;
 	}
 

@@ -1091,8 +1091,9 @@ node_types:
         type: list
         entry_schema:
           type: list
-          entry_schema:
-            type: string
+          # OVI: What does it mean ?
+          #entry_schema:
+          #  type: string
       labels:
         required: no
         type: map
