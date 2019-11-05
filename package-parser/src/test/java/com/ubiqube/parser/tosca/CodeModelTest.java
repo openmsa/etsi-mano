@@ -165,11 +165,12 @@ public class CodeModelTest {
 		if ("map".equals(type)) {
 			final Class<?> jTy = convert(valueObject.getEntrySchema().getType());
 			if (null != jTy) {
-				return codeModel.ref(Map.class).narrow(jTy);
+				return codeModel.ref(Map.class).narrow(String.class, jTy);
 			}
 			final JDefinedClass jcTy = cache.get(valueObject.getType());
 			if (null != jcTy) {
-				return codeModel.ref(Map.class).narrow(jcTy);
+				final JDefinedClass strClazz = codeModel._getClass(String.class.getName());
+				return codeModel.ref(Map.class).narrow(strClazz, jcTy);
 			} else {
 				// TODO
 				// return generateClass(valueObject.getType(),
@@ -230,27 +231,6 @@ public class CodeModelTest {
 
 	private static Class<?> convert(final ValueObject valueObject) {
 		final String type = valueObject.getType();
-		if ("integer".equals(type)) {
-			return Integer.class;
-		}
-		if ("scalar-unit.size".equals(type)) {
-			return Size.class;
-		}
-		if ("scalar-unit.frequency".equals(type)) {
-			return Frequency.class;
-		}
-		if ("string".equals(type)) {
-			return String.class;
-		}
-		if ("range".equals(type)) {
-			return Range.class;
-		}
-		if ("boolean".equals(type)) {
-			return Boolean.class;
-		}
-		if ("version".equals(type)) {
-			return Version.class;
-		}
-		return null;
+		return convert(type);
 	}
 }
