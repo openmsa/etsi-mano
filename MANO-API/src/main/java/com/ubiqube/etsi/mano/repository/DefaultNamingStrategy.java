@@ -16,23 +16,29 @@ public class DefaultNamingStrategy implements NamingStrategy {
 		root = configuration.build("repository.phys.root").notNull().build();
 	}
 
-	@Override
-	public Path getNameFor(final Class<?> frontClass, final String _id, final String _filename) {
-		final Path classPath = cpConverter.convert(frontClass);
-		return Paths.get(root, classPath.toString(), sanitize(_id), sanitize(_filename));
-	}
-
 	protected final static String sanitize(final String filename) {
 		// It's ok for path segment not for a full path.
 		return filename.replaceAll("\\.+", ".");
 	}
 
-	private final Path getRootId(final Path root, final String _id) {
-		return combine(root, _id);
+	@Override
+	public Path getDir(final Class<?> clazz) {
+		return Paths.get(root, cpConverter.convert(clazz));
 	}
 
-	private static final Path combine(final Path path, final String _filename) {
-		return Paths.get(path.toString(), sanitize(_filename));
+	@Override
+	public Path getRoot(final Class<?> clazz, final String _id) {
+		return Paths.get(root, cpConverter.convert(clazz), sanitize(_id));
+	}
+
+	@Override
+	public Path getPath(final Class<?> clazz, final String _id, final String _filename) {
+		return Paths.get(root, cpConverter.convert(clazz), sanitize(_id), sanitize(_filename));
+	}
+
+	@Override
+	public Path getRoot() {
+		return Paths.get(root);
 	}
 
 }

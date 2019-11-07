@@ -64,7 +64,6 @@ public class VnfPkgTest {
 
 		final VnfPkgInfo vnfPkg = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
 		vnfPkg.setId("1234");
-		;
 		when(vnfPackageRepository.save(Mockito.any())).thenReturn(vnfPkg);
 		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sol005/vnfpkgm/v1/vnf_packages")
 				.contentType(MediaType.APPLICATION_JSON)

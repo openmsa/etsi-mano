@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
 /**
  * A Generic implementation of classical CRUD action around a repository.
@@ -39,6 +40,8 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	private final ObjectMapper mapper;
 	protected final JsonFilter jsonFilter;
 	private final RepositoryService repositoryService;
+
+	private NamingStrategy namingStrategy;
 
 	public AbstractGenericRepository(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
 		repositoryService = _repositoryService;

@@ -41,7 +41,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 
 	@Override
 	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
-		final Path path = namingStrategy.getNameFor(getFrontClass(), _id, _filename);
+		final Path path = namingStrategy.getPath(getFrontClass(), _id, _filename);
 		contentManager.store(path, _stream);
 	}
 
@@ -52,7 +52,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 
 	@Override
 	public final byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
-		final Path path = namingStrategy.getNameFor(getFrontClass(), _id, _filename);
+		final Path path = namingStrategy.getPath(getFrontClass(), _id, _filename);
 		final InputStream os = contentManager.load(path, min, max);
 		try {
 			return IOUtils.toByteArray(os);

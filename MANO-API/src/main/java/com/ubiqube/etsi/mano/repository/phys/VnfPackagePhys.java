@@ -9,15 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.Configuration;
 
 @Profile("phys")
 @Service
 public class VnfPackagePhys extends GenaricBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
 
-	public VnfPackagePhys(final Configuration _conf, final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low) {
-		super(_conf.get("repository.phys.root"), objectMapper, jsonFilter, low);
+	public VnfPackagePhys(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low, final NamingStrategy _namingStrategy) {
+		super(objectMapper, jsonFilter, low, _namingStrategy);
 	}
 
 	@Override
@@ -38,11 +38,6 @@ public class VnfPackagePhys extends GenaricBinaryRepository<VnfPkgInfo> implemen
 	@Override
 	protected String getFilename() {
 		return "vnfPkgInfo.json";
-	}
-
-	@Override
-	protected String getDir() {
-		return "vnf_packages";
 	}
 
 }
