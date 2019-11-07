@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.entities.repository.RepositoryElement.RepositoryElementType;
@@ -15,6 +16,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.repository.Low;
 
+@Service
 public class LowMsa implements Low {
 	private static final String NCROOT = "ncroot";
 	private static final String ETSI_MANO = "etsi-mano";

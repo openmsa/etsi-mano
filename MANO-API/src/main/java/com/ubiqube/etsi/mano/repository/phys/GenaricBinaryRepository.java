@@ -41,13 +41,13 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	private void init() {
 		Path root = namingStrategy.getRoot();
 		lowDriver.mkdir(root.toString());
-		root = namingStrategy.getDir(getClazz());
+		root = namingStrategy.getRoot(getClazz());
 		lowDriver.mkdir(root.toString());
 	}
 
 	@Override
 	public final List<T> query(final String filter) {
-		final Path dir = namingStrategy.getDir(getClazz());
+		final Path dir = namingStrategy.getRoot(getClazz());
 		final List<String> listFilesInFolder = lowDriver.find(dir.toString(), getFilename());
 		final AstBuilder astBuilder = new AstBuilder(filter);
 		return listFilesInFolder.stream()
@@ -60,7 +60,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	public final T get(final String _id) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
-		path = namingStrategy.getPath(getClazz(), _id, getFilename());
+		path = namingStrategy.getRoot(getClazz(), _id, getFilename());
 		try {
 			final byte[] content = lowDriver.get(path.toString());
 			return objectMapper.readValue(content, getClazz());
@@ -91,7 +91,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 		verifyPath(path);
 		try {
 			final String content = objectMapper.writeValueAsString(_object);
-			path = namingStrategy.getPath(getClazz(), _id, _filename);
+			path = namingStrategy.getRoot(getClazz(), _id, _filename);
 			lowDriver.add(path.toString(), content.getBytes());
 		} catch (final IOException e) {
 			throw new GenericException(e);
@@ -102,7 +102,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
-		path = namingStrategy.getPath(getClazz(), _id, _filename);
+		path = namingStrategy.getRoot(getClazz(), _id, _filename);
 		lowDriver.add(path.toString(), _stream);
 	}
 
@@ -110,7 +110,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	public final byte[] getBinary(final String _id, final String _filename) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
-		path = namingStrategy.getPath(getClazz(), _id, _filename);
+		path = namingStrategy.getRoot(getClazz(), _id, _filename);
 		return lowDriver.get(path.toString());
 	}
 
@@ -118,7 +118,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	public final byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
-		path = namingStrategy.getPath(getClazz(), _id, _filename);
+		path = namingStrategy.getRoot(getClazz(), _id, _filename);
 		return lowDriver.get(path.toString(), min, max);
 	}
 

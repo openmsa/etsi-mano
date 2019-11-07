@@ -22,7 +22,7 @@ public class DefaultNamingStrategy implements NamingStrategy {
 	}
 
 	@Override
-	public Path getDir(final Class<?> clazz) {
+	public Path getRoot(final Class<?> clazz) {
 		return Paths.get(root, cpConverter.convert(clazz));
 	}
 
@@ -32,7 +32,7 @@ public class DefaultNamingStrategy implements NamingStrategy {
 	}
 
 	@Override
-	public Path getPath(final Class<?> clazz, final String _id, final String _filename) {
+	public Path getRoot(final Class<?> clazz, final String _id, final String _filename) {
 		return Paths.get(root, cpConverter.convert(clazz), sanitize(_id), sanitize(_filename));
 	}
 
