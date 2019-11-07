@@ -20,6 +20,7 @@ import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 import ma.glasnost.orika.MapperFacade;
@@ -31,8 +32,8 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOccsNsLcmOpOcc, NsLcmOpOcc
 
 	private final CrudRepository<NsLcmOpOccs, UUID> repository;
 
-	public NsLcmOpOccsDb(final EntityManager em, final CrudRepository<NsLcmOpOccs, UUID> _repository, final MapperFacade _mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
-		super(em, _repository, _mapper, contentManager, jsonMapper);
+	public NsLcmOpOccsDb(final EntityManager em, final CrudRepository<NsLcmOpOccs, UUID> _repository, final MapperFacade _mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, _repository, _mapper, contentManager, jsonMapper, namingStrategy);
 		mapper = _mapper;
 		repository = _repository;
 	}

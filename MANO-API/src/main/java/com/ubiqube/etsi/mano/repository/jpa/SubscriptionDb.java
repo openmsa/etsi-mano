@@ -12,34 +12,34 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
-import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
+import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
 @Profile("RDBMS")
 @Service
-public class PnfDescriptorsDb extends AbstractJpa<PnfDescriptorsPnfdInfo, PnfDescriptor> implements PnfdInfoRepository {
+public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription> implements SubscriptionRepository {
 
-	public PnfDescriptorsDb(final EntityManager em, final CrudRepository<PnfDescriptor, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+	public SubscriptionDb(final EntityManager em, final CrudRepository<Subscription, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(em, repository, mapper, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override
 	protected Class getFrontClass() {
-		return PnfDescriptorsPnfdInfo.class;
+		return SubscriptionObject.class;
 	}
 
 	@Override
 	protected Class getDbClass() {
-		return PnfDescriptor.class;
+		return Subscription.class;
 	}
 
 	@Override
-	Map<String, From<?, ?>> getJoin(final Root<PnfDescriptor> root) {
+	Map<String, From<?, ?>> getJoin(final Root<Subscription> root) {
 		return null;
 	}
 

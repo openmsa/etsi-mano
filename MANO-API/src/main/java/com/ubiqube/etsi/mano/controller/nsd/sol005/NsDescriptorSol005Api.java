@@ -171,7 +171,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		ensureIsOnboarded(nsdInfo);
 		byte[] bytes;
 		if (rangeHeader != null) {
-			bytes = nsdRepository.getBinary(nsdInfoId, "nsd", rangeHeader.getFrom(), rangeHeader.getTo());
+			bytes = nsdRepository.getBinary(nsdInfoId, "nsd", rangeHeader.getFrom(), (long) rangeHeader.getTo());
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
 			// Content-Range: bytes 0-1023/146515
 			final String mime = MimeType.findMatch(bytes);

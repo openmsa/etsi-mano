@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 import ma.glasnost.orika.MapperFacade;
@@ -25,8 +26,8 @@ public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.man
 
 	private final VnfInstanceJpa repository;
 
-	public VnfInstanceDb(final EntityManager em, final VnfInstanceJpa _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
-		super(em, _repository, mapper, contentManager, jsonMapper);
+	public VnfInstanceDb(final EntityManager em, final VnfInstanceJpa _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, _repository, mapper, contentManager, jsonMapper, namingStrategy);
 		repository = _repository;
 	}
 

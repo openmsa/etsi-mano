@@ -190,13 +190,13 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
+	public byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
 		// We should ask for an API.
 		final byte[] repositoryContent = getBinary(_id, _filename);
 		if (min >= repositoryContent.length) {
 			throw new NotAcceptableException("Could not retreive a min > lenght of file.");
 		}
-		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
+		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max.intValue());
 	}
 
 	protected void verify(final String _uri) {

@@ -16,6 +16,7 @@ import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
 import ma.glasnost.orika.MapperFacade;
@@ -24,8 +25,8 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> implements NsdRepository {
 
-	public NsdPackageDb(final NsdPackageJpa repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final EntityManager _em) {
-		super(_em, repository, mapper, contentManager, jsonMapper);
+	public NsdPackageDb(final NsdPackageJpa repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final EntityManager _em, final NamingStrategy namingStrategy) {
+		super(_em, repository, mapper, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override

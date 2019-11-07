@@ -109,7 +109,7 @@ public class VnfPackageGenTest {
 		md5.update(bytes);
 		assertEquals("4d251f6f44b12f8e6a0b2e9e7e69e603", DatatypeConverter.printHexBinary(md5.digest()).toLowerCase());
 
-		bytes = vnfPackage.getBinary(entity.getId(), "file", 0, 2);
+		bytes = vnfPackage.getBinary(entity.getId(), "file", 0, Long.decode("2"));
 
 		assertEquals(2, bytes.length);
 		assertEquals('P', bytes[0]);

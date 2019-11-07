@@ -113,11 +113,11 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public final byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
+	public final byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
 		Path path = getRoot(_id);
 		path = combine(path, _filename);
 		verifyPath(path);
-		return lowDriver.get(path, min, max);
+		return lowDriver.get(path.toString(), min, max);
 	}
 
 	@Override

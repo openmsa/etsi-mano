@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,11 +90,11 @@ public class LowMsa implements Low {
 	}
 
 	@Override
-	public byte[] get(final Path _path, final int min, final Integer max) {
-		final byte[] repositoryContent = get(_path.toString());
+	public byte[] get(final String _path, final int min, final Long max) {
+		final byte[] repositoryContent = get(_path);
 		if (min >= repositoryContent.length) {
 			throw new NotAcceptableException("Could not retreive a min > lenght of file.");
 		}
-		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
+		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max.intValue());
 	}
 }

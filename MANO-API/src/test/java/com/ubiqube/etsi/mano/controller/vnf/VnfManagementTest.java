@@ -66,8 +66,6 @@ public class VnfManagementTest {
 		assertEquals(1, value.size(), "List size should be 1");
 		final VnfPkgInfo vnf = value.get(0);
 		assertNotNull(vnf);
-		assertEquals("aaa", vnf.getId(), "Id should be 'aaa'");
-		assertEquals("/aaa", vnf.getLinks().getSelf().getHref());
 		assertEquals("CREATED", vnf.getOnboardingState());
 		assertEquals("DISABLED", vnf.getOperationalState().value());
 		assertEquals("NOT_IN_USE", vnf.getUsageState());
@@ -197,7 +195,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdPackageContentGetRangeOk() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, Integer.decode("1000"))).thenReturn(value);
+		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, Long.decode("1000"))).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", RangeHeader.fromValue("Range: bytes=200-1000"));
