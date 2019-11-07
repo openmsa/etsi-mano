@@ -6,6 +6,13 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 
+/**
+ * TODO: Could be removed once GenericBinaryRepository deployement have been
+ * achived.
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 @ConditionalOnBean(RepositoryService.class)
 public class RepositoryInitializer {
