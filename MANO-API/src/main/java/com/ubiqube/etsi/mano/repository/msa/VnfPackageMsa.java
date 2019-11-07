@@ -14,7 +14,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.repository.phys.GenaricBinaryRepository;
+import com.ubiqube.etsi.mano.repository.phys.GenericBinaryRepository;
 
 /**
  * Implementation of a repository for a VNFPackage document.
@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.repository.phys.GenaricBinaryRepository;
  */
 @Profile("!RDBMS")
 @Service
-public class VnfPackageMsa extends GenaricBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
+public class VnfPackageMsa extends GenericBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageMsa.class);
 
