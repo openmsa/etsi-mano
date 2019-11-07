@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
@@ -28,6 +29,8 @@ public class SoftwareImage {
 	private long minRam;
 	private long size;
 	private String imagePath;
+	@OneToOne
+	private VnfPackage vnfPackage;
 
 	public UUID getId() {
 		return id;
@@ -115,6 +118,14 @@ public class SoftwareImage {
 
 	public void setImagePath(final String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	public VnfPackage getVnfPackage() {
+		return vnfPackage;
+	}
+
+	public void setVnfPackage(final VnfPackage vnfPackage) {
+		this.vnfPackage = vnfPackage;
 	}
 
 }

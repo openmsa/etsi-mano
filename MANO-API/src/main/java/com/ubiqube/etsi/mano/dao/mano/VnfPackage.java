@@ -29,29 +29,40 @@ public class VnfPackage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	@Field
 	private String vnfdId;
+
 	@Field
 	private String vnfProvider;
+
 	@Field
 	private String vnfProductName;
+
 	@Field
 	private String vnfSoftwareVersion;
+
 	@Field
 	private String vnfdVersion;
+
 	private Checksum checksum;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
 	private Set<SoftwareImage> softwareImages;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
 	private Set<AdditionalArtifact> additionalArtifacts;
+
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateEnum onboardingState;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private OperationalStateEnum operationalState;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
