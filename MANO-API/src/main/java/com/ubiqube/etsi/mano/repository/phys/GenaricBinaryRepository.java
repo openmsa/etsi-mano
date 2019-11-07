@@ -77,7 +77,7 @@ public abstract class GenaricBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public final T save(final T entity) {
+	public T save(final T entity) {
 		final String id = setId(entity);
 		final Path path = namingStrategy.getRoot(getClazz(), id);
 		lowDriver.mkdir(path.toString());
