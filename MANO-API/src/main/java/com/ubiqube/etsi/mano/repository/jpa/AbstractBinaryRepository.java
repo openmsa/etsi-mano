@@ -29,6 +29,11 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 		namingStrategy = _namingStrategy;
 	}
 
+	protected void mkdir(final String _id) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
+		contentManager.mkdir(path);
+	}
+
 	@Override
 	public final void storeObject(final String _id, final String _filename, final Object _object) {
 		try {

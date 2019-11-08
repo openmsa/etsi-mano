@@ -9,4 +9,6 @@ public interface ContentManager {
 
 	InputStream load(Path _filename, int start, Long end);
 
+	void mkdir(Path _path);
+
 }

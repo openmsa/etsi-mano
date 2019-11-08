@@ -11,6 +11,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
@@ -25,10 +26,11 @@ import ma.glasnost.orika.MapperFacade;
  * @param <T> T is the Json object class.
  * @param <U> Is the Database class.
  */
-public abstract class AbstractJpa<T, U> extends AbstractBinaryRepository implements CrudRepository<T> {
+public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinaryRepository implements CrudRepository<T> {
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
 	private final MapperFacade mapper;
+	private NamingStrategy namingStrategy;
 
 	public AbstractJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(contentManager, jsonMapper, namingStrategy);
@@ -55,8 +57,9 @@ public abstract class AbstractJpa<T, U> extends AbstractBinaryRepository impleme
 
 	@Override
 	public final T save(final T entity) {
-		final U vnf = (U) mapper.map(entity, getDbClass());
-		repository.save(vnf);
+		U vnf = (U) mapper.map(entity, getDbClass());
+		vnf = repository.save(vnf);
+		mkdir(vnf.getId().toString());
 		final T tmp = (T) mapper.map(vnf, getFrontClass());
 		mapper.map(tmp, entity);
 		return entity;
