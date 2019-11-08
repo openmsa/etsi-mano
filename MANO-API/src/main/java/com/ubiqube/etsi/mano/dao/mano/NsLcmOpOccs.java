@@ -26,7 +26,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class NsLcmOpOccs {
+public class NsLcmOpOccs implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -73,6 +73,7 @@ public class NsLcmOpOccs {
 	@Transient
 	private NsLcmOpOccsNsLcmOpOccResourceChanges resourceChanges = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}

@@ -21,7 +21,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class PnfDescriptor {
+public class PnfDescriptor implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -45,6 +45,7 @@ public class PnfDescriptor {
 	private UsageStateEnum pnfdUsageState;
 	private String userDefinedData;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}

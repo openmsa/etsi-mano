@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class NsdPackage {
+public class NsdPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -59,6 +59,7 @@ public class NsdPackage {
 	@Field
 	UsageStateEnum nsdUsageState;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}

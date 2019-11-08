@@ -26,7 +26,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnffgInfo;
 
 @Entity
 @Indexed
-public class NsdInstance {
+public class NsdInstance implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -68,6 +68,7 @@ public class NsdInstance {
 	@Transient
 	private List<NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}

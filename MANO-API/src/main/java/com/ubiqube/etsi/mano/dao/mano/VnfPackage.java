@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfPackage {
+public class VnfPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -68,6 +68,7 @@ public class VnfPackage {
 	@Field
 	private UsageStateEnum usageState;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}

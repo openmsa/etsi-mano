@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 
 @Entity
-public class Subscription {
+public class Subscription implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -22,6 +22,7 @@ public class Subscription {
 
 	private SubscriptionQuery subscriptionQuery;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}

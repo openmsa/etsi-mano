@@ -23,7 +23,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 @Entity
 @Indexed
 
-public class VnfInstance {
+public class VnfInstance implements BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -68,6 +68,7 @@ public class VnfInstance {
 	@Transient
 	private final KeyValuePairs extensions = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
