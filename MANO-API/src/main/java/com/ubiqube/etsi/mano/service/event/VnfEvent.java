@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
@@ -27,6 +28,7 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
  *
  */
 @Service
+@Transactional
 public class VnfEvent {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(VnfEvent.class);
@@ -38,6 +40,7 @@ public class VnfEvent {
 		super();
 		this.subscriptionRepository = subscriptionRepository;
 		this.notifications = notifications;
+		// transactionTemplate = new TransactionTemplate(_transactionManager);
 	}
 
 	public void onEvent(final String vnfPkgId, final NotificationTypesEnum event) {
