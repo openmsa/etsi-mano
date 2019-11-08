@@ -28,16 +28,16 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(NsInstancesNsInstanceVnfInstance.class, VnfInstance.class)
-				.field("vnfPkgId", "vnfPkgId.id")
+				.field("vnfPkgId", "vnfPkg.id")
 				.byDefault()
 				.register();
 
 		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfLcmOpOccs.class)
-				.field("vnfInstanceId", "vnfInstanceId.id")
+				.field("vnfInstanceId", "vnfInstance.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(NsInstance.class, NsdInstance.class)
-				.field("nestedNsInstanceId{}", "nestedNsInstanceId{id}")
+				.field("nestedNsInstanceId{}", "nestedNsInstance{id}")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
