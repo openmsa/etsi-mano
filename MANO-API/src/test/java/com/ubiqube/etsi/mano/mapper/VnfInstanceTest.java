@@ -45,8 +45,8 @@ public class VnfInstanceTest {
 		assertNotNull(ivi);
 		assertEquals("flavour", ivi.getFlavourId());
 		assertEquals("STARTED", ivi.getVnfState().toString());
-		assertNotNull(o.getVnfPkgId());
-		assertNotNull(o.getVnfPkgId().getId());
-		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", o.getVnfPkgId().getId().toString());
+		assertNotNull(o.getVnfPkg());
+		assertNotNull(o.getVnfPkg().getId());
+		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", o.getVnfPkg().getId().toString());
 	}
 }

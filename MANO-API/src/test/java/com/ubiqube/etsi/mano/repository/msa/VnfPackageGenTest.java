@@ -23,6 +23,8 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.repository.DefaultNamingStrategy;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.phys.LowPhys;
 import com.ubiqube.etsi.mano.repository.phys.VnfPackagePhys;
@@ -38,7 +40,8 @@ public class VnfPackageGenTest {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Configuration conf = new PropertiesConfiguration();
 
-		vnfPackage = new VnfPackagePhys(conf, mapper, jsonFilter, new LowPhys());
+		final NamingStrategy namingStrategy = new DefaultNamingStrategy(conf);
+		vnfPackage = new VnfPackagePhys(mapper, jsonFilter, new LowPhys(), namingStrategy);
 	}
 
 	@Test
