@@ -7,9 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.search.annotations.Indexed;
+
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 
 @Entity
+@Indexed
 public class Subscription implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
