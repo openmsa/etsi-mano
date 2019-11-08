@@ -55,7 +55,7 @@ public class VnfInstance {
 	@Field
 	private String vnfInstanceName = null;
 	@OneToOne
-	private VnfPackage vnfPkgId = null;
+	private VnfPackage vnfPkg = null;
 
 	@Field
 	private String vnfProductName = null;
@@ -144,8 +144,8 @@ public class VnfInstance {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
-	public void setVnfPkgId(final VnfPackage vnfPkgId) {
-		this.vnfPkgId = vnfPkgId;
+	public void setVnfPkg(final VnfPackage vnfPkgId) {
+		this.vnfPkg = vnfPkgId;
 	}
 
 	public void setVnfProductName(final String vnfProductName) {
@@ -168,8 +168,8 @@ public class VnfInstance {
 		return vnfConfigurableProperties;
 	}
 
-	public VnfPackage getVnfPkgId() {
-		return vnfPkgId;
+	public VnfPackage getVnfPkg() {
+		return vnfPkg;
 	}
 
 	public KeyValuePairs getExtensions() {

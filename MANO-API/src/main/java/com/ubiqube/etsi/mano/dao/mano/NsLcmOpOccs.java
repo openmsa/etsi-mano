@@ -30,6 +30,7 @@ public class NsLcmOpOccs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
+
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -39,7 +40,7 @@ public class NsLcmOpOccs {
 	private Date stateEnteredTime = null;
 
 	@OneToOne(optional = false)
-	private NsdInstance nsInstanceId = null;
+	private NsdInstance nsInstance = null;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -96,12 +97,12 @@ public class NsLcmOpOccs {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
-	public NsdInstance getNsInstanceId() {
-		return nsInstanceId;
+	public NsdInstance getNsInstance() {
+		return nsInstance;
 	}
 
-	public void setNsInstanceId(final NsdInstance nsInstanceId) {
-		this.nsInstanceId = nsInstanceId;
+	public void setNsInstance(final NsdInstance nsInstanceId) {
+		this.nsInstance = nsInstanceId;
 	}
 
 	public LcmOperationTypeEnum getLcmOperationType() {

@@ -31,6 +31,7 @@ public class VnfLcmOpOccs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id = null;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private LcmOperationStateType operationState = null;
@@ -42,7 +43,7 @@ public class VnfLcmOpOccs {
 	private Date startTime = null;
 
 	@OneToOne(optional = false)
-	private VnfInstance vnfInstanceId = null;
+	private VnfInstance vnfInstance = null;
 
 	@Field
 	private String grantId = null;
@@ -104,12 +105,12 @@ public class VnfLcmOpOccs {
 		this.startTime = startTime;
 	}
 
-	public VnfInstance getVnfInstanceId() {
-		return vnfInstanceId;
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
 	}
 
-	public void setVnfInstanceId(final VnfInstance vnfInstanceId) {
-		this.vnfInstanceId = vnfInstanceId;
+	public void setVnfInstance(final VnfInstance vnfInstanceId) {
+		this.vnfInstance = vnfInstanceId;
 	}
 
 	public String getGrantId() {
