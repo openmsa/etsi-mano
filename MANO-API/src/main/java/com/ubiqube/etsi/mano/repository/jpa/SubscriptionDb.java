@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,6 +41,11 @@ public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription
 
 	@Override
 	Map<String, From<?, ?>> getJoin(final Root<Subscription> root) {
+		return null;
+	}
+
+	@Override
+	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String value) {
 		return null;
 	}
 

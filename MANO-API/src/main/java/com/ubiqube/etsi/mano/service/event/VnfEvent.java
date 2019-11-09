@@ -44,18 +44,11 @@ public class VnfEvent {
 	}
 
 	public void onEvent(final String vnfPkgId, final NotificationTypesEnum event) {
-		final List<SubscriptionObject> res = selectNotifications(vnfPkgId, event.value());
+		final List<SubscriptionObject> res = subscriptionRepository.selectNotifications(vnfPkgId, event.value());
 
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
 
 		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
-	}
-
-	private List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
-		final StringBuilder sb = new StringBuilder("filter.vnfProductsFromProviders.vnfPkgId.eq=").append(vnfPkgId);
-		sb.append("&").append("filter.notificationTypes.eq=").append(event);
-
-		return subscriptionRepository.query(sb.toString());
 	}
 
 	private void sendNotification(final String vnfPkgId, final SubscriptionObject subscriptionObject, final NotificationTypesEnum event) {

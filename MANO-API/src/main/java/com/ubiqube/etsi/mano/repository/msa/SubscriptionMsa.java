@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -55,6 +56,14 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	@Override
 	String getFilename() {
 		return "susbscription.json";
+	}
+
+	@Override
+	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
+		final StringBuilder sb = new StringBuilder("filter.vnfProductsFromProviders.vnfPkgId.eq=").append(vnfPkgId);
+		sb.append("&").append("filter.notificationTypes.eq=").append(event);
+
+		return query(sb.toString());
 	}
 
 }
