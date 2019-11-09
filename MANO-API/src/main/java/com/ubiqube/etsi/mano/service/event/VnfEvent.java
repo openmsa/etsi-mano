@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,6 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 /**
- * TODO: we cannot use the MANO filter query language, instead of this use AST
- * node directly.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -40,7 +37,6 @@ public class VnfEvent {
 		super();
 		this.subscriptionRepository = subscriptionRepository;
 		this.notifications = notifications;
-		// transactionTemplate = new TransactionTemplate(_transactionManager);
 	}
 
 	public void onEvent(final String vnfPkgId, final NotificationTypesEnum event) {
@@ -58,7 +54,6 @@ public class VnfEvent {
 		final String callbackUri = req.getCallbackUri();
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionObject.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
-		final String id = UUID.randomUUID().toString();
 		Object object;
 		if (event == NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION) {
 			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, "", links);
