@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class Subscription implements BaseEntity {
 
 	private AuthentificationInformations authentificationInformations;
 
+	@Embedded
 	private SubscriptionQuery subscriptionQuery;
 
 	@Override

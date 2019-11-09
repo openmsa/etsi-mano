@@ -25,8 +25,11 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription> implements SubscriptionRepository {
 
-	public SubscriptionDb(final EntityManager em, final CrudRepository<Subscription, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, mapper, contentManager, jsonMapper, namingStrategy);
+	private final CrudRepository<Subscription, UUID> repository;
+
+	public SubscriptionDb(final EntityManager em, final CrudRepository<Subscription, UUID> _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, _repository, mapper, contentManager, jsonMapper, namingStrategy);
+		repository = _repository;
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription
 	}
 
 	@Override
-	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String value) {
+	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
 		return null;
 	}
 
