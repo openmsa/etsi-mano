@@ -1,7 +1,9 @@
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.service.event.jms;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ubiqube.etsi.mano.service.event.ActionType;
 
 public class ActionMessage {
 	ActionType actionType;
