@@ -455,8 +455,8 @@ public class VnfPkgInfo {
 	@JsonProperty("onboardingState")
 	@NotNull
 	@Nonnull
-	public String getOnboardingState() {
-		return onboardingState.value();
+	public OnboardingStateEnum getOnboardingState() {
+		return onboardingState;
 	}
 
 	public void setOnboardingState(@Nonnull final OnboardingStateEnum onboardingState) {
@@ -505,8 +505,8 @@ public class VnfPkgInfo {
 	@JsonProperty("usageState")
 	@NotNull
 	@Nonnull
-	public String getUsageState() {
-		return usageState.value();
+	public UsageStateEnum getUsageState() {
+		return usageState;
 	}
 
 	public void setUsageState(@Nonnull final UsageStateEnum usageState) {

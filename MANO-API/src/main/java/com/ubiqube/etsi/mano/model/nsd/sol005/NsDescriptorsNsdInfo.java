@@ -443,8 +443,8 @@ public class NsDescriptorsNsdInfo {
 	@JsonProperty("nsdOnboardingState")
 	@NotNull
 	@Nonnull
-	public String getNsdOnboardingState() {
-		return nsdOnboardingState.value();
+	public NsdOnboardingStateEnum getNsdOnboardingState() {
+		return nsdOnboardingState;
 	}
 
 	public void setNsdOnboardingState(@Nonnull final NsdOnboardingStateEnum nsdOnboardingState) {
@@ -511,8 +511,8 @@ public class NsDescriptorsNsdInfo {
 	@JsonProperty("nsdUsageState")
 	@NotNull
 	@Nonnull
-	public String getNsdUsageState() {
-		return nsdUsageState.value();
+	public NsdUsageStateEnum getNsdUsageState() {
+		return nsdUsageState;
 	}
 
 	public void setNsdUsageState(@Nonnull final NsdUsageStateEnum nsdUsageState) {

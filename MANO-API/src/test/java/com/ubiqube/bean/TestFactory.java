@@ -4,13 +4,19 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoOnboardingFailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoSoftwareImages;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoSoftwareImages.ContainerFormatEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public class TestFactory {
 
@@ -22,6 +28,9 @@ public class TestFactory {
 		nsd.setNestedNsdInfoIds(nestedNsdInfoIds);
 		nsd.setPnfdInfoIds(nestedNsdInfoIds);
 		nsd.setVnfPkgIds(nestedNsdInfoIds);
+		nsd.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
+		nsd.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
+		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
 		final NsDescriptorsNsdInfoOnboardingFailureDetails onboardingFailureDetails = createOnboardingFailureDetails();
 		nsd.setOnboardingFailureDetails(onboardingFailureDetails);
 		return nsd;
@@ -53,4 +62,11 @@ public class TestFactory {
 		return pd;
 	}
 
+	public static NsdPackage createNsdPackage() {
+		final NsdPackage nsdPackage = new NsdPackage();
+		nsdPackage.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
+		nsdPackage.setNsdOperationalState(OperationalStateEnum.ENABLED);
+		nsdPackage.setNsdUsageState(UsageStateEnum.IN_USE);
+		return nsdPackage;
+	}
 }

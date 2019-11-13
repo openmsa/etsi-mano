@@ -13,6 +13,11 @@ import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -53,5 +58,19 @@ public class NsdPackageTest {
 		assertEquals("25dca365-ff1b-4204-a9ca-c3745e6d3244", vnfP[0].getId().toString());
 		assertEquals("52d993dc-7a50-46da-b30c-e8fb344ef140", vnfP[1].getId().toString());
 
+		// Check enum
+		assertEquals(OperationalStateEnum.ENABLED, nsdDao.getNsdOperationalState());
+		assertEquals(UsageStateEnum.IN_USE, nsdDao.getNsdUsageState());
+		assertEquals(NsdOnboardingStateEnum.ONBOARDED, nsdDao.getNsdOnboardingState());
+	}
+
+	@Test
+	void testMapDaoJson() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final NsdPackage nsd = TestFactory.createNsdPackage();
+		final NsDescriptorsNsdInfo nsdInfo = mapper.map(nsd, NsDescriptorsNsdInfo.class);
+		assertEquals(NsdOperationalStateEnum.ENABLED, nsdInfo.getNsdOperationalState());
+		assertEquals(NsdUsageStateEnum.IN_USE, nsdInfo.getNsdUsageState());
+		assertEquals(NsdOnboardingStateEnum.ONBOARDED, nsdInfo.getNsdOnboardingState());
 	}
 }
