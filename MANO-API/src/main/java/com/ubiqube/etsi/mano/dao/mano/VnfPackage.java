@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,6 +68,9 @@ public class VnfPackage implements BaseEntity {
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private UsageStateEnum usageState;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<VnfUserDefinedData> userDefinedData;
 
 	@Override
 	public UUID getId() {
@@ -163,6 +167,14 @@ public class VnfPackage implements BaseEntity {
 
 	public void setUsageState(final UsageStateEnum usageState) {
 		this.usageState = usageState;
+	}
+
+	public List<VnfUserDefinedData> getUserDefinedData() {
+		return userDefinedData;
+	}
+
+	public void setUserDefinedData(final List<VnfUserDefinedData> userDefinedData) {
+		this.userDefinedData = userDefinedData;
 	}
 
 }
