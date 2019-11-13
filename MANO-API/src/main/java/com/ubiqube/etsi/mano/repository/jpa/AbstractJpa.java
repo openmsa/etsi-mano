@@ -42,7 +42,7 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 	@Override
 	public final T get(final String id) {
 		final Optional<U> vnfPackage = repository.findById(UUID.fromString(id));
-		return (T) mapper.map(vnfPackage.orElseThrow(() -> new NotFoundException("VNF Package " + id + " not found.")), getFrontClass());
+		return (T) mapper.map(vnfPackage.orElseThrow(() -> new NotFoundException(getDbClass().getSimpleName() + " entity " + id + " not found.")), getFrontClass());
 	}
 
 	@Override
