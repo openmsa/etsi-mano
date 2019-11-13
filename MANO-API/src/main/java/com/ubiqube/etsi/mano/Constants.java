@@ -35,19 +35,19 @@ public final class Constants {
 	}
 
 	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
-		if (UsageStateEnum.NOT_IN_USE != UsageStateEnum.fromValue(vnfPkgInfo.getUsageState())) {
+		if (UsageStateEnum.NOT_IN_USE != vnfPkgInfo.getUsageState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is Not In Use State.");
 		}
 	}
 
 	public static void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (OnboardingStateEnum.ONBOARDED != OnboardingStateEnum.fromValue(vnfPkgInfo.getOnboardingState())) {
+		if (OnboardingStateEnum.ONBOARDED != vnfPkgInfo.getOnboardingState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (OnboardingStateEnum.ONBOARDED == OnboardingStateEnum.fromValue(vnfPkgInfo.getOnboardingState())) {
+		if (OnboardingStateEnum.ONBOARDED == vnfPkgInfo.getOnboardingState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is already ONBOARDED");
 		}
 	}
@@ -65,7 +65,7 @@ public final class Constants {
 	}
 
 	public static void ensureNotInUse(final NsDescriptorsNsdInfo nsd) {
-		if (NsdUsageStateEnum.NOT_IN_USE == NsdUsageStateEnum.fromValue(nsd.getNsdUsageState())) {
+		if (NsdUsageStateEnum.NOT_IN_USE == nsd.getNsdUsageState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in NOT_IN_USE state.");
 		}
 	}
@@ -83,13 +83,13 @@ public final class Constants {
 	}
 
 	public static void ensureIsOnboarded(final NsDescriptorsNsdInfo nsd) {
-		if (NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
-			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
+		if (NsdOnboardingStateEnum.ONBOARDED != nsd.getNsdOnboardingState()) {
+			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final NsDescriptorsNsdInfo nsd) {
-		if (!NsdOnboardingStateEnum.ONBOARDED.value().equals(nsd.getNsdOnboardingState())) {
+		if (NsdOnboardingStateEnum.ONBOARDED == nsd.getNsdOnboardingState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
 		}
 	}
