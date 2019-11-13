@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfUserDefinedData;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
@@ -37,7 +39,9 @@ public class VnfPackageTest {
 	@Test
 	void testJsonToDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
+		final Map<String, Object> userData = new HashMap<>();
+		userData.put("vimId", "TMA49");
+		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(userData);
 		final VnfPackagesVnfPkgInfoAdditionalArtifacts additionalArtifactsItem = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
 		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
 		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -72,6 +76,11 @@ public class VnfPackageTest {
 		assertEquals("BARE", si.getContainerFormat().toString());
 		assertEquals("/mnt/images/myimages.raw", si.getImagePath());
 		assertEquals(12345, si.getSize());
+
+		final List<VnfUserDefinedData> udd = vnfDao.getUserDefinedData();
+		assertEquals(1, udd.size());
+		assertEquals("vimId", udd.get(0).getKey());
+		assertEquals("TMA49", udd.get(0).getValue());
 
 	}
 }
