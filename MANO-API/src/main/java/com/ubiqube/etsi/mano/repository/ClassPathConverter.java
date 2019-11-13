@@ -1,7 +1,9 @@
 package com.ubiqube.etsi.mano.repository;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
@@ -32,6 +34,10 @@ public class ClassPathConverter {
 
 		path.put(PnfDescriptorsPnfdInfo.class, "pnfd");
 
+	}
+
+	public Set<Class<?>> getList() {
+		return Collections.unmodifiableSet(path.keySet());
 	}
 
 	/**
