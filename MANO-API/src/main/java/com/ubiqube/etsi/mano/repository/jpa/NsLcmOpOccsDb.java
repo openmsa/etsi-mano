@@ -39,12 +39,12 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOccsNsLcmOpOcc, NsLcmOpOcc
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<NsLcmOpOccsNsLcmOpOcc> getFrontClass() {
 		return NsLcmOpOccsNsLcmOpOcc.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<NsLcmOpOccs> getDbClass() {
 		return NsLcmOpOccs.class;
 	}
 

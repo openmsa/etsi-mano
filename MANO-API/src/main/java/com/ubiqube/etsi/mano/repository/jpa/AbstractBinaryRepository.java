@@ -76,5 +76,5 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 		}
 	}
 
-	protected abstract Class getFrontClass();
+	protected abstract Class<?> getFrontClass();
 }

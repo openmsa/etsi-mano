@@ -32,12 +32,12 @@ public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.man
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<VnfInstance> getFrontClass() {
 		return VnfInstance.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<com.ubiqube.etsi.mano.dao.mano.VnfInstance> getDbClass() {
 		return com.ubiqube.etsi.mano.dao.mano.VnfInstance.class;
 	}
 

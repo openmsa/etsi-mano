@@ -36,12 +36,12 @@ public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<SubscriptionObject> getFrontClass() {
 		return SubscriptionObject.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<Subscription> getDbClass() {
 		return Subscription.class;
 	}
 

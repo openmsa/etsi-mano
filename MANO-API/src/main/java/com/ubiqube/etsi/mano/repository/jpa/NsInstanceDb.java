@@ -35,12 +35,12 @@ public class NsInstanceDb extends AbstractJpa<NsInstance, NsdInstance> implement
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<NsInstance> getFrontClass() {
 		return NsInstance.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<NsdInstance> getDbClass() {
 		return NsdInstance.class;
 	}
 

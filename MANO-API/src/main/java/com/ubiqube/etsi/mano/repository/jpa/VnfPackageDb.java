@@ -32,12 +32,12 @@ public class VnfPackageDb extends AbstractJpa<VnfPkgInfo, VnfPackage> implements
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<VnfPkgInfo> getFrontClass() {
 		return VnfPkgInfo.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<VnfPackage> getDbClass() {
 		return VnfPackage.class;
 	}
 

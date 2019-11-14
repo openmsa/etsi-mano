@@ -30,12 +30,12 @@ public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> 
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<NsDescriptorsNsdInfo> getFrontClass() {
 		return NsDescriptorsNsdInfo.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<NsdPackage> getDbClass() {
 		return NsdPackage.class;
 	}
 

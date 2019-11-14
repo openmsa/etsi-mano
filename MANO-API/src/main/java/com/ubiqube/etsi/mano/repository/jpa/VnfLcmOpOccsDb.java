@@ -45,12 +45,12 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> imple
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<VnfLcmOpOcc> getFrontClass() {
 		return VnfLcmOpOcc.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<VnfLcmOpOccs> getDbClass() {
 		return VnfLcmOpOccs.class;
 	}
 

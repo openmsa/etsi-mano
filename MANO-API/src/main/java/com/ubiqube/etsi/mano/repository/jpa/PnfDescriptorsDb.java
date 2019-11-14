@@ -29,12 +29,12 @@ public class PnfDescriptorsDb extends AbstractJpa<PnfDescriptorsPnfdInfo, PnfDes
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<PnfDescriptorsPnfdInfo> getFrontClass() {
 		return PnfDescriptorsPnfdInfo.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<PnfDescriptor> getDbClass() {
 		return PnfDescriptor.class;
 	}
 
