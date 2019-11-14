@@ -69,7 +69,7 @@ public class VnfPackage implements BaseEntity {
 	@Field
 	private UsageStateEnum usageState;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
 	private List<VnfUserDefinedData> userDefinedData;
 
 	@Override
