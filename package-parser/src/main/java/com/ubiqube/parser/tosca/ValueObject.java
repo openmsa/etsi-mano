@@ -8,7 +8,7 @@ import com.ubiqube.parser.tosca.constraints.Constraint;
 
 public class ValueObject {
 	private String type;
-	private Boolean required;
+	private Boolean required = Boolean.TRUE;
 	private Object def;
 	private String description;
 	private EntrySchema entrySchema;
