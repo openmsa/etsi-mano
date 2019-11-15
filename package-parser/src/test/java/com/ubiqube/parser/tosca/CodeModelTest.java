@@ -71,11 +71,25 @@ public class CodeModelTest {
 			generateClass(entry.getKey(), entry.getValue());
 		}
 
+		Set<Entry<String, ToscaClass>> arts = root.getArtifacts().entrySet();
+		for (final Entry<String, ToscaClass> entry : arts) {
+			if (null != cache.get(entry.getKey())) {
+				continue;
+			}
+			generateToscaClass(entry.getKey(), entry.getValue());
+		}
+		arts = root.getNodeType().entrySet();
+		for (final Entry<String, ToscaClass> entry : arts) {
+			if (null != cache.get(entry.getKey())) {
+				continue;
+			}
+			generateToscaClass(entry.getKey(), entry.getValue());
+		}
 		codeModel.build(new File("."));
 	}
 
 	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) throws JClassAlreadyExistsException {
-		LOG.info("Generating class {}", className);
+		LOG.info("generateClassFromDataType class {}", className);
 		final JPackage pack = getPackage(className);
 		final JDefinedClass jc = pack._class(getClassName(className));
 		if (null != definition.getDerivedFrom()) {
@@ -91,14 +105,55 @@ public class CodeModelTest {
 		if (null != definition.getProperties()) {
 			generateFields(jc, definition.getProperties().getProperties());
 		}
+		LOG.debug("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
 	}
 
-	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) throws JClassAlreadyExistsException {
-		LOG.info("Generating class {}", className);
+	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) throws JClassAlreadyExistsException {
+		LOG.info("generateToscaClass class {}", className);
+		if ("tosca.nodes.Compute".equals(className)) {
+			LOG.error("kkkk");
+		}
 		final JPackage pack = getPackage(className);
 		final JDefinedClass jc = pack._class(getClassName(className));
+		if (null != toscaClass.getDerivedFrom()) {
+			JDefinedClass clazz = cache.get(toscaClass.getDerivedFrom());
+			if (null == clazz) {
+				final CapabilityTypes def = root.getCapabilities().get(toscaClass.getDerivedFrom());
+				if (null != def) {
+					clazz = generateClass(toscaClass.getDerivedFrom(), def);
+				} else {
+					final ToscaClass node = root.getNodeType().get(toscaClass.getDerivedFrom());
+					if (node != null) {
+						clazz = generateToscaClass(toscaClass.getDerivedFrom(), node);
+					}
+				}
+				if (null == clazz) {
+					LOG.error("Crashing ...");
+				}
+				LOG.info("Caching {}", toscaClass.getDerivedFrom());
+				cache.put(toscaClass.getDerivedFrom(), clazz);
+			}
+			jc._extends(clazz);
+		}
+		if (null != toscaClass.getProperties()) {
+			generateFields(jc, toscaClass.getProperties().getProperties());
+		}
+		if (null != toscaClass.getAttributes()) {
+			generateFields(jc, toscaClass.getAttributes());
+		}
+		LOG.info("Caching {}", className);
+		cache.put(className, jc);
+		return jc;
+
+	}
+
+	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) throws JClassAlreadyExistsException {
+		LOG.info("generateClass class {}", className);
+		final JPackage pack = getPackage(className);
+		final JDefinedClass jc = pack._class(getClassName(className));
+
 		if (null != definition.getDerivedFrom()) {
 			JDefinedClass clazz = cache.get(definition.getDerivedFrom());
 			if (null == clazz) {
@@ -115,7 +170,7 @@ public class CodeModelTest {
 		return jc;
 	}
 
-	private void generateFields(final JDefinedClass jc, final Map<String, ValueObject> vo) {
+	private void generateFields(final JDefinedClass jc, final Map<String, ValueObject> vo) throws JClassAlreadyExistsException {
 		final Set<Entry<String, ValueObject>> attrsEntr = vo.entrySet();
 		for (final Entry<String, ValueObject> entry : attrsEntr) {
 			final ValueObject val = entry.getValue();
@@ -149,7 +204,7 @@ public class CodeModelTest {
 		}
 	}
 
-	private JType findJType(final ValueObject valueObject) {
+	private JType findJType(final ValueObject valueObject) throws JClassAlreadyExistsException {
 		final JDefinedClass item = cache.get(valueObject.getType());
 		if (null != item) {
 			return item;
@@ -167,15 +222,14 @@ public class CodeModelTest {
 			if (null != jTy) {
 				return codeModel.ref(Map.class).narrow(String.class, jTy);
 			}
-			final JDefinedClass jcTy = cache.get(valueObject.getType());
+			final JDefinedClass jcTy = cache.get(valueObject.getEntrySchema().getType());
 			if (null != jcTy) {
-				final JDefinedClass strClazz = codeModel._getClass(String.class.getName());
-				return codeModel.ref(Map.class).narrow(strClazz, jcTy);
+				return codeModel.ref(Map.class).narrow(String.class).narrow(jcTy);
 			} else {
 				// TODO
-				// return generateClass(valueObject.getType(),
-				// root.getNodeType().get(valueObject.getType()));
-				return codeModel.ref(Map.class).narrow(Object.class);
+				final JType cl = generateToscaClass(valueObject.getEntrySchema().getType(),
+						root.getNodeType().get(valueObject.getEntrySchema().getType()));
+				return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
 			}
 		}
 		throw new RuntimeException("Bad type: " + valueObject);
@@ -199,6 +253,9 @@ public class CodeModelTest {
 		}
 		if ("boolean".equals(type)) {
 			return Boolean.class;
+		}
+		if ("float".equals(type)) {
+			return Float.class;
 		}
 		if ("version".equals(type)) {
 			return Version.class;
