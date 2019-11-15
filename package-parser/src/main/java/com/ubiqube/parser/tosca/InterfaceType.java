@@ -8,7 +8,7 @@ public class InterfaceType extends ToscaBaseEntity {
 	private ToscaProperties inputs;
 	// In V1.0 Json any setter is usefull, while not in V1.3
 	@JsonAnySetter
-	private Map<String, Object> operations;
+	private Map<String, OperationDefinition> operations;
 	private Object notifications;
 
 	public ToscaProperties getInputs() {
@@ -19,11 +19,11 @@ public class InterfaceType extends ToscaBaseEntity {
 		this.inputs = inputs;
 	}
 
-	public Map<String, Object> getOperations() {
+	public Map<String, OperationDefinition> getOperations() {
 		return operations;
 	}
 
-	public void setOperations(final Map<String, Object> operations) {
+	public void setOperations(final Map<String, OperationDefinition> operations) {
 		this.operations = operations;
 	}
 

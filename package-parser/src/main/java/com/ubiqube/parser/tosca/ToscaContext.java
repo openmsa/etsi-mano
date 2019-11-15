@@ -20,6 +20,7 @@ public class ToscaContext {
 	private Map<String, RelationshipType> relationship = new HashMap<>();
 	private Map<String, ToscaClass> artifacts = new HashMap<>();
 	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
+	// Below goes internal Properties.
 	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
 	private final Resolver resolver = new Resolver();
 

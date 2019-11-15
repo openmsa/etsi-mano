@@ -12,7 +12,7 @@ public class ToscaClass extends ToscaBaseEntity {
 	private String mimeType;
 	private List<String> fileExt;
 	private RequirementDefinition requirements;
-	private Object interfaces;
+	private InterfaceType interfaces;
 
 	private Map<String, CapabilityDefinition> capabilities;
 	private Map<String, Artifact> artifacts;
@@ -40,7 +40,7 @@ public class ToscaClass extends ToscaBaseEntity {
 		artifacts = _artifacts;
 	}
 
-	public Object getRequirements() {
+	public RequirementDefinition getRequirements() {
 		return requirements;
 	}
 
@@ -71,11 +71,11 @@ public class ToscaClass extends ToscaBaseEntity {
 		return artifacts;
 	}
 
-	public Object getInterfaces() {
+	public InterfaceType getInterfaces() {
 		return interfaces;
 	}
 
-	public void setInterfaces(final Object interfaces) {
+	public void setInterfaces(final InterfaceType interfaces) {
 		this.interfaces = interfaces;
 	}
 
