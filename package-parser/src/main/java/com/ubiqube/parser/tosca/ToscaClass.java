@@ -87,6 +87,10 @@ public class ToscaClass extends ToscaBaseEntity {
 		this.attributes = attributes;
 	}
 
+	public Map<String, ValueObject> getAttributes() {
+		return attributes;
+	}
+
 	public List<String> getValid_target_types() {
 		return valid_target_types;
 	}
