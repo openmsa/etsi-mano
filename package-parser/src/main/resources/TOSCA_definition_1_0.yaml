@@ -187,9 +187,6 @@ node_types:
       snapshot_id:
         type: string
         required: false
-    attributes:
-      volume_id:
-        type: string
     capabilities:
       attachment:
         type: tosca.capabilities.Attachment
@@ -319,9 +316,9 @@ node_types:
         description: >
           Defines the ending IP of a range to be allocated for the compute
           instances that are associated with this Port.
-    attributes:
-      ip_address:
-        type: string
+    #attributes:
+    #  ip_address:
+    #    type: string
     requirements:
       - binding:
           description: >
