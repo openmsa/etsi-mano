@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -34,6 +36,7 @@ public class CodeModelTest {
 	private final Map<String, JPackage> cachePackage = new HashMap<>();
 	private final ToscaParser tp = new ToscaParser();
 	private ToscaContext root = null;
+	private final ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
 
 	@Test
 	void testName() throws Exception {
@@ -176,11 +179,13 @@ public class CodeModelTest {
 			final ValueObject val = entry.getValue();
 			final Class<?> jType = convert(entry.getValue());
 			final JFieldVar field;
+			JType jType2 = null;
 			if (null != jType) {
-				field = jc.field(JMod.PUBLIC, jType, entry.getKey());
-
+				field = jc.field(JMod.PRIVATE, jType, entry.getKey());
 			} else {
-				field = jc.field(JMod.PUBLIC, findJType(entry.getValue()), entry.getKey());
+				LOG.error("Skipping field {}, {}", entry.getKey(), entry.getValue());
+				jType2 = findJType(entry.getValue());
+				field = jc.field(JMod.PRIVATE, jType2, entry.getKey());
 			}
 			if (null != val.getDescription()) {
 				field.javadoc().add(val.getDescription());
@@ -190,7 +195,13 @@ public class CodeModelTest {
 			}
 			if (val.getDef() != null) {
 				// TODO Convert.
-				// field.init(JExpr.lit((String) val.getDef()));
+				if (null != jType) {
+					field.init(convert(val.getDef(), jType));
+				} else {
+					LOG.error("could not init the field {} of type {}", entry.getKey(), jType2);
+					// field.init(convert(val.getDef(), jType2.));
+				}
+
 			}
 			if (!val.getConstraints().isEmpty()) {
 				// TODO Add Constraint.
@@ -202,6 +213,32 @@ public class CodeModelTest {
 			setVar.param(field.type(), field.name());
 			setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));
 		}
+	}
+
+	private JExpression convert(final Object def, final Class<?> jType) {
+		LOG.info("def={} jType={}", def, jType);
+		if (jType.equals(Long.class)) {
+			return JExpr.lit(new Long((String) def));
+		} else if (jType.equals(String.class)) {
+			return JExpr.lit((String) def);
+		} else if (jType.equals(Boolean.class)) {
+			return JExpr.lit((Boolean) def);
+		} else if (jType.equals(Character.class)) {
+			return JExpr.lit(((String) def).charAt(0));
+		} else if (jType.equals(Double.class)) {
+			return JExpr.lit(Double.parseDouble((String) def));
+		} else if (jType.equals(Float.class)) {
+			return JExpr.lit(((Double) def).floatValue());
+		} else if (jType.equals(Integer.class)) {
+			if (def.getClass().equals(Integer.class)) {
+				return JExpr.lit((Integer) def);
+			} else {
+				return JExpr.lit(Integer.parseInt((String) def));
+			}
+		} else if (jType.equals(Size.class)) {
+			return JExpr._new(codeModel._ref(Size.class));
+		}
+		throw new RuntimeException("Unknown type : " + jType);
 	}
 
 	private JType findJType(final ValueObject valueObject) throws JClassAlreadyExistsException {
