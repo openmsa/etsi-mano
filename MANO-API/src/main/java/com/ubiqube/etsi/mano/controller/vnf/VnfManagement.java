@@ -39,7 +39,7 @@ import com.ubiqube.etsi.mano.utils.RangeHeader.FromToBean;
  * @author ovi@ubiqube.com
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @Service
 public class VnfManagement implements VnfPackageManagement {
 	private static final String APPLICATION_ZIP = "application/zip";
@@ -157,7 +157,7 @@ public class VnfManagement implements VnfPackageManagement {
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
 		if (_range != null) {
-			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo());
+			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo() == null ? null : Long.valueOf(_range.getTo()));
 			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
 			final String mime = MimeType.findMatch(bytes);
 			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)

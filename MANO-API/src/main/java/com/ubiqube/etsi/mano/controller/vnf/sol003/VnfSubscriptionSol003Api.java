@@ -14,7 +14,7 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
 
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @RestController
 public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 

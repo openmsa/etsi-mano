@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.repository.jpa;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,15 +14,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
-public class BinaryRepositoryImpl implements BinaryRepository {
+public abstract class AbstractBinaryRepository implements BinaryRepository {
 	private final ContentManager contentManager;
 	private final ObjectMapper jsonMapper;
 
-	public BinaryRepositoryImpl(final ContentManager contentManager, final ObjectMapper jsonMapper) {
+	private final NamingStrategy namingStrategy;
+
+	public AbstractBinaryRepository(final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy _namingStrategy) {
 		super();
 		this.contentManager = contentManager;
 		this.jsonMapper = jsonMapper;
+		namingStrategy = _namingStrategy;
+	}
+
+	protected void mkdir(final String _id) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
+		contentManager.mkdir(path);
 	}
 
 	@Override
@@ -36,7 +46,8 @@ public class BinaryRepositoryImpl implements BinaryRepository {
 
 	@Override
 	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
-		contentManager.store(_id, _filename, _stream);
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
+		contentManager.store(path, _stream);
 	}
 
 	@Override
@@ -45,8 +56,9 @@ public class BinaryRepositoryImpl implements BinaryRepository {
 	}
 
 	@Override
-	public final byte[] getBinary(final String _id, final String _filename, final int min, final Integer max) {
-		final InputStream os = contentManager.load(_id, _filename, 0, null);
+	public final byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
+		final InputStream os = contentManager.load(path, min, max);
 		try {
 			return IOUtils.toByteArray(os);
 		} catch (final IOException e) {
@@ -64,4 +76,5 @@ public class BinaryRepositoryImpl implements BinaryRepository {
 		}
 	}
 
+	protected abstract Class<?> getFrontClass();
 }

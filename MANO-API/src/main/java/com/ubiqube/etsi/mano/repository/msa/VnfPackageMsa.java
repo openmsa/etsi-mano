@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.repository.phys.GenericBinaryRepository;
 
 /**
  * Implementation of a repository for a VNFPackage document.
@@ -22,18 +24,17 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
  */
 @Profile("!RDBMS")
 @Service
-public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> implements VnfPackageRepository {
-	private static final String REPOSITORY_NVFO_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf_packages";
+public class VnfPackageMsa extends GenericBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageMsa.class);
 
-	public VnfPackageMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {
-		super(_mapper, _repositoryService, _jsonFilter);
+	public VnfPackageMsa(final ObjectMapper _mapper, final JsonFilter _jsonFilter, final Low low, final NamingStrategy _namingStrategy) {
+		super(_mapper, _jsonFilter, low, _namingStrategy);
 		LOG.debug("Starting VNF Package MSA.");
 	}
 
 	@Override
-	String setId(final VnfPkgInfo _entity) {
+	protected String setId(final VnfPkgInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
@@ -43,17 +44,12 @@ public class VnfPackageMsa extends AbstractGenericRepository<VnfPkgInfo> impleme
 	}
 
 	@Override
-	Class<?> getClazz() {
+	protected Class<VnfPkgInfo> getClazz() {
 		return VnfPkgInfo.class;
 	}
 
 	@Override
-	String getRoot() {
-		return REPOSITORY_NVFO_DATAFILE_BASE_PATH;
-	}
-
-	@Override
-	String getFilename() {
+	protected String getFilename() {
 		return "vnfPkgInfo.json";
 	}
 

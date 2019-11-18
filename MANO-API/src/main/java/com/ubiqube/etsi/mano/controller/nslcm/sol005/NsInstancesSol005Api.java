@@ -53,7 +53,7 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);

@@ -65,7 +65,7 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  * could be here and not Jackson, in this case you can use object2String.
  *
  */
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
@@ -133,7 +133,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
 		final Map<String, Object> userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
 
-		final VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userDataObject);
+		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userDataObject);
 
 		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
 		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
@@ -142,7 +142,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		checkUserData(userData);
 
-		vnfPackageRepository.save(vnfPkgInfo);
+		vnfPkgInfo = vnfPackageRepository.save(vnfPkgInfo);
 		@NotNull
 		final String vnfPkgId = vnfPkgInfo.getId();
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));

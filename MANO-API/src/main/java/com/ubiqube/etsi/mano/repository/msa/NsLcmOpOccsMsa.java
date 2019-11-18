@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
+@Profile("!RDBMS")
 @Service
 public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOccsNsLcmOpOcc> implements NsLcmOpOccsRepository {
 	private final NsdPackageMsa nsdPackageMsa;

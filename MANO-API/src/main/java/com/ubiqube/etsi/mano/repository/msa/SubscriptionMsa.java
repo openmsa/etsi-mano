@@ -1,9 +1,11 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +20,7 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
  * @author ovi@ubiqube.com
  *
  */
+@Profile("!RDBMS")
 @Service
 public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObject> implements SubscriptionRepository {
 
@@ -53,6 +56,14 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	@Override
 	String getFilename() {
 		return "susbscription.json";
+	}
+
+	@Override
+	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
+		final StringBuilder sb = new StringBuilder("filter.vnfProductsFromProviders.vnfPkgId.eq=").append(vnfPkgId);
+		sb.append("&").append("filter.notificationTypes.eq=").append(event);
+
+		return query(sb.toString());
 	}
 
 }

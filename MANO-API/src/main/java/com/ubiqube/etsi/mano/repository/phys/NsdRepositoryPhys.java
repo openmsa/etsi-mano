@@ -7,12 +7,13 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
-public class NsdRepositoryPhys extends GenaricBinaryRepository<NsDescriptorsNsdInfo> implements NsdRepository {
+public class NsdRepositoryPhys extends GenericBinaryRepository<NsDescriptorsNsdInfo> implements NsdRepository {
 
-	public NsdRepositoryPhys(final String _root, final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low low) {
-		super(_root, _objectMapper, _jsonFilter, low);
+	public NsdRepositoryPhys(final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low low, final NamingStrategy _namingStrategy) {
+		super(_objectMapper, _jsonFilter, low, _namingStrategy);
 	}
 
 	@Override
@@ -33,11 +34,6 @@ public class NsdRepositoryPhys extends GenaricBinaryRepository<NsDescriptorsNsdI
 	@Override
 	protected String getFilename() {
 		return "nsd.json";
-	}
-
-	@Override
-	protected String getDir() {
-		return "nsd";
 	}
 
 	@Override

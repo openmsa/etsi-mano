@@ -1,24 +1,37 @@
 package com.ubiqube.etsi.mano.repository.msa;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.Low;
 
 @Service
 public class ContentManagerMsa implements ContentManager {
+	private final Low lowDriver;
 
-	@Override
-	public void store(final String _id, final String _filename, final InputStream _stream) {
-		// TODO Auto-generated method stub
-
+	public ContentManagerMsa(final Low lowDriver) {
+		super();
+		this.lowDriver = lowDriver;
 	}
 
 	@Override
-	public InputStream load(final String _id, final String _filename, final long start, final Long end) {
-		// TODO Auto-generated method stub
-		return null;
+	public void store(final Path _filename, final InputStream _stream) {
+		lowDriver.add(_filename.toString(), _stream);
+	}
+
+	@Override
+	public InputStream load(final Path _filename, final int start, final Long end) {
+		final byte[] bytes = lowDriver.get(_filename.toString(), start, end);
+		return new ByteArrayInputStream(bytes);
+	}
+
+	@Override
+	public void mkdir(final Path _path) {
+		lowDriver.mkdir(_path.toString());
 	}
 
 }

@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.util.UUID;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Profile("!RDBMS")
 @Service
 public class NsdPackageMsa extends AbstractGenericRepository<NsDescriptorsNsdInfo> implements NsdRepository {
 

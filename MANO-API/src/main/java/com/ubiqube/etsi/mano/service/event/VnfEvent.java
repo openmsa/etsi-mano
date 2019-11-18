@@ -1,11 +1,11 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
@@ -20,13 +20,12 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionReque
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 /**
- * TODO: we cannot use the MANO filter query language, instead of this use AST
- * node directly.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
+@Transactional
 public class VnfEvent {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(VnfEvent.class);
@@ -41,18 +40,11 @@ public class VnfEvent {
 	}
 
 	public void onEvent(final String vnfPkgId, final NotificationTypesEnum event) {
-		final List<SubscriptionObject> res = selectNotifications(vnfPkgId, event.value());
+		final List<SubscriptionObject> res = subscriptionRepository.selectNotifications(vnfPkgId, event.value());
 
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
 
 		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
-	}
-
-	private List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
-		final StringBuilder sb = new StringBuilder("filter.vnfProductsFromProviders.vnfPkgId.eq=").append(vnfPkgId);
-		sb.append("&").append("filter.notificationTypes.eq=").append(event);
-
-		return subscriptionRepository.query(sb.toString());
 	}
 
 	private void sendNotification(final String vnfPkgId, final SubscriptionObject subscriptionObject, final NotificationTypesEnum event) {
@@ -62,7 +54,6 @@ public class VnfEvent {
 		final String callbackUri = req.getCallbackUri();
 		final SubscriptionsPkgmSubscriptionRequestAuthentication auth = subscriptionObject.getSubscriptionsPkgmSubscriptionRequestAuthentication();
 
-		final String id = UUID.randomUUID().toString();
 		Object object;
 		if (event == NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION) {
 			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, "", links);

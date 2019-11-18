@@ -23,7 +23,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 @Entity
 @Indexed
 
-public class VnfInstance {
+public class VnfInstance implements BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -55,7 +55,7 @@ public class VnfInstance {
 	@Field
 	private String vnfInstanceName = null;
 	@OneToOne
-	private VnfPackage vnfPkgId = null;
+	private VnfPackage vnfPkg = null;
 
 	@Field
 	private String vnfProductName = null;
@@ -68,6 +68,7 @@ public class VnfInstance {
 	@Transient
 	private final KeyValuePairs extensions = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -144,8 +145,8 @@ public class VnfInstance {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
-	public void setVnfPkgId(final VnfPackage vnfPkgId) {
-		this.vnfPkgId = vnfPkgId;
+	public void setVnfPkg(final VnfPackage vnfPkgId) {
+		this.vnfPkg = vnfPkgId;
 	}
 
 	public void setVnfProductName(final String vnfProductName) {
@@ -168,8 +169,8 @@ public class VnfInstance {
 		return vnfConfigurableProperties;
 	}
 
-	public VnfPackage getVnfPkgId() {
-		return vnfPkgId;
+	public VnfPackage getVnfPkg() {
+		return vnfPkg;
 	}
 
 	public KeyValuePairs getExtensions() {

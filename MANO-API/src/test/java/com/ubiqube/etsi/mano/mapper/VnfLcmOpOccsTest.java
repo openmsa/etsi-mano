@@ -34,9 +34,9 @@ public class VnfLcmOpOccsTest {
 		lcm.setVnfInstanceId("3bba2147-147a-41ab-a3ec-1a39e1b6d922");
 
 		final VnfLcmOpOccs lcmP = mapper.map(lcm, VnfLcmOpOccs.class);
-		assertNotNull(lcmP.getVnfInstanceId());
-		assertNotNull(lcmP.getVnfInstanceId().getId());
-		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", lcmP.getVnfInstanceId().getId().toString());
+		assertNotNull(lcmP.getVnfInstance());
+		assertNotNull(lcmP.getVnfInstance().getId());
+		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", lcmP.getVnfInstance().getId().toString());
 
 		assertNotNull(lcmP.getError());
 		final FailureDetails error = lcmP.getError();

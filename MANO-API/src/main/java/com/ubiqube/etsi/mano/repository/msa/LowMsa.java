@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.repository.msa;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.entities.repository.RepositoryElement.RepositoryElementType;
@@ -16,7 +18,11 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.repository.Low;
 
+@Service
 public class LowMsa implements Low {
+
+	private static final Logger LOG = LoggerFactory.getLogger(LowMsa.class);
+
 	private static final String NCROOT = "ncroot";
 	private static final String ETSI_MANO = "etsi-mano";
 	private final RepositoryService repositoryService;
@@ -45,6 +51,7 @@ public class LowMsa implements Low {
 
 	@Override
 	public void add(final String _path, final byte[] _content) {
+		LOG.info("Adding file: {}", _path);
 		try {
 			repositoryService.addFile(_path, ETSI_MANO, ETSI_MANO, _content, NCROOT);
 		} catch (final ServiceException e) {
@@ -91,11 +98,11 @@ public class LowMsa implements Low {
 	}
 
 	@Override
-	public byte[] get(final Path _path, final int min, final Integer max) {
-		final byte[] repositoryContent = get(_path.toString());
+	public byte[] get(final String _path, final int min, final Long max) {
+		final byte[] repositoryContent = get(_path);
 		if (min >= repositoryContent.length) {
 			throw new NotAcceptableException("Could not retreive a min > lenght of file.");
 		}
-		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max);
+		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max.intValue());
 	}
 }

@@ -16,7 +16,7 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @Controller
 public class LcmGrantsSol003Api implements LcmGrantsSol003 {
 

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.SubscriptionsPostQuery;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.SubscriptionsPostResponse;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	/**
 	 * Query PM related subscriptions.

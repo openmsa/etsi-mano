@@ -87,10 +87,11 @@ public class LowPhys implements Low {
 	}
 
 	@Override
-	public byte[] get(final Path path, final int min, final Integer max) {
-		try (InputStream fis = new FileInputStream(path.toFile())) {
-			final byte[] res = new byte[max - min];
-			fis.read(res, min, max - min);
+	public byte[] get(final String path, final int min, final Long max) {
+		try (InputStream fis = new FileInputStream(path)) {
+			final int delta = max.intValue() - min;
+			final byte[] res = new byte[delta];
+			fis.read(res, min, delta);
 			return res;
 		} catch (final IOException e) {
 			throw new GenericException(e);

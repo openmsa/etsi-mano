@@ -1,11 +1,24 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.nio.file.Path;
+import java.util.Set;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.repository.ClassPathConverter;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
+/**
+ * TODO: Could be removed once GenericBinaryRepository deployement have been
+ * achived.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 @ConditionalOnBean(RepositoryService.class)
 public class RepositoryInitializer {
@@ -29,8 +42,13 @@ public class RepositoryInitializer {
 
 	private final RepositoryService repositoryService;
 
-	public RepositoryInitializer(final RepositoryService _repositoryService) throws ServiceException {
+	private final ClassPathConverter cpConverter = new ClassPathConverter();
+
+	private final NamingStrategy namingStrategy;
+
+	public RepositoryInitializer(final RepositoryService _repositoryService, final NamingStrategy _namingStrategy) throws ServiceException {
 		repositoryService = _repositoryService;
+		namingStrategy = _namingStrategy;
 		init();
 	}
 
@@ -45,41 +63,16 @@ public class RepositoryInitializer {
 		if (!repositoryService.exists(PROCESS_NFVO_BASE_PATH)) {
 			repositoryService.addDirectory(PROCESS_NFVO_BASE_PATH, "", MANO, NCROOT);
 		}
+		final Set<Class<?>> set = cpConverter.getList();
+		set.stream().forEach(x -> {
+			final Path root = namingStrategy.getRoot(x);
+			try {
+				repositoryService.addDirectory(root.toString(), "", MANO, NCROOT);
+			} catch (final ServiceException e) {
+				throw new GenericException(e);
+			}
+		});
 
-		if (!repositoryService.exists(PROCESS_VNF_VNF_PCKGM_BASE_PATH)) {
-			repositoryService.addDirectory(PROCESS_VNF_VNF_PCKGM_BASE_PATH, "", MANO, NCROOT);
-		}
-
-		if (!repositoryService.exists(DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(NVFO_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(NVFO_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_NVFO_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_NVFO_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_SUBSCRIPTION_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_SUBSCRIPTION_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_NSD_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_NSD_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_VNF_INSTANCE_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_LCM_OP_OCCS_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_LCM_OP_OCCS_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_VNF_LCM_OP_OCCS_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_VNF_LCM_OP_OCCS_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
-		if (!repositoryService.exists(REPOSITORY_PNF_DATAFILE_BASE_PATH)) {
-			repositoryService.addDirectory(REPOSITORY_PNF_DATAFILE_BASE_PATH, "", MANO, NCROOT);
-		}
 	}
 
 }

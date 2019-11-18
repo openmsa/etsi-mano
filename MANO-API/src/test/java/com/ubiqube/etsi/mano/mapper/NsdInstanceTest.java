@@ -34,8 +34,8 @@ public class NsdInstanceTest {
 		nsInstance.setNsdInfoId("3bba2147-147a-41ab-a3ec-1a39e1b6d922");
 
 		final NsdInstance nsd = mapper.map(nsInstance, NsdInstance.class);
-		assertNotNull(nsd.getNestedNsInstanceId());
-		final List<NsdInstance> l = nsd.getNestedNsInstanceId();
+		assertNotNull(nsd.getNestedNsInstance());
+		final List<NsdInstance> l = nsd.getNestedNsInstance();
 		assertEquals(1, l.size());
 		assertNotNull(l.get(0).getId());
 		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", l.get(0).getId().toString());

@@ -24,6 +24,9 @@ import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesCreateNsRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.repository.DefaultNamingStrategy;
+import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.service.Configuration;
@@ -40,9 +43,13 @@ public class VnfPackageMsaTest {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Configuration conf = new PropertiesConfiguration();
 		final RepositoryService repositoryService = new RepositoryServiceRest(new UbiRest(conf));
-		final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository = new VnfLcmOpOccsMsa(mapper, repositoryService, jsonFilter);
-		final VnfInstancesRepository _vnfInstancesRepository = new VnfInstancesMsa(mapper, repositoryService, jsonFilter);
-		vnfPackageMsa = new VnfPackageMsa(mapper, repositoryService, jsonFilter, _vnfLcmOpOccsRepository, _vnfInstancesRepository);
+
+		final Low low = new LowMsa(repositoryService);
+		final NamingStrategy namingStrategy = new DefaultNamingStrategy(conf);
+		vnfPackageMsa = new VnfPackageMsa(mapper, jsonFilter, low, namingStrategy);
+		final VnfInstancesRepository _vnfInstancesRepository = new VnfInstancesMsa(mapper, repositoryService, jsonFilter, vnfPackageMsa);
+		final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository = new VnfLcmOpOccsMsa(mapper, repositoryService, jsonFilter, _vnfInstancesRepository, vnfPackageMsa);
+
 	}
 
 	@Test
@@ -113,7 +120,7 @@ public class VnfPackageMsaTest {
 		md5.update(bytes);
 		assertEquals("4d251f6f44b12f8e6a0b2e9e7e69e603", DatatypeConverter.printHexBinary(md5.digest()).toLowerCase());
 
-		bytes = vnfPackageMsa.getBinary(entity.getId(), "file", 0, 2);
+		bytes = vnfPackageMsa.getBinary(entity.getId(), "file", 0, 2L);
 
 		assertEquals(2, bytes.length);
 		assertEquals('P', bytes[0]);

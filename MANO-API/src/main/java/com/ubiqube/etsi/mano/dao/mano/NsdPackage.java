@@ -17,14 +17,14 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class NsdPackage {
+public class NsdPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -40,25 +40,32 @@ public class NsdPackage {
 	private String nsdInvariantId;
 	@OneToMany
 	private Set<VnfPackage> vnfPkgIds;
+
 	@OneToMany
 	private Set<PnfDescriptor> pnfdInfoIds;
+
 	@OneToMany
 	private Set<NsdPackage> nestedNsdInfoIds;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private OnboardingStateEnum nsdOnboardingState;
+	private NsdOnboardingStateEnum nsdOnboardingState;
+
 	@IndexedEmbedded
 	private FailureDetails onboardingFailureDetails;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	OperationalStateEnum nsdOperationalState;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	UsageStateEnum nsdUsageState;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -131,11 +138,11 @@ public class NsdPackage {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 	}
 
-	public OnboardingStateEnum getNsdOnboardingState() {
+	public NsdOnboardingStateEnum getNsdOnboardingState() {
 		return nsdOnboardingState;
 	}
 
-	public void setNsdOnboardingState(final OnboardingStateEnum nsdOnboardingState) {
+	public void setNsdOnboardingState(final NsdOnboardingStateEnum nsdOnboardingState) {
 		this.nsdOnboardingState = nsdOnboardingState;
 	}
 

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
@@ -16,7 +17,11 @@ public class AdditionalArtifact {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	@OneToOne
+	private VnfPackage vnfPackage;
+
 	private String artifactPath;
+
 	@Embedded
 	private Checksum checksum;
 
@@ -43,4 +48,13 @@ public class AdditionalArtifact {
 	public void setChecksum(final Checksum checksum) {
 		this.checksum = checksum;
 	}
+
+	public VnfPackage getVnfPackage() {
+		return vnfPackage;
+	}
+
+	public void setVnfPackage(final VnfPackage vnfPackageId) {
+		vnfPackage = vnfPackageId;
+	}
+
 }

@@ -18,7 +18,7 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ApiVersionInformation;
 import io.swagger.annotations.ApiParam;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @Controller
 public class LcmGrantsVersionsSol003Api implements LcmGrantsVersionsSol003 {
 

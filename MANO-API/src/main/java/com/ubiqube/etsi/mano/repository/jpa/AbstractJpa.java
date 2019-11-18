@@ -11,9 +11,11 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -24,13 +26,13 @@ import ma.glasnost.orika.MapperFacade;
  * @param <T> T is the Json object class.
  * @param <U> Is the Database class.
  */
-public abstract class AbstractJpa<T, U> extends BinaryRepositoryImpl implements CrudRepository<T> {
+public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinaryRepository implements CrudRepository<T> {
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
 	private final MapperFacade mapper;
 
-	public AbstractJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
-		super(contentManager, jsonMapper);
+	public AbstractJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(contentManager, jsonMapper, namingStrategy);
 		this.em = em;
 		this.repository = repository;
 		this.mapper = mapper;
@@ -39,12 +41,13 @@ public abstract class AbstractJpa<T, U> extends BinaryRepositoryImpl implements 
 	@Override
 	public final T get(final String id) {
 		final Optional<U> vnfPackage = repository.findById(UUID.fromString(id));
-		return (T) mapper.map(vnfPackage.orElseThrow(() -> new NotFoundException("VNF Package " + id + " not found.")), getFrontClass());
+		return mapper.map(vnfPackage.orElseThrow(() -> new NotFoundException(getDbClass().getSimpleName() + " entity " + id + " not found.")), getFrontClass());
 	}
 
-	protected abstract Class getFrontClass();
+	@Override
+	protected abstract Class<T> getFrontClass();
 
-	protected abstract Class getDbClass();
+	protected abstract Class<U> getDbClass();
 
 	@Override
 	public final void delete(final String id) {
@@ -53,9 +56,10 @@ public abstract class AbstractJpa<T, U> extends BinaryRepositoryImpl implements 
 
 	@Override
 	public final T save(final T entity) {
-		final U vnf = (U) mapper.map(entity, getDbClass());
-		repository.save(vnf);
-		final T tmp = (T) mapper.map(vnf, getFrontClass());
+		U vnf = mapper.map(entity, getDbClass());
+		vnf = repository.save(vnf);
+		mkdir(vnf.getId().toString());
+		final T tmp = mapper.map(vnf, getFrontClass());
 		mapper.map(tmp, entity);
 		return entity;
 	}

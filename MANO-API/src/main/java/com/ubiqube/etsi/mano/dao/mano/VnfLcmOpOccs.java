@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,10 +28,11 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfLcmOpOccs {
+public class VnfLcmOpOccs implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String id = null;
+	private UUID id = null;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private LcmOperationStateType operationState = null;
@@ -42,7 +44,7 @@ public class VnfLcmOpOccs {
 	private Date startTime = null;
 
 	@OneToOne(optional = false)
-	private VnfInstance vnfInstanceId = null;
+	private VnfInstance vnfInstance = null;
 
 	@Field
 	private String grantId = null;
@@ -72,11 +74,12 @@ public class VnfLcmOpOccs {
 	@Transient
 	private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
 
-	public String getId() {
+	@Override
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final UUID id) {
 		this.id = id;
 	}
 
@@ -104,12 +107,12 @@ public class VnfLcmOpOccs {
 		this.startTime = startTime;
 	}
 
-	public VnfInstance getVnfInstanceId() {
-		return vnfInstanceId;
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
 	}
 
-	public void setVnfInstanceId(final VnfInstance vnfInstanceId) {
-		this.vnfInstanceId = vnfInstanceId;
+	public void setVnfInstance(final VnfInstance vnfInstanceId) {
+		this.vnfInstance = vnfInstanceId;
 	}
 
 	public String getGrantId() {

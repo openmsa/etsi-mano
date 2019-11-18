@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,38 +26,53 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfPackage {
+public class VnfPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	@Field
 	private String vnfdId;
+
 	@Field
 	private String vnfProvider;
+
 	@Field
 	private String vnfProductName;
+
 	@Field
 	private String vnfSoftwareVersion;
+
 	@Field
 	private String vnfdVersion;
+
 	private Checksum checksum;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
 	private Set<SoftwareImage> softwareImages;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
 	private Set<AdditionalArtifact> additionalArtifacts;
+
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateEnum onboardingState;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private OperationalStateEnum operationalState;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
 	private UsageStateEnum usageState;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	private List<VnfUserDefinedData> userDefinedData;
+
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -151,6 +167,14 @@ public class VnfPackage {
 
 	public void setUsageState(final UsageStateEnum usageState) {
 		this.usageState = usageState;
+	}
+
+	public List<VnfUserDefinedData> getUserDefinedData() {
+		return userDefinedData;
+	}
+
+	public void setUserDefinedData(final List<VnfUserDefinedData> userDefinedData) {
+		this.userDefinedData = userDefinedData;
 	}
 
 }

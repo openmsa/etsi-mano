@@ -13,6 +13,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
@@ -31,6 +32,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Transactional
 public class ActionJob extends QuartzJobBean {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(ActionJob.class);

@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOccLinks;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
-@Profile({ "default", "VNFM" })
+@Profile({ "!NFVO" })
 @RestController
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);

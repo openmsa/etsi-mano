@@ -26,11 +26,11 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnffgInfo;
 
 @Entity
 @Indexed
-public class NsdInstance {
+public class NsdInstance implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
-	@Field
+
 	@Field
 	private String nsInstanceName = null;
 
@@ -41,7 +41,7 @@ public class NsdInstance {
 	private String nsdId = null;
 
 	@OneToOne
-	private NsdPackage nsdInfoId = null;
+	private NsdPackage nsdInfo = null;
 
 	@Field
 	private String flavourId = null;
@@ -59,7 +59,7 @@ public class NsdInstance {
 	private List<NsInstancesNsInstanceSapInfo> sapInfo = null;
 
 	@OneToMany
-	private List<NsdInstance> nestedNsInstanceId = null;
+	private List<NsdInstance> nestedNsInstance = null;
 	@Enumerated(EnumType.STRING)
 	@Field
 	private InstantiationStateEnum nsState = null;
@@ -68,6 +68,7 @@ public class NsdInstance {
 	@Transient
 	private List<NsInstancesNsInstanceAdditionalAffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -100,12 +101,12 @@ public class NsdInstance {
 		this.nsdId = nsdId;
 	}
 
-	public NsdPackage getNsdInfoId() {
-		return nsdInfoId;
+	public NsdPackage getNsdInfo() {
+		return nsdInfo;
 	}
 
-	public void setNsdInfoId(final NsdPackage nsdInfoId) {
-		this.nsdInfoId = nsdInfoId;
+	public void setNsdInfo(final NsdPackage nsdInfoId) {
+		this.nsdInfo = nsdInfoId;
 	}
 
 	public String getFlavourId() {
@@ -156,12 +157,12 @@ public class NsdInstance {
 		this.sapInfo = sapInfo;
 	}
 
-	public List<NsdInstance> getNestedNsInstanceId() {
-		return nestedNsInstanceId;
+	public List<NsdInstance> getNestedNsInstance() {
+		return nestedNsInstance;
 	}
 
-	public void setNestedNsInstanceId(final List<NsdInstance> nestedNsInstanceId) {
-		this.nestedNsInstanceId = nestedNsInstanceId;
+	public void setNestedNsInstance(final List<NsdInstance> nestedNsInstanceId) {
+		this.nestedNsInstance = nestedNsInstanceId;
 	}
 
 	public InstantiationStateEnum getNsState() {

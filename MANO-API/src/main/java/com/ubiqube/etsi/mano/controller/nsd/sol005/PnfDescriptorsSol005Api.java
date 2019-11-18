@@ -26,7 +26,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoLinks;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPostQuery;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 public interface CrudRepository<T> {
 
@@ -16,5 +17,6 @@ public interface CrudRepository<T> {
 	T save(@Nonnull T entity);
 
 	@Nonnull
+	@NotNull
 	List<T> query(@Nullable String filter);
 }

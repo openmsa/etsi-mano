@@ -12,7 +12,9 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
@@ -22,15 +24,18 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
+@Profile("RDBMS")
+@Service
 public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private final CrudRepository<VnfLcmOpOccs, UUID> repository;
 
-	public VnfLcmOpOccsDb(final EntityManager em, final CrudRepository<VnfLcmOpOccs, UUID> _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper) {
-		super(em, _repository, mapper, contentManager, jsonMapper);
+	public VnfLcmOpOccsDb(final EntityManager em, final CrudRepository<VnfLcmOpOccs, UUID> _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, _repository, mapper, contentManager, jsonMapper, namingStrategy);
 		repository = _repository;
 	}
 
@@ -40,12 +45,12 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> imple
 	}
 
 	@Override
-	protected Class getFrontClass() {
+	protected Class<VnfLcmOpOcc> getFrontClass() {
 		return VnfLcmOpOcc.class;
 	}
 
 	@Override
-	protected Class getDbClass() {
+	protected Class<VnfLcmOpOccs> getDbClass() {
 		return VnfLcmOpOccs.class;
 	}
 

@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdCa
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NslcmV1NsLcmOpOccsNsLcmOpOccIdFailPostResponse;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 

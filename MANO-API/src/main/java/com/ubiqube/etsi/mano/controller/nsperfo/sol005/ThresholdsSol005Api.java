@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.ThresholdsPostResponse;
 
-@Profile({ "default", "NFVO" })
+@Profile({ "!VNFM" })
 public class ThresholdsSol005Api implements ThresholdsSol005 {
 
 	/**

@@ -1,10 +1,14 @@
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.service.event.jms;
 
 import java.util.Map;
 
 import javax.jms.Destination;
 
 import org.springframework.jms.core.JmsTemplate;
+
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 public class JmsEventManager implements EventManager {
 	private final JmsTemplate jmsTemplate;
