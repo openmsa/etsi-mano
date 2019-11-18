@@ -11,22 +11,12 @@
     <order>10000</order>
     <poolId>0</poolId>
     <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>false</showDetailedServiceInstances>
-    <showProcessExecConsole>false</showProcessExecConsole>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>true</showProcessExecConsole>
     <showVariables>false</showVariables>
     <visibility>5</visibility>
   </information>  <variables frozen="0">
-    <variable displayName="Var Name" displayOrder="0" maxLength="100" name="params.var_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>VNF Scale-up</section>
-      </sections>
-    </variable>
-    <variable displayName="Var Name2" displayOrder="1" maxLength="100" name="params.var_name2" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
-      <sections>
-        <section>VNF Scale-up</section>
-      </sections>
-    </variable>
-    <variable displayName="Customer Id" displayOrder="2" maxLength="100" name="params.customer_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Customer Id" displayOrder="2" editable="false" maxLength="100" name="params.customer_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>VNF Scale-out</section>
       </sections>
@@ -41,6 +31,21 @@
         <section>Configure</section>
       </sections>
     </variable>
+    <variable displayName="Subtype" displayOrder="13" maxLength="100" name="params.subtype" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <values>
+        <value>SNMPTHLD-CPU_Utilization</value>
+        <value>SNMPTHLD-Storage_Utilization</value>
+        <value>SNMPTHLD-Memory_Utilization</value>
+      </values>
+      <sections>
+        <section>Handle Alarm</section>
+      </sections>
+    </variable>
+    <variable displayName="Vnfm Service Instance Ref" displayOrder="14" maxLength="100" name="params.vnfm_service_instance_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>VNF Scale-out</section>
+      </sections>
+    </variable>
   </variables>  <example>    <content>
       <?php?>
     </content>  </example>
@@ -52,9 +57,10 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>CREATE</type>
+  
   <task name="Task_Configure.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Initial/Tasks/</processPath>
-      <displayName>Configure</displayName>
+      <displayName>Handle Alarm</displayName>
     </task>
   </process>
 <process name="Process/ETSI-MANO/NFV/Alarm/Process_Move_to_trash">
@@ -87,7 +93,7 @@
     <poolId>0</poolId>
     <compensation/>
     <allowSchedule>false</allowSchedule>
-    <type>CREATE</type>
+    <type>UPDATE</type>
     <task name="Task_VNF_Scale-out.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scale_out/Tasks/</processPath>
       <displayName>VNF Scale-out</displayName>

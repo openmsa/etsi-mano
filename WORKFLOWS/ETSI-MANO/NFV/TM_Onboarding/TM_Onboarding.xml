@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>NFV|NFVO|VNF/NSD Packages creation</group>
+    <icon>/images/eclipseIcons/page_obj.gif</icon>
+    <name>Onboarding</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>true</showProcessExecConsole>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Device Id" displayOrder="0" maxLength="100" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Init</section>
+      </sections>
+      <sdTypes>
+        <sdType manId="17010303" modId="17010305"/>
+      </sdTypes>
+    </variable>
+    <variable displayName="Nsd Model" displayOrder="2" editable="false" isMandatory="true" maxLength="100" name="params.nsd_model" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <values>
+        <value displayValue="3 Net">3_net</value>
+        <value displayValue="4 Net">4_net</value>
+      </values>
+      <sections>
+        <section>Onboarding NSD</section>
+      </sections>
+    </variable>
+    <variable displayName="Vnf Model" displayOrder="3" maxLength="100" name="params.vnf_model" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <values>
+        <value displayValue="Juniper">juniper</value>
+        <value displayValue="Cirros">cirros</value>
+        <value displayValue="CW-AIO">cw-aio</value>
+      </values>
+      <sections>
+        <section>Onboarding VNF</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content/>  </example>
+  <process name="Process/ETSI-MANO/NFV/TM_Onboarding/Process_Onboard_NSD">
+    <visibility>5</visibility>
+    <displayName>Onboard NSD</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+  
+  
+  <task name="Task_Onboard_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/TM_Onboarding/Process_Onboard_NSD/Tasks/</processPath>
+      <displayName>Onboard NSD</displayName>
+    </task>
+    <task name="Task_Update_NFVO.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/TM_Onboarding/Process_Onboard_NSD/Tasks/</processPath>
+      <displayName>Update NFVO</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/TM_Onboarding/Process_Onboard_VNF">
+    <visibility>5</visibility>
+    <displayName>Onboard VNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/TM_Onboarding/Process_Onboard_NSD/Tasks/Task_VNF_Onboarding.php">
+      <processPath/>
+      <displayName>Onboarding VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/TM_Onboarding/Process_Onboard_NSD/Tasks/Task_Update_NFVO.php">
+      <processPath/>
+      <displayName>Update NFVO</displayName>
+    </task>
+  </process>
+
+<process name="Process/ETSI-MANO/NFV/TM_Onboarding/Process_Init">
+    <visibility>5</visibility>
+    <displayName>Instantiate</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    <task name="Task_Get_NFVO.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/TM_Onboarding/Process_Init/Tasks/</processPath>
+      <displayName>Get NFVO</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/TM_Onboarding/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>
