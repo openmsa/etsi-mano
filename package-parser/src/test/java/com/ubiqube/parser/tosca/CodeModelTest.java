@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
@@ -24,6 +26,12 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
+import com.ubiqube.parser.tosca.constraints.Constraint;
+import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
+import com.ubiqube.parser.tosca.constraints.GreaterThan;
+import com.ubiqube.parser.tosca.constraints.LessOrEqual;
+import com.ubiqube.parser.tosca.constraints.LessThan;
+import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Range;
 import com.ubiqube.parser.tosca.scalar.Size;
@@ -183,7 +191,6 @@ public class CodeModelTest {
 			if (null != jType) {
 				field = jc.field(JMod.PRIVATE, jType, entry.getKey());
 			} else {
-				LOG.error("Skipping field {}, {}", entry.getKey(), entry.getValue());
 				jType2 = findJType(entry.getValue());
 				field = jc.field(JMod.PRIVATE, jType2, entry.getKey());
 			}
@@ -205,6 +212,10 @@ public class CodeModelTest {
 			}
 			if (!val.getConstraints().isEmpty()) {
 				// TODO Add Constraint.
+				final List<Constraint> cont = val.getConstraints();
+				cont.forEach(x -> {
+					applyAnnotation(x, field);
+				});
 			}
 			final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + entry.getKey());
 			getter.body()._return(field);
@@ -212,6 +223,20 @@ public class CodeModelTest {
 			final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + entry.getKey());
 			setVar.param(field.type(), field.name());
 			setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));
+		}
+	}
+
+	private void applyAnnotation(final Constraint x, final JFieldVar field) {
+		if (x instanceof Pattern) {
+			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", "");
+		} else if (x instanceof GreaterOrEqual) {
+			field.annotate(DecimalMin.class).param("value", "").param("inclusive", true);
+		} else if (x instanceof GreaterThan) {
+			field.annotate(DecimalMin.class).param("value", "");
+		} else if (x instanceof LessOrEqual) {
+			field.annotate(DecimalMax.class).param("value", "").param("inclusive", true);
+		} else if (x instanceof LessThan) {
+			field.annotate(DecimalMax.class).param("value", "");
 		}
 	}
 
