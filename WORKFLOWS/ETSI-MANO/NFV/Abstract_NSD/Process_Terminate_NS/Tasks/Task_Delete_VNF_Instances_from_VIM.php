@@ -14,7 +14,7 @@ $i=0;
 if(!isset($context['vnfPack_list'])) {
     task_exit(ENDED, "No VNF to stop.");
 }
-$vnfPkg_list = unserialize($context['vnfPack_list']);
+$vnfPkg_list = $context['vnfPack_list'];
 
 foreach ($vnfPkg_list as &$vnfServiceId) {
     $ubiqube_id = $context['UBIQUBEID'];

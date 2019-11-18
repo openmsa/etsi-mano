@@ -12,7 +12,7 @@ function list_args()
 
 $url = get_url_from_device($context['device_id']);
 $vnfPkgApi = new VnfPkgSol005($url);
-$state = true;
+$state = false;
 try {
 	$vnfPkgApi->setOperationalState($context['vnfPkgId'], $state);
 } catch (ManoException $e) {

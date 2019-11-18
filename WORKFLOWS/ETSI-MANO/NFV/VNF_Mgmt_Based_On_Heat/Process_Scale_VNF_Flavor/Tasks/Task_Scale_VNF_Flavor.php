@@ -6,18 +6,21 @@ require_once '/opt/fmc_repository/Process/Reference/OPENSTACK/Library/OBMF/opens
 
 function list_args()
 {
-  create_var_def ("old_flavor", "String");
-  create_var_def ("flavor", "OBMFRef");
 }
 
 $device_id = substr($context['deviceid'], 3);
+
+if (empty($context['flavor_scale'])) {
+	$ret = prepare_json_response(FAILED, "Scale Flavor variable is empty.", $context, true);
+	echo $ret;
+}
 
 $index = 0;
 foreach ($context['servers'] as $server) {
 
 	$server_id = $server['instance_id'];
 
-	$response = _nova_server_action ($device_id, $server_id, "Resize", $context['flavor']);
+	$response = _nova_server_action ($device_id, $server_id, "Resize", $context['flavor_scale']);
 	$response = json_decode($response, true);
 	if ($response['wo_status'] !== ENDED) {
 		$response = json_encode($response);
@@ -50,9 +53,9 @@ foreach ($context['servers'] as $server) {
 	}
 
 }
-
-// set the old_flavor in the $context
-$context['old_flavor'] = $context['flavor'];
+if (!empty($context['flavor_scale_name'])) {
+	$context['flavor'] = $context['flavor_scale_name'];
+}
 
 $ret = prepare_json_response(ENDED, "Servers flavor scaled Successfully", $context, true);
 echo $ret;

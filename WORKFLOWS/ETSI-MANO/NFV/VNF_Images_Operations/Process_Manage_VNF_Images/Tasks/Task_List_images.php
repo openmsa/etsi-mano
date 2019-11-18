@@ -4,6 +4,7 @@ require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
 require_once '/opt/fmc_repository/Process/Reference/OPENSTACK/Library/REST/openstack_common_rest.php';
 
 function list_args() {
+  create_var_def ("images.0.select", "Boolean");
   create_var_def ("images.0.id", "String");
   create_var_def ("images.0.name", "String");
   create_var_def ("images.0.status", "String");
@@ -14,6 +15,7 @@ function list_args() {
   create_var_def ("images.0.min_disk", "String");
   create_var_def ("images.0.protected", "Boolean");
   create_var_def ("images.0.visibility", "String");
+ 
 }
 
 $auth_token = $context['token_id'];
@@ -41,9 +43,10 @@ unset($context['images']);
 
 $index = 0;
 foreach ($images_list['images'] as &$image_details) {
-	$context['images'][$index]['selected'] = false;
+	$context['images'][$index]['select'] = false;
 	$context['images'][$index]['id'] = $image_details['id'];
 	$context['images'][$index]['name'] = $image_details['name'];
+        $context['images'][$index]['status'] = $image_details['status'];
 	$context['images'][$index]['status'] = $image_details['status'];
 	$context['images'][$index]['disk_format'] = $image_details['disk_format'];
 	$context['images'][$index]['container_format'] = $image_details['container_format'];
@@ -52,7 +55,7 @@ foreach ($images_list['images'] as &$image_details) {
 	$context['images'][$index]['min_disk'] = $image_details['min_disk'];
 	$context['images'][$index]['protected'] = $image_details['protected'];
 	$context['images'][$index]['visibility'] = $image_details['visibility'];
-	
+
 	$index++;
 }
 

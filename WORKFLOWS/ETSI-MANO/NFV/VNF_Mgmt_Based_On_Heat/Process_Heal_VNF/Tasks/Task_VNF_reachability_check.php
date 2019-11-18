@@ -10,7 +10,7 @@ if ($instance_status_pre_rebuild != "ACTIVATE") {
 	foreach ($context['servers'] as $server) {
 
 		$device_id = substr($server['device_id'], 3);
-		$response = wait_for_device_reachability($device_id, $context, 1200);
+		$response = wait_for_device_reachability($device_id, $context, 1000);
 		$response = json_decode($response, true);
 		if ($response['wo_status'] !== ENDED) {
 			$response = json_encode($response);

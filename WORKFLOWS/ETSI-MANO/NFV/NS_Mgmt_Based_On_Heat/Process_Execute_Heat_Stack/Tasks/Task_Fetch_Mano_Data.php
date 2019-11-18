@@ -43,7 +43,7 @@ if(array_key_exists('heat', $nsPkg['userDefinedData']))
 }
 
 // TODO get this IP on a NFVO
-$context['template_url'] = 'http://10.31.1.246/tech_report/ns_packages/heat/' . $context['nsPkgId'].'/nsd.yaml';
+$context['template_url'] = 'http://10.10.14.223/tech_report/ns_packages/heat/' . $context['nsPkgId'].'/nsd.yaml';
 
 
 $i=0;

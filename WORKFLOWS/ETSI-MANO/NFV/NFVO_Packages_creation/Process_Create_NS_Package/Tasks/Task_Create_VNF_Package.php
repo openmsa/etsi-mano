@@ -7,7 +7,7 @@ use Ubiqube\EtsiMano\ManoException;
 
 function list_args()
 {
-	create_var_def('vnf_pkg_content', 'String');
+	//create_var_def('vnf_pkg_content', 'String');
 	create_var_def('vimId', 'String');
 	create_var_def('manufacturerId', 'string');
 	create_var_def('modelId', 'string');
@@ -24,14 +24,13 @@ $payload = array('CreateVnfPkgInfoRequest' => array(
 		'modelId' => $context['modelId'],
 		'device_login' => $context['device_login'],
 		'device_password' => $context['device_password'],
-		'heat' => $context['vnf_pkg_content']?$context['vnf_pkg_content']:null
 	)
 ));
 $url = get_url_from_device($context['device_id']);
 $vnfPkgApi = new VnfPkgSol005($url);
 try {
 	$response = $vnfPkgApi->vnfPackagesPost(json_encode($payload));
-	if($context['vnf_pkg_content'] != null) {
+	if(array_key_exists('vnf_pkg_content', $context) && $context['vnf_pkg_content'] != '') {
 		$vnfPkgApi->vnfPackagesVnfPkgIdPackageContentPut($response['VnfPkgInfo']['id'], $context['vnf_pkg_content']);
 	}
 } catch (ManoException $e) {

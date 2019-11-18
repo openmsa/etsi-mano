@@ -7,15 +7,15 @@ use Ubiqube\EtsiMano\ManoException;
 
 function list_args()
 {
-	create_var_def('nsd_pkg_content', 'String');
+	//create_var_def('nsd_pkg_content', 'String');
 	create_var_def('name', 'String');
 	create_var_def('vimId', 'String');
-	create_var_def('vnfPkgIds.0.id', 'String');
+	create_var_def('vnfPkgIds.0', 'String');
 }
 // Craft MANO payload.
 $vnfs = array();
 foreach($context['vnfPkgIds'] as $v) {
-	$vnfs[] = $v['id'];
+	$vnfs[] = $v;
 }
 $payload = array('CreateNsdInfoRequest' => array(
 		'userDefinedData' => array(

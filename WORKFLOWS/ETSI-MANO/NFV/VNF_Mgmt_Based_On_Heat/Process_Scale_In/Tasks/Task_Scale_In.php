@@ -25,6 +25,6 @@ foreach ($context['servers_scaled'] as $server) {
 }
 
 
-task_exit(ENDED, "Openstack Server $server_id Deleted successfully.");
+task_exit(ENDED, "Openstack Server deleted successfully.");
 
 ?>

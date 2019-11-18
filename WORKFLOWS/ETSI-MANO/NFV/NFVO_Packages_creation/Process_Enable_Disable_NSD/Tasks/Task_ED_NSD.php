@@ -8,11 +8,10 @@ use Ubiqube\EtsiMano\ManoException;
 function list_args()
 {
 	create_var_def('nsdPkgId', 'string');
-	create_var_def('state', 'Boolean');
 }
 $url = get_url_from_device($context['device_id']);
 $nsdApi = new NsdSol005($url);
-$state = $context['state'];
+$state = true;
 try {
 	$nsdApi->setOperationalState($context['nsdPkgId'], $state);
 } catch (ManoException $e) {
