@@ -11,7 +11,6 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,6 @@ public class CodeModelTest {
 	private final Map<String, JPackage> cachePackage = new HashMap<>();
 	private final ToscaParser tp = new ToscaParser();
 	private ToscaContext root = null;
-	private final ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
 
 	@Test
 	void testName() throws Exception {
