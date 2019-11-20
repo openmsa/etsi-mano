@@ -135,9 +135,6 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userDataObject);
 
-		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
-		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
-
 		final Map<String, Object> userData = vnfPkgInfo.getUserDefinedData();
 
 		checkUserData(userData);
@@ -154,6 +151,9 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 			vnfPackageRepository.save(vnfPkgInfo);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
+
+		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
+		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
 	}
 
