@@ -27,7 +27,7 @@ $path = '/opt/ses/share/htdocs/tech_report/vnf_packages/heat/' . $context['vnfPk
 file_put_contents($path . '/vnfd', $content);
 
 
-$context['template_url'] = 'http://10.31.1.246/tech_report/vnf_packages/heat/' . $context['vnfPkgId'].'/vnfd';
+$context['template_url'] = 'http://10.10.14.250/tech_report/vnf_packages/heat/' . $context['vnfPkgId'].'/vnfd';
 
 
 

@@ -16,8 +16,8 @@ $server_id = $context['server_id'];
 $response = _neutron_get_pubkic_networks($context['endpoints'][NEUTRON][PUBLIC_URL], $context['token_id']);
 $resp = json_decode($response, 1);
 
-$network = $resp['wo_newparams']['networks'][0]['id'];
-
+//$network = $resp['wo_newparams']['networks'][0]['id'];
+$network = $context['floating_network_id'];
 // Create floating IP
 $response = _neutron_floatingip_create ($context['endpoints'][NEUTRON][PUBLIC_URL], $context['token_id'], $network, $context['tenant_id']);
 $response = json_decode($response, true);

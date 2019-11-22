@@ -24,57 +24,57 @@
         <sdType manId="14020603" modId="16051904"/>
       </sdTypes>
     </variable>
-    <variable default="false" displayName="Select" displayOrder="1" maxLength="100" name="params.images.0.select" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Select" displayOrder="2" maxLength="100" name="params.images.0.select" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Id" displayOrder="2" isUserLocked="true" maxLength="100" name="params.images.0.id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Id" displayOrder="3" isUserLocked="true" maxLength="100" name="params.images.0.id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Name" displayOrder="3" maxLength="100" name="params.images.0.name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Name" displayOrder="4" maxLength="100" name="params.images.0.name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Status" displayOrder="4" isUserLocked="true" maxLength="100" name="params.images.0.status" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Status" displayOrder="5" isUserLocked="true" maxLength="100" name="params.images.0.status" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Disk Format" displayOrder="5" maxLength="100" name="params.images.0.disk_format" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Disk Format" displayOrder="6" maxLength="100" name="params.images.0.disk_format" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Container Format" displayOrder="6" maxLength="100" name="params.images.0.container_format" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Container Format" displayOrder="7" maxLength="100" name="params.images.0.container_format" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Size" displayOrder="7" maxLength="100" name="params.images.0.size" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
+    <variable displayName="Size" displayOrder="8" maxLength="100" name="params.images.0.size" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Min Ram" displayOrder="8" maxLength="100" name="params.images.0.min_ram" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
+    <variable displayName="Min Ram" displayOrder="9" maxLength="100" name="params.images.0.min_ram" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Min Disk" displayOrder="9" maxLength="100" name="params.images.0.min_disk" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Min Disk" displayOrder="10" maxLength="100" name="params.images.0.min_disk" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable default="false" displayName="Protected" displayOrder="10" maxLength="100" name="params.images.0.protected" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable default="false" displayName="Protected" displayOrder="11" maxLength="100" name="params.images.0.protected" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
       <sections>
         <section>List images</section>
       </sections>
     </variable>
-    <variable displayName="Visibility" displayOrder="11" maxLength="100" name="params.images.0.visibility" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Visibility" displayOrder="12" maxLength="100" name="params.images.0.visibility" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>List images</section>
       </sections>

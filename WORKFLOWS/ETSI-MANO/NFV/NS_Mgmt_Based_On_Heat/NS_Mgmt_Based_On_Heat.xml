@@ -21,7 +21,7 @@
         <section>Launch Stack</section>
       </sections>
       <sdTypes>
-        <sdType manId="14020603" modId="16051904"/>
+        <sdType manId="17010303" modId="17010305"/>
       </sdTypes>
     </variable>
     <variable cols="50" default="VNF" displayName="Stack Name" displayOrder="1" editable="false" isMandatory="true" maxLength="100" name="params.stackname" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
@@ -65,7 +65,7 @@
         <section>Get NSD from NS Catalog (NVFO)</section>
       </sections>
       <sdTypes>
-        <sdType manId="14020601" modId="14020601"/>
+        <sdType manId="17010303" modId="17010305"/>
       </sdTypes>
     </variable>
     <variable displayName="Nspkgid" displayOrder="14" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" refDeviceIdVar="params.nfvoDevice" startIncrement="0" tableSizeFix="false" type="OBMFRef">

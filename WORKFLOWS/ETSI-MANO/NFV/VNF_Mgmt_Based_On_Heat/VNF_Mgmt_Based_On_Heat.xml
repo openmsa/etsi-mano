@@ -58,20 +58,30 @@
         <class>keypairs</class>
       </classes>
     </variable>
-    <variable displayName="Old Flavor" displayOrder="6" isUserLocked="true" maxLength="100" name="params.old_flavor" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable default="false" displayName="Is Auto Scale" displayOrder="6" maxLength="100" name="params.is_auto_scale" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+      <sections>
+        <section>Auto scale up</section>
+      </sections>
+    </variable>
+    <variable displayName="Old Flavor" displayOrder="7" isUserLocked="true" maxLength="100" name="params.old_flavor" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Launch Stack</section>
       </sections>
     </variable>
-    <variable default="m1.small" displayName="Flavor" displayOrder="7" maxLength="100" name="params.flavor" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="Flavor" displayOrder="8" maxLength="100" name="params.flavor" numberOfRowMax="0" selector="params.is_auto_scale" startIncrement="0" type="Composite">
       <sections>
         <section>Launch Stack</section>
       </sections>
-      <classes>
-        <class>flavors</class>
-      </classes>
+      <behaviors>
+        <behavior displayName="flavor" displayOrder="0" maxLength="100" name="params.flavor" numberOfRowMax="0" refDeviceIdVar="params.deviceid" selectorValue="false" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+          <classes>
+            <class>flavors</class>
+          </classes>
+        </behavior>
+        <behavior displayName="flavor" displayOrder="0" editable="false" maxLength="100" name="params.flavor" numberOfRowMax="0" selectorValue="true" startIncrement="0" tableSizeFix="false" type="String" visible="false"/>
+      </behaviors>
     </variable>
-    <variable displayName="Image Id" displayOrder="8" maxLength="100" name="params.simulator_image_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="Image Id" displayOrder="9" maxLength="100" name="params.simulator_image_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Launch Stack</section>
       </sections>
@@ -79,7 +89,7 @@
         <class>images</class>
       </classes>
     </variable>
-    <variable displayName="Public Network" displayOrder="9" maxLength="100" name="params.public_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="Public Network" displayOrder="10" maxLength="100" name="params.public_network" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Launch Stack</section>
       </sections>
@@ -87,12 +97,12 @@
         <class>networks</class>
       </classes>
     </variable>
-    <variable cols="50" displayName="Stack Id" displayOrder="10" isUserLocked="true" maxLength="100" name="params.stackid" numberOfRowMax="0" startIncrement="0" type="String">
+    <variable cols="50" displayName="Stack Id" displayOrder="11" isUserLocked="true" maxLength="100" name="params.stackid" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Delete Stack</section>
       </sections>
     </variable>
-    <variable displayName="Server Id" displayOrder="11" maxLength="100" name="params.server_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
+    <variable displayName="Server Id" displayOrder="12" maxLength="100" name="params.server_id" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" type="OBMFRef">
       <sections>
         <section>Scale In</section>
       </sections>
@@ -100,30 +110,33 @@
         <class>servers</class>
       </classes>
     </variable>
-    <variable default="root" displayName="Device Login" displayOrder="12" editable="false" isUserLocked="true" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
+    <variable default="root" displayName="Device Login" displayOrder="13" editable="false" isUserLocked="true" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" type="String" visible="false">
       <sections>
         <section>Create MSA devices from stacks resources</section>
       </sections>
     </variable>
-    <variable default="$ubiqube" displayName="Device Password" displayOrder="13" editable="false" isUserLocked="true" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false">
+    <variable default="$ubiqube" displayName="Device Password" displayOrder="14" editable="false" isUserLocked="true" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" type="Password" visible="false">
       <sections>
         <section>Create MSA devices from stacks resources</section>
       </sections>
     </variable>
-    <variable displayName="Floatingip Id" displayOrder="14" isUserLocked="true" maxLength="100" name="params.floatingip_id" numberOfRowMax="0" startIncrement="0" type="String">
+    <variable displayName="Floatingip Id" displayOrder="15" isUserLocked="true" maxLength="100" name="params.floatingip_id" numberOfRowMax="0" startIncrement="0" type="String">
       <sections>
         <section>Disassociate floating IP</section>
       </sections>
     </variable>
-    <variable displayName="Network Id" displayOrder="15" maxLength="100" name="params.network_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Network Id" displayOrder="16" maxLength="100" name="params.network_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
         <section>Attach Interface</section>
       </sections>
     </variable>
-    <variable displayName="Host" displayOrder="16" maxLength="100" name="params.host" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Hypervisor ID" displayOrder="17" maxLength="100" name="params.host" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" tableSizeFix="false" type="OBMFRef">
       <sections>
         <section>Live-Migrate VNF</section>
       </sections>
+      <classes>
+        <class>hosts</class>
+      </classes>
     </variable>
   </variables>  <example>    <content/>  </example>
   <process name="Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack">
@@ -154,13 +167,72 @@
     
     
   
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
   <task name="Task_Fetch_Mano_Data.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
       <displayName>Get VNFD from VNF Catalog (NFVO)</displayName>
     </task>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/Task_Synchronize_to_VIM_tenant.php">
       <processPath/>
-      <displayName>Sync VIM services inventories </displayName>
+      <displayName>Sync VIM services inventories</displayName>
     </task>
     <task name="Task_Launch_Stack.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
@@ -174,17 +246,21 @@
       <processPath/>
       <displayName>Get VNF details from the VIM</displayName>
     </task>
-    <task name="Task_Wait_30.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
-      <displayName>Wait 30</displayName>
-    </task>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/Task_Create_MSA_devices_from_stacks_resources.php">
       <processPath/>
       <displayName>Create MSA devices corresponding to the VNF</displayName>
     </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Add_Service_instance_ref_config_var.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
+      <displayName>Add Service instance_ref config var</displayName>
+    </task>
     <task name="/opt/fmc_repository/Process/VIO/Pre-test/VNF_Orchestraction_Generic/Process_Instantiate_VNF/Tasks/Task_VNFC_provision.php">
       <processPath/>
       <displayName>VNF provision</displayName>
+    </task>
+    <task name="Task_Attach_MON_profile_to_device.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
+      <displayName>Attach MON profile to device</displayName>
     </task>
     <task name="/opt/fmc_repository/Process/VIO/Pre-test/VNF_Orchestraction_Generic/Process_Instantiate_VNF/Tasks/Task_VNFC_reachability_check.php">
       <processPath/>
@@ -194,7 +270,7 @@
       <processPath/>
       <displayName>VNF Ping Check</displayName>
     </task>
-    <compensation/>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out">
     <visibility>5</visibility>
@@ -221,6 +297,15 @@
     
     
   
+  
+    
+    
+    
+    
+    
+    
+    
+    
   <task name="Task_Scale_Out.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
       <displayName>Scale Out</displayName>
@@ -241,6 +326,10 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
       <displayName>Create MSA device</displayName>
     </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Add_Service_instance_ref_config_var.php">
+      <processPath/>
+      <displayName>Add Service instance_ref config var</displayName>
+    </task>
     <task name="Task_VNF_provision.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
       <displayName>VNF provision</displayName>
@@ -253,7 +342,7 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out/Tasks/</processPath>
       <displayName>VNF Ping Check</displayName>
     </task>
-    <compensation/>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale_In">
     <visibility>5</visibility>
@@ -408,9 +497,32 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+    
+  
+    
+  
+    
+    
+    
+  <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+      <processPath/>
+      <displayName>Get VIM authentification token</displayName>
+    </task>
+    <task name="Task_Get_VNF_instance_current_flavor.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale_VNF_Flavor/Tasks/</processPath>
+      <displayName>Get VNF instance current flavor</displayName>
+    </task>
+    <task name="Task_Calcul_higher_flavor.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale_VNF_Flavor/Tasks/</processPath>
+      <displayName>Calcul higher flavor</displayName>
+    </task>
     <task name="Task_Scale_VNF_Flavor.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale_VNF_Flavor/Tasks/</processPath>
       <displayName>Scale VNF Flavor</displayName>
+    </task>
+    <task name="Task_Clean_up.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Scale_VNF_Flavor/Tasks/</processPath>
+      <displayName>Clean up</displayName>
     </task>
   </process>
 
@@ -422,9 +534,15 @@
     <compensation/>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-    <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+    
+    
+  <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
       <processPath/>
       <displayName>Get VIM authentification token</displayName>
+    </task>
+    <task name="Task_Get_host_name_from_ID.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Live-Migrate_VNF/Tasks/</processPath>
+      <displayName>Get hypervisor name by ID</displayName>
     </task>
     <task name="Task_Live-Migrate_VNF.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Live-Migrate_VNF/Tasks/</processPath>
@@ -471,17 +589,5 @@
       <displayName>VNF Ping Check</displayName>
     </task>
   </process>
-<process name="Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_New_instance">
-    <visibility>5</visibility>
-    <displayName>New instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <compensation/>
-    <allowSchedule>false</allowSchedule>
-    <type>UPDATE</type>
-    <task name="Task_Synchronise_to_NFVO.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_New_instance/Tasks/</processPath>
-      <displayName>Synchronise to NFVO</displayName>
-    </task>
-  </process>
+
 </ObjectDefinition>

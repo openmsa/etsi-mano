@@ -75,17 +75,25 @@ class BaseApi
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Content-Type: multipart/form-data; boundary=' . $boundary
 		));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->multipartBuildQuery('file' , $_content, $boundary));
+		curl_setopt($ch, CURLOPT_POSTFIELDS,
+			$this->multipartBuildQuery(
+			array(
+				'file' => $_content
+			)
+				, $boundary
+		));
 		$response = curl_exec($ch);
 		$this->checkError($ch, $_url, $response);
 		curl_close($ch);
 		return $response;
 	}
 
-	private function multipartBuildQuery($_key, $_value, $boundary)
+	private function multipartBuildQuery($fields, $boundary)
 	{
 		$retval = '';
-		$retval .= "--$boundary\r\nContent-Disposition: form-data; name=\"$_key\"; filename=\"filename\"\r\n\r\n$_value\r\n";
+		foreach ($fields as $key => $value) {
+			$retval .= "--$boundary\r\nContent-Disposition: form-data; name=\"$key\"; filename=\"filename\"\r\n\r\n$value\r\n";
+		}
 		$retval .= "--$boundary--";
 		return $retval . "\r\n";
 	}

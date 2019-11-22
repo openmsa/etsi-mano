@@ -7,7 +7,7 @@
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1561997661830</value>
+            <value>1572016215805</value>
         </entry>
         <entry>
             <key>COMMENT</key>
@@ -25,12 +25,12 @@
             <value></value>
         </entry>
         <entry>
-            <key>TYPE</key>
-            <value>UPLOAD</value>
-        </entry>
-        <entry>
             <key>TAG</key>
             <value>Task_Get_stack_resources.php</value>
+        </entry>
+        <entry>
+            <key>TYPE</key>
+            <value>UPLOAD</value>
         </entry>
     </map>
 </metadata>

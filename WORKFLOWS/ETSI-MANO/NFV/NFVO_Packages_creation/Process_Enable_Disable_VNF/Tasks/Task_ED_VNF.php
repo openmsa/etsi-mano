@@ -8,12 +8,11 @@ use Ubiqube\EtsiMano\ManoException;
 function list_args()
 {
 	create_var_def('vnfPkgId', 'string');
-	create_var_def('state', 'Boolean');
 }
 
 $url = get_url_from_device($context['device_id']);
 $vnfPkgApi = new VnfPkgSol005($url);
-$state = $context['state'];
+$state = true;
 try {
 	$vnfPkgApi->setOperationalState($context['vnfPkgId'], $state);
 } catch (ManoException $e) {

@@ -16,16 +16,30 @@ foreach ($endpoints as &$endpoint) {
 		$stacks_endpoint = $endpoint["publicURL"];
 	}
 }
-
-$response = _list_stacks_resources ($stacks_endpoint, $auth_token, $stack_name, $stack_id);
-$response = json_decode($response, true);
-if ($response['wo_status'] !== ENDED) {
-	$response = json_encode($response);
-	echo $response;
-	exit;
+$resources = "";
+$index = 3;
+$isResourceOk = false;
+while ($isResourceOk !== true && $index > 0) {
+	$response = _list_stacks_resources ($stacks_endpoint, $auth_token, $stack_name, $stack_id);
+	$response = json_decode($response, true);
+	if ($response['wo_status'] !== ENDED) {
+		$response = json_encode($response);
+		echo $response;
+		exit;
+	}
+	$resources = $response['wo_newparams']['resources'];
+	
+	// Check that floating IP resource is containing on the stack resources.
+	foreach ($resources as &$resource) {
+		logToFile("Resource ID: " . $resource['resource_type'] . " ========= \n");
+		if ($resource['resource_type'] == "OS::Neutron::FloatingIP") {
+			$context['floating_ip_id'] = $resource['physical_resource_id'];
+			$isResourceOk = true;
+			break;
+		}
+	}
+	$index--;
 }
-
-$resources = $response['wo_newparams']['resources'];
 $context['resources'] = $resources;
 
 $response = prepare_json_response(ENDED, "Get stack resources successfully.", $context, true);

@@ -18,11 +18,6 @@ $servers_array = array();
 
 
 foreach ($resources as &$resource) {
-	// WARMING: all device is created as LINUX man and GENERIC model.
-	logToFile("Resource ID: " . $resource['resource_type'] . " ========= \n");
-	if ($resource['resource_type'] == "OS::Neutron::FloatingIP") {
-		$context['floating_network_id'] = $resource['physical_resource_id'];
-	}
 	if ($resource['resource_type'] == "OS::Neutron::Port") {
 		$port_id = $resource['physical_resource_id'];
 		$response = _neutron_get_port_info($context['endpoints'][NEUTRON][PUBLIC_URL], $context['token_id'], $port_id);
@@ -30,7 +25,8 @@ foreach ($resources as &$resource) {
 		logToFile(debug_dump($response, "RESPONSE ============++++++++++++>:\n"));
 		$res = json_decode($response, 1);
 		$nId = $res['wo_newparams']['port']['network_id'];
-		$context['networks_id'][0]['network'] = $nId;
+		//$context['networks_id'][0]['network'] = $nId;
+		$context['networks_id'][]['network'] = $nId;
 	}	
 	if ($resource['resource_type'] == "OS::Nova::Server") {
 		
@@ -74,26 +70,22 @@ foreach ($resources as &$resource) {
 			$login =  $context['device_login'];
 		}
 		if (!isset($context['device_password']) || empty($context['device_password'])) {
-			$password =  "ubiqube";
+			$password =  "public";
 		} else {
 			$password =  $context['device_password'];
 		}
 		// Retrieve floating from server details
-		$isFloatingIpFind = false;
-		foreach ($response_body['server']['addresses'] as &$network_addresses) {
-			
-			if ($isFloatingIpFind !== true) { 
-				foreach ($network_addresses as &$address) {
-					if ($address['OS-EXT-IPS:type'] == "floating") {
-						$device_ip_address = $address['addr'];
-						$isFloatingIpFind = true;
-						break;
-					}
-				}
-			} else {
-				break;
+		foreach ($endpoints as &$endpoint) {
+			if ($endpoint["type"] == "network") {
+				$stacks_endpoint = $endpoint["publicURL"];
 			}
 		}
+
+		$isFloatingIpFind = false;
+		$floatingData = json_decode(get_floating_ip_address_and_network_from_id($context['token_id'], $stacks_endpoint, $context['floating_ip_id']), 1);
+		logToFile(print_r($floatingData, true));
+		$device_ip_address = $floatingData['wo_newparams']['floating_ip_address'];
+		$context['floating_network_id'] = $floatingData['wo_newparams']['floating_ip_network'];
 		//logToFile("Floating IP is ::::::::: ----------------------> : " . $device_ip_address . "\n");		
 		if (empty($device_ip_address)) {
 			echo "Missing device management IP address (Floating IP): MSA device creation FAILED.";

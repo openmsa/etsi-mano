@@ -11,7 +11,7 @@ foreach ($context['servers_scaled'] as $server) {
 	}
 	if ($server['is_msa_device'] == "false") {
 		$device_id = substr($server['device_id'], 3);
-		$response = wait_for_device_reachability($device_id, $context);
+		$response = wait_for_device_reachability($device_id, $context, 1000);
 		$response = json_decode($response, true);
 		if ($response['wo_status'] !== ENDED) {
 			$response = json_encode($response);

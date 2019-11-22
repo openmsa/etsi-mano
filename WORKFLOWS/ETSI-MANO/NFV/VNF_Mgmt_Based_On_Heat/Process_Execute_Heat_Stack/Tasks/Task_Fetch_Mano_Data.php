@@ -32,7 +32,11 @@ if(array_key_exists('heat', $vnfPkg['userDefinedData'])) {
 			$resource['properties']['name'] = $context['SERVICEINSTANCEREFERENCE'];
 		}
 	}
-	$context['image'] = $vnfPkg['userDefinedData']['heat']['parameters']['simulator_image_id']['default'];
+	if (isset($vnfPkg['userDefinedData']['heat']['parameters']['simulator_image_id']['default'])) {
+		$context['image'] = $vnfPkg['userDefinedData']['heat']['parameters']['simulator_image_id']['default'];
+	} else {
+		$context['image'] = $vnfPkg['userDefinedData']['heat']['parameters']['image_id']['default'];
+	}
 	$context['flavor'] = $vnfPkg['userDefinedData']['heat']['parameters']['flavor']['default'];
 	$context['old_flavor'] = $context['flavor'];
 	$content = Yaml::dump($heatJson);
@@ -46,7 +50,8 @@ if(array_key_exists('heat', $vnfPkg['userDefinedData'])) {
 
 
 $path = '/opt/ses/share/htdocs/tech_report/vnf_packages/heat/' . $context['vnfPkgId'];
-@mkdir($path);
+@mkdir($path, 0744, true);
+
 file_put_contents($path . '/vnfd.yaml', $content);
 $context['heatJson'] = serialize($heatJson);
 $context['deviceid'] = $vnfPkg['userDefinedData']['vimId'];
@@ -56,10 +61,15 @@ $context['modelId'] = $vnfPkg['userDefinedData']['modelId'];
 $context['device_login'] = $vnfPkg['userDefinedData']['device_login'];
 $context['device_password'] = $vnfPkg['userDefinedData']['device_password'];
 
+$context['monitoring_profile_ref'] = "";
+if (isset($vnfPkg['userDefinedData']['monitoring_profile_ref'])) {
+	$context['monitoring_profile_ref'] = $vnfPkg['userDefinedData']['monitoring_profile_ref'];
+}
+
 //$context['simulator_image_id'] = $vnfPkg['userDefinedData']['heat']['parameters']['simulator_image_id']['default'];
 
 // TODO get this IP on a NFVO
-$context['template_url'] = 'http://10.31.1.246/tech_report/vnf_packages/heat/' . $context['vnfPkgId'].'/vnfd.yaml';
+$context['template_url'] = 'http://10.10.14.223/tech_report/vnf_packages/heat/' . $context['vnfPkgId'].'/vnfd.yaml';
 
 //print_r($vnfPkg);
 task_exit(ENDED, "VNFD fetched successfully from NFVO - VNF Catalogs.");

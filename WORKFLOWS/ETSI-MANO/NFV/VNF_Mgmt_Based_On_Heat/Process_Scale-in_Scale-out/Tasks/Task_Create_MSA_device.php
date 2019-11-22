@@ -32,7 +32,7 @@ foreach ($context['servers_scaled'] as &$server) {
                         $login =  $context['device_login'];
                 }
                 if (!isset($context['device_password']) || empty($context['device_password'])) {
-                        $password =  "ubiqube";
+                        $password =  "public";
                 } else {
                         $password =  $context['device_password'];
                 }

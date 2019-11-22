@@ -17,7 +17,8 @@ $service_name = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_He
 $process_name = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 $nsPkgId = $context['nsPkgId'];
 
-$array = array("nsPkgId" => $nsPkgId);
+$array = array('nsPkgId' => $nsPkgId, 
+		'nfvoDevice' => $context['vnfvo_device']);
 $json_body = json_encode($array);
 
 msa_execute_service_by_reference_and_wait_for_completion($ubiqube_id, $service_name, $process_name, $json_body, true);

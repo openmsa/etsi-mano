@@ -1,7 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
 use Ubiqube\EtsiMano\VnfPkgSol005;
-use Ubiqube\EtsiMano\VnfPkgSol003;
 use Ubiqube\EtsiMano\ManoException;
 
 final class VnfPkgSol005Test extends TestCase
@@ -11,8 +10,7 @@ final class VnfPkgSol005Test extends TestCase
 
 	public function __construct()
 	{
-		$this->vnfPkg = new VnfPkgSol005('http://localhost:8666/ubi-etsi-mano/');
-		$this->vnfPkg3 = new VnfPkgSol003('http://localhost:8666/ubi-etsi-mano/');
+		$this->vnfPkg = new VnfPkgSol005('http://localhost:8380/ubi-etsi-mano/');
 	}
 
 	/**
@@ -40,8 +38,7 @@ final class VnfPkgSol005Test extends TestCase
 
 	public function testException()
 	{
-		// Not compatible with PHP 5.3 but works fine in php 7.3.x
-		$this->setExpectedException(ManoException::class);
+		//$this->setExpectedException(ManoException::class);
 		$this->vnfPkg->vnfPackagesVnfPkgIdDelete('12345');
 	}
 
@@ -52,21 +49,6 @@ final class VnfPkgSol005Test extends TestCase
 		$id = $res['VnfPkgInfo']['id'];
 
 		$this->vnfPkg->vnfPackagesVnfPkgIdPackageContentPut($id, '{}');
-	}
-
-	public function testEnableDisabled()
-	{
-		$body = file_get_contents(__DIR__ . '/stubs/vnf-pkg.json');
-		$res = $this->vnfPkg->vnfPackagesPost($body);
-		$id = $res['VnfPkgInfo']['id'];
-		$this->assertEquals('DISABLED', $res['VnfPkgInfo']['operationalState']);
-
-		$this->vnfPkg->setOperationalState($id, true);
-		$res = $this->vnfPkg3->vnfPackagesVnfPkgIdGet($id);
-		$this->assertEquals('ENABLED', $res['operationalState']);
-
-		$this->vnfPkg->setOperationalState($id, false);
-		$this->vnfPkg->vnfPackagesVnfPkgIdDelete($id);
 	}
 }
 

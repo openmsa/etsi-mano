@@ -5,17 +5,7 @@ require_once '/opt/fmc_repository/Process/Reference/OPENSTACK/Library/REST/opens
 
 function list_args()
 {
-  create_var_def ("images.0.select", "Boolean");
-  create_var_def ("images.0.id", "String");
-  create_var_def ("images.0.name", "String");
-  create_var_def ("images.0.status", "String");
-  create_var_def ("images.0.disk_format", "String");
-  create_var_def ("images.0.container_format", "String");
-  create_var_def ("images.0.size", "String");
-  create_var_def ("images.0.min_ram", "String");
-  create_var_def ("images.0.min_disk", "String");
-  create_var_def ("images.0.protected", "Boolean");
-  create_var_def ("images.0.visibility", "String");
+	
 }
 
 $auth_token = $context['token_id'];
