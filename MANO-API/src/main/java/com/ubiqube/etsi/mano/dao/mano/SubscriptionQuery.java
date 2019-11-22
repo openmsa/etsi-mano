@@ -1,17 +1,24 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 @Embeddable
 public class SubscriptionQuery {
-	private SubscriptionFilter subscriptionFilter;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subscription")
+	private List<FilterAttributes> subscriptionFilter;
+
 	private String callbackUri = null;
 
-	public SubscriptionFilter getSubscriptionFilter() {
+	public List<FilterAttributes> getSubscriptionFilter() {
 		return subscriptionFilter;
 	}
 
-	public void setSubscriptionFilter(final SubscriptionFilter subscriptionFilter) {
+	public void setSubscriptionFilter(final List<FilterAttributes> subscriptionFilter) {
 		this.subscriptionFilter = subscriptionFilter;
 	}
 
