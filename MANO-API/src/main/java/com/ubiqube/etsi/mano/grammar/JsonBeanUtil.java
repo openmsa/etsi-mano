@@ -115,8 +115,8 @@ public class JsonBeanUtil {
 				continue;
 			}
 			LOG.info("Handling property: {}", propertyDescriptor.getName());
-			final Method writeMethod = propertyDescriptor.getReadMethod();
-			final JsonProperty jsonProperty = writeMethod.getAnnotation(JsonProperty.class);
+			final Method readMethod = propertyDescriptor.getReadMethod();
+			final JsonProperty jsonProperty = readMethod.getAnnotation(JsonProperty.class);
 			String jsonName = propertyDescriptor.getName();
 			if (null != jsonProperty) {
 				jsonName = jsonProperty.value();
