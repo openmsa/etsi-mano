@@ -2,255 +2,81 @@ package com.ubiqube.etsi.mano.model.vnf.sol005;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
-import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.ubiqube.etsi.mano.exception.BadRequestException;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@JsonPropertyOrder({ "id", "vnfdId", "vnfProvider" })
-public class VnfPkgInfo {
+/**
+ * VnfPkgInfo
+ */
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
 
-	@ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
-	/**
-	 * An identifier with the intention of being globally unique.
-	 **/
+public class VnfPkgInfo {
+	@JsonProperty("id")
 	private String id = null;
 
-	@ApiModelProperty(value = "An identifier with the intention of being globally unique. ")
-	/**
-	 * An identifier with the intention of being globally unique.
-	 **/
+	@JsonProperty("vnfdId")
 	private String vnfdId = null;
 
-	@ApiModelProperty(value = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
-	/**
-	 * Provider of the VNF package and the VNFD. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
-	 **/
+	@JsonProperty("vnfProvider")
 	private String vnfProvider = null;
 
-	@ApiModelProperty(value = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
-	/**
-	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
-	 * information is copied from the VNFD. It shall be present after the VNF
-	 * package content has been on-boarded and absent otherwise.
-	 **/
+	@JsonProperty("vnfProductName")
 	private String vnfProductName = null;
 
-	@ApiModelProperty(value = "Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
-	/**
-	 * Software version of the VNF. This is changed when there is any change to the
-	 * software included in the VNF package. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
-	 **/
+	@JsonProperty("vnfSoftwareVersion")
 	private String vnfSoftwareVersion = null;
 
-	@ApiModelProperty(value = "Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
-	/**
-	 * Software version of the VNF. This is changed when there is any change to the
-	 * software included in the VNF package. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
-	 **/
+	@JsonProperty("vnfdVersion")
 	private String vnfdVersion = null;
 
-	@ApiModelProperty(value = "")
+	@JsonProperty("checksum")
+	private Checksum checksum = null;
+
+	@JsonProperty("softwareImages")
 	@Valid
-	private VnfPackagesVnfPkgInfoChecksum checksum = null;
+	private List<VnfPackageSoftwareImageInfo> softwareImages = null;
 
-	@ApiModelProperty(value = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
+	@JsonProperty("additionalArtifacts")
 	@Valid
-	/**
-	 * Information about VNF package artifacts that are software images. This
-	 * attribute shall not be present before the VNF package content is on-boarded.
-	 * Otherwise, this attribute shall be present unless it has been requested to be
-	 * excluded per attribute selector.
-	 **/
-	private List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages = null;
+	private List<VnfPackageArtifactInfo> additionalArtifacts = null;
 
-	@ApiModelProperty(value = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
-	@Valid
-	/**
-	 * Information about VNF package artifacts contained in the VNF package that are
-	 * not software images. This attribute shall not be present before the VNF
-	 * package content is on-boarded. Otherwise, this attribute shall be present if
-	 * the VNF package contains additional artifacts.
-	 **/
-	private List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts = new ArrayList<>();
+	@JsonProperty("onboardingState")
+	private PackageOnboardingStateType onboardingState = null;
 
-	@XmlType(name = "OnboardingStateEnum")
-	@XmlEnum(String.class)
-	public enum OnboardingStateEnum {
+	@JsonProperty("operationalState")
+	private PackageOperationalStateType operationalState = null;
 
-		@XmlEnumValue("CREATED")
-		CREATED("CREATED"), @XmlEnumValue("UPLOADING")
-		UPLOADING("UPLOADING"), @XmlEnumValue("PROCESSING")
-		PROCESSING("PROCESSING"), @XmlEnumValue("ONBOARDED")
-		ONBOARDED("ONBOARDED");
-		@Nonnull
-		private final String value;
+	@JsonProperty("usageState")
+	private PackageUsageStateType usageState = null;
 
-		OnboardingStateEnum(@Nonnull final String v) {
-			value = v;
-		}
+	@JsonProperty("userDefinedData")
+	private KeyValuePairs userDefinedData = null;
 
-		@Nonnull
-		public String value() {
-			return value;
-		}
+	@JsonProperty("_links")
+	private VnfPkgInfoLinks links = null;
 
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		@Nonnull
-		public static OnboardingStateEnum fromValue(final String v) {
-			for (final OnboardingStateEnum b : OnboardingStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			throw new BadRequestException("OnboardingStateEnum could not be equal to [" + v + "]");
-		}
+	public VnfPkgInfo id(final String id) {
+		this.id = id;
+		return this;
 	}
 
-	@ApiModelProperty(required = true, value = "The enumeration PackageOnboardingStateType shall comply with the provisions defined in Table 9.5.4.3-1. Permitted values: - CREATED: The VNF package resource has been created. - UPLOADING: The associated VNF package content is being uploaded. - PROCESSING: The associated VNF package content is being processed, e.g. validation. - ONBOARDED: The associated VNF package content is successfully on-boarded. ")
 	/**
-	 * The enumeration PackageOnboardingStateType shall comply with the provisions
-	 * defined in Table 9.5.4.3-1. Permitted values: - CREATED: The VNF package
-	 * resource has been created. - UPLOADING: The associated VNF package content is
-	 * being uploaded. - PROCESSING: The associated VNF package content is being
-	 * processed, e.g. validation. - ONBOARDED: The associated VNF package content
-	 * is successfully on-boarded.
-	 **/
-	private OnboardingStateEnum onboardingState = OnboardingStateEnum.CREATED;
-
-	@XmlType(name = "OperationalStateEnum")
-	@XmlEnum(String.class)
-	public enum OperationalStateEnum {
-
-		@XmlEnumValue("ENABLED")
-		ENABLED("ENABLED"), @XmlEnumValue("DISABLED")
-		DISABLED("DISABLED");
-		@Nonnull
-		private final String value;
-
-		OperationalStateEnum(@Nonnull final String v) {
-			value = v;
-		}
-
-		@Nonnull
-		public String value() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		@Nonnull
-		public static OperationalStateEnum fromValue(final String v) {
-			for (final OperationalStateEnum b : OperationalStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			throw new BadRequestException("OperationalStateEnum could not be equal to [" + v + "]");
-		}
-	}
-
-	@ApiModelProperty(required = true, value = "\"The enumeration PackageOperationalStateType shall  comply with the provisions defined in Table 9.5.4.4-1.\" Acceptable values are: -ENABLED - The VNF package is enabled, i.e. it can be used for instantiation of new VNF instances. -DISABLED - The VNF package is disabled, i.e. it cannot be used for further VNF instantiation requests (unless and until the VNF package is re-enabled). ")
-	/**
-	 * \"The enumeration PackageOperationalStateType shall comply with the
-	 * provisions defined in Table 9.5.4.4-1.\" Acceptable values are: -ENABLED -
-	 * The VNF package is enabled, i.e. it can be used for instantiation of new VNF
-	 * instances. -DISABLED - The VNF package is disabled, i.e. it cannot be used
-	 * for further VNF instantiation requests (unless and until the VNF package is
-	 * re-enabled).
-	 **/
-	@Nonnull
-	private OperationalStateEnum operationalState = OperationalStateEnum.DISABLED;
-
-	@XmlType(name = "UsageStateEnum")
-	@XmlEnum(String.class)
-	public enum UsageStateEnum {
-
-		@XmlEnumValue("IN_USE")
-		IN_USE("IN_USE"), @XmlEnumValue("NOT_IN_USE")
-		NOT_IN_USE("NOT_IN_USE");
-		@Nonnull
-		private final String value;
-
-		UsageStateEnum(@Nonnull final String v) {
-			value = v;
-		}
-
-		@Nonnull
-		public String value() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		public static UsageStateEnum fromValue(final String v) {
-			for (final UsageStateEnum b : UsageStateEnum.values()) {
-				if (String.valueOf(b.value).equals(v)) {
-					return b;
-				}
-			}
-			throw new BadRequestException("UsageStateEnum could not be equal to [" + v + "]");
-		}
-	}
-
-	@ApiModelProperty(required = true, value = "\"The enumeration PackageUsageStateType shall comply with the provisions. Acceptable values are: -IN_USE - VNF instances instantiated from this VNF package exist. -NOT_IN_USE - No existing VNF instance is instantiated from this VNF package\"       ")
-	/**
-	 * \"The enumeration PackageUsageStateType shall comply with the provisions.
-	 * Acceptable values are: -IN_USE - VNF instances instantiated from this VNF
-	 * package exist. -NOT_IN_USE - No existing VNF instance is instantiated from
-	 * this VNF package\"
-	 **/
-	private UsageStateEnum usageState = UsageStateEnum.NOT_IN_USE;
-
-	@ApiModelProperty(value = "This type represents a list of key-value pairs. The order of the pairs in the list is not significant. In JSON, a set of key- value pairs is represented as an object. It shall comply with the provisions  defined in clause 4 of IETF RFC 7159.  ")
-	/**
-	 * This type represents a list of key-value pairs. The order of the pairs in the
-	 * list is not significant. In JSON, a set of key- value pairs is represented as
-	 * an object. It shall comply with the provisions defined in clause 4 of IETF
-	 * RFC 7159.
-	 **/
-	private Map<String, Object> userDefinedData = null;
-
-	@ApiModelProperty(value = "")
-	@Valid
-	private VnfPackagesVnfPkgInfoLinks links = null;
-
-	/**
-	 * An identifier with the intention of being globally unique.
-	 *
+	 * Identifier of the VNF package. This identifier is allocated by the NFVO.
+	 * 
 	 * @return id
 	 **/
-	@JsonProperty("id")
+	@ApiModelProperty(required = true, value = "Identifier of the VNF package. This identifier is allocated by the NFVO. ")
 	@NotNull
+
 	public String getId() {
 		return id;
 	}
@@ -259,17 +85,21 @@ public class VnfPkgInfo {
 		this.id = id;
 	}
 
-	public VnfPkgInfo id(final String id) {
-		this.id = id;
+	public VnfPkgInfo vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
 		return this;
 	}
 
 	/**
-	 * An identifier with the intention of being globally unique.
-	 *
+	 * This identifier, which is managed by the VNF provider, identifies the VNF
+	 * package and the VNFD in a globally unique way. It is copied from the VNFD of
+	 * the on boarded VNF package. It shall be present after the VNF package content
+	 * has been on-boarded and absent otherwise.
+	 * 
 	 * @return vnfdId
 	 **/
-	@JsonProperty("vnfdId")
+	@ApiModelProperty(value = "This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+
 	public String getVnfdId() {
 		return vnfdId;
 	}
@@ -278,8 +108,8 @@ public class VnfPkgInfo {
 		this.vnfdId = vnfdId;
 	}
 
-	public VnfPkgInfo vnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
+	public VnfPkgInfo vnfProvider(final String vnfProvider) {
+		this.vnfProvider = vnfProvider;
 		return this;
 	}
 
@@ -287,10 +117,11 @@ public class VnfPkgInfo {
 	 * Provider of the VNF package and the VNFD. This information is copied from the
 	 * VNFD. It shall be present after the VNF package content has been on-boarded
 	 * and absent otherwise.
-	 *
+	 * 
 	 * @return vnfProvider
 	 **/
-	@JsonProperty("vnfProvider")
+	@ApiModelProperty(value = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+
 	public String getVnfProvider() {
 		return vnfProvider;
 	}
@@ -299,8 +130,8 @@ public class VnfPkgInfo {
 		this.vnfProvider = vnfProvider;
 	}
 
-	public VnfPkgInfo vnfProvider(final String vnfProvider) {
-		this.vnfProvider = vnfProvider;
+	public VnfPkgInfo vnfProductName(final String vnfProductName) {
+		this.vnfProductName = vnfProductName;
 		return this;
 	}
 
@@ -308,38 +139,17 @@ public class VnfPkgInfo {
 	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
 	 * information is copied from the VNFD. It shall be present after the VNF
 	 * package content has been on-boarded and absent otherwise.
-	 *
+	 * 
 	 * @return vnfProductName
 	 **/
-	@JsonProperty("vnfProductName")
+	@ApiModelProperty(value = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+
 	public String getVnfProductName() {
 		return vnfProductName;
 	}
 
 	public void setVnfProductName(final String vnfProductName) {
 		this.vnfProductName = vnfProductName;
-	}
-
-	public VnfPkgInfo vnfProductName(final String vnfProductName) {
-		this.vnfProductName = vnfProductName;
-		return this;
-	}
-
-	/**
-	 * Software version of the VNF. This is changed when there is any change to the
-	 * software included in the VNF package. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
-	 *
-	 * @return vnfSoftwareVersion
-	 **/
-	@JsonProperty("vnfSoftwareVersion")
-	public String getVnfSoftwareVersion() {
-		return vnfSoftwareVersion;
-	}
-
-	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
-		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
 	public VnfPkgInfo vnfSoftwareVersion(final String vnfSoftwareVersion) {
@@ -352,16 +162,17 @@ public class VnfPkgInfo {
 	 * software included in the VNF package. This information is copied from the
 	 * VNFD. It shall be present after the VNF package content has been on-boarded
 	 * and absent otherwise.
-	 *
-	 * @return vnfdVersion
+	 * 
+	 * @return vnfSoftwareVersion
 	 **/
-	@JsonProperty("vnfdVersion")
-	public String getVnfdVersion() {
-		return vnfdVersion;
+	@ApiModelProperty(value = "Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+
+	public String getVnfSoftwareVersion() {
+		return vnfSoftwareVersion;
 	}
 
-	public void setVnfdVersion(final String vnfdVersion) {
-		this.vnfdVersion = vnfdVersion;
+	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
+		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
 	public VnfPkgInfo vnfdVersion(final String vnfdVersion) {
@@ -370,21 +181,55 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Get checksum
-	 *
+	 * The version of the VNFD. This information is copied from the VNFD. It shall
+	 * be present after the VNF package content has been on-boarded and absent
+	 * otherwise.
+	 * 
+	 * @return vnfdVersion
+	 **/
+	@ApiModelProperty(value = "The version of the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+
+	public String getVnfdVersion() {
+		return vnfdVersion;
+	}
+
+	public void setVnfdVersion(final String vnfdVersion) {
+		this.vnfdVersion = vnfdVersion;
+	}
+
+	public VnfPkgInfo checksum(final Checksum checksum) {
+		this.checksum = checksum;
+		return this;
+	}
+
+	/**
+	 * Checksum of the on-boarded VNF package. It shall be present after the VNF
+	 * package content has been on-boarded and absent otherwise.
+	 * 
 	 * @return checksum
 	 **/
-	@JsonProperty("checksum")
-	public VnfPackagesVnfPkgInfoChecksum getChecksum() {
+	@ApiModelProperty(value = "Checksum of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+
+	@Valid
+
+	public Checksum getChecksum() {
 		return checksum;
 	}
 
-	public void setChecksum(final VnfPackagesVnfPkgInfoChecksum checksum) {
+	public void setChecksum(final Checksum checksum) {
 		this.checksum = checksum;
 	}
 
-	public VnfPkgInfo checksum(final VnfPackagesVnfPkgInfoChecksum checksum) {
-		this.checksum = checksum;
+	public VnfPkgInfo softwareImages(final List<VnfPackageSoftwareImageInfo> softwareImages) {
+		this.softwareImages = softwareImages;
+		return this;
+	}
+
+	public VnfPkgInfo addSoftwareImagesItem(final VnfPackageSoftwareImageInfo softwareImagesItem) {
+		if (this.softwareImages == null) {
+			this.softwareImages = new ArrayList<>();
+		}
+		this.softwareImages.add(softwareImagesItem);
 		return this;
 	}
 
@@ -393,25 +238,31 @@ public class VnfPkgInfo {
 	 * attribute shall not be present before the VNF package content is on-boarded.
 	 * Otherwise, this attribute shall be present unless it has been requested to be
 	 * excluded per attribute selector.
-	 *
+	 * 
 	 * @return softwareImages
 	 **/
-	@JsonProperty("softwareImages")
-	public List<VnfPackagesVnfPkgInfoSoftwareImages> getSoftwareImages() {
+	@ApiModelProperty(value = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
+
+	@Valid
+
+	public List<VnfPackageSoftwareImageInfo> getSoftwareImages() {
 		return softwareImages;
 	}
 
-	public void setSoftwareImages(final List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages) {
+	public void setSoftwareImages(final List<VnfPackageSoftwareImageInfo> softwareImages) {
 		this.softwareImages = softwareImages;
 	}
 
-	public VnfPkgInfo softwareImages(final List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages) {
-		this.softwareImages = softwareImages;
+	public VnfPkgInfo additionalArtifacts(final List<VnfPackageArtifactInfo> additionalArtifacts) {
+		this.additionalArtifacts = additionalArtifacts;
 		return this;
 	}
 
-	public VnfPkgInfo addSoftwareImagesItem(final VnfPackagesVnfPkgInfoSoftwareImages softwareImagesItem) {
-		this.softwareImages.add(softwareImagesItem);
+	public VnfPkgInfo addAdditionalArtifactsItem(final VnfPackageArtifactInfo additionalArtifactsItem) {
+		if (this.additionalArtifacts == null) {
+			this.additionalArtifacts = new ArrayList<>();
+		}
+		this.additionalArtifacts.add(additionalArtifactsItem);
 		return this;
 	}
 
@@ -420,143 +271,162 @@ public class VnfPkgInfo {
 	 * not software images. This attribute shall not be present before the VNF
 	 * package content is on-boarded. Otherwise, this attribute shall be present if
 	 * the VNF package contains additional artifacts.
-	 *
+	 * 
 	 * @return additionalArtifacts
 	 **/
-	@JsonProperty("additionalArtifacts")
-	public List<VnfPackagesVnfPkgInfoAdditionalArtifacts> getAdditionalArtifacts() {
+	@ApiModelProperty(value = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
+
+	@Valid
+
+	public List<VnfPackageArtifactInfo> getAdditionalArtifacts() {
 		return additionalArtifacts;
 	}
 
-	public void setAdditionalArtifacts(final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts) {
+	public void setAdditionalArtifacts(final List<VnfPackageArtifactInfo> additionalArtifacts) {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
-	public VnfPkgInfo additionalArtifacts(final List<VnfPackagesVnfPkgInfoAdditionalArtifacts> additionalArtifacts) {
-		this.additionalArtifacts = additionalArtifacts;
-		return this;
-	}
-
-	public VnfPkgInfo addAdditionalArtifactsItem(final VnfPackagesVnfPkgInfoAdditionalArtifacts additionalArtifactsItem) {
-		this.additionalArtifacts.add(additionalArtifactsItem);
+	public VnfPkgInfo onboardingState(final PackageOnboardingStateType onboardingState) {
+		this.onboardingState = onboardingState;
 		return this;
 	}
 
 	/**
-	 * The enumeration PackageOnboardingStateType shall comply with the provisions
-	 * defined in Table 9.5.4.3-1. Permitted values: - CREATED: The VNF package
-	 * resource has been created. - UPLOADING: The associated VNF package content is
-	 * being uploaded. - PROCESSING: The associated VNF package content is being
-	 * processed, e.g. validation. - ONBOARDED: The associated VNF package content
-	 * is successfully on-boarded.
-	 *
+	 * On-boarding state of the VNF package.
+	 * 
 	 * @return onboardingState
 	 **/
-	@JsonProperty("onboardingState")
+	@ApiModelProperty(required = true, value = "On-boarding state of the VNF package. ")
 	@NotNull
-	@Nonnull
-	public OnboardingStateEnum getOnboardingState() {
+
+	@Valid
+
+	public PackageOnboardingStateType getOnboardingState() {
 		return onboardingState;
 	}
 
-	public void setOnboardingState(@Nonnull final OnboardingStateEnum onboardingState) {
+	public void setOnboardingState(final PackageOnboardingStateType onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public VnfPkgInfo onboardingState(@Nonnull final OnboardingStateEnum _onboardingState) {
-		this.onboardingState = _onboardingState;
+	public VnfPkgInfo operationalState(final PackageOperationalStateType operationalState) {
+		this.operationalState = operationalState;
 		return this;
 	}
 
 	/**
-	 * \&quot;The enumeration PackageOperationalStateType shall comply with the
-	 * provisions defined in Table 9.5.4.4-1.\&quot; Acceptable values are: -ENABLED
-	 * - The VNF package is enabled, i.e. it can be used for instantiation of new
-	 * VNF instances. -DISABLED - The VNF package is disabled, i.e. it cannot be
-	 * used for further VNF instantiation requests (unless and until the VNF package
-	 * is re-enabled).
-	 *
+	 * Operational state of the VNF package.
+	 * 
 	 * @return operationalState
 	 **/
-	@JsonProperty("operationalState")
+	@ApiModelProperty(required = true, value = "Operational state of the VNF package. ")
 	@NotNull
-	@Nonnull
-	public OperationalStateEnum getOperationalState() {
+
+	@Valid
+
+	public PackageOperationalStateType getOperationalState() {
 		return operationalState;
 	}
 
-	public void setOperationalState(@Nonnull final OperationalStateEnum operationalState) {
+	public void setOperationalState(final PackageOperationalStateType operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public VnfPkgInfo operationalState(@Nonnull final OperationalStateEnum _operationalState) {
-		this.operationalState = _operationalState;
+	public VnfPkgInfo usageState(final PackageUsageStateType usageState) {
+		this.usageState = usageState;
 		return this;
 	}
 
 	/**
-	 * \&quot;The enumeration PackageUsageStateType shall comply with the
-	 * provisions. Acceptable values are: -IN_USE - VNF instances instantiated from
-	 * this VNF package exist. -NOT_IN_USE - No existing VNF instance is
-	 * instantiated from this VNF package\&quot;
-	 *
+	 * Usage state of the VNF package.
+	 * 
 	 * @return usageState
 	 **/
-	@JsonProperty("usageState")
+	@ApiModelProperty(required = true, value = "Usage state of the VNF package. ")
 	@NotNull
-	@Nonnull
-	public UsageStateEnum getUsageState() {
+
+	@Valid
+
+	public PackageUsageStateType getUsageState() {
 		return usageState;
 	}
 
-	public void setUsageState(@Nonnull final UsageStateEnum usageState) {
+	public void setUsageState(final PackageUsageStateType usageState) {
 		this.usageState = usageState;
 	}
 
-	public VnfPkgInfo usageState(@Nonnull final UsageStateEnum _usageState) {
-		this.usageState = _usageState;
+	public VnfPkgInfo userDefinedData(final KeyValuePairs userDefinedData) {
+		this.userDefinedData = userDefinedData;
 		return this;
 	}
 
 	/**
-	 * This type represents a list of key-value pairs. The order of the pairs in the
-	 * list is not significant. In JSON, a set of key- value pairs is represented as
-	 * an object. It shall comply with the provisions defined in clause 4 of IETF
-	 * RFC 7159.
-	 *
+	 * Usage state of the VNF package.
+	 * 
 	 * @return userDefinedData
 	 **/
-	@JsonProperty("userDefinedData")
-	public Map<String, Object> getUserDefinedData() {
+	@ApiModelProperty(value = "Usage state of the VNF package. ")
+
+	@Valid
+
+	public KeyValuePairs getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
-	public VnfPkgInfo userDefinedData(final Map<String, Object> userDefinedData) {
-		this.userDefinedData = userDefinedData;
+	public VnfPkgInfo links(final VnfPkgInfoLinks links) {
+		this.links = links;
 		return this;
 	}
 
 	/**
 	 * Get links
-	 *
+	 * 
 	 * @return links
 	 **/
-	@JsonProperty("_links")
-	public VnfPackagesVnfPkgInfoLinks getLinks() {
+	@ApiModelProperty(value = "")
+
+	@Valid
+
+	public VnfPkgInfoLinks getLinks() {
 		return links;
 	}
 
-	public void setLinks(final VnfPackagesVnfPkgInfoLinks links) {
+	public void setLinks(final VnfPkgInfoLinks links) {
 		this.links = links;
 	}
 
-	public VnfPkgInfo links(final VnfPackagesVnfPkgInfoLinks links) {
-		this.links = links;
-		return this;
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final VnfPkgInfo vnfPkgInfo = (VnfPkgInfo) o;
+		return Objects.equals(this.id, vnfPkgInfo.id) &&
+				Objects.equals(this.vnfdId, vnfPkgInfo.vnfdId) &&
+				Objects.equals(this.vnfProvider, vnfPkgInfo.vnfProvider) &&
+				Objects.equals(this.vnfProductName, vnfPkgInfo.vnfProductName) &&
+				Objects.equals(this.vnfSoftwareVersion, vnfPkgInfo.vnfSoftwareVersion) &&
+				Objects.equals(this.vnfdVersion, vnfPkgInfo.vnfdVersion) &&
+				Objects.equals(this.checksum, vnfPkgInfo.checksum) &&
+				Objects.equals(this.softwareImages, vnfPkgInfo.softwareImages) &&
+				Objects.equals(this.additionalArtifacts, vnfPkgInfo.additionalArtifacts) &&
+				Objects.equals(this.onboardingState, vnfPkgInfo.onboardingState) &&
+				Objects.equals(this.operationalState, vnfPkgInfo.operationalState) &&
+				Objects.equals(this.usageState, vnfPkgInfo.usageState) &&
+				Objects.equals(this.userDefinedData, vnfPkgInfo.userDefinedData) &&
+				Objects.equals(this.links, vnfPkgInfo.links);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, vnfdId, vnfProvider, vnfProductName, vnfSoftwareVersion, vnfdVersion, checksum, softwareImages, additionalArtifacts, onboardingState, operationalState, usageState, userDefinedData, links);
 	}
 
 	@Override
@@ -586,7 +456,7 @@ public class VnfPkgInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(final Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

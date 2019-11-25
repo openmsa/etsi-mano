@@ -12,18 +12,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * IndividualVNF package resource creation parameters, as defined in clause
- * 9.5.2.2.
+ * \&quot;The payload body contains the address information based on which the
+ * NFVO can obtain the content of the VNF package\&quot;
  */
-@ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
+@ApiModel(description = "\"The payload body contains the address information based on which the NFVO can obtain the content of the VNF package\" ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
 
-public class CreateVnfPkgInfoRequest {
+public class UploadVnfPkgFromUriRequest {
 	@JsonProperty("userDefinedData")
 	private KeyValuePairs userDefinedData = null;
 
-	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
+	public UploadVnfPkgFromUriRequest userDefinedData(final KeyValuePairs userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -53,8 +53,8 @@ public class CreateVnfPkgInfoRequest {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		final CreateVnfPkgInfoRequest createVnfPkgInfoRequest = (CreateVnfPkgInfoRequest) o;
-		return Objects.equals(this.userDefinedData, createVnfPkgInfoRequest.userDefinedData);
+		final UploadVnfPkgFromUriRequest uploadVnfPkgFromUriRequest = (UploadVnfPkgFromUriRequest) o;
+		return Objects.equals(this.userDefinedData, uploadVnfPkgFromUriRequest.userDefinedData);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class CreateVnfPkgInfoRequest {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class CreateVnfPkgInfoRequest {\n");
+		sb.append("class UploadVnfPkgFromUriRequest {\n");
 
 		sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
 		sb.append("}");

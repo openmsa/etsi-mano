@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.model.vnf.sol005;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -12,37 +13,37 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * IndividualVNF package resource creation parameters, as defined in clause
- * 9.5.2.2.
+ * Links to resources related to this resource.
  */
-@ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
+@ApiModel(description = "Links to resources related to this resource. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
 
-public class CreateVnfPkgInfoRequest {
-	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+public class PkgmSubscriptionLinks {
+	@JsonProperty("self")
+	private Link self = null;
 
-	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
-		this.userDefinedData = userDefinedData;
+	public PkgmSubscriptionLinks self(final Link self) {
+		this.self = self;
 		return this;
 	}
 
 	/**
-	 * Get userDefinedData
+	 * URI of this resource.
 	 * 
-	 * @return userDefinedData
+	 * @return self
 	 **/
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@NotNull
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
-		return userDefinedData;
+	public Link getSelf() {
+		return self;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
-		this.userDefinedData = userDefinedData;
+	public void setSelf(final Link self) {
+		this.self = self;
 	}
 
 	@Override
@@ -53,21 +54,21 @@ public class CreateVnfPkgInfoRequest {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		final CreateVnfPkgInfoRequest createVnfPkgInfoRequest = (CreateVnfPkgInfoRequest) o;
-		return Objects.equals(this.userDefinedData, createVnfPkgInfoRequest.userDefinedData);
+		final PkgmSubscriptionLinks pkgmSubscriptionLinks = (PkgmSubscriptionLinks) o;
+		return Objects.equals(this.self, pkgmSubscriptionLinks.self);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(userDefinedData);
+		return Objects.hash(self);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class CreateVnfPkgInfoRequest {\n");
+		sb.append("class PkgmSubscriptionLinks {\n");
 
-		sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
+		sb.append("    self: ").append(toIndentedString(self)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

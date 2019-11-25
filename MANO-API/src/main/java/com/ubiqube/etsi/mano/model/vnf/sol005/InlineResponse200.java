@@ -8,41 +8,38 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * IndividualVNF package resource creation parameters, as defined in clause
- * 9.5.2.2.
+ * InlineResponse200
  */
-@ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
 
-public class CreateVnfPkgInfoRequest {
-	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+public class InlineResponse200 {
+	@JsonProperty("VnfPkgInfo")
+	private VnfPkgInfo vnfPkgInfo = null;
 
-	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
-		this.userDefinedData = userDefinedData;
+	public InlineResponse200 vnfPkgInfo(final VnfPkgInfo vnfPkgInfo) {
+		this.vnfPkgInfo = vnfPkgInfo;
 		return this;
 	}
 
 	/**
-	 * Get userDefinedData
+	 * Get vnfPkgInfo
 	 * 
-	 * @return userDefinedData
+	 * @return vnfPkgInfo
 	 **/
 	@ApiModelProperty(value = "")
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
-		return userDefinedData;
+	public VnfPkgInfo getVnfPkgInfo() {
+		return vnfPkgInfo;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
-		this.userDefinedData = userDefinedData;
+	public void setVnfPkgInfo(final VnfPkgInfo vnfPkgInfo) {
+		this.vnfPkgInfo = vnfPkgInfo;
 	}
 
 	@Override
@@ -53,21 +50,21 @@ public class CreateVnfPkgInfoRequest {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		final CreateVnfPkgInfoRequest createVnfPkgInfoRequest = (CreateVnfPkgInfoRequest) o;
-		return Objects.equals(this.userDefinedData, createVnfPkgInfoRequest.userDefinedData);
+		final InlineResponse200 inlineResponse200 = (InlineResponse200) o;
+		return Objects.equals(this.vnfPkgInfo, inlineResponse200.vnfPkgInfo);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(userDefinedData);
+		return Objects.hash(vnfPkgInfo);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class CreateVnfPkgInfoRequest {\n");
+		sb.append("class InlineResponse200 {\n");
 
-		sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
+		sb.append("    vnfPkgInfo: ").append(toIndentedString(vnfPkgInfo)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
