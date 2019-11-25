@@ -117,8 +117,10 @@ public class JsonBeanUtil {
 				continue;
 			}
 			LOG.info("Handling property: {}", propertyDescriptor.getName());
-			final Method readMethod = propertyDescriptor.getReadMethod();
-			final JsonProperty jsonProperty = readMethod.getAnnotation(JsonProperty.class);
+			if ("links".equals(propertyDescriptor.getName())) {
+				LOG.debug("");
+			}
+			final JsonProperty jsonProperty = findNamedAnnotaion(propertyDescriptor, clazz);
 			String jsonName = propertyDescriptor.getName();
 			if (null != jsonProperty) {
 				jsonName = jsonProperty.value();
@@ -144,6 +146,9 @@ public class JsonBeanUtil {
 	}
 
 	private static JsonProperty findNamedAnnotaion(final PropertyDescriptor propertyDescriptor, final Class<?> clazz) {
+		if (propertyDescriptor.getName().equals("links")) {
+			LOG.debug("");
+		}
 		Method method = propertyDescriptor.getWriteMethod();
 		if (method != null) {
 			final JsonProperty ann = method.getAnnotation(JsonProperty.class);
