@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 @Service
@@ -73,7 +73,7 @@ public class PackagingManager {
 		}
 	}
 
-	private static VnfPackagesVnfPkgInfoChecksum getChecksum(final byte[] bytes) {
+	private static Checksum getChecksum(final byte[] bytes) {
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
@@ -82,7 +82,7 @@ public class PackagingManager {
 		}
 		final byte[] hashbytes = digest.digest(bytes);
 		final String sha3_256hex = bytesToHex(hashbytes);
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
+		final Checksum checksum = new Checksum();
 
 		checksum.algorithm(Constants.HASH_ALGORITHM).hash(sha3_256hex);
 		return checksum;
@@ -101,13 +101,13 @@ public class PackagingManager {
 	}
 
 	private void finishOnboarding(final VnfPkgInfo vnfPkgInfo) {
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
+		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
+		vnfPkgInfo.setOperationalState(PackageOperationalStateType.ENABLED);
 		vnfPackageRepository.save(vnfPkgInfo);
 	}
 
 	private void startOnboarding(final VnfPkgInfo vnfPkgInfo) {
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.PROCESSING);
+		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.PROCESSING);
 		vnfPackageRepository.save(vnfPkgInfo);
 	}
 
