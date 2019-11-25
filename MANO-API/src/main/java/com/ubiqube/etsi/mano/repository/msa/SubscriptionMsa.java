@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -21,7 +20,6 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
  *
  */
 @Profile("!RDBMS")
-@Service
 public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObject> implements SubscriptionRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SubscriptionMsa.class);

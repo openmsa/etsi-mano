@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -12,7 +11,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
 
 @Profile("!RDBMS")
-@Service
 public class PnfDescriptiorsMsa extends AbstractGenericRepository<PnfdInfo> implements PnfdInfoRepository {
 
 	public PnfDescriptiorsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter) {

@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +21,6 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("RDBMS")
 @Service
 public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription> implements SubscriptionRepository {
 

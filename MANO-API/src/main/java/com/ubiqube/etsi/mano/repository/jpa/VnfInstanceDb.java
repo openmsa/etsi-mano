@@ -8,7 +8,6 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +19,6 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("RDBMS")
 @Service
 public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance> implements VnfInstancesRepository {
 

@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
@@ -23,7 +22,6 @@ import com.ubiqube.etsi.mano.repository.phys.GenericBinaryRepository;
  *
  */
 @Profile("!RDBMS")
-@Service
 public class VnfPackageMsa extends GenericBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageMsa.class);

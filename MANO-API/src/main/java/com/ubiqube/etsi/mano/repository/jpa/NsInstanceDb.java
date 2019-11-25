@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("RDBMS")
 @Service
 public class NsInstanceDb extends AbstractJpa<NsInstance, NsdInstance> implements NsInstanceRepository {
 
