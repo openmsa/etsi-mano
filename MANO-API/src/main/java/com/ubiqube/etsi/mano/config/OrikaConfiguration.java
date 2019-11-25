@@ -4,14 +4,17 @@ import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstancesNsInstanceVnfInstance;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFactory;
@@ -47,8 +50,14 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("userDefinedData{value}", "userDefinedData{value}")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(SubscriptionsPkgmSubscription.class, Subscription.class)
+				.field("callbackUri", "subscriptionQuery.callbackUri")
+				.fieldMap("filter", "subscriptionQuery.subscriptionFilter").converter("filterConverter").add()
+				.byDefault()
+				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());
+		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
 	}
 
 }
