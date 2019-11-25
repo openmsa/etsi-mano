@@ -13,6 +13,6 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.Notificati
 @Repository
 public interface SubscriptionJpa extends CrudRepository<Subscription, UUID> {
 
-	@Query("select s from Subscription s where s.subscriptionQuery.subscriptionFilter.notificationTypes = ?1 and s.subscriptionQuery.subscriptionFilter.data = ?2")
+	@Query("select s from Subscription s")
 	List<Subscription> findEventAndVnfPkg(NotificationTypesEnum notificationTypesEnum, String vnfPkgId);
 }

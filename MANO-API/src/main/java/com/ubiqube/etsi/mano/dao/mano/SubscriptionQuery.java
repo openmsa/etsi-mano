@@ -2,10 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
 
-<<<<<<< HEAD
 import javax.persistence.CascadeType;
-=======
->>>>>>> First modifications for VNF Package SOL005.
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;

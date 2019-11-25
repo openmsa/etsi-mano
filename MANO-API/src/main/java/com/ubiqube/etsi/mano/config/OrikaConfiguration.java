@@ -34,6 +34,14 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class, VnfInstance.class)
 				.field("vnfPkgId", "vnfPkg.id")
+				.field("vnfConfigurableProperties{key}", "vnfConfigurableProperties{key}")
+				.field("vnfConfigurableProperties{value}", "vnfConfigurableProperties{value}")
+
+				.field("metadata{key}", "metadata{key}")
+				.field("metadata{value}", "metadata{value}")
+
+				.field("extensions{key}", "extensions{key}")
+				.field("extensions{value}", "extensions{value}")
 				.byDefault()
 				.register();
 
