@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,7 +42,7 @@ public class VnfPackageArtifactInfo {
 	 * access a copy of the artifact. The value of this attribute shall start with
 	 * the name of the first segment in the path, i.e. it shall not be prefixed by
 	 * path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/run.sh
-	 * 
+	 *
 	 * @return artifactPath
 	 **/
 	@ApiModelProperty(required = true, value = "Path in the VNF package, which identifies the artifact and also allows to access a copy of the artifact. The value of this attribute shall start with the name of the first segment in the path, i.e. it shall not be prefixed by path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/run.sh ")
@@ -62,7 +63,7 @@ public class VnfPackageArtifactInfo {
 
 	/**
 	 * Checksum of the artifact file.
-	 * 
+	 *
 	 * @return checksum
 	 **/
 	@ApiModelProperty(required = true, value = "Checksum of the artifact file. ")
@@ -86,7 +87,7 @@ public class VnfPackageArtifactInfo {
 	/**
 	 * The metadata of the artifact that are available in the VNF package, such as
 	 * Content type, size, creation date, etc.
-	 * 
+	 *
 	 * @return metadata
 	 **/
 	@ApiModelProperty(value = "The metadata of the artifact that are available in the VNF package, such as Content type, size, creation date, etc. ")

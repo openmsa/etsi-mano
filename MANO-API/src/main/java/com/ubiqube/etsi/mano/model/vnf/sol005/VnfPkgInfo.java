@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -71,7 +72,7 @@ public class VnfPkgInfo {
 
 	/**
 	 * Identifier of the VNF package. This identifier is allocated by the NFVO.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF package. This identifier is allocated by the NFVO. ")
@@ -95,7 +96,7 @@ public class VnfPkgInfo {
 	 * package and the VNFD in a globally unique way. It is copied from the VNFD of
 	 * the on boarded VNF package. It shall be present after the VNF package content
 	 * has been on-boarded and absent otherwise.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@ApiModelProperty(value = "This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
@@ -117,7 +118,7 @@ public class VnfPkgInfo {
 	 * Provider of the VNF package and the VNFD. This information is copied from the
 	 * VNFD. It shall be present after the VNF package content has been on-boarded
 	 * and absent otherwise.
-	 * 
+	 *
 	 * @return vnfProvider
 	 **/
 	@ApiModelProperty(value = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
@@ -139,7 +140,7 @@ public class VnfPkgInfo {
 	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
 	 * information is copied from the VNFD. It shall be present after the VNF
 	 * package content has been on-boarded and absent otherwise.
-	 * 
+	 *
 	 * @return vnfProductName
 	 **/
 	@ApiModelProperty(value = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
@@ -162,7 +163,7 @@ public class VnfPkgInfo {
 	 * software included in the VNF package. This information is copied from the
 	 * VNFD. It shall be present after the VNF package content has been on-boarded
 	 * and absent otherwise.
-	 * 
+	 *
 	 * @return vnfSoftwareVersion
 	 **/
 	@ApiModelProperty(value = "Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
@@ -184,7 +185,7 @@ public class VnfPkgInfo {
 	 * The version of the VNFD. This information is copied from the VNFD. It shall
 	 * be present after the VNF package content has been on-boarded and absent
 	 * otherwise.
-	 * 
+	 *
 	 * @return vnfdVersion
 	 **/
 	@ApiModelProperty(value = "The version of the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
@@ -205,7 +206,7 @@ public class VnfPkgInfo {
 	/**
 	 * Checksum of the on-boarded VNF package. It shall be present after the VNF
 	 * package content has been on-boarded and absent otherwise.
-	 * 
+	 *
 	 * @return checksum
 	 **/
 	@ApiModelProperty(value = "Checksum of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
@@ -238,7 +239,7 @@ public class VnfPkgInfo {
 	 * attribute shall not be present before the VNF package content is on-boarded.
 	 * Otherwise, this attribute shall be present unless it has been requested to be
 	 * excluded per attribute selector.
-	 * 
+	 *
 	 * @return softwareImages
 	 **/
 	@ApiModelProperty(value = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
@@ -271,7 +272,7 @@ public class VnfPkgInfo {
 	 * not software images. This attribute shall not be present before the VNF
 	 * package content is on-boarded. Otherwise, this attribute shall be present if
 	 * the VNF package contains additional artifacts.
-	 * 
+	 *
 	 * @return additionalArtifacts
 	 **/
 	@ApiModelProperty(value = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
@@ -293,7 +294,7 @@ public class VnfPkgInfo {
 
 	/**
 	 * On-boarding state of the VNF package.
-	 * 
+	 *
 	 * @return onboardingState
 	 **/
 	@ApiModelProperty(required = true, value = "On-boarding state of the VNF package. ")
@@ -316,7 +317,7 @@ public class VnfPkgInfo {
 
 	/**
 	 * Operational state of the VNF package.
-	 * 
+	 *
 	 * @return operationalState
 	 **/
 	@ApiModelProperty(required = true, value = "Operational state of the VNF package. ")
@@ -339,7 +340,7 @@ public class VnfPkgInfo {
 
 	/**
 	 * Usage state of the VNF package.
-	 * 
+	 *
 	 * @return usageState
 	 **/
 	@ApiModelProperty(required = true, value = "Usage state of the VNF package. ")
@@ -362,7 +363,7 @@ public class VnfPkgInfo {
 
 	/**
 	 * Usage state of the VNF package.
-	 * 
+	 *
 	 * @return userDefinedData
 	 **/
 	@ApiModelProperty(value = "Usage state of the VNF package. ")
@@ -384,7 +385,7 @@ public class VnfPkgInfo {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@ApiModelProperty(value = "")

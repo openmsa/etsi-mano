@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,7 +35,7 @@ public class VnfPkgInfoModifications {
 	/**
 	 * New value of the operational state of the on-boarded instance of the VNF
 	 * package.
-	 * 
+	 *
 	 * @return operationalState
 	 **/
 	@ApiModelProperty(value = "New value of the operational state of the on-boarded instance of the VNF package. ")
@@ -56,7 +57,7 @@ public class VnfPkgInfoModifications {
 
 	/**
 	 * User defined data to be updated. For existing keys, the value is replaced.
-	 * 
+	 *
 	 * @return userDefinedData
 	 **/
 	@ApiModelProperty(value = "User defined data to be updated. For existing keys, the value is replaced. ")

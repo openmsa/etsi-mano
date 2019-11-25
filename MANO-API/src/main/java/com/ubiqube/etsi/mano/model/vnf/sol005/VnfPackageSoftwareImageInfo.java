@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -172,7 +173,7 @@ public class VnfPackageSoftwareImageInfo {
 	/**
 	 * Name of the algorithm used to generate the checksum, as defined in ETSI GS
 	 * NFV-SOL 004 [5]. For example, SHA-256, SHA-512.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
@@ -193,7 +194,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * Name of the software image.
-	 * 
+	 *
 	 * @return name
 	 **/
 	@ApiModelProperty(required = true, value = "Name of the software image. ")
@@ -214,7 +215,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * Provider of the software image.
-	 * 
+	 *
 	 * @return provider
 	 **/
 	@ApiModelProperty(required = true, value = "Provider of the software image. ")
@@ -235,7 +236,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * Version of the software image.
-	 * 
+	 *
 	 * @return version
 	 **/
 	@ApiModelProperty(required = true, value = "Version of the software image. ")
@@ -256,7 +257,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * Checksum of the software image file.
-	 * 
+	 *
 	 * @return checksum
 	 **/
 	@ApiModelProperty(required = true, value = "Checksum of the software image file. ")
@@ -284,7 +285,7 @@ public class VnfPackageSoftwareImageInfo {
 	 * image format - BARE: the image does not have a container or meta-data
 	 * envelope - DOCKER: docker container format - OVA: OVF package in a tar file -
 	 * OVF: OVF container format
-	 * 
+	 *
 	 * @return containerFormat
 	 **/
 	@ApiModelProperty(required = true, value = "Container format indicates whether the software image is in a file format that also contains meta-data about the actual software. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ram disk image format - BARE: the image does not have a container or meta-data envelope - DOCKER: docker container format - OVA: OVF package in a tar file - OVF: OVF container format ")
@@ -312,7 +313,7 @@ public class VnfPackageSoftwareImageInfo {
 	 * image format - VDI: a common disk image format - VHD: a common disk image
 	 * format - VHDX: enhanced version of VHD format - VMDK: a common disk image
 	 * format
-	 * 
+	 *
 	 * @return diskFormat
 	 **/
 	@ApiModelProperty(required = true, value = "Disk format of a software image is the format of the underlying disk image. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ramdisk image format - ISO: an archive format for the data contents of an optical disc, such as CD-ROM - QCOW2: a common disk image format, which can expand dynamically and supports copy on write - RAW: an unstructured disk image format - VDI: a common disk image format - VHD: a common disk image format - VHDX: enhanced version of VHD format - VMDK: a common disk image format ")
@@ -333,7 +334,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * Time when this software image was created.
-	 * 
+	 *
 	 * @return createdAt
 	 **/
 	@ApiModelProperty(required = true, value = "Time when this software image was created. ")
@@ -356,7 +357,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * The minimal disk for this software image in bytes. minimum: 0
-	 * 
+	 *
 	 * @return minDisk
 	 **/
 	@ApiModelProperty(required = true, value = "The minimal disk for this software image in bytes. ")
@@ -378,7 +379,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * The minimal RAM for this software image in bytes. minimum: 0
-	 * 
+	 *
 	 * @return minRam
 	 **/
 	@ApiModelProperty(required = true, value = "The minimal RAM for this software image in bytes. ")
@@ -400,7 +401,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * Size of this software image in bytes. minimum: 0
-	 * 
+	 *
 	 * @return size
 	 **/
 	@ApiModelProperty(required = true, value = "Size of this software image in bytes. ")
@@ -422,7 +423,7 @@ public class VnfPackageSoftwareImageInfo {
 
 	/**
 	 * User-defined data.
-	 * 
+	 *
 	 * @return userMetadata
 	 **/
 	@ApiModelProperty(value = "User-defined data. ")
@@ -445,7 +446,7 @@ public class VnfPackageSoftwareImageInfo {
 	/**
 	 * Path in the VNF package, which identifies the image artifact and also allows
 	 * to access a copy of the image artifact.
-	 * 
+	 *
 	 * @return imagePath
 	 **/
 	@ApiModelProperty(required = true, value = "Path in the VNF package, which identifies the image artifact and also allows to access a copy of the image artifact. ")
