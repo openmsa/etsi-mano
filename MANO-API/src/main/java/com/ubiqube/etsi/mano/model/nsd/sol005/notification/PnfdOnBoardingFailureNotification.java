@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ProblemDetails;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -56,7 +57,7 @@ public class PnfdOnBoardingFailureNotification {
 
 	/**
 	 * Get id
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -78,7 +79,7 @@ public class PnfdOnBoardingFailureNotification {
 	/**
 	 * Discriminator for the different notification types. Shall be set to
 	 * \"PnfdOnboardingFailureNotification\" for this notification type.
-	 * 
+	 *
 	 * @return notificationType
 	 **/
 	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"PnfdOnboardingFailureNotification\" for this notification type. ")
@@ -99,7 +100,7 @@ public class PnfdOnBoardingFailureNotification {
 
 	/**
 	 * Get subscriptionId
-	 * 
+	 *
 	 * @return subscriptionId
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -120,7 +121,7 @@ public class PnfdOnBoardingFailureNotification {
 
 	/**
 	 * Date-time of the generation of the notification.
-	 * 
+	 *
 	 * @return timeStamp
 	 **/
 	@ApiModelProperty(required = true, value = "Date-time of the generation of the notification. ")
@@ -143,7 +144,7 @@ public class PnfdOnBoardingFailureNotification {
 
 	/**
 	 * Get pnfdInfoId
-	 * 
+	 *
 	 * @return pnfdInfoId
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -164,7 +165,7 @@ public class PnfdOnBoardingFailureNotification {
 
 	/**
 	 * Get pnfdId
-	 * 
+	 *
 	 * @return pnfdId
 	 **/
 	@ApiModelProperty(value = "")
@@ -185,7 +186,7 @@ public class PnfdOnBoardingFailureNotification {
 	/**
 	 * Failure details of current onboarding procedure. See clause 6.3 of ETSI GS
 	 * NFV-SOL 013 for the details of \"ProblemDetails\" structure.
-	 * 
+	 *
 	 * @return onboardingFailureDetails
 	 **/
 	@ApiModelProperty(required = true, value = "Failure details of current onboarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. ")
@@ -208,7 +209,7 @@ public class PnfdOnBoardingFailureNotification {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@ApiModelProperty(required = true, value = "")
