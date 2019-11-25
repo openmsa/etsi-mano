@@ -1,6 +1,6 @@
 package com.ubiqube.bean;
 
-import java.sql.Date;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +12,11 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboarding
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoOnboardingFailureDetails;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoSoftwareImages;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoSoftwareImages.ContainerFormatEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 
 public class TestFactory {
 
@@ -42,11 +42,11 @@ public class TestFactory {
 		return fd;
 	}
 
-	public static VnfPackagesVnfPkgInfoSoftwareImages createVnfPackagesVnfPkgInfoSoftwareImages() {
-		final VnfPackagesVnfPkgInfoSoftwareImages si = new VnfPackagesVnfPkgInfoSoftwareImages();
-		si.setChecksum(new VnfPackagesVnfPkgInfoChecksum().algorithm("SHA-512").hash("e7c22b994c59d9cf2b48e549b1e24666636045930d3da7c1acb299d1c3b7f931f94aae41edda2c2b207a36e10f8bcb8d45223e54878f5b316e7ce3b6bc019629"));
+	public static VnfPackageSoftwareImageInfo createVnfPackagesVnfPkgInfoSoftwareImages() {
+		final VnfPackageSoftwareImageInfo si = new VnfPackageSoftwareImageInfo();
+		si.setChecksum(new Checksum().algorithm("SHA-512").hash("e7c22b994c59d9cf2b48e549b1e24666636045930d3da7c1acb299d1c3b7f931f94aae41edda2c2b207a36e10f8bcb8d45223e54878f5b316e7ce3b6bc019629"));
 		si.setContainerFormat(ContainerFormatEnum.BARE);
-		si.setCreatedAt(Date.valueOf("2017-10-25"));
+		si.setCreatedAt(OffsetDateTime.now());
 		si.setImagePath("/mnt/images/myimages.raw");
 		si.setSize(12345);
 		return si;
@@ -65,8 +65,8 @@ public class TestFactory {
 	public static NsdPackage createNsdPackage() {
 		final NsdPackage nsdPackage = new NsdPackage();
 		nsdPackage.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
-		nsdPackage.setNsdOperationalState(OperationalStateEnum.ENABLED);
-		nsdPackage.setNsdUsageState(UsageStateEnum.IN_USE);
+		nsdPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
+		nsdPackage.setNsdUsageState(PackageUsageStateType.IN_USE);
 		return nsdPackage;
 	}
 }

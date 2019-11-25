@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
-import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
 
 @Profile({ "!NFVO" })
 @RestController
@@ -38,7 +38,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 * response data structures, and response codes. ²
 	 */
 	@Override
-	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter) {
+	public List<PkgmSubscription> subscriptionsGet(final String filter) {
 		return vnfSubscriptionManagement.subscriptionsGet(filter, links);
 	}
 
@@ -62,7 +62,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public List<InlineResponse2001> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
+	public List<InlineResponse2001> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
 		return vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, links);
 	}

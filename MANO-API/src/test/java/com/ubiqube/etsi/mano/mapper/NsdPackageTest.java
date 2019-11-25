@@ -16,8 +16,8 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -59,8 +59,8 @@ public class NsdPackageTest {
 		assertEquals("52d993dc-7a50-46da-b30c-e8fb344ef140", vnfP[1].getId().toString());
 
 		// Check enum
-		assertEquals(OperationalStateEnum.ENABLED, nsdDao.getNsdOperationalState());
-		assertEquals(UsageStateEnum.IN_USE, nsdDao.getNsdUsageState());
+		assertEquals(PackageOperationalStateType.ENABLED, nsdDao.getNsdOperationalState());
+		assertEquals(PackageUsageStateType.IN_USE, nsdDao.getNsdUsageState());
 		assertEquals(NsdOnboardingStateEnum.ONBOARDED, nsdDao.getNsdOnboardingState());
 	}
 

@@ -35,12 +35,12 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 
 	@Override
 	String setId(final SubscriptionObject _entity) {
-		final String id = _entity.getSubscriptionsPkgmSubscription().getId();
+		final String id = _entity.getPkgmSubscription().getId();
 		if (null == id) {
-			_entity.getSubscriptionsPkgmSubscription().setId(UUID.randomUUID().toString());
+			_entity.getPkgmSubscription().setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getSubscriptionsPkgmSubscription().getId();
+		return _entity.getPkgmSubscription().getId();
 	}
 
 	@Override

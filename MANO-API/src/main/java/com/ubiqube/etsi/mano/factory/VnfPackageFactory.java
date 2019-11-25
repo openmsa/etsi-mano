@@ -5,19 +5,18 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.ChangeTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public class VnfPackageFactory {
 	private VnfPackageFactory() {
@@ -26,26 +25,26 @@ public class VnfPackageFactory {
 
 	public static VnfPkgInfo createVnfPkgInfo(final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
+		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.CREATED);
 		vnfPkgInfo.setUserDefinedData(userData);
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
-		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
+		vnfPkgInfo.setOperationalState(PackageOperationalStateType.DISABLED);
+		vnfPkgInfo.setUsageState(PackageUsageStateType.NOT_IN_USE);
 
 		return vnfPkgInfo;
 	}
 
-	public static VnfPackagesVnfPkgInfoAdditionalArtifacts createArtefact(final String _filename, final String _checksum) {
-		final VnfPackagesVnfPkgInfoAdditionalArtifacts artefact = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
+	public static VnfPackageArtifactInfo createArtefact(final String _filename, final String _checksum) {
+		final VnfPackageArtifactInfo artefact = new VnfPackageArtifactInfo();
 		artefact.artifactPath(_filename);
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
+		final Checksum checksum = new Checksum();
 		checksum.algorithm(Constants.HASH_ALGORITHM);
 		checksum.setHash(_checksum);
 		artefact.setChecksum(checksum);
 		return artefact;
 	}
 
-	public static VnfPackagesVnfPkgInfoAdditionalArtifacts createArtefact(final String _filename, final VnfPackagesVnfPkgInfoChecksum _checksum) {
-		final VnfPackagesVnfPkgInfoAdditionalArtifacts artefact = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
+	public static VnfPackageArtifactInfo createArtefact(final String _filename, final Checksum _checksum) {
+		final VnfPackageArtifactInfo artefact = new VnfPackageArtifactInfo();
 		artefact.artifactPath(_filename);
 		artefact.setChecksum(_checksum);
 		return artefact;
@@ -82,18 +81,18 @@ public class VnfPackageFactory {
 		return ret;
 	}
 
-	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final SubscriptionsPkgmSubscriptionFilter _filter) {
-		final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = new SubscriptionsPkgmSubscription();
+	public static PkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final PkgmNotificationsFilter _filter) {
+		final PkgmSubscription subscriptionsPkgmSubscription = new PkgmSubscription();
 		subscriptionsPkgmSubscription.setCallbackUri(_callbackUri);
 		subscriptionsPkgmSubscription.setFilter(_filter);
 		return subscriptionsPkgmSubscription;
 	}
 
-	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
-		final SubscriptionsPkgmSubscription ret = new SubscriptionsPkgmSubscription();
-		ret.setCallbackUri(subscriptionObject.getSubscriptionsPkgmSubscription().getCallbackUri());
-		ret.setId(subscriptionObject.getSubscriptionsPkgmSubscription().getId());
-		ret.setFilter(subscriptionObject.getSubscriptionsPkgmSubscription().getFilter());
+	public static PkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
+		final PkgmSubscription ret = new PkgmSubscription();
+		ret.setCallbackUri(subscriptionObject.getPkgmSubscription().getCallbackUri());
+		ret.setId(subscriptionObject.getPkgmSubscription().getId());
+		ret.setFilter(subscriptionObject.getPkgmSubscription().getFilter());
 		return ret;
 	}
 

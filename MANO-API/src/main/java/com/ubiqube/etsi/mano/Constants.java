@@ -9,10 +9,10 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageState
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 
 public final class Constants {
 
@@ -23,31 +23,31 @@ public final class Constants {
 	public static final String HASH_ALGORITHM = "SHA-512";
 
 	public static void ensureDisabled(final VnfPkgInfo vnfPkgInfo) {
-		if (OperationalStateEnum.DISABLED != vnfPkgInfo.getOperationalState()) {
+		if (PackageOperationalStateType.DISABLED != vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is ENABLED.");
 		}
 	}
 
 	public static void ensureIsEnabled(final VnfPkgInfo vnfPkgInfo) {
-		if (OperationalStateEnum.ENABLED != vnfPkgInfo.getOperationalState()) {
+		if (PackageOperationalStateType.ENABLED != vnfPkgInfo.getOperationalState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ENABLED state.");
 		}
 	}
 
 	public static void ensureNotInUse(final VnfPkgInfo vnfPkgInfo) {
-		if (UsageStateEnum.NOT_IN_USE != vnfPkgInfo.getUsageState()) {
+		if (PackageUsageStateType.NOT_IN_USE != vnfPkgInfo.getUsageState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is Not In Use State.");
 		}
 	}
 
 	public static void ensureIsOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (OnboardingStateEnum.ONBOARDED != vnfPkgInfo.getOnboardingState()) {
+		if (PackageOnboardingStateType.ONBOARDED != vnfPkgInfo.getOnboardingState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final VnfPkgInfo vnfPkgInfo) {
-		if (OnboardingStateEnum.ONBOARDED == vnfPkgInfo.getOnboardingState()) {
+		if (PackageOnboardingStateType.ONBOARDED == vnfPkgInfo.getOnboardingState()) {
 			throw new ConflictException("The VNF Package " + vnfPkgInfo.getId() + " is already ONBOARDED");
 		}
 	}

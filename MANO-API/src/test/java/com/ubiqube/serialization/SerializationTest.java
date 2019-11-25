@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 
 public class SerializationTest {
 	ObjectMapper mapper = new ObjectMapper();
@@ -14,12 +14,12 @@ public class SerializationTest {
 	@Test
 	void testVnfPkgInfo() throws Exception {
 		final VnfPkgInfo vnfPkg = new VnfPkgInfo();
-		vnfPkg.setOperationalState(OperationalStateEnum.ENABLED);
+		vnfPkg.setOperationalState(PackageOperationalStateType.ENABLED);
 
 		final String res = mapper.writeValueAsString(vnfPkg);
 		final VnfPkgInfo vnf2 = mapper.readValue(res.getBytes(), VnfPkgInfo.class);
 
-		assertEquals("ENABLED", vnf2.getOperationalState().value());
+		assertEquals("ENABLED", vnf2.getOperationalState());
 
 	}
 }

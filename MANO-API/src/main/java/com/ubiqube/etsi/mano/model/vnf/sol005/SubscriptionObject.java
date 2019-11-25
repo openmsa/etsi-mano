@@ -13,11 +13,11 @@ public class SubscriptionObject {
 
 	@ApiModelProperty(value = "")
 	@Valid
-	private SubscriptionsPkgmSubscriptionRequestAuthentication subscriptionsPkgmSubscriptionRequestAuthentication = null;
+	private SubscriptionAuthentication subscriptionsAuthentication = null;
 
 	@ApiModelProperty(value = "")
 	@Valid
-	private SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = null;
+	private PkgmSubscription pkgmSubscription = null;
 
 	private ApiTypesEnum api;
 
@@ -25,28 +25,28 @@ public class SubscriptionObject {
 		// Nothing.
 	}
 
-	public SubscriptionObject(final SubscriptionsPkgmSubscriptionRequestAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication, final SubscriptionsPkgmSubscription _subscriptionsPkgmSubscription) {
+	public SubscriptionObject(final SubscriptionAuthentication _subscriptionAuthentication, final PkgmSubscription _PkgmSubscription) {
 		super();
-		subscriptionsPkgmSubscriptionRequestAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
-		subscriptionsPkgmSubscription = _subscriptionsPkgmSubscription;
+		subscriptionsAuthentication = _subscriptionAuthentication;
+		pkgmSubscription = _PkgmSubscription;
 	}
 
 	@JsonProperty("auth")
-	public SubscriptionsPkgmSubscriptionRequestAuthentication getSubscriptionsPkgmSubscriptionRequestAuthentication() {
-		return subscriptionsPkgmSubscriptionRequestAuthentication;
+	public SubscriptionAuthentication getSubscriptionAuthentication() {
+		return subscriptionsAuthentication;
 	}
 
-	public void setSubscriptionsPkgmSubscriptionRequestAuthentication(final SubscriptionsPkgmSubscriptionRequestAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication) {
-		subscriptionsPkgmSubscriptionRequestAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
+	public void setSubscriptionAuthentication(final SubscriptionAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication) {
+		subscriptionsAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
 	}
 
 	@JsonProperty("subscriptionsPkgmSubscription")
-	public SubscriptionsPkgmSubscription getSubscriptionsPkgmSubscription() {
-		return subscriptionsPkgmSubscription;
+	public PkgmSubscription getPkgmSubscription() {
+		return pkgmSubscription;
 	}
 
-	public void setSubscriptionsPkgmSubscription(final SubscriptionsPkgmSubscription _subscriptionsPkgmSubscription) {
-		subscriptionsPkgmSubscription = _subscriptionsPkgmSubscription;
+	public void setSubscriptionsPkgmSubscription(final PkgmSubscription _subscriptionsPkgmSubscription) {
+		pkgmSubscription = _subscriptionsPkgmSubscription;
 	}
 
 	@JsonProperty("api")

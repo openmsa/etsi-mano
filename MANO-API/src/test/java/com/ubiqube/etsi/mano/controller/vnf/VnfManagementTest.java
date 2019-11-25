@@ -67,7 +67,7 @@ public class VnfManagementTest {
 		final VnfPkgInfo vnf = value.get(0);
 		assertNotNull(vnf);
 		assertEquals("CREATED", vnf.getOnboardingState());
-		assertEquals("DISABLED", vnf.getOperationalState().value());
+		assertEquals("DISABLED", vnf.getOperationalState());
 		assertEquals("NOT_IN_USE", vnf.getUsageState());
 	}
 

@@ -2,8 +2,9 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter.NotificationTypesEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 
+// TODO: Probably need to change NotificationTypesEnum.
 @Embeddable
 public class SubscriptionFilter {
 	private NotificationTypesEnum notificationTypes = null;

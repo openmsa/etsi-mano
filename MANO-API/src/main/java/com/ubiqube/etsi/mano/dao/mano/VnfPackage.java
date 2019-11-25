@@ -19,9 +19,9 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -57,17 +57,17 @@ public class VnfPackage implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private OnboardingStateEnum onboardingState;
+	private PackageOnboardingStateType onboardingState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private OperationalStateEnum operationalState;
+	private PackageOperationalStateType operationalState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private UsageStateEnum usageState;
+	private PackageUsageStateType usageState;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
 	private List<VnfUserDefinedData> userDefinedData;
@@ -145,27 +145,27 @@ public class VnfPackage implements BaseEntity {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
-	public OnboardingStateEnum getOnboardingState() {
+	public PackageOnboardingStateType getOnboardingState() {
 		return onboardingState;
 	}
 
-	public void setOnboardingState(final OnboardingStateEnum onboardingState) {
+	public void setOnboardingState(final PackageOnboardingStateType onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public OperationalStateEnum getOperationalState() {
+	public PackageOperationalStateType getOperationalState() {
 		return operationalState;
 	}
 
-	public void setOperationalState(final OperationalStateEnum operationalState) {
+	public void setOperationalState(final PackageOperationalStateType operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public UsageStateEnum getUsageState() {
+	public PackageUsageStateType getUsageState() {
 		return usageState;
 	}
 
-	public void setUsageState(final UsageStateEnum usageState) {
+	public void setUsageState(final PackageUsageStateType usageState) {
 		this.usageState = usageState;
 	}
 

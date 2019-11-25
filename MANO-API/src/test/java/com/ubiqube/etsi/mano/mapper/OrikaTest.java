@@ -13,8 +13,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
@@ -35,8 +35,8 @@ public class OrikaTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 
 		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
-		final VnfPackagesVnfPkgInfoAdditionalArtifacts additionalArtifactsItem = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
+		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();
+		final Checksum checksum = new Checksum();
 		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		additionalArtifactsItem.artifactPath("/path").checksum(checksum);
 		vnf.addAdditionalArtifactsItem(additionalArtifactsItem);

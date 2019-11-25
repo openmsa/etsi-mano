@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
@@ -44,8 +43,7 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 				.pathSegment("vnfpkgm/v1/vnf_packages/{vnfPkgId}")
 				.buildAndExpand(uriVariables)
 				.toUri();
-		final VnfPackagesVnfPkgIdGetResponse resp = nfvoRest.get(uri, VnfPackagesVnfPkgIdGetResponse.class);
-		return resp.getVnfPkgInfo();
+		return nfvoRest.get(uri, VnfPkgInfo.class);
 	}
 
 	@Override

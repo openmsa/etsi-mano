@@ -24,8 +24,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -87,7 +87,7 @@ public class VnfInstanceLcm {
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkgId())) {
 			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkgId());
-			vnfPkg.setUsageState(UsageStateEnum.NOT_IN_USE);
+			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
 		vnfInstancesRepository.delete(vnfInstanceId);

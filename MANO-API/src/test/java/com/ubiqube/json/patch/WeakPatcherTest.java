@@ -33,7 +33,7 @@ public class WeakPatcherTest {
 
 		assertEquals("Encryption algorithm", "SHA256", vnfPkgInfo.getChecksum().getAlgorithm());
 		assertEquals("VnfId", "1234-1234-1234", vnfPkgInfo.getVnfdId());
-		assertEquals("Operation state", "DISABLED", vnfPkgInfo.getOperationalState().value());
+		assertEquals("Operation state", "DISABLED", vnfPkgInfo.getOperationalState());
 
 		assertEquals("id", "8a5878be-21c8-4123-a6a1-a9cea03123a0", vnfPkgInfo.getId());
 	}

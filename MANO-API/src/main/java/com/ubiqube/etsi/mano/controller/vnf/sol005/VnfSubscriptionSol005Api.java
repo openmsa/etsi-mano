@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
-import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
 import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
 
 @Profile({ "!VNFM" })
 @RestController
@@ -32,12 +31,12 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	}
 
 	@Override
-	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) final String filters) {
+	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) final String filters) {
 		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsGet(filters, links), HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<List<InlineResponse2001>> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
+	public ResponseEntity<List<PkgmSubscription>> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
 		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, links), HttpStatus.OK);
 	}
@@ -48,7 +47,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	}
 
 	@Override
-	public ResponseEntity<SubscriptionsPkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
+	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
 		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links), HttpStatus.OK);
 
 	}
