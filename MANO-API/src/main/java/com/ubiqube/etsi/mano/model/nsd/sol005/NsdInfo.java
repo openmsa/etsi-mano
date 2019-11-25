@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.model.nsd.sol005;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -67,7 +68,7 @@ public class NsdInfo {
 	private NsdUsageStateType nsdUsageState = null;
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, Object> userDefinedData = null;
 
 	@JsonProperty("_links")
 	private NsdInfoLinks links = null;
@@ -398,11 +399,11 @@ public class NsdInfo {
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, Object> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

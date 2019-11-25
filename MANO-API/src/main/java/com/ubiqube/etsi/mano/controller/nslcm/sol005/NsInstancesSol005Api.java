@@ -28,8 +28,8 @@ import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.HealNsRequest;
@@ -224,10 +224,10 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
 		}
-		final NsDescriptorsNsdInfo nsd = nsdRepository.get(req.getNsdId());
+		final NsdInfo nsd = nsdRepository.get(req.getNsdId());
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
-		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
+		nsd.setNsdUsageState(NsdUsageStateType.IN_USE);
 		nsdRepository.save(nsd);
 
 		final NsInstance nsInstance = NsInstanceFactory.createNsInstancesNsInstance(req, nsd);

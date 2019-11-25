@@ -17,13 +17,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.PnfFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdGetResponse;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchQuery;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchResponse;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoLinks;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPostQuery;
+import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.model.nsd.sol005.CreatePnfdInfoRequest;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfoLinks;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfoModifications;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
 
 @Profile({ "!VNFM" })
@@ -47,7 +45,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<PnfDescriptorsPnfdInfo> pnfs = pnfdInfoRepository.query(filter);
+		final List<PnfdInfo> pnfs = pnfdInfoRepository.query(filter);
 		pnfs.forEach(x -> x.setLinks(makeLinks(x)));
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
@@ -86,12 +84,10 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId, final String accept) {
-		final PnfDescriptorsPnfdInfo pnfdInfo = pnfdInfoRepository.get(pnfdInfoId);
+	public ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId, final String accept) {
+		final PnfdInfo pnfdInfo = pnfdInfoRepository.get(pnfdInfoId);
 		pnfdInfo.setLinks(makeLinks(pnfdInfo));
-		final PnfDescriptorsPnfdInfoIdGetResponse resp = new PnfDescriptorsPnfdInfoIdGetResponse();
-		resp.setPnfdInfo(pnfdInfo);
-		return new ResponseEntity<>(resp, HttpStatus.OK);
+		return new ResponseEntity<>(pnfdInfo, HttpStatus.OK);
 	}
 
 	/**
@@ -102,7 +98,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PnfDescriptorsPnfdInfoIdPatchResponse> pnfDescriptorsPnfdInfoIdPatch(final String pnfdInfoId, final String accept, final String contentType, final PnfDescriptorsPnfdInfoIdPatchQuery body) {
+	public ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(final String pnfdInfoId, final String accept, final String contentType, final PnfdInfoModifications body) {
 		// : Implement...
 
 		return null;
@@ -144,21 +140,19 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPost(final String accept, final String contentType, final PnfDescriptorsPostQuery body) {
-		final PnfDescriptorsPnfdInfo pnfd = PnfFactory.createPnfDescriptorsPnfdInfo(body);
+	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String accept, final String contentType, final CreatePnfdInfoRequest body) {
+		final PnfdInfo pnfd = PnfFactory.createPnfDescriptorsPnfdInfo(body);
 		pnfdInfoRepository.save(pnfd);
 		pnfd.setLinks(makeLinks(pnfd));
-		final PnfDescriptorsPnfdInfoIdGetResponse resp = new PnfDescriptorsPnfdInfoIdGetResponse();
-		resp.setPnfdInfo(pnfd);
-		return new ResponseEntity<>(resp, HttpStatus.OK);
+		return new ResponseEntity<>(pnfd, HttpStatus.OK);
 	}
 
-	private static PnfDescriptorsPnfdInfoLinks makeLinks(final PnfDescriptorsPnfdInfo x) {
-		final PnfDescriptorsPnfdInfoLinks links = new PnfDescriptorsPnfdInfoLinks();
-		final NsDescriptorsNsdInfoLinksSelf pnfdContent = new NsDescriptorsNsdInfoLinksSelf();
+	private static PnfdInfoLinks makeLinks(final PnfdInfo x) {
+		final PnfdInfoLinks links = new PnfdInfoLinks();
+		final Link pnfdContent = new Link();
 		pnfdContent.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdPnfdContentGet(x.getId(), "")).withSelfRel().getHref());
 		links.setPnfdContent(pnfdContent);
-		final NsDescriptorsNsdInfoLinksSelf self = new NsDescriptorsNsdInfoLinksSelf();
+		final Link self = new Link();
 		self.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdGet(x.getId(), "")).withSelfRel().getHref());
 		links.setSelf(self);
 

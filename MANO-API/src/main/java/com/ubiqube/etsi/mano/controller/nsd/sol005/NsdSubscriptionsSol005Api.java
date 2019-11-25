@@ -10,8 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostQuery;
-import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostResponse;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdmSubscription;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdmSubscriptionRequest;
+import com.ubiqube.etsi.mano.model.nsperfo.sol005.SubscriptionsPostResponse;
 
 @Profile({ "!VNFM" })
 @RestController
@@ -61,7 +62,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(final String accept, final String contentType, final SubscriptionsPostQuery body) {
+	public ResponseEntity<NsdmSubscription> subscriptionsPost(final String accept, final String contentType, final NsdmSubscriptionRequest body) {
 		// : Implement...
 		return null;
 	}

@@ -7,11 +7,10 @@ import java.util.List;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoOnboardingFailureDetails;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
@@ -20,24 +19,24 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo.Contai
 
 public class TestFactory {
 
-	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo() {
-		final NsDescriptorsNsdInfo nsd = NsdFactories.createNsDescriptorsNsdInfo();
+	public static NsdInfo createNsDescriptorsNsdInfo() {
+		final NsdInfo nsd = NsdFactories.createNsdInfo();
 		final List<String> nestedNsdInfoIds = new ArrayList<>();
 		nestedNsdInfoIds.add("25dca365-ff1b-4204-a9ca-c3745e6d3244");
 		nestedNsdInfoIds.add("52d993dc-7a50-46da-b30c-e8fb344ef140");
 		nsd.setNestedNsdInfoIds(nestedNsdInfoIds);
 		nsd.setPnfdInfoIds(nestedNsdInfoIds);
 		nsd.setVnfPkgIds(nestedNsdInfoIds);
-		nsd.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
-		nsd.setNsdOperationalState(NsdOperationalStateEnum.ENABLED);
-		nsd.setNsdUsageState(NsdUsageStateEnum.IN_USE);
-		final NsDescriptorsNsdInfoOnboardingFailureDetails onboardingFailureDetails = createOnboardingFailureDetails();
+		nsd.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
+		nsd.setNsdOperationalState(NsdOperationalStateType.ENABLED);
+		nsd.setNsdUsageState(NsdUsageStateType.IN_USE);
+		final ProblemDetails onboardingFailureDetails = createOnboardingFailureDetails();
 		nsd.setOnboardingFailureDetails(onboardingFailureDetails);
 		return nsd;
 	}
 
-	public static NsDescriptorsNsdInfoOnboardingFailureDetails createOnboardingFailureDetails() {
-		final NsDescriptorsNsdInfoOnboardingFailureDetails fd = new NsDescriptorsNsdInfoOnboardingFailureDetails();
+	public static ProblemDetails createOnboardingFailureDetails() {
+		final ProblemDetails fd = new ProblemDetails();
 		fd.setDetail("detail");
 		return fd;
 	}
@@ -64,7 +63,7 @@ public class TestFactory {
 
 	public static NsdPackage createNsdPackage() {
 		final NsdPackage nsdPackage = new NsdPackage();
-		nsdPackage.setNsdOnboardingState(NsdOnboardingStateEnum.ONBOARDED);
+		nsdPackage.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
 		nsdPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
 		nsdPackage.setNsdUsageState(PackageUsageStateType.IN_USE);
 		return nsdPackage;

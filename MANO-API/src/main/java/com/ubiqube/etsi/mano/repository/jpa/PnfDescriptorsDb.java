@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
@@ -22,15 +22,15 @@ import ma.glasnost.orika.MapperFacade;
 
 @Profile("RDBMS")
 @Service
-public class PnfDescriptorsDb extends AbstractJpa<PnfDescriptorsPnfdInfo, PnfDescriptor> implements PnfdInfoRepository {
+public class PnfDescriptorsDb extends AbstractJpa<PnfdInfo, PnfDescriptor> implements PnfdInfoRepository {
 
 	public PnfDescriptorsDb(final EntityManager em, final CrudRepository<PnfDescriptor, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(em, repository, mapper, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override
-	protected Class<PnfDescriptorsPnfdInfo> getFrontClass() {
-		return PnfDescriptorsPnfdInfo.class;
+	protected Class<PnfdInfo> getFrontClass() {
+		return PnfdInfo.class;
 	}
 
 	@Override

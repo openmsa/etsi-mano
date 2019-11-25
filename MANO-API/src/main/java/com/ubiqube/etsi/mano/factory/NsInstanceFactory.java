@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.factory;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
@@ -16,7 +16,7 @@ public class NsInstanceFactory {
 	}
 
 	@Nonnull
-	public static NsInstance createNsInstancesNsInstance(final CreateNsRequest nsInstancesCreateNsRequest, final NsDescriptorsNsdInfo nsd) {
+	public static NsInstance createNsInstancesNsInstance(final CreateNsRequest nsInstancesCreateNsRequest, final NsdInfo nsd) {
 		final NsInstance nsInstance = new NsInstance();
 		nsInstance.setNsdId(nsInstancesCreateNsRequest.getNsdId());
 		nsInstance.setNsInstanceDescription(nsInstancesCreateNsRequest.getNsDescription());

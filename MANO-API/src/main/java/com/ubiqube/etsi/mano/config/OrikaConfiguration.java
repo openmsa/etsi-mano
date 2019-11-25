@@ -11,7 +11,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
@@ -26,7 +26,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
-		orikaMapperFactory.classMap(NsDescriptorsNsdInfo.class, NsdPackage.class)
+		orikaMapperFactory.classMap(NsdInfo.class, NsdPackage.class)
 				.field("vnfPkgIds{}", "vnfPkgIds{id}")
 				.field("pnfdInfoIds{}", "pnfdInfoIds{id}")
 				.field("nestedNsdInfoIds{}", "nestedNsdInfoIds{id}")

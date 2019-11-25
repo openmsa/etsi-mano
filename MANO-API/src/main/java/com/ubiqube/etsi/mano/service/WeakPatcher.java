@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.OperationalStateConverter;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 
 /**
@@ -42,7 +42,7 @@ public class WeakPatcher implements Patcher {
 	public WeakPatcher() {
 		final ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
 		convertUtilsBean.register(new OperationalStateConverter(), PackageOperationalStateType.class);
-		convertUtilsBean.register(new OperationalStateConverter(), NsdOperationalStateEnum.class);
+		convertUtilsBean.register(new OperationalStateConverter(), NsdUsageStateType.class);
 		beanUtils = new BeanUtilsBean(convertUtilsBean);
 	}
 

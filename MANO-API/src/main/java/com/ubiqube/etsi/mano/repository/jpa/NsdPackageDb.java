@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -23,15 +23,15 @@ import ma.glasnost.orika.MapperFacade;
 
 @Profile("RDBMS")
 @Service
-public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> implements NsdRepository {
+public class NsdPackageDb extends AbstractJpa<NsdInfo, NsdPackage> implements NsdRepository {
 
 	public NsdPackageDb(final NsdPackageJpa repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final EntityManager _em, final NamingStrategy namingStrategy) {
 		super(_em, repository, mapper, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override
-	protected Class<NsDescriptorsNsdInfo> getFrontClass() {
-		return NsDescriptorsNsdInfo.class;
+	protected Class<NsdInfo> getFrontClass() {
+		return NsdInfo.class;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class NsdPackageDb extends AbstractJpa<NsDescriptorsNsdInfo, NsdPackage> 
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsDescriptorsNsdInfo nsdInfo, final NsdUsageStateEnum state) {
+	public void changeNsdUpdateState(final NsdInfo nsdInfo, final NsdUsageStateType state) {
 		nsdInfo.setNsdUsageState(state);
 		save(nsdInfo);
 	}

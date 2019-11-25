@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
@@ -63,7 +63,7 @@ public class NfvoActions {
 		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
-		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
+		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Delete VNF
 		final List<String> vnfs = nsdInfo.getVnfPkgIds();
 		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
@@ -108,7 +108,7 @@ public class NfvoActions {
 		final String nsdId = nsInstance.getNsdId();
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
 
-		final NsDescriptorsNsdInfo nsdInfo = nsdRepository.get(nsdId);
+		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Create Ns.
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
@@ -122,7 +122,7 @@ public class NfvoActions {
 			LOG.warn("Instance #{} => {}", nsInstance.getId(), status);
 			return;
 		}
-		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateEnum.IN_USE);
+		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);
 		// Instantiate each VNF.
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
