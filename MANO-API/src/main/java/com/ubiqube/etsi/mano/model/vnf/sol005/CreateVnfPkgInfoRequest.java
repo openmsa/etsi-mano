@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -22,7 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class CreateVnfPkgInfoRequest {
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, Object> userDefinedData = null;
 
 	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
 		this.userDefinedData = userDefinedData;
@@ -38,11 +39,11 @@ public class CreateVnfPkgInfoRequest {
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, Object> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

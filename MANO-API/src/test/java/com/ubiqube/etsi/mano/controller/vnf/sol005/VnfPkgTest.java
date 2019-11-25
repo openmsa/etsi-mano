@@ -63,6 +63,10 @@ public class VnfPkgTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "vnf-pkg-post.json"));
 
 		final VnfPkgInfo vnfPkg = VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs());
+		vnfPkg.getUserDefinedData().put("customerId", "123");
+		vnfPkg.getUserDefinedData().put("device_login", "123");
+		vnfPkg.getUserDefinedData().put("device_password", "123");
+		vnfPkg.getUserDefinedData().put("manufacturerId", "123");
 		vnfPkg.setId("1234");
 		when(vnfPackageRepository.save(Mockito.any())).thenReturn(vnfPkg);
 		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sol005/vnfpkgm/v1/vnf_packages")

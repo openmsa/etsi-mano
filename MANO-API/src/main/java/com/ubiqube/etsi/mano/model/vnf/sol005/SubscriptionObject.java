@@ -45,7 +45,7 @@ public class SubscriptionObject {
 		return pkgmSubscription;
 	}
 
-	public void setSubscriptionsPkgmSubscription(final PkgmSubscription _subscriptionsPkgmSubscription) {
+	public void setPkgmSubscription(final PkgmSubscription _subscriptionsPkgmSubscription) {
 		pkgmSubscription = _subscriptionsPkgmSubscription;
 	}
 

@@ -4,6 +4,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -48,9 +49,10 @@ public class JsonBeanUtil {
 		simpleTypes.add("long");
 		simpleTypes.add("float");
 		simpleTypes.add("java.util.Date");
+		simpleTypes.add("java.time.OffsetDateTime");
 	}
 
-	public Map<String, JsonBeanProperty> getProperties(@Nonnull Object _object) {
+	public Map<String, JsonBeanProperty> getProperties(@Nonnull final Object _object) {
 		Map<String, JsonBeanProperty> cached = cache.get(_object.getClass().getName());
 		if (cached != null) {
 			return cached;
@@ -66,7 +68,7 @@ public class JsonBeanUtil {
 		return cached;
 	}
 
-	private Map<String, JsonBeanProperty> rebuildProperties(Map<String, JsonBeanProperty> res) {
+	private Map<String, JsonBeanProperty> rebuildProperties(final Map<String, JsonBeanProperty> res) {
 		final Map<String, JsonBeanProperty> ret = new HashMap<>();
 		final Deque<String> stack = new LinkedList<>();
 		final Deque<JsonBeanProperty> stackObject = new LinkedList<>();
@@ -74,7 +76,7 @@ public class JsonBeanUtil {
 		return ret;
 	}
 
-	private void rebuildPropertiesInner(Map<String, JsonBeanProperty> rawProps, Deque<String> stackName, Deque<JsonBeanProperty> stackObject, final Map<String, JsonBeanProperty> ret) {
+	private void rebuildPropertiesInner(final Map<String, JsonBeanProperty> rawProps, final Deque<String> stackName, final Deque<JsonBeanProperty> stackObject, final Map<String, JsonBeanProperty> ret) {
 
 		for (final Map.Entry<String, JsonBeanProperty> entry : rawProps.entrySet()) {
 			final String key = entry.getKey();
@@ -97,12 +99,12 @@ public class JsonBeanUtil {
 		}
 	}
 
-	private Map<String, JsonBeanProperty> buildCache(Class<?> clazz) throws IntrospectionException {
+	private Map<String, JsonBeanProperty> buildCache(final Class<?> clazz) throws IntrospectionException {
 		final LinkedList<JsonBeanProperty> stack = new LinkedList<>();
 		return buildCacheInner(clazz, stack);
 	}
 
-	private Map<String, JsonBeanProperty> buildCacheInner(Class<?> clazz, Deque<JsonBeanProperty> stack) throws IntrospectionException {
+	private Map<String, JsonBeanProperty> buildCacheInner(final Class<?> clazz, final Deque<JsonBeanProperty> stack) throws IntrospectionException {
 		final Map<String, JsonBeanProperty> properties = new HashMap<>();
 		LOG.info("Building AST of a {}", clazz.getName());
 		final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
@@ -141,7 +143,33 @@ public class JsonBeanUtil {
 		return properties;
 	}
 
-	private boolean haveInnerType(Class<?> clazz) {
+	private static JsonProperty findNamedAnnotaion(final PropertyDescriptor propertyDescriptor, final Class<?> clazz) {
+		Method method = propertyDescriptor.getWriteMethod();
+		if (method != null) {
+			final JsonProperty ann = method.getAnnotation(JsonProperty.class);
+			if (ann != null) {
+				return ann;
+			}
+		}
+		if (method != null) {
+			method = propertyDescriptor.getReadMethod();
+			final JsonProperty ann = method.getAnnotation(JsonProperty.class);
+			if (ann != null) {
+				return ann;
+			}
+		}
+		// Try to get annotation on field.
+		final String name = propertyDescriptor.getName();
+		try {
+			final Field field = clazz.getDeclaredField(name);
+			return field.getAnnotation(JsonProperty.class);
+		} catch (NoSuchFieldException | SecurityException e) {
+			LOG.warn("Could not find field for annotation: " + name);
+		}
+		return null;
+	}
+
+	private boolean haveInnerType(final Class<?> clazz) {
 		if (clazz.getName().contentEquals("java.util.List")) {
 			return true;
 		}
@@ -152,14 +180,14 @@ public class JsonBeanUtil {
 		return false;
 	}
 
-	private static Class<?> extractInnerListType(PropertyDescriptor propertyDescriptor) {
+	private static Class<?> extractInnerListType(final PropertyDescriptor propertyDescriptor) {
 		final Method method = propertyDescriptor.getReadMethod();
 		final ParameterizedType returnType = (ParameterizedType) method.getGenericReturnType();
 		final Type[] type = returnType.getActualTypeArguments();
 		return (Class<?>) type[0];
 	}
 
-	private boolean isComplex(Class<?> propertyType) {
+	private boolean isComplex(final Class<?> propertyType) {
 		final String name = propertyType.getName();
 		if (simpleTypes.contains(name)) {
 			return false;

@@ -29,7 +29,6 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.vnf.sol005.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
@@ -121,7 +120,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesPost(final String accept, final String contentType, final CreateVnfPkgInfoRequest vnfPackagePostQuery) {
-		final KeyValuePairs userData = vnfPackagePostQuery.getUserDefinedData();
+		final Map<String, Object> userData = vnfPackagePostQuery.getUserDefinedData();
 
 		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userData);
 

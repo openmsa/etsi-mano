@@ -1,10 +1,10 @@
 package com.ubiqube.etsi.mano.factory;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
@@ -23,7 +23,7 @@ public class VnfPackageFactory {
 		// Nothing.
 	}
 
-	public static VnfPkgInfo createVnfPkgInfo(final KeyValuePairs userData) {
+	public static VnfPkgInfo createVnfPkgInfo(final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
 		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.CREATED);
 		vnfPkgInfo.setUserDefinedData(userData);
