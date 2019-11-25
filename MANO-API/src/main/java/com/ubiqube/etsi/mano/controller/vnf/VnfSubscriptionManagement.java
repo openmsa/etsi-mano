@@ -10,14 +10,13 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 
@@ -58,7 +57,7 @@ public class VnfSubscriptionManagement {
 		return response;
 	}
 
-	public void vnfPackageChangeNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, final Linkable links) {
+	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage, final Linkable links) {
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -72,7 +71,7 @@ public class VnfSubscriptionManagement {
 		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
 	}
 
-	public void vnfPackageOnboardingNotificationPost(@Nonnull final NotificationsMessage notificationsMessage, final Linkable links) {
+	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage, final Linkable links) {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final PkgmSubscription req = subscriptionsRepository.getPkgmSubscription();
@@ -81,7 +80,7 @@ public class VnfSubscriptionManagement {
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
 
-		final NotificationVnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, vnfdId, links);
+		final VnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, vnfdId, links);
 		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
 	}
 

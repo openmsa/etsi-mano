@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +37,7 @@ public class VnfPkgInfoLinks {
 
 	/**
 	 * URI of this resource.
-	 * 
+	 *
 	 * @return self
 	 **/
 	@ApiModelProperty(required = true, value = "URI of this resource. ")
@@ -59,7 +60,7 @@ public class VnfPkgInfoLinks {
 
 	/**
 	 * Link to the VNFD resource.
-	 * 
+	 *
 	 * @return vnfd
 	 **/
 	@ApiModelProperty(value = "Link to the VNFD resource. ")
@@ -81,7 +82,7 @@ public class VnfPkgInfoLinks {
 
 	/**
 	 * Link to the \"VNF package content\" resource.
-	 * 
+	 *
 	 * @return packageContent
 	 **/
 	@ApiModelProperty(required = true, value = "Link to the \"VNF package content\" resource. ")

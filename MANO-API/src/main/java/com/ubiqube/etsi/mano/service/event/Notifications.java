@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -27,8 +29,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication.AuthTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsBasic;
 
 /**
@@ -136,7 +138,7 @@ public class Notifications {
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createOAuth2Context(final SubscriptionAuthenticationParamsOauth2ClientCredentials _paramsOauth2ClientCredentials, final HttpHost _targetHost) {
+	private HttpClientContext createOAuth2Context(final com.ubiqube.etsi.mano.model.vnf.sol005.@Valid SubscriptionAuthenticationParamsOauth2ClientCredentials subscriptionAuthenticationParamsOauth2ClientCredentials, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 

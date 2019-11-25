@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
 
 @Profile({ "!VNFM" })
 @RestController
@@ -53,12 +54,12 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	}
 
 	@Override
-	public void vnfPackageChangeNotificationPost(final NotificationsMessage notificationsMessage) {
+	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
 		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, links);
 	}
 
 	@Override
-	public void vnfPackageOnboardingNotificationPost(final NotificationsMessage notificationsMessage) {
+	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
 		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, links);
 	}
 

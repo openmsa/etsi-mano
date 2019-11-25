@@ -1,12 +1,11 @@
 package com.ubiqube.etsi.mano.factory;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
@@ -14,9 +13,10 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.PackageChangeType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
 
 public class VnfPackageFactory {
 	private VnfPackageFactory() {
@@ -51,28 +51,26 @@ public class VnfPackageFactory {
 	}
 
 	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
-		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
-		final VnfPackageChangeNotificationVnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_subscriptionId, _vnfPkgId, _vnfdId, links);
-		ret.setVnfPackageChangeNotification(obj);
-		return ret;
+		final VnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_subscriptionId, _vnfPkgId, _vnfdId, links);
+		return obj;
 	}
 
-	public static VnfPackageChangeNotificationVnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
-		final VnfPackageChangeNotificationVnfPackageChangeNotification ret = new VnfPackageChangeNotificationVnfPackageChangeNotification();
-		ret.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
+	public static VnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
+		ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
 		ret.setNotificationType("VnfPackageChangeNotification");
-		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum.DISABLED);
+		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.notification.PackageOperationalStateType.DISABLED);
 		ret.setSubscriptionId(_subscriptionId);
-		ret.setTimeStamp(new Date());
+		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setVnfdId(_vnfdId);
 		ret.setVnfPkgId(_vnfPkgId);
 		ret.setLinks(links.createNotificationLink(_vnfPkgId, _subscriptionId));
 		return ret;
 	}
 
-	public static NotificationVnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
-		final NotificationVnfPackageOnboardingNotification ret = new NotificationVnfPackageOnboardingNotification();
-		ret.setTimeStamp(new Date());
+	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+		final VnfPackageOnboardingNotification ret = new VnfPackageOnboardingNotification();
+		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setNotificationType("VnfPackageOnboardingNotification");
 		ret.setSubscriptionId(_subscriptionId);
 		ret.setVnfPkgId(_vnfPkgId);
