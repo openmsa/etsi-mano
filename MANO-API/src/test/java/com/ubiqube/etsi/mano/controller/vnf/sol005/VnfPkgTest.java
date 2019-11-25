@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,6 +29,7 @@ import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.config.Http403EntryPoint;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
@@ -62,7 +62,7 @@ public class VnfPkgTest {
 	void testVnfPackagePost() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "vnf-pkg-post.json"));
 
-		final VnfPkgInfo vnfPkg = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
+		final VnfPkgInfo vnfPkg = VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs());
 		vnfPkg.setId("1234");
 		when(vnfPackageRepository.save(Mockito.any())).thenReturn(vnfPkg);
 		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sol005/vnfpkgm/v1/vnf_packages")

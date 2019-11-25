@@ -4,9 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -18,6 +16,7 @@ import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfUserDefinedData;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
@@ -38,7 +37,7 @@ public class VnfPackageTest {
 	@Test
 	void testJsonToDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final Map<String, Object> userData = new HashMap<>();
+		final KeyValuePairs userData = new KeyValuePairs();
 		userData.put("vimId", "TMA49");
 		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(userData);
 		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();

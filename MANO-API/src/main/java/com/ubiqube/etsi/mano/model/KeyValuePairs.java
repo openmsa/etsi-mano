@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.model;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +20,10 @@ import io.swagger.annotations.ApiModel;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
 
-public class KeyValuePairs {
+public class KeyValuePairs extends HashMap<String, Object> {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public boolean equals(final java.lang.Object o) {

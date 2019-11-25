@@ -19,7 +19,7 @@ public class SerializationTest {
 		final String res = mapper.writeValueAsString(vnfPkg);
 		final VnfPkgInfo vnf2 = mapper.readValue(res.getBytes(), VnfPkgInfo.class);
 
-		assertEquals("ENABLED", vnf2.getOperationalState());
+		assertEquals(PackageOperationalStateType.ENABLED, vnf2.getOperationalState());
 
 	}
 }

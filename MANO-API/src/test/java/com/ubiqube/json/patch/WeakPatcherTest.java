@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.WeakPatcher;
@@ -33,7 +34,7 @@ public class WeakPatcherTest {
 
 		assertEquals("Encryption algorithm", "SHA256", vnfPkgInfo.getChecksum().getAlgorithm());
 		assertEquals("VnfId", "1234-1234-1234", vnfPkgInfo.getVnfdId());
-		assertEquals("Operation state", "DISABLED", vnfPkgInfo.getOperationalState());
+		assertEquals("Operation state", PackageOperationalStateType.DISABLED, vnfPkgInfo.getOperationalState());
 
 		assertEquals("id", "8a5878be-21c8-4123-a6a1-a9cea03123a0", vnfPkgInfo.getId());
 	}

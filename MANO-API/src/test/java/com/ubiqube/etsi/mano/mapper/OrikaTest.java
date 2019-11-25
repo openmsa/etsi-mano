@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
@@ -34,7 +34,7 @@ public class OrikaTest {
 	void testMapVnfArtifactChecksum() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 
-		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
+		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs());
 		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();
 		final Checksum checksum = new Checksum();
 		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
