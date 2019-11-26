@@ -13,7 +13,7 @@ public class SubscriptionObject {
 
 	@ApiModelProperty(value = "")
 	@Valid
-	private SubscriptionAuthentication subscriptionsAuthentication = null;
+	private SubscriptionAuthentication subscriptionAuthentication = null;
 
 	@ApiModelProperty(value = "")
 	@Valid
@@ -27,17 +27,17 @@ public class SubscriptionObject {
 
 	public SubscriptionObject(final SubscriptionAuthentication _subscriptionAuthentication, final PkgmSubscription _PkgmSubscription) {
 		super();
-		subscriptionsAuthentication = _subscriptionAuthentication;
+		subscriptionAuthentication = _subscriptionAuthentication;
 		pkgmSubscription = _PkgmSubscription;
 	}
 
 	@JsonProperty("auth")
 	public SubscriptionAuthentication getSubscriptionAuthentication() {
-		return subscriptionsAuthentication;
+		return subscriptionAuthentication;
 	}
 
 	public void setSubscriptionAuthentication(final SubscriptionAuthentication _subscriptionsPkgmSubscriptionRequestAuthentication) {
-		subscriptionsAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
+		subscriptionAuthentication = _subscriptionsPkgmSubscriptionRequestAuthentication;
 	}
 
 	@JsonProperty("subscriptionsPkgmSubscription")

@@ -14,7 +14,7 @@ import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFactory;
@@ -58,9 +58,13 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("userDefinedData{value}", "userDefinedData{value}")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(PkgmSubscription.class, Subscription.class)
-				.field("callbackUri", "subscriptionQuery.callbackUri")
-				.fieldMap("filter", "subscriptionQuery.subscriptionFilter").converter("filterConverter").add()
+		orikaMapperFactory.classMap(SubscriptionObject.class, Subscription.class)
+				.field("pkgmSubscription.callbackUri", "subscriptionQuery.callbackUri")
+				.fieldMap("pkgmSubscription.filter", "subscriptionFilter").converter("filterConverter").add()
+				.field("pkgmSubscription.id", "id")
+				.field("subscriptionAuthentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("subscriptionAuthentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("subscriptionAuthentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

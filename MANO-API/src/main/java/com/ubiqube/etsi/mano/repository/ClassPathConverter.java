@@ -12,6 +12,7 @@ import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 /**
@@ -31,6 +32,7 @@ public class ClassPathConverter {
 		path.put(VnfPkgInfo.class, "vnf-packages");
 		path.put(VnfLcmOpOcc.class, "vnf-lcm-op-occs");
 		path.put(VnfInstance.class, "vnf-instances");
+		path.put(SubscriptionObject.class, "subscriptions");
 
 		path.put(PnfdInfo.class, "pnfd");
 
