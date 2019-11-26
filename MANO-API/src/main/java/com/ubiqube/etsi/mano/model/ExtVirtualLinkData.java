@@ -42,15 +42,15 @@ public class ExtVirtualLinkData {
 	@Valid
 	private List<ExtLinkPortData> extLinkPorts = null;
 
-	public ExtVirtualLinkData id(final String id) {
-		this.id = id;
+	public ExtVirtualLinkData id(final String _id) {
+		this.id = _id;
 		return this;
 	}
 
 	/**
 	 * The identifier of the external VL instance. The identifier is assigned by the
 	 * NFV-MANO entity that manages this VL instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "The identifier of the external VL instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
@@ -64,8 +64,8 @@ public class ExtVirtualLinkData {
 		this.id = id;
 	}
 
-	public ExtVirtualLinkData vimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
+	public ExtVirtualLinkData vimConnectionId(final String _vimConnectionId) {
+		this.vimConnectionId = _vimConnectionId;
 		return this;
 	}
 
@@ -73,7 +73,7 @@ public class ExtVirtualLinkData {
 	 * Identifier of the VIM connection to manage this resource. This attribute
 	 * shall only be supported and present if VNF-related resource management in
 	 * direct mode is applicable.
-	 * 
+	 *
 	 * @return vimConnectionId
 	 **/
 	@ApiModelProperty(value = "Identifier of the VIM connection to manage this resource. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable. ")
@@ -86,8 +86,8 @@ public class ExtVirtualLinkData {
 		this.vimConnectionId = vimConnectionId;
 	}
 
-	public ExtVirtualLinkData resourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
+	public ExtVirtualLinkData resourceProviderId(final String _resourceProviderId) {
+		this.resourceProviderId = _resourceProviderId;
 		return this;
 	}
 
@@ -96,7 +96,7 @@ public class ExtVirtualLinkData {
 	 * attribute shall only be supported and present if VNF-related resource
 	 * management in indirect mode is applicable. The identification scheme is
 	 * outside the scope of the present document.
-	 * 
+	 *
 	 * @return resourceProviderId
 	 **/
 	@ApiModelProperty(value = "Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
@@ -109,15 +109,15 @@ public class ExtVirtualLinkData {
 		this.resourceProviderId = resourceProviderId;
 	}
 
-	public ExtVirtualLinkData resourceId(final String resourceId) {
-		this.resourceId = resourceId;
+	public ExtVirtualLinkData resourceId(final String _resourceId) {
+		this.resourceId = _resourceId;
 		return this;
 	}
 
 	/**
 	 * The identifier of the resource in the scope of the VIM or the resource
 	 * provider.
-	 * 
+	 *
 	 * @return resourceId
 	 **/
 	@ApiModelProperty(required = true, value = "The identifier of the resource in the scope of the VIM or the resource provider. ")
@@ -131,8 +131,8 @@ public class ExtVirtualLinkData {
 		this.resourceId = resourceId;
 	}
 
-	public ExtVirtualLinkData extCps(final List<VnfExtCpData> extCps) {
-		this.extCps = extCps;
+	public ExtVirtualLinkData extCps(final List<VnfExtCpData> _extCps) {
+		this.extCps = _extCps;
 		return this;
 	}
 
@@ -143,7 +143,7 @@ public class ExtVirtualLinkData {
 
 	/**
 	 * External CPs of the VNF to be connected to this external VL.
-	 * 
+	 *
 	 * @return extCps
 	 **/
 	@ApiModelProperty(required = true, value = "External CPs of the VNF to be connected to this external VL. ")
@@ -159,8 +159,8 @@ public class ExtVirtualLinkData {
 		this.extCps = extCps;
 	}
 
-	public ExtVirtualLinkData extLinkPorts(final List<ExtLinkPortData> extLinkPorts) {
-		this.extLinkPorts = extLinkPorts;
+	public ExtVirtualLinkData extLinkPorts(final List<ExtLinkPortData> _extLinkPorts) {
+		this.extLinkPorts = _extLinkPorts;
 		return this;
 	}
 
@@ -176,7 +176,7 @@ public class ExtVirtualLinkData {
 	 * Externally provided link ports to be used to connect external connection
 	 * points to this external VL. If this attribute is not present, the VNFM shall
 	 * create the link ports on the external VL.
-	 * 
+	 *
 	 * @return extLinkPorts
 	 **/
 	@ApiModelProperty(value = "Externally provided link ports to be used to connect external connection points to this external VL. If this attribute is not present, the VNFM shall create the link ports on the external VL. ")
@@ -232,7 +232,7 @@ public class ExtVirtualLinkData {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

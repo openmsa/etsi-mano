@@ -33,8 +33,8 @@ public class ResourceHandle {
 	@JsonProperty("vimLevelResourceType")
 	private String vimLevelResourceType = null;
 
-	public ResourceHandle vimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
+	public ResourceHandle vimConnectionId(final String _vimConnectionId) {
+		this.vimConnectionId = _vimConnectionId;
 		return this;
 	}
 
@@ -44,7 +44,7 @@ public class ResourceHandle {
 	 * mode is applicable. The applicable \"VimConnectionInfo\" structure, which is
 	 * referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\"
 	 * attribute of the \"VnfInstance\" structure.
-	 * 
+	 *
 	 * @return vimConnectionId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VIM connection to manage the resource. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable. The applicable \"VimConnectionInfo\" structure, which is referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\" attribute of the \"VnfInstance\" structure. ")
@@ -58,8 +58,8 @@ public class ResourceHandle {
 		this.vimConnectionId = vimConnectionId;
 	}
 
-	public ResourceHandle resourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
+	public ResourceHandle resourceProviderId(final String _resourceProviderId) {
+		this.resourceProviderId = _resourceProviderId;
 		return this;
 	}
 
@@ -68,7 +68,7 @@ public class ResourceHandle {
 	 * attribute shall only be supported and present when VNF-related resource
 	 * management in indirect mode is applicable. The identification scheme is
 	 * outside the scope of the present document.
-	 * 
+	 *
 	 * @return resourceProviderId
 	 **/
 	@ApiModelProperty(value = "Identifier of the entity responsible for the management of the resource. This attribute shall only be supported and present when VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
@@ -81,14 +81,14 @@ public class ResourceHandle {
 		this.resourceProviderId = resourceProviderId;
 	}
 
-	public ResourceHandle resourceId(final String resourceId) {
-		this.resourceId = resourceId;
+	public ResourceHandle resourceId(final String _resourceId) {
+		this.resourceId = _resourceId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the resource in the scope of the VIM or the resource provider.
-	 * 
+	 *
 	 * @return resourceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the resource in the scope of the VIM or the resource provider. ")
@@ -102,8 +102,8 @@ public class ResourceHandle {
 		this.resourceId = resourceId;
 	}
 
-	public ResourceHandle vimLevelResourceType(final String vimLevelResourceType) {
-		this.vimLevelResourceType = vimLevelResourceType;
+	public ResourceHandle vimLevelResourceType(final String _vimLevelResourceType) {
+		this.vimLevelResourceType = _vimLevelResourceType;
 		return this;
 	}
 
@@ -113,7 +113,7 @@ public class ResourceHandle {
 	 * complements the ResourceHandle. This value set is different from the value
 	 * set of the \"type\" attribute in the ResourceDefinition (refer to clause
 	 * 9.5.3.2 in SOL003).
-	 * 
+	 *
 	 * @return vimLevelResourceType
 	 **/
 	@ApiModelProperty(value = "The value set of the \"vimLevelResourceType\" attribute is within the scope of the VIM or the resource provider and can be used as information that complements the ResourceHandle. This value set is different from the value set of the \"type\" attribute in the ResourceDefinition (refer to clause 9.5.3.2 in SOL003). ")
@@ -163,7 +163,7 @@ public class ResourceHandle {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

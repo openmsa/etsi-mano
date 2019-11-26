@@ -124,8 +124,8 @@ public class ProblemDetails {
 		this.title = title;
 	}
 
-	public ProblemDetails title(final String title) {
-		this.title = title;
+	public ProblemDetails title(final String _title) {
+		this.title = _title;
 		return this;
 	}
 
@@ -146,8 +146,8 @@ public class ProblemDetails {
 		this.status = status;
 	}
 
-	public ProblemDetails status(final Integer status) {
-		this.status = status;
+	public ProblemDetails status(final Integer _status) {
+		this.status = _status;
 		return this;
 	}
 
@@ -166,8 +166,8 @@ public class ProblemDetails {
 		this.detail = detail;
 	}
 
-	public ProblemDetails detail(final String detail) {
-		this.detail = detail;
+	public ProblemDetails detail(final String _detail) {
+		this.detail = _detail;
 		return this;
 	}
 
@@ -186,8 +186,8 @@ public class ProblemDetails {
 		this.instance = instance;
 	}
 
-	public ProblemDetails instance(final String instance) {
-		this.instance = instance;
+	public ProblemDetails instance(final String _instance) {
+		this.instance = _instance;
 		return this;
 	}
 
