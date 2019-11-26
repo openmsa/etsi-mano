@@ -52,7 +52,7 @@ public class SubscriptionTest {
 		subsJson.setLinks(links);
 
 		final Subscription subsDb = mapper.map(subsJson, Subscription.class);
-		final List<FilterAttributes> filters = subsDb.getSubscriptionQuery().getSubscriptionFilter();
+		final List<FilterAttributes> filters = subsDb.getSubscriptionFilter();
 		assertEquals(2, filters.size()); // Should be 2
 		checkFilter(filters.get(0), "notificationTypes", "VnfPackageChangeNotification");
 		checkFilter(filters.get(1), "vnfProductsFromProviders.0.operationalState.0", "DISABLED");
@@ -84,7 +84,7 @@ public class SubscriptionTest {
 		fa.setAttribute("vnfProductsFromProviders.0.operationalState.0");
 		fa.setValue("DISABLED");
 		subscriptionFilter.add(fa);
-		subscriptionQuery.setSubscriptionFilter(subscriptionFilter);
+		// subscriptionQuery.setSubscriptionFilter(subscriptionFilter);
 		subsDb.setSubscriptionQuery(subscriptionQuery);
 		final PkgmSubscription subsJson = mapper.map(subsDb, PkgmSubscription.class);
 		System.out.println("" + subsJson);
