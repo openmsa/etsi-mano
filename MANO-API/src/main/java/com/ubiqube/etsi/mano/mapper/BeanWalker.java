@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +32,6 @@ public class BeanWalker {
 	}
 
 	public void walk(final Object source, final BeanListener beanListener) {
-		final LinkedList<String> stack = new LinkedList<>();
 		try {
 			makeFieldInner(source, beanListener);
 		} catch (final IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

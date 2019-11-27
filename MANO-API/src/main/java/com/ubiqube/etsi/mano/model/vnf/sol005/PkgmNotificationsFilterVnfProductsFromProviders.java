@@ -50,7 +50,7 @@ public class PkgmNotificationsFilterVnfProductsFromProviders {
 
 	/**
 	 * Name of the VNFprovider to match.
-	 * 
+	 *
 	 * @return vnfProvider
 	 **/
 	@ApiModelProperty(required = true, value = "Name of the VNFprovider to match. ")
@@ -80,7 +80,7 @@ public class PkgmNotificationsFilterVnfProductsFromProviders {
 	/**
 	 * If present, match VNF packages that contain VNF products with certain product
 	 * names, from one particular provider.
-	 * 
+	 *
 	 * @return vnfProducts
 	 **/
 	@ApiModelProperty(value = "If present, match VNF packages that contain VNF products with certain product names, from one particular provider. ")
@@ -110,7 +110,7 @@ public class PkgmNotificationsFilterVnfProductsFromProviders {
 
 	/**
 	 * Match VNF packages with a VNFD identifier listed in the attribute.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@ApiModelProperty(value = "Match VNF packages with a VNFD identifier listed in the attribute. ")
@@ -140,7 +140,7 @@ public class PkgmNotificationsFilterVnfProductsFromProviders {
 	 * Match VNF packages with a package identifier listed in the attribute. May be
 	 * present if the \"notificationTypes\" attribute contains the value
 	 * \"VnfPackageChangeNotification\", and shall be absent otherwise.
-	 * 
+	 *
 	 * @return vnfPkgId
 	 **/
 	@ApiModelProperty(value = "Match VNF packages with a package identifier listed in the attribute. May be present if the \"notificationTypes\" attribute contains the value \"VnfPackageChangeNotification\", and shall be absent otherwise. ")
@@ -170,7 +170,7 @@ public class PkgmNotificationsFilterVnfProductsFromProviders {
 	 * Match VNF packages with a package identifier listed in the attribute. May be
 	 * present if the \"notificationTypes\" attribute contains the value
 	 * \"VnfPackageChangeNotification\", and shall be absent otherwise.
-	 * 
+	 *
 	 * @return operationalState
 	 **/
 	@ApiModelProperty(value = "Match VNF packages with a package identifier listed in the attribute. May be present if the \"notificationTypes\" attribute contains the value \"VnfPackageChangeNotification\", and shall be absent otherwise. ")
@@ -202,7 +202,7 @@ public class PkgmNotificationsFilterVnfProductsFromProviders {
 	 * Match particular usage state of the on-boarded VNF package. May be present if
 	 * the \"notificationTypes\" attribute contains the value
 	 * \"VnfPackageChangeNotification\", and shall be absent otherwise.
-	 * 
+	 *
 	 * @return usageState
 	 **/
 	@ApiModelProperty(value = "Match particular usage state of the on-boarded VNF package. May be present if the \"notificationTypes\" attribute contains the value \"VnfPackageChangeNotification\", and shall be absent otherwise. ")

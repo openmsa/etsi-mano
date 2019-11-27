@@ -13,7 +13,9 @@ public class CollectNonNullListener implements BeanListener {
 		final AttrHolder ah = new AttrHolder();
 		ah.setStack((LinkedList<AttrNode>) stack.clone());
 		ah.setValue(source);
-		attrs.add(ah);
+		if (null != source) {
+			attrs.add(ah);
+		}
 	}
 
 	@Override
