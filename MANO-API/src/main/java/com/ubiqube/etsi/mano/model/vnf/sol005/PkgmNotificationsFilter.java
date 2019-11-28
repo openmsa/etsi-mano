@@ -34,9 +34,9 @@ public class PkgmNotificationsFilter {
 	 * VnfPackageOnboardingNotification - VnfPackageChangeNotification
 	 */
 	public enum NotificationTypesEnum {
-		VNFPACKAGEONBOARDINGNOTIFICATION("VnfPackageOnboardingNotification"),
+		VnfPackageOnboardingNotification("VnfPackageOnboardingNotification"),
 
-		VNFPACKAGECHANGENOTIFICATION("VnfPackageChangeNotification");
+		VnfPackageChangeNotification("VnfPackageChangeNotification");
 
 		private final String value;
 

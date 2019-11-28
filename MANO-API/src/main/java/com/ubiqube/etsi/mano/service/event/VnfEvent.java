@@ -55,7 +55,7 @@ public class VnfEvent {
 		final SubscriptionAuthentication auth = subscriptionObject.getSubscriptionAuthentication();
 
 		Object object;
-		if (event == NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION) {
+		if (event == NotificationTypesEnum.VnfPackageOnboardingNotification) {
 			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, "", links);
 		} else {
 			object = VnfPackageFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, "", links);

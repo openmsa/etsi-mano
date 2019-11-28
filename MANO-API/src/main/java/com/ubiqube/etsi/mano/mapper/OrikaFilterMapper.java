@@ -12,9 +12,11 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 
 import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.impl.DefaultConstructorObjectFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
 
 public class OrikaFilterMapper extends BidirectionalConverter<Object, List<FilterAttributes>> {
@@ -23,9 +25,10 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 	private final BeanWalker beanWalker;
 	private final MapperFacade mapper;
 
-	public OrikaFilterMapper(final BeanWalker _beanBeanWalker, final MapperFacade _mapper) {
-		beanWalker = _beanBeanWalker;
-		mapper = _mapper;
+	public OrikaFilterMapper() {
+		beanWalker = new BeanWalker();
+		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapper = mapperFactory.getMapperFacade();
 	}
 
 	@Override
@@ -48,7 +51,11 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
 		final ExpressionParser parser = new SpelExpressionParser(config);
 		final StandardEvaluationContext modelContext = new StandardEvaluationContext(ret);
-		source.forEach(x -> parser.parseExpression(x.getAttribute()).setValue(modelContext, x.getValue()));
+		LOG.debug("Setting on entity type: {}", ret.getClass());
+		source.forEach(x -> {
+			LOG.debug(" - Setting: {}", x.getAttribute());
+			parser.parseExpression(x.getAttribute()).setValue(modelContext, x.getValue());
+		});
 		return ret;
 	}
 

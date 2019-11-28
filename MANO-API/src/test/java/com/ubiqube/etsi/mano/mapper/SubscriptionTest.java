@@ -40,7 +40,7 @@ public class SubscriptionTest {
 		final PkgmSubscription subsJson = new PkgmSubscription();
 		subsJson.setCallbackUri("http://callbackUri/");
 		final PkgmNotificationsFilter filter = new PkgmNotificationsFilter();
-		filter.setNotificationTypes(NotificationTypesEnum.VNFPACKAGECHANGENOTIFICATION);
+		filter.setNotificationTypes(NotificationTypesEnum.VnfPackageChangeNotification);
 		final List<PkgmNotificationsFilterVnfProductsFromProviders> vnfProductsFromProviders = new ArrayList<>();
 		final PkgmNotificationsFilterVnfProductsFromProviders subProv = new PkgmNotificationsFilterVnfProductsFromProviders();
 		subProv.addOperationalStateItem(PackageOperationalStateType.DISABLED);

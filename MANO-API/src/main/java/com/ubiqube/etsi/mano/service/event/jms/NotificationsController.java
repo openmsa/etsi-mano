@@ -24,10 +24,10 @@ public class NotificationsController {
 		LOG.info("Receiving event: {}", ev);
 		switch (ev.notificationEvent) {
 		case VNF_PKG_ONBOARDING:
-			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION);
+			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageOnboardingNotification);
 			break;
 		case VNF_PKG_ONCHANGE:
-			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VNFPACKAGECHANGENOTIFICATION);
+			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageChangeNotification);
 			break;
 		default:
 			LOG.error("Unable to handle event type {}", ev.notificationEvent);
