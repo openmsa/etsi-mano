@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 /**

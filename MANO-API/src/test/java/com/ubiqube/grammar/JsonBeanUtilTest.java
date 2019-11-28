@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.grammar.JsonBeanProperty;
 import com.ubiqube.etsi.mano.grammar.JsonBeanUtil;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public class JsonBeanUtilTest {

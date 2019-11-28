@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.repository;
 
 import java.util.List;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 
 public interface SubscriptionRepository extends CrudRepository<SubscriptionObject>, BinaryRepository {
 

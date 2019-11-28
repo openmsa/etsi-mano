@@ -1,9 +1,11 @@
-package com.ubiqube.etsi.mano.model.vnf.sol005;
+package com.ubiqube.etsi.mano.model.vnf;
 
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
