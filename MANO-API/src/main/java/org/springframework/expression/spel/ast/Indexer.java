@@ -651,7 +651,13 @@ public class Indexer extends SpelNodeImpl {
 				}
 				final TypeDescriptor elementType = this.collectionEntryDescriptor.getElementTypeDescriptor();
 				try {
-					final Constructor<?> ctor = ReflectionUtils.accessibleConstructor(elementType.getType());
+					// Ubiqube-OVI: We put Object in case of enum, because ctor is not accessible.
+					// et.getEnumConstants()[0]
+					Class<?> et = elementType.getType();
+					if (et.isEnum()) {
+						et = Object.class;
+					}
+					final Constructor<?> ctor = ReflectionUtils.accessibleConstructor(et);
 					int newElements = this.index - this.collection.size();
 					while (newElements >= 0) {
 						this.collection.add(ctor.newInstance());
