@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
-import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
