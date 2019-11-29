@@ -224,7 +224,7 @@ public class CodeModelTest {
 		}
 	}
 
-	private void applyAnnotation(final Constraint x, final JFieldVar field) {
+	private static void applyAnnotation(final Constraint x, final JFieldVar field) {
 		if (x instanceof Pattern) {
 			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", "");
 		} else if (x instanceof GreaterOrEqual) {
@@ -285,12 +285,11 @@ public class CodeModelTest {
 			final JDefinedClass jcTy = cache.get(valueObject.getEntrySchema().getType());
 			if (null != jcTy) {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(jcTy);
-			} else {
-				// TODO
-				final JType cl = generateToscaClass(valueObject.getEntrySchema().getType(),
-						root.getNodeType().get(valueObject.getEntrySchema().getType()));
-				return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
 			}
+			// TODO
+			final JType cl = generateToscaClass(valueObject.getEntrySchema().getType(),
+					root.getNodeType().get(valueObject.getEntrySchema().getType()));
+			return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
 		}
 		throw new RuntimeException("Bad type: " + valueObject);
 	}
