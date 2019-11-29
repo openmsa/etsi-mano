@@ -62,7 +62,8 @@ public class VnfManagement implements VnfPackageManagement {
 
 	@Override
 	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
-		// TODO: queryParameters is not correct. Plus this code is allways the same, we should factorize it.
+		// TODO: queryParameters is not correct. Plus this code is allways the same, we
+		// should factorize it.
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
@@ -103,23 +104,8 @@ public class VnfManagement implements VnfPackageManagement {
 					continue;
 				}
 				if (entry.getName().equals(artifactPath)) {
-					final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-					// TODO: We can refactor around BodyBuilder.
-					if (rangeHeader != null) {
-						final FromToBean ft = rangeHeader.getValues(zcontent.length);
-						final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
-						final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
-						final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-						return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-								.header("Content-Range", rangeHeader.getContentRange(zcontent.length))
-								.contentType(contentType)
-								.body(resource);
-					}
-					final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
-					final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-					return ResponseEntity.ok()
-							.contentType(contentType)
-							.body(resource);
+					return handleArtifact(zis, rangeHeader);
+
 				}
 			}
 		} catch (final IOException e) {
@@ -127,6 +113,27 @@ public class VnfManagement implements VnfPackageManagement {
 		}
 		throw new NotFoundException(new StringBuilder("VNF package artifact not found for vnfPack with id: ")
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
+	}
+
+	private static ResponseEntity<Resource> handleArtifact(final ZipInputStream zis, final RangeHeader rangeHeader) throws IOException {
+		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
+		final InputStreamResource resource;
+		BodyBuilder bodyBuilder;
+		if (rangeHeader != null) {
+			final FromToBean ft = rangeHeader.getValues(zcontent.length);
+			final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
+			resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
+
+			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT);
+			bodyBuilder.header("Content-Range", rangeHeader.getContentRange(finalContent.length));
+		} else {
+			bodyBuilder = ResponseEntity.ok();
+			resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
+		}
+		final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+		return bodyBuilder
+				.contentType(contentType)
+				.body(resource);
 	}
 
 	@Override
