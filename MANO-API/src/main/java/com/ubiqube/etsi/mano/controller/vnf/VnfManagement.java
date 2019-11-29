@@ -17,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
@@ -61,6 +62,7 @@ public class VnfManagement implements VnfPackageManagement {
 
 	@Override
 	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
+		// TODO: queryParameters is not correct. Plus this code is allways the same, we should factorize it.
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
@@ -102,6 +104,7 @@ public class VnfManagement implements VnfPackageManagement {
 				}
 				if (entry.getName().equals(artifactPath)) {
 					final byte[] zcontent = StreamUtils.copyToByteArray(zis);
+					// TODO: We can refactor around BodyBuilder.
 					if (rangeHeader != null) {
 						final FromToBean ft = rangeHeader.getValues(zcontent.length);
 						final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
@@ -153,21 +156,21 @@ public class VnfManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
+		byte[] bytes;
+		BodyBuilder bodyBuilder;
 		if (_range != null) {
-			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo() == null ? null : Long.valueOf(_range.getTo()));
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
-			final String mime = MimeType.findMatch(bytes);
-			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", _range.getContentRange(bytes.length))
-					.header("Content-Type", mime)
-					.body(resource);
+			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo() == null ? null : Long.valueOf(_range.getTo()));
+			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+					.header("Content-Range", _range.getContentRange(bytes.length));
+		} else {
+			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
+			bodyBuilder = ResponseEntity.status(HttpStatus.OK);
 		}
-		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
 		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
 		final String mime = MimeType.findMatch(bytes);
-		return ResponseEntity.status(HttpStatus.OK)
-				.header("Content-Type", mime)
-				.body(resource);
+		bodyBuilder = bodyBuilder.header("Content-Type", mime);
+
+		return bodyBuilder.body(resource);
 	}
 
 }

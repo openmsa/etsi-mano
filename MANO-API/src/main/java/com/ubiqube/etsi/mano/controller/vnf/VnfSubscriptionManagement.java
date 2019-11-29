@@ -58,6 +58,7 @@ public class VnfSubscriptionManagement {
 	}
 
 	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage, final Linkable links) {
+		// TODO: This is mapping, and Orika should handle it.
 		final String vnfPkgId = notificationsMessage.getVnfPkgId();
 		final String vnfdId = notificationsMessage.getVnfdId();
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
@@ -72,6 +73,7 @@ public class VnfSubscriptionManagement {
 	}
 
 	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage, final Linkable links) {
+		// TODO: This is mapping, and Orika should handle it.
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final PkgmSubscription req = subscriptionsRepository.getPkgmSubscription();

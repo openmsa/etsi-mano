@@ -83,7 +83,6 @@ public class VnfInstanceLcm {
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
-		// Clean LCM Repository.
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkgId())) {
 			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkgId());
@@ -107,6 +106,7 @@ public class VnfInstanceLcm {
 	}
 
 	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
+		// TODO: A little bit wrong , move this to async.
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
