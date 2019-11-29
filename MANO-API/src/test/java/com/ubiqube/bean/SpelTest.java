@@ -1,15 +1,11 @@
 package com.ubiqube.bean;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 
@@ -34,12 +30,4 @@ public class SpelTest {
 		System.out.println("" + subsJson);
 	}
 
-	@Test
-	void testName2() throws Exception {
-		final ObjectMapper mapper = new ObjectMapper();
-		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "Sol003LcmSubscription-req.json"));
-
-		final PkgmSubscription object = mapper.readValue(value, PkgmSubscription.class);
-
-	}
 }

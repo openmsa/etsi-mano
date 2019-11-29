@@ -34,7 +34,7 @@ public class VnfSubscriptionManagement {
 	public List<PkgmSubscription> subscriptionsGet(final String filter, final Linkable links) {
 		final List<SubscriptionObject> result = subscriptionRepository.query(filter);
 		final List<PkgmSubscription> response = result.stream()
-				.map(x -> x.getPkgmSubscription())
+				.map(SubscriptionObject::getPkgmSubscription)
 				.collect(Collectors.toList());
 		response.stream().forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
 		return response;
@@ -57,33 +57,24 @@ public class VnfSubscriptionManagement {
 		return response;
 	}
 
-	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage, final Linkable links) {
-		// TODO: This is mapping, and Orika should handle it.
-		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-		final String vnfdId = notificationsMessage.getVnfdId();
+	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage) {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
 		final String callbackUri = subscriptionsRepository.getPkgmSubscription().getCallbackUri();
 
-		final VnfPackageChangeNotification vnfPackageChangeNotification = VnfPackageFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, vnfdId, links);
-
-		notifications.doNotification(vnfPackageChangeNotification, callbackUri, auth);
+		notifications.doNotification(notificationsMessage, callbackUri, auth);
 	}
 
-	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage, final Linkable links) {
-		// TODO: This is mapping, and Orika should handle it.
+	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
 		final String subscriptionId = notificationsMessage.getSubscriptionId();
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final PkgmSubscription req = subscriptionsRepository.getPkgmSubscription();
 		final String cbUrl = req.getCallbackUri();
-		final String vnfPkgId = notificationsMessage.getVnfPkgId();
-		final String vnfdId = notificationsMessage.getVnfdId();
 		final com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
 
-		final VnfPackageOnboardingNotification notificationVnfPackageOnboardingNotification = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, vnfdId, links);
-		notifications.doNotification(notificationVnfPackageOnboardingNotification, cbUrl, auth);
+		notifications.doNotification(notificationsMessage, cbUrl, auth);
 	}
 
 	public void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId) {

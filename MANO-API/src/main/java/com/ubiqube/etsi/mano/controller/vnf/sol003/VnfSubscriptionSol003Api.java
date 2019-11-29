@@ -115,7 +115,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, links);
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, links);
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage);
 	}
 
 }

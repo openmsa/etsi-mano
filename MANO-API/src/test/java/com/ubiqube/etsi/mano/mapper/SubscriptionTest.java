@@ -15,6 +15,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.SubscriptionQuery;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
@@ -50,12 +51,13 @@ public class SubscriptionTest {
 		subsJson.setId(UUID.randomUUID().toString());
 		final PkgmSubscriptionLinks links = new PkgmSubscriptionLinks();
 		subsJson.setLinks(links);
-
-		final Subscription subsDb = mapper.map(subsJson, Subscription.class);
+		final SubscriptionObject so = new SubscriptionObject();
+		so.setPkgmSubscription(subsJson);
+		final Subscription subsDb = mapper.map(so, Subscription.class);
 		final List<FilterAttributes> filters = subsDb.getSubscriptionFilter();
 		assertEquals(2, filters.size()); // Should be 2
 		checkFilter(filters.get(0), "notificationTypes", "VnfPackageChangeNotification");
-		checkFilter(filters.get(1), "vnfProductsFromProviders.0.operationalState.0", "DISABLED");
+		checkFilter(filters.get(1), "vnfProductsFromProviders[0].operationalState[0]", "DISABLED");
 	}
 
 	private static void checkFilter(final FilterAttributes filterAttributes, final String attr, final String value) {

@@ -51,11 +51,6 @@ public class VnfPackageFactory {
 	}
 
 	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
-		final VnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_subscriptionId, _vnfPkgId, _vnfdId, links);
-		return obj;
-	}
-
-	public static VnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
 		ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
 		ret.setNotificationType("VnfPackageChangeNotification");

@@ -55,12 +55,12 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, links);
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage);
 	}
 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, links);
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage);
 	}
 
 }
