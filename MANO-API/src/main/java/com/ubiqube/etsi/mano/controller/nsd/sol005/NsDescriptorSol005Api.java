@@ -269,6 +269,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdDescriptor.setPnfdInfoIds(pnfPkgIds);
 		nsdRepository.save(nsdDescriptor);
 
+		// TODO Remove.
 		if (null != userDefinedData.get("heat")) {
 			nsdRepository.storeObject(nsdDescriptor.getId(), "nsd", userDefinedData.get("heat"));
 			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
