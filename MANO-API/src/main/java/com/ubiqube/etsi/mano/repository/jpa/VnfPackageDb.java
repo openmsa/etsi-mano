@@ -51,4 +51,18 @@ public class VnfPackageDb extends AbstractJpa<VnfPkgInfo, VnfPackage> implements
 		joins.put("additionalArtifacts", jTmp);
 		return joins;
 	}
+
+	@Override
+	protected void mapChild(final VnfPackage vnf) {
+		if (null != vnf.getAdditionalArtifacts()) {
+			vnf.getAdditionalArtifacts().forEach(x -> x.setVnfPackage(vnf));
+		}
+
+		if (null != vnf.getSoftwareImages()) {
+			vnf.getSoftwareImages().forEach(x -> x.setVnfPackage(vnf));
+		}
+		if (null != vnf.getUserDefinedData()) {
+			vnf.getUserDefinedData().forEach(x -> x.setVnfPackage(vnf));
+		}
+	}
 }

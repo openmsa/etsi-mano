@@ -57,12 +57,15 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 	@Override
 	public final T save(final T entity) {
 		U vnf = mapper.map(entity, getDbClass());
+		mapChild(vnf);
 		vnf = repository.save(vnf);
 		mkdir(vnf.getId().toString());
 		final T tmp = mapper.map(vnf, getFrontClass());
 		mapper.map(tmp, entity);
 		return entity;
 	}
+
+	protected abstract void mapChild(U vnf);
 
 	@Override
 	public final List<T> query(final String filter) {

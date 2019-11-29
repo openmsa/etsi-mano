@@ -78,4 +78,10 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> imple
 		repository.save(lcm);
 	}
 
+	@Override
+	protected void mapChild(final VnfLcmOpOccs vnf) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

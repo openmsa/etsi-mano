@@ -56,4 +56,9 @@ public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	protected void mapChild(final Subscription vnf) {
+		// Nothing.
+	}
+
 }

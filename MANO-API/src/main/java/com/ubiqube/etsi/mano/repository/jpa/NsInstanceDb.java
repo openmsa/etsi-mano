@@ -47,4 +47,14 @@ public class NsInstanceDb extends AbstractJpa<NsInstance, NsdInstance> implement
 		return null;
 	}
 
+	@Override
+	protected void mapChild(final NsdInstance vnf) {
+		if (null != vnf.getAdditionalAffinityOrAntiAffinityRule()) {
+			// TODO
+		}
+		if (null != vnf.getVnfInstance()) {
+			vnf.getVnfInstance().forEach(x -> x.setNsInstance(vnf));
+		}
+	}
+
 }

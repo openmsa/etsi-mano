@@ -65,6 +65,9 @@ public class VnfInstance implements BaseEntity {
 
 	@Field
 	private String vnfSoftwareVersion = null;
+	@OneToOne
+	private NsdInstance nsInstance;
+
 	@Transient
 	private final KeyValuePairs extensions = null;
 
@@ -175,6 +178,14 @@ public class VnfInstance implements BaseEntity {
 
 	public KeyValuePairs getExtensions() {
 		return extensions;
+	}
+
+	public NsdInstance getNsInstance() {
+		return nsInstance;
+	}
+
+	public void setNsInstance(final NsdInstance nsInstance) {
+		this.nsInstance = nsInstance;
 	}
 
 }

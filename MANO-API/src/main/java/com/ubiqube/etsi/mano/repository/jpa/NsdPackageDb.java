@@ -50,4 +50,9 @@ public class NsdPackageDb extends AbstractJpa<NsdInfo, NsdPackage> implements Ns
 		save(nsdInfo);
 	}
 
+	@Override
+	protected void mapChild(final NsdPackage vnf) {
+		// Nothing.
+	}
+
 }

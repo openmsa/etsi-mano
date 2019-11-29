@@ -41,4 +41,10 @@ public class PnfDescriptorsDb extends AbstractJpa<PnfdInfo, PnfDescriptor> imple
 		return null;
 	}
 
+	@Override
+	protected void mapChild(final PnfDescriptor vnf) {
+		// TODO Auto-generated method stub
+		// vnf.getUserDefinedData()
+	}
+
 }

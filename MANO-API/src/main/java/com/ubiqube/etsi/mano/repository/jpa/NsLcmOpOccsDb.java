@@ -65,4 +65,9 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOcc, NsLcmOpOccs> implemen
 		repository.save(lcm);
 	}
 
+	@Override
+	protected void mapChild(final NsLcmOpOccs vnf) {
+		// Nothing.
+	}
+
 }

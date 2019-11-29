@@ -49,4 +49,10 @@ public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.man
 		return 0 == repository.countByVnfPkgId(UUID.fromString(vnfPkgId));
 	}
 
+	@Override
+	protected void mapChild(final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnf) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
