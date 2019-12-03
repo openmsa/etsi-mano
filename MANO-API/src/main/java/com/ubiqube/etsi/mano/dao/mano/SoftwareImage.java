@@ -1,21 +1,12 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.UUID;
-
+import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
-@Entity
+@Embeddable
 public class SoftwareImage {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
 	private String name;
 	private String provider;
 	private String version;
@@ -29,16 +20,6 @@ public class SoftwareImage {
 	private long minRam;
 	private long size;
 	private String imagePath;
-	@OneToOne
-	private VnfPackage vnfPackage;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -118,14 +99,6 @@ public class SoftwareImage {
 
 	public void setImagePath(final String imagePath) {
 		this.imagePath = imagePath;
-	}
-
-	public VnfPackage getVnfPackage() {
-		return vnfPackage;
-	}
-
-	public void setVnfPackage(final VnfPackage vnfPackage) {
-		this.vnfPackage = vnfPackage;
 	}
 
 }

@@ -4,15 +4,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -29,6 +28,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class VnfPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 
 	@Field
@@ -48,10 +48,10 @@ public class VnfPackage implements BaseEntity {
 
 	private Checksum checksum;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ElementCollection
 	private Set<SoftwareImage> softwareImages;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ElementCollection
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
@@ -69,7 +69,7 @@ public class VnfPackage implements BaseEntity {
 	@Field
 	private PackageUsageStateType usageState;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ElementCollection
 	private List<VnfUserDefinedData> userDefinedData;
 
 	@Override
