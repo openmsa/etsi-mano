@@ -60,8 +60,8 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 		mapChild(vnf);
 		vnf = repository.save(vnf);
 		mkdir(vnf.getId().toString());
-		final T tmp = mapper.map(vnf, getFrontClass());
-		mapper.map(tmp, entity);
+		mapper.map(vnf, getFrontClass());
+		mapper.map(vnf, entity);
 		return entity;
 	}
 
