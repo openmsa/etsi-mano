@@ -77,7 +77,7 @@ public class VnfPackageTest {
 
 		final List<VnfUserDefinedData> udd = vnfDao.getUserDefinedData();
 		assertEquals(1, udd.size());
-		assertEquals("vimId", udd.get(0).getKey());
+		assertEquals("vimId", udd.get(0).getName());
 		assertEquals("TMA49", udd.get(0).getValue());
 
 	}
