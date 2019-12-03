@@ -71,8 +71,10 @@ public class VnfmActions {
 			final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 			instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);
 			vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
+			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 		} else {
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 		}
 		vnfInstancesRepository.save(vnfInstance);
 		vnfPackageRepository.save(vnfPkg);
