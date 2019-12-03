@@ -1,15 +1,19 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -27,6 +31,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class NsdPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Field
 	private String nsdId;
@@ -38,13 +43,13 @@ public class NsdPackage implements BaseEntity {
 	private String nsdDesigner;
 	@Field
 	private String nsdInvariantId;
-	@OneToMany
+	@ManyToMany
 	private Set<VnfPackage> vnfPkgIds;
 
-	@OneToMany
+	@ManyToMany
 	private Set<PnfDescriptor> pnfdInfoIds;
 
-	@OneToMany
+	@ManyToMany
 	private Set<NsdPackage> nestedNsdInfoIds;
 
 	@Enumerated(EnumType.STRING)
@@ -58,12 +63,15 @@ public class NsdPackage implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	PackageOperationalStateType nsdOperationalState;
+	private PackageOperationalStateType nsdOperationalState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	PackageUsageStateType nsdUsageState;
+	private PackageUsageStateType nsdUsageState;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<NsdUserDefinedData> userDefinedData;
 
 	@Override
 	public UUID getId() {
@@ -168,6 +176,14 @@ public class NsdPackage implements BaseEntity {
 
 	public void setNsdUsageState(final PackageUsageStateType nsdUsageState) {
 		this.nsdUsageState = nsdUsageState;
+	}
+
+	public List<NsdUserDefinedData> getUserDefinedData() {
+		return userDefinedData;
+	}
+
+	public void setUserDefinedData(final List<NsdUserDefinedData> userDefinedData) {
+		this.userDefinedData = userDefinedData;
 	}
 
 }

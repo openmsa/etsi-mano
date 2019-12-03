@@ -9,6 +9,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,10 +49,10 @@ public class VnfPackage implements BaseEntity {
 
 	private Checksum checksum;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<SoftwareImage> softwareImages;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
@@ -69,7 +70,7 @@ public class VnfPackage implements BaseEntity {
 	@Field
 	private PackageUsageStateType usageState;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<VnfUserDefinedData> userDefinedData;
 
 	@Override

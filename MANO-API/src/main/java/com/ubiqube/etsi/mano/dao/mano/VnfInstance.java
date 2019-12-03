@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -24,9 +25,9 @@ import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 @Indexed
 
 public class VnfInstance implements BaseEntity {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID id = null;
 
 	@Transient
@@ -35,14 +36,15 @@ public class VnfInstance implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Field
 	private InstantiationStateEnum instantiationState = null;
+
 	@Transient
-	private final KeyValuePairs metadata = null;
+	private KeyValuePairs metadata = null;
 
 	@OneToMany
 	private List<VimConnectionInformation> vimConnectionInfo = null;
 
 	@Transient
-	private final KeyValuePairs vnfConfigurableProperties = null;
+	private KeyValuePairs vnfConfigurableProperties = null;
 
 	@Field
 	private String vnfdId = null;
@@ -69,7 +71,7 @@ public class VnfInstance implements BaseEntity {
 	private NsdInstance nsInstance;
 
 	@Transient
-	private final KeyValuePairs extensions = null;
+	private KeyValuePairs extensions = null;
 
 	@Override
 	public UUID getId() {
@@ -186,6 +188,18 @@ public class VnfInstance implements BaseEntity {
 
 	public void setNsInstance(final NsdInstance nsInstance) {
 		this.nsInstance = nsInstance;
+	}
+
+	public void setMetadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+	}
+
+	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+	}
+
+	public void setExtensions(final KeyValuePairs extensions) {
+		this.extensions = extensions;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,6 +32,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class VnfLcmOpOccs implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID id = null;
 
 	@Enumerated(EnumType.STRING)
