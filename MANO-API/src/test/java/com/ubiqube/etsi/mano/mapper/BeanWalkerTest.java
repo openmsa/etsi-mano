@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilterVnfProductsFromProviders;

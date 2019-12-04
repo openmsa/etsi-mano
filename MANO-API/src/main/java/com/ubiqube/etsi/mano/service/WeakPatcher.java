@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.node.ValueNode;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.OperationalStateConverter;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 
 /**
  * Naive implementation of a Patch engine.

@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 

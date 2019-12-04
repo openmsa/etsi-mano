@@ -6,7 +6,7 @@ import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 
 public class SpelTest {

@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.WeakPatcher;

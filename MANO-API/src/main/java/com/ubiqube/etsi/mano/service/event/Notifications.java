@@ -29,8 +29,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication.AuthTypeEnum;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsBasic;
 
 /**

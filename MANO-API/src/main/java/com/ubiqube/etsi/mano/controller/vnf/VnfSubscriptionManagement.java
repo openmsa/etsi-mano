@@ -10,11 +10,11 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
@@ -72,7 +72,7 @@ public class VnfSubscriptionManagement {
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final PkgmSubscription req = subscriptionsRepository.getPkgmSubscription();
 		final String cbUrl = req.getCallbackUri();
-		final com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
+		final com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
 
 		notifications.doNotification(notificationsMessage, cbUrl, auth);
 	}

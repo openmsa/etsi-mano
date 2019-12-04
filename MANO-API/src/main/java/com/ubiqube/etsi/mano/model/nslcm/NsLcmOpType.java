@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.nslcm.sol005;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import java.util.Objects;
 import io.swagger.annotations.ApiModel;

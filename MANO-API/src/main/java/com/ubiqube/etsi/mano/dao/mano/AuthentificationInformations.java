@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthentication.AuthTypeEnum;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Embeddable

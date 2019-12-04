@@ -18,11 +18,11 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccResourceChanges;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity

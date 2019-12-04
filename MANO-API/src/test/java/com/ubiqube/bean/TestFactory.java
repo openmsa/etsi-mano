@@ -7,13 +7,13 @@ import java.util.List;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 

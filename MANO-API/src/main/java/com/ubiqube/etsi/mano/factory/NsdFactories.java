@@ -3,9 +3,9 @@ package com.ubiqube.etsi.mano.factory;
 import java.util.ArrayList;
 
 import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfoLinks;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;

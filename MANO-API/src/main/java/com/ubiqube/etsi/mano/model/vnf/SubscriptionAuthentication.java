@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.vnf.sol005;
+package com.ubiqube.etsi.mano.model.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsBasic;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 
 import io.swagger.annotations.ApiModelProperty;
 

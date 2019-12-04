@@ -19,9 +19,9 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity

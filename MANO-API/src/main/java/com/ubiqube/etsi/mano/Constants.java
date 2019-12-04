@@ -2,16 +2,16 @@ package com.ubiqube.etsi.mano;
 
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public final class Constants {

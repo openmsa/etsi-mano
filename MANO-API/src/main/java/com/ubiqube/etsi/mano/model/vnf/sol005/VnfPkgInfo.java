@@ -12,6 +12,9 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 
 import io.swagger.annotations.ApiModelProperty;
 

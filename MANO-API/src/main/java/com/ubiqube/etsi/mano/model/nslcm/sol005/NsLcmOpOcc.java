@@ -8,10 +8,11 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -57,39 +58,6 @@ public class NsLcmOpOcc {
 	 * according to the chosen attribute selector parameter if this data type is
 	 * returned in a response to a query of a container resource.
 	 */
-	public enum OperationParamsEnum {
-		INSTANTIATE("INSTANTIATE"),
-
-		SCALE("SCALE"),
-
-		UPDATE("UPDATE"),
-
-		HEAL("HEAL"),
-
-		TERMINATE("TERMINATE");
-
-		private final String value;
-
-		OperationParamsEnum(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static OperationParamsEnum fromValue(final String text) {
-			for (final OperationParamsEnum b : OperationParamsEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
 
 	@JsonProperty("operationParams")
 	private OperationParamsEnum operationParams = null;

@@ -3,7 +3,7 @@ package com.ubiqube.etsi.mano.json;
 import org.apache.commons.beanutils.Converter;
 
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 
 public class OperationalStateConverter implements Converter {
 

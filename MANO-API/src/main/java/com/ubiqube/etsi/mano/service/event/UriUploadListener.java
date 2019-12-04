@@ -7,7 +7,7 @@ import org.quartz.JobListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 

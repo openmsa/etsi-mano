@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.vnf.sol005;
+package com.ubiqube.etsi.mano.model.vnf;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

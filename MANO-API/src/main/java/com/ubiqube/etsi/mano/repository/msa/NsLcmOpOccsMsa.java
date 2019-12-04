@@ -12,8 +12,8 @@ import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.NsInstanceIndex;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpOccsIndex;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
 @Profile("!RDBMS")

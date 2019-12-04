@@ -21,9 +21,9 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity

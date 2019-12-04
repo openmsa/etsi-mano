@@ -5,11 +5,11 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
