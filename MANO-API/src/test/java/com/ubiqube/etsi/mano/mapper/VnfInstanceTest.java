@@ -36,7 +36,6 @@ public class VnfInstanceTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-		nsInstancesNsInstanceVnfInstance.setVimId("abcdef");
 		nsInstancesNsInstanceVnfInstance.setVnfdId("1234");
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceDescription("description");
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceName("instance_name");

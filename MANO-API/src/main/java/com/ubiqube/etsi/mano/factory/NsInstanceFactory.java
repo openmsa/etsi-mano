@@ -31,7 +31,6 @@ public class NsInstanceFactory {
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
 		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-		nsInstancesNsInstanceVnfInstance.setVimId((String) _vnfPkgInfo.getUserDefinedData().get("vimId"));
 		nsInstancesNsInstanceVnfInstance.setVnfdId(_vnfPkgInfo.getVnfdId());
 		nsInstancesNsInstanceVnfInstance.setVnfdVersion(_vnfPkgInfo.getVnfdVersion());
 		nsInstancesNsInstanceVnfInstance.setVnfPkgId(_vnfPkgInfo.getId());

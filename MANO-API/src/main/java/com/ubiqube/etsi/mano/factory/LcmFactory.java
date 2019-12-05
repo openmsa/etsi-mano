@@ -11,6 +11,7 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
@@ -18,7 +19,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc.OperationParamsEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
 
 public final class LcmFactory {

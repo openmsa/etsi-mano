@@ -54,8 +54,10 @@ public class VnfInstance implements BaseEntity {
 
 	@Field
 	private String vnfInstanceDescription = null;
+
 	@Field
 	private String vnfInstanceName = null;
+
 	@OneToOne
 	private VnfPackage vnfPkg = null;
 
@@ -67,6 +69,7 @@ public class VnfInstance implements BaseEntity {
 
 	@Field
 	private String vnfSoftwareVersion = null;
+
 	@OneToOne
 	private NsdInstance nsInstance;
 
