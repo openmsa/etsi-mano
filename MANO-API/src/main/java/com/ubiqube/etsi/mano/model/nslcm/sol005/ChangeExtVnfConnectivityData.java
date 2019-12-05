@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,7 +28,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type describes the information invoked by the NFVO to change the external VNF connectivity information maintained by the VNFM. The types of changes that this operation supports are: 1) Disconnect the external CPs that are connected to a particular external VL, and connect them to a different external VL. 2) Change the connectivity parameters of the existing external CPs, including changing addresses. NOTE: Depending on the capabilities of the underlying VIM resources, certain changes (e.g. modifying the IP address assignment) might not be supported without deleting the resource and creating another one with the modified configuration. This type shall comply with the provisions defined in Table 6.5.3.33-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
 public class ChangeExtVnfConnectivityData {
 	@JsonProperty("vnfInstanceId")
@@ -50,7 +48,7 @@ public class ChangeExtVnfConnectivityData {
 
 	/**
 	 * Identifier of the VNF instance.
-	 *
+	 * 
 	 * @return vnfInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
@@ -76,7 +74,7 @@ public class ChangeExtVnfConnectivityData {
 
 	/**
 	 * Information about external VLs to change (e.g. connect the VNF to).
-	 *
+	 * 
 	 * @return extVirtualLink
 	 **/
 	@ApiModelProperty(required = true, value = "Information about external VLs to change (e.g. connect the VNF to). ")
@@ -100,7 +98,7 @@ public class ChangeExtVnfConnectivityData {
 	/**
 	 * Additional parameters passed by the OSS as input to the external connectivity
 	 * change process, specific to the VNF instance being changed.
-	 *
+	 * 
 	 * @return additionalParams
 	 **/
 	@ApiModelProperty(value = "Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. ")

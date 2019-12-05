@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type defines the additional parameters for the VNF instance to be created associated with an NS instance. It shall comply with the provisions defined in Table 6.5.3.22-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
 public class ParamsForVnf {
 	@JsonProperty("vnfProfileId")
@@ -37,7 +36,7 @@ public class ParamsForVnf {
 	/**
 	 * Identifier of (reference to) a vnfProfile to which the additional parameters
 	 * apply.
-	 *
+	 * 
 	 * @return vnfProfileId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of (reference to) a vnfProfile to which the additional parameters apply. ")
@@ -58,7 +57,7 @@ public class ParamsForVnf {
 
 	/**
 	 * Additional parameters that are applied for the VNF instance to be created.
-	 *
+	 * 
 	 * @return additionalParams
 	 **/
 	@ApiModelProperty(value = "Additional parameters that are applied for the VNF instance to be created. ")

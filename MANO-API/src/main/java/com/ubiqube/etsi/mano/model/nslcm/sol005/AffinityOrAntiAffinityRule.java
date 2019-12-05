@@ -1,280 +1,298 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol005;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type describes the additional affinity or anti-affinity rule applicable between the VNF instances to be instantiated in the NS instantiation operation request or between the VNF instances to be instantiated in the NS instantiation operation request and the existing VNF instances.. 
+ * This type describes the additional affinity or anti-affinity rule applicable
+ * between the VNF instances to be instantiated in the NS instantiation
+ * operation request or between the VNF instances to be instantiated in the NS
+ * instantiation operation request and the existing VNF instances..
  */
 @ApiModel(description = "This type describes the additional affinity or anti-affinity rule applicable between the VNF instances to be instantiated in the NS instantiation operation request or between the VNF instances to be instantiated in the NS instantiation operation request and the existing VNF instances.. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
-public class AffinityOrAntiAffinityRule   {
-  @JsonProperty("vnfdId")
-  @Valid
-  private List<String> vnfdId = null;
+public class AffinityOrAntiAffinityRule {
+	@JsonProperty("vnfdId")
+	@Valid
+	private List<String> vnfdId = null;
 
-  @JsonProperty("vnfProfileId")
-  @Valid
-  private List<String> vnfProfileId = null;
+	@JsonProperty("vnfProfileId")
+	@Valid
+	private List<String> vnfProfileId = null;
 
-  @JsonProperty("vnfInstanceId")
-  @Valid
-  private List<String> vnfInstanceId = null;
+	@JsonProperty("vnfInstanceId")
+	@Valid
+	private List<String> vnfInstanceId = null;
 
-  /**
-   * The type of the constraint. Permitted values: AFFINITY ANTI_AFFINITY. 
-   */
-  public enum AffinityOrAntiAffiintyEnum {
-    AFFINITY("AFFINITY"),
-    
-    ANTI_AFFINITY("ANTI_AFFINITY");
+	/**
+	 * The type of the constraint. Permitted values: AFFINITY ANTI_AFFINITY.
+	 */
+	public enum AffinityOrAntiAffiintyEnum {
+		AFFINITY("AFFINITY"),
 
-    private String value;
+		ANTI_AFFINITY("ANTI_AFFINITY");
 
-    AffinityOrAntiAffiintyEnum(String value) {
-      this.value = value;
-    }
+		private final String value;
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		AffinityOrAntiAffiintyEnum(final String value) {
+			this.value = value;
+		}
 
-    @JsonCreator
-    public static AffinityOrAntiAffiintyEnum fromValue(String text) {
-      for (AffinityOrAntiAffiintyEnum b : AffinityOrAntiAffiintyEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("affinityOrAntiAffiinty")
-  private AffinityOrAntiAffiintyEnum affinityOrAntiAffiinty = null;
+		@JsonCreator
+		public static AffinityOrAntiAffiintyEnum fromValue(final String text) {
+			for (final AffinityOrAntiAffiintyEnum b : AffinityOrAntiAffiintyEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  /**
-   * Specifies the scope of the rule where the placement constraint applies. Permitted values: NFVI_POP ZONE ZONE_GROUP NFVI_NODE. 
-   */
-  public enum ScopeEnum {
-    NFVI_POP("NFVI_POP"),
-    
-    ZONE("ZONE"),
-    
-    ZONE_GROUP("ZONE_GROUP"),
-    
-    NFVI_NODE("NFVI_NODE");
+	@JsonProperty("affinityOrAntiAffiinty")
+	private AffinityOrAntiAffiintyEnum affinityOrAntiAffiinty = null;
 
-    private String value;
+	/**
+	 * Specifies the scope of the rule where the placement constraint applies.
+	 * Permitted values: NFVI_POP ZONE ZONE_GROUP NFVI_NODE.
+	 */
+	public enum ScopeEnum {
+		NFVI_POP("NFVI_POP"),
 
-    ScopeEnum(String value) {
-      this.value = value;
-    }
+		ZONE("ZONE"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		ZONE_GROUP("ZONE_GROUP"),
 
-    @JsonCreator
-    public static ScopeEnum fromValue(String text) {
-      for (ScopeEnum b : ScopeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		NFVI_NODE("NFVI_NODE");
 
-  @JsonProperty("scope")
-  private ScopeEnum scope = null;
+		private final String value;
 
-  public AffinityOrAntiAffinityRule vnfdId(List<String> vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+		ScopeEnum(final String value) {
+			this.value = value;
+		}
 
-  public AffinityOrAntiAffinityRule addVnfdIdItem(String vnfdIdItem) {
-    if (this.vnfdId == null) {
-      this.vnfdId = new ArrayList<>();
-    }
-    this.vnfdId.add(vnfdIdItem);
-    return this;
-  }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  /**
-   * Reference to a VNFD. When the VNFD which is not used to instantiate VNF, it presents all VNF instances of this type as the subjects of the affinity or anti-affinity rule. The VNF instance which the VNFD presents is not necessary as a part of the NS to be instantiated. 
-   * @return vnfdId
-  **/
-  @ApiModelProperty(value = "Reference to a VNFD. When the VNFD which is not used to instantiate VNF, it presents all VNF instances of this type as the subjects of the affinity or anti-affinity rule. The VNF instance which the VNFD presents is not necessary as a part of the NS to be instantiated. ")
+		@JsonCreator
+		public static ScopeEnum fromValue(final String text) {
+			for (final ScopeEnum b : ScopeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
+	@JsonProperty("scope")
+	private ScopeEnum scope = null;
 
-  public List<String> getVnfdId() {
-    return vnfdId;
-  }
+	public AffinityOrAntiAffinityRule vnfdId(final List<String> vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  public void setVnfdId(List<String> vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	public AffinityOrAntiAffinityRule addVnfdIdItem(final String vnfdIdItem) {
+		if (this.vnfdId == null) {
+			this.vnfdId = new ArrayList<>();
+		}
+		this.vnfdId.add(vnfdIdItem);
+		return this;
+	}
 
-  public AffinityOrAntiAffinityRule vnfProfileId(List<String> vnfProfileId) {
-    this.vnfProfileId = vnfProfileId;
-    return this;
-  }
+	/**
+	 * Reference to a VNFD. When the VNFD which is not used to instantiate VNF, it
+	 * presents all VNF instances of this type as the subjects of the affinity or
+	 * anti-affinity rule. The VNF instance which the VNFD presents is not necessary
+	 * as a part of the NS to be instantiated.
+	 * 
+	 * @return vnfdId
+	 **/
+	@ApiModelProperty(value = "Reference to a VNFD. When the VNFD which is not used to instantiate VNF, it presents all VNF instances of this type as the subjects of the affinity or anti-affinity rule. The VNF instance which the VNFD presents is not necessary as a part of the NS to be instantiated. ")
 
-  public AffinityOrAntiAffinityRule addVnfProfileIdItem(String vnfProfileIdItem) {
-    if (this.vnfProfileId == null) {
-      this.vnfProfileId = new ArrayList<>();
-    }
-    this.vnfProfileId.add(vnfProfileIdItem);
-    return this;
-  }
+	public List<String> getVnfdId() {
+		return vnfdId;
+	}
 
-  /**
-   * Reference to a vnfProfile defined in the NSD. At least one VnfProfile which is used to instantiate VNF for the NS to be instantiated as the subject of the affinity or anti-affinity rule shall be present. When the VnfProfile which is not used to instantiate VNF, it presents all VNF instances of this type as the subjects of the affinity or anti-affinity rule. The VNF instance which the VnfProfile presents is not necessary as a part of the NS to be instantiated. 
-   * @return vnfProfileId
-  **/
-  @ApiModelProperty(value = "Reference to a vnfProfile defined in the NSD. At least one VnfProfile which is used to instantiate VNF for the NS to be instantiated as the subject of the affinity or anti-affinity rule shall be present. When the VnfProfile which is not used to instantiate VNF, it presents all VNF instances of this type as the subjects of the affinity or anti-affinity rule. The VNF instance which the VnfProfile presents is not necessary as a part of the NS to be instantiated. ")
+	public void setVnfdId(final List<String> vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
+	public AffinityOrAntiAffinityRule vnfProfileId(final List<String> vnfProfileId) {
+		this.vnfProfileId = vnfProfileId;
+		return this;
+	}
 
-  public List<String> getVnfProfileId() {
-    return vnfProfileId;
-  }
+	public AffinityOrAntiAffinityRule addVnfProfileIdItem(final String vnfProfileIdItem) {
+		if (this.vnfProfileId == null) {
+			this.vnfProfileId = new ArrayList<>();
+		}
+		this.vnfProfileId.add(vnfProfileIdItem);
+		return this;
+	}
 
-  public void setVnfProfileId(List<String> vnfProfileId) {
-    this.vnfProfileId = vnfProfileId;
-  }
+	/**
+	 * Reference to a vnfProfile defined in the NSD. At least one VnfProfile which
+	 * is used to instantiate VNF for the NS to be instantiated as the subject of
+	 * the affinity or anti-affinity rule shall be present. When the VnfProfile
+	 * which is not used to instantiate VNF, it presents all VNF instances of this
+	 * type as the subjects of the affinity or anti-affinity rule. The VNF instance
+	 * which the VnfProfile presents is not necessary as a part of the NS to be
+	 * instantiated.
+	 * 
+	 * @return vnfProfileId
+	 **/
+	@ApiModelProperty(value = "Reference to a vnfProfile defined in the NSD. At least one VnfProfile which is used to instantiate VNF for the NS to be instantiated as the subject of the affinity or anti-affinity rule shall be present. When the VnfProfile which is not used to instantiate VNF, it presents all VNF instances of this type as the subjects of the affinity or anti-affinity rule. The VNF instance which the VnfProfile presents is not necessary as a part of the NS to be instantiated. ")
 
-  public AffinityOrAntiAffinityRule vnfInstanceId(List<String> vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-    return this;
-  }
+	public List<String> getVnfProfileId() {
+		return vnfProfileId;
+	}
 
-  public AffinityOrAntiAffinityRule addVnfInstanceIdItem(String vnfInstanceIdItem) {
-    if (this.vnfInstanceId == null) {
-      this.vnfInstanceId = new ArrayList<>();
-    }
-    this.vnfInstanceId.add(vnfInstanceIdItem);
-    return this;
-  }
+	public void setVnfProfileId(final List<String> vnfProfileId) {
+		this.vnfProfileId = vnfProfileId;
+	}
 
-  /**
-   * Reference to the existing VNF instance as the subject of the affinity or anti-affinity rule. The existing VNF instance is not necessary as a part of the NS to be instantiated. 
-   * @return vnfInstanceId
-  **/
-  @ApiModelProperty(value = "Reference to the existing VNF instance as the subject of the affinity or anti-affinity rule. The existing VNF instance is not necessary as a part of the NS to be instantiated. ")
+	public AffinityOrAntiAffinityRule vnfInstanceId(final List<String> vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+		return this;
+	}
 
+	public AffinityOrAntiAffinityRule addVnfInstanceIdItem(final String vnfInstanceIdItem) {
+		if (this.vnfInstanceId == null) {
+			this.vnfInstanceId = new ArrayList<>();
+		}
+		this.vnfInstanceId.add(vnfInstanceIdItem);
+		return this;
+	}
 
-  public List<String> getVnfInstanceId() {
-    return vnfInstanceId;
-  }
+	/**
+	 * Reference to the existing VNF instance as the subject of the affinity or
+	 * anti-affinity rule. The existing VNF instance is not necessary as a part of
+	 * the NS to be instantiated.
+	 * 
+	 * @return vnfInstanceId
+	 **/
+	@ApiModelProperty(value = "Reference to the existing VNF instance as the subject of the affinity or anti-affinity rule. The existing VNF instance is not necessary as a part of the NS to be instantiated. ")
 
-  public void setVnfInstanceId(List<String> vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-  }
+	public List<String> getVnfInstanceId() {
+		return vnfInstanceId;
+	}
 
-  public AffinityOrAntiAffinityRule affinityOrAntiAffiinty(AffinityOrAntiAffiintyEnum affinityOrAntiAffiinty) {
-    this.affinityOrAntiAffiinty = affinityOrAntiAffiinty;
-    return this;
-  }
+	public void setVnfInstanceId(final List<String> vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+	}
 
-  /**
-   * The type of the constraint. Permitted values: AFFINITY ANTI_AFFINITY. 
-   * @return affinityOrAntiAffiinty
-  **/
-  @ApiModelProperty(required = true, value = "The type of the constraint. Permitted values: AFFINITY ANTI_AFFINITY. ")
-  @NotNull
+	public AffinityOrAntiAffinityRule affinityOrAntiAffiinty(final AffinityOrAntiAffiintyEnum affinityOrAntiAffiinty) {
+		this.affinityOrAntiAffiinty = affinityOrAntiAffiinty;
+		return this;
+	}
 
+	/**
+	 * The type of the constraint. Permitted values: AFFINITY ANTI_AFFINITY.
+	 * 
+	 * @return affinityOrAntiAffiinty
+	 **/
+	@ApiModelProperty(required = true, value = "The type of the constraint. Permitted values: AFFINITY ANTI_AFFINITY. ")
+	@NotNull
 
-  public AffinityOrAntiAffiintyEnum getAffinityOrAntiAffiinty() {
-    return affinityOrAntiAffiinty;
-  }
+	public AffinityOrAntiAffiintyEnum getAffinityOrAntiAffiinty() {
+		return affinityOrAntiAffiinty;
+	}
 
-  public void setAffinityOrAntiAffiinty(AffinityOrAntiAffiintyEnum affinityOrAntiAffiinty) {
-    this.affinityOrAntiAffiinty = affinityOrAntiAffiinty;
-  }
+	public void setAffinityOrAntiAffiinty(final AffinityOrAntiAffiintyEnum affinityOrAntiAffiinty) {
+		this.affinityOrAntiAffiinty = affinityOrAntiAffiinty;
+	}
 
-  public AffinityOrAntiAffinityRule scope(ScopeEnum scope) {
-    this.scope = scope;
-    return this;
-  }
+	public AffinityOrAntiAffinityRule scope(final ScopeEnum scope) {
+		this.scope = scope;
+		return this;
+	}
 
-  /**
-   * Specifies the scope of the rule where the placement constraint applies. Permitted values: NFVI_POP ZONE ZONE_GROUP NFVI_NODE. 
-   * @return scope
-  **/
-  @ApiModelProperty(required = true, value = "Specifies the scope of the rule where the placement constraint applies. Permitted values: NFVI_POP ZONE ZONE_GROUP NFVI_NODE. ")
-  @NotNull
+	/**
+	 * Specifies the scope of the rule where the placement constraint applies.
+	 * Permitted values: NFVI_POP ZONE ZONE_GROUP NFVI_NODE.
+	 * 
+	 * @return scope
+	 **/
+	@ApiModelProperty(required = true, value = "Specifies the scope of the rule where the placement constraint applies. Permitted values: NFVI_POP ZONE ZONE_GROUP NFVI_NODE. ")
+	@NotNull
 
+	public ScopeEnum getScope() {
+		return scope;
+	}
 
-  public ScopeEnum getScope() {
-    return scope;
-  }
+	public void setScope(final ScopeEnum scope) {
+		this.scope = scope;
+	}
 
-  public void setScope(ScopeEnum scope) {
-    this.scope = scope;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AffinityOrAntiAffinityRule affinityOrAntiAffinityRule = (AffinityOrAntiAffinityRule) o;
+		return Objects.equals(this.vnfdId, affinityOrAntiAffinityRule.vnfdId) &&
+				Objects.equals(this.vnfProfileId, affinityOrAntiAffinityRule.vnfProfileId) &&
+				Objects.equals(this.vnfInstanceId, affinityOrAntiAffinityRule.vnfInstanceId) &&
+				Objects.equals(this.affinityOrAntiAffiinty, affinityOrAntiAffinityRule.affinityOrAntiAffiinty) &&
+				Objects.equals(this.scope, affinityOrAntiAffinityRule.scope);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfdId, vnfProfileId, vnfInstanceId, affinityOrAntiAffiinty, scope);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffinityOrAntiAffinityRule affinityOrAntiAffinityRule = (AffinityOrAntiAffinityRule) o;
-    return Objects.equals(this.vnfdId, affinityOrAntiAffinityRule.vnfdId) &&
-        Objects.equals(this.vnfProfileId, affinityOrAntiAffinityRule.vnfProfileId) &&
-        Objects.equals(this.vnfInstanceId, affinityOrAntiAffinityRule.vnfInstanceId) &&
-        Objects.equals(this.affinityOrAntiAffiinty, affinityOrAntiAffinityRule.affinityOrAntiAffiinty) &&
-        Objects.equals(this.scope, affinityOrAntiAffinityRule.scope);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffinityOrAntiAffinityRule {\n");
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfdId, vnfProfileId, vnfInstanceId, affinityOrAntiAffiinty, scope);
-  }
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    vnfProfileId: ").append(toIndentedString(vnfProfileId)).append("\n");
+		sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
+		sb.append("    affinityOrAntiAffiinty: ").append(toIndentedString(affinityOrAntiAffiinty)).append("\n");
+		sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffinityOrAntiAffinityRule {\n");
-    
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    vnfProfileId: ").append(toIndentedString(vnfProfileId)).append("\n");
-    sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
-    sb.append("    affinityOrAntiAffiinty: ").append(toIndentedString(affinityOrAntiAffiinty)).append("\n");
-    sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

@@ -1,134 +1,142 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol005;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * ApiVersionInformationApiVersions
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
-public class ApiVersionInformationApiVersions   {
-  @JsonProperty("version")
-  private String version = null;
+public class ApiVersionInformationApiVersions {
+	@JsonProperty("version")
+	private String version = null;
 
-  @JsonProperty("isDeprecated")
-  private Boolean isDeprecated = null;
+	@JsonProperty("isDeprecated")
+	private Boolean isDeprecated = null;
 
-  @JsonProperty("retirementDate")
-  private OffsetDateTime retirementDate = null;
+	@JsonProperty("retirementDate")
+	private OffsetDateTime retirementDate = null;
 
-  public ApiVersionInformationApiVersions version(String version) {
-    this.version = version;
-    return this;
-  }
+	public ApiVersionInformationApiVersions version(final String version) {
+		this.version = version;
+		return this;
+	}
 
-  /**
-   * Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. 
-   * @return version
-  **/
-  @ApiModelProperty(required = true, value = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
-  @NotNull
+	/**
+	 * Identifies a supported version. The value of the version attribute shall be a
+	 * version identifier as specified in clause 4.6.1.
+	 * 
+	 * @return version
+	 **/
+	@ApiModelProperty(required = true, value = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
+	@NotNull
 
+	public String getVersion() {
+		return version;
+	}
 
-  public String getVersion() {
-    return version;
-  }
+	public void setVersion(final String version) {
+		this.version = version;
+	}
 
-  public void setVersion(String version) {
-    this.version = version;
-  }
+	public ApiVersionInformationApiVersions isDeprecated(final Boolean isDeprecated) {
+		this.isDeprecated = isDeprecated;
+		return this;
+	}
 
-  public ApiVersionInformationApiVersions isDeprecated(Boolean isDeprecated) {
-    this.isDeprecated = isDeprecated;
-    return this;
-  }
+	/**
+	 * If such information is available, this attribute indicates whether use of the
+	 * version signaled by the version attribute is deprecated (true) or not
+	 * (false). A deprecated version is still supported by the API producer but is
+	 * recommended not to be used any longer. When a version is no longer supported,
+	 * it does not appear in the response body.
+	 * 
+	 * @return isDeprecated
+	 **/
+	@ApiModelProperty(value = "If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body. ")
 
-  /**
-   * If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body. 
-   * @return isDeprecated
-  **/
-  @ApiModelProperty(value = "If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body. ")
+	public Boolean getIsDeprecated() {
+		return isDeprecated;
+	}
 
+	public void setIsDeprecated(final Boolean isDeprecated) {
+		this.isDeprecated = isDeprecated;
+	}
 
-  public Boolean getIsDeprecated() {
-    return isDeprecated;
-  }
+	public ApiVersionInformationApiVersions retirementDate(final OffsetDateTime retirementDate) {
+		this.retirementDate = retirementDate;
+		return this;
+	}
 
-  public void setIsDeprecated(Boolean isDeprecated) {
-    this.isDeprecated = isDeprecated;
-  }
+	/**
+	 * The date and time after which the API version will no longer be supported.
+	 * This attribute may be included if the value of the isDeprecated attribute is
+	 * set to true and shall be absent otherwise.
+	 * 
+	 * @return retirementDate
+	 **/
+	@ApiModelProperty(value = "The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise. ")
 
-  public ApiVersionInformationApiVersions retirementDate(OffsetDateTime retirementDate) {
-    this.retirementDate = retirementDate;
-    return this;
-  }
+	@Valid
 
-  /**
-   * The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise. 
-   * @return retirementDate
-  **/
-  @ApiModelProperty(value = "The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise. ")
+	public OffsetDateTime getRetirementDate() {
+		return retirementDate;
+	}
 
-  @Valid
+	public void setRetirementDate(final OffsetDateTime retirementDate) {
+		this.retirementDate = retirementDate;
+	}
 
-  public OffsetDateTime getRetirementDate() {
-    return retirementDate;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final ApiVersionInformationApiVersions apiVersionInformationApiVersions = (ApiVersionInformationApiVersions) o;
+		return Objects.equals(this.version, apiVersionInformationApiVersions.version) &&
+				Objects.equals(this.isDeprecated, apiVersionInformationApiVersions.isDeprecated) &&
+				Objects.equals(this.retirementDate, apiVersionInformationApiVersions.retirementDate);
+	}
 
-  public void setRetirementDate(OffsetDateTime retirementDate) {
-    this.retirementDate = retirementDate;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(version, isDeprecated, retirementDate);
+	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class ApiVersionInformationApiVersions {\n");
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ApiVersionInformationApiVersions apiVersionInformationApiVersions = (ApiVersionInformationApiVersions) o;
-    return Objects.equals(this.version, apiVersionInformationApiVersions.version) &&
-        Objects.equals(this.isDeprecated, apiVersionInformationApiVersions.isDeprecated) &&
-        Objects.equals(this.retirementDate, apiVersionInformationApiVersions.retirementDate);
-  }
+		sb.append("    version: ").append(toIndentedString(version)).append("\n");
+		sb.append("    isDeprecated: ").append(toIndentedString(isDeprecated)).append("\n");
+		sb.append("    retirementDate: ").append(toIndentedString(retirementDate)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(version, isDeprecated, retirementDate);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ApiVersionInformationApiVersions {\n");
-    
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
-    sb.append("    isDeprecated: ").append(toIndentedString(isDeprecated)).append("\n");
-    sb.append("    retirementDate: ").append(toIndentedString(retirementDate)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

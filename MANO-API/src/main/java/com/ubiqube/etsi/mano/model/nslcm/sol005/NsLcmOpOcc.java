@@ -10,8 +10,6 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 
 import io.swagger.annotations.ApiModel;
@@ -23,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a request a NS lifecycle operation occurrence. It shall comply with the provisions defined in Table 6.5.2.3-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
 public class NsLcmOpOcc {
 	@JsonProperty("id")
@@ -46,18 +44,6 @@ public class NsLcmOpOcc {
 
 	@JsonProperty("isAutomaticInvocation")
 	private Boolean isAutomaticInvocation = null;
-
-	/**
-	 * Input parameters of the LCM operation. This attribute shall be formatted
-	 * according to the request data type of the related LCM operation. The
-	 * following mapping between lcmOperationType and the data type of this
-	 * attribute shall apply: - INSTANTIATE: InstantiateNsRequest - SCALE:
-	 * ScaleNsRequest - UPDATE: UpdateNsRequest - HEAL: HealNsRequest - TERMINATE:
-	 * TerminateNsRequest This attribute shall be present if this data type is
-	 * returned in a response to reading an individual resource, and may be present
-	 * according to the chosen attribute selector parameter if this data type is
-	 * returned in a response to a query of a container resource.
-	 */
 
 	@JsonProperty("operationParams")
 	private OperationParamsEnum operationParams = null;

@@ -1,226 +1,230 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol005;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * This type provides information about added, deleted and modified VNFFG instances. It shall comply with the provisions in Table 6.5.3.5-1. 
+ * This type provides information about added, deleted and modified VNFFG
+ * instances. It shall comply with the provisions in Table 6.5.3.5-1.
  */
 @ApiModel(description = "This type provides information about added, deleted and modified VNFFG instances. It shall comply with the provisions in Table 6.5.3.5-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
-public class AffectedVnffg   {
-  @JsonProperty("vnffgInstanceId")
-  private String vnffgInstanceId = null;
+public class AffectedVnffg {
+	@JsonProperty("vnffgInstanceId")
+	private String vnffgInstanceId = null;
 
-  @JsonProperty("vnffgdId")
-  private String vnffgdId = null;
+	@JsonProperty("vnffgdId")
+	private String vnffgdId = null;
 
-  /**
-   * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY 
-   */
-  public enum ChangeTypeEnum {
-    ADD("ADD"),
-    
-    DELETE("DELETE"),
-    
-    MODIFY("MODIFY");
+	/**
+	 * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY
+	 */
+	public enum ChangeTypeEnum {
+		ADD("ADD"),
 
-    private String value;
+		DELETE("DELETE"),
 
-    ChangeTypeEnum(String value) {
-      this.value = value;
-    }
+		MODIFY("MODIFY");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		private final String value;
 
-    @JsonCreator
-    public static ChangeTypeEnum fromValue(String text) {
-      for (ChangeTypeEnum b : ChangeTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		ChangeTypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("changeType")
-  private ChangeTypeEnum changeType = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  /**
-   * Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED 
-   */
-  public enum ChangeResultEnum {
-    COMPLETED("COMPLETED"),
-    
-    ROLLED_BACK("ROLLED_BACK"),
-    
-    FAILED("FAILED");
+		@JsonCreator
+		public static ChangeTypeEnum fromValue(final String text) {
+			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-    private String value;
+	@JsonProperty("changeType")
+	private ChangeTypeEnum changeType = null;
 
-    ChangeResultEnum(String value) {
-      this.value = value;
-    }
+	/**
+	 * Signals the result of change identified by the \"changeType\" attribute.
+	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
+	 */
+	public enum ChangeResultEnum {
+		COMPLETED("COMPLETED"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		ROLLED_BACK("ROLLED_BACK"),
 
-    @JsonCreator
-    public static ChangeResultEnum fromValue(String text) {
-      for (ChangeResultEnum b : ChangeResultEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		FAILED("FAILED");
 
-  @JsonProperty("changeResult")
-  private ChangeResultEnum changeResult = null;
+		private final String value;
 
-  public AffectedVnffg vnffgInstanceId(String vnffgInstanceId) {
-    this.vnffgInstanceId = vnffgInstanceId;
-    return this;
-  }
+		ChangeResultEnum(final String value) {
+			this.value = value;
+		}
 
-  /**
-   * Identifier of the VNFFG instance. 
-   * @return vnffgInstanceId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the VNFFG instance. ")
-  @NotNull
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
+		@JsonCreator
+		public static ChangeResultEnum fromValue(final String text) {
+			for (final ChangeResultEnum b : ChangeResultEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  public String getVnffgInstanceId() {
-    return vnffgInstanceId;
-  }
+	@JsonProperty("changeResult")
+	private ChangeResultEnum changeResult = null;
 
-  public void setVnffgInstanceId(String vnffgInstanceId) {
-    this.vnffgInstanceId = vnffgInstanceId;
-  }
+	public AffectedVnffg vnffgInstanceId(final String vnffgInstanceId) {
+		this.vnffgInstanceId = vnffgInstanceId;
+		return this;
+	}
 
-  public AffectedVnffg vnffgdId(String vnffgdId) {
-    this.vnffgdId = vnffgdId;
-    return this;
-  }
+	/**
+	 * Identifier of the VNFFG instance.
+	 * 
+	 * @return vnffgInstanceId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the VNFFG instance. ")
+	@NotNull
 
-  /**
-   * Identifier of the VNFFGD of the VNFFG instance. 
-   * @return vnffgdId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the VNFFGD of the VNFFG instance. ")
-  @NotNull
+	public String getVnffgInstanceId() {
+		return vnffgInstanceId;
+	}
 
+	public void setVnffgInstanceId(final String vnffgInstanceId) {
+		this.vnffgInstanceId = vnffgInstanceId;
+	}
 
-  public String getVnffgdId() {
-    return vnffgdId;
-  }
+	public AffectedVnffg vnffgdId(final String vnffgdId) {
+		this.vnffgdId = vnffgdId;
+		return this;
+	}
 
-  public void setVnffgdId(String vnffgdId) {
-    this.vnffgdId = vnffgdId;
-  }
+	/**
+	 * Identifier of the VNFFGD of the VNFFG instance.
+	 * 
+	 * @return vnffgdId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the VNFFGD of the VNFFG instance. ")
+	@NotNull
 
-  public AffectedVnffg changeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-    return this;
-  }
+	public String getVnffgdId() {
+		return vnffgdId;
+	}
 
-  /**
-   * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY 
-   * @return changeType
-  **/
-  @ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY ")
+	public void setVnffgdId(final String vnffgdId) {
+		this.vnffgdId = vnffgdId;
+	}
 
+	public AffectedVnffg changeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+		return this;
+	}
 
-  public ChangeTypeEnum getChangeType() {
-    return changeType;
-  }
+	/**
+	 * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY
+	 * 
+	 * @return changeType
+	 **/
+	@ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY ")
 
-  public void setChangeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-  }
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
 
-  public AffectedVnffg changeResult(ChangeResultEnum changeResult) {
-    this.changeResult = changeResult;
-    return this;
-  }
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
 
-  /**
-   * Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED 
-   * @return changeResult
-  **/
-  @ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
+	public AffectedVnffg changeResult(final ChangeResultEnum changeResult) {
+		this.changeResult = changeResult;
+		return this;
+	}
 
+	/**
+	 * Signals the result of change identified by the \"changeType\" attribute.
+	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
+	 * 
+	 * @return changeResult
+	 **/
+	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
 
-  public ChangeResultEnum getChangeResult() {
-    return changeResult;
-  }
+	public ChangeResultEnum getChangeResult() {
+		return changeResult;
+	}
 
-  public void setChangeResult(ChangeResultEnum changeResult) {
-    this.changeResult = changeResult;
-  }
+	public void setChangeResult(final ChangeResultEnum changeResult) {
+		this.changeResult = changeResult;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AffectedVnffg affectedVnffg = (AffectedVnffg) o;
+		return Objects.equals(this.vnffgInstanceId, affectedVnffg.vnffgInstanceId) &&
+				Objects.equals(this.vnffgdId, affectedVnffg.vnffgdId) &&
+				Objects.equals(this.changeType, affectedVnffg.changeType) &&
+				Objects.equals(this.changeResult, affectedVnffg.changeResult);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffectedVnffg affectedVnffg = (AffectedVnffg) o;
-    return Objects.equals(this.vnffgInstanceId, affectedVnffg.vnffgInstanceId) &&
-        Objects.equals(this.vnffgdId, affectedVnffg.vnffgdId) &&
-        Objects.equals(this.changeType, affectedVnffg.changeType) &&
-        Objects.equals(this.changeResult, affectedVnffg.changeResult);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnffgInstanceId, vnffgdId, changeType, changeResult);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnffgInstanceId, vnffgdId, changeType, changeResult);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffectedVnffg {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffectedVnffg {\n");
-    
-    sb.append("    vnffgInstanceId: ").append(toIndentedString(vnffgInstanceId)).append("\n");
-    sb.append("    vnffgdId: ").append(toIndentedString(vnffgdId)).append("\n");
-    sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
-    sb.append("    changeResult: ").append(toIndentedString(changeResult)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    vnffgInstanceId: ").append(toIndentedString(vnffgInstanceId)).append("\n");
+		sb.append("    vnffgdId: ").append(toIndentedString(vnffgdId)).append("\n");
+		sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
+		sb.append("    changeResult: ").append(toIndentedString(changeResult)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-
