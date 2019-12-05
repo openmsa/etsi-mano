@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.CpProtocolData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,7 +41,7 @@ public class PnfExtCpData {
 
 	/**
 	 * Identifier of the CP. Shall be present for existing CP.
-	 * 
+	 *
 	 * @return cpInstanceI16
 	 **/
 	@ApiModelProperty(value = "Identifier of the CP. Shall be present for existing CP. ")
@@ -61,7 +62,7 @@ public class PnfExtCpData {
 	/**
 	 * Identifier of the Connection Point Descriptor (CPD) for this CP. Shall be
 	 * present for new CP.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@ApiModelProperty(value = "Identifier of the Connection Point Descriptor (CPD) for this CP. Shall be present for new CP. ")
@@ -86,7 +87,7 @@ public class PnfExtCpData {
 
 	/**
 	 * Address assigned for this CP.
-	 * 
+	 *
 	 * @return cpProtocolData
 	 **/
 	@ApiModelProperty(required = true, value = "Address assigned for this CP. ")

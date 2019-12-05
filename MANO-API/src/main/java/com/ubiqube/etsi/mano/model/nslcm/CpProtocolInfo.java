@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.nslcm.sol005;
+package com.ubiqube.etsi.mano.model.nslcm;
 
 import java.util.Objects;
 
@@ -10,20 +10,24 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.IpOverEthernetAddressInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents network protocol data.
+ * This type describes the protocol layer(s) that a CP or SAP uses together with
+ * protocol-related information, like addresses. It shall comply with the
+ * provisions defined in Table 6.5.3.58-1.
  */
-@ApiModel(description = "This type represents network protocol data. ")
+@ApiModel(description = "This type describes the protocol layer(s) that a CP or SAP uses together with protocol-related information, like addresses. It shall comply with the provisions defined in Table 6.5.3.58-1. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
 
-public class CpProtocolData {
+public class CpProtocolInfo {
 	/**
-	 * Identifier of layer(s) and protocol(s). Permitted values: IP_OVER_ETHERNET.
+	 * The identifier of layer(s) and protocol(s) associated to the network address
+	 * information. Permitted values: IP_OVER_ETHERNET See note.
 	 */
 	public enum LayerProtocolEnum {
 		IP_OVER_ETHERNET("IP_OVER_ETHERNET");
@@ -55,19 +59,20 @@ public class CpProtocolData {
 	private LayerProtocolEnum layerProtocol = null;
 
 	@JsonProperty("ipOverEthernet")
-	private IpOverEthernetAddressData ipOverEthernet = null;
+	private IpOverEthernetAddressInfo ipOverEthernet = null;
 
-	public CpProtocolData layerProtocol(final LayerProtocolEnum layerProtocol) {
+	public CpProtocolInfo layerProtocol(final LayerProtocolEnum layerProtocol) {
 		this.layerProtocol = layerProtocol;
 		return this;
 	}
 
 	/**
-	 * Identifier of layer(s) and protocol(s). Permitted values: IP_OVER_ETHERNET.
+	 * The identifier of layer(s) and protocol(s) associated to the network address
+	 * information. Permitted values: IP_OVER_ETHERNET See note.
 	 * 
 	 * @return layerProtocol
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of layer(s) and protocol(s). Permitted values: IP_OVER_ETHERNET. ")
+	@ApiModelProperty(required = true, value = "The identifier of layer(s) and protocol(s) associated to the network address information. Permitted values: IP_OVER_ETHERNET See note. ")
 	@NotNull
 
 	public LayerProtocolEnum getLayerProtocol() {
@@ -78,27 +83,28 @@ public class CpProtocolData {
 		this.layerProtocol = layerProtocol;
 	}
 
-	public CpProtocolData ipOverEthernet(final IpOverEthernetAddressData ipOverEthernet) {
+	public CpProtocolInfo ipOverEthernet(final IpOverEthernetAddressInfo ipOverEthernet) {
 		this.ipOverEthernet = ipOverEthernet;
 		return this;
 	}
 
 	/**
-	 * Network address data for IP over Ethernet to assign to the extCP instance.
-	 * Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall
-	 * be absent otherwise.
+	 * IP addresses over Ethernet to assign to the CP or SAP instance. Shall be
+	 * present if layerProtocol is equal to \" IP_OVER_ETHERNET\", and shall be
+	 * absent otherwise.
 	 * 
 	 * @return ipOverEthernet
 	 **/
-	@ApiModelProperty(value = "Network address data for IP over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall be absent otherwise. ")
+	@ApiModelProperty(required = true, value = "IP addresses over Ethernet to assign to the CP or SAP instance. Shall be present if layerProtocol is equal to \" IP_OVER_ETHERNET\", and shall be absent otherwise. ")
+	@NotNull
 
 	@Valid
 
-	public IpOverEthernetAddressData getIpOverEthernet() {
+	public IpOverEthernetAddressInfo getIpOverEthernet() {
 		return ipOverEthernet;
 	}
 
-	public void setIpOverEthernet(final IpOverEthernetAddressData ipOverEthernet) {
+	public void setIpOverEthernet(final IpOverEthernetAddressInfo ipOverEthernet) {
 		this.ipOverEthernet = ipOverEthernet;
 	}
 
@@ -110,9 +116,9 @@ public class CpProtocolData {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		final CpProtocolData cpProtocolData = (CpProtocolData) o;
-		return Objects.equals(this.layerProtocol, cpProtocolData.layerProtocol) &&
-				Objects.equals(this.ipOverEthernet, cpProtocolData.ipOverEthernet);
+		final CpProtocolInfo cpProtocolInfo = (CpProtocolInfo) o;
+		return Objects.equals(this.layerProtocol, cpProtocolInfo.layerProtocol) &&
+				Objects.equals(this.ipOverEthernet, cpProtocolInfo.ipOverEthernet);
 	}
 
 	@Override
@@ -123,7 +129,7 @@ public class CpProtocolData {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class CpProtocolData {\n");
+		sb.append("class CpProtocolInfo {\n");
 
 		sb.append("    layerProtocol: ").append(toIndentedString(layerProtocol)).append("\n");
 		sb.append("    ipOverEthernet: ").append(toIndentedString(ipOverEthernet)).append("\n");

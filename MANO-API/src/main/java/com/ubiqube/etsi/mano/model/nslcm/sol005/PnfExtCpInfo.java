@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.CpProtocolData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,7 +41,7 @@ public class PnfExtCpInfo {
 
 	/**
 	 * Identifier of the CP in the scope of the PNF.
-	 * 
+	 *
 	 * @return cpInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the CP in the scope of the PNF. ")
@@ -62,7 +63,7 @@ public class PnfExtCpInfo {
 	/**
 	 * Identifier of (reference to) the Connection Point Descriptor (CPD) for this
 	 * CP.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of (reference to) the Connection Point Descriptor (CPD) for this CP. ")
@@ -91,7 +92,7 @@ public class PnfExtCpInfo {
 
 	/**
 	 * Parameters for configuring the network protocols on the CP.
-	 * 
+	 *
 	 * @return cpProtocolData
 	 **/
 	@ApiModelProperty(value = "Parameters for configuring the network protocols on the CP. ")

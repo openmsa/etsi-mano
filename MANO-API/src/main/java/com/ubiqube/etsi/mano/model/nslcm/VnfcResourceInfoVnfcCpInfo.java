@@ -11,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 

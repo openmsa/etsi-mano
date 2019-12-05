@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.CpProtocolData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,7 +44,7 @@ public class SapData {
 
 	/**
 	 * Reference to the SAPD for this SAP.
-	 * 
+	 *
 	 * @return sapdId
 	 **/
 	@ApiModelProperty(required = true, value = "Reference to the SAPD for this SAP. ")
@@ -64,7 +65,7 @@ public class SapData {
 
 	/**
 	 * Human readable name for the SAP.
-	 * 
+	 *
 	 * @return sapName
 	 **/
 	@ApiModelProperty(required = true, value = "Human readable name for the SAP. ")
@@ -85,7 +86,7 @@ public class SapData {
 
 	/**
 	 * Human readable description for the SAP.
-	 * 
+	 *
 	 * @return description
 	 **/
 	@ApiModelProperty(required = true, value = "Human readable description for the SAP. ")
@@ -114,7 +115,7 @@ public class SapData {
 
 	/**
 	 * Parameters for configuring the network protocols on the SAP.
-	 * 
+	 *
 	 * @return sapProtocolData
 	 **/
 	@ApiModelProperty(value = "Parameters for configuring the network protocols on the SAP. ")
