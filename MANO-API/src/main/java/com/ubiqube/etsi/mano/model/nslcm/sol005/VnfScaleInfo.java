@@ -1,13 +1,14 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol005;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * VnfScaleInfo
@@ -15,94 +16,93 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
 
-public class VnfScaleInfo   {
-  @JsonProperty("aspectId")
-  private String aspectId = null;
+public class VnfScaleInfo {
+	@JsonProperty("aspectId")
+	private String aspectId = null;
 
-  @JsonProperty("scaleLevel")
-  private Integer scaleLevel = null;
+	@JsonProperty("scaleLevel")
+	private Integer scaleLevel = null;
 
-  public VnfScaleInfo aspectId(String aspectId) {
-    this.aspectId = aspectId;
-    return this;
-  }
+	public VnfScaleInfo aspectId(final String aspectId) {
+		this.aspectId = aspectId;
+		return this;
+	}
 
-  /**
-   * Identifier of the scaling aspect. 
-   * @return aspectId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
-  @NotNull
+	/**
+	 * Identifier of the scaling aspect.
+	 * 
+	 * @return aspectId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
+	@NotNull
 
+	public String getAspectId() {
+		return aspectId;
+	}
 
-  public String getAspectId() {
-    return aspectId;
-  }
+	public void setAspectId(final String aspectId) {
+		this.aspectId = aspectId;
+	}
 
-  public void setAspectId(String aspectId) {
-    this.aspectId = aspectId;
-  }
+	public VnfScaleInfo scaleLevel(final Integer scaleLevel) {
+		this.scaleLevel = scaleLevel;
+		return this;
+	}
 
-  public VnfScaleInfo scaleLevel(Integer scaleLevel) {
-    this.scaleLevel = scaleLevel;
-    return this;
-  }
+	/**
+	 * Indicates the scale level. The minimum value shall be 0 and the maximum value
+	 * shall be <= maxScaleLevel as described in the VNFD.
+	 * 
+	 * @return scaleLevel
+	 **/
+	@ApiModelProperty(required = true, value = "Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. ")
+	@NotNull
 
-  /**
-   * Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. 
-   * @return scaleLevel
-  **/
-  @ApiModelProperty(required = true, value = "Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. ")
-  @NotNull
+	public Integer getScaleLevel() {
+		return scaleLevel;
+	}
 
+	public void setScaleLevel(final Integer scaleLevel) {
+		this.scaleLevel = scaleLevel;
+	}
 
-  public Integer getScaleLevel() {
-    return scaleLevel;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final VnfScaleInfo vnfScaleInfo = (VnfScaleInfo) o;
+		return Objects.equals(this.aspectId, vnfScaleInfo.aspectId) &&
+				Objects.equals(this.scaleLevel, vnfScaleInfo.scaleLevel);
+	}
 
-  public void setScaleLevel(Integer scaleLevel) {
-    this.scaleLevel = scaleLevel;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(aspectId, scaleLevel);
+	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfScaleInfo {\n");
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfScaleInfo vnfScaleInfo = (VnfScaleInfo) o;
-    return Objects.equals(this.aspectId, vnfScaleInfo.aspectId) &&
-        Objects.equals(this.scaleLevel, vnfScaleInfo.scaleLevel);
-  }
+		sb.append("    aspectId: ").append(toIndentedString(aspectId)).append("\n");
+		sb.append("    scaleLevel: ").append(toIndentedString(scaleLevel)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(aspectId, scaleLevel);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfScaleInfo {\n");
-    
-    sb.append("    aspectId: ").append(toIndentedString(aspectId)).append("\n");
-    sb.append("    scaleLevel: ").append(toIndentedString(scaleLevel)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

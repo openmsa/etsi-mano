@@ -1,311 +1,316 @@
 package com.ubiqube.etsi.mano.model.nslcm.sol005;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type provides information about added, deleted and modified PNFs.  It shall comply with the provisions in Table 6.5.3.3-1. 
+ * This type provides information about added, deleted and modified PNFs. It
+ * shall comply with the provisions in Table 6.5.3.3-1.
  */
 @ApiModel(description = "This type provides information about added, deleted and modified PNFs.  It shall comply with the provisions in Table 6.5.3.3-1. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
 
-public class AffectedPnf   {
-  @JsonProperty("pnfId")
-  private String pnfId = null;
+public class AffectedPnf {
+	@JsonProperty("pnfId")
+	private String pnfId = null;
 
-  @JsonProperty("pnfdId")
-  private String pnfdId = null;
+	@JsonProperty("pnfdId")
+	private String pnfdId = null;
 
-  @JsonProperty("pnfProfileId")
-  private String pnfProfileId = null;
+	@JsonProperty("pnfProfileId")
+	private String pnfProfileId = null;
 
-  @JsonProperty("pnfName")
-  private String pnfName = null;
+	@JsonProperty("pnfName")
+	private String pnfName = null;
 
-  @JsonProperty("cpInstanceId")
-  @Valid
-  private List<String> cpInstanceId = new ArrayList<>();
+	@JsonProperty("cpInstanceId")
+	@Valid
+	private List<String> cpInstanceId = new ArrayList<>();
 
-  /**
-   * Signals the type of change. Permitted values: - ADD - REMOVE - MODIFY 
-   */
-  public enum ChangeTypeEnum {
-    ADD("ADD"),
-    
-    REMOVE("REMOVE"),
-    
-    MODIFY("MODIFY");
+	/**
+	 * Signals the type of change. Permitted values: - ADD - REMOVE - MODIFY
+	 */
+	public enum ChangeTypeEnum {
+		ADD("ADD"),
 
-    private String value;
+		REMOVE("REMOVE"),
 
-    ChangeTypeEnum(String value) {
-      this.value = value;
-    }
+		MODIFY("MODIFY");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		private final String value;
 
-    @JsonCreator
-    public static ChangeTypeEnum fromValue(String text) {
-      for (ChangeTypeEnum b : ChangeTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		ChangeTypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("changeType")
-  private ChangeTypeEnum changeType = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  /**
-   * Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED 
-   */
-  public enum ChangeResultEnum {
-    COMPLETED("COMPLETED"),
-    
-    ROLLED_BACK("ROLLED_BACK"),
-    
-    FAILED("FAILED");
+		@JsonCreator
+		public static ChangeTypeEnum fromValue(final String text) {
+			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-    private String value;
+	@JsonProperty("changeType")
+	private ChangeTypeEnum changeType = null;
 
-    ChangeResultEnum(String value) {
-      this.value = value;
-    }
+	/**
+	 * Signals the result of change identified by the \"changeType\" attribute.
+	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
+	 */
+	public enum ChangeResultEnum {
+		COMPLETED("COMPLETED"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		ROLLED_BACK("ROLLED_BACK"),
 
-    @JsonCreator
-    public static ChangeResultEnum fromValue(String text) {
-      for (ChangeResultEnum b : ChangeResultEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		FAILED("FAILED");
 
-  @JsonProperty("changeResult")
-  private ChangeResultEnum changeResult = null;
+		private final String value;
 
-  public AffectedPnf pnfId(String pnfId) {
-    this.pnfId = pnfId;
-    return this;
-  }
+		ChangeResultEnum(final String value) {
+			this.value = value;
+		}
 
-  /**
-   * Identifier of the affected PNF. This identifier is allocated by the OSS/BSS. 
-   * @return pnfId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the affected PNF. This identifier is allocated by the OSS/BSS. ")
-  @NotNull
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
+		@JsonCreator
+		public static ChangeResultEnum fromValue(final String text) {
+			for (final ChangeResultEnum b : ChangeResultEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  public String getPnfId() {
-    return pnfId;
-  }
+	@JsonProperty("changeResult")
+	private ChangeResultEnum changeResult = null;
 
-  public void setPnfId(String pnfId) {
-    this.pnfId = pnfId;
-  }
+	public AffectedPnf pnfId(final String pnfId) {
+		this.pnfId = pnfId;
+		return this;
+	}
 
-  public AffectedPnf pnfdId(String pnfdId) {
-    this.pnfdId = pnfdId;
-    return this;
-  }
+	/**
+	 * Identifier of the affected PNF. This identifier is allocated by the OSS/BSS.
+	 * 
+	 * @return pnfId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the affected PNF. This identifier is allocated by the OSS/BSS. ")
+	@NotNull
 
-  /**
-   * Identifier of the PNFD on which the PNF is based. 
-   * @return pnfdId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the PNFD on which the PNF is based. ")
-  @NotNull
+	public String getPnfId() {
+		return pnfId;
+	}
 
+	public void setPnfId(final String pnfId) {
+		this.pnfId = pnfId;
+	}
 
-  public String getPnfdId() {
-    return pnfdId;
-  }
+	public AffectedPnf pnfdId(final String pnfdId) {
+		this.pnfdId = pnfdId;
+		return this;
+	}
 
-  public void setPnfdId(String pnfdId) {
-    this.pnfdId = pnfdId;
-  }
+	/**
+	 * Identifier of the PNFD on which the PNF is based.
+	 * 
+	 * @return pnfdId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the PNFD on which the PNF is based. ")
+	@NotNull
 
-  public AffectedPnf pnfProfileId(String pnfProfileId) {
-    this.pnfProfileId = pnfProfileId;
-    return this;
-  }
+	public String getPnfdId() {
+		return pnfdId;
+	}
 
-  /**
-   * Identifier of the VNF profile of the NSD. 
-   * @return pnfProfileId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the VNF profile of the NSD. ")
-  @NotNull
+	public void setPnfdId(final String pnfdId) {
+		this.pnfdId = pnfdId;
+	}
 
+	public AffectedPnf pnfProfileId(final String pnfProfileId) {
+		this.pnfProfileId = pnfProfileId;
+		return this;
+	}
 
-  public String getPnfProfileId() {
-    return pnfProfileId;
-  }
+	/**
+	 * Identifier of the VNF profile of the NSD.
+	 * 
+	 * @return pnfProfileId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the VNF profile of the NSD. ")
+	@NotNull
 
-  public void setPnfProfileId(String pnfProfileId) {
-    this.pnfProfileId = pnfProfileId;
-  }
+	public String getPnfProfileId() {
+		return pnfProfileId;
+	}
 
-  public AffectedPnf pnfName(String pnfName) {
-    this.pnfName = pnfName;
-    return this;
-  }
+	public void setPnfProfileId(final String pnfProfileId) {
+		this.pnfProfileId = pnfProfileId;
+	}
 
-  /**
-   * Name of the PNF. 
-   * @return pnfName
-  **/
-  @ApiModelProperty(value = "Name of the PNF. ")
+	public AffectedPnf pnfName(final String pnfName) {
+		this.pnfName = pnfName;
+		return this;
+	}
 
+	/**
+	 * Name of the PNF.
+	 * 
+	 * @return pnfName
+	 **/
+	@ApiModelProperty(value = "Name of the PNF. ")
 
-  public String getPnfName() {
-    return pnfName;
-  }
+	public String getPnfName() {
+		return pnfName;
+	}
 
-  public void setPnfName(String pnfName) {
-    this.pnfName = pnfName;
-  }
+	public void setPnfName(final String pnfName) {
+		this.pnfName = pnfName;
+	}
 
-  public AffectedPnf cpInstanceId(List<String> cpInstanceId) {
-    this.cpInstanceId = cpInstanceId;
-    return this;
-  }
+	public AffectedPnf cpInstanceId(final List<String> cpInstanceId) {
+		this.cpInstanceId = cpInstanceId;
+		return this;
+	}
 
-  public AffectedPnf addCpInstanceIdItem(String cpInstanceIdItem) {
-    this.cpInstanceId.add(cpInstanceIdItem);
-    return this;
-  }
+	public AffectedPnf addCpInstanceIdItem(final String cpInstanceIdItem) {
+		this.cpInstanceId.add(cpInstanceIdItem);
+		return this;
+	}
 
-  /**
-   * Identifier of the CP in the scope of the PNF. 
-   * @return cpInstanceId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the CP in the scope of the PNF. ")
-  @NotNull
+	/**
+	 * Identifier of the CP in the scope of the PNF.
+	 * 
+	 * @return cpInstanceId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the CP in the scope of the PNF. ")
+	@NotNull
 
+	public List<String> getCpInstanceId() {
+		return cpInstanceId;
+	}
 
-  public List<String> getCpInstanceId() {
-    return cpInstanceId;
-  }
+	public void setCpInstanceId(final List<String> cpInstanceId) {
+		this.cpInstanceId = cpInstanceId;
+	}
 
-  public void setCpInstanceId(List<String> cpInstanceId) {
-    this.cpInstanceId = cpInstanceId;
-  }
+	public AffectedPnf changeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+		return this;
+	}
 
-  public AffectedPnf changeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-    return this;
-  }
+	/**
+	 * Signals the type of change. Permitted values: - ADD - REMOVE - MODIFY
+	 * 
+	 * @return changeType
+	 **/
+	@ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - REMOVE - MODIFY ")
 
-  /**
-   * Signals the type of change. Permitted values: - ADD - REMOVE - MODIFY 
-   * @return changeType
-  **/
-  @ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - REMOVE - MODIFY ")
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
 
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
 
-  public ChangeTypeEnum getChangeType() {
-    return changeType;
-  }
+	public AffectedPnf changeResult(final ChangeResultEnum changeResult) {
+		this.changeResult = changeResult;
+		return this;
+	}
 
-  public void setChangeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-  }
+	/**
+	 * Signals the result of change identified by the \"changeType\" attribute.
+	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
+	 * 
+	 * @return changeResult
+	 **/
+	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
 
-  public AffectedPnf changeResult(ChangeResultEnum changeResult) {
-    this.changeResult = changeResult;
-    return this;
-  }
+	public ChangeResultEnum getChangeResult() {
+		return changeResult;
+	}
 
-  /**
-   * Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED 
-   * @return changeResult
-  **/
-  @ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
+	public void setChangeResult(final ChangeResultEnum changeResult) {
+		this.changeResult = changeResult;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AffectedPnf affectedPnf = (AffectedPnf) o;
+		return Objects.equals(this.pnfId, affectedPnf.pnfId) &&
+				Objects.equals(this.pnfdId, affectedPnf.pnfdId) &&
+				Objects.equals(this.pnfProfileId, affectedPnf.pnfProfileId) &&
+				Objects.equals(this.pnfName, affectedPnf.pnfName) &&
+				Objects.equals(this.cpInstanceId, affectedPnf.cpInstanceId) &&
+				Objects.equals(this.changeType, affectedPnf.changeType) &&
+				Objects.equals(this.changeResult, affectedPnf.changeResult);
+	}
 
-  public ChangeResultEnum getChangeResult() {
-    return changeResult;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(pnfId, pnfdId, pnfProfileId, pnfName, cpInstanceId, changeType, changeResult);
+	}
 
-  public void setChangeResult(ChangeResultEnum changeResult) {
-    this.changeResult = changeResult;
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffectedPnf {\n");
 
+		sb.append("    pnfId: ").append(toIndentedString(pnfId)).append("\n");
+		sb.append("    pnfdId: ").append(toIndentedString(pnfdId)).append("\n");
+		sb.append("    pnfProfileId: ").append(toIndentedString(pnfProfileId)).append("\n");
+		sb.append("    pnfName: ").append(toIndentedString(pnfName)).append("\n");
+		sb.append("    cpInstanceId: ").append(toIndentedString(cpInstanceId)).append("\n");
+		sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
+		sb.append("    changeResult: ").append(toIndentedString(changeResult)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffectedPnf affectedPnf = (AffectedPnf) o;
-    return Objects.equals(this.pnfId, affectedPnf.pnfId) &&
-        Objects.equals(this.pnfdId, affectedPnf.pnfdId) &&
-        Objects.equals(this.pnfProfileId, affectedPnf.pnfProfileId) &&
-        Objects.equals(this.pnfName, affectedPnf.pnfName) &&
-        Objects.equals(this.cpInstanceId, affectedPnf.cpInstanceId) &&
-        Objects.equals(this.changeType, affectedPnf.changeType) &&
-        Objects.equals(this.changeResult, affectedPnf.changeResult);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(pnfId, pnfdId, pnfProfileId, pnfName, cpInstanceId, changeType, changeResult);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffectedPnf {\n");
-    
-    sb.append("    pnfId: ").append(toIndentedString(pnfId)).append("\n");
-    sb.append("    pnfdId: ").append(toIndentedString(pnfdId)).append("\n");
-    sb.append("    pnfProfileId: ").append(toIndentedString(pnfProfileId)).append("\n");
-    sb.append("    pnfName: ").append(toIndentedString(pnfName)).append("\n");
-    sb.append("    cpInstanceId: ").append(toIndentedString(cpInstanceId)).append("\n");
-    sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
-    sb.append("    changeResult: ").append(toIndentedString(changeResult)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-
