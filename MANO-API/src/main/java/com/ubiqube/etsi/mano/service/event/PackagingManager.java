@@ -22,21 +22,27 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+import ma.glasnost.orika.MapperFacade;
+
 @Service
 public class PackagingManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PackagingManager.class);
 
 	private final VnfPackageRepository vnfPackageRepository;
+
 	private final EventManager eventManager;
 
 	private final PackageManager packageManager;
 
-	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager) {
+	private final MapperFacade mapper;
+
+	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
+		mapper = _mapper;
 	}
 
 	public void vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
@@ -59,6 +65,8 @@ public class PackagingManager {
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			vnfPkgInfo.setSoftwareImages(packageProvider.getSoftwareImages());
+			final ProviderData pd = packageProvider.getProviderPadata();
+			mapper.map(pd, vnfPkgInfo);
 		}
 		finishOnboarding(vnfPkgInfo);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgInfo.getId());

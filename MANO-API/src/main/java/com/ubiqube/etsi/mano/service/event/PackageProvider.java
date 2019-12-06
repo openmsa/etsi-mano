@@ -8,4 +8,6 @@ public interface PackageProvider {
 
 	List<VnfPackageSoftwareImageInfo> getSoftwareImages();
 
+	ProviderData getProviderPadata();
+
 }
