@@ -21,6 +21,8 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
  */
 @Service
 public class MsaExecutor implements Vim {
+	private static final String TMA129 = "TMA129";
+
 	private static final String CUSTOMER_ID = "customerId";
 
 	private static final Logger LOG = LoggerFactory.getLogger(MsaExecutor.class);
@@ -51,7 +53,7 @@ public class MsaExecutor implements Vim {
 		varsMap.put("vnfPkgId", vnfPkgId);
 		varsMap.put(CUSTOMER_ID, customerId);
 		// TODO My NFVO
-		varsMap.put("nfvoDevice", "TMA129");
+		varsMap.put("nfvoDevice", TMA129);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
 
@@ -65,7 +67,7 @@ public class MsaExecutor implements Vim {
 		varsMap.put("deviceid", (String) userData.get("vimId"));
 		varsMap.put("nsPkgId", nsdId);
 		// TODO My NFVO
-		varsMap.put("nfvoDevice", "TMA129");
+		varsMap.put("nfvoDevice", TMA129);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
 
@@ -108,7 +110,10 @@ public class MsaExecutor implements Vim {
 				final String status = res.getStatus().getStatus();
 				if (!"RUNNING".equals(status)) {
 					LOG.debug("Wait for completion done with result: {}", status);
-					return LcmOperationStateType.fromValue(status);
+					if ("ENDED".equals(status)) {
+						return LcmOperationStateType.COMPLETED;
+					}
+					return LcmOperationStateType.FAILED;
 				}
 				Thread.sleep(15 * 1000);
 			} catch (NumberFormatException | InterruptedException e) {
