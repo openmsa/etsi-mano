@@ -5,15 +5,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -70,7 +69,8 @@ public class NsdPackage implements BaseEntity {
 	@Field
 	private PackageUsageStateType nsdUsageState;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	// @ElementCollection(fetch = FetchType.EAGER)
+	@Transient
 	private List<NsdUserDefinedData> userDefinedData;
 
 	@Override
