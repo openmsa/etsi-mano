@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,7 +42,7 @@ public class NsLinkPortInfo {
 	/**
 	 * Identifier of this link port as provided by the entity that has created the
 	 * link port.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of this link port as provided by the entity that has created the link port. ")
@@ -62,7 +63,7 @@ public class NsLinkPortInfo {
 
 	/**
 	 * Identifier of the virtualised network resource realizing this link port.
-	 * 
+	 *
 	 * @return resourceHandle
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the virtualised network resource realizing this link port. ")
@@ -96,7 +97,7 @@ public class NsLinkPortInfo {
 	 * value refers to a vnfExtCpInfo item in the VnfInstance, or a pnfExtCpInfo
 	 * item in the PnfInfo, or a sapInfo item in the NS instance. There shall be at
 	 * most one link port associated with any connection point instance.
-	 * 
+	 *
 	 * @return nsCpHandle
 	 **/
 	@ApiModelProperty(value = "Identifier of the CP/SAP instance to be connected to this link port. The value refers to a vnfExtCpInfo item in the VnfInstance, or a pnfExtCpInfo item in the PnfInfo, or a sapInfo item in the NS instance. There shall be at most one link port associated with any connection point instance. ")

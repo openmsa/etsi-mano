@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,7 +69,7 @@ public class VnfPackageChangeNotification {
 	 * Identifier of this notification. If a notification is sent multiple times due
 	 * to multiple subscriptions, the \"id\" attribute of all these notifications
 	 * shall have the same value.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of this notification. If a notification is sent multiple times due to multiple subscriptions, the \"id\" attribute of all these notifications shall have the same value. ")
@@ -90,7 +91,7 @@ public class VnfPackageChangeNotification {
 	/**
 	 * Discriminator for the different notification types. Shall be set to
 	 * \"VnfPackageChangeNotification\" for this notification type.
-	 * 
+	 *
 	 * @return notificationType
 	 **/
 	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"VnfPackageChangeNotification\" for this notification type. ")
@@ -111,7 +112,7 @@ public class VnfPackageChangeNotification {
 
 	/**
 	 * Identifier of the subscription that this notification relates to.
-	 * 
+	 *
 	 * @return subscriptionId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the subscription that this notification relates to. ")
@@ -132,7 +133,7 @@ public class VnfPackageChangeNotification {
 
 	/**
 	 * Date and time of the generation of the notification.
-	 * 
+	 *
 	 * @return timeStamp
 	 **/
 	@ApiModelProperty(required = true, value = "Date and time of the generation of the notification. ")
@@ -157,7 +158,7 @@ public class VnfPackageChangeNotification {
 	 * Identifier of the on-boarded VNF package. This identifier is allocated by the
 	 * NFVO. Its value is the same as the value of the \"id\" attribute of the
 	 * related \"Individual VNF package\" resource.
-	 * 
+	 *
 	 * @return vnfPkgId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the on-boarded VNF package. This identifier is allocated by the NFVO. Its value is the same as the value of the \"id\" attribute of the related \"Individual VNF package\" resource. ")
@@ -180,7 +181,7 @@ public class VnfPackageChangeNotification {
 	 * Identifier of the VNFD contained in the VNF package, which also identifies
 	 * the VNF package. This identifier is allocated by the VNF provider and copied
 	 * from the VNFD.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNFD contained in the VNF package, which also identifies the VNF package. This identifier is allocated by the VNF provider and copied from the VNFD. ")
@@ -201,7 +202,7 @@ public class VnfPackageChangeNotification {
 
 	/**
 	 * The type of change of the VNF package.
-	 * 
+	 *
 	 * @return changeType
 	 **/
 	@ApiModelProperty(required = true, value = "The type of change of the VNF package. ")
@@ -225,7 +226,7 @@ public class VnfPackageChangeNotification {
 	/**
 	 * New operational state of the VNF package. Only present when changeType is
 	 * OP_STATE_CHANGE.
-	 * 
+	 *
 	 * @return operationalState
 	 **/
 	@ApiModelProperty(value = "New operational state of the VNF package. Only present when changeType is OP_STATE_CHANGE. ")
@@ -247,7 +248,7 @@ public class VnfPackageChangeNotification {
 
 	/**
 	 * Links to resources related to this notification.
-	 * 
+	 *
 	 * @return links
 	 **/
 	@ApiModelProperty(required = true, value = "Links to resources related to this notification. ")

@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.IpOverEthernetAddressInfoIpAddresses;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -91,7 +92,7 @@ public class IpOverEthernetAddressInfo {
 
 	/**
 	 * Assigned MAC address.
-	 * 
+	 *
 	 * @return macAddress
 	 **/
 	@ApiModelProperty(required = true, value = "Assigned MAC address. ")
@@ -118,7 +119,7 @@ public class IpOverEthernetAddressInfo {
 	/**
 	 * Addresses assigned to the CP instance. Each entry represents IP addresses
 	 * assigned by fixed or dynamic IP address assignment per subnet.
-	 * 
+	 *
 	 * @return ipAddresses
 	 **/
 	@ApiModelProperty(required = true, value = "Addresses assigned to the CP instance. Each entry represents IP addresses assigned by fixed or dynamic IP address assignment per subnet. ")
@@ -141,7 +142,7 @@ public class IpOverEthernetAddressInfo {
 
 	/**
 	 * The type of the IP addresses
-	 * 
+	 *
 	 * @return type
 	 **/
 	@ApiModelProperty(value = "The type of the IP addresses ")
@@ -162,7 +163,7 @@ public class IpOverEthernetAddressInfo {
 	/**
 	 * Fixed addresses assigned (from the subnet defined by \"subnetId\" if
 	 * provided). See note.
-	 * 
+	 *
 	 * @return addresses
 	 **/
 	@ApiModelProperty(required = true, value = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). See note. ")
@@ -185,7 +186,7 @@ public class IpOverEthernetAddressInfo {
 	 * Indicates whether this set of addresses was assigned dynamically (true) or
 	 * based on address information provided as input from the API consumer (false).
 	 * Shall be present if \"addresses\" is present and shall be absent otherwise.
-	 * 
+	 *
 	 * @return isDynamic
 	 **/
 	@ApiModelProperty(value = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
@@ -205,7 +206,7 @@ public class IpOverEthernetAddressInfo {
 
 	/**
 	 * Get addressRange
-	 * 
+	 *
 	 * @return addressRange
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -228,7 +229,7 @@ public class IpOverEthernetAddressInfo {
 
 	/**
 	 * Lowest IP address belonging to the range
-	 * 
+	 *
 	 * @return minAddress
 	 **/
 	@ApiModelProperty(value = "Lowest IP address belonging to the range ")
@@ -248,7 +249,7 @@ public class IpOverEthernetAddressInfo {
 
 	/**
 	 * Highest IP address belonging to the range.
-	 * 
+	 *
 	 * @return maxAddress
 	 **/
 	@ApiModelProperty(value = "Highest IP address belonging to the range. ")
@@ -269,7 +270,7 @@ public class IpOverEthernetAddressInfo {
 	/**
 	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
 	 * this attribute is present, IP addresses are bound to that subnet.
-	 * 
+	 *
 	 * @return subnetId
 	 **/
 	@ApiModelProperty(required = true, value = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")

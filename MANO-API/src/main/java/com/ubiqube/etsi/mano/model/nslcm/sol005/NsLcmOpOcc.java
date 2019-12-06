@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 
 import io.swagger.annotations.ApiModel;

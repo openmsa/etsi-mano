@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,7 +48,7 @@ public class NsVirtualLinkInfo {
 
 	/**
 	 * Identifier of the VL instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VL instance. ")
@@ -68,7 +69,7 @@ public class NsVirtualLinkInfo {
 
 	/**
 	 * Identifier of the VLD in the NSD.
-	 * 
+	 *
 	 * @return nsVirtualLinkDescId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VLD in the NSD. ")
@@ -89,7 +90,7 @@ public class NsVirtualLinkInfo {
 
 	/**
 	 * Identifier of the VL profile in the NSD.
-	 * 
+	 *
 	 * @return nsVirtualLinkProfileId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VL profile in the NSD. ")
@@ -119,7 +120,7 @@ public class NsVirtualLinkInfo {
 	/**
 	 * Identifier(s) of the virtualised network resource(s) realizing the VL
 	 * instance. See note.
-	 * 
+	 *
 	 * @return resourceHandle
 	 **/
 	@ApiModelProperty(value = "Identifier(s) of the virtualised network resource(s) realizing the VL instance. See note. ")
@@ -150,7 +151,7 @@ public class NsVirtualLinkInfo {
 	/**
 	 * Link ports of the VL instance. Cardinality of zero indicates that no port has
 	 * yet been created for the VL instance.
-	 * 
+	 *
 	 * @return linkPort
 	 **/
 	@ApiModelProperty(value = "Link ports of the VL instance. Cardinality of zero indicates that no port has yet been created for the VL instance. ")

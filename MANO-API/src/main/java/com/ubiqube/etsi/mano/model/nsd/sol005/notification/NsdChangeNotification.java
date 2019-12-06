@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -60,7 +61,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Get id
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -82,7 +83,7 @@ public class NsdChangeNotification {
 	/**
 	 * Discriminator for the different notification types. Shall be set to
 	 * \"NsdChangeNotification\" for this notification type.
-	 * 
+	 *
 	 * @return notificationType
 	 **/
 	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"NsdChangeNotification\" for this notification type. ")
@@ -103,7 +104,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Get subscriptionId
-	 * 
+	 *
 	 * @return subscriptionId
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -124,7 +125,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Date-time of the generation of the notification.
-	 * 
+	 *
 	 * @return timeStamp
 	 **/
 	@ApiModelProperty(required = true, value = "Date-time of the generation of the notification. ")
@@ -147,7 +148,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Get nsdInfoId
-	 * 
+	 *
 	 * @return nsdInfoId
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -168,7 +169,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Get nsdId
-	 * 
+	 *
 	 * @return nsdId
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -189,7 +190,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Get nsdOperationalState
-	 * 
+	 *
 	 * @return nsdOperationalState
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -212,7 +213,7 @@ public class NsdChangeNotification {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@ApiModelProperty(required = true, value = "")

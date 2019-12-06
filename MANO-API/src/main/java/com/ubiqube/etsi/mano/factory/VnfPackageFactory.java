@@ -54,7 +54,7 @@ public class VnfPackageFactory {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
 		ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
 		ret.setNotificationType("VnfPackageChangeNotification");
-		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.notification.PackageOperationalStateType.DISABLED);
+		ret.setOperationalState(PackageOperationalStateType.DISABLED);
 		ret.setSubscriptionId(_subscriptionId);
 		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setVnfdId(_vnfdId);

@@ -15,18 +15,19 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents an external VL.
+ * This type represents an external VL. It shall comply with the provisions
+ * defined in Table 6.5.3.26-1.
  */
-@ApiModel(description = "This type represents an external VL. ")
+@ApiModel(description = "This type represents an external VL. It shall comply with the provisions defined in Table 6.5.3.26-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
 public class ExtVirtualLinkData {
-	@JsonProperty("id")
-	private String id = null;
+	@JsonProperty("extVirtualLinkId")
+	private String extVirtualLinkId = null;
 
-	@JsonProperty("vimConnectionId")
-	private String vimConnectionId = null;
+	@JsonProperty("vimId")
+	private String vimId = null;
 
 	@JsonProperty("resourceProviderId")
 	private String resourceProviderId = null;
@@ -42,52 +43,50 @@ public class ExtVirtualLinkData {
 	@Valid
 	private List<ExtLinkPortData> extLinkPorts = null;
 
-	public ExtVirtualLinkData id(final String _id) {
-		this.id = _id;
+	public ExtVirtualLinkData extVirtualLinkId(final String extVirtualLinkId) {
+		this.extVirtualLinkId = extVirtualLinkId;
 		return this;
 	}
 
 	/**
-	 * The identifier of the external VL instance. The identifier is assigned by the
-	 * NFV-MANO entity that manages this VL instance.
+	 * The identifier of the external VL instance, if provided.
 	 *
-	 * @return id
+	 * @return extVirtualLinkId
 	 **/
-	@ApiModelProperty(required = true, value = "The identifier of the external VL instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
-	@NotNull
+	@ApiModelProperty(value = "The identifier of the external VL instance, if provided. ")
 
-	public String getId() {
-		return id;
+	public String getExtVirtualLinkId() {
+		return extVirtualLinkId;
 	}
 
-	public void setId(final String id) {
-		this.id = id;
+	public void setExtVirtualLinkId(final String extVirtualLinkId) {
+		this.extVirtualLinkId = extVirtualLinkId;
 	}
 
-	public ExtVirtualLinkData vimConnectionId(final String _vimConnectionId) {
-		this.vimConnectionId = _vimConnectionId;
+	public ExtVirtualLinkData vimId(final String vimId) {
+		this.vimId = vimId;
 		return this;
 	}
 
 	/**
-	 * Identifier of the VIM connection to manage this resource. This attribute
-	 * shall only be supported and present if VNF-related resource management in
-	 * direct mode is applicable.
+	 * Identifier of the VIM that manages this resource. This attribute shall only
+	 * be supported and present if VNFrelated resource management in direct mode is
+	 * applicable.
 	 *
-	 * @return vimConnectionId
+	 * @return vimId
 	 **/
-	@ApiModelProperty(value = "Identifier of the VIM connection to manage this resource. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable. ")
+	@ApiModelProperty(value = "Identifier of the VIM that manages this resource. This attribute shall only be supported and present if VNFrelated resource management in direct mode is applicable. ")
 
-	public String getVimConnectionId() {
-		return vimConnectionId;
+	public String getVimId() {
+		return vimId;
 	}
 
-	public void setVimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
+	public void setVimId(final String vimId) {
+		this.vimId = vimId;
 	}
 
-	public ExtVirtualLinkData resourceProviderId(final String _resourceProviderId) {
-		this.resourceProviderId = _resourceProviderId;
+	public ExtVirtualLinkData resourceProviderId(final String resourceProviderId) {
+		this.resourceProviderId = resourceProviderId;
 		return this;
 	}
 
@@ -109,8 +108,8 @@ public class ExtVirtualLinkData {
 		this.resourceProviderId = resourceProviderId;
 	}
 
-	public ExtVirtualLinkData resourceId(final String _resourceId) {
-		this.resourceId = _resourceId;
+	public ExtVirtualLinkData resourceId(final String resourceId) {
+		this.resourceId = resourceId;
 		return this;
 	}
 
@@ -131,8 +130,8 @@ public class ExtVirtualLinkData {
 		this.resourceId = resourceId;
 	}
 
-	public ExtVirtualLinkData extCps(final List<VnfExtCpData> _extCps) {
-		this.extCps = _extCps;
+	public ExtVirtualLinkData extCps(final List<VnfExtCpData> extCps) {
+		this.extCps = extCps;
 		return this;
 	}
 
@@ -159,8 +158,8 @@ public class ExtVirtualLinkData {
 		this.extCps = extCps;
 	}
 
-	public ExtVirtualLinkData extLinkPorts(final List<ExtLinkPortData> _extLinkPorts) {
-		this.extLinkPorts = _extLinkPorts;
+	public ExtVirtualLinkData extLinkPorts(final List<ExtLinkPortData> extLinkPorts) {
+		this.extLinkPorts = extLinkPorts;
 		return this;
 	}
 
@@ -174,12 +173,11 @@ public class ExtVirtualLinkData {
 
 	/**
 	 * Externally provided link ports to be used to connect external connection
-	 * points to this external VL. If this attribute is not present, the VNFM shall
-	 * create the link ports on the external VL.
+	 * points to this external VL.
 	 *
 	 * @return extLinkPorts
 	 **/
-	@ApiModelProperty(value = "Externally provided link ports to be used to connect external connection points to this external VL. If this attribute is not present, the VNFM shall create the link ports on the external VL. ")
+	@ApiModelProperty(value = "Externally provided link ports to be used to connect external connection points to this external VL. ")
 
 	@Valid
 
@@ -200,8 +198,8 @@ public class ExtVirtualLinkData {
 			return false;
 		}
 		final ExtVirtualLinkData extVirtualLinkData = (ExtVirtualLinkData) o;
-		return Objects.equals(this.id, extVirtualLinkData.id) &&
-				Objects.equals(this.vimConnectionId, extVirtualLinkData.vimConnectionId) &&
+		return Objects.equals(this.extVirtualLinkId, extVirtualLinkData.extVirtualLinkId) &&
+				Objects.equals(this.vimId, extVirtualLinkData.vimId) &&
 				Objects.equals(this.resourceProviderId, extVirtualLinkData.resourceProviderId) &&
 				Objects.equals(this.resourceId, extVirtualLinkData.resourceId) &&
 				Objects.equals(this.extCps, extVirtualLinkData.extCps) &&
@@ -210,7 +208,7 @@ public class ExtVirtualLinkData {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, vimConnectionId, resourceProviderId, resourceId, extCps, extLinkPorts);
+		return Objects.hash(extVirtualLinkId, vimId, resourceProviderId, resourceId, extCps, extLinkPorts);
 	}
 
 	@Override
@@ -218,8 +216,8 @@ public class ExtVirtualLinkData {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("class ExtVirtualLinkData {\n");
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    vimConnectionId: ").append(toIndentedString(vimConnectionId)).append("\n");
+		sb.append("    extVirtualLinkId: ").append(toIndentedString(extVirtualLinkId)).append("\n");
+		sb.append("    vimId: ").append(toIndentedString(vimId)).append("\n");
 		sb.append("    resourceProviderId: ").append(toIndentedString(resourceProviderId)).append("\n");
 		sb.append("    resourceId: ").append(toIndentedString(resourceId)).append("\n");
 		sb.append("    extCps: ").append(toIndentedString(extCps)).append("\n");
@@ -232,7 +230,7 @@ public class ExtVirtualLinkData {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(final java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -48,7 +50,7 @@ public class ChangeExtVnfConnectivityData {
 
 	/**
 	 * Identifier of the VNF instance.
-	 * 
+	 *
 	 * @return vnfInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
@@ -74,7 +76,7 @@ public class ChangeExtVnfConnectivityData {
 
 	/**
 	 * Information about external VLs to change (e.g. connect the VNF to).
-	 * 
+	 *
 	 * @return extVirtualLink
 	 **/
 	@ApiModelProperty(required = true, value = "Information about external VLs to change (e.g. connect the VNF to). ")
@@ -98,7 +100,7 @@ public class ChangeExtVnfConnectivityData {
 	/**
 	 * Additional parameters passed by the OSS as input to the external connectivity
 	 * change process, specific to the VNF instance being changed.
-	 * 
+	 *
 	 * @return additionalParams
 	 **/
 	@ApiModelProperty(value = "Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. ")
