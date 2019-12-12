@@ -16,7 +16,7 @@ public class VimConnectionInformation {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private final String vimId = null;
+	private String vimId = null;
 
 	private String vimType = null;
 
@@ -65,6 +65,14 @@ public class VimConnectionInformation {
 
 	public void setExtra(final Map<String, String> extra) {
 		this.extra = extra;
+	}
+
+	public String getVimId() {
+		return vimId;
+	}
+
+	public void setVimId(final String vimId) {
+		this.vimId = vimId;
 	}
 
 }
