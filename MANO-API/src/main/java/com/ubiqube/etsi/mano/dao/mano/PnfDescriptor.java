@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -25,7 +24,6 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class PnfDescriptor implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Field
 	private String pnfdId;

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -22,7 +21,6 @@ import com.ubiqube.etsi.mano.model.KeyValuePairs;
 public class Grants {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private UUID id = null;
 
 	private String vnfInstanceId = null;

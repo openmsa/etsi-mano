@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +13,6 @@ import javax.persistence.OneToOne;
 public class ExtLinkPortDataEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private UUID id = null;
 
 	@Embedded

@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,7 +21,6 @@ import javax.validation.Valid;
 public class IpOverEthernetAddressDataEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 	private String macAddress = null;
 

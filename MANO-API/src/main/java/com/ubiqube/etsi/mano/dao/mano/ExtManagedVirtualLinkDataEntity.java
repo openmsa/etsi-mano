@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +10,6 @@ import javax.persistence.OneToOne;
 public class ExtManagedVirtualLinkDataEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private String id = null;
 
 	private String vnfVirtualLinkDescId = null;
