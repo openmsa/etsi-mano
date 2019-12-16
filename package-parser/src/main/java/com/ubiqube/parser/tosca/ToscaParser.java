@@ -13,7 +13,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class ToscaParser {
 
-	public ToscaContext è(final String filename) {
+	public ToscaContext parse(final String filename) {
 		final ObjectMapper mapper = getMapper();
 		try {
 			final ToscaRoot root = loadToscaBase();
