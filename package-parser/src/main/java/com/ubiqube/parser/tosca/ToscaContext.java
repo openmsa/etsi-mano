@@ -37,7 +37,6 @@ public class ToscaContext {
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
 		dataTypes = root.getData_types();
-
 	}
 
 	public void setImports(final Imports _imports) {
@@ -165,7 +164,12 @@ public class ToscaContext {
 	private void mergeContext(final ToscaContext context) {
 		mergeHash(artifacts, context.getArtifacts());
 		// mergeHash(capabilities, context.getCapabilities());
-		dataTypes.putAll(context.getDataTypes());
+		if (null != context.getCapabilities()) {
+			capabilities.putAll(context.getCapabilities());
+		}
+		if (null != context.getDataTypes()) {
+			dataTypes.putAll(context.getDataTypes());
+		}
 		mergeHash(nodeType, context.getNodeType());
 		// mergeHash(relationship, context.getRelationship());
 		// topologies.merge(context.getTopologies());
