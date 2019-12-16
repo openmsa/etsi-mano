@@ -47,7 +47,7 @@ public class CodeModelTest {
 
 	@Test
 	void testName() throws Exception {
-		root = tp.parse("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml");
+		root = tp.parse("src/test/resources/etsi_nfv_sol001_pnfd_types.yaml");
 
 		// root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
@@ -97,7 +97,8 @@ public class CodeModelTest {
 			}
 			generateToscaClass(entry.getKey(), entry.getValue());
 		}
-		codeModel.build(new File("."));
+		new File("src/generated/java").mkdirs();
+		codeModel.build(new File("src/generated/java/"));
 	}
 
 	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) throws JClassAlreadyExistsException {
@@ -109,8 +110,14 @@ public class CodeModelTest {
 			if (null == clazz) {
 				LOG.debug("Cache missed {}", definition.getDerivedFrom());
 				final CapabilityTypes def = root.getCapabilities().get(definition.getDerivedFrom());
-				clazz = generateClass(definition.getDerivedFrom(), def);
-				cache.put(definition.getDerivedFrom(), clazz);
+				if (def != null) {
+					clazz = generateClass(definition.getDerivedFrom(), def);
+				} else {
+					final DataType dType = root.getDataTypes().get(definition.getDerivedFrom());
+					if (null != dType) {
+						clazz = generateClassFromDataType(definition.getDerivedFrom(), dType);
+					}
+				}
 			}
 			jc._extends(clazz);
 		}
@@ -278,7 +285,19 @@ public class CodeModelTest {
 			if (null != jTy) {
 				return codeModel.ref(List.class).narrow(jTy);
 			}
-			return codeModel.ref(List.class).narrow(Object.class);
+			final JDefinedClass cached = cache.get(valueObject.getEntrySchema().getType());
+			if (null != cached) {
+				return codeModel.ref(List.class).narrow(cached);
+			}
+			final DataType dType = root.getDataTypes().get(valueObject.getEntrySchema().getType());
+			JType cl;
+			if (null != dType) {
+				cl = generateClassFromDataType(valueObject.getEntrySchema().getType(), dType);
+			} else {
+				cl = generateToscaClass(valueObject.getEntrySchema().getType(),
+						root.getNodeType().get(valueObject.getEntrySchema().getType()));
+			}
+			return codeModel.ref(List.class).narrow(cl);
 		}
 		if ("map".equals(type)) {
 			final Class<?> jTy = convert(valueObject.getEntrySchema().getType());
