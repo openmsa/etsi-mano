@@ -1,11 +1,31 @@
 package com.ubiqube.parser.tosca.constraints;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class InRange implements Constraint {
 
-	public InRange(final JsonNode key) {
-		// TODO Auto-generated constructor stub
+	private String min;
+	private String max;
+
+	public InRange(final ArrayNode key) {
+		min = key.get(0).asText();
+		max = key.get(1).asText();
+	}
+
+	public String getMin() {
+		return min;
+	}
+
+	public void setMin(final String min) {
+		this.min = min;
+	}
+
+	public String getMax() {
+		return max;
+	}
+
+	public void setMax(final String max) {
+		this.max = max;
 	}
 
 }
