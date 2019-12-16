@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.junit.jupiter.api.Test;
@@ -29,11 +31,15 @@ import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.ubiqube.parser.tosca.constraints.Constraint;
+import com.ubiqube.parser.tosca.constraints.Equal;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
 import com.ubiqube.parser.tosca.constraints.GreaterThan;
+import com.ubiqube.parser.tosca.constraints.InRange;
 import com.ubiqube.parser.tosca.constraints.LessOrEqual;
 import com.ubiqube.parser.tosca.constraints.LessThan;
+import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.Pattern;
+import com.ubiqube.parser.tosca.constraints.ValidValues;
 import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Range;
 import com.ubiqube.parser.tosca.scalar.Size;
@@ -50,7 +56,7 @@ public class CodeModelTest {
 
 	@Test
 	void testName() throws Exception {
-		root = tp.parse("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml");
+		root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 
 		// root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
@@ -100,8 +106,8 @@ public class CodeModelTest {
 			}
 			generateToscaClass(entry.getKey(), entry.getValue());
 		}
-		new File("src/generated/java").mkdirs();
-		codeModel.build(new File("src/generated/java/"));
+		// new File("src/generated/java").mkdirs();
+		codeModel.build(new File("."));
 	}
 
 	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) throws JClassAlreadyExistsException {
@@ -165,10 +171,40 @@ public class CodeModelTest {
 		if (null != toscaClass.getAttributes()) {
 			generateFields(jc, toscaClass.getAttributes());
 		}
+		if (null != toscaClass.getCapabilities()) {
+			generateCaps(jc, toscaClass.getCapabilities());
+		}
 		LOG.info("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
 
+	}
+
+	private void generateCaps(final JDefinedClass jc, final Map<String, CapabilityDefinition> capabilities) {
+		capabilities.forEach((x, y) -> {
+			final String fieldName = fieldCamelCase(x);
+			JDefinedClass jType = cache.get(y.getType());
+			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
+			if (null == jType) {
+				try {
+					jType = generateClass(y.getType(), caps);
+				} catch (final JClassAlreadyExistsException e) {
+					throw new ParseException(e);
+				}
+			}
+			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
+				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());
+			}
+			if ((y.getProperties() != null) && !y.getProperties().getProperties().isEmpty()) {
+				throw new ParseException("Unable to handle properties in " + x + '=' + y.getType());
+			}
+			final JFieldVar field = jc.field(JMod.PRIVATE, jType, fieldName);
+			field.javadoc().add("Caps.");
+			if (null != y.getDescription()) {
+				field.javadoc().add(y.getDescription());
+			}
+			createGetterSetter(fieldName, jc, field, new ValueObject());
+		});
 	}
 
 	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) throws JClassAlreadyExistsException {
@@ -230,21 +266,26 @@ public class CodeModelTest {
 				cont.forEach(x -> {
 					applyAnnotation(x, field);
 				});
+				createGetterSetter(fieldName, jc, field, val);
 			}
-			final String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-			final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + methodName);
-			if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
-				getter.annotate(NotNull.class);
-			}
-			getter.body()._return(field);
-			// Setter
-			final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + methodName);
-			final JVar param = setVar.param(field.type(), field.name());
-			if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
-				param.annotate(NotNull.class);
-			}
-			setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));
+
 		}
+	}
+
+	private void createGetterSetter(final String fieldName, final JDefinedClass jc, final JFieldVar field, final ValueObject val) {
+		final String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+		final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + methodName);
+		if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
+			getter.annotate(NotNull.class);
+		}
+		getter.body()._return(field);
+		// Setter
+		final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + methodName);
+		final JVar param = setVar.param(field.type(), field.name());
+		if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
+			param.annotate(NotNull.class);
+		}
+		setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));
 	}
 
 	private static String fieldCamelCase(final String key) {
@@ -269,6 +310,17 @@ public class CodeModelTest {
 			field.annotate(DecimalMax.class).param("value", ((LessOrEqual) x).getValue()).param("inclusive", true);
 		} else if (x instanceof LessThan) {
 			field.annotate(DecimalMax.class).param("value", ((LessThan) x).getValue());
+		} else if (x instanceof ValidValues) {
+			// TODO.
+		} else if (x instanceof InRange) {
+			field.annotate(Min.class).param("value", ((InRange) x).getMin());
+			field.annotate(Max.class).param("value", ((InRange) x).getMax());
+		} else if (x instanceof MinLength) {
+			field.annotate(javax.validation.constraints.Size.class).param("min", ((MinLength) x).getValue());
+		} else if (x instanceof Equal) {
+			// TODO
+		} else {
+			throw new ParseException("Unknown constraint: " + x.getClass().getCanonicalName());
 		}
 	}
 
@@ -305,42 +357,44 @@ public class CodeModelTest {
 		}
 		final String type = valueObject.getType();
 		if ("list".equals(type)) {
-			final Class<?> jTy = convert(valueObject.getEntrySchema().getType());
+			final String subType = valueObject.getEntrySchema().getType();
+			final Class<?> jTy = convert(subType);
 			if (null != jTy) {
 				return codeModel.ref(List.class).narrow(jTy);
 			}
-			final JDefinedClass cached = cache.get(valueObject.getEntrySchema().getType());
+			final JDefinedClass cached = cache.get(subType);
 			if (null != cached) {
 				return codeModel.ref(List.class).narrow(cached);
 			}
-			final DataType dType = root.getDataTypes().get(valueObject.getEntrySchema().getType());
+			final DataType dType = root.getDataTypes().get(subType);
 			JType cl;
 			if (null != dType) {
-				cl = generateClassFromDataType(valueObject.getEntrySchema().getType(), dType);
+				cl = generateClassFromDataType(subType, dType);
 			} else {
-				cl = generateToscaClass(valueObject.getEntrySchema().getType(),
-						root.getNodeType().get(valueObject.getEntrySchema().getType()));
+				cl = generateToscaClass(subType,
+						root.getNodeType().get(subType));
 			}
 			return codeModel.ref(List.class).narrow(cl);
 		}
 		if ("map".equals(type)) {
-			final Class<?> jTy = convert(valueObject.getEntrySchema().getType());
+			final String subType = valueObject.getEntrySchema().getType();
+			final Class<?> jTy = convert(subType);
 			if (null != jTy) {
 				return codeModel.ref(Map.class).narrow(String.class, jTy);
 			}
-			final JDefinedClass jcTy = cache.get(valueObject.getEntrySchema().getType());
+			final JDefinedClass jcTy = cache.get(subType);
 			if (null != jcTy) {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(jcTy);
 			}
 			// TODO
-			LOG.info("Map of {}", valueObject.getEntrySchema().getType());
-			final DataType dType = root.getDataTypes().get(valueObject.getEntrySchema().getType());
+			LOG.info("Map of {}", subType);
+			final DataType dType = root.getDataTypes().get(subType);
 			JType cl;
 			if (null != dType) {
-				cl = generateClassFromDataType(valueObject.getEntrySchema().getType(), dType);
+				cl = generateClassFromDataType(subType, dType);
 			} else {
-				cl = generateToscaClass(valueObject.getEntrySchema().getType(),
-						root.getNodeType().get(valueObject.getEntrySchema().getType()));
+				cl = generateToscaClass(subType,
+						root.getNodeType().get(subType));
 			}
 			return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
 		}
