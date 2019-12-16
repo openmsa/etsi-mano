@@ -52,7 +52,7 @@ public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
 			} else if ("less_than".equals(key)) {
 				return new LessThan(entry.getKey());
 			} else if ("in_range".equals(key)) {
-				return new InRange(entry.getValue());
+				return new InRange((ArrayNode) entry.getValue());
 			} else if ("pattern".equals(key)) {
 				return new Pattern(entry.getValue());
 			} else {
