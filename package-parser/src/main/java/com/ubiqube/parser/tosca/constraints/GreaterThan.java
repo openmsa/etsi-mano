@@ -1,9 +1,11 @@
 package com.ubiqube.parser.tosca.constraints;
 
-public class GreaterThan implements Constraint {
+import com.fasterxml.jackson.databind.JsonNode;
 
-	public GreaterThan(final String key) {
-		// TODO Auto-generated constructor stub
+public class GreaterThan extends SimpleValue implements Constraint {
+
+	public GreaterThan(final JsonNode jsonNode) {
+		super(jsonNode.asText());
 	}
 
 }
