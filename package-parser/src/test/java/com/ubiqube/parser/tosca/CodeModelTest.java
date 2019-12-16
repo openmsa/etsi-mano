@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -47,7 +48,7 @@ public class CodeModelTest {
 
 	@Test
 	void testName() throws Exception {
-		root = tp.parse("src/test/resources/etsi_nfv_sol001_pnfd_types.yaml");
+		root = tp.parse("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml");
 
 		// root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
@@ -208,6 +209,8 @@ public class CodeModelTest {
 			if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
 				field.annotate(NotNull.class);
 			}
+			// Jackson Annotate
+			field.annotate(JsonProperty.class).param("value", entry.getKey());
 			if (val.getDef() != null) {
 				// TODO Convert.
 				if (null != jType) {
@@ -236,15 +239,15 @@ public class CodeModelTest {
 
 	private static void applyAnnotation(final Constraint x, final JFieldVar field) {
 		if (x instanceof Pattern) {
-			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", "");
+			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", ((Pattern) x).getValue());
 		} else if (x instanceof GreaterOrEqual) {
-			field.annotate(DecimalMin.class).param("value", "").param("inclusive", true);
+			field.annotate(DecimalMin.class).param("value", ((GreaterOrEqual) x).getValue()).param("inclusive", true);
 		} else if (x instanceof GreaterThan) {
-			field.annotate(DecimalMin.class).param("value", "");
+			field.annotate(DecimalMin.class).param("value", ((GreaterThan) x).getValue());
 		} else if (x instanceof LessOrEqual) {
-			field.annotate(DecimalMax.class).param("value", "").param("inclusive", true);
+			field.annotate(DecimalMax.class).param("value", ((LessOrEqual) x).getValue()).param("inclusive", true);
 		} else if (x instanceof LessThan) {
-			field.annotate(DecimalMax.class).param("value", "");
+			field.annotate(DecimalMax.class).param("value", ((LessThan) x).getValue());
 		}
 	}
 

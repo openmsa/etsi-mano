@@ -48,7 +48,7 @@ public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
 			} else if ("equal".equals(key)) {
 				return new Equal(entry.getKey());
 			} else if ("greater_than".equals(key)) {
-				return new GreaterThan(entry.getKey());
+				return new GreaterThan(entry.getValue());
 			} else if ("less_than".equals(key)) {
 				return new LessThan(entry.getKey());
 			} else if ("in_range".equals(key)) {
