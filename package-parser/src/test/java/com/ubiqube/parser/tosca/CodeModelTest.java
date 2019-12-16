@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
@@ -26,6 +27,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
 import com.ubiqube.parser.tosca.constraints.GreaterThan;
@@ -197,11 +199,12 @@ public class CodeModelTest {
 			final Class<?> jType = convert(entry.getValue());
 			final JFieldVar field;
 			JType jType2 = null;
+			final String fieldName = fieldCamelCase(entry.getKey());
 			if (null != jType) {
-				field = jc.field(JMod.PRIVATE, jType, entry.getKey());
+				field = jc.field(JMod.PRIVATE, jType, fieldName);
 			} else {
 				jType2 = findJType(entry.getValue());
-				field = jc.field(JMod.PRIVATE, jType2, entry.getKey());
+				field = jc.field(JMod.PRIVATE, jType2, fieldName);
 			}
 			if (null != val.getDescription()) {
 				field.javadoc().add(val.getDescription());
@@ -228,13 +231,31 @@ public class CodeModelTest {
 					applyAnnotation(x, field);
 				});
 			}
-			final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + entry.getKey());
+			final String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+			final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + methodName);
+			if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
+				getter.annotate(NotNull.class);
+			}
 			getter.body()._return(field);
 			// Setter
-			final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + entry.getKey());
-			setVar.param(field.type(), field.name());
+			final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + methodName);
+			final JVar param = setVar.param(field.type(), field.name());
+			if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
+				param.annotate(NotNull.class);
+			}
 			setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));
 		}
+	}
+
+	private static String fieldCamelCase(final String key) {
+		final java.util.regex.Pattern p = java.util.regex.Pattern.compile("_(.)");
+		final Matcher m = p.matcher(key);
+		final StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			m.appendReplacement(sb, m.group(1).toUpperCase());
+		}
+		m.appendTail(sb);
+		return sb.toString();
 	}
 
 	private static void applyAnnotation(final Constraint x, final JFieldVar field) {
