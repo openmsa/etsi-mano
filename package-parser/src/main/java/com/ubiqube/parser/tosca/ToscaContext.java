@@ -165,6 +165,7 @@ public class ToscaContext {
 	private void mergeContext(final ToscaContext context) {
 		mergeHash(artifacts, context.getArtifacts());
 		// mergeHash(capabilities, context.getCapabilities());
+		dataTypes.putAll(context.getDataTypes());
 		mergeHash(nodeType, context.getNodeType());
 		// mergeHash(relationship, context.getRelationship());
 		// topologies.merge(context.getTopologies());
@@ -278,6 +279,9 @@ public class ToscaContext {
 		}
 		if (null != root2.getNodeTypes()) {
 			nodeType.putAll(root2.getNodeTypes());
+		}
+		if (null != root2.getData_types()) {
+			dataTypes.putAll(root2.getData_types());
 		}
 		if (null != root2.getRelationshipTypes()) {
 			relationship.putAll(root2.getRelationshipTypes());

@@ -34,6 +34,7 @@ import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Range;
 import com.ubiqube.parser.tosca.scalar.Size;
+import com.ubiqube.parser.tosca.scalar.Time;
 import com.ubiqube.parser.tosca.scalar.Version;
 
 public class CodeModelTest {
@@ -46,7 +47,9 @@ public class CodeModelTest {
 
 	@Test
 	void testName() throws Exception {
-		root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
+		root = tp.parse("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml");
+
+		// root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Map<String, DataType> dt = root.getDataTypes();
 		final Set<Entry<String, DataType>> e = dt.entrySet();
@@ -287,9 +290,20 @@ public class CodeModelTest {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(jcTy);
 			}
 			// TODO
-			final JType cl = generateToscaClass(valueObject.getEntrySchema().getType(),
-					root.getNodeType().get(valueObject.getEntrySchema().getType()));
+			LOG.info("Map of {}", valueObject.getEntrySchema().getType());
+			final DataType dType = root.getDataTypes().get(valueObject.getEntrySchema().getType());
+			JType cl;
+			if (null != dType) {
+				cl = generateClassFromDataType(valueObject.getEntrySchema().getType(), dType);
+			} else {
+				cl = generateToscaClass(valueObject.getEntrySchema().getType(),
+						root.getNodeType().get(valueObject.getEntrySchema().getType()));
+			}
 			return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
+		}
+		final DataType dType = root.getDataTypes().get(valueObject.getType());
+		if (null != dType) {
+			return generateClassFromDataType(valueObject.getType(), dType);
 		}
 		throw new RuntimeException("Bad type: " + valueObject);
 	}
@@ -303,6 +317,9 @@ public class CodeModelTest {
 		}
 		if ("scalar-unit.frequency".equals(type)) {
 			return Frequency.class;
+		}
+		if ("scalar-unit.time".equals(type)) {
+			return Time.class;
 		}
 		if ("string".equals(type)) {
 			return String.class;
