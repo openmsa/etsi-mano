@@ -3,8 +3,8 @@ package com.ubiqube.etsi.mano.mapper;
 import java.util.LinkedList;
 
 public class AttrHolder {
-	LinkedList<AttrNode> stack;
-	Object value;
+	private LinkedList<AttrNode> stack;
+	private Object value;
 
 	public LinkedList<AttrNode> getStack() {
 		return stack;
