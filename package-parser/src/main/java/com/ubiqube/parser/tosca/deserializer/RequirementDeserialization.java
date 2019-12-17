@@ -19,6 +19,9 @@ import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
 
 public class RequirementDeserialization extends StdDeserializer<RequirementDefinition> {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	protected RequirementDeserialization() {
 		this(null);
 	}
