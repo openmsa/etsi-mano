@@ -271,9 +271,8 @@ public class JavaGenerator {
 				cont.forEach(x -> {
 					applyAnnotation(x, field);
 				});
-				createGetterSetter(fieldName, jc, field, val);
 			}
-
+			createGetterSetter(fieldName, jc, field, val);
 		}
 	}
 
