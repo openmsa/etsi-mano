@@ -124,19 +124,7 @@ public class JavaGenerator {
 		final JPackage pack = getPackage(className);
 		final JDefinedClass jc = pack._class(getClassName(className));
 		if (null != definition.getDerivedFrom()) {
-			JDefinedClass clazz = cache.get(definition.getDerivedFrom());
-			if (null == clazz) {
-				LOG.debug("Cache missed {}", definition.getDerivedFrom());
-				final CapabilityTypes def = root.getCapabilities().get(definition.getDerivedFrom());
-				if (def != null) {
-					clazz = generateClass(definition.getDerivedFrom(), def);
-				} else {
-					final DataType dType = root.getDataTypes().get(definition.getDerivedFrom());
-					if (null != dType) {
-						clazz = generateClassFromDataType(definition.getDerivedFrom(), dType);
-					}
-				}
-			}
+			final JDefinedClass clazz = getExtends(definition.getDerivedFrom());
 			jc._extends(clazz);
 		}
 		if (null != definition.getProperties()) {
@@ -149,29 +137,10 @@ public class JavaGenerator {
 
 	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) throws JClassAlreadyExistsException {
 		LOG.info("generateToscaClass class {}", className);
-		if ("tosca.nodes.Compute".equals(className)) {
-			LOG.error("kkkk");
-		}
 		final JPackage pack = getPackage(className);
 		final JDefinedClass jc = pack._class(getClassName(className));
 		if (null != toscaClass.getDerivedFrom()) {
-			JDefinedClass clazz = cache.get(toscaClass.getDerivedFrom());
-			if (null == clazz) {
-				final CapabilityTypes def = root.getCapabilities().get(toscaClass.getDerivedFrom());
-				if (null != def) {
-					clazz = generateClass(toscaClass.getDerivedFrom(), def);
-				} else {
-					final ToscaClass node = root.getNodeType().get(toscaClass.getDerivedFrom());
-					if (node != null) {
-						clazz = generateToscaClass(toscaClass.getDerivedFrom(), node);
-					}
-				}
-				if (null == clazz) {
-					LOG.error("Crashing ...");
-				}
-				LOG.info("Caching {}", toscaClass.getDerivedFrom());
-				cache.put(toscaClass.getDerivedFrom(), clazz);
-			}
+			final JDefinedClass clazz = getExtends(toscaClass.getDerivedFrom());
 			jc._extends(clazz);
 		}
 		if (null != toscaClass.getProperties()) {
@@ -190,6 +159,27 @@ public class JavaGenerator {
 		cache.put(className, jc);
 		return jc;
 
+	}
+
+	private JDefinedClass getExtends(final String derivedFrom) throws JClassAlreadyExistsException {
+		JDefinedClass clazz = cache.get(derivedFrom);
+		if (null == clazz) {
+			final CapabilityTypes def = root.getCapabilities().get(derivedFrom);
+			if (null != def) {
+				clazz = generateClass(derivedFrom, def);
+			} else {
+				final ToscaClass node = root.getNodeType().get(derivedFrom);
+				if (node != null) {
+					clazz = generateToscaClass(derivedFrom, node);
+				}
+			}
+			if (null == clazz) {
+				throw new ParseException("Could not find parent class: " + derivedFrom);
+			}
+			LOG.info("Caching {}", derivedFrom);
+			cache.put(derivedFrom, clazz);
+		}
+		return clazz;
 	}
 
 	private void generateRequirements(final JDefinedClass jc, final RequirementDefinition requirements) {
@@ -444,7 +434,7 @@ public class JavaGenerator {
 		if (null != dType) {
 			return generateClassFromDataType(valueObject.getType(), dType);
 		}
-		throw new RuntimeException("Bad type: " + valueObject);
+		throw new ParseException("Bad type: " + valueObject);
 	}
 
 	private static Class<?> convert(final String type) {
