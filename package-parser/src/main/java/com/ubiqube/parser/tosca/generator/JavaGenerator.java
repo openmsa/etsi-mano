@@ -34,10 +34,14 @@ import com.ubiqube.parser.tosca.CapabilityDefinition;
 import com.ubiqube.parser.tosca.CapabilityTypes;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.ToscaClass;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.ValueObject;
+import com.ubiqube.parser.tosca.annotations.Capability;
+import com.ubiqube.parser.tosca.annotations.Node;
+import com.ubiqube.parser.tosca.annotations.Relationship;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 import com.ubiqube.parser.tosca.constraints.Equal;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
@@ -112,7 +116,7 @@ public class JavaGenerator {
 			generateToscaClass(entry.getKey(), entry.getValue());
 		}
 		// new File("src/generated/java").mkdirs();
-		codeModel.build(new File("."));
+		codeModel.build(new File("src/generated/java"));
 	}
 
 	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) throws JClassAlreadyExistsException {
@@ -179,9 +183,43 @@ public class JavaGenerator {
 		if (null != toscaClass.getCapabilities()) {
 			generateCaps(jc, toscaClass.getCapabilities());
 		}
+		if (null != toscaClass.getRequirements()) {
+			generateRequirements(jc, toscaClass.getRequirements());
+		}
 		LOG.info("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
+
+	}
+
+	private void generateRequirements(final JDefinedClass jc, final RequirementDefinition requirements) {
+		requirements.getRequirements().forEach((x, y) -> {
+			final String fieldName = fieldCamelCase(x + "_req");
+			JFieldVar field = null;
+			final List<String> occ = y.getOccurrences();
+			if ((null != occ) && (occ.size() == 2)) {
+				final String indice = occ.get(1);
+				if ("UNBOUNDED".equals(indice)) {
+					field = jc.field(JMod.PRIVATE, List.class, fieldName);
+				} else if (Integer.parseInt(indice) > 1) {
+					field = jc.field(JMod.PRIVATE, List.class, fieldName);
+				}
+			}
+			if (null == field) {
+				field = jc.field(JMod.PRIVATE, Object.class, fieldName);
+			}
+			if (null != y.getNode()) {
+				field.annotate(Node.class).param("value", y.getNode());
+			}
+			if (null != y.getCapability()) {
+				field.annotate(Capability.class).param("value", y.getCapability());
+			}
+			if (null != y.getRelationship()) {
+				field.annotate(Relationship.class).param("value", y.getRelationship());
+			}
+			field.annotate(JsonProperty.class).param("value", x);
+			createGetterSetter(fieldName, jc, field, new ValueObject());
+		});
 
 	}
 
