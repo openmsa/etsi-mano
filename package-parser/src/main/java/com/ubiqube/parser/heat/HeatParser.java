@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.parser.tosca.ParseException;
 
 public class HeatParser {
 
@@ -14,8 +15,7 @@ public class HeatParser {
 		try {
 			return mapper.readValue(new File(filename), HeatRoot.class);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			throw new ParseException(e);
 		}
-		return null;
 	}
 }

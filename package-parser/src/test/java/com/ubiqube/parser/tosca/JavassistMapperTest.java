@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.util.List;
 
 import org.apache.commons.jxpath.JXPathContext;
-import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +20,6 @@ public class JavassistMapperTest {
 	})
 	private final List<String> test = null;
 
-	@Test
 	void testName() throws Exception {
 		final ClassPool pool = ClassPool.getDefault();
 		final CtClass cc = pool.makeClass("tosca.capabilities.Root");

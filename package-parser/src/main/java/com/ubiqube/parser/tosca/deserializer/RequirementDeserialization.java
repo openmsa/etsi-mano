@@ -28,7 +28,7 @@ public class RequirementDeserialization extends StdDeserializer<RequirementDefin
 	}
 
 	@Override
-	public RequirementDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public RequirementDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final Map<String, Requirement> reqMap = new HashMap<>();
 		final ArrayNode value = p.getCodec().readTree(p);
 		final Iterator<JsonNode> ite = value.iterator();

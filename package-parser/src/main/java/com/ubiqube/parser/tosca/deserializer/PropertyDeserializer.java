@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -29,7 +28,7 @@ public class PropertyDeserializer extends StdDeserializer<ToscaProperties> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public ToscaProperties deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public ToscaProperties deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final HashMap<String, ValueObject> props = new HashMap<>();
 		final ObjectNode value = p.getCodec().readTree(p);
 		final Iterator<Entry<String, JsonNode>> fields = value.fields();

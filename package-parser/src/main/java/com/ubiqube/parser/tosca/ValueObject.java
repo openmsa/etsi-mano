@@ -75,7 +75,7 @@ public class ValueObject {
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("ValueObject [type=" + type + ", ");
 		if (null != required) {
 			sb.append("required=" + required + ", ");
