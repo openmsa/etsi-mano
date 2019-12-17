@@ -1,6 +1,5 @@
 package com.ubiqube.parser.tosca;
 
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -10,7 +9,7 @@ public class OperationDefinition {
 
 	private String description;
 	private Object implementation;
-	List<ToscaProperties> inputs;
+	private Map<String, Object> inputs;
 	private String type;
 
 	@JsonAnySetter
@@ -32,11 +31,11 @@ public class OperationDefinition {
 		this.implementation = implementation;
 	}
 
-	public List<ToscaProperties> getInputs() {
+	public Map<String, Object> getInputs() {
 		return inputs;
 	}
 
-	public void setInputs(final List<ToscaProperties> inputs) {
+	public void setInputs(final Map<String, Object> inputs) {
 		this.inputs = inputs;
 	}
 

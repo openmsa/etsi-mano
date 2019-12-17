@@ -10,7 +10,7 @@ public class NodeTemplate {
 	private RequirementDefinition requirements;
 	private Map<String, ValueObject> attributes;
 	private Map<String, Artifact> artifacts;
-	private Object interfaces;
+	private Map<String, InterfaceType> interfaces;
 
 	public String getType() {
 		return type;
@@ -60,11 +60,11 @@ public class NodeTemplate {
 		this.artifacts = artifacts;
 	}
 
-	public Object getInterfaces() {
+	public Map<String, InterfaceType> getInterfaces() {
 		return interfaces;
 	}
 
-	public void setInterfaces(final Object interfaces) {
+	public void setInterfaces(final Map<String, InterfaceType> interfaces) {
 		this.interfaces = interfaces;
 	}
 
