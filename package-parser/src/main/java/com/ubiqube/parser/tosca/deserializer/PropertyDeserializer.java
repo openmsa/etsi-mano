@@ -34,9 +34,7 @@ public class PropertyDeserializer extends StdDeserializer<ToscaProperties> {
 		final Iterator<Entry<String, JsonNode>> fields = value.fields();
 		while (fields.hasNext()) {
 			final Map.Entry<String, JsonNode> entry = fields.next();
-			final JsonNode val = entry.getValue();
-			ValueObject vo;
-			// val.isContainerNode
+			ValueObject vo = new ValueObject();
 			vo = p.getCodec().treeToValue(entry.getValue(), ValueObject.class);
 			props.put(entry.getKey(), vo);
 		}
