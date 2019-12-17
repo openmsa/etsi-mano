@@ -17,15 +17,15 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -83,11 +83,10 @@ public class VnfInstanceLcm {
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
-		// Clean LCM Repository.
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkgId())) {
 			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkgId());
-			vnfPkg.setUsageState(UsageStateEnum.NOT_IN_USE);
+			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
 		vnfInstancesRepository.delete(vnfInstanceId);
@@ -107,6 +106,7 @@ public class VnfInstanceLcm {
 	}
 
 	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
+		// TODO: A little bit wrong , move this to async.
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
@@ -121,12 +121,12 @@ public class VnfInstanceLcm {
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
-		addVnfOperation(processId, vnfInstanceId, LcmOperationTypeEnum.TERMINATE);
+		addVnfOperation(processId, vnfInstanceId, NsLcmOpType.TERMINATE);
 		vnfInstancesRepository.save(vnfInstance);
 	}
 
-	private NsLcmOpOccsNsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final LcmOperationTypeEnum _lcmOperationType) {
-		final NsLcmOpOccsNsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOccsNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
+	private NsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final NsLcmOpType _lcmOperationType) {
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
 		lcmOpOccsMsa.save(lcmOpOccs);
 		lcmOpOccsMsa.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), _processId);
 		return lcmOpOccs;

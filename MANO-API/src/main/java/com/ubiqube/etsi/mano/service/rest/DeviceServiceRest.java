@@ -2,9 +2,10 @@ package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.api.commons.id.DeviceId;
@@ -14,6 +15,7 @@ import com.ubiqube.api.entities.device.SimpleDevice;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 
+@Profile("default")
 @Service
 public class DeviceServiceRest implements DeviceService {
 
@@ -92,7 +94,7 @@ public class DeviceServiceRest implements DeviceService {
 	}
 
 	static class ManufacturerModel implements Manufacturer {
-		HashMap<Long, ModelModel> _models;
+		Map<Long, ModelModel> _models;
 
 		public int manufacturerId;
 		public String manufacturerName;
@@ -135,12 +137,9 @@ public class DeviceServiceRest implements DeviceService {
 	static class ListOfManufacturers extends ArrayList<ManufacturerModel> {
 	}
 
-	static <T> HashMap<Long, T> toHashMap(final ArrayList<T> list) {
-		final HashMap<Long, T> ret = new HashMap<>();
-		for (final T obj : list) {
-			ret.put((long) obj.hashCode(), obj);
-		}
-		return ret;
+	static <T> Map<Long, T> toHashMap(final ArrayList<T> list) {
+		final Map<Long, T> res = list.stream().collect(Collectors.toMap(x -> (long) x.hashCode(), x -> x));
+		return res;
 	}
 
 }

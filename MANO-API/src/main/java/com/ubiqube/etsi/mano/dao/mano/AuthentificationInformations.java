@@ -1,11 +1,20 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication.AuthTypeEnum;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Embeddable
 public class AuthentificationInformations {
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
+	@Field
 	private AuthTypeEnum authType;
 
 	private AuthParamBasic authParamBasic;

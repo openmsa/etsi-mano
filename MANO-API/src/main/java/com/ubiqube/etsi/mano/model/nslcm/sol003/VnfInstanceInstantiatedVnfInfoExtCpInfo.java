@@ -18,6 +18,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.nslcm.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -38,14 +39,14 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	@JsonProperty("extLinkPortId")
 	private String extLinkPortId = null;
 
-	public VnfInstanceInstantiatedVnfInfoExtCpInfo id(String id) {
+	public VnfInstanceInstantiatedVnfInfoExtCpInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Identifier of the external CP instance and the related information instance.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -55,18 +56,18 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfInstanceInstantiatedVnfInfoExtCpInfo cpdId(String cpdId) {
+	public VnfInstanceInstantiatedVnfInfoExtCpInfo cpdId(final String cpdId) {
 		this.cpdId = cpdId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the external CPD, VnfExtCpd, in the VNFD.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@JsonProperty("cpdId")
@@ -76,18 +77,18 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 		return cpdId;
 	}
 
-	public void setCpdId(String cpdId) {
+	public void setCpdId(final String cpdId) {
 		this.cpdId = cpdId;
 	}
 
-	public VnfInstanceInstantiatedVnfInfoExtCpInfo cpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
+	public VnfInstanceInstantiatedVnfInfoExtCpInfo cpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
 		this.cpProtocolInfo = cpProtocolInfo;
 		return this;
 	}
 
-	public VnfInstanceInstantiatedVnfInfoExtCpInfo addCpProtocolInfoItem(CpProtocolInfo cpProtocolInfoItem) {
+	public VnfInstanceInstantiatedVnfInfoExtCpInfo addCpProtocolInfoItem(final CpProtocolInfo cpProtocolInfoItem) {
 		if (this.cpProtocolInfo == null) {
-			this.cpProtocolInfo = new ArrayList<CpProtocolInfo>();
+			this.cpProtocolInfo = new ArrayList<>();
 		}
 		this.cpProtocolInfo.add(cpProtocolInfoItem);
 		return this;
@@ -95,7 +96,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 
 	/**
 	 * Network protocol information for this CP.
-	 * 
+	 *
 	 * @return cpProtocolInfo
 	 **/
 	@JsonProperty("cpProtocolInfo")
@@ -104,11 +105,11 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 		return cpProtocolInfo;
 	}
 
-	public void setCpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
+	public void setCpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
 		this.cpProtocolInfo = cpProtocolInfo;
 	}
 
-	public VnfInstanceInstantiatedVnfInfoExtCpInfo extLinkPortId(String extLinkPortId) {
+	public VnfInstanceInstantiatedVnfInfoExtCpInfo extLinkPortId(final String extLinkPortId) {
 		this.extLinkPortId = extLinkPortId;
 		return this;
 	}
@@ -117,7 +118,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	 * Identifier of the \&quot;extLinkPortInfo\&quot; structure inside the the
 	 * \&quot;extVirtualLinkInfo\&quot; structure. Shall be present if the CP is
 	 * associated to a link port.
-	 * 
+	 *
 	 * @return extLinkPortId
 	 **/
 	@JsonProperty("extLinkPortId")
@@ -126,7 +127,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 		return extLinkPortId;
 	}
 
-	public void setExtLinkPortId(String extLinkPortId) {
+	public void setExtLinkPortId(final String extLinkPortId) {
 		this.extLinkPortId = extLinkPortId;
 	}
 
@@ -147,7 +148,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

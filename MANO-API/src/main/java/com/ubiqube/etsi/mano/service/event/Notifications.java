@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -27,10 +29,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthentication.AuthTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthenticationParamsBasic;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequestAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsBasic;
 
 /**
  * This class handle the notification callback.
@@ -73,7 +74,7 @@ public class Notifications {
 	 * @param _uri  The complete URL.
 	 * @param _auth Auth parameters.
 	 */
-	public void doNotification(final Object obj, final String _uri, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth) {
+	public void doNotification(final Object obj, final String _uri, final SubscriptionAuthentication _auth) {
 		String content;
 		try {
 			content = mapper.writeValueAsString(obj);
@@ -84,7 +85,7 @@ public class Notifications {
 		sendRequest(content, _auth, _uri);
 	}
 
-	private void sendRequest(final String _content, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final String _uri) {
+	private void sendRequest(final String _content, final SubscriptionAuthentication _auth, final String _uri) {
 		HttpClientContext context;
 		try {
 			context = createContext(_auth, _uri);
@@ -108,7 +109,7 @@ public class Notifications {
 		}
 	}
 
-	private HttpClientContext createContext(final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final String _uri) throws MalformedURLException {
+	private HttpClientContext createContext(final SubscriptionAuthentication _auth, final String _uri) throws MalformedURLException {
 		final List<AuthTypeEnum> auths = _auth.getAuthType();
 		final URL url = new URL(_uri);
 		final HttpHost targetHost = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
@@ -121,7 +122,7 @@ public class Notifications {
 		return context;
 	}
 
-	private HttpClientContext createContext(final AuthTypeEnum authType, final SubscriptionsPkgmSubscriptionRequestAuthentication _auth, final HttpHost targetHost) {
+	private HttpClientContext createContext(final AuthTypeEnum authType, final SubscriptionAuthentication _auth, final HttpHost targetHost) {
 		if (authType == AuthTypeEnum.BASIC) {
 			return createBasicContext(_auth.getParamsBasic(), targetHost);
 		} else if (authType == AuthTypeEnum.OAUTH2_CLIENT_CREDENTIALS) {
@@ -137,11 +138,11 @@ public class Notifications {
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createOAuth2Context(final SubscriptionsPkgmSubscriptionRequestAuthenticationParamsOauth2ClientCredentials _paramsOauth2ClientCredentials, final HttpHost _targetHost) {
+	private HttpClientContext createOAuth2Context(final com.ubiqube.etsi.mano.model.vnf.sol005.@Valid SubscriptionAuthenticationParamsOauth2ClientCredentials subscriptionAuthenticationParamsOauth2ClientCredentials, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createBasicContext(final SubscriptionsPkgmSubscriptionRequestAuthenticationParamsBasic _paramsBasic, final HttpHost _targetHost) {
+	private HttpClientContext createBasicContext(final SubscriptionAuthenticationParamsBasic _paramsBasic, final HttpHost _targetHost) {
 
 		final CredentialsProvider credsProvider = new BasicCredentialsProvider();
 		final String _username = _paramsBasic.getUserName();

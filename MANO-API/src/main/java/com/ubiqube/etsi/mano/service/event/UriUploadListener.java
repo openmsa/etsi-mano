@@ -7,14 +7,14 @@ import org.quartz.JobListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 /**
  * A kind of VNF rollback. We need to kepp track of the state while uploading.
  * This service will switch back the VNF state on failure.
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -54,7 +54,7 @@ public class UriUploadListener implements JobListener {
 		final String vnfPkgId = (String) datamap.get("objectId");
 		LOG.info("Rollbacking vnf package {}", vnfPkgId);
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
+		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.CREATED);
 		vnfPackageRepository.save(vnfPkgInfo);
 		LOG.info("Rollback successfull.");
 	}

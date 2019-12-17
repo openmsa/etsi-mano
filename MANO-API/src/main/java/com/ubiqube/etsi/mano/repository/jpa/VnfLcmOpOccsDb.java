@@ -12,7 +12,6 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
@@ -29,7 +28,6 @@ import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("RDBMS")
 @Service
 public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private final CrudRepository<VnfLcmOpOccs, UUID> repository;
@@ -78,6 +76,12 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> imple
 		final VnfLcmOpOccs lcm = optLcm.orElseThrow(() -> new NotFoundException("VNF LcmOpOccs " + id + " could not be found."));
 		lcm.setExternalProcessId(processId);
 		repository.save(lcm);
+	}
+
+	@Override
+	protected void mapChild(final VnfLcmOpOccs vnf) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -4,9 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -17,11 +15,11 @@ import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfUserDefinedData;
-import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoSoftwareImages;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
@@ -39,16 +37,16 @@ public class VnfPackageTest {
 	@Test
 	void testJsonToDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final Map<String, Object> userData = new HashMap<>();
+		final KeyValuePairs userData = new KeyValuePairs();
 		userData.put("vimId", "TMA49");
 		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(userData);
-		final VnfPackagesVnfPkgInfoAdditionalArtifacts additionalArtifactsItem = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
+		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();
+		final Checksum checksum = new Checksum();
 		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		additionalArtifactsItem.artifactPath("/path").checksum(checksum);
 		vnf.addAdditionalArtifactsItem(additionalArtifactsItem);
 		vnf.setChecksum(checksum);
-		final List<VnfPackagesVnfPkgInfoSoftwareImages> softwareImages = new ArrayList<>();
+		final List<VnfPackageSoftwareImageInfo> softwareImages = new ArrayList<>();
 		softwareImages.add(TestFactory.createVnfPackagesVnfPkgInfoSoftwareImages());
 		vnf.setSoftwareImages(softwareImages);
 
@@ -61,7 +59,7 @@ public class VnfPackageTest {
 		final AdditionalArtifact addP[] = add.toArray(new AdditionalArtifact[0]);
 		assertEquals(1, add.size());
 		assertEquals("/path", addP[0].getArtifactPath());
-		final Checksum check = addP[0].getChecksum();
+		final com.ubiqube.etsi.mano.dao.mano.common.Checksum check = addP[0].getChecksum();
 		assertNotNull(check);
 		assertEquals("SHA-512", check.getAlgorithm());
 		assertEquals("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", check.getHash());
@@ -79,7 +77,7 @@ public class VnfPackageTest {
 
 		final List<VnfUserDefinedData> udd = vnfDao.getUserDefinedData();
 		assertEquals(1, udd.size());
-		assertEquals("vimId", udd.get(0).getKey());
+		assertEquals("vimId", udd.get(0).getName());
 		assertEquals("TMA49", udd.get(0).getValue());
 
 	}

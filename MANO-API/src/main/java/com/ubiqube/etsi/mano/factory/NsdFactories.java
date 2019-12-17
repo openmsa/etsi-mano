@@ -2,16 +2,15 @@ package com.ubiqube.etsi.mano.factory;
 
 import java.util.ArrayList;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoIdGetResponse;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinks;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfoLinksSelf;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdOnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfo.PnfdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfoLinks;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdUsageStateType;
 
 public final class NsdFactories {
 
@@ -19,48 +18,34 @@ public final class NsdFactories {
 		// Nothing.
 	}
 
-	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse(final NsDescriptorsNsdInfo nsDescriptorsNsdInfo) {
-		final NsDescriptorsNsdInfoIdGetResponse ret = new NsDescriptorsNsdInfoIdGetResponse();
-		ret.setNsdInfo(nsDescriptorsNsdInfo);
-		return ret;
-	}
-
-	// Not Used?
-	public static NsDescriptorsNsdInfoIdGetResponse createNsDescriptorsNsdInfoIdGetResponse() {
-		final NsDescriptorsNsdInfoIdGetResponse ret = new NsDescriptorsNsdInfoIdGetResponse();
-		final NsDescriptorsNsdInfo nsdInfo = createNsDescriptorsNsdInfo();
-		ret.setNsdInfo(nsdInfo);
-		return ret;
-	}
-
-	public static NsDescriptorsNsdInfoLinks createNsDescriptorsNsdInfoLinks(final String _self, final String _nsdContent) {
-		final NsDescriptorsNsdInfoLinks ret = new NsDescriptorsNsdInfoLinks();
-		final NsDescriptorsNsdInfoLinksSelf nsdContent = new NsDescriptorsNsdInfoLinksSelf();
+	public static NsdInfoLinks createNsdInfoLinks(final String _self, final String _nsdContent) {
+		final NsdInfoLinks ret = new NsdInfoLinks();
+		final Link nsdContent = new Link();
 		nsdContent.setHref(_nsdContent);
 		ret.setNsdContent(nsdContent);
-		final NsDescriptorsNsdInfoLinksSelf self = new NsDescriptorsNsdInfoLinksSelf();
+		final Link self = new Link();
 		self.setHref(_self);
 		ret.setSelf(self);
 
 		return ret;
 	}
 
-	public static NsDescriptorsNsdInfo createNsDescriptorsNsdInfo() {
-		final NsDescriptorsNsdInfo nsdInfo = new NsDescriptorsNsdInfo();
+	public static NsdInfo createNsdInfo() {
+		final NsdInfo nsdInfo = new NsdInfo();
 		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
-		nsdInfo.setNsdOnboardingState(NsdOnboardingStateEnum.CREATED);
-		nsdInfo.setNsdOperationalState(NsdOperationalStateEnum.DISABLED);
-		nsdInfo.setNsdUsageState(NsdUsageStateEnum.NOT_IN_USE);
+		nsdInfo.setNsdOnboardingState(NsdOnboardingStateType.CREATED);
+		nsdInfo.setNsdOperationalState(NsdOperationalStateType.DISABLED);
+		nsdInfo.setNsdUsageState(NsdUsageStateType.NOT_IN_USE);
 		nsdInfo.setPnfdInfoIds(new ArrayList<String>());
 		nsdInfo.setVnfPkgIds(new ArrayList<String>());
 		return nsdInfo;
 	}
 
-	public static PnfDescriptorsPnfdInfo createPnfDescriptorsPnfdInfo(final String _id) {
-		final PnfDescriptorsPnfdInfo pnfDescriptorsPnfdInfo = new PnfDescriptorsPnfdInfo();
+	public static PnfdInfo createPnfDescriptorsPnfdInfo(final String _id) {
+		final PnfdInfo pnfDescriptorsPnfdInfo = new PnfdInfo();
 		pnfDescriptorsPnfdInfo.setId(_id);
-		pnfDescriptorsPnfdInfo.setPnfdOnboardingState(PnfdOnboardingStateEnum.CREATED);
-		pnfDescriptorsPnfdInfo.setPnfdUsageState(PnfdUsageStateEnum.NOT_IN_USE);
+		pnfDescriptorsPnfdInfo.setPnfdOnboardingState(PnfdOnboardingStateType.CREATED);
+		pnfDescriptorsPnfdInfo.setPnfdUsageState(PnfdUsageStateType.NOT_IN_USE);
 		return pnfDescriptorsPnfdInfo;
 	}
 }

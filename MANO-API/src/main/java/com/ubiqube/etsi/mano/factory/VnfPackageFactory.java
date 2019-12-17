@@ -1,23 +1,22 @@
 package com.ubiqube.etsi.mano.factory;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationVnfPackageOnboardingNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.ChangeTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoAdditionalArtifacts;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgInfoChecksum;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
+import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.PackageChangeType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
 
 public class VnfPackageFactory {
 	private VnfPackageFactory() {
@@ -26,26 +25,26 @@ public class VnfPackageFactory {
 
 	public static VnfPkgInfo createVnfPkgInfo(final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
-		vnfPkgInfo.setOnboardingState(OnboardingStateEnum.CREATED);
+		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.CREATED);
 		vnfPkgInfo.setUserDefinedData(userData);
-		vnfPkgInfo.setOperationalState(OperationalStateEnum.DISABLED);
-		vnfPkgInfo.setUsageState(UsageStateEnum.NOT_IN_USE);
+		vnfPkgInfo.setOperationalState(PackageOperationalStateType.DISABLED);
+		vnfPkgInfo.setUsageState(PackageUsageStateType.NOT_IN_USE);
 
 		return vnfPkgInfo;
 	}
 
-	public static VnfPackagesVnfPkgInfoAdditionalArtifacts createArtefact(final String _filename, final String _checksum) {
-		final VnfPackagesVnfPkgInfoAdditionalArtifacts artefact = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
+	public static VnfPackageArtifactInfo createArtefact(final String _filename, final String _checksum) {
+		final VnfPackageArtifactInfo artefact = new VnfPackageArtifactInfo();
 		artefact.artifactPath(_filename);
-		final VnfPackagesVnfPkgInfoChecksum checksum = new VnfPackagesVnfPkgInfoChecksum();
+		final Checksum checksum = new Checksum();
 		checksum.algorithm(Constants.HASH_ALGORITHM);
 		checksum.setHash(_checksum);
 		artefact.setChecksum(checksum);
 		return artefact;
 	}
 
-	public static VnfPackagesVnfPkgInfoAdditionalArtifacts createArtefact(final String _filename, final VnfPackagesVnfPkgInfoChecksum _checksum) {
-		final VnfPackagesVnfPkgInfoAdditionalArtifacts artefact = new VnfPackagesVnfPkgInfoAdditionalArtifacts();
+	public static VnfPackageArtifactInfo createArtefact(final String _filename, final Checksum _checksum) {
+		final VnfPackageArtifactInfo artefact = new VnfPackageArtifactInfo();
 		artefact.artifactPath(_filename);
 		artefact.setChecksum(_checksum);
 		return artefact;
@@ -53,27 +52,20 @@ public class VnfPackageFactory {
 
 	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
-		final VnfPackageChangeNotificationVnfPackageChangeNotification obj = createVnfPackageChangeNotificationVnfPackageChangeNotification(_subscriptionId, _vnfPkgId, _vnfdId, links);
-		ret.setVnfPackageChangeNotification(obj);
-		return ret;
-	}
-
-	public static VnfPackageChangeNotificationVnfPackageChangeNotification createVnfPackageChangeNotificationVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
-		final VnfPackageChangeNotificationVnfPackageChangeNotification ret = new VnfPackageChangeNotificationVnfPackageChangeNotification();
-		ret.setChangeType(ChangeTypeEnum.OP_STATE_CHANGE);
+		ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
 		ret.setNotificationType("VnfPackageChangeNotification");
-		ret.setOperationalState(com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageChangeNotificationVnfPackageChangeNotification.OperationalStateEnum.DISABLED);
+		ret.setOperationalState(PackageOperationalStateType.DISABLED);
 		ret.setSubscriptionId(_subscriptionId);
-		ret.setTimeStamp(new Date());
+		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setVnfdId(_vnfdId);
 		ret.setVnfPkgId(_vnfPkgId);
 		ret.setLinks(links.createNotificationLink(_vnfPkgId, _subscriptionId));
 		return ret;
 	}
 
-	public static NotificationVnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
-		final NotificationVnfPackageOnboardingNotification ret = new NotificationVnfPackageOnboardingNotification();
-		ret.setTimeStamp(new Date());
+	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+		final VnfPackageOnboardingNotification ret = new VnfPackageOnboardingNotification();
+		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setNotificationType("VnfPackageOnboardingNotification");
 		ret.setSubscriptionId(_subscriptionId);
 		ret.setVnfPkgId(_vnfPkgId);
@@ -82,18 +74,18 @@ public class VnfPackageFactory {
 		return ret;
 	}
 
-	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final SubscriptionsPkgmSubscriptionFilter _filter) {
-		final SubscriptionsPkgmSubscription subscriptionsPkgmSubscription = new SubscriptionsPkgmSubscription();
+	public static PkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final PkgmNotificationsFilter _filter) {
+		final PkgmSubscription subscriptionsPkgmSubscription = new PkgmSubscription();
 		subscriptionsPkgmSubscription.setCallbackUri(_callbackUri);
 		subscriptionsPkgmSubscription.setFilter(_filter);
 		return subscriptionsPkgmSubscription;
 	}
 
-	public static SubscriptionsPkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
-		final SubscriptionsPkgmSubscription ret = new SubscriptionsPkgmSubscription();
-		ret.setCallbackUri(subscriptionObject.getSubscriptionsPkgmSubscription().getCallbackUri());
-		ret.setId(subscriptionObject.getSubscriptionsPkgmSubscription().getId());
-		ret.setFilter(subscriptionObject.getSubscriptionsPkgmSubscription().getFilter());
+	public static PkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
+		final PkgmSubscription ret = new PkgmSubscription();
+		ret.setCallbackUri(subscriptionObject.getPkgmSubscription().getCallbackUri());
+		ret.setId(subscriptionObject.getPkgmSubscription().getId());
+		ret.setFilter(subscriptionObject.getPkgmSubscription().getFilter());
 		return ret;
 	}
 

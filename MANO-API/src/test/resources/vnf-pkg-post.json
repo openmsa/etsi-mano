@@ -1,5 +1,4 @@
 {
-    "CreateVnfPkgInfoRequest": {
         "userDefinedData": {
             "customerId": "TMAA6",
             "vimId": "TMA125",
@@ -104,5 +103,4 @@
                 }
             }
         }
-    }
 }

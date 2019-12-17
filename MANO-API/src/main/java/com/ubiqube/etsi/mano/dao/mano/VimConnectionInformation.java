@@ -1,14 +1,14 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Transient;
-
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 @Entity
 public class VimConnectionInformation {
@@ -20,12 +20,12 @@ public class VimConnectionInformation {
 
 	private String vimType = null;
 
-	@Transient
-	private KeyValuePairs interfaceInfo = null;
-	@Transient
-	private KeyValuePairs accessInfo = null;
-	@Transient
-	private KeyValuePairs extra = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> interfaceInfo = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> accessInfo = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> extra = null;
 
 	public UUID getId() {
 		return id;
@@ -43,27 +43,27 @@ public class VimConnectionInformation {
 		this.vimType = vimType;
 	}
 
-	public KeyValuePairs getInterfaceInfo() {
+	public Map<String, String> getInterfaceInfo() {
 		return interfaceInfo;
 	}
 
-	public void setInterfaceInfo(final KeyValuePairs interfaceInfo) {
+	public void setInterfaceInfo(final Map<String, String> interfaceInfo) {
 		this.interfaceInfo = interfaceInfo;
 	}
 
-	public KeyValuePairs getAccessInfo() {
+	public Map<String, String> getAccessInfo() {
 		return accessInfo;
 	}
 
-	public void setAccessInfo(final KeyValuePairs accessInfo) {
+	public void setAccessInfo(final Map<String, String> accessInfo) {
 		this.accessInfo = accessInfo;
 	}
 
-	public KeyValuePairs getExtra() {
+	public Map<String, String> getExtra() {
 		return extra;
 	}
 
-	public void setExtra(final KeyValuePairs extra) {
+	public void setExtra(final Map<String, String> extra) {
 		this.extra = extra;
 	}
 

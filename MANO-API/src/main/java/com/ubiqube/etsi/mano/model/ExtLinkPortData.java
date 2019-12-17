@@ -27,15 +27,15 @@ public class ExtLinkPortData {
 	@JsonProperty("resourceHandle")
 	private ResourceHandle resourceHandle = null;
 
-	public ExtLinkPortData id(final String id) {
-		this.id = id;
+	public ExtLinkPortData id(final String _id) {
+		this.id = _id;
 		return this;
 	}
 
 	/**
 	 * Identifier of this link port as provided by the entity that has created the
 	 * link port.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of this link port as provided by the entity that has created the link port. ")
@@ -49,14 +49,14 @@ public class ExtLinkPortData {
 		this.id = id;
 	}
 
-	public ExtLinkPortData resourceHandle(final ResourceHandle resourceHandle) {
-		this.resourceHandle = resourceHandle;
+	public ExtLinkPortData resourceHandle(final ResourceHandle _resourceHandle) {
+		this.resourceHandle = _resourceHandle;
 		return this;
 	}
 
 	/**
 	 * Reference to the virtualised resource realizing this link port.
-	 * 
+	 *
 	 * @return resourceHandle
 	 **/
 	@ApiModelProperty(required = true, value = "Reference to the virtualised resource realizing this link port. ")
@@ -105,7 +105,7 @@ public class ExtLinkPortData {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

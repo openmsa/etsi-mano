@@ -69,14 +69,14 @@ public class IpOverEthernetAddressDataIpAddresses {
 	@JsonProperty("subnetId")
 	private String subnetId = null;
 
-	public IpOverEthernetAddressDataIpAddresses type(final TypeEnum type) {
-		this.type = type;
+	public IpOverEthernetAddressDataIpAddresses type(final TypeEnum _type) {
+		this.type = _type;
 		return this;
 	}
 
 	/**
 	 * The type of the IP addresses. Permitted values: IPV4, IPV6.
-	 * 
+	 *
 	 * @return type
 	 **/
 	@ApiModelProperty(required = true, value = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
@@ -90,8 +90,8 @@ public class IpOverEthernetAddressDataIpAddresses {
 		this.type = type;
 	}
 
-	public IpOverEthernetAddressDataIpAddresses fixedAddresses(final List<String> fixedAddresses) {
-		this.fixedAddresses = fixedAddresses;
+	public IpOverEthernetAddressDataIpAddresses fixedAddresses(final List<String> _fixedAddresses) {
+		this.fixedAddresses = _fixedAddresses;
 		return this;
 	}
 
@@ -107,7 +107,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	 * Fixed addresses to assign (from the subnet defined by \"subnetId\" if
 	 * provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or
 	 * \"ipAddressRange\" shall be present.
-	 * 
+	 *
 	 * @return fixedAddresses
 	 **/
 	@ApiModelProperty(value = "Fixed addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present. ")
@@ -120,8 +120,8 @@ public class IpOverEthernetAddressDataIpAddresses {
 		this.fixedAddresses = fixedAddresses;
 	}
 
-	public IpOverEthernetAddressDataIpAddresses numDynamicAddresses(final Integer numDynamicAddresses) {
-		this.numDynamicAddresses = numDynamicAddresses;
+	public IpOverEthernetAddressDataIpAddresses numDynamicAddresses(final Integer _numDynamicAddresses) {
+		this.numDynamicAddresses = _numDynamicAddresses;
 		return this;
 	}
 
@@ -129,7 +129,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	 * Number of dynamic addresses to assign (from the subnet defined by
 	 * \"subnetId\" if provided). Exactly one of \"fixedAddresses\",
 	 * \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
-	 * 
+	 *
 	 * @return numDynamicAddresses
 	 **/
 	@ApiModelProperty(value = "Number of dynamic addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present. ")
@@ -142,14 +142,14 @@ public class IpOverEthernetAddressDataIpAddresses {
 		this.numDynamicAddresses = numDynamicAddresses;
 	}
 
-	public IpOverEthernetAddressDataIpAddresses addressRange(final IpOverEthernetAddressDataAddressRange addressRange) {
-		this.addressRange = addressRange;
+	public IpOverEthernetAddressDataIpAddresses addressRange(final IpOverEthernetAddressDataAddressRange _addressRange) {
+		this.addressRange = _addressRange;
 		return this;
 	}
 
 	/**
 	 * Get addressRange
-	 * 
+	 *
 	 * @return addressRange
 	 **/
 	@ApiModelProperty(value = "")
@@ -164,8 +164,8 @@ public class IpOverEthernetAddressDataIpAddresses {
 		this.addressRange = addressRange;
 	}
 
-	public IpOverEthernetAddressDataIpAddresses subnetId(final String subnetId) {
-		this.subnetId = subnetId;
+	public IpOverEthernetAddressDataIpAddresses subnetId(final String _subnetId) {
+		this.subnetId = _subnetId;
 		return this;
 	}
 
@@ -173,7 +173,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
 	 * this attribute is present, IP addresses from that subnet will be assigned;
 	 * otherwise, IP addresses not bound to a subnet will be assigned.
-	 * 
+	 *
 	 * @return subnetId
 	 **/
 	@ApiModelProperty(value = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses from that subnet will be assigned; otherwise, IP addresses not bound to a subnet will be assigned. ")
@@ -225,7 +225,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionFilter.NotificationTypesEnum;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 
 public class NotificationJob extends QuartzJobBean {
 
@@ -32,10 +32,10 @@ public class NotificationJob extends QuartzJobBean {
 	private void dispatch(final NotificationEvent eventType, final String objectIdId) {
 		switch (eventType) {
 		case VNF_PKG_ONBOARDING:
-			vnfEvent.onEvent(objectIdId, NotificationTypesEnum.VNFPACKAGEONBOARDINGNOTIFICATION);
+			vnfEvent.onEvent(objectIdId, NotificationTypesEnum.VnfPackageOnboardingNotification);
 			break;
 		case VNF_PKG_ONCHANGE:
-			vnfEvent.onEvent(objectIdId, NotificationTypesEnum.VNFPACKAGECHANGENOTIFICATION);
+			vnfEvent.onEvent(objectIdId, NotificationTypesEnum.VnfPackageChangeNotification);
 			break;
 		default:
 			LOG.warn("Could not find event: {}", eventType);

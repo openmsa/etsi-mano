@@ -1,8 +1,14 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
 import java.util.Map;
+import java.util.Objects;
+
+import javax.validation.Valid;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,39 +16,52 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * IndividualVNF package resource creation parameters, as defined in clause
  * 9.5.2.2.
- **/
+ */
 @ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
-public class CreateVnfPkgInfoRequest {
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
 
-	@ApiModelProperty(value = "This type represents a list of key-value pairs. The order of the pairs in the list is not significant. In JSON, a set of key- value pairs is represented as an object. It shall comply with the provisions  defined in clause 4 of IETF RFC 7159.  ")
-	/**
-	 * This type represents a list of key-value pairs. The order of the pairs in the
-	 * list is not significant. In JSON, a set of key- value pairs is represented as
-	 * an object. It shall comply with the provisions defined in clause 4 of IETF
-	 * RFC 7159.
-	 **/
+public class CreateVnfPkgInfoRequest {
+	@JsonProperty("userDefinedData")
 	private Map<String, Object> userDefinedData = null;
 
+	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
+		this.userDefinedData = userDefinedData;
+		return this;
+	}
+
 	/**
-	 * This type represents a list of key-value pairs. The order of the pairs in the
-	 * list is not significant. In JSON, a set of key- value pairs is represented as
-	 * an object. It shall comply with the provisions defined in clause 4 of IETF
-	 * RFC 7159.
-	 * 
+	 * Get userDefinedData
+	 *
 	 * @return userDefinedData
 	 **/
-	@JsonProperty("userDefinedData")
+	@ApiModelProperty(value = "")
+
+	@Valid
+
 	public Map<String, Object> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> _userDefinedData1) {
-		this.userDefinedData = _userDefinedData1;
+	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+		this.userDefinedData = userDefinedData;
 	}
 
-	public CreateVnfPkgInfoRequest userDefinedData(final Map<String, Object> _userDefinedData1) {
-		this.userDefinedData = _userDefinedData1;
-		return this;
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final CreateVnfPkgInfoRequest createVnfPkgInfoRequest = (CreateVnfPkgInfoRequest) o;
+		return Objects.equals(this.userDefinedData, createVnfPkgInfoRequest.userDefinedData);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(userDefinedData);
 	}
 
 	@Override
@@ -59,7 +78,7 @@ public class CreateVnfPkgInfoRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private static String toIndentedString(final Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

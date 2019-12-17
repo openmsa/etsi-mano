@@ -3,12 +3,15 @@ package com.ubiqube.etsi.mano.service.event.jms;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import com.ubiqube.etsi.mano.service.event.ActionType;
 
 public class ActionMessage {
-	ActionType actionType;
-	String objectId;
-	Map<String, Object> parameters = new HashMap<>();
+	private ActionType actionType;
+	private String objectId;
+	@Nonnull
+	private Map<String, Object> parameters = new HashMap<>();
 
 	public ActionMessage() {
 		// Nothing.

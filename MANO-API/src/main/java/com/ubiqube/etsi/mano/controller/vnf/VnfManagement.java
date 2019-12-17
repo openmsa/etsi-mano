@@ -17,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
@@ -26,7 +27,6 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
@@ -57,8 +57,6 @@ public class VnfManagement implements VnfPackageManagement {
 	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final String vnfPkgId, final Linkable links) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
-		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
-		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		return vnfPkgInfo;
 	}
 
@@ -104,22 +102,8 @@ public class VnfManagement implements VnfPackageManagement {
 					continue;
 				}
 				if (entry.getName().equals(artifactPath)) {
-					final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-					if (rangeHeader != null) {
-						final FromToBean ft = rangeHeader.getValues(zcontent.length);
-						final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
-						final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
-						final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-						return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-								.header("Content-Range", rangeHeader.getContentRange(zcontent.length))
-								.contentType(contentType)
-								.body(resource);
-					}
-					final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
-					final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-					return ResponseEntity.ok()
-							.contentType(contentType)
-							.body(resource);
+					return handleArtifact(zis, rangeHeader);
+
 				}
 			}
 		} catch (final IOException e) {
@@ -133,44 +117,63 @@ public class VnfManagement implements VnfPackageManagement {
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
 		vnfPackageRepository.get(vnfPkgId);
 
-		// - Implement VNFD multi-files support
 		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 		final String mime = MimeType.findMatch(content);
-		if (MediaType.APPLICATION_JSON_VALUE.contentEquals(mime)) {
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-			return ResponseEntity.ok()
-					.contentType(MediaType.APPLICATION_JSON)
-					.body(resource);
-		} else if (APPLICATION_ZIP.equals(mime)) {
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-			return ResponseEntity.ok()
-					.header("Content-Type", mime)
-					.body(resource);
-		} else {
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-			return ResponseEntity.ok()
-					.contentType(MediaType.APPLICATION_OCTET_STREAM)
-					.body(resource);
-		}
+		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
+		final BodyBuilder bodyBuilder = ResponseEntity.ok();
+		handleMimeType(bodyBuilder, mime);
+		return bodyBuilder.body(resource);
+
 	}
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
+		byte[] bytes;
+		BodyBuilder bodyBuilder;
 		if (_range != null) {
-			final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo() == null ? null : Long.valueOf(_range.getTo()));
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
-			final String mime = MimeType.findMatch(bytes);
-			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", _range.getContentRange(bytes.length))
-					.header("Content-Type", mime)
-					.body(resource);
+			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo() == null ? null : Long.valueOf(_range.getTo()));
+			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+					.header("Content-Range", _range.getContentRange(bytes.length));
+		} else {
+			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
+			bodyBuilder = ResponseEntity.status(HttpStatus.OK);
 		}
-		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
 		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
 		final String mime = MimeType.findMatch(bytes);
-		return ResponseEntity.status(HttpStatus.OK)
-				.header("Content-Type", mime)
+		handleMimeType(bodyBuilder, mime);
+
+		return bodyBuilder.body(resource);
+	}
+
+	private static ResponseEntity<Resource> handleArtifact(final ZipInputStream zis, final RangeHeader rangeHeader) throws IOException {
+		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
+		final InputStreamResource resource;
+		BodyBuilder bodyBuilder;
+		if (rangeHeader != null) {
+			final FromToBean ft = rangeHeader.getValues(zcontent.length);
+			final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
+			resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
+
+			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT);
+			bodyBuilder.header("Content-Range", rangeHeader.getContentRange(finalContent.length));
+		} else {
+			bodyBuilder = ResponseEntity.ok();
+			resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
+		}
+		final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
+		return bodyBuilder
+				.contentType(contentType)
 				.body(resource);
+	}
+
+	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {
+		if (MediaType.APPLICATION_JSON_VALUE.contentEquals(mime)) {
+			bodyBuilder.contentType(MediaType.APPLICATION_JSON);
+		} else if (APPLICATION_ZIP.equals(mime)) {
+			bodyBuilder.header("Content-Type", mime);
+		} else {
+			bodyBuilder.contentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
 	}
 
 }

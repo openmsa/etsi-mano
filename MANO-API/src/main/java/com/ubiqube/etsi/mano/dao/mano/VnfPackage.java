@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,16 +13,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class VnfPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 
 	@Field
@@ -48,28 +49,28 @@ public class VnfPackage implements BaseEntity {
 
 	private Checksum checksum;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<SoftwareImage> softwareImages;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private OnboardingStateEnum onboardingState;
+	private PackageOnboardingStateType onboardingState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private OperationalStateEnum operationalState;
+	private PackageOperationalStateType operationalState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private UsageStateEnum usageState;
+	private PackageUsageStateType usageState;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<VnfUserDefinedData> userDefinedData;
 
 	@Override
@@ -145,27 +146,27 @@ public class VnfPackage implements BaseEntity {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
-	public OnboardingStateEnum getOnboardingState() {
+	public PackageOnboardingStateType getOnboardingState() {
 		return onboardingState;
 	}
 
-	public void setOnboardingState(final OnboardingStateEnum onboardingState) {
+	public void setOnboardingState(final PackageOnboardingStateType onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public OperationalStateEnum getOperationalState() {
+	public PackageOperationalStateType getOperationalState() {
 		return operationalState;
 	}
 
-	public void setOperationalState(final OperationalStateEnum operationalState) {
+	public void setOperationalState(final PackageOperationalStateType operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public UsageStateEnum getUsageState() {
+	public PackageUsageStateType getUsageState() {
 		return usageState;
 	}
 
-	public void setUsageState(final UsageStateEnum usageState) {
+	public void setUsageState(final PackageUsageStateType usageState) {
 		this.usageState = usageState;
 	}
 

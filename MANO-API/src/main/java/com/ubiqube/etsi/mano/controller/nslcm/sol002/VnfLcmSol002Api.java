@@ -18,10 +18,10 @@ import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 @Profile({ "!NFVO" })

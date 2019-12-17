@@ -7,15 +7,14 @@ import java.util.UUID;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgInstance;
@@ -24,7 +23,6 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 @Profile("!RDBMS")
-@Service
 public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> implements VnfLcmOpOccsRepository {
 	private static final String INDEXES_JSON = "indexes.json";
 	private final VnfInstancesRepository vnfInstancesRepository;

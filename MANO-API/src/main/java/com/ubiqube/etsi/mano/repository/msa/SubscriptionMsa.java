@@ -6,12 +6,11 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionObject;
+import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 /**
@@ -21,7 +20,6 @@ import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
  *
  */
 @Profile("!RDBMS")
-@Service
 public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObject> implements SubscriptionRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SubscriptionMsa.class);
@@ -35,12 +33,12 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 
 	@Override
 	String setId(final SubscriptionObject _entity) {
-		final String id = _entity.getSubscriptionsPkgmSubscription().getId();
+		final String id = _entity.getPkgmSubscription().getId();
 		if (null == id) {
-			_entity.getSubscriptionsPkgmSubscription().setId(UUID.randomUUID().toString());
+			_entity.getPkgmSubscription().setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getSubscriptionsPkgmSubscription().getId();
+		return _entity.getPkgmSubscription().getId();
 	}
 
 	@Override

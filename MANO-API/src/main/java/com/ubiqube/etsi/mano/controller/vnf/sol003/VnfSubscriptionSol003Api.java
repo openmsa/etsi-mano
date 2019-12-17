@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
-import com.ubiqube.etsi.mano.model.vnf.sol005.InlineResponse2001;
-import com.ubiqube.etsi.mano.model.vnf.sol005.NotificationsMessage;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
 
 @Profile({ "!NFVO" })
 @RestController
@@ -38,7 +38,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 * response data structures, and response codes. ²
 	 */
 	@Override
-	public List<SubscriptionsPkgmSubscription> subscriptionsGet(final String filter) {
+	public List<PkgmSubscription> subscriptionsGet(final String filter) {
 		return vnfSubscriptionManagement.subscriptionsGet(filter, links);
 	}
 
@@ -62,7 +62,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public List<InlineResponse2001> subscriptionsPost(final SubscriptionsPkgmSubscriptionRequest subscriptionsPostQuery) {
+	public List<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
 		// Job
 		return vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, links);
 	}
@@ -86,7 +86,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public SubscriptionsPkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
+	public PkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
 		return vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links);
 	}
 
@@ -114,8 +114,8 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void vnfPackageChangeNotificationPost(final NotificationsMessage notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage, links);
+	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage);
 	}
 
 	/**
@@ -128,8 +128,8 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void vnfPackageOnboardingNotificationPost(final NotificationsMessage notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage, links);
+	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage);
 	}
 
 }

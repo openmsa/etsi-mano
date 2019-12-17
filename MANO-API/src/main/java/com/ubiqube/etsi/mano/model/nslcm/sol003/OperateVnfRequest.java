@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

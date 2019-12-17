@@ -10,7 +10,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("RDBMS")
 @Service
 public class VnfPackageDb extends AbstractJpa<VnfPkgInfo, VnfPackage> implements VnfPackageRepository {
 
@@ -52,5 +50,10 @@ public class VnfPackageDb extends AbstractJpa<VnfPkgInfo, VnfPackage> implements
 		jTmp = root.join("additionalArtifacts", JoinType.LEFT);
 		joins.put("additionalArtifacts", jTmp);
 		return joins;
+	}
+
+	@Override
+	protected void mapChild(final VnfPackage vnf) {
+		// Nothing
 	}
 }

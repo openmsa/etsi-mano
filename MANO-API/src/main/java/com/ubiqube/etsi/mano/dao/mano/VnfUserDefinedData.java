@@ -1,41 +1,20 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.UUID;
+import javax.persistence.Embeddable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+@Embeddable
+public class VnfUserDefinedData {
 
-@Entity
-public class VnfUserDefinedData implements BaseEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-
-	@OneToOne
-	private VnfPackage vnfPackage;
-
-	private String key;
+	private String name;
 
 	private String value;
 
-	@Override
-	public UUID getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(final String key) {
-		this.key = key;
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public String getValue() {
@@ -44,14 +23,6 @@ public class VnfUserDefinedData implements BaseEntity {
 
 	public void setValue(final String value) {
 		this.value = value;
-	}
-
-	public VnfPackage getVnfPackage() {
-		return vnfPackage;
-	}
-
-	public void setVnfPackage(final VnfPackage vnfPackage) {
-		this.vnfPackage = vnfPackage;
 	}
 
 }

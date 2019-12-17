@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 
 public interface VnfLcmOpOccsRepository extends CrudRepository<VnfLcmOpOcc>, BinaryRepository {

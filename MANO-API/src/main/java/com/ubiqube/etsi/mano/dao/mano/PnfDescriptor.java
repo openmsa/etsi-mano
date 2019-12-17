@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,8 +16,8 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -24,6 +25,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class PnfDescriptor implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Field
 	private String pnfdId;
@@ -37,12 +39,12 @@ public class PnfDescriptor implements BaseEntity {
 	private String pnfdInvariantId;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private OnboardingStateEnum pnfdOnboardingState;
+	private PackageOnboardingStateType pnfdOnboardingState;
 	@Embedded
 	private FailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private UsageStateEnum pnfdUsageState;
+	private PackageUsageStateType pnfdUsageState;
 	private String userDefinedData;
 
 	@Override
@@ -94,11 +96,11 @@ public class PnfDescriptor implements BaseEntity {
 		this.pnfdInvariantId = pnfdInvariantId;
 	}
 
-	public OnboardingStateEnum getPnfdOnboardingState() {
+	public PackageOnboardingStateType getPnfdOnboardingState() {
 		return pnfdOnboardingState;
 	}
 
-	public void setPnfdOnboardingState(final OnboardingStateEnum pnfdOnboardingState) {
+	public void setPnfdOnboardingState(final PackageOnboardingStateType pnfdOnboardingState) {
 		this.pnfdOnboardingState = pnfdOnboardingState;
 	}
 
@@ -110,11 +112,11 @@ public class PnfDescriptor implements BaseEntity {
 		this.onboardingFailureDetails = onboardingFailureDetails;
 	}
 
-	public UsageStateEnum getPnfdUsageState() {
+	public PackageUsageStateType getPnfdUsageState() {
 		return pnfdUsageState;
 	}
 
-	public void setPnfdUsageState(final UsageStateEnum pnfdUsageState) {
+	public void setPnfdUsageState(final PackageUsageStateType pnfdUsageState) {
 		this.pnfdUsageState = pnfdUsageState;
 	}
 

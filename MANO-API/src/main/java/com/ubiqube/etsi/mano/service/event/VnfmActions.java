@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -67,12 +67,14 @@ public class VnfmActions {
 
 		if (status == LcmOperationStateType.COMPLETED) {
 			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
-			vnfPkg.setUsageState(UsageStateEnum.IN_USE);
+			vnfPkg.setUsageState(PackageUsageStateType.IN_USE);
 			final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 			instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);
 			vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
+			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 		} else {
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 		}
 		vnfInstancesRepository.save(vnfInstance);
 		vnfPackageRepository.save(vnfPkg);

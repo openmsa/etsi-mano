@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostQuery;
-import com.ubiqube.etsi.mano.model.nsd.sol005.SubscriptionsPostResponse;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdmSubscription;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdmSubscriptionRequest;
+import com.ubiqube.etsi.mano.model.nsperfo.sol005.SubscriptionsPostResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -69,7 +70,7 @@ public interface NsdSubscriptionsSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<SubscriptionsPostResponse> subscriptionsPost(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @ApiParam(value = "", required = true) @Valid @RequestBody SubscriptionsPostQuery body);
+	ResponseEntity<NsdmSubscription> subscriptionsPost(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @ApiParam(value = "", required = true) @Valid @RequestBody NsdmSubscriptionRequest body);
 
 	@ApiOperation(value = "Terminate Subscription", nickname = "subscriptionsSubscriptionIdDelete", notes = "This resource represents an individual subscription.  It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and  response data structures, and response codes, as specified in the Table 5.4.9.3.3-2.       ", tags = {})
 	@ApiResponses(value = {

@@ -26,14 +26,14 @@ public class IpOverEthernetAddressDataAddressRange {
 	@JsonProperty("maxAddress")
 	private String maxAddress = null;
 
-	public IpOverEthernetAddressDataAddressRange minAddress(final String minAddress) {
-		this.minAddress = minAddress;
+	public IpOverEthernetAddressDataAddressRange minAddress(final String _minAddress) {
+		this.minAddress = _minAddress;
 		return this;
 	}
 
 	/**
 	 * Lowest IP address belonging to the range.
-	 * 
+	 *
 	 * @return minAddress
 	 **/
 	@ApiModelProperty(required = true, value = "Lowest IP address belonging to the range. ")
@@ -47,14 +47,14 @@ public class IpOverEthernetAddressDataAddressRange {
 		this.minAddress = minAddress;
 	}
 
-	public IpOverEthernetAddressDataAddressRange maxAddress(final String maxAddress) {
-		this.maxAddress = maxAddress;
+	public IpOverEthernetAddressDataAddressRange maxAddress(final String _maxAddress) {
+		this.maxAddress = _maxAddress;
 		return this;
 	}
 
 	/**
 	 * Highest IP address belonging to the range.
-	 * 
+	 *
 	 * @return maxAddress
 	 **/
 	@ApiModelProperty(required = true, value = "Highest IP address belonging to the range. ")
@@ -101,7 +101,7 @@ public class IpOverEthernetAddressDataAddressRange {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

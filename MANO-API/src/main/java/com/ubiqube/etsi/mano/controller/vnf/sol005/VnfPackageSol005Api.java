@@ -5,9 +5,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -21,7 +19,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,13 +29,11 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionsPkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.CreateVnfPkgInfoRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.UploadVnfPkgFromUriRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -88,11 +83,6 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		LOG.info("Starting VNF Package SOL005 Controller.");
 	}
 
-	public ResponseEntity<List<SubscriptionsPkgmSubscription>> subscriptionsGet2(@RequestParam final Map<String, String> params) {
-		LOG.info("qp => {}", params);
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
-	}
-
 	@Override
 	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) throws ServiceException {
 		final String resp = vnfManagement.vnfPackagesGet(requestParams, links);
@@ -106,11 +96,10 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	@Override
-	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
+	// TODO: Same as SOL003 ?
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, links);
-		final VnfPackagesVnfPkgIdGetResponse resp = new VnfPackagesVnfPkgIdGetResponse();
-		resp.setVnfPkgInfo(vnfPkgInfo);
-		return ResponseEntity.ok(resp);
+		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
 	@Override
@@ -130,15 +119,10 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(final String accept, final String contentType, final VnfPackagePostQuery vnfPackagePostQuery) {
-		final Map<String, Object> userDataObject = vnfPackagePostQuery.getCreateVnfPkgInfoRequest().getUserDefinedData();
+	public ResponseEntity<VnfPkgInfo> vnfPackagesPost(final String accept, final String contentType, final CreateVnfPkgInfoRequest vnfPackagePostQuery) {
+		final Map<String, Object> userData = vnfPackagePostQuery.getUserDefinedData();
 
-		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userDataObject);
-
-		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
-		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
-
-		final Map<String, Object> userData = vnfPkgInfo.getUserDefinedData();
+		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userData);
 
 		checkUserData(userData);
 
@@ -149,12 +133,13 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
-			vnfPkgInfo.setOnboardingState(OnboardingStateEnum.ONBOARDED);
-			vnfPkgInfo.setOperationalState(OperationalStateEnum.ENABLED);
+			vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
+			vnfPkgInfo.setOperationalState(PackageOperationalStateType.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
-		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.CREATED);
+
+		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.CREATED);
 	}
 
 	private void checkUserData(final Map<String, Object> userData) {
@@ -207,17 +192,15 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		patcher.patch(body, vnfPkgInfo);
 		vnfPackageRepository.save(vnfPkgInfo);
 
-		final VnfPackagesVnfPkgIdGetResponse vnfPackagesVnfPkgIdGetResponse = new VnfPackagesVnfPkgIdGetResponse();
-		vnfPackagesVnfPkgIdGetResponse.setVnfPkgInfo(vnfPkgInfo);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		// On change Notification
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
-		return new ResponseEntity<>(vnfPackagesVnfPkgIdGetResponse, HttpStatus.OK);
+		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
 	/**
@@ -252,11 +235,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest) {
+	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final UploadVnfPkgFromUriRequest contentUploadFromUriPostRequest) {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
 		ensureNotOnboarded(vnfPkgInfo);
 
-		final Map<String, Object> uddList = vnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest.getUploadVnfPkgFromUriRequest().getUserDefinedData();
+		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("url", uddList.get("url"));
 		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);

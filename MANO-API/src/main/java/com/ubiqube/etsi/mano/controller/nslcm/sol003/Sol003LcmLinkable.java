@@ -18,7 +18,7 @@ public class Sol003LcmLinkable implements LcmLinkable {
 		final String hrefIndicators = "";
 		final String hrefHeal = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdHealPost(id)).withSelfRel().getHref();
 		final String hrefChangeFlavor = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdChangeFlavourPost(id)).withSelfRel().getHref();
-		final String hrefChangeExtConn = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id)).withSelfRel().getHref();
+		final String hrefChangeExtConn = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null)).withSelfRel().getHref();
 		final String hrefSelf = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
 		final String hrefTerminate = linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdTerminatePost(id, null)).withSelfRel().getHref();
 		return LcmFactory.createVnfInstancesLink(hrefSelf, hrefChangeExtConn, hrefChangeFlavor, hrefHeal, hrefIndicators, hrefInstanciate, hrefOperate, hrefScale, hrefScaleToLevel, hrefTerminate);

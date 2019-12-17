@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdChangeNotification;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdDeletionNotification;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnBoardingFailureNotification;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOnBoardingNotification;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdDeletionNotification;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingFailureNotification;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnBoardingNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.NsdChangeNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.NsdDeletionNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.NsdOnBoardingFailureNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.NsdOnBoardingNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.PnfdDeletionNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.PnfdOnBoardingFailureNotification;
+import com.ubiqube.etsi.mano.model.nsd.sol005.notification.PnfdOnBoardingNotification;
 
 @Profile({ "!VNFM" })
 @RestController

@@ -22,15 +22,15 @@ public class Link {
 	@JsonProperty("href")
 	private String href = null;
 
-	public Link href(final String href) {
-		this.href = href;
+	public Link href(final String _href) {
+		this.href = _href;
 		return this;
 	}
 
 	/**
 	 * URI of another resource referenced from a resource. Shall be an absolute URI
 	 * (i.e. a UTI that contains {apiRoot}).
-	 * 
+	 *
 	 * @return href
 	 **/
 	@ApiModelProperty(required = true, value = "URI of another resource referenced from a resource. Shall be an absolute URI (i.e. a UTI that contains {apiRoot}). ")
@@ -75,7 +75,7 @@ public class Link {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

@@ -12,12 +12,12 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOnboardingStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdOperationalStateEnum;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.OperationalStateEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo.UsageStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -34,7 +34,7 @@ public class NsdPackageTest {
 	@Test
 	void testMapJsonDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final NsDescriptorsNsdInfo nsd = TestFactory.createNsDescriptorsNsdInfo();
+		final NsdInfo nsd = TestFactory.createNsDescriptorsNsdInfo();
 		final NsdPackage nsdDao = mapper.map(nsd, NsdPackage.class);
 
 		final Set<NsdPackage> infoId = nsdDao.getNestedNsdInfoIds();
@@ -59,18 +59,18 @@ public class NsdPackageTest {
 		assertEquals("52d993dc-7a50-46da-b30c-e8fb344ef140", vnfP[1].getId().toString());
 
 		// Check enum
-		assertEquals(OperationalStateEnum.ENABLED, nsdDao.getNsdOperationalState());
-		assertEquals(UsageStateEnum.IN_USE, nsdDao.getNsdUsageState());
-		assertEquals(NsdOnboardingStateEnum.ONBOARDED, nsdDao.getNsdOnboardingState());
+		assertEquals(PackageOperationalStateType.ENABLED, nsdDao.getNsdOperationalState());
+		assertEquals(PackageUsageStateType.IN_USE, nsdDao.getNsdUsageState());
+		assertEquals(NsdOnboardingStateType.ONBOARDED, nsdDao.getNsdOnboardingState());
 	}
 
 	@Test
 	void testMapDaoJson() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final NsdPackage nsd = TestFactory.createNsdPackage();
-		final NsDescriptorsNsdInfo nsdInfo = mapper.map(nsd, NsDescriptorsNsdInfo.class);
-		assertEquals(NsdOperationalStateEnum.ENABLED, nsdInfo.getNsdOperationalState());
-		assertEquals(NsdUsageStateEnum.IN_USE, nsdInfo.getNsdUsageState());
-		assertEquals(NsdOnboardingStateEnum.ONBOARDED, nsdInfo.getNsdOnboardingState());
+		final NsdInfo nsdInfo = mapper.map(nsd, NsdInfo.class);
+		assertEquals(NsdOperationalStateType.ENABLED, nsdInfo.getNsdOperationalState());
+		assertEquals(NsdUsageStateType.IN_USE, nsdInfo.getNsdUsageState());
+		assertEquals(NsdOnboardingStateType.ONBOARDED, nsdInfo.getNsdOnboardingState());
 	}
 }

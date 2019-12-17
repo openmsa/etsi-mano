@@ -28,6 +28,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.vnf.sol003.Sol003Linkable;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
@@ -54,7 +58,7 @@ public class VnfManagementTest {
 	@Test
 	void testOneTupple() throws Exception {
 		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
-		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>()));
+		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs()));
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
 
@@ -66,14 +70,14 @@ public class VnfManagementTest {
 		assertEquals(1, value.size(), "List size should be 1");
 		final VnfPkgInfo vnf = value.get(0);
 		assertNotNull(vnf);
-		assertEquals("CREATED", vnf.getOnboardingState());
-		assertEquals("DISABLED", vnf.getOperationalState().value());
-		assertEquals("NOT_IN_USE", vnf.getUsageState());
+		assertEquals(PackageOnboardingStateType.CREATED, vnf.getOnboardingState());
+		assertEquals(PackageOperationalStateType.DISABLED, vnf.getOperationalState());
+		assertEquals(PackageUsageStateType.NOT_IN_USE, vnf.getUsageState());
 	}
 
 	@Test
 	void testgetVnfUniq() throws Exception {
-		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, Object>());
+		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs());
 		when(vnfPackageRepository.get("aaa")).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);

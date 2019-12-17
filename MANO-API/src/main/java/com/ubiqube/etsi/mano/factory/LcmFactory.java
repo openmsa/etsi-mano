@@ -1,23 +1,25 @@
 package com.ubiqube.etsi.mano.factory;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.model.Link;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.Link;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfOperationalStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.LcmOperationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccsNsLcmOpOcc.OperationParamsEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
 
 public final class LcmFactory {
 	private LcmFactory() {
@@ -85,16 +87,16 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static NsLcmOpOccsNsLcmOpOcc createNsLcmOpOccsNsLcmOpOcc(final String nsInstanceId, final LcmOperationTypeEnum lcmOperationType) {
-		final NsLcmOpOccsNsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOccsNsLcmOpOcc();
+	public static NsLcmOpOcc createNsLcmOpOcc(final String nsInstanceId, final NsLcmOpType lcmOperationType) {
+		final NsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOcc();
 		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(true);
 		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(false);
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
-		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
-		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
-		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(NsLcmOperationStateType.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());
+		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
 
@@ -109,7 +111,7 @@ public final class LcmFactory {
 		return vnfLcmOpOcc;
 	}
 
-	public static OperationParamsEnum lcmOperationTypeToParameter(final LcmOperationTypeEnum lcmOperationType) {
+	public static OperationParamsEnum lcmOperationTypeToParameter(final NsLcmOpType lcmOperationType) {
 		switch (lcmOperationType) {
 		case HEAL:
 			return OperationParamsEnum.HEAL;

@@ -2,9 +2,9 @@ package com.ubiqube.etsi.mano.repository;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsDescriptorsNsdInfo.NsdUsageStateEnum;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 
-public interface NsdRepository extends CrudRepository<NsDescriptorsNsdInfo>, BinaryRepository {
-	void changeNsdUpdateState(NsDescriptorsNsdInfo nsdInfo, @Nonnull NsdUsageStateEnum state);
+public interface NsdRepository extends CrudRepository<NsdInfo>, BinaryRepository {
+	void changeNsdUpdateState(NsdInfo nsdInfo, @Nonnull NsdUsageStateType state);
 }

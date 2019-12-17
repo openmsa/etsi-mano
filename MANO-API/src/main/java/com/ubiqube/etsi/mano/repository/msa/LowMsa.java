@@ -16,6 +16,7 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotAcceptableException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.Low;
 
 @Service
@@ -62,6 +63,9 @@ public class LowMsa implements Low {
 	@Override
 	public byte[] get(final String _path) {
 		final RepositoryElement repositoryElement = repositoryService.getElement(_path);
+		if (null == repositoryElement) {
+			throw new NotFoundException("Unable to find file " + _path);
+		}
 		return repositoryService.getRepositoryElementContent(repositoryElement);
 	}
 

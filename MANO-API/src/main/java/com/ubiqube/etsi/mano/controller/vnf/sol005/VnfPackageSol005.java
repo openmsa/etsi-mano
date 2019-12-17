@@ -22,9 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagePostQuery;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdGetResponse;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.CreateVnfPkgInfoRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.UploadVnfPkgFromUriRequest;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 import io.swagger.annotations.Api;
@@ -69,9 +69,9 @@ public interface VnfPackageSol005 {
 	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip" }, consumes = { "application/json" })
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, HttpServletRequest request, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) RangeHeader range) throws ServiceException;
 
-	@ApiOperation(value = "Read information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdGet", notes = "The GET method reads the information of a VNF package. ", response = VnfPackagesVnfPkgIdGetResponse.class, tags = {})
+	@ApiOperation(value = "Read information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdGet", notes = "The GET method reads the information of a VNF package. ", response = VnfPkgInfo.class, tags = {})
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "200 OK Information of the VNF package.             ", response = VnfPackagesVnfPkgIdGetResponse.class),
+			@ApiResponse(code = 200, message = "200 OK Information of the VNF package.             ", response = VnfPkgInfo.class),
 			@ApiResponse(code = 400, message = "Bad Request. Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error.        ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
@@ -82,7 +82,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesVnfPkgIdGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader("Accept") String accept);
+	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader("Accept") String accept);
 
 	@ApiOperation(value = "Fetch an on-boarded VNF package.", nickname = "vnfPackagesVnfPkgIdPackageContentGet", notes = "The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. This method shall follow the provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -127,7 +127,7 @@ public interface VnfPackageSol005 {
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "201 Created             An individual VNF package resource has been created successfully. The response body shall contain a representation of the new individual VNF package resource, as defined in clause 9.5.2.4. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the individual VNF package resource. ", response = Object.class) })
 	@PostMapping(value = "", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<VnfPackagesVnfPkgIdGetResponse> vnfPackagesPost(@Nonnull @RequestHeader("Accept") String accept, @Nullable @RequestHeader("Content-Type") String contentType, @Nonnull @RequestBody VnfPackagePostQuery body);
+	ResponseEntity<VnfPkgInfo> vnfPackagesPost(@Nonnull @RequestHeader("Accept") String accept, @Nullable @RequestHeader("Content-Type") String contentType, @Nonnull @RequestBody CreateVnfPkgInfoRequest body);
 
 	/**
 	 * Delete an individual VNF package.
@@ -221,6 +221,6 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfPkgId}/package_content/upload_from_uri", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader("Content-Type") String contentType, @Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull @RequestBody VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest);
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader("Content-Type") String contentType, @Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull @RequestBody UploadVnfPkgFromUriRequest VnfPackagesVnfPkgIdPackageContentUploadFromUriPostRequest);
 
 }

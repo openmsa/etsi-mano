@@ -8,19 +8,17 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("RDBMS")
 @Service
 public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance> implements VnfInstancesRepository {
 
@@ -49,6 +47,12 @@ public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.man
 	@Override
 	public boolean isInstantiate(@NotNull final String vnfPkgId) {
 		return 0 == repository.countByVnfPkgId(UUID.fromString(vnfPkgId));
+	}
+
+	@Override
+	protected void mapChild(final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnf) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -9,12 +9,12 @@ import ma.glasnost.orika.metadata.Type;
 public class UuidConverter extends BidirectionalConverter<String, UUID> {
 
 	@Override
-	public UUID convertTo(final String source, final Type<UUID> destinationType, final MappingContext mappingContext) {
+	public UUID convertTo(final String source, final Type<UUID> _destinationType, final MappingContext mappingContext) {
 		return UUID.fromString(source);
 	}
 
 	@Override
-	public String convertFrom(final UUID source, final Type<String> destinationType, final MappingContext mappingContext) {
+	public String convertFrom(final UUID source, final Type<String> _destinationType, final MappingContext mappingContext) {
 		return source.toString();
 	}
 

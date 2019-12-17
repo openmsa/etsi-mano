@@ -18,6 +18,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.model.nslcm.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -41,14 +42,14 @@ public class VnfcResourceInfoVnfcCpInfo {
 	@JsonProperty("vnfLinkPortId")
 	private String vnfLinkPortId = null;
 
-	public VnfcResourceInfoVnfcCpInfo id(String id) {
+	public VnfcResourceInfoVnfcCpInfo id(final String id) {
 		this.id = id;
 		return this;
 	}
 
 	/**
 	 * Identifier of this VNFC CP instance and the associated array entry.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
@@ -58,18 +59,18 @@ public class VnfcResourceInfoVnfcCpInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
-	public VnfcResourceInfoVnfcCpInfo cpdId(String cpdId) {
+	public VnfcResourceInfoVnfcCpInfo cpdId(final String cpdId) {
 		this.cpdId = cpdId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VDU CPD, cpdId, in the VNFD.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@JsonProperty("cpdId")
@@ -79,11 +80,11 @@ public class VnfcResourceInfoVnfcCpInfo {
 		return cpdId;
 	}
 
-	public void setCpdId(String cpdId) {
+	public void setCpdId(final String cpdId) {
 		this.cpdId = cpdId;
 	}
 
-	public VnfcResourceInfoVnfcCpInfo vnfExtCpId(String vnfExtCpId) {
+	public VnfcResourceInfoVnfcCpInfo vnfExtCpId(final String vnfExtCpId) {
 		this.vnfExtCpId = vnfExtCpId;
 		return this;
 	}
@@ -91,7 +92,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	/**
 	 * When the VNFC CP is exposed as external CP of the VNF, the identifier of this
 	 * external VNF CP.
-	 * 
+	 *
 	 * @return vnfExtCpId
 	 **/
 	@JsonProperty("vnfExtCpId")
@@ -100,18 +101,18 @@ public class VnfcResourceInfoVnfcCpInfo {
 		return vnfExtCpId;
 	}
 
-	public void setVnfExtCpId(String vnfExtCpId) {
+	public void setVnfExtCpId(final String vnfExtCpId) {
 		this.vnfExtCpId = vnfExtCpId;
 	}
 
-	public VnfcResourceInfoVnfcCpInfo cpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
+	public VnfcResourceInfoVnfcCpInfo cpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
 		this.cpProtocolInfo = cpProtocolInfo;
 		return this;
 	}
 
-	public VnfcResourceInfoVnfcCpInfo addCpProtocolInfoItem(CpProtocolInfo cpProtocolInfoItem) {
+	public VnfcResourceInfoVnfcCpInfo addCpProtocolInfoItem(final CpProtocolInfo cpProtocolInfoItem) {
 		if (this.cpProtocolInfo == null) {
-			this.cpProtocolInfo = new ArrayList<CpProtocolInfo>();
+			this.cpProtocolInfo = new ArrayList<>();
 		}
 		this.cpProtocolInfo.add(cpProtocolInfoItem);
 		return this;
@@ -119,7 +120,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 
 	/**
 	 * Network protocol information for this CP.
-	 * 
+	 *
 	 * @return cpProtocolInfo
 	 **/
 	@JsonProperty("cpProtocolInfo")
@@ -128,11 +129,11 @@ public class VnfcResourceInfoVnfcCpInfo {
 		return cpProtocolInfo;
 	}
 
-	public void setCpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
+	public void setCpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
 		this.cpProtocolInfo = cpProtocolInfo;
 	}
 
-	public VnfcResourceInfoVnfcCpInfo vnfLinkPortId(String vnfLinkPortId) {
+	public VnfcResourceInfoVnfcCpInfo vnfLinkPortId(final String vnfLinkPortId) {
 		this.vnfLinkPortId = vnfLinkPortId;
 		return this;
 	}
@@ -141,7 +142,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 * Identifier of the \&quot;vnfLinkPorts\&quot; structure in the
 	 * \&quot;vnfVirtualLinkResourceInfo\&quot; structure. Shall be present if the
 	 * CP is associated to a link port.
-	 * 
+	 *
 	 * @return vnfLinkPortId
 	 **/
 	@JsonProperty("vnfLinkPortId")
@@ -150,7 +151,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 		return vnfLinkPortId;
 	}
 
-	public void setVnfLinkPortId(String vnfLinkPortId) {
+	public void setVnfLinkPortId(final String vnfLinkPortId) {
 		this.vnfLinkPortId = vnfLinkPortId;
 	}
 
@@ -172,7 +173,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

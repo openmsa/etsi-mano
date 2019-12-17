@@ -60,8 +60,8 @@ public class CpProtocolData {
 	@JsonProperty("ipOverEthernet")
 	private IpOverEthernetAddressData ipOverEthernet = null;
 
-	public CpProtocolData layerProtocol(final LayerProtocolEnum layerProtocol) {
-		this.layerProtocol = layerProtocol;
+	public CpProtocolData layerProtocol(final LayerProtocolEnum _layerProtocol) {
+		this.layerProtocol = _layerProtocol;
 		return this;
 	}
 
@@ -70,7 +70,7 @@ public class CpProtocolData {
 	 * addition of further types of layer and protocol in future versions of the
 	 * present document in a backwards-compatible way. In the current version of the
 	 * present document, only IP over Ethernet is supported.
-	 * 
+	 *
 	 * @return layerProtocol
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of layer(s) and protocol(s). This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported. ")
@@ -84,8 +84,8 @@ public class CpProtocolData {
 		this.layerProtocol = layerProtocol;
 	}
 
-	public CpProtocolData ipOverEthernet(final IpOverEthernetAddressData ipOverEthernet) {
-		this.ipOverEthernet = ipOverEthernet;
+	public CpProtocolData ipOverEthernet(final IpOverEthernetAddressData _ipOverEthernet) {
+		this.ipOverEthernet = _ipOverEthernet;
 		return this;
 	}
 
@@ -93,7 +93,7 @@ public class CpProtocolData {
 	 * Network address data for IP over Ethernet to assign to the extCP instance.
 	 * Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall
 	 * be absent otherwise.
-	 * 
+	 *
 	 * @return ipOverEthernet
 	 **/
 	@ApiModelProperty(value = "Network address data for IP over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall be absent otherwise. ")
@@ -141,7 +141,7 @@ public class CpProtocolData {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

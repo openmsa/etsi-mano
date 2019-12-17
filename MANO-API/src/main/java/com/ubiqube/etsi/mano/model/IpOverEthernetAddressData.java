@@ -28,15 +28,15 @@ public class IpOverEthernetAddressData {
 	@Valid
 	private List<IpOverEthernetAddressDataIpAddresses> ipAddresses = null;
 
-	public IpOverEthernetAddressData macAddress(final String macAddress) {
-		this.macAddress = macAddress;
+	public IpOverEthernetAddressData macAddress(final String _macAddress) {
+		this.macAddress = _macAddress;
 		return this;
 	}
 
 	/**
 	 * MAC address. If this attribute is not present, it shall be chosen by the VIM.
 	 * At least one of \"macAddress\" or \"ipAddresses\" shall be present.
-	 * 
+	 *
 	 * @return macAddress
 	 **/
 	@ApiModelProperty(value = "MAC address. If this attribute is not present, it shall be chosen by the VIM. At least one of \"macAddress\" or \"ipAddresses\" shall be present. ")
@@ -49,8 +49,8 @@ public class IpOverEthernetAddressData {
 		this.macAddress = macAddress;
 	}
 
-	public IpOverEthernetAddressData ipAddresses(final List<IpOverEthernetAddressDataIpAddresses> ipAddresses) {
-		this.ipAddresses = ipAddresses;
+	public IpOverEthernetAddressData ipAddresses(final List<IpOverEthernetAddressDataIpAddresses> _ipAddresses) {
+		this.ipAddresses = _ipAddresses;
 		return this;
 	}
 
@@ -66,7 +66,7 @@ public class IpOverEthernetAddressData {
 	 * List of IP addresses to assign to the CP instance. Each entry represents IP
 	 * address data for fixed or dynamic IP address assignment per subnet. If this
 	 * attribute is not present, no IP address shall be assigned.
-	 * 
+	 *
 	 * @return ipAddresses
 	 **/
 	@ApiModelProperty(value = "List of IP addresses to assign to the CP instance. Each entry represents IP address data for fixed or dynamic IP address assignment per subnet. If this attribute is not present, no IP address shall be assigned. ")
@@ -114,7 +114,7 @@ public class IpOverEthernetAddressData {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

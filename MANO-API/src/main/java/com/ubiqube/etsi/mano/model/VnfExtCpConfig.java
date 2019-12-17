@@ -36,8 +36,8 @@ public class VnfExtCpConfig {
 	@Valid
 	private List<CpProtocolData> cpProtocolData = null;
 
-	public VnfExtCpConfig cpInstanceId(final String cpInstanceId) {
-		this.cpInstanceId = cpInstanceId;
+	public VnfExtCpConfig cpInstanceId(final String _cpInstanceId) {
+		this.cpInstanceId = _cpInstanceId;
 		return this;
 	}
 
@@ -45,7 +45,7 @@ public class VnfExtCpConfig {
 	 * Identifier of the external CP instance to which this set of configuration
 	 * parameters is requested to be applied. Shall be present if this instance has
 	 * already been created.
-	 * 
+	 *
 	 * @return cpInstanceId
 	 **/
 	@ApiModelProperty(value = "Identifier of the external CP instance to which this set of configuration parameters is requested to be applied. Shall be present if this instance has already been created. ")
@@ -58,8 +58,8 @@ public class VnfExtCpConfig {
 		this.cpInstanceId = cpInstanceId;
 	}
 
-	public VnfExtCpConfig linkPortId(final String linkPortId) {
-		this.linkPortId = linkPortId;
+	public VnfExtCpConfig linkPortId(final String _linkPortId) {
+		this.linkPortId = _linkPortId;
 		return this;
 	}
 
@@ -79,7 +79,7 @@ public class VnfExtCpConfig {
 	 * \"linkportId\" are provided, the API consumer shall ensure that the
 	 * cpProtocolData can be used with the pre-created link port referenced by
 	 * \"linkPortId\".
-	 * 
+	 *
 	 * @return linkPortId
 	 **/
 	@ApiModelProperty(value = "Identifier of a pre-configured link port to which the external CP will be associated. The following conditions apply to the attributes \"linkPortId\" and \"cpProtocolData\": 1) The \"linkPortId\" and \"cpProtocolData\" attributes shall both be    absent for the deletion of an existing external CP instance    addressed by cpInstanceId. 2) At least one of these attributes shall be present for a    to-be-created external CP instance or an existing external    CP instance. 3) If the \"linkPortId\" attribute is absent, the VNFM shall create a    link port. 4) If the \"cpProtocolData\" attribute is absent, the \"linkPortId\"    attribute shall be provided referencing a pre-created link port,    and the VNFM can use means outside the scope of the present    document to obtain the pre-configured address information for the    connection point from the resource representing the link port. 5) If both \"cpProtocolData\" and \"linkportId\" are provided, the API    consumer shall ensure that the cpProtocolData can be used with the    pre-created link port referenced by \"linkPortId\". ")
@@ -92,8 +92,8 @@ public class VnfExtCpConfig {
 		this.linkPortId = linkPortId;
 	}
 
-	public VnfExtCpConfig cpProtocolData(final List<CpProtocolData> cpProtocolData) {
-		this.cpProtocolData = cpProtocolData;
+	public VnfExtCpConfig cpProtocolData(final List<CpProtocolData> _cpProtocolData) {
+		this.cpProtocolData = _cpProtocolData;
 		return this;
 	}
 
@@ -121,7 +121,7 @@ public class VnfExtCpConfig {
 	 * port. 5) If both \"cpProtocolData\" and \"linkportId\" are provided, the API
 	 * consumer shall ensure that the cpProtocolData can be used with the
 	 * pre-created link port referenced by \"linkPortId\".
-	 * 
+	 *
 	 * @return cpProtocolData
 	 **/
 	@ApiModelProperty(value = "Parameters for configuring the network protocols on the link port that connects the CP to a VL. The following conditions apply to the attributes \"linkPortId\" and \"cpProtocolData\": 1) The \"linkPortId\" and \"cpProtocolData\" attributes shall both be    absent for the deletion of an existing external CP instance    addressed by cpInstanceId. 2) At least one of these attributes shall be present for a    to-be-created external CP instance or an existing external    CP instance. 3) If the \"linkPortId\" attribute is absent, the VNFM shall create a    link port. 4) If the \"cpProtocolData\" attribute is absent, the \"linkPortId\"    attribute shall be provided referencing a pre-created link port,    and the VNFM can use means outside the scope of the present    document to obtain the pre-configured address information for the    connection point from the resource representing the link port. 5) If both \"cpProtocolData\" and \"linkportId\" are provided, the API    consumer shall ensure that the cpProtocolData can be used with the    pre-created link port referenced by \"linkPortId\". ")
@@ -171,7 +171,7 @@ public class VnfExtCpConfig {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

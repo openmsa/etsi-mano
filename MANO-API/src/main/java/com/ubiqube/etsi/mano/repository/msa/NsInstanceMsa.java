@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -16,7 +15,6 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 
 @Profile("!RDBMS")
-@Service
 public class NsInstanceMsa extends AbstractGenericRepository<NsInstance> implements NsInstanceRepository {
 	private static final String REPOSITORY_NS_INSTANCE_DATAFILE_BASE_PATH = "Datafiles/NFVO/ns_instances";
 	private final NsdRepository nsdRepository;

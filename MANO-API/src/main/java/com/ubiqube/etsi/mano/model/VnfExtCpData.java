@@ -30,14 +30,14 @@ public class VnfExtCpData {
 	@Valid
 	private List<VnfExtCpConfig> cpConfig = null;
 
-	public VnfExtCpData cpdId(final String cpdId) {
-		this.cpdId = cpdId;
+	public VnfExtCpData cpdId(final String _cpdId) {
+		this.cpdId = _cpdId;
 		return this;
 	}
 
 	/**
 	 * The identifier of the CPD in the VNFD.
-	 * 
+	 *
 	 * @return cpdId
 	 **/
 	@ApiModelProperty(required = true, value = "The identifier of the CPD in the VNFD. ")
@@ -51,8 +51,8 @@ public class VnfExtCpData {
 		this.cpdId = cpdId;
 	}
 
-	public VnfExtCpData cpConfig(final List<VnfExtCpConfig> cpConfig) {
-		this.cpConfig = cpConfig;
+	public VnfExtCpData cpConfig(final List<VnfExtCpConfig> _cpConfig) {
+		this.cpConfig = _cpConfig;
 		return this;
 	}
 
@@ -67,7 +67,7 @@ public class VnfExtCpData {
 	/**
 	 * List of instance data that need to be configured on the CP instances created
 	 * from the respective CPD.
-	 * 
+	 *
 	 * @return cpConfig
 	 **/
 	@ApiModelProperty(value = "List of instance data that need to be configured on the CP instances created from the respective CPD. ")
@@ -115,7 +115,7 @@ public class VnfExtCpData {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

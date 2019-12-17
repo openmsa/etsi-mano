@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdGetResponse;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchQuery;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPnfdInfoIdPatchResponse;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfDescriptorsPostQuery;
+import com.ubiqube.etsi.mano.model.nsd.sol005.CreatePnfdInfoRequest;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfoModifications;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,9 +72,9 @@ public interface PnfDescriptorsSol005 {
 	@DeleteMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId);
 
-	@ApiOperation(value = "Read an individual PNFD resource.", nickname = "pnfDescriptorsPnfdInfoIdGet", notes = "The GET method reads information about an individual PNF descriptor. This method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes. ", response = PnfDescriptorsPnfdInfoIdGetResponse.class, tags = {})
+	@ApiOperation(value = "Read an individual PNFD resource.", nickname = "pnfDescriptorsPnfdInfoIdGet", notes = "The GET method reads information about an individual PNF descriptor. This method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes. ", response = PnfdInfo.class, tags = {})
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "200 OK Information about the individual PNFD descriptor. The response body shall contain a representation of the individual PNF descriptor. ", response = PnfDescriptorsPnfdInfoIdGetResponse.class),
+			@ApiResponse(code = 200, message = "200 OK Information about the individual PNFD descriptor. The response body shall contain a representation of the individual PNF descriptor. ", response = PnfdInfo.class),
 			@ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
@@ -88,13 +87,13 @@ public interface PnfDescriptorsSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPnfdInfoIdGet(
+	ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(
 			@Nonnull @ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId,
 			@ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) String accept);
 
-	@ApiOperation(value = "Modify the user defined data of an individual PNF descriptor resource.", nickname = "pnfDescriptorsPnfdInfoIdPatch", notes = "The PATCH method modifies the user defined data of an individual PNF descriptor resource. ", response = PnfDescriptorsPnfdInfoIdPatchResponse.class, tags = {})
+	@ApiOperation(value = "Modify the user defined data of an individual PNF descriptor resource.", nickname = "pnfDescriptorsPnfdInfoIdPatch", notes = "The PATCH method modifies the user defined data of an individual PNF descriptor resource. ", response = PnfdInfoModifications.class, tags = {})
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "200 OK The operation was completed successfully. The response body shall contain attribute modifications for an 'Individual PNF Descriptor' resource.             ", response = PnfDescriptorsPnfdInfoIdPatchResponse.class),
+			@ApiResponse(code = 200, message = "200 OK The operation was completed successfully. The response body shall contain attribute modifications for an 'Individual PNF Descriptor' resource.             ", response = PnfdInfoModifications.class),
 			@ApiResponse(code = 206, message = "Partial Content. On success, if the NFVO supports range requests, a single consecutive byte range from the content of the NSD file is returned. The response body shall contain the requested part of the NSD file. The \"Content-Range\" HTTP header shall be provided according to IETF RFC 7233 [23]. The \"Content-Type\" HTTP header shall be set as defined above for the \"200 OK\" response.        ", response = ProblemDetails.class),
 			@ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
@@ -108,11 +107,11 @@ public interface PnfDescriptorsSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PatchMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<PnfDescriptorsPnfdInfoIdPatchResponse> pnfDescriptorsPnfdInfoIdPatch(
+	ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(
 			@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId,
 			@ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "The MIME type of the body of the request. This header field shall be present if the request has a non-empty message body. ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType,
-			@ApiParam(value = "", required = true) @Valid @RequestBody PnfDescriptorsPnfdInfoIdPatchQuery body);
+			@ApiParam(value = "", required = true) @Valid @RequestBody PnfdInfoModifications body);
 
 	@ApiOperation(value = "Fetch the content of a PNFD.", nickname = "pnfDescriptorsPnfdInfoIdPnfdContentGet", notes = "The GET method fetches the content of the PNFD. This method shall follow the provisions specified in the  Table 5.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -152,9 +151,9 @@ public interface PnfDescriptorsSol005 {
 	@PutMapping(value = "/{pnfdInfoId}/pnfd_content", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentPut(@ApiParam(value = "Identifier of the individual PNF descriptor. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain") @RequestHeader(value = "Accept", required = true) String accept);
 
-	@ApiOperation(value = "Create a new PNF descriptor resource.", nickname = "pnfDescriptorsPost", notes = "The POST method is used to create a new PNF descriptor resource ", response = PnfDescriptorsPnfdInfoIdGetResponse.class, tags = {})
+	@ApiOperation(value = "Create a new PNF descriptor resource.", nickname = "pnfDescriptorsPost", notes = "The POST method is used to create a new PNF descriptor resource ", response = PnfdInfo.class, tags = {})
 	@ApiResponses(value = {
-			@ApiResponse(code = 201, message = "201 Created A PNF descriptor resource was created successfully, as a new PNF descriptor resource. The response body shall contain a representation of the new PNF descriptor resource, as defined in clause 5.5.2.5. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the new PNF descriptor resource.             ", response = PnfDescriptorsPnfdInfoIdGetResponse.class),
+			@ApiResponse(code = 201, message = "201 Created A PNF descriptor resource was created successfully, as a new PNF descriptor resource. The response body shall contain a representation of the new PNF descriptor resource, as defined in clause 5.5.2.5. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the new PNF descriptor resource.             ", response = PnfdInfo.class),
 			@ApiResponse(code = 206, message = "Partial Content. On success, if the NFVO supports range requests, a single consecutive byte range from the content of the NSD file is returned. The response body shall contain the requested part of the NSD file. The \"Content-Range\" HTTP header shall be provided according to IETF RFC 7233 [23]. The \"Content-Type\" HTTP header shall be set as defined above for the \"200 OK\" response.        ", response = ProblemDetails.class),
 			@ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
@@ -168,9 +167,9 @@ public interface PnfDescriptorsSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<PnfDescriptorsPnfdInfoIdGetResponse> pnfDescriptorsPost(
+	ResponseEntity<PnfdInfo> pnfDescriptorsPost(
 			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType,
-			@ApiParam(value = "", required = true) @Valid @RequestBody PnfDescriptorsPostQuery body);
+			@ApiParam(value = "", required = true) @Valid @RequestBody CreatePnfdInfoRequest body);
 
 }
