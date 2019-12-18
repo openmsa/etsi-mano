@@ -67,19 +67,24 @@ public class JavaGenerator {
 	private final Map<String, JPackage> cachePackage = new HashMap<>();
 	private final ToscaParser tp = new ToscaParser();
 	private ToscaContext root = null;
+	private final Map<String, DataType> primitive = new HashMap<>();
 
 	public void generate(final String file) throws JClassAlreadyExistsException, IOException {
 		root = tp.parse(file);
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Map<String, DataType> dt = root.getDataTypes();
 		final Set<Entry<String, DataType>> e = dt.entrySet();
-		cache.put("integer", codeModel._class(Integer.class.getName()));
 		for (final Entry<String, DataType> entry : e) {
 			if (null != cache.get(entry.getKey())) {
 				continue;
 			}
-			final JDefinedClass jd = generateClassFromDataType(entry.getKey(), entry.getValue());
-			cache.put(entry.getKey(), jd);
+			final DataType val = entry.getValue();
+			if (isPrimitive(val)) {
+				primitive.put(entry.getKey(), val);
+			} else {
+				final JDefinedClass jd = generateClassFromDataType(entry.getKey(), entry.getValue());
+				cache.put(entry.getKey(), jd);
+			}
 		}
 
 		final CapabilityTypes rootNode = caps.get("tosca.capabilities.Root");
@@ -119,6 +124,18 @@ public class JavaGenerator {
 		}
 		// new File("src/generated/java").mkdirs();
 		codeModel.build(new File("src/generated/java"));
+	}
+
+	private static boolean isPrimitive(final DataType val) {
+		if (null == val.getDerivedFrom()) {
+			return false;
+		}
+		if ("integer".equals(val.getDerivedFrom())) {
+			return true;
+		} else if ("string".equals(val.getDerivedFrom())) {
+			return true;
+		}
+		return false;
 	}
 
 	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
@@ -281,15 +298,19 @@ public class JavaGenerator {
 			if (null != jType) {
 				field = jc.field(JMod.PRIVATE, jType, fieldName);
 			} else {
-				jType2 = findJType(entry.getValue());
-				field = jc.field(JMod.PRIVATE, jType2, fieldName);
+				if (null != primitive.get(val.getType())) {
+					field = jc.field(JMod.PRIVATE, Integer.class, fieldName);
+				} else {
+					jType2 = findJType(entry.getValue());
+					field = jc.field(JMod.PRIVATE, jType2, fieldName);
+				}
 			}
 			Optional.ofNullable(val.getDescription()).ifPresent(x -> field.javadoc().add(x));
 
 			Optional.ofNullable(val.getRequired())
 					.filter(Boolean.TRUE::equals)
 					.map(x -> field.annotate(NotNull.class));
-			// Jackson Annotate
+			// Jackson Constraint Annotate
 			field.annotate(JsonProperty.class).param(VALUE, entry.getKey());
 			if (val.getDef() != null) {
 				// TODO Convert.
@@ -304,9 +325,11 @@ public class JavaGenerator {
 			if (!val.getConstraints().isEmpty()) {
 				// TODO Add Constraint.
 				final List<Constraint> cont = val.getConstraints();
-				cont.forEach(x -> {
-					applyAnnotation(x, field);
-				});
+				cont.forEach(x -> applyAnnotation(x, field));
+			}
+			if (null != primitive.get(val.getType())) {
+				final List<Constraint> cont = primitive.get(val.getType()).getConstraints();
+				cont.forEach(x -> applyAnnotation(x, field));
 			}
 			createGetterSetter(fieldName, jc, field, val);
 		}
