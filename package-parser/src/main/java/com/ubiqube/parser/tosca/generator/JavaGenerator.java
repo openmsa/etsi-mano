@@ -517,7 +517,7 @@ public class JavaGenerator {
 		if (null != pack) {
 			return pack;
 		}
-		pack = codeModel._package(p);
+		pack = codeModel._package(p.toLowerCase());
 		cachePackage.put(p, pack);
 		return pack;
 	}
