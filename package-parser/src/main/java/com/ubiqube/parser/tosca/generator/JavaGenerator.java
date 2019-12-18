@@ -35,6 +35,7 @@ import com.ubiqube.parser.tosca.CapabilityDefinition;
 import com.ubiqube.parser.tosca.CapabilityTypes;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.ToscaClass;
 import com.ubiqube.parser.tosca.ToscaContext;
@@ -132,7 +133,8 @@ public class JavaGenerator {
 		}
 		if ("integer".equals(val.getDerivedFrom())) {
 			return true;
-		} else if ("string".equals(val.getDerivedFrom())) {
+		}
+		if ("string".equals(val.getDerivedFrom())) {
 			return true;
 		}
 		return false;
@@ -146,9 +148,8 @@ public class JavaGenerator {
 			final JDefinedClass clazz = getExtends(definition.getDerivedFrom());
 			jc._extends(clazz);
 		}
-		if (null != definition.getProperties()) {
-			generateFields(jc, definition.getProperties().getProperties());
-		}
+		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
+
 		LOG.debug("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
@@ -162,18 +163,14 @@ public class JavaGenerator {
 			final JDefinedClass clazz = getExtends(toscaClass.getDerivedFrom());
 			jc._extends(clazz);
 		}
-		if (null != toscaClass.getProperties()) {
-			generateFields(jc, toscaClass.getProperties().getProperties());
-		}
-		if (null != toscaClass.getAttributes()) {
-			generateFields(jc, toscaClass.getAttributes());
-		}
-		if (null != toscaClass.getCapabilities()) {
-			generateCaps(jc, toscaClass.getCapabilities());
-		}
-		if (null != toscaClass.getRequirements()) {
-			generateRequirements(jc, toscaClass.getRequirements());
-		}
+		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
+
+		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(jc, x));
+
+		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(jc, x));
+
+		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(jc, x));
+
 		LOG.info("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
@@ -202,7 +199,7 @@ public class JavaGenerator {
 	}
 
 	private void generateRequirements(final JDefinedClass jc, final RequirementDefinition requirements) {
-		requirements.getRequirements().forEach((x, y) -> {
+		requirements.getRequirements().forEach((final String x, final Requirement y) -> {
 			final String fieldName = fieldCamelCase(x + "_req");
 			JFieldVar field = null;
 			final List<String> occ = y.getOccurrences();
@@ -211,6 +208,7 @@ public class JavaGenerator {
 			} else {
 				field = jc.field(JMod.PRIVATE, Object.class, fieldName);
 			}
+			// XXX: Probably one may be a concrete type.
 			if (null != y.getNode()) {
 				field.annotate(Node.class).param(VALUE, y.getNode());
 			}
@@ -363,6 +361,7 @@ public class JavaGenerator {
 	}
 
 	private static void applyAnnotation(final Constraint x, final JFieldVar field) {
+		// XXX: All numéric values maybe scalars.
 		if (x instanceof Pattern) {
 			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", ((Pattern) x).getValue());
 		} else if (x instanceof GreaterOrEqual) {
@@ -376,10 +375,12 @@ public class JavaGenerator {
 		} else if (x instanceof ValidValues) {
 			// TODO.
 		} else if (x instanceof InRange) {
-			field.annotate(Min.class).param(VALUE, ((InRange) x).getMin());
-			field.annotate(Max.class).param(VALUE, ((InRange) x).getMax());
+			final InRange ir = (InRange) x;
+			field.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
+			field.annotate(Max.class).param(VALUE, Integer.parseInt(ir.getMax()));
 		} else if (x instanceof MinLength) {
-			field.annotate(javax.validation.constraints.Size.class).param("min", ((MinLength) x).getValue());
+			final MinLength ml = (MinLength) x;
+			field.annotate(javax.validation.constraints.Size.class).param("min", Integer.parseInt(ml.getValue()));
 		} else if (x instanceof Equal) {
 			// TODO
 		} else {
