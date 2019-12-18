@@ -2,19 +2,21 @@ package com.ubiqube.parser.tosca;
 
 import java.util.List;
 
+import com.ubiqube.parser.tosca.constraints.Constraint;
+
 public class DataType extends ToscaBaseEntity {
-	private List<Object> constraints;
+	private List<Constraint> constraints;
 	private ToscaProperties properties;
 	// 1.3
 	private Object key_schema;
 	// 1.3
 	private Object entry_schema;
 
-	public List<Object> getConstraints() {
+	public List<Constraint> getConstraints() {
 		return constraints;
 	}
 
-	public void setConstraints(final List<Object> constraints) {
+	public void setConstraints(final List<Constraint> constraints) {
 		this.constraints = constraints;
 	}
 
