@@ -60,6 +60,7 @@ import com.ubiqube.parser.tosca.scalar.Time;
 import com.ubiqube.parser.tosca.scalar.Version;
 
 public class JavaGenerator {
+	private static final String VALUE = "value";
 	private static final Logger LOG = LoggerFactory.getLogger(JavaGenerator.class);
 	private final JCodeModel codeModel = new JCodeModel();
 	private final Map<String, JDefinedClass> cache = new HashMap<>();
@@ -194,15 +195,15 @@ public class JavaGenerator {
 				field = jc.field(JMod.PRIVATE, Object.class, fieldName);
 			}
 			if (null != y.getNode()) {
-				field.annotate(Node.class).param("value", y.getNode());
+				field.annotate(Node.class).param(VALUE, y.getNode());
 			}
 			if (null != y.getCapability()) {
-				field.annotate(Capability.class).param("value", y.getCapability());
+				field.annotate(Capability.class).param(VALUE, y.getCapability());
 			}
 			if (null != y.getRelationship()) {
-				field.annotate(Relationship.class).param("value", y.getRelationship());
+				field.annotate(Relationship.class).param(VALUE, y.getRelationship());
 			}
-			field.annotate(JsonProperty.class).param("value", x);
+			field.annotate(JsonProperty.class).param(VALUE, x);
 			createGetterSetter(fieldName, jc, field, new ValueObject());
 		});
 
@@ -216,15 +217,11 @@ public class JavaGenerator {
 			return false;
 		}
 		final String indice = occ.get(1);
-		if ("UNBOUNDED".equals(indice) || (Integer.parseInt(indice) > 1)) {
-			return true;
-		}
-		return false;
+		return ("UNBOUNDED".equals(indice) || (Integer.parseInt(indice) > 1));
 	}
 
 	private void generateCaps(final JDefinedClass jc, final Map<String, CapabilityDefinition> capabilities) {
-		capabilities.forEach((x, y) -> {
-			final String fieldName = fieldCamelCase(x);
+		capabilities.forEach((final String x, final CapabilityDefinition y) -> {
 			JDefinedClass jType = cache.get(y.getType());
 			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 			if (null == jType) {
@@ -236,6 +233,7 @@ public class JavaGenerator {
 			if ((y.getProperties() != null) && !y.getProperties().getProperties().isEmpty()) {
 				throw new ParseException("Unable to handle properties in " + x + '=' + y.getType());
 			}
+			final String fieldName = fieldCamelCase(x);
 			final JFieldVar field = jc.field(JMod.PRIVATE, jType, fieldName);
 			field.javadoc().add("Caps.");
 			if (null != y.getDescription()) {
@@ -259,10 +257,7 @@ public class JavaGenerator {
 			}
 			jc._extends(clazz);
 		}
-		Optional.of(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
-		if (null != definition.getProperties()) {
-			generateFields(jc, definition.getProperties().getProperties());
-		}
+		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
 		cache.put(className, jc);
 		return jc;
 	}
@@ -289,13 +284,13 @@ public class JavaGenerator {
 				jType2 = findJType(entry.getValue());
 				field = jc.field(JMod.PRIVATE, jType2, fieldName);
 			}
-			Optional.of(val.getDescription()).ifPresent(x -> field.javadoc().add(x));
+			Optional.ofNullable(val.getDescription()).ifPresent(x -> field.javadoc().add(x));
 
-			Optional.of(val.getRequired())
-					.filter(x -> Boolean.TRUE.equals(x))
+			Optional.ofNullable(val.getRequired())
+					.filter(Boolean.TRUE::equals)
 					.map(x -> field.annotate(NotNull.class));
 			// Jackson Annotate
-			field.annotate(JsonProperty.class).param("value", entry.getKey());
+			field.annotate(JsonProperty.class).param(VALUE, entry.getKey());
 			if (val.getDef() != null) {
 				// TODO Convert.
 				if (null != jType) {
@@ -320,14 +315,14 @@ public class JavaGenerator {
 	private void createGetterSetter(final String fieldName, final JDefinedClass jc, final JFieldVar field, final ValueObject val) {
 		final String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 		final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + methodName);
-		if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
+		if ((null != val.getRequired()) && (Boolean.TRUE.equals(val.getRequired()))) {
 			getter.annotate(NotNull.class);
 		}
 		getter.body()._return(field);
 		// Setter
 		final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + methodName);
 		final JVar param = setVar.param(field.type(), field.name());
-		if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
+		if ((null != val.getRequired()) && (Boolean.TRUE.equals(val.getRequired()))) {
 			param.annotate(NotNull.class);
 		}
 		setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));
@@ -348,18 +343,18 @@ public class JavaGenerator {
 		if (x instanceof Pattern) {
 			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", ((Pattern) x).getValue());
 		} else if (x instanceof GreaterOrEqual) {
-			field.annotate(DecimalMin.class).param("value", ((GreaterOrEqual) x).getValue()).param("inclusive", true);
+			field.annotate(DecimalMin.class).param(VALUE, ((GreaterOrEqual) x).getValue()).param("inclusive", true);
 		} else if (x instanceof GreaterThan) {
-			field.annotate(DecimalMin.class).param("value", ((GreaterThan) x).getValue());
+			field.annotate(DecimalMin.class).param(VALUE, ((GreaterThan) x).getValue());
 		} else if (x instanceof LessOrEqual) {
-			field.annotate(DecimalMax.class).param("value", ((LessOrEqual) x).getValue()).param("inclusive", true);
+			field.annotate(DecimalMax.class).param(VALUE, ((LessOrEqual) x).getValue()).param("inclusive", true);
 		} else if (x instanceof LessThan) {
-			field.annotate(DecimalMax.class).param("value", ((LessThan) x).getValue());
+			field.annotate(DecimalMax.class).param(VALUE, ((LessThan) x).getValue());
 		} else if (x instanceof ValidValues) {
 			// TODO.
 		} else if (x instanceof InRange) {
-			field.annotate(Min.class).param("value", ((InRange) x).getMin());
-			field.annotate(Max.class).param("value", ((InRange) x).getMax());
+			field.annotate(Min.class).param(VALUE, ((InRange) x).getMin());
+			field.annotate(Max.class).param(VALUE, ((InRange) x).getMax());
 		} else if (x instanceof MinLength) {
 			field.annotate(javax.validation.constraints.Size.class).param("min", ((MinLength) x).getValue());
 		} else if (x instanceof Equal) {
@@ -372,7 +367,7 @@ public class JavaGenerator {
 	private JExpression convert(final Object def, final Class<?> jType) {
 		LOG.info("def={} jType={}", def, jType);
 		if (jType.equals(Long.class)) {
-			return JExpr.lit(new Long((String) def));
+			return JExpr.lit(Long.parseLong((String) def));
 		} else if (jType.equals(String.class)) {
 			return JExpr.lit((String) def);
 		} else if (jType.equals(Boolean.class)) {
@@ -386,9 +381,8 @@ public class JavaGenerator {
 		} else if (jType.equals(Integer.class)) {
 			if (def.getClass().equals(Integer.class)) {
 				return JExpr.lit((Integer) def);
-			} else {
-				return JExpr.lit(Integer.parseInt((String) def));
 			}
+			return JExpr.lit(Integer.parseInt((String) def));
 		} else if (jType.equals(Size.class)) {
 			return JExpr._new(codeModel._ref(Size.class));
 		}
