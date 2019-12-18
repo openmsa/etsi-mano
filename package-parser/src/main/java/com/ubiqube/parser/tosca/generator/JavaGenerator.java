@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 
@@ -119,10 +120,10 @@ public class JavaGenerator {
 		codeModel.build(new File("src/generated/java"));
 	}
 
-	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) throws JClassAlreadyExistsException {
+	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
 		LOG.info("generateClassFromDataType class {}", className);
 		final JPackage pack = getPackage(className);
-		final JDefinedClass jc = pack._class(getClassName(className));
+		final JDefinedClass jc = createClass(pack, getClassName(className));
 		if (null != definition.getDerivedFrom()) {
 			final JDefinedClass clazz = getExtends(definition.getDerivedFrom());
 			jc._extends(clazz);
@@ -135,10 +136,10 @@ public class JavaGenerator {
 		return jc;
 	}
 
-	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) throws JClassAlreadyExistsException {
+	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) {
 		LOG.info("generateToscaClass class {}", className);
 		final JPackage pack = getPackage(className);
-		final JDefinedClass jc = pack._class(getClassName(className));
+		final JDefinedClass jc = createClass(pack, getClassName(className));
 		if (null != toscaClass.getDerivedFrom()) {
 			final JDefinedClass clazz = getExtends(toscaClass.getDerivedFrom());
 			jc._extends(clazz);
@@ -161,7 +162,7 @@ public class JavaGenerator {
 
 	}
 
-	private JDefinedClass getExtends(final String derivedFrom) throws JClassAlreadyExistsException {
+	private JDefinedClass getExtends(final String derivedFrom) {
 		JDefinedClass clazz = cache.get(derivedFrom);
 		if (null == clazz) {
 			final CapabilityTypes def = root.getCapabilities().get(derivedFrom);
@@ -187,15 +188,9 @@ public class JavaGenerator {
 			final String fieldName = fieldCamelCase(x + "_req");
 			JFieldVar field = null;
 			final List<String> occ = y.getOccurrences();
-			if ((null != occ) && (occ.size() == 2)) {
-				final String indice = occ.get(1);
-				if ("UNBOUNDED".equals(indice)) {
-					field = jc.field(JMod.PRIVATE, List.class, fieldName);
-				} else if (Integer.parseInt(indice) > 1) {
-					field = jc.field(JMod.PRIVATE, List.class, fieldName);
-				}
-			}
-			if (null == field) {
+			if (isList(occ)) {
+				field = jc.field(JMod.PRIVATE, List.class, fieldName);
+			} else {
 				field = jc.field(JMod.PRIVATE, Object.class, fieldName);
 			}
 			if (null != y.getNode()) {
@@ -213,17 +208,27 @@ public class JavaGenerator {
 
 	}
 
+	private static boolean isList(final List<String> occ) {
+		if (null == occ) {
+			return false;
+		}
+		if (occ.size() < 2) {
+			return false;
+		}
+		final String indice = occ.get(1);
+		if ("UNBOUNDED".equals(indice) || (Integer.parseInt(indice) > 1)) {
+			return true;
+		}
+		return false;
+	}
+
 	private void generateCaps(final JDefinedClass jc, final Map<String, CapabilityDefinition> capabilities) {
 		capabilities.forEach((x, y) -> {
 			final String fieldName = fieldCamelCase(x);
 			JDefinedClass jType = cache.get(y.getType());
 			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 			if (null == jType) {
-				try {
-					jType = generateClass(y.getType(), caps);
-				} catch (final JClassAlreadyExistsException e) {
-					throw new ParseException(e);
-				}
+				jType = generateClass(y.getType(), caps);
 			}
 			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
 				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());
@@ -240,10 +245,10 @@ public class JavaGenerator {
 		});
 	}
 
-	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) throws JClassAlreadyExistsException {
+	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) {
 		LOG.info("generateClass class {}", className);
 		final JPackage pack = getPackage(className);
-		final JDefinedClass jc = pack._class(getClassName(className));
+		final JDefinedClass jc = createClass(pack, getClassName(className));
 
 		if (null != definition.getDerivedFrom()) {
 			JDefinedClass clazz = cache.get(definition.getDerivedFrom());
@@ -254,6 +259,7 @@ public class JavaGenerator {
 			}
 			jc._extends(clazz);
 		}
+		Optional.of(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
 		if (null != definition.getProperties()) {
 			generateFields(jc, definition.getProperties().getProperties());
 		}
@@ -261,7 +267,15 @@ public class JavaGenerator {
 		return jc;
 	}
 
-	private void generateFields(final JDefinedClass jc, final Map<String, ValueObject> vo) throws JClassAlreadyExistsException {
+	private static JDefinedClass createClass(final JPackage pack, final String classname) {
+		try {
+			return pack._class(classname);
+		} catch (final JClassAlreadyExistsException e) {
+			throw new ParseException(e);
+		}
+	}
+
+	private void generateFields(final JDefinedClass jc, final Map<String, ValueObject> vo) {
 		final Set<Entry<String, ValueObject>> attrsEntr = vo.entrySet();
 		for (final Entry<String, ValueObject> entry : attrsEntr) {
 			final ValueObject val = entry.getValue();
@@ -275,12 +289,11 @@ public class JavaGenerator {
 				jType2 = findJType(entry.getValue());
 				field = jc.field(JMod.PRIVATE, jType2, fieldName);
 			}
-			if (null != val.getDescription()) {
-				field.javadoc().add(val.getDescription());
-			}
-			if ((null != val.getRequired()) && (val.getRequired() == Boolean.TRUE)) {
-				field.annotate(NotNull.class);
-			}
+			Optional.of(val.getDescription()).ifPresent(x -> field.javadoc().add(x));
+
+			Optional.of(val.getRequired())
+					.filter(x -> Boolean.TRUE.equals(x))
+					.map(x -> field.annotate(NotNull.class));
 			// Jackson Annotate
 			field.annotate(JsonProperty.class).param("value", entry.getKey());
 			if (val.getDef() != null) {
@@ -379,10 +392,10 @@ public class JavaGenerator {
 		} else if (jType.equals(Size.class)) {
 			return JExpr._new(codeModel._ref(Size.class));
 		}
-		throw new RuntimeException("Unknown type : " + jType);
+		throw new ParseException("Unknown type : " + jType);
 	}
 
-	private JType findJType(final ValueObject valueObject) throws JClassAlreadyExistsException {
+	private JType findJType(final ValueObject valueObject) {
 		final JDefinedClass item = cache.get(valueObject.getType());
 		if (null != item) {
 			return item;
@@ -414,9 +427,9 @@ public class JavaGenerator {
 			if (null != jTy) {
 				return codeModel.ref(Map.class).narrow(String.class, jTy);
 			}
-			final JDefinedClass jcTy = cache.get(subType);
-			if (null != jcTy) {
-				return codeModel.ref(Map.class).narrow(String.class).narrow(jcTy);
+			final JDefinedClass cahed = cache.get(subType);
+			if (null != cahed) {
+				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
 			}
 			// TODO
 			LOG.info("Map of {}", subType);
