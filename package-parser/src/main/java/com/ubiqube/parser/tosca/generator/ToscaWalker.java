@@ -204,7 +204,7 @@ public class ToscaWalker {
 			if (cache.contains(subType)) {
 				return;
 			}
-			// TODO
+			// XXX
 			LOG.info("Map of {}", subType);
 			final DataType dType = root.getDataTypes().get(subType);
 			if (null != dType) {
@@ -228,7 +228,6 @@ public class ToscaWalker {
 				return;
 			}
 			generateClassFromDataType(valueObject.getType(), dType, listener);
-			return;
 		}
 	}
 
@@ -331,12 +330,15 @@ public class ToscaWalker {
 		if (null == val.getDerivedFrom()) {
 			return false;
 		}
-		if ("integer".equals(val.getDerivedFrom())) {
-			return true;
+		boolean ret = false;
+		switch (val.getDerivedFrom()) {
+		case "integer":
+		case "string":
+			ret = true;
+			break;
+		default:
+			ret = false;
 		}
-		if ("string".equals(val.getDerivedFrom())) {
-			return true;
-		}
-		return false;
+		return ret;
 	}
 }

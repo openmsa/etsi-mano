@@ -65,11 +65,10 @@ public class JavaWalker extends AbstractWalker {
 	public void onClassStart(final String className) {
 		currentClassName = className;
 		final JPackage pack = getPackage(className);
-		if (null != pack) {
-			currentClass = createClass(pack, getClassName(className));
-		} else {
+		if (null == pack) {
 			throw new ParseException("Unable to add a file without a package.");
 		}
+		currentClass = createClass(pack, ClassUtils.getClassName(className));
 	}
 
 	@Override
@@ -222,20 +221,8 @@ public class JavaWalker extends AbstractWalker {
 		currentClass.javadoc().add(description);
 	}
 
-	private static String getClassName(final String key) {
-		if (key.lastIndexOf('.') == -1) {
-			return key;
-		}
-		final int pi = key.lastIndexOf('.');
-		return key.substring(pi + 1);
-	}
-
 	private JPackage getPackage(final String key) {
-		if (key.lastIndexOf('.') == -1) {
-			return null;
-		}
-		final int pi = key.lastIndexOf('.');
-		final String p = key.substring(0, pi);
+		final String p = ClassUtils.getPackage(key);
 		JPackage pack = cachePackage.get(p);
 		if (null != pack) {
 			return pack;

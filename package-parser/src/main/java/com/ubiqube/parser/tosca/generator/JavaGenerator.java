@@ -137,7 +137,10 @@ public class JavaGenerator {
 	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
 		LOG.info("generateClassFromDataType class {}", className);
 		final JPackage pack = getPackage(className);
-		final JDefinedClass jc = createClass(pack, getClassName(className));
+		if (null == pack) {
+			throw new ParseException("Unable to create a class without a package: " + className);
+		}
+		final JDefinedClass jc = createClass(pack, ClassUtils.getClassName(className));
 		if (null != definition.getDerivedFrom()) {
 			final JDefinedClass clazz = getExtends(definition.getDerivedFrom());
 			jc._extends(clazz);
@@ -152,7 +155,10 @@ public class JavaGenerator {
 	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) {
 		LOG.info("generateToscaClass class {}", className);
 		final JPackage pack = getPackage(className);
-		final JDefinedClass jc = createClass(pack, getClassName(className));
+		if (null == pack) {
+			throw new ParseException("Cannot create a class without a package : " + className);
+		}
+		final JDefinedClass jc = createClass(pack, ClassUtils.getClassName(className));
 		if (null != toscaClass.getDerivedFrom()) {
 			final JDefinedClass clazz = getExtends(toscaClass.getDerivedFrom());
 			jc._extends(clazz);
@@ -261,7 +267,7 @@ public class JavaGenerator {
 		final JPackage pack = getPackage(className);
 		final JDefinedClass jc;
 		if (null != pack) {
-			jc = createClass(pack, getClassName(className));
+			jc = createClass(pack, ClassUtils.getClassName(className));
 		} else {
 			throw new ParseException("Definition without a package ?");
 		}
@@ -446,20 +452,8 @@ public class JavaGenerator {
 		throw new ParseException("Bad type: " + valueObject);
 	}
 
-	private static String getClassName(final String key) {
-		if (key.lastIndexOf('.') == -1) {
-			return key;
-		}
-		final int pi = key.lastIndexOf('.');
-		return key.substring(pi + 1);
-	}
-
 	private JPackage getPackage(final String key) {
-		if (key.lastIndexOf('.') == -1) {
-			return null;
-		}
-		final int pi = key.lastIndexOf('.');
-		final String p = key.substring(0, pi);
+		final String p = ClassUtils.getPackage(key);
 		JPackage pack = cachePackage.get(p);
 		if (null != pack) {
 			return pack;
