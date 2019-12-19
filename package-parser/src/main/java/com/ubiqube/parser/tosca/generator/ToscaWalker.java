@@ -123,8 +123,7 @@ public class ToscaWalker {
 
 		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(listener, x));
 
-		// Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x ->
-		// generateRequirements(listener, x));
+		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(listener, x));
 		if (toscaClass.getDescription() != null) {
 			listener.onClassDescription(toscaClass.getDescription());
 		}
@@ -242,6 +241,7 @@ public class ToscaWalker {
 		requirements.getRequirements().forEach((final String x, final Requirement y) -> {
 			final String fieldName = fieldCamelCase(x + "_req");
 			final List<String> occ = y.getOccurrences();
+			LOG.debug("Forcing field Object");
 			listener.startField(fieldName, "java.lang.Object", isList(occ));
 
 			// XXX: Probably one may be a concrete type.
@@ -273,7 +273,8 @@ public class ToscaWalker {
 				throw new ParseException("Unable to handle properties in " + x + '=' + y.getType());
 			}
 			final String fieldName = fieldCamelCase(x);
-			listener.startField(fieldName, y.getType(), true);
+			LOG.debug("CAPS: Start field {} of type {}", fieldName, y.getType());
+			listener.startField(fieldName, y.getType(), false);
 			listener.onFieldJavadoc("Caps.");
 			if (null != y.getDescription()) {
 				listener.onFieldJavadoc(y.getDescription());

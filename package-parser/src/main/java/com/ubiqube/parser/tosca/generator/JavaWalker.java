@@ -60,7 +60,6 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void startDocument() {
 		// Nothing.
-
 	}
 
 	@Override
@@ -90,14 +89,38 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void startField(final String fieldName, final String type, final boolean multi) {
 		final Class<?> conv = convert(type);
+		JDefinedClass typ = null;
 		if (null == conv) {
-			final JDefinedClass typ = cache.get(type);
-			LOG.debug("Starting JDC field {} => {} r={}", fieldName, type, typ);
-			currentField = currentClass.field(JMod.PRIVATE, typ, fieldName);
-		} else {
-			LOG.debug("Starting field {} => {} r={}", fieldName, type, conv);
-			currentField = currentClass.field(JMod.PRIVATE, conv, fieldName);
+			typ = cache.get(type);
 		}
+		LOG.debug("Starting field {} => {} r={}, multi={}", fieldName, type, typ, multi);
+		if (multi) {
+			handleMulti(conv, typ, fieldName);
+
+		} else {
+			handleSingle(conv, typ, fieldName);
+		}
+	}
+
+	private void handleSingle(final Class<?> conv, final JDefinedClass typ, final String fieldName) {
+		if (null != typ) {
+			currentField = currentClass.field(JMod.PRIVATE, typ, fieldName);
+		} else if (null != conv) {
+			currentField = currentClass.field(JMod.PRIVATE, conv, fieldName);
+		} else {
+			currentField = currentClass.field(JMod.PRIVATE, Object.class, fieldName);
+			LOG.error("Unknown type for fieldname {}", fieldName);
+		}
+	}
+
+	private void handleMulti(final Class<?> conv, final JDefinedClass typ, final String fieldName) {
+		final JClass list = codeModel.ref(List.class);
+		if (null != typ) {
+			list.narrow(typ);
+		} else if (null != conv) {
+			list.narrow(conv);
+		}
+		currentField = currentClass.field(JMod.PRIVATE, list, fieldName);
 	}
 
 	@Override
@@ -177,6 +200,7 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void onFieldAnnotate(final Class<? extends Annotation> class1, final String node) {
+		LOG.debug("Annotate: {}, {}", class1.getName(), node);
 		currentField.annotate(class1).param("value", node);
 	}
 
