@@ -219,7 +219,9 @@ public class JavaGenerator {
 				field.annotate(Relationship.class).param(VALUE, y.getRelationship());
 			}
 			field.annotate(JsonProperty.class).param(VALUE, x);
-			createGetterSetter(fieldName, jc, field, new ValueObject());
+			final ValueObject vo = new ValueObject();
+			vo.setRequired(Boolean.FALSE);
+			createGetterSetter(fieldName, jc, field, vo);
 		});
 
 	}
@@ -254,7 +256,9 @@ public class JavaGenerator {
 			if (null != y.getDescription()) {
 				field.javadoc().add(y.getDescription());
 			}
-			createGetterSetter(fieldName, jc, field, new ValueObject());
+			final ValueObject vo = new ValueObject();
+			vo.setRequired(Boolean.FALSE);
+			createGetterSetter(fieldName, jc, field, vo);
 		});
 	}
 
