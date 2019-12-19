@@ -24,7 +24,6 @@ import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JExpression;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
@@ -54,11 +53,6 @@ import com.ubiqube.parser.tosca.constraints.LessThan;
 import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
-import com.ubiqube.parser.tosca.scalar.Frequency;
-import com.ubiqube.parser.tosca.scalar.Range;
-import com.ubiqube.parser.tosca.scalar.Size;
-import com.ubiqube.parser.tosca.scalar.Time;
-import com.ubiqube.parser.tosca.scalar.Version;
 
 public class JavaGenerator {
 	private static final String VALUE = "value";
@@ -265,7 +259,12 @@ public class JavaGenerator {
 	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) {
 		LOG.info("generateClass class {}", className);
 		final JPackage pack = getPackage(className);
-		final JDefinedClass jc = createClass(pack, getClassName(className));
+		final JDefinedClass jc;
+		if (null != pack) {
+			jc = createClass(pack, getClassName(className));
+		} else {
+			throw new ParseException("Definition without a package ?");
+		}
 
 		if (null != definition.getDerivedFrom()) {
 			JDefinedClass clazz = cache.get(definition.getDerivedFrom());
@@ -281,7 +280,7 @@ public class JavaGenerator {
 		return jc;
 	}
 
-	private static JDefinedClass createClass(final JPackage pack, final String classname) {
+	private static JDefinedClass createClass(@NotNull final JPackage pack, final String classname) {
 		try {
 			return pack._class(classname);
 		} catch (final JClassAlreadyExistsException e) {
@@ -315,9 +314,9 @@ public class JavaGenerator {
 			// Jackson Constraint Annotate
 			field.annotate(JsonProperty.class).param(VALUE, entry.getKey());
 			if (val.getDef() != null) {
-				// TODO Convert.
+				// XXX Convert.
 				if (null != jType) {
-					field.init(convert(val.getDef(), jType));
+					field.init(Converters.convert(codeModel, val.getDef(), jType));
 				} else {
 					LOG.error("could not init the field {} of type {}", entry.getKey(), jType2);
 					// field.init(convert(val.getDef(), jType2.));
@@ -325,7 +324,7 @@ public class JavaGenerator {
 
 			}
 			if (!val.getConstraints().isEmpty()) {
-				// TODO Add Constraint.
+				// XXX Add Constraint.
 				final List<Constraint> cont = val.getConstraints();
 				cont.forEach(x -> applyAnnotation(x, field));
 			}
@@ -377,7 +376,7 @@ public class JavaGenerator {
 		} else if (x instanceof LessThan) {
 			field.annotate(DecimalMax.class).param(VALUE, ((LessThan) x).getValue());
 		} else if (x instanceof ValidValues) {
-			// TODO.
+			// XXX.
 		} else if (x instanceof InRange) {
 			final InRange ir = (InRange) x;
 			field.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
@@ -386,35 +385,10 @@ public class JavaGenerator {
 			final MinLength ml = (MinLength) x;
 			field.annotate(javax.validation.constraints.Size.class).param("min", Integer.parseInt(ml.getValue()));
 		} else if (x instanceof Equal) {
-			// TODO
+			// XXX
 		} else {
 			throw new ParseException("Unknown constraint: " + x.getClass().getCanonicalName());
 		}
-	}
-
-	private JExpression convert(final Object def, final Class<?> jType) {
-		LOG.info("def={} jType={}", def, jType);
-		if (jType.equals(Long.class)) {
-			return JExpr.lit(Long.parseLong((String) def));
-		} else if (jType.equals(String.class)) {
-			return JExpr.lit((String) def);
-		} else if (jType.equals(Boolean.class)) {
-			return JExpr.lit((Boolean) def);
-		} else if (jType.equals(Character.class)) {
-			return JExpr.lit(((String) def).charAt(0));
-		} else if (jType.equals(Double.class)) {
-			return JExpr.lit(Double.parseDouble((String) def));
-		} else if (jType.equals(Float.class)) {
-			return JExpr.lit(((Double) def).floatValue());
-		} else if (jType.equals(Integer.class)) {
-			if (def.getClass().equals(Integer.class)) {
-				return JExpr.lit((Integer) def);
-			}
-			return JExpr.lit(Integer.parseInt((String) def));
-		} else if (jType.equals(Size.class)) {
-			return JExpr._new(codeModel._ref(Size.class));
-		}
-		throw new ParseException("Unknown type : " + jType);
 	}
 
 	private JType findJType(final ValueObject valueObject) {
@@ -425,7 +399,7 @@ public class JavaGenerator {
 		final String type = valueObject.getType();
 		if ("list".equals(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = convert(subType);
+			final Class<?> jTy = Converters.convert(subType);
 			if (null != jTy) {
 				return codeModel.ref(List.class).narrow(jTy);
 			}
@@ -445,7 +419,7 @@ public class JavaGenerator {
 		}
 		if ("map".equals(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = convert(subType);
+			final Class<?> jTy = Converters.convert(subType);
 			if (null != jTy) {
 				return codeModel.ref(Map.class).narrow(String.class, jTy);
 			}
@@ -453,7 +427,7 @@ public class JavaGenerator {
 			if (null != cahed) {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
 			}
-			// TODO
+			// XXX
 			LOG.info("Map of {}", subType);
 			final DataType dType = root.getDataTypes().get(subType);
 			JType cl;
@@ -470,37 +444,6 @@ public class JavaGenerator {
 			return generateClassFromDataType(valueObject.getType(), dType);
 		}
 		throw new ParseException("Bad type: " + valueObject);
-	}
-
-	private static Class<?> convert(final String type) {
-		if ("integer".equals(type)) {
-			return Integer.class;
-		}
-		if ("scalar-unit.size".equals(type)) {
-			return Size.class;
-		}
-		if ("scalar-unit.frequency".equals(type)) {
-			return Frequency.class;
-		}
-		if ("scalar-unit.time".equals(type)) {
-			return Time.class;
-		}
-		if ("string".equals(type)) {
-			return String.class;
-		}
-		if ("range".equals(type)) {
-			return Range.class;
-		}
-		if ("boolean".equals(type)) {
-			return Boolean.class;
-		}
-		if ("float".equals(type)) {
-			return Float.class;
-		}
-		if ("version".equals(type)) {
-			return Version.class;
-		}
-		return null;
 	}
 
 	private static String getClassName(final String key) {
@@ -528,7 +471,7 @@ public class JavaGenerator {
 
 	private static Class<?> convert(final ValueObject valueObject) {
 		final String type = valueObject.getType();
-		return convert(type);
+		return Converters.convert(type);
 	}
 
 }

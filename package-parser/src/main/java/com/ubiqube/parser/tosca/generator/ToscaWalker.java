@@ -27,11 +27,6 @@ import com.ubiqube.parser.tosca.annotations.Capability;
 import com.ubiqube.parser.tosca.annotations.Node;
 import com.ubiqube.parser.tosca.annotations.Relationship;
 import com.ubiqube.parser.tosca.constraints.Constraint;
-import com.ubiqube.parser.tosca.scalar.Frequency;
-import com.ubiqube.parser.tosca.scalar.Range;
-import com.ubiqube.parser.tosca.scalar.Size;
-import com.ubiqube.parser.tosca.scalar.Time;
-import com.ubiqube.parser.tosca.scalar.Version;
 
 public class ToscaWalker {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaWalker.class);
@@ -184,7 +179,7 @@ public class ToscaWalker {
 		final String type = valueObject.getType();
 		if ("list".equals(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = convert(subType);
+			final Class<?> jTy = Converters.convert(subType);
 			if (null != jTy) {
 				return;
 			}
@@ -202,7 +197,7 @@ public class ToscaWalker {
 		}
 		if ("map".equals(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = convert(subType);
+			final Class<?> jTy = Converters.convert(subType);
 			if (null != jTy) {
 				return;
 			}
@@ -330,50 +325,6 @@ public class ToscaWalker {
 		}
 		m.appendTail(sb);
 		return sb.toString();
-	}
-
-	private static Class<?> convert(final String type) {
-		if ("integer".equals(type)) {
-			return Integer.class;
-		}
-		if ("scalar-unit.size".equals(type)) {
-			return Size.class;
-		}
-		if ("scalar-unit.frequency".equals(type)) {
-			return Frequency.class;
-		}
-		if ("scalar-unit.time".equals(type)) {
-			return Time.class;
-		}
-		if ("string".equals(type)) {
-			return String.class;
-		}
-		if ("range".equals(type)) {
-			return Range.class;
-		}
-		if ("boolean".equals(type)) {
-			return Boolean.class;
-		}
-		if ("float".equals(type)) {
-			return Float.class;
-		}
-		if ("version".equals(type)) {
-			return Version.class;
-		}
-		return null;
-	}
-
-	private static boolean isPrimitive(final String type) {
-		if (null == type) {
-			return false;
-		}
-		if ("integer".equals(type)) {
-			return true;
-		}
-		if ("string".equals(type)) {
-			return true;
-		}
-		return false;
 	}
 
 	private static boolean isPrimitive(final DataType val) {
