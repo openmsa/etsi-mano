@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -26,6 +27,7 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
 import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.ValueObject;
@@ -53,6 +55,7 @@ public class JavaWalker extends AbstractWalker {
 	private final Map<String, JDefinedClass> cache = new HashMap<>();
 	private final Map<String, DataType> primitive = new HashMap<>();
 	private final Map<String, JPackage> cachePackage = new HashMap<>();
+	private boolean nonnull;
 
 	@Override
 	public void startDocument() {
@@ -86,8 +89,15 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void startField(final String fieldName, final String type, final boolean multi) {
-		LOG.debug("Starting field {} => {} r={}", fieldName, type, convert(type));
-		currentField = currentClass.field(JMod.PRIVATE, convert(type), fieldName);
+		final Class<?> conv = convert(type);
+		if (null == conv) {
+			final JDefinedClass typ = cache.get(type);
+			LOG.debug("Starting JDC field {} => {} r={}", fieldName, type, typ);
+			currentField = currentClass.field(JMod.PRIVATE, typ, fieldName);
+		} else {
+			LOG.debug("Starting field {} => {} r={}", fieldName, type, conv);
+			currentField = currentClass.field(JMod.PRIVATE, conv, fieldName);
+		}
 	}
 
 	@Override
@@ -107,7 +117,7 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void onFieldJsonName(final String key) {
-		currentField.annotate(NotNull.class).param("value", key);
+		currentField.annotate(JsonProperty.class).param("value", key);
 	}
 
 	@Override
@@ -149,17 +159,31 @@ public class JavaWalker extends AbstractWalker {
 		final String fieldName = currentField.name();
 		final String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 		final JMethod getter = currentClass.method(JMod.PUBLIC, currentField.type(), "get" + methodName);
+		if (nonnull) {
+			getter.annotate(NotNull.class);
+		}
 		getter.body()._return(currentField);
 		// Setter
 		final JMethod setVar = currentClass.method(JMod.PUBLIC, codeModel.VOID, "set" + methodName);
+		final JVar param = setVar.param(currentField.type(), currentField.name());
+		if (nonnull) {
+			param.annotate(NotNull.class);
+		}
 		setVar.body().assign(JExpr._this().ref(currentField.name()), JExpr.ref(currentField.name()));
 
 		currentField = null;
+		nonnull = false;
 	}
 
 	@Override
 	public void onFieldAnnotate(final Class<? extends Annotation> class1, final String node) {
 		currentField.annotate(class1).param("value", node);
+	}
+
+	@Override
+	public void onFieldNonNull() {
+		currentField.annotate(NotNull.class);
+		nonnull = true;
 	}
 
 	@Override
@@ -169,6 +193,11 @@ public class JavaWalker extends AbstractWalker {
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
+	}
+
+	@Override
+	public void onClassDescription(final String description) {
+		currentClass.javadoc().add(description);
 	}
 
 	private static String getClassName(final String key) {
@@ -202,10 +231,22 @@ public class JavaWalker extends AbstractWalker {
 		}
 	}
 
-	private JExpression convert(final Object def, final JType type) {
-		LOG.info("def={} jType={}", def, type);
+	private static JExpression convert(final Object def, final JType type) {
+		LOG.info("def={} jType={}", def, type.name());
 		// XXX to do.
-		return null;
+		switch (type.name()) {
+		case "String":
+			return JExpr.lit((String) def);
+		case "Boolean":
+			return JExpr.lit((Boolean) def);
+		case "Integer":
+			if (def.getClass().equals(Integer.class)) {
+				return JExpr.lit((Integer) def);
+			}
+			return JExpr.lit(Integer.parseInt((String) def));
+		default:
+			throw new ParseException("Unknoqn type: " + type.name());
+		}
 	}
 
 	private static Class<?> convert(final String type) {
@@ -240,6 +281,10 @@ public class JavaWalker extends AbstractWalker {
 	}
 
 	private JType resolvVo(final ValueObject valueObject) {
+		final DataType prim = primitive.get(valueObject.getType());
+		if (null != prim) {
+			return codeModel.ref(Integer.class);
+		}
 		final JDefinedClass item = cache.get(valueObject.getType());
 		if (null != item) {
 			return item;
@@ -271,10 +316,6 @@ public class JavaWalker extends AbstractWalker {
 		if (null != conv) {
 			return codeModel.ref(conv);
 		}
-		final DataType prim = primitive.get(valueObject.getType());
-		if (null != prim) {
-			return codeModel.ref(Integer.class);
-		}
-		throw new ParseException("Bad type: " + valueObject);
+		throw new ParseException("Bad type: " + valueObject.getType());
 	}
 }

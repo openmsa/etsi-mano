@@ -38,4 +38,8 @@ public interface ToscaListener {
 
 	void terminateDocument();
 
+	void onFieldNonNull();
+
+	void onClassDescription(String description);
+
 }

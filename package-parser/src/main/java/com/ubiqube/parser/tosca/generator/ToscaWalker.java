@@ -9,8 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,14 +89,12 @@ public class ToscaWalker {
 
 	private void generateClassFromDataType(final String className, final DataType definition, final ToscaListener listener) {
 		LOG.debug("generateClassFromDataType class={}", className);
-		listener.startClass(className);
-		if (null != definition.getDerivedFrom()) {
-			final String derivedFrom = definition.getDerivedFrom();
-			getExtends(derivedFrom, listener);
-			LOG.debug("deivedFrom: {}", derivedFrom);
-			listener.onDataTypeExtend(derivedFrom);
-		}
+		startClass(className, definition.getDerivedFrom(), listener);
+
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
+		if (definition.getDescription() != null) {
+			listener.onClassDescription(definition.getDescription());
+		}
 		LOG.debug("generateClassFromDataType end {}", className);
 		cache.add(className);
 		listener.terminateClass();
@@ -106,76 +102,76 @@ public class ToscaWalker {
 
 	private void generateClass(final String className, final CapabilityTypes definition, final ToscaListener listener) {
 		LOG.debug("generateClass class {}", className);
-		listener.startClass(className);
+		startClass(className, definition.getDerivedFrom(), listener);
 
-		if (null != definition.getDerivedFrom()) {
-			if (!cache.contains(definition.getDerivedFrom())) {
-				final CapabilityTypes def = root.getCapabilities().get(definition.getDerivedFrom());
-				generateClass(definition.getDerivedFrom(), def, listener);
-				cache.add(definition.getDerivedFrom());
-			}
-			listener.onDataTypeExtend(definition.getDerivedFrom());
-		}
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		cache.add(className);
+		if (definition.getDescription() != null) {
+			listener.onClassDescription(definition.getDescription());
+		}
 		listener.terminateClass();
 		LOG.debug("generateClass end {}", className);
 	}
 
 	private void generateToscaClass(final String className, final ToscaClass toscaClass, final ToscaListener listener) {
 		LOG.info("generateToscaClass class {}", className);
-		if ("tosca.nodes.Root".equals(className)) {
-			LOG.debug("fff");
-		}
-		listener.startClass(className);
-		if (null != toscaClass.getDerivedFrom()) {
-			getExtends(toscaClass.getDerivedFrom(), listener);
-			listener.onDataTypeExtend(toscaClass.getDerivedFrom());
-		}
+		startClass(className, toscaClass.getDerivedFrom(), listener);
+
 		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 
 		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(listener, x));
 
 		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(listener, x));
 
-		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(listener, x));
-
+		// Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x ->
+		// generateRequirements(listener, x));
+		if (toscaClass.getDescription() != null) {
+			listener.onClassDescription(toscaClass.getDescription());
+		}
 		LOG.info("Caching {}", className);
 		cache.add(className);
 		listener.terminateClass();
 	}
 
+	private void startClass(final String classname, final String parent, final ToscaListener listener) {
+		listener.startClass(classname);
+		if (null != parent) {
+			getExtends(parent, listener);
+			LOG.debug("deivedFrom: {}->{}", classname, parent);
+			listener.onDataTypeExtend(parent);
+		}
+	}
+
 	private void generateFields(final ToscaListener listener, final Map<String, ValueObject> vo) {
 		final Set<Entry<String, ValueObject>> attrsEntr = vo.entrySet();
 		for (final Entry<String, ValueObject> entry : attrsEntr) {
-			final ValueObject val = entry.getValue();
 			final String fieldName = fieldCamelCase(entry.getKey());
 			// XXX Missing primitive block.
 			resolvVo(entry.getValue(), listener);
 			final ValueObject value = entry.getValue();
-			if (isPrimitive(value.getType())) {
+
+			if (primitive.containsKey(value.getType())) {
 				listener.startField(fieldName, "integer", false);
 			} else {
 				listener.startField(fieldName, value, false);
 			}
 
-			Optional.ofNullable(val.getDescription()).ifPresent(listener::onFieldJavadoc);
+			Optional.ofNullable(value.getDescription()).ifPresent(listener::onFieldJavadoc);
 
-			Optional.ofNullable(val.getRequired())
+			Optional.ofNullable(value.getRequired())
 					.filter(Boolean.TRUE::equals)
-					.ifPresent(x -> listener.onFieldAnnotate(NotNull.class));
+					.ifPresent(x -> listener.onFieldNonNull());
 			// Jackson Constraint Annotate
 			listener.onFieldJsonName(entry.getKey());
-			if (val.getDef() != null) {
-				listener.onFieldSetDefaultValue(val.getDef());
+			if (value.getDef() != null) {
+				listener.onFieldSetDefaultValue(value.getDef());
 			}
-			if (!val.getConstraints().isEmpty()) {
-				// TODO Add Constraint.
-				final List<Constraint> cont = val.getConstraints();
+			if (!value.getConstraints().isEmpty()) {
+				final List<Constraint> cont = value.getConstraints();
 				cont.forEach(listener::onFieldConstraints);
 			}
-			if (null != primitive.get(val.getType())) {
-				final List<Constraint> cont = primitive.get(val.getType()).getConstraints();
+			if (primitive.containsKey(value.getType())) {
+				final List<Constraint> cont = primitive.get(value.getType()).getConstraints();
 				cont.forEach(listener::onFieldConstraints);
 			}
 			listener.onFieldTerminate();
@@ -226,10 +222,17 @@ public class ToscaWalker {
 			return;
 		}
 		if (null != primitive.get(type)) {
+			LOG.error("Type {} is a primitive.", type);
 			return;
 		}
 		final DataType dType = root.getDataTypes().get(valueObject.getType());
 		if (null != dType) {
+			if (isPrimitive(dType)) {
+				LOG.error("Type {} is an unknown primitive.", type);
+				primitive.put(type, dType);
+				listener.onPrimitiveObject(type, dType);
+				return;
+			}
 			generateClassFromDataType(valueObject.getType(), dType, listener);
 			return;
 		}
@@ -290,6 +293,11 @@ public class ToscaWalker {
 				final ToscaClass node = root.getNodeType().get(derivedFrom);
 				if (node != null) {
 					generateToscaClass(derivedFrom, node, listener);
+					found = true;
+				}
+				final DataType dt = root.getDataTypes().get(derivedFrom);
+				if (null != dt) {
+					generateClassFromDataType(derivedFrom, dt, listener);
 					found = true;
 				}
 			}
