@@ -163,7 +163,6 @@ public class ToscaContext {
 
 	private void mergeContext(final ToscaContext context) {
 		mergeHash(artifacts, context.getArtifacts());
-		// mergeHash(capabilities, context.getCapabilities());
 		if (null != context.getCapabilities()) {
 			capabilities.putAll(context.getCapabilities());
 		}
@@ -300,4 +299,7 @@ public class ToscaContext {
 
 	}
 
+	public boolean isAssignableFor(final NodeTemplate nodeTemplate, final String clazz) {
+		return false;
+	}
 }
