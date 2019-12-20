@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -52,9 +53,9 @@ public class ToscaParser {
 		}
 	}
 
-	private ObjectMapper getMapper() {
+	private static ObjectMapper getMapper() {
 		final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		// mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		final SimpleModule module = new SimpleModule();
 		mapper.registerModule(module);
 
