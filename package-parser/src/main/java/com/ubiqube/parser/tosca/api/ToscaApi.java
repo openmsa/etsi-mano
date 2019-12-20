@@ -15,7 +15,7 @@ public class ToscaApi {
 				.getNodeTemplate()
 				.entrySet()
 				.stream()
-				.filter(x -> root.isAssignableFor(x.getValue(), clazzname))
+				.filter(x -> root.isAssignableFor(x.getKey(), clazzname))
 				.map(Entry::getValue)
 				.collect(Collectors.toList());
 

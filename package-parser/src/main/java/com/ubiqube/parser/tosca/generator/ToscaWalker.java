@@ -172,12 +172,17 @@ public class ToscaWalker {
 		}
 	}
 
+	private boolean isContainer(final String type) {
+		return "list".equals(type) || "map".equals(type);
+	}
+
 	private void resolvVo(final ValueObject valueObject, final ToscaListener listener) {
 		if (cache.contains(valueObject.getType())) {
 			return;
 		}
+
 		final String type = valueObject.getType();
-		if ("list".equals(type)) {
+		if (isContainer(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
 			final Class<?> jTy = Converters.convert(subType);
 			if (null != jTy) {
@@ -186,26 +191,6 @@ public class ToscaWalker {
 			if (cache.contains(subType)) {
 				return;
 			}
-			final DataType dType = root.getDataTypes().get(subType);
-			if (null != dType) {
-				generateClassFromDataType(subType, dType, listener);
-			} else {
-				generateToscaClass(subType,
-						root.getNodeType().get(subType), listener);
-			}
-			return;
-		}
-		if ("map".equals(type)) {
-			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = Converters.convert(subType);
-			if (null != jTy) {
-				return;
-			}
-			if (cache.contains(subType)) {
-				return;
-			}
-			// XXX
-			LOG.info("Map of {}", subType);
 			final DataType dType = root.getDataTypes().get(subType);
 			if (null != dType) {
 				generateClassFromDataType(subType, dType, listener);

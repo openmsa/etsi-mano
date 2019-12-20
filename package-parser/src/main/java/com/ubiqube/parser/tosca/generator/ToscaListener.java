@@ -20,7 +20,7 @@ public interface ToscaListener {
 
 	void startField(String fieldName, String type, boolean multi);
 
-	void startField(String fieldName, ValueObject value, boolean multi);
+	void startField(String fieldName, ValueObject value);
 
 	void onFieldJavadoc(String x);
 

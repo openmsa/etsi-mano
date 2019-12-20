@@ -299,7 +299,8 @@ public class ToscaContext {
 
 	}
 
-	public boolean isAssignableFor(final NodeTemplate nodeTemplate, final String clazz) {
-		return false;
+	public boolean isAssignableFor(final String source, final String clazz) {
+		final ToscaClassHolder ch = classHierarchy.get(source);
+		return ch.isInstanceOf(clazz);
 	}
 }
