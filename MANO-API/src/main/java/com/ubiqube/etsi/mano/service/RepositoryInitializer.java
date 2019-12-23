@@ -60,8 +60,8 @@ public class RepositoryInitializer {
 		if (!repositoryService.exists(PROCESS_BASE_PATH)) {
 			repositoryService.addDirectory(PROCESS_BASE_PATH, "", MANO, NCROOT);
 		}
-		if (!repositoryService.exists(PROCESS_NFVO_BASE_PATH)) {
-			repositoryService.addDirectory(PROCESS_NFVO_BASE_PATH, "", MANO, NCROOT);
+		if (!repositoryService.exists(NVFO_DATAFILE_BASE_PATH)) {
+			repositoryService.addDirectory(NVFO_DATAFILE_BASE_PATH, "", MANO, NCROOT);
 		}
 		final Set<Class<?>> set = cpConverter.getList();
 		set.stream().forEach(x -> {
