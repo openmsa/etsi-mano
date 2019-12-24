@@ -8,6 +8,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public class SpelTest {
 
@@ -30,4 +31,13 @@ public class SpelTest {
 		System.out.println("" + subsJson);
 	}
 
+	@Test
+	public void testHashmap() throws Exception {
+		final VnfPkgInfo pkg = new VnfPkgInfo();
+		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
+		final ExpressionParser parser = new SpelExpressionParser(config);
+		final StandardEvaluationContext modelContext = new StandardEvaluationContext(pkg);
+		parser.parseExpression("userDefinedData[vnfProvider]").setValue(modelContext, "XXXYYY1");
+		System.out.println("" + pkg.getUserDefinedData());
+	}
 }
