@@ -9,6 +9,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import com.ubiqube.etsi.mano.mapper.CollectNonNullListener;
 import com.ubiqube.etsi.mano.mapper.JsonWalker;
 import com.ubiqube.etsi.mano.mapper.SpelWriter;
 
+@Service
 public class SpelPatcher implements Patcher {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SpelPatcher.class);
@@ -31,6 +33,7 @@ public class SpelPatcher implements Patcher {
 		mapper = _mapper;
 		jsonWalker = _jsonWalker;
 		spelWriter = _spelWriter;
+		LOG.info("SpelPatcher activated.");
 	}
 
 	@Override
