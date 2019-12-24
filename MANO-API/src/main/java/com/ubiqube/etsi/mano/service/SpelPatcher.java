@@ -54,6 +54,7 @@ public class SpelPatcher implements Patcher {
 		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
 		final ExpressionParser parser = new SpelExpressionParser(config);
 		final StandardEvaluationContext modelContext = new StandardEvaluationContext(_entity);
+		LOG.debug("Patching attr: {}", attrs);
 		attrs.forEach(x -> parser.parseExpression(x.getAttribute()).setValue(modelContext, x.getValue()));
 	}
 
