@@ -64,6 +64,15 @@ public class WeakPatcherTest {
 				assertNotNull(propertyDescriptor.getWriteMethod());
 			}
 		}
+	}
 
+	@Test
+	void testVnfPkgEnum() throws Exception {
+		final Patcher patcher = new WeakPatcher();
+		final String patchStr = readFile("src/test/resources/VnfPkgInfoModifications2.json");
+		final String vnfPkgInfoStr = readFile("src/test/resources/VnfPkgInfo.json");
+		final VnfPkgInfo vnfPkgInfo = mapper.readValue(vnfPkgInfoStr, VnfPkgInfo.class);
+		patcher.patch(patchStr, vnfPkgInfo);
+		System.out.println("" + vnfPkgInfo);
 	}
 }
