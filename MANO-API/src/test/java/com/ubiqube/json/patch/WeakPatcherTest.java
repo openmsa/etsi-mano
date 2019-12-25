@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -74,5 +75,14 @@ public class WeakPatcherTest {
 		final VnfPkgInfo vnfPkgInfo = mapper.readValue(vnfPkgInfoStr, VnfPkgInfo.class);
 		patcher.patch(patchStr, vnfPkgInfo);
 		System.out.println("" + vnfPkgInfo);
+	}
+
+	@Test
+	void testNsdModifiaction() throws Exception {
+		final Patcher patcher = new WeakPatcher();
+		final String patchStr = readFile("src/test/resources/NsdModification.json");
+		final String nsdPkgInfoStr = readFile("src/test/resources/NsdPkgInfo.json");
+		final NsdInfo nsdPkgInfo = mapper.readValue(nsdPkgInfoStr, NsdInfo.class);
+		patcher.patch(patchStr, nsdPkgInfo);
 	}
 }

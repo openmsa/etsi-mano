@@ -21,8 +21,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.OperationalStateConverter;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 
 /**
  * Naive implementation of a Patch engine.
@@ -41,6 +45,10 @@ public class WeakPatcher implements Patcher {
 		final ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
 		convertUtilsBean.register(new OperationalStateConverter(), PackageOperationalStateType.class);
 		convertUtilsBean.register(new OperationalStateConverter(), NsdUsageStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), PackageOnboardingStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), PackageUsageStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), NsdOnboardingStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), NsdOperationalStateType.class);
 		beanUtils = new BeanUtilsBean(convertUtilsBean);
 	}
 

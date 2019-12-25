@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.json;
 import org.apache.commons.beanutils.Converter;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
@@ -20,6 +22,10 @@ public class OperationalStateConverter implements Converter {
 			return PackageOnboardingStateType.fromValue((String) value);
 		} else if (type.equals(PackageUsageStateType.class)) {
 			return PackageUsageStateType.fromValue((String) value);
+		} else if (type.equals(NsdOnboardingStateType.class)) {
+			return NsdOnboardingStateType.fromValue((String) value);
+		} else if (type.equals(NsdOperationalStateType.class)) {
+			return NsdOperationalStateType.fromValue((String) value);
 		}
 		throw new GenericException("You must define a " + type.getName() + " in " + OperationalStateConverter.class);
 	}

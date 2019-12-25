@@ -1,0 +1,13 @@
+{
+    "operationalState": "ENABLED",
+    "nsdOnboardingState": "ONBOARDED",
+    "nsdOperationalState": "ENABLED",
+    "nsdUsageState": "IN_USE",
+    "vnfSoftwareVersion": "1.0.0",
+    "checksum": {
+        "algorithm": "SHA-51255"
+    },
+    "userDefinedData": {
+        "name": "Test Horizon VNF."
+    }
+}
