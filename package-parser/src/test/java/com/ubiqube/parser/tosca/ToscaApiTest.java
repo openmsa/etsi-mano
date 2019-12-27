@@ -23,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.parser.tosca.api.ToscaApi;
+import com.ubiqube.parser.tosca.convert.ConvertApi;
+import com.ubiqube.parser.tosca.convert.SizeConverter;
+import com.ubiqube.parser.tosca.scalar.Size;
 
 import tosca.nodes.Compute;
 
@@ -30,6 +33,11 @@ import tosca.nodes.Compute;
 public class ToscaApiTest {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaApiTest.class);
 	private final ToscaParser tp = new ToscaParser();
+	private final ConvertApi conv = new ConvertApi();
+
+	public ToscaApiTest() {
+		conv.register(Size.class.getCanonicalName(), new SizeConverter());
+	}
 
 	@Test
 	void testName() throws Exception {
@@ -44,7 +52,7 @@ public class ToscaApiTest {
 		final ToscaContext root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<NodeTemplate> res = toscaApi.getNodeMatching(root, Compute.class);
-		assertEquals(1, res.size(), "Size of the list must be 1");
+		assertEquals(2, res.size(), "Size of the list must be 2");
 		final NodeTemplate obj = res.get(0);
 		final Map<String, Object> caps = (Map<String, Object>) obj.getCapabilities();
 		final Object maps = handleMap(caps, Compute.class, null);
@@ -65,7 +73,6 @@ public class ToscaApiTest {
 			LOG.debug("Handling map of {}", generic);
 			final Map map = (Map) cls;
 			handleRealMap(map, generic, caps);
-			// map.put(key, value)
 		}
 		final Stream<PropertyDescriptor> stream = Arrays.stream(props);
 		stream.forEach(x -> {
@@ -102,27 +109,19 @@ public class ToscaApiTest {
 			}
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
-			try {
-				meth.invoke(cls, ret);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				throw new ParseException(e);
-			}
+			methodInvoke(meth, cls, ret);
 		} else {
 			final Method writeMethod = x.getWriteMethod();
-			try {
-				writeMethod.invoke(cls, convert(res, writeMethod.getParameterTypes()[0]));
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				throw new ParseException(e);
-			}
+			methodInvoke(writeMethod, cls, convert(res, writeMethod.getParameterTypes()[0]));
 		}
 	}
 
-	private static Object convert(final Object res, final Class<?> parameterType) {
+	private Object convert(final Object res, final Class<?> parameterType) {
 		if (res.getClass().equals(parameterType)) {
 			return res;
 		}
 		LOG.debug("Converting: {} into {}", res.getClass(), parameterType.getName());
-		return null;
+		return conv.map(parameterType.getName(), res);
 	}
 
 	private static Class getReturnType(final Method readMethod) {
@@ -158,6 +157,14 @@ public class ToscaApiTest {
 			}
 			return clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
+			throw new ParseException(e);
+		}
+	}
+
+	private static void methodInvoke(final Method method, final Object instance, final Object paramter) {
+		try {
+			method.invoke(instance, paramter);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new ParseException(e);
 		}
 	}

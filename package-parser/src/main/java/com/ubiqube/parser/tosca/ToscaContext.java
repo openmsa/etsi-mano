@@ -214,12 +214,12 @@ public class ToscaContext {
 				LOG.error("{} not a Node Type.", derived);
 			} else if (derived != null) {
 				final ToscaClassHolder parent = resolvDerived(derived);
-				final ToscaClassHolder tch = new ToscaClassHolder(clazz);
+				final ToscaClassHolder tch = new ToscaClassHolder(entry.getKey(), clazz);
 				tch.setParent(parent);
 
 				registerTch(entry.getKey(), tch);
 			} else {
-				final ToscaClassHolder tch = new ToscaClassHolder(clazz);
+				final ToscaClassHolder tch = new ToscaClassHolder(entry.getKey(), clazz);
 				registerTch(entry.getKey(), tch);
 			}
 		}
@@ -257,7 +257,7 @@ public class ToscaContext {
 		}
 		final ToscaClass node = nodeType.get(derived);
 		LOG.debug("Building Tree Node {} ", derived);
-		final ToscaClassHolder tch = new ToscaClassHolder(node);
+		final ToscaClassHolder tch = new ToscaClassHolder(derived, node);
 		classHierarchy.put(derived, tch);
 		if (node.getDerivedFrom() != null) {
 			final ToscaClassHolder newParent = resolvDerived(node.getDerivedFrom());
@@ -301,7 +301,8 @@ public class ToscaContext {
 
 	public boolean isAssignableFor(final String source, final String clazz) {
 		final ToscaClassHolder ch = classHierarchy.get(source);
-		LOG.debug("isAssignalbe for: {}=>{}", source, clazz);
-		return ch.isInstanceOf(clazz);
+		final boolean res = ch.isInstanceOf(clazz);
+		LOG.debug("isAssignalbe for: {}=>{} {}", source, clazz, res);
+		return res;
 	}
 }
