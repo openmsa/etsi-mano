@@ -26,6 +26,7 @@ import com.ubiqube.parser.tosca.api.ToscaApi;
 
 import tosca.nodes.Compute;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ToscaApiTest {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaApiTest.class);
 	private final ToscaParser tp = new ToscaParser();
@@ -116,7 +117,7 @@ public class ToscaApiTest {
 		}
 	}
 
-	private Object convert(final Object res, final Class<?> parameterType) {
+	private static Object convert(final Object res, final Class<?> parameterType) {
 		if (res.getClass().equals(parameterType)) {
 			return res;
 		}
