@@ -6,10 +6,12 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -41,51 +43,85 @@ public class ToscaApiTest {
 		final ToscaContext root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<NodeTemplate> res = toscaApi.getNodeMatching(root, Compute.class);
-		assertEquals(1, res.size());
+		assertEquals(1, res.size(), "Size of the list must be 1");
 		final NodeTemplate obj = res.get(0);
 		final Map<String, Object> caps = (Map<String, Object>) obj.getCapabilities();
-		handleMap(caps, Compute.class, null);
+		final Object maps = handleMap(caps, Compute.class, null);
+		LOG.debug("map={}", maps);
 	}
 
-	private void handleMap(final Map<String, Object> caps, final Class clazz, final Class generic) throws IntrospectionException {
-		final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+	private Object handleMap(final Map<String, Object> caps, final Class clazz, final Class generic) {
+		final Object cls = newInstance(clazz);
+		BeanInfo beanInfo;
+		try {
+			beanInfo = Introspector.getBeanInfo(clazz);
+		} catch (final IntrospectionException e) {
+			throw new ParseException(e);
+		}
 		final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
 		LOG.info("class=>{}[{}] --- [{}]", clazz.getName(), caps, Arrays.toString(props));
 		if (clazz.isAssignableFrom(Map.class)) {
 			LOG.debug("Handling map of {}", generic);
-			return;
+			final Map map = (Map) cls;
+			handleRealMap(map, generic, caps);
+			// map.put(key, value)
 		}
 		final Stream<PropertyDescriptor> stream = Arrays.stream(props);
 		stream.forEach(x -> {
 			final Object res = caps.get(camelCaseToUnderscore(x.getName()));
 			if (null != res) {
 				LOG.info("Property: {}={}", x.getName(), res);
-				handleCaps(res, x);
+				handleCaps(res, x, cls);
 			}
+		});
+		return cls;
+	}
+
+	private void handleRealMap(final Map map, final Class generic, final Map<String, Object> caps) {
+		caps.forEach((x, y) -> {
+			final Object res = handleMap((Map<String, Object>) y, generic, null);
+			map.put(x, res);
 		});
 	}
 
-	private void handleCaps(final Object res, final PropertyDescriptor x) {
+	private void handleCaps(final Object res, final PropertyDescriptor x, final Object cls) {
 		if (res instanceof Map) {
 			Map<String, Object> caps = (Map<String, Object>) res;
 			if (null != caps.get("properties")) {
 				caps = (Map<String, Object>) caps.get("properties");
 			}
 			LOG.debug("Recursing: {}", caps);
+			final Method rm = x.getReadMethod();
+			final Class zz = getReturnType(rm);
+			Object ret = null;
+			if (rm.getReturnType().isAssignableFrom(Map.class)) {
+				ret = handleMap(caps, Map.class, zz);
+			} else {
+				ret = handleMap(caps, zz, zz);
+			}
+			LOG.debug("return: {} for property: {}", ret, x.getName());
+			final Method meth = x.getWriteMethod();
 			try {
-				final Method rm = x.getReadMethod();
-				final Class zz = getReturnType(rm);
-				if (rm.getReturnType().isAssignableFrom(Map.class)) {
-					handleMap(caps, Map.class, zz);
-				} else {
-					handleMap(caps, zz, zz);
-				}
-			} catch (final IntrospectionException e) {
+				meth.invoke(cls, ret);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				throw new ParseException(e);
 			}
 		} else {
-			LOG.error("Unkwon type: {} => {}", x.getName(), res.getClass().getName());
+			final Method writeMethod = x.getWriteMethod();
+			try {
+				writeMethod.invoke(cls, convert(res, writeMethod.getParameterTypes()[0]));
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new ParseException(e);
+			}
 		}
+	}
+
+	private Object convert(final Object res, final Class<?> parameterType) {
+		if (res.getClass().equals(parameterType)) {
+			return res;
+		}
+		LOG.debug("Converting: {} into {}", res.getClass(), parameterType.getName());
+		return null;
 	}
 
 	private static Class getReturnType(final Method readMethod) {
@@ -102,18 +138,6 @@ public class ToscaApiTest {
 		return readMethod.getReturnType();
 	}
 
-	private static String fieldCamelCase(final String key) {
-		final java.util.regex.Pattern p = java.util.regex.Pattern.compile("_(.)");
-		final Matcher m = p.matcher(key);
-		final StringBuffer sb = new StringBuffer();
-		while (m.find()) {
-			m.appendReplacement(sb, m.group(1).toUpperCase());
-		}
-		m.appendTail(sb);
-		LOG.debug("CamelCase:  {}<=>{}", key, sb.toString());
-		return sb.toString();
-	}
-
 	private static String camelCaseToUnderscore(final String key) {
 		final Matcher m = Pattern.compile("(?<=[a-z])[A-Z]").matcher(key);
 
@@ -124,5 +148,16 @@ public class ToscaApiTest {
 		m.appendTail(sb);
 		LOG.trace("Underscore:  {}<=>{}", key, sb.toString());
 		return sb.toString();
+	}
+
+	private static Object newInstance(final Class<?> clazz) {
+		try {
+			if (clazz.isAssignableFrom(Map.class)) {
+				return new HashMap();
+			}
+			return clazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new ParseException(e);
+		}
 	}
 }
