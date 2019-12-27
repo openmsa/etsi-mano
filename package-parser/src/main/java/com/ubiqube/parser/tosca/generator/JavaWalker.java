@@ -121,7 +121,7 @@ public class JavaWalker extends AbstractWalker {
 	}
 
 	@Override
-	public void startField(final String fieldName, final ValueObject value, final boolean multi) {
+	public void startField(final String fieldName, final ValueObject value) {
 		currentField = currentClass.field(JMod.PRIVATE, resolvVo(value), fieldName);
 	}
 

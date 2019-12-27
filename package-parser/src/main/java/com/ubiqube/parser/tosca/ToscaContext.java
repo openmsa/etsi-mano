@@ -301,6 +301,7 @@ public class ToscaContext {
 
 	public boolean isAssignableFor(final String source, final String clazz) {
 		final ToscaClassHolder ch = classHierarchy.get(source);
+		LOG.debug("isAssignalbe for: {}=>{}", source, clazz);
 		return ch.isInstanceOf(clazz);
 	}
 }

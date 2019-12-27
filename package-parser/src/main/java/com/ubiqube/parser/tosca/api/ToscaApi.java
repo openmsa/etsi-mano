@@ -15,7 +15,7 @@ public class ToscaApi {
 				.getNodeTemplate()
 				.entrySet()
 				.stream()
-				.filter(x -> root.isAssignableFor(x.getKey(), clazzname))
+				.filter(x -> root.isAssignableFor(x.getValue().getType(), clazzname))
 				.map(Entry::getValue)
 				.collect(Collectors.toList());
 
@@ -24,6 +24,7 @@ public class ToscaApi {
 
 	private <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
 		nodes.stream();
+		System.out.println("" + nodes);
 		return null;
 	}
 }

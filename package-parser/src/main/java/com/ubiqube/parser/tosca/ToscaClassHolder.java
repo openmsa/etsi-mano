@@ -1,7 +1,6 @@
 package com.ubiqube.parser.tosca;
 
 public class ToscaClassHolder {
-
 	private ToscaClassHolder parent;
 	private final ToscaClass node;
 
@@ -23,6 +22,9 @@ public class ToscaClassHolder {
 	}
 
 	public boolean isInstanceOf(final String clazz) {
+		if (null == node.getDerivedFrom()) {
+			return false;
+		}
 		if (node.getDerivedFrom().equals(clazz)) {
 			return true;
 		}

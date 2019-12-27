@@ -147,7 +147,7 @@ public class ToscaWalker {
 			if (primitive.containsKey(value.getType())) {
 				listener.startField(fieldName, "integer", false);
 			} else {
-				listener.startField(fieldName, value, false);
+				listener.startField(fieldName, value);
 			}
 
 			Optional.ofNullable(value.getDescription()).ifPresent(listener::onFieldJavadoc);
