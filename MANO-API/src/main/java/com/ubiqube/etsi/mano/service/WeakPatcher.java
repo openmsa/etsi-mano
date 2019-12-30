@@ -8,10 +8,10 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +100,9 @@ public class WeakPatcher implements Patcher {
 	}
 
 	private void patchEntity(final Deque<String> _stack, final Object _value, final Object _entity) throws IllegalAccessException, InvocationTargetException {
-		final String key = StringUtils.join(_stack.descendingIterator(), ".");
+		final StringJoiner sj = new StringJoiner(".");
+		_stack.descendingIterator().forEachRemaining(sj::add);
+		final String key = sj.toString();
 		if (LOG.isDebugEnabled()) {
 			// LOG.debug("Patching object {} on field {} with value {}",
 			// _entity.getClass().getName(), key, _value);
