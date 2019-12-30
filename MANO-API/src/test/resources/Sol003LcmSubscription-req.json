@@ -1,0 +1,57 @@
+{
+	"filter": {
+		"vnfInstanceSubscriptionFilter": {
+			"vnfdIds": [
+				"string"
+			],
+			"vnfProductsFromProviders": [
+				{
+					"vnfProvider": "string",
+					"vnfProducts": [
+						{
+							"vnfProductName": "string",
+							"versions": [
+								{
+									"vnfSoftwareVersion": "string",
+									"vnfdVersions": [
+										"string"
+									]
+								}
+							]
+						}
+					]
+				}
+			],
+			"vnfInstanceIds": [
+				"string"
+			],
+			"vnfInstanceNames": [
+				"string"
+			]
+		},
+		"notificationTypes": [
+			"VnfLcmOperationOccurrenceNotification"
+		],
+		"operationTypes": [
+			"INSTANTIATE"
+		],
+		"operationStates": [
+			"STARTING"
+		]
+	},
+	"callbackUri": "string",
+	"authentication": {
+		"authType": [
+			"BASIC"
+		],
+		"paramsBasic": {
+			"userName": "string",
+			"password": "string"
+		},
+		"paramsOauth2ClientCredentials": {
+			"clientId": "string",
+			"clientPassword": "string",
+			"tokenEndpoint": "string"
+		}
+	}
+}
