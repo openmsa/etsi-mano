@@ -72,14 +72,4 @@ public class CollectNonNullListener implements BeanListener {
 		stack.pop();
 	}
 
-	@Override
-	public void mapValue(final Object source) {
-		final AttrMapHolder amh = new AttrMapHolder();
-		amh.setStack((LinkedList<AttrNode>) stack.clone());
-		amh.setValue(source);
-		if (null != source) {
-			attrs.add(amh);
-		}
-	}
-
 }

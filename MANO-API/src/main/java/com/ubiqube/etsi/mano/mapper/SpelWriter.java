@@ -54,14 +54,6 @@ public class SpelWriter {
 			if (prev == null) {
 				return ((NamedAttrNode) elem).getName();
 			}
-			// XXX Is there another way to adress map.
-			if (prev instanceof NamedAttrNode) {
-				final NamedAttrNode previous = (NamedAttrNode) prev;
-				if ("userDefinedData".equals(previous.getName())) {
-					return '[' + ((NamedAttrNode) elem).getName() + ']';
-				}
-				return '.' + ((NamedAttrNode) elem).getName();
-			}
 			return '.' + ((NamedAttrNode) elem).getName();
 		} else if (elem instanceof IndiceAttrNode) {
 			return elem.toString();

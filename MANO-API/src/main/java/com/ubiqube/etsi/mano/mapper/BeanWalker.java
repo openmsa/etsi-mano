@@ -87,7 +87,7 @@ public class BeanWalker {
 		final Set<Entry> entries = map.entrySet();
 		for (final Entry entry : entries) {
 			beanListener.mapStartEntry((String) entry.getKey());
-			beanListener.mapValue(entry.getValue());
+			beanListener.addProperty(entry.getValue());
 			beanListener.mapEndEntry((String) entry.getKey());
 		}
 		beanListener.endMap(name);

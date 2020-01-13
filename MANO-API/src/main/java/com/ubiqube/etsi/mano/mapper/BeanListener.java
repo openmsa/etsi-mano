@@ -24,6 +24,4 @@ public interface BeanListener {
 
 	void endMap(String name);
 
-	void mapValue(Object value);
-
 }
