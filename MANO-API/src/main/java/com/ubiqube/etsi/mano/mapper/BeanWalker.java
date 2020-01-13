@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -62,6 +64,8 @@ public class BeanWalker {
 				final Class<?> clazzRet = extractInnerListType(propertyDescriptor);
 				if (retCls.isAssignableFrom(List.class)) {
 					handleList(source, propertyDescriptor.getName(), readMethod, beanListener);
+				} else if (retCls.isAssignableFrom(Map.class)) {
+					handleMap(source, propertyDescriptor.getName(), readMethod, beanListener);
 				} else if (isComplex(clazzRet)) {
 					handleComplex(source, propertyDescriptor, readMethod, beanListener);
 				}
@@ -74,6 +78,19 @@ public class BeanWalker {
 				beanListener.complexEnd();
 			}
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private static void handleMap(final Object source, final String name, final Method readMethod, final BeanListener beanListener) throws IllegalAccessException, InvocationTargetException {
+		final Map map = (Map) readMethod.invoke(source);
+		beanListener.startMap(name);
+		final Set<Entry> entries = map.entrySet();
+		for (final Entry entry : entries) {
+			beanListener.mapStartEntry((String) entry.getKey());
+			beanListener.mapValue(entry.getValue());
+			beanListener.mapEndEntry((String) entry.getKey());
+		}
+		beanListener.endMap(name);
 	}
 
 	private void handleComplex(final Object source, final FeatureDescriptor propertyDescriptor, final Method readMethod, final BeanListener beanListener) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
@@ -101,6 +118,9 @@ public class BeanWalker {
 
 	private boolean haveInnerType(final Class<?> clazz) {
 		if (clazz.getName().contentEquals("java.util.List")) {
+			return true;
+		}
+		if (clazz.getName().contentEquals("java.util.Map")) {
 			return true;
 		}
 		if (simpleTypes.contains(clazz.getName())) {
