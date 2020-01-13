@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.entities.repository.RepositoryElement.RepositoryElementType;
@@ -92,9 +92,9 @@ public class LowMsa implements Low {
 
 	@Override
 	public void add(final String _path, final InputStream _stream) {
-		byte[] content;
+		final byte[] content;
 		try {
-			content = IOUtils.toByteArray(_stream);
+			content = StreamUtils.copyToByteArray(_stream);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.ByteStreams;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -150,7 +150,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		path.append('/').append(_filename);
 
 		try {
-			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", ByteStreams.toByteArray(_stream), "ncroot");
+			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", StreamUtils.copyToByteArray(_stream), "ncroot");
 		} catch (ServiceException | IOException e) {
 			throw new GenericException(e);
 		}
