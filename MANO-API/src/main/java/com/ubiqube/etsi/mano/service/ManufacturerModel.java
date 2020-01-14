@@ -36,7 +36,7 @@ public class ManufacturerModel {
 	}
 
 	public String getManufacturerById(final String _id) {
-		final Manufacturer manufacturer = manufacturers.get(Long.getLong(_id));
+		final Manufacturer manufacturer = manufacturers.get(Long.decode(_id));
 		if (null == manufacturer) {
 			throw new NotFoundException("Manufacturer not found [" + _id + "]");
 		}
@@ -44,7 +44,7 @@ public class ManufacturerModel {
 	}
 
 	public String getModelById(final String _manufacturerId, final String _modelId) {
-		final Manufacturer manufacturer = manufacturers.get(Long.getLong(_manufacturerId));
+		final Manufacturer manufacturer = manufacturers.get(Long.decode(_manufacturerId));
 		final Model model = manufacturer.getModel(Long.parseLong(_modelId));
 		if (null == model) {
 			throw new NotFoundException("Model not found [" + _modelId + "]");
