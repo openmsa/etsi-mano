@@ -4,8 +4,8 @@ import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

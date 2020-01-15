@@ -41,4 +41,9 @@ public class FilterAttributes {
 		this.value = value;
 	}
 
+	@Override
+	public String toString() {
+		return "FilterAttributes [id=" + id + ", attribute=" + attribute + ", value=" + value + "]";
+	}
+
 }

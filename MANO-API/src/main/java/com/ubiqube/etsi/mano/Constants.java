@@ -65,7 +65,7 @@ public final class Constants {
 	}
 
 	public static void ensureNotInUse(final NsdInfo nsd) {
-		if (NsdUsageStateType.NOT_IN_USE == nsd.getNsdUsageState()) {
+		if (NsdUsageStateType.NOT_IN_USE != nsd.getNsdUsageState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in NOT_IN_USE state.");
 		}
 	}

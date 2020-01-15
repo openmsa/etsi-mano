@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CollectNonNullListener implements BeanListener {
-	final LinkedList<AttrNode> stack = new LinkedList<>();
-	List<AttrHolder> attrs = new ArrayList<>();
+	private final LinkedList<AttrNode> stack = new LinkedList<>();
+	private final List<AttrHolder> attrs = new ArrayList<>();
 
 	@Override
 	public void addProperty(final Object source) {

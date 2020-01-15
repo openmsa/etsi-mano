@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol002;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
 import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.controller.nslcm.sol003.VnfLcmSol003;
@@ -11,7 +11,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 public class Sol002LcmLinkable implements LcmLinkable {
 
 	@Override
-	public VnfInstanceLinks getLinks(String id) {
+	public VnfInstanceLinks getLinks(final String id) {
 		final String hrefScaleToLevel = linkTo(methodOn(VnfLcmSol002.class).vnfInstancesVnfInstanceIdScaleToLevelPost(id)).withSelfRel().getHref();
 		final String hrefScale = linkTo(methodOn(VnfLcmSol002.class).vnfInstancesVnfInstanceIdScalePost(id)).withSelfRel().getHref();
 		final String hrefOperate = linkTo(methodOn(VnfLcmSol002.class).vnfInstancesVnfInstanceIdOperatePost(id)).withSelfRel().getHref();

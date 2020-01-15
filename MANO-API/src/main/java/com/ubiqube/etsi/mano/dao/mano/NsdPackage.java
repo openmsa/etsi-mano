@@ -4,16 +4,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -31,7 +29,6 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 public class NsdPackage implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 	@Field
 	private String nsdId;
@@ -70,7 +67,8 @@ public class NsdPackage implements BaseEntity {
 	@Field
 	private PackageUsageStateType nsdUsageState;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	// @ElementCollection(fetch = FetchType.EAGER)
+	@Transient
 	private List<NsdUserDefinedData> userDefinedData;
 
 	@Override

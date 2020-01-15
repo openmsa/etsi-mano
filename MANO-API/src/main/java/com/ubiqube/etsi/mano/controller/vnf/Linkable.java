@@ -22,11 +22,11 @@ public interface Linkable {
 	 */
 	VnfPkgInfoLinks getVnfLinks(@Nonnull String _vnfPkgId);
 
-	PkgmLinks createNotificationLink(String _vnfPkgId, String _subscriptionId);
+	PkgmLinks createNotificationLink(@Nonnull String _vnfPkgId, String _subscriptionId);
 
-	PkgmLinks createVnfPackageOnboardingNotificationLinks(String _vnfPkgId, String _subscriptionId);
+	PkgmLinks createVnfPackageOnboardingNotificationLinks(@Nonnull String _vnfPkgId, String _subscriptionId);
 
-	PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(String _subscriptionId);
+	PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(@Nonnull String _subscriptionId);
 
 	ApiTypesEnum getApi();
 }

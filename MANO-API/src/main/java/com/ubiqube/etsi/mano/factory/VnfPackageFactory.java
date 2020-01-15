@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.factory;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
@@ -23,6 +25,7 @@ public class VnfPackageFactory {
 		// Nothing.
 	}
 
+	@Nonnull
 	public static VnfPkgInfo createVnfPkgInfo(final Map<String, Object> userData) {
 		final VnfPkgInfo vnfPkgInfo = new VnfPkgInfo();
 		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.CREATED);
@@ -33,6 +36,7 @@ public class VnfPackageFactory {
 		return vnfPkgInfo;
 	}
 
+	@Nonnull
 	public static VnfPackageArtifactInfo createArtefact(final String _filename, final String _checksum) {
 		final VnfPackageArtifactInfo artefact = new VnfPackageArtifactInfo();
 		artefact.artifactPath(_filename);
@@ -43,6 +47,7 @@ public class VnfPackageFactory {
 		return artefact;
 	}
 
+	@Nonnull
 	public static VnfPackageArtifactInfo createArtefact(final String _filename, final Checksum _checksum) {
 		final VnfPackageArtifactInfo artefact = new VnfPackageArtifactInfo();
 		artefact.artifactPath(_filename);
@@ -50,7 +55,8 @@ public class VnfPackageFactory {
 		return artefact;
 	}
 
-	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+	@Nonnull
+	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final String _subscriptionId, @Nonnull final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
 		ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
 		ret.setNotificationType("VnfPackageChangeNotification");
@@ -63,7 +69,8 @@ public class VnfPackageFactory {
 		return ret;
 	}
 
-	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, final String _vnfPkgId, final String _vnfdId, final Linkable links) {
+	@Nonnull
+	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final String _subscriptionId, @Nonnull final String _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageOnboardingNotification ret = new VnfPackageOnboardingNotification();
 		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setNotificationType("VnfPackageOnboardingNotification");
@@ -74,6 +81,7 @@ public class VnfPackageFactory {
 		return ret;
 	}
 
+	@Nonnull
 	public static PkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final PkgmNotificationsFilter _filter) {
 		final PkgmSubscription subscriptionsPkgmSubscription = new PkgmSubscription();
 		subscriptionsPkgmSubscription.setCallbackUri(_callbackUri);
@@ -81,6 +89,7 @@ public class VnfPackageFactory {
 		return subscriptionsPkgmSubscription;
 	}
 
+	@Nonnull
 	public static PkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
 		final PkgmSubscription ret = new PkgmSubscription();
 		ret.setCallbackUri(subscriptionObject.getPkgmSubscription().getCallbackUri());

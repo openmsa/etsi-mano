@@ -6,11 +6,44 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class VimResource {
 
-	private final String vimConnectionId = null;
+	private String vimConnectionId = null;
 
-	private final String resourceProviderId = null;
+	private String resourceProviderId = null;
 
-	private final String resourceId = null;
+	private String resourceId = null;
 
-	private final String vimLevelResourceType = null;
+	private String vimLevelResourceType = null;
+
+	public String getVimConnectionId() {
+		return vimConnectionId;
+	}
+
+	public void setVimConnectionId(final String vimConnectionId) {
+		this.vimConnectionId = vimConnectionId;
+	}
+
+	public String getResourceProviderId() {
+		return resourceProviderId;
+	}
+
+	public void setResourceProviderId(final String resourceProviderId) {
+		this.resourceProviderId = resourceProviderId;
+	}
+
+	public String getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(final String resourceId) {
+		this.resourceId = resourceId;
+	}
+
+	public String getVimLevelResourceType() {
+		return vimLevelResourceType;
+	}
+
+	public void setVimLevelResourceType(final String vimLevelResourceType) {
+		this.vimLevelResourceType = vimLevelResourceType;
+	}
+
 }

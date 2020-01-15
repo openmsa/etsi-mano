@@ -8,13 +8,12 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +21,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.OperationalStateConverter;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
+import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 
 /**
  * Naive implementation of a Patch engine.
@@ -31,7 +34,6 @@ import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
 public class WeakPatcher implements Patcher {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(WeakPatcher.class);
@@ -43,6 +45,10 @@ public class WeakPatcher implements Patcher {
 		final ConvertUtilsBean convertUtilsBean = new ConvertUtilsBean();
 		convertUtilsBean.register(new OperationalStateConverter(), PackageOperationalStateType.class);
 		convertUtilsBean.register(new OperationalStateConverter(), NsdUsageStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), PackageOnboardingStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), PackageUsageStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), NsdOnboardingStateType.class);
+		convertUtilsBean.register(new OperationalStateConverter(), NsdOperationalStateType.class);
 		beanUtils = new BeanUtilsBean(convertUtilsBean);
 	}
 
@@ -94,7 +100,9 @@ public class WeakPatcher implements Patcher {
 	}
 
 	private void patchEntity(final Deque<String> _stack, final Object _value, final Object _entity) throws IllegalAccessException, InvocationTargetException {
-		final String key = StringUtils.join(_stack.descendingIterator(), ".");
+		final StringJoiner sj = new StringJoiner(".");
+		_stack.descendingIterator().forEachRemaining(sj::add);
+		final String key = sj.toString();
 		if (LOG.isDebugEnabled()) {
 			// LOG.debug("Patching object {} on field {} with value {}",
 			// _entity.getClass().getName(), key, _value);

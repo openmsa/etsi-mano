@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -77,7 +77,6 @@ public class JsonBeanUtil {
 	}
 
 	private void rebuildPropertiesInner(final Map<String, JsonBeanProperty> rawProps, final Deque<String> stackName, final Deque<JsonBeanProperty> stackObject, final Map<String, JsonBeanProperty> ret) {
-
 		for (final Map.Entry<String, JsonBeanProperty> entry : rawProps.entrySet()) {
 			final String key = entry.getKey();
 			final JsonBeanProperty jsonBeanProperty = entry.getValue();
@@ -87,7 +86,9 @@ public class JsonBeanUtil {
 			if (right != null) {
 				rebuildPropertiesInner(right, stackName, stackObject, ret);
 			} else {
-				final String newKey = StringUtils.join(stackName.descendingIterator(), ".");
+				final StringJoiner sj = new StringJoiner(".");
+				stackName.descendingIterator().forEachRemaining(sj::add);
+				final String newKey = sj.toString();
 				final Queue<JsonBeanProperty> rev = Collections.asLifoQueue(stackObject);
 				final List<JsonBeanProperty> listObject = new ArrayList<>(rev);
 				Collections.reverse(listObject);

@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;

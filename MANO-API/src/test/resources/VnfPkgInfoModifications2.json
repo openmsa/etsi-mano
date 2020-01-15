@@ -1,0 +1,9 @@
+{
+	"vnfdId": "1234-1234-1234",
+	"operationalState": "DISABLED",
+	"onboardingState": "ONBOARDED",
+	"usageState": "NOT_IN_USE",
+	"checksum": {
+		"algorithm": "SHA256"
+	}
+}

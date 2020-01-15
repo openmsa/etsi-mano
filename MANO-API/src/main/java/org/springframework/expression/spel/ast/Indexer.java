@@ -1,3 +1,19 @@
+/*
+ * Copyright 2002-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.expression.spel.ast;
 
 import java.lang.reflect.Constructor;
@@ -8,6 +24,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import org.springframework.asm.MethodVisitor;
 import org.springframework.core.convert.TypeDescriptor;
@@ -26,16 +43,25 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
+/**
+ * An Indexer can index into some proceeding structure to access a particular piece of it.
+ * Supported structures are: strings / collections (lists/sets) / arrays.
+ *
+ * @author Andy Clement
+ * @author Phillip Webb
+ * @author Stephane Nicoll
+ * @since 3.0
+ */
+// TODO support multidimensional arrays
+// TODO support correct syntax for multidimensional [][][] and not [,,,]
 public class Indexer extends SpelNodeImpl {
 
 	private enum IndexedType {
 		ARRAY, LIST, MAP, STRING, OBJECT
 	}
 
-	// These fields are used when the indexer is being used as a property read
-	// accessor.
-	// If the name and target type match these cached values then the
-	// cachedReadAccessor
+	// These fields are used when the indexer is being used as a property read accessor.
+	// If the name and target type match these cached values then the cachedReadAccessor
 	// is used to read the property. If they do not match, the correct accessor is
 	// discovered and then cached for later use.
 
@@ -48,10 +74,8 @@ public class Indexer extends SpelNodeImpl {
 	@Nullable
 	private PropertyAccessor cachedReadAccessor;
 
-	// These fields are used when the indexer is being used as a property write
-	// accessor.
-	// If the name and target type match these cached values then the
-	// cachedWriteAccessor
+	// These fields are used when the indexer is being used as a property write accessor.
+	// If the name and target type match these cached values then the cachedWriteAccessor
 	// is used to write the property. If they do not match, the correct accessor is
 	// discovered and then cached for later use.
 
@@ -67,8 +91,8 @@ public class Indexer extends SpelNodeImpl {
 	@Nullable
 	private IndexedType indexedType;
 
-	public Indexer(final int pos, final SpelNodeImpl expr) {
-		super(pos, expr);
+	public Indexer(final int startPos, final int endPos, final SpelNodeImpl expr) {
+		super(startPos, endPos, expr);
 	}
 
 	@Override
@@ -94,15 +118,13 @@ public class Indexer extends SpelNodeImpl {
 		TypedValue indexValue;
 		Object index;
 
-		// This first part of the if clause prevents a 'double dereference' of the
-		// property (SPR-5847)
+		// This first part of the if clause prevents a 'double dereference' of the property (SPR-5847)
 		if ((target instanceof Map) && (this.children[0] instanceof PropertyOrFieldReference)) {
 			final PropertyOrFieldReference reference = (PropertyOrFieldReference) this.children[0];
 			index = reference.getName();
 			indexValue = new TypedValue(index);
 		} else {
-			// In case the map key is unqualified, we want it evaluated against the root
-			// object
+			// In case the map key is unqualified, we want it evaluated against the root object
 			// so temporarily push that on whilst evaluating the key
 			try {
 				state.pushActiveContextObject(state.getRootContextObject());
@@ -173,8 +195,7 @@ public class Indexer extends SpelNodeImpl {
 		} else if (this.indexedType == IndexedType.MAP) {
 			return ((this.children[0] instanceof PropertyOrFieldReference) || this.children[0].isCompilable());
 		} else if (this.indexedType == IndexedType.OBJECT) {
-			// If the string name is changing the accessor is clearly going to change (so no
-			// compilation possible)
+			// If the string name is changing the accessor is clearly going to change (so no compilation possible)
 			return ((this.cachedReadAccessor != null) &&
 					(this.cachedReadAccessor instanceof ReflectivePropertyAccessor.OptimalPropertyAccessor) &&
 					(getChild(0) instanceof StringLiteral));
@@ -236,8 +257,7 @@ public class Indexer extends SpelNodeImpl {
 
 		else if (this.indexedType == IndexedType.MAP) {
 			mv.visitTypeInsn(CHECKCAST, "java/util/Map");
-			// Special case when the key is an unquoted string literal that will be parsed
-			// as
+			// Special case when the key is an unquoted string literal that will be parsed as
 			// a property/field reference
 			if ((this.children[0] instanceof PropertyOrFieldReference)) {
 				final PropertyOrFieldReference reference = (PropertyOrFieldReference) this.children[0];
@@ -282,15 +302,11 @@ public class Indexer extends SpelNodeImpl {
 
 	@Override
 	public String toStringAST() {
-		final StringBuilder sb = new StringBuilder("[");
+		final StringJoiner sj = new StringJoiner(",", "[", "]");
 		for (int i = 0; i < getChildCount(); i++) {
-			if (i > 0) {
-				sb.append(",");
-			}
-			sb.append(getChild(i).toStringAST());
+			sj.add(getChild(i).toStringAST());
 		}
-		sb.append("]");
-		return sb.toString();
+		return sj.toString();
 	}
 
 	private void setArrayElement(final TypeConverter converter, final Object ctx, final int idx, @Nullable final Object newValue,
@@ -387,7 +403,7 @@ public class Indexer extends SpelNodeImpl {
 	}
 
 	private void checkAccess(final int arrayLength, final int index) throws SpelEvaluationException {
-		if (index > arrayLength) {
+		if (index >= arrayLength) {
 			throw new SpelEvaluationException(getStartPosition(), SpelMessage.ARRAY_INDEX_OUT_OF_BOUNDS,
 					arrayLength, index);
 		}

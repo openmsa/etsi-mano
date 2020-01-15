@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,7 +16,6 @@ import com.ubiqube.etsi.mano.model.CpProtocolData.LayerProtocolEnum;
 public class CpProtocolDataEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 
 	@Enumerated(EnumType.STRING)

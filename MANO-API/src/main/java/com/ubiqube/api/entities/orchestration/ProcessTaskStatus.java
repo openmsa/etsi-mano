@@ -46,7 +46,7 @@ public class ProcessTaskStatus {
 	private String scriptName;
 	private String startingDate;
 
-	ProcessStatusEnum status;
+	private ProcessStatusEnum status;
 
 	public String getDetails() {
 		return details;
