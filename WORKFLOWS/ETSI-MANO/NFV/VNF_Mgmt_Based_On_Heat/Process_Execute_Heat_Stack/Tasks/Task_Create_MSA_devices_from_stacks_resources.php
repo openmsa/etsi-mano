@@ -105,7 +105,7 @@ foreach ($resources as &$resource) {
 			echo $response;
 			exit;
 		}
-		$device_id = $response['wo_newparams']['entity']['externalReference'];
+		$device_id = $response['wo_newparams']['externalReference'];
 		$wo_comment = "Device External Reference : $device_id";
 		logToFile($wo_comment);
 		
