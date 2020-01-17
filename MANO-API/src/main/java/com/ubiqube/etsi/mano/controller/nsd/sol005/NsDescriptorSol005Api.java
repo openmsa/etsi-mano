@@ -274,6 +274,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 			nsdRepository.storeObject(nsdDescriptor.getId(), "nsd", userDefinedData.get("heat"));
 			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
 			nsdDescriptor.setNsdOperationalState(NsdOperationalStateType.ENABLED);
+			userDefinedData.remove("heat");
 			nsdRepository.save(nsdDescriptor);
 		}
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));

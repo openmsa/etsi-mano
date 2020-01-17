@@ -133,6 +133,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
+			userData.remove("heat");
 			vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
 			vnfPkgInfo.setOperationalState(PackageOperationalStateType.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
