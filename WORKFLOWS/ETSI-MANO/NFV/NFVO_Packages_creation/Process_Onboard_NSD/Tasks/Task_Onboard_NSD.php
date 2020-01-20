@@ -1,5 +1,4 @@
 <?php
-
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
 include "/opt/fmc_repository/Process/ETSI-MANO/vendor/autoload.php";
 
@@ -21,7 +20,7 @@ try {
 } catch (ManoException $e) {
 	task_error($e->getMessage());
 }
-	
-task_exit(ENDED, 'NSD #' . $context['nsdPkgId'] . ' sucessfully onboarded.');
 
-?>
+unset($context['nsd_pkg_content']);
+
+task_exit(ENDED, 'NSD #' . $context['nsdPkgId'] . ' sucessfully onboarded.');

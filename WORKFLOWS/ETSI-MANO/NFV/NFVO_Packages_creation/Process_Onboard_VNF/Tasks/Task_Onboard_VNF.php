@@ -15,7 +15,7 @@ function list_args()
 $url = get_url_from_device($context['device_id']);
 $vnfPkgApi = new VnfPkgSol005($url);
 try {
-        $vnfPkgApi->vnfPackagesVnfPkgIdPackageContentPut($context['vnfPkgId'], $context['vnf_pkg_content']);
+	$vnfPkgApi->vnfPackagesVnfPkgIdPackageContentPut($context['vnfPkgId'], $context['vnf_pkg_content']);
 } catch (ManoException $e) {
 	task_error($e->getMessage());
 }
