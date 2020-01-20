@@ -22,8 +22,8 @@ foreach ($context['servers_scaled'] as &$server) {
 		// Create MSA devices
 
 		$managed_device_name = $server['name'];
-		$manufacturer_id = 14020601;
-		$model_id = 14020601;
+		$manufacturer_id = $context['manufacturerId'];
+		$model_id = $context['modelId'];
 		$server_id = $context['server_id'];
 		
 		if (!isset($context['device_login']) || empty($context['device_login'])) {

@@ -8,7 +8,7 @@ function list_args()
 
 }
 
-
+if (isset($context['servers_scaled']) && !empty($context['servers_scaled'])) {
 foreach ($context['servers_scaled'] as $server) {
 	$server_id = $server['server_id'];
 	$context['scale_in_server_id'] = $server_id;
@@ -23,7 +23,9 @@ foreach ($context['servers_scaled'] as $server) {
 
 	break;
 }
-
+} else {
+	task_exit(ENDED, "No VNF instance to scale in.");
+}
 
 task_exit(ENDED, "Openstack Server deleted successfully.");
 

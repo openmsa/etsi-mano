@@ -11,7 +11,7 @@ require_once '/opt/fmc_repository/Process/Reference/Common/Library/msa_common.ph
  */
 function list_args()
 {
-  create_var_def('nfvoDevice', 'Device');
+	create_var_def('nfvoDevice', 'Device');
 }
 
 check_mandatory_param("deviceid");
@@ -26,4 +26,3 @@ logToFile($response);
 
 task_exit(ENDED, "Synchronisation to NFVO is successfull.");
 
-?>
