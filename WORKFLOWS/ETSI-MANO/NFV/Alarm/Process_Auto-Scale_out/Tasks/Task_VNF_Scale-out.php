@@ -1,10 +1,9 @@
 <?php
-
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
 
 function list_args()
 {
-   create_var_def ('vnfm_service_instance_ref', 'String');
+	create_var_def('vnfm_service_instance_ref', 'String');
 }
 $ubiqube_id = $context['UBIQUBEID'];
 $service_instance_ref = $context['vnfm_service_instance_ref'];
@@ -15,4 +14,3 @@ msa_execute_service_by_reference_and_wait_for_completion($ubiqube_id, $service_n
 
 task_exit(ENDED, "Auto-Scale-out OK");
 
-?>
