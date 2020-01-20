@@ -3,7 +3,7 @@ require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
 
 function list_args()
 {
-	  create_var_def('device_id', 'Device');
+	create_var_def('device_id', 'Device');
 }
 
 /**
@@ -11,4 +11,3 @@ function list_args()
  */
 task_exit(ENDED, "Task OK");
 
-?>

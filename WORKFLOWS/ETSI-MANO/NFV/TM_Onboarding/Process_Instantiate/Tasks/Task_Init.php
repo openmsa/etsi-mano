@@ -17,13 +17,11 @@ $response = json_decode($response, true);
 if ($response['wo_status'] !== ENDED) {
 	$response = json_encode($response);
 	echo $response;
-	exit;
+	exit();
 }
-
 
 /**
  * End of the task do not modify after this point
  */
 task_exit(ENDED, "Task OK");
 
-?>
