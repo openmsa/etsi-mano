@@ -24,7 +24,7 @@ foreach ($vnfPkg_list as &$vnfServiceId) {
 	$process_info = $context[$service_name][$vnfServiceId]['context'];
 
 	$service_instance_ref = '';
-	// Step 1: Preparer the request body
+	// Step 1: Prepare the request body
 	$linux_man_id = "14020601";
 	$juniper_man_id = "18";
 	$json_body = array();
