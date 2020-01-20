@@ -31,7 +31,7 @@ if(array_key_exists('heat', $nsPkg['userDefinedData']))
 	$heatYaml = Yaml::dump($heatJson);
 	file_put_contents($path . '/nsd.yaml', $heatYaml);
 
-	$context['stackname'] = key($heatJson['resources']);
+	$context['stackname'] =  $nsPkg['nsdName'];
 } else {
 	try {
 		$content = $nsPkgManagement->nsDescriptorsNsdInfoIdNsdContentGet($context['nsPkgId']);

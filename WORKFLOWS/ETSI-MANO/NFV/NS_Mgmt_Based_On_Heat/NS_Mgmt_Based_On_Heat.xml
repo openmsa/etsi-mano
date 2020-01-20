@@ -181,6 +181,11 @@
     
     
   
+  
+    
+    
+    
+    
   <task name="Task_Fetch_Mano_Data.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
       <displayName>Get NSD from NS Catalog (NVFO)</displayName>
@@ -193,11 +198,19 @@
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
       <displayName>Instantiate NS based-on NSD (Stack)</displayName>
     </task>
+    <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+      <processPath/>
+      <displayName>Get VIM authentification token</displayName>
+    </task>
+    <task name="Task_Add_routers_interfaces.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack/Tasks/</processPath>
+      <displayName>Add routers interfaces</displayName>
+    </task>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
       <processPath/>
       <displayName>Sync</displayName>
     </task>
-    <compensation/>
+  <compensation/>
   </process>
   <process name="Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Scale-in_Scale-out">
     <visibility>5</visibility>
@@ -259,7 +272,26 @@
   
   
   
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack/Tasks/Task_Delete_Stack.php">
+  
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  <task name="Task_GET_VIM_Token.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack/Tasks/</processPath>
+      <displayName>GET VIM Token</displayName>
+    </task>
+    <task name="Task_Release_routers_interfaces.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack/Tasks/</processPath>
+      <displayName>Release routers interfaces</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack/Tasks/Task_Delete_Stack.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack/Tasks/</processPath>
       <displayName>Delete Stack</displayName>
     </task>
