@@ -267,14 +267,14 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final List<String> pnfPkgIds = (List<String>) userDefinedData.get("pnfPkgIds");
 		// TODO: verify PNF ids.
 		nsdDescriptor.setPnfdInfoIds(pnfPkgIds);
+		final Object heatDoc = userDefinedData.remove("heat");
 		nsdRepository.save(nsdDescriptor);
 
 		// TODO Remove.
-		if (null != userDefinedData.get("heat")) {
-			nsdRepository.storeObject(nsdDescriptor.getId(), "nsd", userDefinedData.get("heat"));
+		if (null != heatDoc) {
+			nsdRepository.storeObject(nsdDescriptor.getId(), "nsd", heatDoc);
 			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
 			nsdDescriptor.setNsdOperationalState(NsdOperationalStateType.ENABLED);
-			userDefinedData.remove("heat");
 			nsdRepository.save(nsdDescriptor);
 		}
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));

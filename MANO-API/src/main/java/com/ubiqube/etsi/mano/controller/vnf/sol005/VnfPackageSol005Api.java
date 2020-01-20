@@ -125,15 +125,13 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userData);
 
 		checkUserData(userData);
-
+		final Object heatDoc = userData.remove("heat");
 		vnfPkgInfo = vnfPackageRepository.save(vnfPkgInfo);
 		@NotNull
 		final String vnfPkgId = vnfPkgInfo.getId();
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
-		final Object heatDoc = userData.get("heat");
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
-			userData.remove("heat");
 			vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
 			vnfPkgInfo.setOperationalState(PackageOperationalStateType.ENABLED);
 			vnfPackageRepository.save(vnfPkgInfo);
