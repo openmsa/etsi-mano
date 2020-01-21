@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>service_id</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>NFV|NFVO|Alarm Management</group>
+    <icon>/images/eclipseIcons/page_obj.gif</icon>
+    <name>NS Alarm handler</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>true</showProcessExecConsole>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Customer Id" displayOrder="0" maxLength="100" name="params.customer_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Alarm handler</section>
+      </sections>
+    </variable>
+    <variable displayName="Device Id" displayOrder="1" maxLength="100" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Alarm handler</section>
+      </sections>
+    </variable>
+    <variable displayName="Subtype" displayOrder="2" maxLength="100" name="params.subtype" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Alarm handler</section>
+      </sections>
+    </variable>
+    <variable displayName="Rawlog" displayOrder="3" maxLength="100" name="params.rawlog" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <values>
+        <value>idle</value>
+        <value>CPU Utilization threshold</value>
+      </values>
+      <sections>
+        <section>Alarm handler</section>
+      </sections>
+    </variable>
+    <variable displayName="Nfvo Service Instance Ref" displayOrder="4" maxLength="100" name="params.nfvo_service_instance_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Scale out</section>
+      </sections>
+    </variable>
+    <variable displayName="Vnfm Service Instance Ref" displayOrder="6" maxLength="100" name="params.vnfm_service_instance_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Scale out</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content>
+      <?php?>
+    </content>  </example>
+  <process name="Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_initial">
+    <visibility>5</visibility>
+    <displayName>Initial</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    <task name="Task_Alarm_handler.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_initial/Tasks/</processPath>
+      <displayName>Alarm handler</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_NS_Auto_Scale-out">
+    <visibility>5</visibility>
+    <displayName>NS Auto Scale-out</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="Task_Scale_out.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_NS_Auto_Scale-out/Tasks/</processPath>
+      <displayName>Scale out</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_NS_Auto_Scale-in">
+    <visibility>5</visibility>
+    <displayName>NS Auto Scale-in</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="Task_Scale_in.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_NS_Auto_Scale-in/Tasks/</processPath>
+      <displayName>Scale in</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/NS_Auto_scale_handler/Process_Move_To_Trash">
+    <visibility>5</visibility>
+    <displayName>Move To Trash</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+</ObjectDefinition>
