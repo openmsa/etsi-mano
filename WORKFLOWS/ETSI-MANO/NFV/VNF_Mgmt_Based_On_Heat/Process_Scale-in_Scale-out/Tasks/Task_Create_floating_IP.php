@@ -9,7 +9,7 @@ function list_args()
 $device_id = substr($context['deviceid'], 3);
 $server_id = $context['server_id'];
 
-$response = _neutron_get_pubkic_networks($context['endpoints'][NEUTRON][PUBLIC_URL], $context['token_id']);
+$response = _neutron_get_public_networks($context['endpoints'][NEUTRON][PUBLIC_URL], $context['token_id']);
 $resp = json_decode($response, 1);
 
 $network = $context['floating_network_id'];
