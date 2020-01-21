@@ -1,6 +1,6 @@
 <?php
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
-include "/opt/fmc_repository/Process/ETSI-MANO/vendor/autoload.php";
+include_once '/opt/fmc_repository/Process/ETSI-MANO/vendor/autoload.php';
 use Ubiqube\EtsiMano\NsdSol005;
 use Ubiqube\EtsiMano\ManoException;
 
