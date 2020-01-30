@@ -10,19 +10,15 @@ import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.metho
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.support.ResourceRegion;
-import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +36,7 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
-import com.ubiqube.etsi.mano.utils.MimeType;
+import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 import io.swagger.annotations.Api;
 
@@ -160,18 +156,10 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
-		final Optional<String> oRange = Optional.ofNullable(range);
 		final NsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 		ensureIsOnboarded(nsdInfo);
 		final byte[] bytes = nsdRepository.getBinary(nsdInfoId, "nsd");
-		final List<HttpRange> ranges = HttpRange.parseRanges(oRange.orElse("bytes=0-"));
-		final BodyBuilder bodyBuilder = ResponseEntity.status(oRange.isPresent() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK);
-		final ByteArrayResource resource = new ByteArrayResource(bytes);
-		final String mime = MimeType.findMatch(bytes);
-		final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
-		return bodyBuilder
-				.header("Content-Type", mime)
-				.body(body);
+		return SpringUtil.handleBytes(bytes, range);
 	}
 
 	/**

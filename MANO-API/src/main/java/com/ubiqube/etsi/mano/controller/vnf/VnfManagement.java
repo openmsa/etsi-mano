@@ -5,19 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
-import org.springframework.http.HttpRange;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
@@ -33,6 +29,7 @@ import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
+import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 /**
  * This implementation cover VNFO + NFVM & VNFO only.
@@ -129,21 +126,12 @@ public class VnfManagement implements VnfPackageManagement {
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
 		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
-		return handleBytes(bytes, _range);
+		return SpringUtil.handleBytes(bytes, _range);
 	}
 
 	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String _range) throws IOException {
 		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		return handleBytes(zcontent, _range);
-	}
-
-	private static ResponseEntity<List<ResourceRegion>> handleBytes(final byte[] bytes, final String _range) {
-		final Optional<String> oRange = Optional.ofNullable(_range);
-		final List<HttpRange> ranges = HttpRange.parseRanges(oRange.orElse("bytes=0-"));
-		final BodyBuilder bodyBuilder = ResponseEntity.status(oRange.isPresent() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK);
-		final ByteArrayResource resource = new ByteArrayResource(bytes);
-		final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
-		return bodyBuilder.body(body);
+		return SpringUtil.handleBytes(zcontent, _range);
 	}
 
 	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {
