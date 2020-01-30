@@ -28,8 +28,9 @@ import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
 
 /**
- * A Generic implementation of classical CRUD action around a repository.
- *
+ * A Generic implementation of classical CRUD action around a repository. XXX:
+ * This class should use lowDriver.
+ * 
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  * @param <T>
@@ -197,6 +198,11 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 			throw new NotAcceptableException("Could not retreive a min > lenght of file.");
 		}
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max.intValue());
+	}
+
+	@Override
+	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+		// XXX:repositoryService.de
 	}
 
 	protected void verify(final String _uri) {

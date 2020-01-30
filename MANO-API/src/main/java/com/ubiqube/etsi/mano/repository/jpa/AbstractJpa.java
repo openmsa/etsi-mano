@@ -52,6 +52,7 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 	@Override
 	public final void delete(final String id) {
 		repository.deleteById(UUID.fromString(id));
+		super.delete(id);
 	}
 
 	@Override

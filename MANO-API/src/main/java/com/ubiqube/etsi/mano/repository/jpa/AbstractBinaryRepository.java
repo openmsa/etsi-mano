@@ -76,5 +76,17 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 		}
 	}
 
+	@Override
+	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
+		contentManager.delete(path);
+	}
+
+	@Override
+	public void delete(@NotNull final String _id) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
+		contentManager.delete(path);
+	}
+
 	protected abstract Class<?> getFrontClass();
 }

@@ -152,4 +152,11 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 			throw new GenericException(e);
 		}
 	}
+
+	@Override
+	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+		final Path path = namingStrategy.getRoot(getClazz(), _id);
+		lowDriver.delete(path.toString());
+	}
+
 }
