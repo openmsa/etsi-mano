@@ -7,20 +7,22 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +41,6 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.MimeType;
-import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 import io.swagger.annotations.Api;
 
@@ -158,27 +159,19 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
-		final RangeHeader rangeHeader = RangeHeader.fromValue(range);
+	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
+		final Optional<String> oRange = Optional.ofNullable(range);
 		final NsdInfo nsdInfo = nsdRepository.get(nsdInfoId);
 		ensureIsOnboarded(nsdInfo);
-		byte[] bytes;
-		if (rangeHeader != null) {
-			bytes = nsdRepository.getBinary(nsdInfoId, "nsd", rangeHeader.getFrom(), (long) rangeHeader.getTo());
-			final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
-			// Content-Range: bytes 0-1023/146515
-			final String mime = MimeType.findMatch(bytes);
-			return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", rangeHeader.getContentRange(bytes.length))
-					.header("Content-Type", mime)
-					.body(resource);
-		}
-		bytes = nsdRepository.getBinary(nsdInfoId, "nsd");
-		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+		final byte[] bytes = nsdRepository.getBinary(nsdInfoId, "nsd");
+		final List<HttpRange> ranges = HttpRange.parseRanges(oRange.orElse("bytes=0-"));
+		final BodyBuilder bodyBuilder = ResponseEntity.status(oRange.isPresent() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK);
+		final ByteArrayResource resource = new ByteArrayResource(bytes);
 		final String mime = MimeType.findMatch(bytes);
-		return ResponseEntity.ok()
+		final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
+		return bodyBuilder
 				.header("Content-Type", mime)
-				.body(resource);
+				.body(body);
 	}
 
 	/**

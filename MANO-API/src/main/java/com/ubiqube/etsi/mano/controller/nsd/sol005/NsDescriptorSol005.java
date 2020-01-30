@@ -1,9 +1,11 @@
 package com.ubiqube.etsi.mano.controller.nsd.sol005;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -115,7 +117,7 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{nsdInfoId}/nsd_content", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(@Nonnull @ApiParam(value = "NSD Info ID", required = true) @PathVariable("nsdInfoId") String nsdInfoId, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) String accept, @ApiParam(value = "\"The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD file. This can be used to continue an aborted transmission.If the NFVO does not support range requests, the NFVO shall ignore the 'Range\" header, process the GET request, and return the whole NSD file with a 200 OK response (rather than returning a 4xx error status code).\" ") @RequestHeader(value = "Range", required = false) String range);
+	ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(@Nonnull @ApiParam(value = "NSD Info ID", required = true) @PathVariable("nsdInfoId") String nsdInfoId, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) String accept, @ApiParam(value = "\"The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD file. This can be used to continue an aborted transmission.If the NFVO does not support range requests, the NFVO shall ignore the 'Range\" header, process the GET request, and return the whole NSD file with a 200 OK response (rather than returning a 4xx error status code).\" ") @RequestHeader(value = "Range", required = false) String range);
 
 	@ApiOperation(value = "Upload the content of a NSD.", nickname = "nsDescriptorsNsdInfoIdNsdContentPut", notes = "\"The PUT method is used to upload the content of a NSD. The NSD to be uploaded can be implemented as a single file or as a collection of multiple files, as defined in clause 5.4.4.3.2 of GS NFV-SOL 005.  If the NSD is implemented in the form of multiple files, a ZIP file embedding these files shall be uploaded.  If the NSD is implemented as a single file, either that file or a ZIP file  embedding that file shall be uploaded. The \"Content-Type\" HTTP header in the PUT request shall be set accordingly based on the format selection of the NSD.  If the NSD to be uploaded is a text file, the \"Content-Type\" header is set to \"text/plain\".  If the NSD to be uploaded is a zip file, the \"Content-Type\" header is set to \"application/zip\".  This method shall follow the provisions specified in the Tables 5.4.4.3.3-1 and 5.4.4.3.3-2 of GS-NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.\" ", tags = {})
 	@ApiResponses(value = {

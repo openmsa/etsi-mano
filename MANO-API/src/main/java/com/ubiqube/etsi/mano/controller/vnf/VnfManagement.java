@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -123,51 +124,26 @@ public class VnfManagement implements VnfPackageManagement {
 		final BodyBuilder bodyBuilder = ResponseEntity.ok();
 		handleMimeType(bodyBuilder, mime);
 		return bodyBuilder.body(resource);
-
 	}
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
-		byte[] bytes;
-		BodyBuilder bodyBuilder;
-		if (_range != null) {
-			final List<HttpRange> ranges = HttpRange.parseRanges(_range);
-			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
-			final ByteArrayResource resource = new ByteArrayResource(bytes);
-			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT);
-			final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
-			return bodyBuilder.body(body);
-		}
-		bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
-		bodyBuilder = ResponseEntity.status(HttpStatus.OK);
-
-		final ByteArrayResource resource = new ByteArrayResource(bytes);
-		final String mime = MimeType.findMatch(bytes);
-		handleMimeType(bodyBuilder, mime);
-		final List<HttpRange> ranges = HttpRange.parseRanges("bytes=0-");
-		final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
-		return bodyBuilder.body(body);
+		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
+		return handleBytes(bytes, _range);
 	}
 
 	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String _range) throws IOException {
 		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		BodyBuilder bodyBuilder;
-		if (_range != null) {
-			final List<HttpRange> ranges = HttpRange.parseRanges(_range);
+		return handleBytes(zcontent, _range);
+	}
 
-			final ByteArrayResource resource = new ByteArrayResource(zcontent);
-
-			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT);
-			final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
-			return bodyBuilder.body(body);
-		}
-		bodyBuilder = ResponseEntity.ok();
-		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
-
-		final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-		final List<HttpRange> ranges = HttpRange.parseRanges("bytes=0-");
+	private static ResponseEntity<List<ResourceRegion>> handleBytes(final byte[] bytes, final String _range) {
+		final Optional<String> oRange = Optional.ofNullable(_range);
+		final List<HttpRange> ranges = HttpRange.parseRanges(oRange.orElse("bytes=0-"));
+		final BodyBuilder bodyBuilder = ResponseEntity.status(oRange.isPresent() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK);
+		final ByteArrayResource resource = new ByteArrayResource(bytes);
 		final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
-		return bodyBuilder.contentType(contentType).body(body);
+		return bodyBuilder.body(body);
 	}
 
 	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {
