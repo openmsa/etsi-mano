@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol005;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -7,6 +8,7 @@ import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,6 @@ import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.vnf.sol005.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.UploadVnfPkgFromUriRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,7 +68,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, HttpServletRequest request, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) RangeHeader range) throws ServiceException;
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, HttpServletRequest request, @RequestHeader("Accept") String accept, @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
 
 	@ApiOperation(value = "Read information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdGet", notes = "The GET method reads the information of a VNF package. ", response = VnfPkgInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -99,7 +100,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "application/zip", "application/text" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) RangeHeader range);
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) String range);
 
 	@ApiOperation(value = "Read VNFD of an on-boarded VNF package.", nickname = "vnfPackagesVnfPkgIdVnfdGet", notes = "The GET method reads the content of the VNFD within a VNF package. The VNFD can be implemented as a single file or as a collection of multiple files. If the VNFD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the VNFD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \"Accept\" HTTP header passed in the GET request. • If the \"Accept\" header contains only \"text/plain\" and the VNFD is implemented as a single file, the file shall be returned; otherwise, an error message shall be returned. • If the \"Accept\" header contains only \"application/zip\", the single file or the multiple files that make up the VNFD shall be returned embedded in a ZIP file. • If the \"Accept\" header contains both \"text/plain\" and \"application/zip\", it is up to the NFVO to choose the format to return for a single-file VNFD; for a multi-file VNFD, a ZIP file shall be returned. The default format of the ZIP file shall be the one specified in ETSI GS NFV-SOL 004 [5] where only the YAML files representing the VNFD, and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the VNFD (such as TOSCA-meta or manifest files or naming conventions) are included. This method shall follow the provisions specified in the Tables 9.4.4.3.2-1 and 9.4.4.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {

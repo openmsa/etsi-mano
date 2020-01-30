@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -9,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
-import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 /**
  * This is a VNFM Only Implementation. All queries shall go to the NFVO (REST).
@@ -60,7 +61,7 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final RangeHeader rangeHeader) {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String rangeHeader) {
 		LOG.error("artifact = {}", artifactPath);
 		if (null == rangeHeader) {
 			final Map<String, Object> uriVariables = new HashMap<>();
@@ -82,7 +83,7 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
 		// TODO Auto-generated method stub
 		return null;
 	}

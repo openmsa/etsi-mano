@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.controller.vnf.sol003;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -8,6 +9,7 @@ import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 public interface VnfPackageSol003 {
 
@@ -42,7 +43,7 @@ public interface VnfPackageSol003 {
 	 *
 	 */
 	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip", "*/*" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) RangeHeader range) throws ServiceException;
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader("Accept") String accept, @Nullable @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
 
 	/**
 	 * Read information about an individual VNF package.
@@ -66,7 +67,7 @@ public interface VnfPackageSol003 {
 	 *
 	 */
 	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") @Nullable String accept, @Nullable @RequestHeader(value = "Range", required = false) RangeHeader range);
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @RequestHeader("Accept") @Nullable String accept, @Nullable @RequestHeader(value = "Range", required = false) String range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.
