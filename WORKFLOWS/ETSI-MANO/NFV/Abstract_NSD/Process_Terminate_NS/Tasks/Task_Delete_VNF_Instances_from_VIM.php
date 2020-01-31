@@ -12,7 +12,7 @@ function list_args()
 // Execute WF via MSA API
 $i=0;
 if(!isset($context['vnfPack_list'])) {
-    task_exit(ENDED, "No VNF to stop.");
+    task_exit(ENDED, "Skip task: VNF references packages list is empty.");
 }
 $vnfPkg_list = $context['vnfPack_list'];
 

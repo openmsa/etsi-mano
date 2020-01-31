@@ -38,6 +38,8 @@
         <value displayValue="Juniper">juniper</value>
         <value displayValue="Cirros">cirros</value>
         <value displayValue="CW-AIO">cw-aio</value>
+        <value displayValue="centOS7_left">centOS7_left</value>
+        <value displayValue="centOS7_right">centOS7_right</value>
       </values>
       <sections>
         <section>Onboarding VNF</section>

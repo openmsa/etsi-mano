@@ -19,7 +19,7 @@ $url = get_url_from_device($context['vnfvo_device']);
 $nsPkgManagement = new NsdSol005($url);
 $nsPkgInfo = $nsPkgManagement->nsDescriptorsNsdInfoIdGet($nsPkgId);
 
-$vnfPkgIds = $nsPkgInfo['userDefinedData']['vnfPkgIds'];
+$vnfPkgIds = $nsPkgInfo['vnfPkgIds'];
 
 $i=0;
 foreach ($nsPkgInfo['vnfPkgIds'] as $vnfPkgId) {

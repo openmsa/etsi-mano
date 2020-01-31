@@ -26,7 +26,6 @@
         <sdType manId="17010303" modId="17010305"/>
       </sdTypes>
     </variable>
-    <variable displayName="VNF Package IDs" displayOrder="1" maxLength="100" name="params.vnfPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
     <variable displayName="NSD Package IDs" displayOrder="2" maxLength="100" name="params.nsdPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
     <variable displayName="Vnfpkgid" displayOrder="3" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
       <sections>
@@ -351,5 +350,6 @@
 			<displayName>Synchronization</displayName>
 		</task>
 	</process>
+
 
 </ObjectDefinition>

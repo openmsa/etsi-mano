@@ -41,28 +41,35 @@
         <section>Handle Alarm</section>
       </sections>
     </variable>
-    <variable displayName="Vnfm Service Instance Ref" displayOrder="14" maxLength="100" name="params.vnfm_service_instance_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Rowlog" displayOrder="20" maxLength="100" name="params.rowlog" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
       <sections>
-        <section>VNF Scale-out</section>
+        <section>Handle Alarm</section>
+      </sections>
+    </variable>
+    <variable displayName="Rawlog" displayOrder="26" maxLength="100" name="params.rawlog" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Handle Alarm</section>
+      </sections>
+    </variable>
+    <variable displayName="Nfvo Device" displayOrder="27" editable="false" maxLength="100" name="params.nfvo_device" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device" visible="false">
+      <sections>
+        <section>Get VNFs to Live-Migrate </section>
+      </sections>
+    </variable>
+    <variable displayName="Deviceid" displayOrder="37" editable="false" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device" visible="false">
+      <sections>
+        <section>Synchronize NFVO and VIM</section>
+      </sections>
+    </variable>
+    <variable displayName="Vnfm Service Instance Ref" displayOrder="38" maxLength="100" name="params.vnfm_service_instance_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>VNF Auto-Healing</section>
       </sections>
     </variable>
   </variables>  <example>    <content>
       <?php?>
     </content>  </example>
-  <process name="Process/ETSI-MANO/NFV/Alarm/Process_Initial">
-    <visibility>5</visibility>
-    <displayName>Initial</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <compensation/>
-    <allowSchedule>false</allowSchedule>
-    <type>CREATE</type>
   
-  <task name="Task_Configure.php">
-      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Initial/Tasks/</processPath>
-      <displayName>Handle Alarm</displayName>
-    </task>
-  </process>
 <process name="Process/ETSI-MANO/NFV/Alarm/Process_Move_to_trash">
     <visibility>5</visibility>
     <displayName>Move to trash</displayName>
@@ -110,6 +117,150 @@
     <task name="Task_VNF_Auto-Healing.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Heal/Tasks/</processPath>
       <displayName>VNF Auto-Healing</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Auto-Live-Migration">
+    <visibility>5</visibility>
+    <displayName>Auto-Live-Migration</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+  
+    
+    
+  
+    
+    
+    
+    
+  <task name="Task_Synchronize_NFVO_and_VIM.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Live-Migration/Tasks/</processPath>
+      <displayName>Synchronize NFVO and VIM</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/NFV/Common/Tasks/Task_Synchronize_to_VIM_tenant.php">
+      <processPath/>
+      <displayName>Sync VIM services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/OPENSTACK/Tasks/REST/Keystone/Task_openstack_project_scoped_token_get.php">
+      <processPath/>
+      <displayName>Get VIM authentification token</displayName>
+    </task>
+    <task name="Task_Get_VNFs_to_Live-Migrate_.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Live-Migration/Tasks/</processPath>
+      <displayName>Get VNFs to Live-Migrate</displayName>
+    </task>
+    <task name="Task_Get_new_destination_hypervisor.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Live-Migration/Tasks/</processPath>
+      <displayName>Get new destination hypervisor</displayName>
+    </task>
+    <task name="Task_VNF_Live-Migration.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Live-Migration/Tasks/</processPath>
+      <displayName>VNF Live-Migration</displayName>
+    </task>
+  </process>
+
+
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_AutoLiveMigration">
+    <visibility>5</visibility>
+    <displayName>AutoLiveMigration</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+  
+    
+  
+    
+    
+    
+  
+    
+    
+    
+  <task name="Task_VIM_Sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_AutoLiveMigration/Tasks/</processPath>
+      <displayName>VIM Sync</displayName>
+    </task>
+    <task name="Task_Inventory_sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_AutoLiveMigration/Tasks/</processPath>
+      <displayName>Inventory_sync</displayName>
+    </task>
+    <task name="Task_TOKEN.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_AutoLiveMigration/Tasks/</processPath>
+      <displayName>TOKEN</displayName>
+    </task>
+    <task name="Task_Find_current_hypervisor.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_AutoLiveMigration/Tasks/</processPath>
+      <displayName>Find current hypervisor</displayName>
+    </task>
+    <task name="Task_Migrate.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_AutoLiveMigration/Tasks/</processPath>
+      <displayName>Migrate</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Auto_evacuate">
+    <visibility>5</visibility>
+    <displayName>Auto_evacuate</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+    
+    
+    
+    
+  <task name="Task_VIM_sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto_evacuate/Tasks/</processPath>
+      <displayName>VIM sync</displayName>
+    </task>
+    <task name="Task_Inventory_sync.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto_evacuate/Tasks/</processPath>
+      <displayName>Inventory sync</displayName>
+    </task>
+    <task name="Task_Token.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto_evacuate/Tasks/</processPath>
+      <displayName>Token</displayName>
+    </task>
+    <task name="Task_Find_VNF_on_Hypervisor.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto_evacuate/Tasks/</processPath>
+      <displayName>Find VNF on Hypervisor</displayName>
+    </task>
+    <task name="Task_Evacuate.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto_evacuate/Tasks/</processPath>
+      <displayName>Evacuate</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scale_in">
+    <visibility>5</visibility>
+    <displayName>Auto-Scale in</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="Task_VNF_scale-in.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Auto-Scale_in/Tasks/</processPath>
+      <displayName>VNF scale-in</displayName>
+    </task>
+  </process>
+<process name="Process/ETSI-MANO/NFV/Alarm/Process_Initial_original">
+    <visibility>5</visibility>
+    <displayName>Initial</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+    <task name="Task_Handle_Alarm.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Alarm/Process_Initial_original/Tasks/</processPath>
+      <displayName>Handle Alarm</displayName>
     </task>
   </process>
 </ObjectDefinition>

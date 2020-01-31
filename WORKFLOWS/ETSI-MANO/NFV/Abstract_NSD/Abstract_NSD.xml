@@ -47,6 +47,11 @@
         <section>Get NSD from NS Catalog (NVFO)</section>
       </sections>
     </variable>
+    <variable displayName="Service Instance Ref" displayOrder="8" maxLength="100" name="params.service_instance_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Task Scale Out</section>
+      </sections>
+    </variable>
   </variables>  <example>    <content/>  </example>
   <process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Instantiate_NSD">
     <visibility>5</visibility>
@@ -74,6 +79,20 @@
     
     
   
+    
+    
+  
+    
+    
+  
+    
+    
+    
+  
+    
+    
+  
+    
     
     
   <task name="Task_Get_NSD_ID_from_NFVO_Catalogs.php">
@@ -145,4 +164,17 @@
     </task>
   </process>
 
+<process name="Process/ETSI-MANO/NFV/Abstract_NSD/Process_Normalise">
+    <visibility>5</visibility>
+    <displayName>Normalise</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <compensation/>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="Task_Normalize.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/Abstract_NSD/Process_Normalise/Tasks/</processPath>
+      <displayName>Normalize</displayName>
+    </task>
+  </process>
 </ObjectDefinition>

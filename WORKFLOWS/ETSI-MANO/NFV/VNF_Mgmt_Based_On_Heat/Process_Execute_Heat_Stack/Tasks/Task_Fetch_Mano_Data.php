@@ -65,6 +65,10 @@ $context['monitoring_profile_ref'] = "";
 if (isset($vnfPkg['userDefinedData']['monitoring_profile_ref'])) {
 	$context['monitoring_profile_ref'] = $vnfPkg['userDefinedData']['monitoring_profile_ref'];
 }
+$context['location'] = "";
+if (isset($vnfPkg['userDefinedData']['location'])) {
+	$context['location'] = $vnfPkg['userDefinedData']['location'];
+}
 
 //$context['simulator_image_id'] = $vnfPkg['userDefinedData']['heat']['parameters']['simulator_image_id']['default'];
 

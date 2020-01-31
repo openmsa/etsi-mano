@@ -11,7 +11,7 @@ function list_args()
 }
 $id = $context['vnfPkgId'];
 $url = get_url_from_device($context['device_id']);
-$vnfPkgApi = new VnfPkgSol005($url); 
+$vnfPkgApi = new VnfPkgSol005($url);
 try {
 	$vnfPkgApi->vnfPackagesVnfPkgIdDelete($id);
 } catch (ManoException $e) {
@@ -22,4 +22,3 @@ unset($context['vnfPkgId']);
 
 task_exit(ENDED, "VNF Package $id deleted.");
 
-?>

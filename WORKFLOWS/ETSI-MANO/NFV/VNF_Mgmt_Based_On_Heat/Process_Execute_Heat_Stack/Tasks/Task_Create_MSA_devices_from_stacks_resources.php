@@ -24,9 +24,11 @@ foreach ($resources as &$resource) {
 		
 		logToFile(debug_dump($response, "RESPONSE ============++++++++++++>:\n"));
 		$res = json_decode($response, 1);
-		$nId = $res['wo_newparams']['port']['network_id'];
-		//$context['networks_id'][0]['network'] = $nId;
-		$context['networks_id'][]['network'] = $nId;
+		if (isset($res['wo_newparams']['port']['network_id'])) {
+			$nId = $res['wo_newparams']['port']['network_id'];
+			//$context['networks_id'][0]['network'] = $nId;
+			$context['networks_id'][]['network'] = $nId;
+		}
 	}	
 	if ($resource['resource_type'] == "OS::Nova::Server") {
 		
@@ -80,18 +82,32 @@ foreach ($resources as &$resource) {
 				$stacks_endpoint = $endpoint["publicURL"];
 			}
 		}
-
+		$device_ip_address = "";
 		$isFloatingIpFind = false;
-		$floatingData = json_decode(get_floating_ip_address_and_network_from_id($context['token_id'], $stacks_endpoint, $context['floating_ip_id']), 1);
-		logToFile(print_r($floatingData, true));
-		$device_ip_address = $floatingData['wo_newparams']['floating_ip_address'];
-		$context['floating_network_id'] = $floatingData['wo_newparams']['floating_ip_network'];
-		//logToFile("Floating IP is ::::::::: ----------------------> : " . $device_ip_address . "\n");		
+		if (isset($context['floating_ip_id']) && !empty($context['floating_ip_id'])) {
+			$floatingData = json_decode(get_floating_ip_address_and_network_from_id($context['token_id'], $stacks_endpoint, $context['floating_ip_id']), 1);
+			logToFile(print_r($floatingData, true));
+			$device_ip_address = $floatingData['wo_newparams']['floating_ip_address'];
+			$context['floating_network_id'] = $floatingData['wo_newparams']['floating_ip_network'];
+			//logToFile("Floating IP is ::::::::: ----------------------> : " . $device_ip_address . "\n");
+		  }	
+			if (empty($device_ip_address)) {
+				logToFile(debug_dump($response_body['server']['addresses'], "SLE_DEBUG_SERVER_ADDRESSES ***************************"));
+				foreach ($response_body['server']['addresses'] as &$subnet) {
+					// TODO: REMOVE AFTER TM POC
+					logToFile(debug_dump($subnet[0]['addr'], "SLE_DEBUG_SUBNETDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"));
+					if (strpos($subnet[0]['addr'], "10.134.160.") !== false) {
+						$device_ip_address = $subnet[0]['addr'];
+						break;
+					}
+				} 
+			}
 		if (empty($device_ip_address)) {
 			echo "Missing device management IP address (Floating IP): MSA device creation FAILED.";
 			exit;
 		}	
-
+	
+		logToFile("SLE_DEBUG: ________________________+++++++++++++ " .  $device_ip_address . "\n"); 
 		$device_external_reference = "";
 		if (array_key_exists('device_external_reference', $context)) {
 			$device_external_reference = $context['device_external_reference'];
