@@ -17,10 +17,10 @@ public class SpringUtil {
 		final List<HttpRange> ranges = HttpRange.parseRanges(oRange.orElse("bytes=0-"));
 		BodyBuilder bodyBuilder = ResponseEntity.status(oRange.isPresent() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK);
 		if (oRange.isPresent()) {
+			bodyBuilder = bodyBuilder.contentType(MediaType.APPLICATION_OCTET_STREAM);
+		} else {
 			final String mime = MimeType.findMatch(bytes);
 			bodyBuilder = bodyBuilder.header("Content-Type", mime);
-		} else {
-			bodyBuilder = bodyBuilder.contentType(MediaType.APPLICATION_OCTET_STREAM);
 		}
 		final ByteArrayResource resource = new ByteArrayResource(bytes);
 		final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
