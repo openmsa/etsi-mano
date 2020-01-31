@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -34,7 +34,6 @@ import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.utils.RangeHeader;
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = { VnfManagement.class })
@@ -114,12 +113,13 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", null);
+		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", null);
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
-		final InputStreamResource isr = (InputStreamResource) res.getBody();
-
-		assertEquals(4977, isr.contentLength());
+		final List<ResourceRegion> isr = res.getBody();
+		assertEquals(1, isr.size());
+		final ResourceRegion r1 = isr.get(0);
+		assertEquals(4977, r1.getCount());
 	}
 
 	@Test
@@ -127,14 +127,15 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final RangeHeader rangeHeader = RangeHeader.fromValue("Range: bytes=200-1000");
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", rangeHeader);
+		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", "bytes=200-1000");
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
-		final InputStreamResource isr = (InputStreamResource) res.getBody();
+		final List<ResourceRegion> isr = res.getBody();
 
-		assertEquals(800, isr.contentLength());
+		assertEquals(1, isr.size());
+		final ResourceRegion r1 = isr.get(0);
+		assertEquals(801, r1.getCount());
 	}
 
 	@Test
@@ -142,14 +143,15 @@ public class VnfManagementTest {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
-		final RangeHeader rangeHeader = RangeHeader.fromValue("Range: bytes=200-");
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", rangeHeader);
+		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", "bytes=200-");
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
-		final InputStreamResource isr = (InputStreamResource) res.getBody();
+		final List<ResourceRegion> isr = res.getBody();
 
-		assertEquals(4777, isr.contentLength());
+		assertEquals(1, isr.size());
+		final ResourceRegion r1 = isr.get(0);
+		assertEquals(4777, r1.getCount());
 	}
 
 	@Test
@@ -191,7 +193,7 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", null);
+		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", null);
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
 	}
@@ -199,28 +201,31 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdPackageContentGetRangeOk() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, Long.decode("1000"))).thenReturn(value);
+		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", RangeHeader.fromValue("Range: bytes=200-1000"));
+		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "bytes=200-1000");
+		assertEquals(1, res.getBody().size());
 		assertTrue(res.getStatusCode().is2xxSuccessful());
-		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
-		final InputStreamResource isr = (InputStreamResource) res.getBody();
+		assertEquals("application/octet-stream", res.getHeaders().get("Content-Type").get(0));
+		final List<ResourceRegion> isr = res.getBody();
 		// This is the size of the returned object from getBinary.
-		assertEquals(3606, isr.contentLength());
+		final ResourceRegion r1 = isr.get(0);
+		assertEquals(801, r1.getCount());
 	}
 
 	@Test
 	void testvnfPackagesVnfPkgIdPackageContentGetRangePartial() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("aaa", "vnfd", 200, null)).thenReturn(value);
-
+		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
-		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", RangeHeader.fromValue("Range: bytes=200-"));
+		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "bytes=200-");
+		assertEquals(1, res.getBody().size());
 		assertTrue(res.getStatusCode().is2xxSuccessful());
-		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
-		final InputStreamResource isr = (InputStreamResource) res.getBody();
+		assertEquals("application/octet-stream", res.getHeaders().get("Content-Type").get(0));
+		final List<ResourceRegion> isr = res.getBody();
 		// This is the size of the returned object from getBinary.
-		assertEquals(3606, isr.contentLength());
+		final ResourceRegion r1 = isr.get(0);
+		assertEquals(3406, r1.getCount());
 	}
 }
