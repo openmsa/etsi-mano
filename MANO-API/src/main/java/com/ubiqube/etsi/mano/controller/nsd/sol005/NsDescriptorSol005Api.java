@@ -8,8 +8,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -239,7 +241,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
 		nsdDescriptor.setUserDefinedData(userDefinedData);
 		nsdDescriptor.setNsdName((String) userDefinedData.get("name"));
-		final List<String> vnfPkgIds = (List<String>) userDefinedData.get("vnfPkgIds");
+		final List<String> vnfPkgIds = Optional.ofNullable((List<String>) userDefinedData.get("vnfPkgIds")).orElse(new ArrayList<String>());
 		// Verify if VNF Package exists.
 		vnfPkgIds.stream().forEach(vnfPackageRepository::get);
 		nsdDescriptor.setVnfPkgIds(vnfPkgIds);
