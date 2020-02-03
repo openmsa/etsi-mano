@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,8 +72,8 @@ public class LowMsa implements Low {
 
 	@Override
 	public void delete(final String _path) {
-		final RepositoryElement repositoryElement = repositoryService.getElement(_path);
-		repositoryService.deleteRepositoryElement(repositoryElement, NCROOT);
+		final Optional<RepositoryElement> repositoryElement = Optional.ofNullable(repositoryService.getElement(_path));
+		repositoryElement.ifPresent(x -> repositoryService.deleteRepositoryElement(x, NCROOT));
 	}
 
 	@Override
