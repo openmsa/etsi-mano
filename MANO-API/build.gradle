@@ -2,7 +2,7 @@ plugins {
 	id 'war'
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'com.peterabeles.gversion' version '1.6.2'
+	id 'com.gorylenko.gradle-git-properties' version '2.2.0'
 }
 
 
@@ -38,21 +38,16 @@ task integrationTests(type: Test) {
 	outputs.upToDateWhen { false }
 }
 
-gversion {
-	srcDir       = 'src/main/java/'
-	classPackage = 'com.ubiqube.etsi.mano.config'
-	className    = "Version"
-	dateFormat   = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-	timeZone     = 'UTC'
-	debug        = false
-	language     = 'java'
-	explicitType = true
+gitProperties {
+	gitPropertiesName = 'git.properties'
+	dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+	dateFormatTimeZone = 'UTC'
 }
 
 group = 'com.ubiqube'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-project.compileJava.dependsOn(createVersionFile)
+project.compileJava.dependsOn(generateGitProperties)
 
 dependencies {
 	testImplementation('org.junit.jupiter:junit-jupiter:5.6.0')
@@ -75,6 +70,7 @@ dependencies {
 	compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
 	// https://github.com/vromero/activemq-artemis-docker
 	implementation 'org.springframework.boot:spring-boot-starter-artemis'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.h2database:h2'
 
