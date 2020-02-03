@@ -2,6 +2,7 @@ plugins {
 	id 'war'
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'com.peterabeles.gversion' version '1.6.2'
 }
 
 
@@ -37,10 +38,21 @@ task integrationTests(type: Test) {
 	outputs.upToDateWhen { false }
 }
 
+gversion {
+	srcDir       = 'src/main/java/'
+	classPackage = 'com.ubiqube.etsi.mano.config'
+	className    = "Version"
+	dateFormat   = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+	timeZone     = 'UTC'
+	debug        = false
+	language     = 'java'
+	explicitType = true
+}
+
 group = 'com.ubiqube'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-
+project.compileJava.dependsOn(createVersionFile)
 
 dependencies {
 	testImplementation('org.junit.jupiter:junit-jupiter:5.6.0')
