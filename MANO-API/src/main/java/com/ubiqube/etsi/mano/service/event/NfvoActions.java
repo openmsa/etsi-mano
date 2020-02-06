@@ -11,15 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
@@ -60,7 +60,7 @@ public class NfvoActions {
 
 	public void nsTerminate(final String nsInstanceId) {
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
-		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final String nsdId = nsInstance.getNsdId();
 		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
@@ -82,7 +82,7 @@ public class NfvoActions {
 			return;
 		}
 		// Release the NS.
-		final String processId = msaExecutor.onNsInstanceTerminate(nsdInfo.getUserDefinedData());
+		final String processId = msaExecutor.onNsInstanceTerminate(nsInstance.getProcessId(), nsdInfo.getUserDefinedData());
 		msaExecutor.waitForCompletion(processId, 5 * 60);
 
 		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
@@ -104,7 +104,7 @@ public class NfvoActions {
 	}
 
 	public void nsInstantiate(final String nsInstanceId) {
-		final NsInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstance.getNsdId();
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
 
@@ -113,7 +113,7 @@ public class NfvoActions {
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
 		LOG.info("Creating a MSA Job: {}", processId);
-		// Save Process Id with lcm
+		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
 		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
 		LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
 		if (status != LcmOperationStateType.COMPLETED) {
@@ -127,15 +127,15 @@ public class NfvoActions {
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfPkgIds) {
-			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkgId().equals(vnfId)).findFirst().orElse(null);
+			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
 				final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPkgInfo, "", "Sub-instance " + nsInstanceId);
 				nsVnfInstance = VnfInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, "vimId?");
-				nsInstance.addVnfInstanceItem(nsVnfInstance);
+				nsInstance.getVnfInstance().add(nsVnfInstance);
 				nsInstanceRepository.save(nsInstance);
 			}
-			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId(), vnfId);
+			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId().toString(), vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.
@@ -167,7 +167,7 @@ public class NfvoActions {
 			if (ret.isEmpty()) {
 				break;
 			}
-			sleepSeconds(5 * 60);
+			sleepSeconds(1 * 60);
 		}
 	}
 

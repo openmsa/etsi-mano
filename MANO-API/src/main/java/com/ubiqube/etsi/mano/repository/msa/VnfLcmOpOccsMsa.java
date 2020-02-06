@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgInstance;
@@ -71,12 +71,12 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 		save(vnfLcmOpOcc);
 
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, VnfPkgIndex.class);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance instance = new VnfPkgInstance(vnfInstanceId);
 		final VnfPkgOperation vnfPackageOperation = new VnfPkgOperation(vnfLcmOpOcc.getId());
 		instance.addOperation(vnfPackageOperation);
 		vnfPkgIndex.addVnfPkgInstance(instance);
-		vnfPackageMsa.storeObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, vnfPkgIndex);
+		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
 		return vnfLcmOpOcc;
 	}
 
@@ -93,11 +93,11 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 		@NotNull
 		final String vnfInstanceId = lcmOpOccs.getVnfInstanceId();
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, VnfPkgIndex.class);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance indexInstance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 		final VnfPkgOperation operation = indexInstance.getOperation(id);
 		operation.setProcessId(processId);
-		vnfPackageMsa.storeObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, vnfPkgIndex);
+		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
 	}
 
 }

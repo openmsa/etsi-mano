@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
@@ -48,11 +48,11 @@ public class VnfmActions {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		// Maybe e need additional parameters to say STARTING / PROCESSING ...
 		final VnfLcmOpOcc lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
-		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
 		// Send Grant.
 		// Send processing notification.
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
-		final String vnfPkgId = vnfInstance.getVnfPkgId();
+		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
 		if (null == userData.get("vimId")) {

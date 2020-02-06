@@ -8,6 +8,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -15,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
@@ -32,6 +33,8 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Vim;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  * NFVO+VNFM & VNFM Implementation. TODO: Make terminate Async and this will be
@@ -51,24 +54,31 @@ public class VnfInstanceLcm {
 	private final Vim msaExecutor;
 	private final NsLcmOpOccsRepository lcmOpOccsMsa;
 	private final EventManager eventManager;
+	private final MapperFacade mapper;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final Vim _msaExecutor, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final Vim _msaExecutor, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
 		msaExecutor = _msaExecutor;
 		lcmOpOccsMsa = _lcmOpOccsRepository;
 		eventManager = _eventManager;
+		mapper = _mapper;
 	}
 
-	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
+	public List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
 		final String filter = queryParameters.get("filter");
 		final List<VnfInstance> result = vnfInstancesRepository.query(filter);
-		result.stream().forEach(x -> x.setLinks(links.getLinks(x.getId())));
-		return result;
+		return result.stream()
+				.map(x -> {
+					final com.ubiqube.etsi.mano.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
+					v.setLinks(links.getLinks(x.getId().toString()));
+					return v;
+				})
+				.collect(Collectors.toList());
 	}
 
-	public VnfInstance post(final CreateVnfRequest createVnfRequest) {
+	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		ensureIsOnboarded(vnfPkgInfo);
@@ -77,15 +87,15 @@ public class VnfInstanceLcm {
 
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
-		return vnfInstance;
+		return mapper.map(vnfInstance, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
 	}
 
 	public void delete(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
-		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkgId())) {
-			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkgId());
+		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId().toString())) {
+			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId().toString());
 			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
@@ -97,12 +107,10 @@ public class VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
-		final String vnfPkgId = vnfInstance.getVnfPkgId();
+		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
-
-		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 	}
 
 	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
@@ -114,7 +122,7 @@ public class VnfInstanceLcm {
 		ensureInstantiated(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
 
-		final String vnfPkgId = vnfInstance.getVnfPkgId();
+		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);

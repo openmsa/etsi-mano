@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -20,7 +20,7 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import ma.glasnost.orika.MapperFacade;
 
 @Service
-public class VnfInstanceDb extends AbstractJpa<VnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance> implements VnfInstancesRepository {
+public class VnfInstanceDb extends AbstractJpa<VnfInstance, VnfInstance> implements VnfInstancesRepository {
 
 	private final VnfInstanceJpa repository;
 

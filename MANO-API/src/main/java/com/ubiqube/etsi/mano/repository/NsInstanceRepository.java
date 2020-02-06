@@ -1,10 +1,10 @@
 package com.ubiqube.etsi.mano.repository;
 
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 
-public interface NsInstanceRepository extends CrudRepository<NsInstance> {
+public interface NsInstanceRepository extends CrudRepository<NsdInstance> {
 
-	void changeNsdUpdateState(NsInstance nsInstance, InstantiationStateEnum notInstantiated);
+	void changeNsdUpdateState(NsdInstance nsInstance, InstantiationStateEnum notInstantiated);
 
 }

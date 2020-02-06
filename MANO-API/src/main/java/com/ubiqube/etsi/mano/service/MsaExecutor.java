@@ -21,7 +21,7 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
  */
 @Service
 public class MsaExecutor implements Vim {
-	private static final String TMA129 = "TMA129";
+	private static final String TMA129 = "UBI195";
 
 	private static final String CUSTOMER_ID = "customerId";
 
@@ -75,7 +75,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String onNsInstanceTerminate(final Map<String, Object> userData) {
+	public String onNsInstanceTerminate(final String processId, final Map<String, Object> userData) {
 		final String msaServiceId = (String) userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
 		final String customerId = (String) userData.get(CUSTOMER_ID);
