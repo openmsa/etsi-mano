@@ -40,9 +40,7 @@ public class ToscaApi {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ParseException(e);
 		}
-		nodes.stream().forEach(x -> {
-			applyAttributes(obj, x.getAttributes());
-		});
+		nodes.stream().forEach(x -> applyAttributes(obj, x.getAttributes()));
 		System.out.println("" + nodes);
 		return new ArrayList<>();
 	}
