@@ -4,7 +4,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ubiqube.parser.tosca.deserializer.OperationDeserializer;
 
+@JsonDeserialize(using = OperationDeserializer.class)
 public class OperationDefinition {
 
 	private String description;
