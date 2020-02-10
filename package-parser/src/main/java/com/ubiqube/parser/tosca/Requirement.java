@@ -6,6 +6,7 @@ public class Requirement {
 	private String description;
 	private String capability;
 	private String node;
+	// XXX: Could be an object? See tosca_elk.csar
 	private String relationship;
 	private List<String> occurrences;
 
