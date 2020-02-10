@@ -47,7 +47,9 @@ public class ToscaApi {
 
 	private <T> void applyAttributes(final T obj, final Map<String, ValueObject> attributes) {
 		BeanInfo beanInfo;
-
+		if (null == attributes) {
+			return;
+		}
 		try {
 			beanInfo = Introspector.getBeanInfo(obj.getClass());
 		} catch (final IntrospectionException e) {
@@ -55,7 +57,7 @@ public class ToscaApi {
 		}
 		final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
 		attributes.forEach((x, y) -> {
-
+			// XXX: TODO
 			y.getType();
 		});
 	}
