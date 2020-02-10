@@ -1,14 +1,17 @@
 package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.ubiqube.parser.tosca.OperationDefinition;
 
@@ -28,15 +31,19 @@ public class OperationDeserializer extends StdDeserializer<OperationDefinition> 
 
 	@Override
 	public OperationDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		final Object value = p.getCodec().readTree(p);
+		final TreeNode value = p.getCodec().readTree(p);
 		LOG.info("value {}<=>{}", value.getClass(), value);
 		if (value instanceof TextNode) {
 			final OperationDefinition od = new OperationDefinition();
 			od.setImplementation(value);
 			return od;
-		} else {
-			return p.getCodec().treeToValue(p.getCodec().readTree(p), OperationDefinition.class);
 		}
+		// XXX: Handle other values.
+		final OperationDefinition od = new OperationDefinition();
+		final ObjectNode tn = (ObjectNode) value;
+		Optional.ofNullable(tn.findValue("type")).ifPresent(x -> od.setType(x.asText()));
+		Optional.ofNullable(tn.findValue("description")).ifPresent(x -> od.setType(x.asText()));
+		return new OperationDefinition();
 	}
 
 }
