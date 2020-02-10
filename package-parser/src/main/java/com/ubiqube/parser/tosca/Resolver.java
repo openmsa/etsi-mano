@@ -12,13 +12,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class Resolver {
+public class Resolver implements IResolver {
 	private final File cacheDir = new File(".cache");
 
 	public Resolver() {
 		cacheDir.mkdir();
 	}
 
+	@Override
 	public String getContent(final String url) {
 		final String cacheFileName = getCacheName(url);
 		final File cacheFile = new File(cacheDir, cacheFileName);

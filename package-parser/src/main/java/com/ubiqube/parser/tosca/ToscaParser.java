@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 
@@ -11,15 +13,30 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.parser.tosca.csar.CsarParser;
 
 public class ToscaParser {
+	Pattern zipMatcher = Pattern.compile("\\.(zip|csar)$");
 
 	public ToscaContext parse(final String filename) {
 		final ObjectMapper mapper = getMapper();
+		CsarParser csar = null;
+		IResolver resolver;
+		if (isZip(filename)) {
+			csar = new CsarParser(filename);
+			resolver = csar.getResolver();
+		} else {
+			resolver = new Resolver();
+		}
 		try {
 			final ToscaRoot root = loadToscaBase();
-			final ToscaContext ctx = new ToscaContext(root);
-			final ToscaRoot root2 = mapper.readValue(new File(filename), ToscaRoot.class);
+			final ToscaContext ctx = new ToscaContext(root, resolver);
+			final ToscaRoot root2;
+			if (isZip(filename)) {
+				root2 = mapper.readValue(csar.getEntryDefinition(), ToscaRoot.class);
+			} else {
+				root2 = mapper.readValue(new File(filename), ToscaRoot.class);
+			}
 			ctx.addRoot(root2);
 			ctx.resolvImports();
 			ctx.resolvSymbols();
@@ -29,11 +46,11 @@ public class ToscaParser {
 		}
 	}
 
-	public ToscaContext parseContent(final String content) {
+	public ToscaContext parseContent(final String content, final IResolver resolver) {
 		final ObjectMapper mapper = getMapper();
 		try {
 			final ToscaRoot root = mapper.readValue(content, ToscaRoot.class);
-			final ToscaContext ctx = new ToscaContext(root);
+			final ToscaContext ctx = new ToscaContext(root, resolver);
 			ctx.resolvImports();
 			return ctx;
 		} catch (final IOException e) {
@@ -60,5 +77,10 @@ public class ToscaParser {
 		mapper.registerModule(module);
 
 		return mapper;
+	}
+
+	private boolean isZip(final String fileName) {
+		final Matcher res = zipMatcher.matcher(fileName);
+		return res.find();
 	}
 }

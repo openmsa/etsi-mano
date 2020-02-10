@@ -22,11 +22,11 @@ public class ToscaContext {
 	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
 	// Below goes internal Properties.
 	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
-	private final Resolver resolver = new Resolver();
+	private final IResolver resolver;
 
 	private Map<String, DataType> dataTypes = new HashMap<>();
 
-	public ToscaContext(final ToscaRoot root) {
+	public ToscaContext(final ToscaRoot root, final IResolver _resolver) {
 
 		artifacts = root.getArtifactTypes();
 		capabilities = root.getCapabilityTypes();
@@ -37,6 +37,7 @@ public class ToscaContext {
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
 		dataTypes = root.getData_types();
+		resolver = _resolver;
 	}
 
 	public void setImports(final Imports _imports) {
@@ -153,7 +154,7 @@ public class ToscaContext {
 			final Import value = entry2.getValue();
 			final String content = resolver.getContent(value.getUrl());
 			final ToscaParser main = new ToscaParser();
-			final ToscaContext context = main.parseContent(content);
+			final ToscaContext context = main.parseContent(content, resolver);
 			context.resolvImports();
 			LOG.debug("Before new CTX={}, current={}", context.nodeType.size(), nodeType.size());
 			mergeContext(context);
