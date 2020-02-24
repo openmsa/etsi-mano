@@ -4,15 +4,23 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.parser.tosca.ParseException;
 
 public class Size {
-	private final Pattern p = Pattern.compile("(?<size>[0-9]+)\\s*(?<unit>[a-zA-Z]+)");
+	private static final Logger LOG = LoggerFactory.getLogger(Size.class);
 	private final long size;
 	private final String unit;
 
 	public Size(final String value) {
+		LOG.debug("Size value: {}", value);
+		final Pattern p = Pattern.compile("(?<size>[0-9]+)\\s*(?<unit>[a-zA-Z]+)");
 		final Matcher m = p.matcher(value);
+		if (!m.find()) {
+			throw new ParseException("Size scalr: Unable to find a match for: " + value);
+		}
 		size = Long.parseLong(m.group("size"));
 		unit = m.group("unit");
 	}
