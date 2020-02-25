@@ -61,7 +61,8 @@ public class VnfmActions {
 
 		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId, userData);
 		LOG.info("New MSA VNF Create job: {}", processId);
-		vnfLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		vnfInstance.setProcessId(processId);
+		vnfInstancesRepository.save(vnfInstance);
 		final LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, status);
 
@@ -72,7 +73,6 @@ public class VnfmActions {
 			instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);
 			vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
-
 		} else {
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);

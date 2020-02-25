@@ -22,7 +22,7 @@ public class NotificationsController {
 	@JmsListener(destination = "system.notifications")
 	public void onEvent(final EventMessage ev) {
 		LOG.info("Receiving event: {}", ev);
-		switch (ev.notificationEvent) {
+		switch (ev.getNotificationEvent()) {
 		case VNF_PKG_ONBOARDING:
 			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageOnboardingNotification);
 			break;
@@ -30,7 +30,7 @@ public class NotificationsController {
 			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageChangeNotification);
 			break;
 		default:
-			LOG.error("Unable to handle event type {}", ev.notificationEvent);
+			LOG.error("Unable to handle event type {}", ev.getNotificationEvent());
 			break;
 		}
 	}

@@ -3,8 +3,8 @@ package com.ubiqube.etsi.mano.service.event.jms;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 public class EventMessage {
-	NotificationEvent notificationEvent;
-	String objectId;
+	private NotificationEvent notificationEvent;
+	private String objectId;
 
 	public EventMessage() {
 		// Nothing.
