@@ -115,7 +115,7 @@ public class MsaExecutor implements Vim {
 					}
 					return LcmOperationStateType.FAILED;
 				}
-				Thread.sleep(15 * 1000);
+				Thread.sleep(15 * 1000L);
 			} catch (NumberFormatException | InterruptedException e) {
 				throw new GenericException(e);
 			}
