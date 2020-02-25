@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.config;
 import java.util.Optional;
 
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthContributor;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,7 @@ import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.etsi.mano.service.ejb.RepositoryServiceEjb;
 
 @Component
-public class EjbHealthCheck implements HealthIndicator, HealthContributor {
+public class EjbHealthCheck implements HealthIndicator {
 	private static final String STATUS = "status";
 	private final RepositoryServiceEjb ejb;
 
