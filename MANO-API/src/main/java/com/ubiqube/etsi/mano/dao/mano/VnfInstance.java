@@ -8,10 +8,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -36,13 +36,14 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private InstantiationStateEnum instantiationState = null;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
-	@OneToMany
+	// @OneToMany // (fetch = FetchType.EAGER)
+	@Transient
 	private List<VimConnectionInformation> vimConnectionInfo = null;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> vnfConfigurableProperties = null;
 
 	@Field
@@ -57,7 +58,7 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfInstanceName = null;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private VnfPackage vnfPkg = null;
 
 	@Field
@@ -69,12 +70,12 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private NsdInstance nsInstance;
 
 	private String processId;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extensions = null;
 
 	@Override

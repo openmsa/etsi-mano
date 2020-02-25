@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
@@ -40,7 +39,8 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private String nsdId = null;
 
-	@OneToOne
+	// @OneToOne(fetch = FetchType.EAGER)
+	@Transient
 	private NsdPackage nsdInfo = null;
 
 	@Field
