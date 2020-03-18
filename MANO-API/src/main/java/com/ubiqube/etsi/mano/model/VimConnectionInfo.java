@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.model;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -34,13 +35,13 @@ public class VimConnectionInfo {
 	private String vimType = null;
 
 	@JsonProperty("interfaceInfo")
-	private KeyValuePairs interfaceInfo = null;
+	private Map<String, String> interfaceInfo = null;
 
 	@JsonProperty("accessInfo")
-	private KeyValuePairs accessInfo = null;
+	private Map<String, String> accessInfo = null;
 
 	@JsonProperty("extra")
-	private KeyValuePairs extra = null;
+	private Map<String, String> extra = null;
 
 	public VimConnectionInfo id(final String _id) {
 		this.id = _id;
@@ -113,7 +114,7 @@ public class VimConnectionInfo {
 		this.vimType = vimType;
 	}
 
-	public VimConnectionInfo interfaceInfo(final KeyValuePairs _interfaceInfo) {
+	public VimConnectionInfo interfaceInfo(final Map<String, String> _interfaceInfo) {
 		this.interfaceInfo = _interfaceInfo;
 		return this;
 	}
@@ -130,15 +131,15 @@ public class VimConnectionInfo {
 
 	@Valid
 
-	public KeyValuePairs getInterfaceInfo() {
+	public Map<String, String> getInterfaceInfo() {
 		return interfaceInfo;
 	}
 
-	public void setInterfaceInfo(final KeyValuePairs interfaceInfo) {
+	public void setInterfaceInfo(final Map<String, String> interfaceInfo) {
 		this.interfaceInfo = interfaceInfo;
 	}
 
-	public VimConnectionInfo accessInfo(final KeyValuePairs _accessInfo) {
+	public VimConnectionInfo accessInfo(final Map<String, String> _accessInfo) {
 		this.accessInfo = _accessInfo;
 		return this;
 	}
@@ -160,15 +161,15 @@ public class VimConnectionInfo {
 
 	@Valid
 
-	public KeyValuePairs getAccessInfo() {
+	public Map<String, String> getAccessInfo() {
 		return accessInfo;
 	}
 
-	public void setAccessInfo(final KeyValuePairs accessInfo) {
+	public void setAccessInfo(final Map<String, String> accessInfo) {
 		this.accessInfo = accessInfo;
 	}
 
-	public VimConnectionInfo extra(final KeyValuePairs _extra) {
+	public VimConnectionInfo extra(final Map<String, String> _extra) {
 		this.extra = _extra;
 		return this;
 	}
@@ -184,11 +185,11 @@ public class VimConnectionInfo {
 
 	@Valid
 
-	public KeyValuePairs getExtra() {
+	public Map<String, String> getExtra() {
 		return extra;
 	}
 
-	public void setExtra(final KeyValuePairs extra) {
+	public void setExtra(final Map<String, String> extra) {
 		this.extra = extra;
 	}
 
