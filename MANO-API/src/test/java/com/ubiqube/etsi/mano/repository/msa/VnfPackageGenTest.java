@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.repository.phys.LowPhys;
 import com.ubiqube.etsi.mano.repository.phys.VnfPackagePhys;
 import com.ubiqube.etsi.mano.service.Configuration;
-import com.ubiqube.etsi.mano.service.PropertiesConfiguration;
+import com.ubiqube.service.TestConfigurations;
 
 public class VnfPackageGenTest {
 
@@ -38,7 +38,7 @@ public class VnfPackageGenTest {
 	public VnfPackageGenTest() {
 		final JsonFilter jsonFilter = new JsonFilter(new JsonBeanUtil());
 		final ObjectMapper mapper = new ObjectMapper();
-		final Configuration conf = new PropertiesConfiguration();
+		final Configuration conf = new TestConfigurations();
 
 		final NamingStrategy namingStrategy = new DefaultNamingStrategy(conf);
 		vnfPackage = new VnfPackagePhys(mapper, jsonFilter, new LowPhys(), namingStrategy);
