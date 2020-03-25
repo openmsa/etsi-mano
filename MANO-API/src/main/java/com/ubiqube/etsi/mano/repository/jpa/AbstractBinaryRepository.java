@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.io.IOUtils;
+import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,7 +60,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
 		final InputStream os = contentManager.load(path, min, max);
 		try {
-			return IOUtils.toByteArray(os);
+			return StreamUtils.copyToByteArray(os);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -74,6 +74,18 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	@Override
+	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
+		contentManager.delete(path);
+	}
+
+	@Override
+	public void delete(@NotNull final String _id) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
+		contentManager.delete(path);
 	}
 
 	protected abstract Class<?> getFrontClass();

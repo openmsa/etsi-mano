@@ -70,6 +70,8 @@ public class SpelWriter {
 				return ((ListAttrNode) elem).getName();
 			}
 			return '.' + ((ListAttrNode) elem).getName();
+		} else if (elem instanceof AttrMapEntryNode) {
+			return '[' + ((AttrMapEntryNode) elem).getName() + ']';
 		} else {
 			throw new GenericException("Unknown Node instance: " + elem.getClass());
 		}

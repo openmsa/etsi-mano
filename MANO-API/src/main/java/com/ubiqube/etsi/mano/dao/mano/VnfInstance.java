@@ -1,22 +1,23 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 
@@ -35,14 +36,15 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private InstantiationStateEnum instantiationState = null;
 
-	@Transient
-	private KeyValuePairs metadata = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> metadata = null;
 
-	@OneToMany
+	// @OneToMany // (fetch = FetchType.EAGER)
+	@Transient
 	private List<VimConnectionInformation> vimConnectionInfo = null;
 
-	@Transient
-	private KeyValuePairs vnfConfigurableProperties = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> vnfConfigurableProperties = null;
 
 	@Field
 	private String vnfdId = null;
@@ -56,7 +58,7 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfInstanceName = null;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private VnfPackage vnfPkg = null;
 
 	@Field
@@ -68,11 +70,13 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private NsdInstance nsInstance;
 
-	@Transient
-	private KeyValuePairs extensions = null;
+	private String processId;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> extensions = null;
 
 	@Override
 	public UUID getId() {
@@ -167,11 +171,11 @@ public class VnfInstance implements BaseEntity {
 		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public KeyValuePairs getVnfConfigurableProperties() {
+	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
 	}
 
@@ -179,7 +183,7 @@ public class VnfInstance implements BaseEntity {
 		return vnfPkg;
 	}
 
-	public KeyValuePairs getExtensions() {
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
 
@@ -191,16 +195,24 @@ public class VnfInstance implements BaseEntity {
 		this.nsInstance = nsInstance;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
-	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public void setExtensions(final KeyValuePairs extensions) {
+	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
+	}
+
+	public String getProcessId() {
+		return processId;
+	}
+
+	public void setProcessId(final String processId) {
+		this.processId = processId;
 	}
 
 }

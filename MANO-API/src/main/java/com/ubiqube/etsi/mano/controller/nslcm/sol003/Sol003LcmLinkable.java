@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.controller.nslcm.sol003;
 
-import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.factory.LcmFactory;

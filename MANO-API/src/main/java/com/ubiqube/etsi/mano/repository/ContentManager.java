@@ -11,4 +11,6 @@ public interface ContentManager {
 
 	void mkdir(Path _path);
 
+	void delete(Path _path);
+
 }

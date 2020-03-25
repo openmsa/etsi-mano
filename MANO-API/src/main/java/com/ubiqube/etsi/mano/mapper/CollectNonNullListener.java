@@ -52,4 +52,24 @@ public class CollectNonNullListener implements BeanListener {
 		return attrs;
 	}
 
+	@Override
+	public void startMap(final String name) {
+		stack.push(new NamedAttrNode(name));
+	}
+
+	@Override
+	public void mapStartEntry(final String key) {
+		stack.push(new AttrMapEntryNode(key));
+	}
+
+	@Override
+	public void mapEndEntry(final String key) {
+		stack.pop();
+	}
+
+	@Override
+	public void endMap(final String name) {
+		stack.pop();
+	}
+
 }

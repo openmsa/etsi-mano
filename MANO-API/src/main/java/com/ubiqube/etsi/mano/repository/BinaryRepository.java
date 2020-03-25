@@ -15,4 +15,8 @@ public interface BinaryRepository {
 	byte[] getBinary(@NotNull String _id, @NotNull String _filename);
 
 	byte[] getBinary(@NotNull String _id, @NotNull String _filename, int min, Long max);
+
+	void delete(@NotNull String _id, @NotNull String _filename);
+
+	void delete(@NotNull String _id);
 }

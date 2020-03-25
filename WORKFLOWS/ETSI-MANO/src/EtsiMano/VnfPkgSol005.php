@@ -34,13 +34,13 @@ class VnfPkgSol005 extends BaseApi
 		$url_frag = self::BASE_URL . '/' . $_vnfPkgId;
 		return $this->doDelete($url_frag);
 	}
-	
-	public function vnfPackagesVnfPkgIdPackageContentPut($_vnfPkgId, $_content) {
-		$url_frag = self::BASE_URL . '/' . $_vnfPkgId. '/package_content';
+
+	public function vnfPackagesVnfPkgIdPackageContentPut($_vnfPkgId, $_content)
+	{
+		$url_frag = self::BASE_URL . '/' . $_vnfPkgId . '/package_content';
 		return $this->doPutMp($url_frag, $_content);
 	}
-	
-	
+
 	public function setOperationalState($_vnfPkgId, $_state)
 	{
 		$content = '{ "operationalState": "DISABLED" }';
@@ -48,5 +48,11 @@ class VnfPkgSol005 extends BaseApi
 			$content = '{ "operationalState": "ENABLED" }';
 		}
 		$this->vnfPackagesVnfPkgIdPatch($_vnfPkgId, $content);
+	}
+
+	public function exposeDocument($_documentType, $_id)
+	{
+		$url_frag = 'expose/' . urlencode($_documentType) . '/' . urlencode($_id);
+		return json_decode($this->doPost($url_frag, '{}'), 1);
 	}
 }

@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
-import com.google.common.io.ByteStreams;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
@@ -75,7 +75,7 @@ public class PackagingManager {
 	private static byte[] getUrlContent(final String uri) {
 		try {
 			final URL url = new URL(uri);
-			return ByteStreams.toByteArray((InputStream) url.getContent());
+			return StreamUtils.copyToByteArray((InputStream) url.getContent());
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

@@ -4,7 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,6 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
@@ -72,7 +73,7 @@ public class VnfInstanceTest {
 		vimConnectionInfo.add(new VimConnectionInformation());
 		vnfInstance.setVimConnectionInfo(vimConnectionInfo);
 		vnfInstance.setVnfProvider("provider");
-		final KeyValuePairs extensions = new KeyValuePairs();
+		final Map<String, String> extensions = new HashMap<>();
 		vnfInstance.setExtensions(extensions);
 
 		final VnfInstance o = mapper.map(vnfInstance, VnfInstance.class);

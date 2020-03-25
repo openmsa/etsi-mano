@@ -12,7 +12,6 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -23,7 +22,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
+//@Service
 public class QuartzEventManager implements EventManager {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(QuartzEventManager.class);

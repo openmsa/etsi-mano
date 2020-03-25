@@ -9,8 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringJoiner;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,6 +65,8 @@ public class SubscriptionFilterTest {
 	}
 
 	private String buildKey(final Deque<String> _stack) {
-		return StringUtils.join(_stack.descendingIterator(), ".");
+		final StringJoiner sj = new StringJoiner(".");
+		_stack.descendingIterator().forEachRemaining(sj::add);
+		return sj.toString();
 	}
 }

@@ -7,10 +7,11 @@ import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
@@ -43,7 +44,7 @@ public class VnfLcmOpOccs implements BaseEntity {
 	@Field
 	private Date startTime = null;
 
-	@OneToOne(optional = false)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private VnfInstance vnfInstance = null;
 
 	@Field

@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgInstance;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -27,12 +27,12 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 
 	@Override
 	String setId(final VnfInstance _entity) {
-		final String id = _entity.getId();
+		final String id = _entity.getId().toString();
 		if (null == id) {
-			_entity.setId(UUID.randomUUID().toString());
+			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId();
+		return _entity.getId().toString();
 	}
 
 	@Override
@@ -53,22 +53,22 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 	@Override
 	public VnfInstance save(final VnfInstance _entity) {
 		final VnfInstance vnfInstance = super.save(_entity);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, VnfPkgIndex.class);
-		vnfPkgIndex.addVnfPkgInstance(new VnfPkgInstance(vnfInstance.getId()));
-		vnfPackageRepository.storeObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, vnfPkgIndex);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
+		vnfPkgIndex.addVnfPkgInstance(new VnfPkgInstance(vnfInstance.getId().toString()));
+		vnfPackageRepository.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
 		return vnfInstance;
 	}
 
 	@Override
 	public void delete(final String _id) {
 		final VnfInstance vnfInstance = get(_id);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, VnfPkgIndex.class);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(_id);
 		// TODO We should remove lcm but this will lead to a circular dependency.
 		// instance.getOperations().values().stream().forEach(x ->
 		// lcmOpOccsMsa.delete(x.getId()));
 		vnfPkgIndex.remove(instance);
-		vnfPackageRepository.storeObject(vnfInstance.getVnfPkgId(), INDEXES_JSON, vnfPkgIndex);
+		vnfPackageRepository.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
 		super.delete(_id);
 	}
 

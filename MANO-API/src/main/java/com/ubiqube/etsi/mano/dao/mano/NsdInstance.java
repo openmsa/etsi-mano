@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
@@ -40,7 +39,8 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private String nsdId = null;
 
-	@OneToOne
+	// @OneToOne(fetch = FetchType.EAGER)
+	@Transient
 	private NsdPackage nsdInfo = null;
 
 	@Field
@@ -60,11 +60,16 @@ public class NsdInstance implements BaseEntity {
 
 	@OneToMany
 	private List<NsdInstance> nestedNsInstance = null;
+
 	@Enumerated(EnumType.STRING)
 	@Field
 	private InstantiationStateEnum nsState = null;
+
+	private String processId;
+
 	@Transient
 	private List<NsScaleInfo> nsScaleStatus = null;
+
 	@Transient
 	private List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
 
@@ -187,6 +192,14 @@ public class NsdInstance implements BaseEntity {
 
 	public void setAdditionalAffinityOrAntiAffinityRule(final List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule) {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
+	}
+
+	public String getProcessId() {
+		return processId;
+	}
+
+	public void setProcessId(final String processId) {
+		this.processId = processId;
 	}
 
 }

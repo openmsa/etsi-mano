@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.service.PropertiesConfiguration;
+import com.ubiqube.service.TestConfigurations;
 
 public class ConfigurationTest {
 
 	@Test
 	void testName() throws Exception {
-		final PropertiesConfiguration conf = new PropertiesConfiguration();
+		final TestConfigurations conf = new TestConfigurations();
 		conf.set("key", "value");
 		final String val = conf.build("key")
 				.notNull()

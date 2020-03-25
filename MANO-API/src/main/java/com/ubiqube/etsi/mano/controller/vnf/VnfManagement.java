@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.controller.vnf;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
@@ -30,8 +29,7 @@ import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
-import com.ubiqube.etsi.mano.utils.RangeHeader;
-import com.ubiqube.etsi.mano.utils.RangeHeader.FromToBean;
+import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 /**
  * This implementation cover VNFO + NFVM & VNFO only.
@@ -90,7 +88,7 @@ public class VnfManagement implements VnfPackageManagement {
 	 * @throws ServiceException
 	 */
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final RangeHeader rangeHeader) {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String rangeHeader) {
 		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 
 		final InputStream bis = new ByteArrayInputStream(content);
@@ -123,47 +121,17 @@ public class VnfManagement implements VnfPackageManagement {
 		final BodyBuilder bodyBuilder = ResponseEntity.ok();
 		handleMimeType(bodyBuilder, mime);
 		return bodyBuilder.body(resource);
-
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final RangeHeader _range) {
-		byte[] bytes;
-		BodyBuilder bodyBuilder;
-		if (_range != null) {
-			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd", _range.getFrom(), _range.getTo() == null ? null : Long.valueOf(_range.getTo()));
-			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-					.header("Content-Range", _range.getContentRange(bytes.length));
-		} else {
-			bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
-			bodyBuilder = ResponseEntity.status(HttpStatus.OK);
-		}
-		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
-		final String mime = MimeType.findMatch(bytes);
-		handleMimeType(bodyBuilder, mime);
-
-		return bodyBuilder.body(resource);
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
+		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
+		return SpringUtil.handleBytes(bytes, _range);
 	}
 
-	private static ResponseEntity<Resource> handleArtifact(final ZipInputStream zis, final RangeHeader rangeHeader) throws IOException {
+	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String _range) throws IOException {
 		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		final InputStreamResource resource;
-		BodyBuilder bodyBuilder;
-		if (rangeHeader != null) {
-			final FromToBean ft = rangeHeader.getValues(zcontent.length);
-			final byte[] finalContent = Arrays.copyOfRange(zcontent, ft.from, ft.to);
-			resource = new InputStreamResource(new ByteArrayInputStream(finalContent));
-
-			bodyBuilder = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT);
-			bodyBuilder.header("Content-Range", rangeHeader.getContentRange(finalContent.length));
-		} else {
-			bodyBuilder = ResponseEntity.ok();
-			resource = new InputStreamResource(new ByteArrayInputStream(zcontent));
-		}
-		final MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
-		return bodyBuilder
-				.contentType(contentType)
-				.body(resource);
+		return SpringUtil.handleBytes(zcontent, _range);
 	}
 
 	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NsdPkgInstance {
 	private String instanceId;
-	final List<NsdPkgOperation> operations = new ArrayList<>();
-	final List<String> VnfmOperations = new ArrayList<>();
+	private final List<NsdPkgOperation> operations = new ArrayList<>();
+	private final List<String> vnfmOperations = new ArrayList<>();
 
 	public NsdPkgInstance() {
 		// Nothing.
@@ -34,7 +34,7 @@ public class NsdPkgInstance {
 
 	@JsonProperty("VnfmOperations")
 	public List<String> getVnfmOperations() {
-		return VnfmOperations;
+		return vnfmOperations;
 	}
 
 }

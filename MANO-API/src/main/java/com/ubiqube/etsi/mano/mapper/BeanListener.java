@@ -16,4 +16,12 @@ public interface BeanListener {
 
 	void listElementEnd();
 
+	void startMap(String name);
+
+	void mapStartEntry(String key);
+
+	void mapEndEntry(String key);
+
+	void endMap(String name);
+
 }

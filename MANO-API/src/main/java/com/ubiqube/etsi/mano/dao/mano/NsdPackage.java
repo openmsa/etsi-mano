@@ -1,17 +1,17 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -68,8 +68,8 @@ public class NsdPackage implements BaseEntity {
 	private PackageUsageStateType nsdUsageState;
 
 	// @ElementCollection(fetch = FetchType.EAGER)
-	@Transient
-	private List<NsdUserDefinedData> userDefinedData;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<NsdUserDefinedData> userDefinedData;
 
 	@Override
 	public UUID getId() {
@@ -176,11 +176,11 @@ public class NsdPackage implements BaseEntity {
 		this.nsdUsageState = nsdUsageState;
 	}
 
-	public List<NsdUserDefinedData> getUserDefinedData() {
+	public Set<NsdUserDefinedData> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final List<NsdUserDefinedData> userDefinedData) {
+	public void setUserDefinedData(final Set<NsdUserDefinedData> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

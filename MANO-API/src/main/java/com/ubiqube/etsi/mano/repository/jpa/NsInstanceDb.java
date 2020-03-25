@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
@@ -21,20 +20,20 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import ma.glasnost.orika.MapperFacade;
 
 @Service
-public class NsInstanceDb extends AbstractJpa<NsInstance, NsdInstance> implements NsInstanceRepository {
+public class NsInstanceDb extends AbstractJpa<NsdInstance, NsdInstance> implements NsInstanceRepository {
 
 	public NsInstanceDb(final EntityManager em, final CrudRepository<NsdInstance, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(em, repository, mapper, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsInstance nsInstance, final InstantiationStateEnum notInstantiated) {
+	public void changeNsdUpdateState(final NsdInstance nsInstance, final InstantiationStateEnum notInstantiated) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	protected Class<NsInstance> getFrontClass() {
-		return NsInstance.class;
+	protected Class<NsdInstance> getFrontClass() {
+		return NsdInstance.class;
 	}
 
 	@Override

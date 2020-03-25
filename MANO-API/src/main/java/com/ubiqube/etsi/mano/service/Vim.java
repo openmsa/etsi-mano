@@ -12,7 +12,7 @@ public interface Vim {
 
 	String onNsInstantiate(String nsdId, Map<String, Object> userData);
 
-	String onNsInstanceTerminate(Map<String, Object> userData);
+	String onNsInstanceTerminate(String processId, Map<String, Object> userData);
 
 	LcmOperationStateType waitForCompletion(String processId, int seconds);
 

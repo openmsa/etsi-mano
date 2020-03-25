@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.ByteStreams;
 import com.ubiqube.api.entities.repository.RepositoryElement;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
@@ -28,8 +28,9 @@ import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
 
 /**
- * A Generic implementation of classical CRUD action around a repository.
- *
+ * A Generic implementation of classical CRUD action around a repository. XXX:
+ * This class should use lowDriver.
+ * 
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  * @param <T>
@@ -150,7 +151,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		path.append('/').append(_filename);
 
 		try {
-			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", ByteStreams.toByteArray(_stream), "ncroot");
+			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", StreamUtils.copyToByteArray(_stream), "ncroot");
 		} catch (ServiceException | IOException e) {
 			throw new GenericException(e);
 		}
@@ -197,6 +198,11 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 			throw new NotAcceptableException("Could not retreive a min > lenght of file.");
 		}
 		return Arrays.copyOfRange(repositoryContent, min, max == null ? repositoryContent.length - min : max.intValue());
+	}
+
+	@Override
+	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+		// XXX:repositoryService.de
 	}
 
 	protected void verify(final String _uri) {

@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.factory;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 
 public class VnfInstanceFactory {
 	private VnfInstanceFactory() {
@@ -22,7 +22,7 @@ public class VnfInstanceFactory {
 		nsInstancesNsInstanceVnfInstance.setVnfdId(vnfInstance.getVnfdId());
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceDescription(vnfInstance.getVnfInstanceDescription());
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceName(vnfInstance.getVnfInstanceName());
-		nsInstancesNsInstanceVnfInstance.setVnfPkgId(vnfInstance.getVnfPkgId());
+		nsInstancesNsInstanceVnfInstance.setVnfPkg(vnfInstance.getVnfPkg());
 		nsInstancesNsInstanceVnfInstance.setVnfProductName(vnfInstance.getVnfProductName());
 		nsInstancesNsInstanceVnfInstance.setVnfProvider(vnfInstance.getVnfProvider());
 		nsInstancesNsInstanceVnfInstance.setVnfdVersion(vnfInstance.getVnfdVersion());

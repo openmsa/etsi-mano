@@ -38,7 +38,7 @@ final class VnfPkgSol005Test extends TestCase
 
 	public function testException()
 	{
-		//$this->setExpectedException(ManoException::class);
+		// $this->setExpectedException(ManoException::class);
 		$this->vnfPkg->vnfPackagesVnfPkgIdDelete('12345');
 	}
 
@@ -49,6 +49,12 @@ final class VnfPkgSol005Test extends TestCase
 		$id = $res['VnfPkgInfo']['id'];
 
 		$this->vnfPkg->vnfPackagesVnfPkgIdPackageContentPut($id, '{}');
+	}
+
+	public function testExpose()
+	{
+		$res = $this->vnfPkg->exposeDocument('VNFD', 'b0b7d593-9a4d-407d-90fa-dfd17599bf65');
+		$url = 'http://localhost:8380/ubi-etsi-mano/download/' . $res['id'];
 	}
 }
 
