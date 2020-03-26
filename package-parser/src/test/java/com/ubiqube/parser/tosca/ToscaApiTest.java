@@ -48,6 +48,14 @@ public class ToscaApiTest {
 	}
 
 	@Test
+	public void testUbiCsar() throws Exception {
+		final ToscaContext root = tp.parse("/home/olivier/eclipse-workspace/package-parser/src/test/resources/ubi-tosca.csar");
+		final ToscaApi toscaApi = new ToscaApi();
+		final List<tosca.nodes.nfv.Vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.Vdu.Compute.class);
+		System.out.println("" + res);
+	}
+
+	@Test
 	void testResolvValue() throws Exception {
 		final ToscaContext root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaApi toscaApi = new ToscaApi();
