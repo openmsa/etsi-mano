@@ -1,6 +1,7 @@
 package com.ubiqube.parser.tosca.csar;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -31,13 +32,26 @@ public class CsarParser {
 		FileSystemManager fsManager;
 		try {
 			fsManager = VFS.getManager();
-			csar = fsManager.resolveFile("zip:" + filename);
+			csar = fsManager.resolveFile(computeFilename(filename));
 			resolver = new VfsResolver();
 			props = getMetaFileContent(csar);
 
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
+	}
+
+	private String computeFilename(final String filename) {
+		final String result = filename;
+		if (filename.startsWith("zip:")) {
+			return filename;
+		}
+		// In case of files
+		if (filename.startsWith("/")) {
+			return "zip:" + filename;
+		}
+		final File file = new File(filename);
+		return "zip:" + file.getAbsolutePath();
 	}
 
 	public String getEntryDefinition() {
