@@ -24,13 +24,13 @@ public class ToscaClassHolder {
 	}
 
 	public boolean isInstanceOf(final String clazz) {
-		if (name.equals(clazz)) {
+		if (name.equalsIgnoreCase(clazz)) {
 			return true;
 		}
 		if (null == node.getDerivedFrom()) {
 			return false;
 		}
-		if (node.getDerivedFrom().equals(clazz)) {
+		if (node.getDerivedFrom().equalsIgnoreCase(clazz)) {
 			return true;
 		}
 		if (parent != null) {
