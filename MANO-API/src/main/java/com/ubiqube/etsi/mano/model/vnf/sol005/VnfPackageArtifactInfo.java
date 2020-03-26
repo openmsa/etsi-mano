@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.model.vnf.sol005;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -8,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,7 +31,7 @@ public class VnfPackageArtifactInfo {
 	private Checksum checksum = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public VnfPackageArtifactInfo artifactPath(final String artifactPath) {
 		this.artifactPath = artifactPath;
@@ -79,7 +80,7 @@ public class VnfPackageArtifactInfo {
 		this.checksum = checksum;
 	}
 
-	public VnfPackageArtifactInfo metadata(final KeyValuePairs metadata) {
+	public VnfPackageArtifactInfo metadata(final HashMap<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -94,11 +95,11 @@ public class VnfPackageArtifactInfo {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
