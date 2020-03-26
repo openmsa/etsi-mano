@@ -22,8 +22,8 @@ public class JavassistTest {
 
 	@Test
 	void testName() throws Exception {
-		final ToscaParser tp = new ToscaParser();
-		final ToscaContext root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaContext root = tp.getContext();
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 
 		final ClassPool pool = ClassPool.getDefault();

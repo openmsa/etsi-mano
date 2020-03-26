@@ -30,13 +30,13 @@ import com.ubiqube.parser.tosca.constraints.Constraint;
 
 public class ToscaWalker {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaWalker.class);
-	private final ToscaParser tp = new ToscaParser();
 	private ToscaContext root = null;
 	private final Map<String, DataType> primitive = new HashMap<>();
 	private final Set<String> cache = new HashSet<>();
 
 	public void generate(final String file, final ToscaListener listener) {
-		root = tp.parse(file);
+		final ToscaParser tp = new ToscaParser(file);
+		root = tp.getContext();
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Map<String, DataType> dt = root.getDataTypes();
 		final Set<Entry<String, DataType>> e = dt.entrySet();

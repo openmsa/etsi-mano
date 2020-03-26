@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,14 +14,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.parser.tosca.api.ArtefactInformations;
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
 public class ToscaParser {
 	Pattern zipMatcher = Pattern.compile("\\.(zip|csar)$");
+	private CsarParser csar = null;
+	private ToscaContext context;
 
-	public ToscaContext parse(final String filename) {
+	public ToscaParser(final String filename) {
 		final ObjectMapper mapper = getMapper();
-		CsarParser csar = null;
+
 		IResolver resolver;
 		if (isZip(filename)) {
 			csar = new CsarParser(filename);
@@ -30,29 +34,29 @@ public class ToscaParser {
 		}
 		try {
 			final ToscaRoot root = loadToscaBase();
-			final ToscaContext ctx = new ToscaContext(root, resolver);
+			context = new ToscaContext(root, resolver);
 			final ToscaRoot root2;
 			if (isZip(filename)) {
 				root2 = mapper.readValue(csar.getEntryDefinition(), ToscaRoot.class);
 			} else {
 				root2 = mapper.readValue(new File(filename), ToscaRoot.class);
 			}
-			ctx.addRoot(root2);
-			ctx.resolvImports();
-			ctx.resolvSymbols();
-			return ctx;
+			context.addRoot(root2);
+			context.resolvImports();
+			context.resolvSymbols();
+
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
 	}
 
-	public ToscaContext parseContent(final String content, final IResolver resolver) {
+	public ToscaParser(final String content, final IResolver resolver) {
+
 		final ObjectMapper mapper = getMapper();
 		try {
 			final ToscaRoot root = mapper.readValue(content, ToscaRoot.class);
-			final ToscaContext ctx = new ToscaContext(root, resolver);
-			ctx.resolvImports();
-			return ctx;
+			context = new ToscaContext(root, resolver);
+			context.resolvImports();
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
@@ -83,4 +87,13 @@ public class ToscaParser {
 		final Matcher res = zipMatcher.matcher(fileName);
 		return res.find();
 	}
+
+	public List<ArtefactInformations> getFiles() {
+		return csar.getFiles();
+	}
+
+	public ToscaContext getContext() {
+		return context;
+	}
+
 }

@@ -153,8 +153,9 @@ public class ToscaContext {
 			LOG.info("Resolving: {} -> {}", entry2.getKey(), entry2.getValue());
 			final Import value = entry2.getValue();
 			final String content = resolver.getContent(value.getUrl());
-			final ToscaParser main = new ToscaParser();
-			final ToscaContext context = main.parseContent(content, resolver);
+			final ToscaParser main = new ToscaParser(content, resolver);
+			final ToscaContext context = main.getContext();
+
 			context.resolvImports();
 			LOG.debug("Before new CTX={}, current={}", context.nodeType.size(), nodeType.size());
 			mergeContext(context);

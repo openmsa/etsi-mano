@@ -60,12 +60,13 @@ public class JavaGenerator {
 	private final JCodeModel codeModel = new JCodeModel();
 	private final Map<String, JDefinedClass> cache = new HashMap<>();
 	private final Map<String, JPackage> cachePackage = new HashMap<>();
-	private final ToscaParser tp = new ToscaParser();
+
 	private ToscaContext root = null;
 	private final Map<String, DataType> primitive = new HashMap<>();
 
 	public void generate(final String file) throws JClassAlreadyExistsException, IOException {
-		root = tp.parse(file);
+		final ToscaParser tp = new ToscaParser(file);
+		root = tp.getContext();
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Map<String, DataType> dt = root.getDataTypes();
 		final Set<Entry<String, DataType>> e = dt.entrySet();

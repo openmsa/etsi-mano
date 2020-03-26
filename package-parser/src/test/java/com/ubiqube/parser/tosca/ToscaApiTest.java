@@ -32,7 +32,6 @@ import tosca.nodes.Compute;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ToscaApiTest {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaApiTest.class);
-	private final ToscaParser tp = new ToscaParser();
 	private final ConvertApi conv = new ConvertApi();
 
 	public ToscaApiTest() {
@@ -41,7 +40,8 @@ public class ToscaApiTest {
 
 	@Test
 	void testName() throws Exception {
-		final ToscaContext root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<Compute> res = toscaApi.getObjects(root, Compute.class);
 		System.out.println("" + res);
@@ -49,7 +49,8 @@ public class ToscaApiTest {
 
 	@Test
 	public void testUbiCsar() throws Exception {
-		final ToscaContext root = tp.parse("/home/olivier/eclipse-workspace/package-parser/src/test/resources/ubi-tosca.csar");
+		final ToscaParser tp = new ToscaParser("/home/olivier/eclipse-workspace/package-parser/src/test/resources/ubi-tosca.csar");
+		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.Vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.Vdu.Compute.class);
 		System.out.println("" + res);
@@ -57,7 +58,8 @@ public class ToscaApiTest {
 
 	@Test
 	void testResolvValue() throws Exception {
-		final ToscaContext root = tp.parse("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<NodeTemplate> res = toscaApi.getNodeMatching(root, Compute.class);
 		assertEquals(2, res.size(), "Size of the list must be 2");
