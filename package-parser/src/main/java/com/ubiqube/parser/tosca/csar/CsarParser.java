@@ -41,8 +41,7 @@ public class CsarParser {
 		}
 	}
 
-	private String computeFilename(final String filename) {
-		final String result = filename;
+	private static String computeFilename(final String filename) {
 		if (filename.startsWith("zip:")) {
 			return filename;
 		}
@@ -110,10 +109,19 @@ public class CsarParser {
 		final ArtefactInformations artefact = new ArtefactInformations();
 		final String hash = doHash(fileObject.getContent().getByteArray());
 		artefact.setChecksum(hash);
-		artefact.setPath(fileObject.toString());
+		artefact.setPath(doFriendlyName(fileObject.toString()));
 		final Map<String, String> meta = extractMetadata(fileObject);
 		artefact.setMetadata(meta);
 		return artefact;
+	}
+
+	private static String doFriendlyName(final String filename) {
+		// XXX: I don'tkown how to the original file name.
+		final int idx = filename.indexOf("!/");
+		if (idx > 0) {
+			return filename.substring(idx + 2);
+		}
+		return filename;
 	}
 
 	private static Map<String, String> extractMetadata(final FileObject fileObject) throws FileSystemException {
