@@ -25,6 +25,11 @@ public class Size {
 		unit = m.group("unit");
 	}
 
+	public Size(final Long value) {
+		size = value.longValue();
+		unit = "b";
+	}
+
 	public String getToscaForm() {
 		return size + " " + unit;
 	}
