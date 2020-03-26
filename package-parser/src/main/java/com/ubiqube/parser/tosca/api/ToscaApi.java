@@ -80,43 +80,61 @@ public class ToscaApi {
 	}
 
 	private <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
-		return (List<T>) nodes.stream().map(x -> handleMap((Map<String, Object>) x.getCapabilities(), destination, null)).collect(Collectors.toList());
+		return (List<T>) nodes.stream().map(x -> handleObject(x, destination)).collect(Collectors.toList());
 	}
 
-	private Object handleMap(final Map<String, Object> caps, final Class clazz, final Class generic) {
+	private Object handleObject(final NodeTemplate node, final Class clazz) {
 		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz);
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
-		final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
-		LOG.info("class=>{}[{}] --- [{}]", clazz.getName(), caps, Arrays.toString(props));
+		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
+		LOG.info("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
 		final Object cls = newInstance(clazz);
+
+		final Object caps = node.getCapabilities();
+		if (null != caps) {
+			handleMap((Map<String, Object>) caps, clazz, propsDescr, cls, null);
+		}
+		final Map<String, Object> props = node.getProperties();
+		if (null != props) {
+			handleMap(props, clazz, propsDescr, cls, null);
+		}
+		return cls;
+	}
+
+	private Object handleMap(final Map<String, Object> caps, final Class clazz, final PropertyDescriptor[] props, final Object cls, final Class generic) {
 		if (clazz.isAssignableFrom(Map.class)) {
 			LOG.debug("Handling map of {}", generic);
 			final Map map = (Map) cls;
-			handleRealMap(map, generic, caps);
+			handleRealMap(map, generic, caps, props, cls);
 		}
 		final Stream<PropertyDescriptor> stream = Arrays.stream(props);
 		stream.forEach(x -> {
 			final Object res = caps.get(camelCaseToUnderscore(x.getName()));
 			if (null != res) {
 				LOG.info("Property: {}={}", x.getName(), res);
-				handleCaps(res, x, cls);
+				handleCaps(res, x, props, cls);
 			}
 		});
 		return cls;
 	}
 
-	private void handleRealMap(final Map map, final Class generic, final Map<String, Object> caps) {
+	private void handleRealMap(final Map map, final Class generic, final Map<String, Object> caps, final PropertyDescriptor[] propsDescr, final Object cls) {
 		caps.forEach((x, y) -> {
-			final Object res = handleMap((Map<String, Object>) y, generic, null);
+			Object res;
+			try {
+				res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.newInstance(), null);
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new ParseException(e);
+			}
 			map.put(x, res);
 		});
 	}
 
-	private void handleCaps(final Object res, final PropertyDescriptor x, final Object cls) {
+	private void handleCaps(final Object res, final PropertyDescriptor x, final PropertyDescriptor[] propsDescr, final Object cls) {
 		if (res instanceof Map) {
 			Map<String, Object> caps = (Map<String, Object>) res;
 			if (null != caps.get("properties")) {
@@ -125,11 +143,22 @@ public class ToscaApi {
 			LOG.debug("Recursing: {}", caps);
 			final Method rm = x.getReadMethod();
 			final Class zz = getReturnType(rm);
+
+			BeanInfo beanInfo;
+			try {
+				beanInfo = Introspector.getBeanInfo(zz);
+			} catch (final IntrospectionException e) {
+				throw new ParseException(e);
+			}
+			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
+			LOG.info("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescr));
+			final Object clsNew = newInstance(zz);
+
 			Object ret = null;
 			if (rm.getReturnType().isAssignableFrom(Map.class)) {
-				ret = handleMap(caps, Map.class, zz);
+				ret = handleMap(caps, Map.class, propsDescrNew, new HashMap(), zz);
 			} else {
-				ret = handleMap(caps, zz, zz);
+				ret = handleMap(caps, zz, propsDescrNew, clsNew, zz);
 			}
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
