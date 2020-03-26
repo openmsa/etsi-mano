@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
@@ -48,9 +50,11 @@ public class VnfPackage implements BaseEntity {
 	private Checksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	private Set<SoftwareImage> softwareImages;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
@@ -69,6 +73,7 @@ public class VnfPackage implements BaseEntity {
 	private PackageUsageStateType usageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	private List<VnfUserDefinedData> userDefinedData;
 
 	@Override
