@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.service.pkg;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,6 +21,9 @@ import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.event.ProviderData;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -65,6 +68,7 @@ public class PackagingManager {
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			vnfPkgInfo.setSoftwareImages(packageProvider.getSoftwareImages());
+			vnfPkgInfo.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPkgInfo);
 		}

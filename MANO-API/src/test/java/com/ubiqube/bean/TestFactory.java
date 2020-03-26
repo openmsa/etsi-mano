@@ -47,7 +47,7 @@ public class TestFactory {
 		si.setContainerFormat(ContainerFormatEnum.BARE);
 		si.setCreatedAt(OffsetDateTime.now());
 		si.setImagePath("/mnt/images/myimages.raw");
-		si.setSize(12345);
+		si.setSize(12345L);
 		return si;
 	}
 
