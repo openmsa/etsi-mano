@@ -109,6 +109,7 @@ public class CsarParser {
 		final ArtefactInformations artefact = new ArtefactInformations();
 		final String hash = doHash(fileObject.getContent().getByteArray());
 		artefact.setChecksum(hash);
+		artefact.setAlgorithm("SHA-512");
 		artefact.setPath(doFriendlyName(fileObject.toString()));
 		final Map<String, String> meta = extractMetadata(fileObject);
 		artefact.setMetadata(meta);
