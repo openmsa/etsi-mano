@@ -3,16 +3,24 @@ package com.ubiqube.parser.tosca.csar;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
 import com.ubiqube.parser.tosca.IResolver;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.VfsResolver;
+import com.ubiqube.parser.tosca.api.ArtefactInformations;
 
 public class CsarParser {
 	private final FileObject csar;
@@ -59,4 +67,64 @@ public class CsarParser {
 	public IResolver getResolver() {
 		return resolver;
 	}
+
+	public List<ArtefactInformations> getFiles() {
+		final List<ArtefactInformations> ret = new ArrayList<>();
+		try {
+			ret.addAll(recurse(csar));
+		} catch (final IOException | NoSuchAlgorithmException e) {
+			throw new ParseException(e);
+		}
+		return ret;
+	}
+
+	private static List<ArtefactInformations> recurse(final FileObject fileObject) throws IOException, NoSuchAlgorithmException {
+		final List<ArtefactInformations> ret = new ArrayList<>();
+		if (fileObject.isFolder()) {
+			final FileObject[] child = fileObject.getChildren();
+			for (final FileObject fileObject2 : child) {
+				final List<ArtefactInformations> l = recurse(fileObject2);
+				ret.addAll(l);
+			}
+		} else {
+			ret.add(convert(fileObject));
+		}
+		return ret;
+	}
+
+	private static ArtefactInformations convert(final FileObject fileObject) throws IOException, NoSuchAlgorithmException {
+		final ArtefactInformations artefact = new ArtefactInformations();
+		final String hash = doHash(fileObject.getContent().getByteArray());
+		artefact.setChecksum(hash);
+		artefact.setPath(fileObject.toString());
+		final Map<String, String> meta = extractMetadata(fileObject);
+		artefact.setMetadata(meta);
+		return artefact;
+	}
+
+	private static Map<String, String> extractMetadata(final FileObject fileObject) throws FileSystemException {
+		final Map<String, String> meta = new HashMap<>();
+		meta.put("last-modified", String.valueOf(fileObject.getContent().getLastModifiedTime()));
+		meta.put("size", String.valueOf(fileObject.getContent().getSize()));
+		return meta;
+	}
+
+	private static String doHash(final byte[] bytes) throws NoSuchAlgorithmException {
+		final MessageDigest digest = MessageDigest.getInstance("SHA-512");
+		final byte[] hashbytes = digest.digest(bytes);
+		return bytesToHex(hashbytes);
+	}
+
+	private static String bytesToHex(final byte[] hash) {
+		final StringBuilder hexString = new StringBuilder();
+		for (final byte element : hash) {
+			final String hex = Integer.toHexString(0xff & element);
+			if (hex.length() == 1) {
+				hexString.append('0');
+			}
+			hexString.append(hex);
+		}
+		return hexString.toString();
+	}
+
 }
