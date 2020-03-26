@@ -1,0 +1,42 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+description: >
+  Sample VNF for integration testing.
+
+imports:
+  - etsi_nfv_sol001_vnfd_types.yaml
+
+topology_template:
+  node_templates:
+    ubiVdo.1_0:
+      type: tosca.nodes.nfv.VNF
+      properties:
+        descriptor_id: dcd11fbf-c767-41eb-abc9-cec35dd95bca
+        provider: Ubiqube internal.
+        product_name: Integration tests
+        software_version: 1.0.0
+        descriptor_version: 1.0.0
+        flavour_id: m1.small
+
+    ubi01:
+      type: tosca.nodes.nfv.Vdu.Compute
+      name: Ubi01
+      description: A node.
+      properties:
+        sw_image_data:
+          name: imagename
+          version: 1.0.0
+          checksum:
+            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+            algorithm: SHA-256
+          container_format: BARE
+          disk_format: QCOW2
+          min_disk: 6 GB
+          min_ram: 2 GB
+          operating_system: centos8
+      capabilities:
+        virtual_compute:
+          properties:
+            virtual_memory:
+              properties:
+                virtual_mem_size: 2 GB
+
