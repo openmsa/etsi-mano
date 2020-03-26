@@ -32,6 +32,9 @@ configurations {
 	integrationTestsCompile.extendsFrom testCompile
 	integrationTestsRuntime.extendsFrom testRuntime
 }
+configurations.all {
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
 
 task integrationTests(type: Test) {
 	testClassesDirs = sourceSets.integrationTests.output.classesDirs
