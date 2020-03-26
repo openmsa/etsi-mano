@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ubiqube.etsi.mano.service.pkg.PackagingManager;
+
 /**
  * this class handle job reception.
  *

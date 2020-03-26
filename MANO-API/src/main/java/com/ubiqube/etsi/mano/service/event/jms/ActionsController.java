@@ -8,8 +8,8 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.event.NfvoActions;
-import com.ubiqube.etsi.mano.service.event.PackagingManager;
 import com.ubiqube.etsi.mano.service.event.VnfmActions;
+import com.ubiqube.etsi.mano.service.pkg.PackagingManager;
 
 @Service
 public class ActionsController {
