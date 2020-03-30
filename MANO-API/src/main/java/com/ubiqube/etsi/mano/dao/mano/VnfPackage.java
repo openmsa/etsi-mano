@@ -47,6 +47,8 @@ public class VnfPackage implements BaseEntity {
 	@Field
 	private String vnfdVersion;
 
+	private String flavorId;
+
 	private Checksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -75,6 +77,22 @@ public class VnfPackage implements BaseEntity {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<VnfUserDefinedData> userDefinedData;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VnfCompute> vnfCompute;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VnfVl> vnfVl;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VnfStorage> vnfStorage;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VnfLinkPort> vnfLinkPort;
 
 	@Override
 	public UUID getId() {
@@ -179,6 +197,46 @@ public class VnfPackage implements BaseEntity {
 
 	public void setUserDefinedData(final List<VnfUserDefinedData> userDefinedData) {
 		this.userDefinedData = userDefinedData;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
+	}
+
+	public Set<VnfCompute> getVnfCompute() {
+		return vnfCompute;
+	}
+
+	public void setVnfCompute(final Set<VnfCompute> vnfCompute) {
+		this.vnfCompute = vnfCompute;
+	}
+
+	public Set<VnfVl> getVnfVl() {
+		return vnfVl;
+	}
+
+	public void setVnfVl(final Set<VnfVl> vnfVl) {
+		this.vnfVl = vnfVl;
+	}
+
+	public Set<VnfStorage> getVnfStorage() {
+		return vnfStorage;
+	}
+
+	public void setVnfStorage(final Set<VnfStorage> vnfStorage) {
+		this.vnfStorage = vnfStorage;
+	}
+
+	public Set<VnfLinkPort> getVnfLinkPort() {
+		return vnfLinkPort;
+	}
+
+	public void setVnfLinkPort(final Set<VnfLinkPort> vnfLinkPort) {
+		this.vnfLinkPort = vnfLinkPort;
 	}
 
 }
