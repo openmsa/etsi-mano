@@ -111,6 +111,7 @@ public class VnfInstanceLcm {
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
+		LOG.info("Instantiation Event Sucessfully sent.");
 	}
 
 	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
