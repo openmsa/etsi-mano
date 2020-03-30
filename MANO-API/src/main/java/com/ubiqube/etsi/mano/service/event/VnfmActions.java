@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
@@ -50,6 +53,7 @@ public class VnfmActions {
 		final VnfLcmOpOcc lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
 		// Send Grant.
+		final GrantRequest grant = createGrant(vnfInstance, lcmOpOccs, null);
 		// Send processing notification.
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
@@ -79,6 +83,19 @@ public class VnfmActions {
 		}
 		vnfInstancesRepository.save(vnfInstance);
 		vnfPackageRepository.save(vnfPkg);
+	}
+
+	private GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOcc lcmOpOccs, final VnfPackage vnfPackage) {
+		final GrantRequest grant = new GrantRequest();
+		grant.setVnfInstanceId(vnfInstance.getId().toString());
+		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
+		grant.setVnfdId(vnfInstance.getVnfdId());
+		grant.setFlavourId(vnfPackage.getFlavorId());
+		grant.setIsAutomaticInvocation(false);
+		grant.setOperation(GrantedLcmOperationType.INSTANTIATE);
+		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
+		grant.setInstantiationLevelId("0");
+		return grant;
 	}
 
 }
