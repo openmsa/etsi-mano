@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.controller.lcmgrant.sol003.LcmGrantsSol003;
+import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsSol003;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;

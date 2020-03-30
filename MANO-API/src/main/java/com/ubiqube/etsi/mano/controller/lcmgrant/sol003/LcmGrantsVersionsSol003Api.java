@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsVersionsSol003;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ApiVersionInformation;
 
 import io.swagger.annotations.ApiParam;
