@@ -1,21 +1,32 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrants;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
@@ -41,13 +52,16 @@ public class VnfmActions {
 
 	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final Vim _vim, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository) {
+	private final LcmGrants lcmGrantsSol003;
+
+	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final Vim _vim, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final LcmGrants _lcmGrantsSol003) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
 		msaExecutor = _vim;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
+		lcmGrantsSol003 = _lcmGrantsSol003;
 	}
 
 	public void vnfInstantiate(final String vnfInstanceId) {
@@ -55,13 +69,14 @@ public class VnfmActions {
 		// Maybe e need additional parameters to say STARTING / PROCESSING ...
 		final VnfLcmOpOcc lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
-		// Send Grant.
-		final GrantRequest grant = createGrant(vnfInstance, lcmOpOccs, null);
-		// Send processing notification.
-		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final Optional<VnfPackage> vnfPkgOpt = vnfPackageRepository.findById(vnfPkgId);
 		final VnfPackage vnfPkg = vnfPkgOpt.orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
+		// Send processing notification.
+		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
+		// Send Grant.
+		final GrantRequest grantRequest = createGrant(vnfInstance, lcmOpOccs, vnfPkg);
+
 		// XXX: vimId came from Grant.
 		final Map<String, Object> userData = new HashMap<>();
 		if (null == userData.get("vimId")) {
@@ -90,7 +105,7 @@ public class VnfmActions {
 		vnfPackageRepository.save(vnfPkg);
 	}
 
-	private GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOcc lcmOpOccs, final VnfPackage vnfPackage) {
+	private static GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOcc lcmOpOccs, final VnfPackage vnfPackage) {
 		final GrantRequest grant = new GrantRequest();
 		grant.setVnfInstanceId(vnfInstance.getId().toString());
 		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
@@ -100,7 +115,51 @@ public class VnfmActions {
 		grant.setOperation(GrantedLcmOperationType.INSTANTIATE);
 		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
 		grant.setInstantiationLevelId("0");
+		final List<ResourceDefinition> addResources = new ArrayList<>();
+		final Set<VnfCompute> compute = vnfPackage.getVnfCompute();
+		final List<ResourceDefinition> listCompute = compute.stream().map(VnfmActions::mapCompute).collect(Collectors.toList());
+		addResources.addAll(listCompute);
+
+		final Set<VnfVl> vl = vnfPackage.getVnfVl();
+		final List<ResourceDefinition> listVl = vl.stream().map(VnfmActions::mapVl).collect(Collectors.toList());
+		addResources.addAll(listVl);
+
+		final Set<VnfLinkPort> linkPort = vnfPackage.getVnfLinkPort();
+		final List<ResourceDefinition> listLinkPort = linkPort.stream().map(VnfmActions::mapLinkPort).collect(Collectors.toList());
+		addResources.addAll(listLinkPort);
+
+		final Set<VnfStorage> storage = vnfPackage.getVnfStorage();
+		final List<ResourceDefinition> listStorage = storage.stream().map(VnfmActions::mapStorage).collect(Collectors.toList());
+		addResources.addAll(listStorage);
+		grant.setAddResources(addResources);
 		return grant;
 	}
 
+	private static ResourceDefinition mapStorage(final VnfStorage vnfStorage) {
+		final ResourceDefinition resourceDefinition = new ResourceDefinition();
+		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setVduId(vnfStorage.getId().toString());
+		return resourceDefinition;
+	}
+
+	private static ResourceDefinition mapLinkPort(final VnfLinkPort vnfLinkPort) {
+		final ResourceDefinition resourceDefinition = new ResourceDefinition();
+		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setVduId(vnfLinkPort.getId().toString());
+		return resourceDefinition;
+	}
+
+	private static ResourceDefinition mapVl(final VnfVl vnfVl) {
+		final ResourceDefinition resourceDefinition = new ResourceDefinition();
+		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setVduId(vnfVl.getId().toString());
+		return resourceDefinition;
+	}
+
+	private static ResourceDefinition mapCompute(final VnfCompute vnfCompute) {
+		final ResourceDefinition resourceDefinition = new ResourceDefinition();
+		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setVduId(vnfCompute.getId().toString());
+		return resourceDefinition;
+	}
 }

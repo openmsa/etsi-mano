@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.config;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
@@ -11,6 +12,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
@@ -67,6 +69,12 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("subscriptionAuthentication.paramsBasic", "authentificationInformations.authParamBasic")
 				.field("subscriptionAuthentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
 				.field("subscriptionAuthentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformation.class)
+				.field("id", "resourceDefinitionId")
+				.field("resource.vimConnectionId", "vimConnectionId")
+				.field("resource.resourceProviderId", "resourceProviderId")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

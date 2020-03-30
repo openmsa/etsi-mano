@@ -1,0 +1,102 @@
+{
+  "vnfInstanceId": "string",
+  "vnfLcmOpOccId": "string",
+  "vnfdId": "string",
+  "flavourId": "string",
+  "operation": "INSTANTIATE",
+  "isAutomaticInvocation": true,
+  "instantiationLevelId": "string",
+  "addResources": [
+    {
+      "id": "string",
+      "type": "COMPUTE",
+      "vduId": "string",
+      "resourceTemplateId": "string",
+      "resource": {
+        "vimConnectionId": "string",
+        "resourceProviderId": "string",
+        "resourceId": "string",
+        "vimLevelResourceType": "string"
+      }
+    }
+  ],
+  "tempResources": [
+    {
+      "id": "string",
+      "type": "COMPUTE",
+      "vduId": "string",
+      "resourceTemplateId": "string",
+      "resource": {
+        "vimConnectionId": "string",
+        "resourceProviderId": "string",
+        "resourceId": "string",
+        "vimLevelResourceType": "string"
+      }
+    }
+  ],
+  "removeResources": [
+    {
+      "id": "string",
+      "type": "COMPUTE",
+      "vduId": "string",
+      "resourceTemplateId": "string",
+      "resource": {
+        "vimConnectionId": "string",
+        "resourceProviderId": "string",
+        "resourceId": "string",
+        "vimLevelResourceType": "string"
+      }
+    }
+  ],
+  "updateResources": [
+    {
+      "id": "string",
+      "type": "COMPUTE",
+      "vduId": "string",
+      "resourceTemplateId": "string",
+      "resource": {
+        "vimConnectionId": "string",
+        "resourceProviderId": "string",
+        "resourceId": "string",
+        "vimLevelResourceType": "string"
+      }
+    }
+  ],
+  "placementConstraints": [
+    {
+      "affinityOrAntiAffinity": "AFFINITY",
+      "scope": "NFVI_POP",
+      "resource": [
+        {
+          "idType": "RES_MGMT",
+          "resourceId": "string",
+          "vimConnectionId": "string",
+          "resourceProviderId": "string"
+        }
+      ],
+      "fallbackBestEffort": true
+    }
+  ],
+  "vimConstraints": [
+    {
+      "sameResourceGroup": true,
+      "resource": [
+        {
+          "idType": "RES_MGMT",
+          "resourceId": "string",
+          "vimConnectionId": "string",
+          "resourceProviderId": "string"
+        }
+      ]
+    }
+  ],
+  "additionalParams": {},
+  "_links": {
+    "vnfLcmOpOcc": {
+      "href": "string"
+    },
+    "vnfInstance": {
+      "href": "string"
+    }
+  }
+}

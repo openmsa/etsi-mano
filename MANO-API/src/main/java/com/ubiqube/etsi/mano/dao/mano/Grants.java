@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -11,11 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
-
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 @Entity
 public class Grants {
@@ -23,10 +21,15 @@ public class Grants {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
+	private String vnfdId;
+
+	private String flavourId;
+
+	// Must be string because VNFM / NFVO are differents.
 	private String vnfInstanceId = null;
 
-	@OneToOne
-	private VnfLcmOpOccs vnfLcmOpOccId = null;
+	// Must be string because VNFM / NFVO are differents.
+	private String vnfLcmOpOccId = null;
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL)
@@ -73,7 +76,7 @@ public class Grants {
 	private List<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
 
 	@Transient
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public UUID getId() {
 		return id;
@@ -91,11 +94,11 @@ public class Grants {
 		this.vnfInstanceId = vnfInstanceId;
 	}
 
-	public VnfLcmOpOccs getVnfLcmOpOccId() {
+	public String getVnfLcmOpOccId() {
 		return vnfLcmOpOccId;
 	}
 
-	public void setVnfLcmOpOccId(final VnfLcmOpOccs vnfLcmOpOccId) {
+	public void setVnfLcmOpOccId(final String vnfLcmOpOccId) {
 		this.vnfLcmOpOccId = vnfLcmOpOccId;
 	}
 
@@ -203,12 +206,28 @@ public class Grants {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
+	}
+
+	public String getVnfdId() {
+		return vnfdId;
+	}
+
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
+
+	public String getFlavourId() {
+		return flavourId;
+	}
+
+	public void setFlavourId(final String flavourId) {
+		this.flavourId = flavourId;
 	}
 
 }

@@ -2,6 +2,8 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.persistence.Embeddable;
 
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
+
 @Embeddable
 public class GrantInformation {
 	private String resourceDefinitionId = null;
@@ -15,6 +17,10 @@ public class GrantInformation {
 	private String zoneId = null;
 
 	private String resourceGroupId = null;
+
+	private TypeEnum type;
+
+	private String vduId;
 
 	public String getResourceDefinitionId() {
 		return resourceDefinitionId;
@@ -62,6 +68,22 @@ public class GrantInformation {
 
 	public void setResourceGroupId(final String resourceGroupId) {
 		this.resourceGroupId = resourceGroupId;
+	}
+
+	public TypeEnum getType() {
+		return type;
+	}
+
+	public void setType(final TypeEnum type) {
+		this.type = type;
+	}
+
+	public String getVduId() {
+		return vduId;
+	}
+
+	public void setVduId(final String vduId) {
+		this.vduId = vduId;
 	}
 
 }
