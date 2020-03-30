@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsSol003;
+import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrants;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
@@ -97,7 +97,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		link.setFail(fail);
 
 		final Link grant = new Link();
-		grant.setHref(linkTo(methodOn(LcmGrantsSol003.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(), "")).withSelfRel().getHref());
+		grant.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(), "")).withSelfRel().getHref());
 		link.setGrant(grant);
 
 		final Link retry = new Link();

@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "api-versions")
 @RequestMapping("/sol003/grant/v1")
-public interface LcmGrantsVersionsSol003 {
+public interface LcmGrantsVersions {
 
 	@ApiOperation(value = "Retrieve API version information", nickname = "apiVersionsGet", notes = "The GET method reads API version information. This method shall follow the provisions specified in table 4.6.3.3.3.2-1 for request and response data structures, and response codes. URI query parameters are not supported. ", response = ApiVersionInformation.class, tags = {})
 	@ApiResponses(value = {

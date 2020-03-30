@@ -2,13 +2,17 @@ package com.ubiqube.etsi.mano.controller.lcmgrant.sol005;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
-import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsSol003;
+import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrants;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 
-public class LcmGrantsSol005Api implements LcmGrantsSol003 {
+@Profile({ "!NFVO" })
+@Controller
+public class LcmGrantsSol005Api implements LcmGrants {
 
 	@Override
 	public ResponseEntity<Grant> grantsGrantIdGet(final String grantId, final String version) {
