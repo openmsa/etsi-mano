@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
 /**
@@ -21,17 +24,31 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
  */
 @Service
 public class MsaExecutor implements Vim {
-	private static final String TMA129 = "UBI195";
-
 	private static final String CUSTOMER_ID = "customerId";
 
 	private static final Logger LOG = LoggerFactory.getLogger(MsaExecutor.class);
 
+	private String defaultfNfvo;
+
+	private String devaultfVim;
+
 	private final OrchestrationService orchestrationService;
 
-	public MsaExecutor(final OrchestrationService orchestrationService) {
+	private final VimConnectionInformationJpa vimJpa;
+
+	public MsaExecutor(final OrchestrationService orchestrationService, final VimConnectionInformationJpa _vimJpa) {
 		super();
 		this.orchestrationService = orchestrationService;
+		vimJpa = _vimJpa;
+		checkVimData(vimJpa);
+	}
+
+	private void checkVimData(final VimConnectionInformationJpa _vimJpa) {
+		final Optional<VimConnectionInformation> oVim = _vimJpa.findByVimType("MSA_20");
+		final VimConnectionInformation vci = oVim.orElseThrow(() -> new GenericException("Unable to find a Vim of MSA_20 type"));
+		final Map<String, String> accessInfo = vci.getAccessInfo();
+		defaultfNfvo = accessInfo.get("defaultNfvo");
+		devaultfVim = accessInfo.get("defaultVim");
 	}
 
 	@Override
@@ -48,12 +65,12 @@ public class MsaExecutor implements Vim {
 
 	@Override
 	public String onVnfInstantiate(final String vnfPkgId, final Map<String, Object> userData) {
+
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = (String) userData.get(CUSTOMER_ID);
 		varsMap.put("vnfPkgId", vnfPkgId);
 		varsMap.put(CUSTOMER_ID, customerId);
-		// TODO My NFVO
-		varsMap.put("nfvoDevice", TMA129);
+		varsMap.put("nfvoDevice", defaultfNfvo);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
 
@@ -64,10 +81,9 @@ public class MsaExecutor implements Vim {
 	public String onNsInstantiate(final String nsdId, final Map<String, Object> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = (String) userData.get(CUSTOMER_ID);
-		varsMap.put("deviceid", (String) userData.get("vimId"));
+		varsMap.put("deviceid", getDefault((String) userData.get("vimId"), devaultfVim));
 		varsMap.put("nsPkgId", nsdId);
-		// TODO My NFVO
-		varsMap.put("nfvoDevice", TMA129);
+		varsMap.put("nfvoDevice", defaultfNfvo);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
 
@@ -123,4 +139,10 @@ public class MsaExecutor implements Vim {
 
 	}
 
+	private String getDefault(final String orig, final String def) {
+		if (null != orig) {
+			return orig;
+		}
+		return def;
+	}
 }
