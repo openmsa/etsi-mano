@@ -45,20 +45,20 @@ public class NfvoActions {
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsdRepository nsdRepository;
 	private final VnfmInterface vnfm;
-	private final Vim msaExecutor;
+	private final Vim vim;
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
 	private final GrantsJpa grantJpa;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _vim, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
 		vnfm = _vnfm;
-		msaExecutor = _msaExecutor;
+		vim = _vim;
 		eventManager = _eventManager;
 		vnfPackageRepository = _vnfPackageRepository;
 		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
@@ -89,8 +89,8 @@ public class NfvoActions {
 			return;
 		}
 		// Release the NS.
-		final String processId = msaExecutor.onNsInstanceTerminate(nsInstance.getProcessId(), nsdInfo.getUserDefinedData());
-		msaExecutor.waitForCompletion(processId, 5 * 60);
+		final String processId = vim.onNsInstanceTerminate(nsInstance.getProcessId(), nsdInfo.getUserDefinedData());
+		vim.waitForCompletion(processId, 5 * 60);
 
 		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
 	}
@@ -118,11 +118,11 @@ public class NfvoActions {
 		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Create Ns.
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
-		final String processId = msaExecutor.onNsInstantiate(nsdId, userData);
+		final String processId = vim.onNsInstantiate(nsdId, userData);
 		LOG.info("Creating a MSA Job: {}", processId);
 		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
 		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
-		LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
+		LcmOperationStateType status = vim.waitForCompletion(processId, 1 * 60);
 		if (status != LcmOperationStateType.COMPLETED) {
 			// update Lcm OpOccs
 			// send Notification.
@@ -203,13 +203,13 @@ public class NfvoActions {
 		final Grants grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
-				msaExecutor.freeResources(x.getReservationId());
+				vim.freeResources(x.getReservationId());
 			}
 		});
 
 		grants.getAddResources().forEach(x -> {
 			x.getVduId();
-			msaExecutor.allocateResources(x);
+			vim.allocateResources(x);
 		});
 
 	}

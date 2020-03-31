@@ -51,16 +51,16 @@ public class VnfInstanceLcm {
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageRepository vnfPackageRepository;
-	private final Vim msaExecutor;
+	private final Vim vim;
 	private final NsLcmOpOccsRepository lcmOpOccsMsa;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final Vim _msaExecutor, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final Vim _vim, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
-		msaExecutor = _msaExecutor;
+		vim = _vim;
 		lcmOpOccsMsa = _lcmOpOccsRepository;
 		eventManager = _eventManager;
 		mapper = _mapper;
@@ -128,7 +128,7 @@ public class VnfInstanceLcm {
 
 		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
-		final String processId = msaExecutor.onVnfInstanceTerminate(userData);
+		final String processId = vim.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
 		addVnfOperation(processId, vnfInstanceId, NsLcmOpType.TERMINATE);
 		vnfInstancesRepository.save(vnfInstance);

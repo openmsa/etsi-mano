@@ -44,7 +44,7 @@ public class VnfmActions {
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 
-	private final Vim msaExecutor;
+	private final Vim vim;
 
 	private final VnfPackageJpa vnfPackageRepository;
 
@@ -57,7 +57,7 @@ public class VnfmActions {
 	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final Vim _vim, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final LcmGrants _lcmGrantsSol003) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
-		msaExecutor = _vim;
+		vim = _vim;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -83,11 +83,11 @@ public class VnfmActions {
 			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
 		}
 
-		final String processId = msaExecutor.onVnfInstantiate(vnfPkgId.toString(), userData);
+		final String processId = vim.onVnfInstantiate(vnfPkgId.toString(), userData);
 		LOG.info("New MSA VNF Create job: {}", processId);
 		vnfInstance.setProcessId(processId);
 		vnfInstancesRepository.save(vnfInstance);
-		final LcmOperationStateType status = msaExecutor.waitForCompletion(processId, 1 * 60);
+		final LcmOperationStateType status = vim.waitForCompletion(processId, 1 * 60);
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, status);
 
 		if (status == LcmOperationStateType.COMPLETED) {
