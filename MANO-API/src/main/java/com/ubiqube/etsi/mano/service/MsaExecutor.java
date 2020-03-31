@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +45,11 @@ public class MsaExecutor implements Vim {
 	}
 
 	private void checkVimData(final VimConnectionInformationJpa _vimJpa) {
-		final Optional<VimConnectionInformation> oVim = _vimJpa.findByVimType("MSA_20");
-		final VimConnectionInformation vci = oVim.orElseThrow(() -> new GenericException("Unable to find a Vim of MSA_20 type"));
+		final Set<VimConnectionInformation> vims = _vimJpa.findByVimType("MSA_20");
+		if (vims.isEmpty()) {
+			throw new GenericException("Unable to find configuration for im MSA_20");
+		}
+		final VimConnectionInformation vci = vims.iterator().next();
 		final Map<String, String> accessInfo = vci.getAccessInfo();
 		defaultfNfvo = accessInfo.get("defaultNfvo");
 		devaultfVim = accessInfo.get("defaultVim");
@@ -65,10 +68,10 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String onVnfInstantiate(final String vnfPkgId, final Map<String, Object> userData) {
+	public String onVnfInstantiate(final String vnfPkgId, final Map<String, String> userData) {
 
 		final Map<String, String> varsMap = new HashMap<>();
-		final String customerId = (String) userData.get(CUSTOMER_ID);
+		final String customerId = userData.get(CUSTOMER_ID);
 		varsMap.put("vnfPkgId", vnfPkgId);
 		varsMap.put(CUSTOMER_ID, customerId);
 		varsMap.put("nfvoDevice", defaultfNfvo);
@@ -140,7 +143,7 @@ public class MsaExecutor implements Vim {
 
 	}
 
-	private String getDefault(final String orig, final String def) {
+	private static String getDefault(final String orig, final String def) {
 		if (null != orig) {
 			return orig;
 		}
@@ -157,5 +160,10 @@ public class MsaExecutor implements Vim {
 	public void freeResources(final String reservationId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String getType() {
+		return "MSA_20";
 	}
 }

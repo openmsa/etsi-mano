@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.VnfUserDefinedData;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
@@ -75,10 +75,8 @@ public class VnfPackageTest {
 		assertEquals("/mnt/images/myimages.raw", si.getImagePath());
 		assertEquals(12345, si.getSize());
 
-		final List<VnfUserDefinedData> udd = vnfDao.getUserDefinedData();
+		final Map<String, String> udd = vnfDao.getUserDefinedData();
 		assertEquals(1, udd.size());
-		assertEquals("vimId", udd.get(0).getName());
-		assertEquals("TMA49", udd.get(0).getValue());
-
+		assertEquals("TMA49", udd.get("vimId"));
 	}
 }

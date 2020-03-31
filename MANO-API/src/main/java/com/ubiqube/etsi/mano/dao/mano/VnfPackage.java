@@ -1,6 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -78,7 +78,7 @@ public class VnfPackage implements BaseEntity {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
-	private List<VnfUserDefinedData> userDefinedData;
+	private Map<String, String> userDefinedData;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
 	private Set<VnfCompute> vnfCompute;
@@ -189,11 +189,11 @@ public class VnfPackage implements BaseEntity {
 		this.usageState = usageState;
 	}
 
-	public List<VnfUserDefinedData> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final List<VnfUserDefinedData> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

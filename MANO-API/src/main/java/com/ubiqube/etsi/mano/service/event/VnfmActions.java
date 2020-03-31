@@ -1,9 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -13,14 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrants;
+import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
@@ -37,6 +36,7 @@ import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.service.Vim;
+import com.ubiqube.etsi.mano.service.VimManager;
 
 @Service
 public class VnfmActions {
@@ -44,7 +44,7 @@ public class VnfmActions {
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 
-	private final Vim vim;
+	private final VimManager vimManager;
 
 	private final VnfPackageJpa vnfPackageRepository;
 
@@ -52,16 +52,16 @@ public class VnfmActions {
 
 	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 
-	private final LcmGrants lcmGrantsSol003;
+	private final GrantManagement grantManagement;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final Vim _vim, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final LcmGrants _lcmGrantsSol003) {
+	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final GrantManagement _grantManagement) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
-		vim = _vim;
+		vimManager = _vimManager;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
-		lcmGrantsSol003 = _lcmGrantsSol003;
+		grantManagement = _grantManagement;
 	}
 
 	public void vnfInstantiate(final String vnfInstanceId) {
@@ -76,15 +76,18 @@ public class VnfmActions {
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 		// Send Grant.
 		final GrantRequest grantRequest = createGrant(vnfInstance, lcmOpOccs, vnfPkg);
+		final Grants grants = grantManagement.post(grantRequest);
+		// Instantiate VDU.
+		final List<GrantInformation> addVdu = grants.getAddResources();
+		addVdu.forEach(x -> {
+			spawnVdu(x, vnfPkg, vnfInstance, lcmOpOccs);
+		});
+	}
 
-		// XXX: vimId came from Grant.
-		final Map<String, Object> userData = new HashMap<>();
-		if (null == userData.get("vimId")) {
-			throw new GenericException("No vim information for VNF Instance: " + vnfInstanceId);
-		}
-
-		final String processId = vim.onVnfInstantiate(vnfPkgId.toString(), userData);
-		LOG.info("New MSA VNF Create job: {}", processId);
+	private void spawnVdu(final GrantInformation grantInformation, final VnfPackage vnfPackage, final VnfInstance vnfInstance, final VnfLcmOpOcc lcmOpOccs) {
+		final Vim vim = vimManager.getVimById(UUID.fromString(grantInformation.getVimConnectionId()));
+		final String processId = vim.onVnfInstantiate(grantInformation.getVduId(), vnfPackage.getUserDefinedData());
+		LOG.info("New VDU VNF Create job: {}", processId);
 		vnfInstance.setProcessId(processId);
 		vnfInstancesRepository.save(vnfInstance);
 		final LcmOperationStateType status = vim.waitForCompletion(processId, 1 * 60);
@@ -92,7 +95,7 @@ public class VnfmActions {
 
 		if (status == LcmOperationStateType.COMPLETED) {
 			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
-			vnfPkg.setUsageState(PackageUsageStateType.IN_USE);
+			vnfPackage.setUsageState(PackageUsageStateType.IN_USE);
 			final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 			instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);
 			vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
@@ -102,7 +105,7 @@ public class VnfmActions {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 		}
 		vnfInstancesRepository.save(vnfInstance);
-		vnfPackageRepository.save(vnfPkg);
+		vnfPackageRepository.save(vnfPackage);
 	}
 
 	private static GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOcc lcmOpOccs, final VnfPackage vnfPackage) {

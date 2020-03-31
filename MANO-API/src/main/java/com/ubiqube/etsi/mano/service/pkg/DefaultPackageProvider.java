@@ -35,7 +35,11 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public Set<VnfCompute> getVnfComputeNodes() {
-		return new HashSet<>();
+		final HashSet<VnfCompute> set = new HashSet<>();
+		// Create One VDU. for one call on OS createStack.
+		final VnfCompute vnfCompute = new VnfCompute();
+		set.add(vnfCompute);
+		return set;
 	}
 
 	@Override

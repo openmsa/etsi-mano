@@ -8,7 +8,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -17,7 +16,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -55,11 +53,6 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(NsInstance.class, NsdInstance.class)
 				.field("nestedNsInstanceId{}", "nestedNsInstance{id}")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(VnfPkgInfo.class, VnfPackage.class)
-				.field("userDefinedData{key}", "userDefinedData{name}")
-				.field("userDefinedData{value}", "userDefinedData{value}")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(SubscriptionObject.class, Subscription.class)

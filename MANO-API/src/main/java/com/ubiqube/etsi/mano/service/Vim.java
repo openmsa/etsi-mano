@@ -9,7 +9,7 @@ public interface Vim {
 
 	String onVnfInstanceTerminate(Map<String, Object> userData);
 
-	String onVnfInstantiate(String vnfPkgId, Map<String, Object> userData);
+	String onVnfInstantiate(String vnfPkgId, Map<String, String> userData);
 
 	String onNsInstantiate(String nsdId, Map<String, Object> userData);
 
@@ -20,5 +20,7 @@ public interface Vim {
 	void allocateResources(GrantInformation x);
 
 	void freeResources(String reservationId);
+
+	String getType();
 
 }

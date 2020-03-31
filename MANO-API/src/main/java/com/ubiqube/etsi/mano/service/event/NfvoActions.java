@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -13,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
@@ -33,6 +36,7 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Vim;
+import com.ubiqube.etsi.mano.service.VimManager;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 @Service
@@ -45,20 +49,20 @@ public class NfvoActions {
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsdRepository nsdRepository;
 	private final VnfmInterface vnfm;
-	private final Vim vim;
+	private final VimManager vimManager;
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
 	private final GrantsJpa grantJpa;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _vim, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
 		vnfm = _vnfm;
-		vim = _vim;
+		vimManager = _vimManager;
 		eventManager = _eventManager;
 		vnfPackageRepository = _vnfPackageRepository;
 		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
@@ -66,6 +70,8 @@ public class NfvoActions {
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
+		// XXX This is not the correct way/
+		final Vim vim = electVim(null);
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
@@ -111,6 +117,8 @@ public class NfvoActions {
 	}
 
 	public void nsInstantiate(final String nsInstanceId) {
+		// XXX This is not the correct way/
+		final Vim vim = electVim(null);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstance.getNsdId();
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
@@ -201,17 +209,26 @@ public class NfvoActions {
 	public void grantRequest(final String objectId) {
 		final Optional<Grants> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
 		final Grants grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
+
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
+				final Vim vim = vimManager.getVimById(UUID.fromString(x.getVimConnectionId()));
 				vim.freeResources(x.getReservationId());
 			}
 		});
-
+		final Vim vim = electVim(grants.getAddResources());
 		grants.getAddResources().forEach(x -> {
 			x.getVduId();
 			vim.allocateResources(x);
 		});
 
+	}
+
+	private Vim electVim(final List<GrantInformation> addResources) {
+		// XXX: Do some real elections.
+		final Set<VimConnectionInformation> vims = vimManager.getVimByType("MSA_20");
+		final VimConnectionInformation vimInfo = vims.iterator().next();
+		return vimManager.getVimById(vimInfo.getId());
 	}
 
 }
