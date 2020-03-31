@@ -137,21 +137,21 @@ public class VnfmActions {
 
 	private static ResourceDefinition mapStorage(final VnfStorage vnfStorage) {
 		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setType(TypeEnum.STORAGE);
 		resourceDefinition.setVduId(vnfStorage.getId().toString());
 		return resourceDefinition;
 	}
 
 	private static ResourceDefinition mapLinkPort(final VnfLinkPort vnfLinkPort) {
 		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setType(TypeEnum.LINKPORT);
 		resourceDefinition.setVduId(vnfLinkPort.getId().toString());
 		return resourceDefinition;
 	}
 
 	private static ResourceDefinition mapVl(final VnfVl vnfVl) {
 		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.COMPUTE);
+		resourceDefinition.setType(TypeEnum.VL);
 		resourceDefinition.setVduId(vnfVl.getId().toString());
 		return resourceDefinition;
 	}
