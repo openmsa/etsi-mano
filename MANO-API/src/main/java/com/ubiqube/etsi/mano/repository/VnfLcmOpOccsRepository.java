@@ -20,6 +20,7 @@ public interface VnfLcmOpOccsRepository extends CrudRepository<VnfLcmOpOcc>, Bin
 	 * @param operation
 	 * @return
 	 */
+	@Nonnull
 	VnfLcmOpOcc createLcmOpOccs(@Nonnull final String vnfInstanceId, final LcmOperationType operation);
 
 	void updateState(@Nonnull final VnfLcmOpOcc lcmOpOccs, final LcmOperationStateType operationState);
