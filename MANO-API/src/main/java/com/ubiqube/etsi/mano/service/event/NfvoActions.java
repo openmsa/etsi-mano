@@ -4,6 +4,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -11,9 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
+import com.ubiqube.etsi.mano.jpa.GrantsJpa;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -44,8 +49,9 @@ public class NfvoActions {
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
+	private final GrantsJpa grantJpa;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final Vim _msaExecutor, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -56,6 +62,7 @@ public class NfvoActions {
 		eventManager = _eventManager;
 		vnfPackageRepository = _vnfPackageRepository;
 		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
+		grantJpa = _grantJpa;
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
@@ -189,6 +196,22 @@ public class NfvoActions {
 			}
 		}
 		return ret;
+	}
+
+	public void grantRequest(final String objectId) {
+		final Optional<Grants> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
+		final Grants grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
+		grants.getRemoveResources().forEach(x -> {
+			if (x.getReservationId() != null) {
+				msaExecutor.freeResources(x.getReservationId());
+			}
+		});
+
+		grants.getAddResources().forEach(x -> {
+			x.getVduId();
+			msaExecutor.allocateResources(x);
+		});
+
 	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
@@ -144,5 +145,17 @@ public class MsaExecutor implements Vim {
 			return orig;
 		}
 		return def;
+	}
+
+	@Override
+	public void allocateResources(final GrantInformation x) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void freeResources(final String reservationId) {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -1,17 +1,30 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
-import java.util.List;
+import java.util.Set;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
+import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
+
+import tosca.nodes.nfv.VduCp;
 
 public interface PackageProvider {
 
-	List<VnfPackageSoftwareImageInfo> getSoftwareImages();
+	Set<SoftwareImage> getSoftwareImages();
 
 	ProviderData getProviderPadata();
 
-	List<VnfPackageArtifactInfo> getAdditionalArtefacts();
+	Set<AdditionalArtifact> getAdditionalArtefacts();
+
+	Set<VnfCompute> getVnfComputeNodes();
+
+	Set<VnfStorage> getVnfStorages();
+
+	Set<VnfVl> getVnfVirtualLinks();
+
+	Set<VduCp> getVnfVduCp();
 
 }

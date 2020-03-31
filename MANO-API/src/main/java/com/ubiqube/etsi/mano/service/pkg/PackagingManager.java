@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -15,17 +18,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 
 import ma.glasnost.orika.MapperFacade;
+import tosca.nodes.nfv.VduCp;
 
 @Service
 public class PackagingManager {
@@ -40,40 +49,52 @@ public class PackagingManager {
 
 	private final MapperFacade mapper;
 
-	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper) {
+	private final VnfPackageJpa vnfPackageJpa;
+
+	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper, final VnfPackageJpa _vnfPackageJpa) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
 		mapper = _mapper;
+		vnfPackageJpa = _vnfPackageJpa;
 	}
 
 	public void vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		startOnboarding(vnfPkgInfo);
-		uploadAndFinishOnboarding(vnfPkgInfo, data);
+		final Optional<VnfPackage> vnfPackageOpt = vnfPackageJpa.findById(UUID.fromString(vnfPkgId));
+		final VnfPackage vnfPpackage = vnfPackageOpt.orElseThrow(() -> new NotFoundException("VNF Package " + vnfPkgId + " Not found."));
+		startOnboarding(vnfPpackage);
+		uploadAndFinishOnboarding(vnfPpackage, data);
 	}
 
 	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nonnull final String vnfPkgId, final String url) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		startOnboarding(vnfPkgInfo);
+		final Optional<VnfPackage> vnfPackageOpt = vnfPackageJpa.findById(UUID.fromString(vnfPkgId));
+		final VnfPackage vnfPackage = vnfPackageOpt.orElseThrow(() -> new NotFoundException("VNF Package " + vnfPkgId + " Not found."));
+		startOnboarding(vnfPackage);
 		LOG.info("Async. Download of {}", url);
 		final byte[] data = getUrlContent(url);
-		uploadAndFinishOnboarding(vnfPkgInfo, data);
+		uploadAndFinishOnboarding(vnfPackage, data);
 	}
 
-	private void uploadAndFinishOnboarding(final VnfPkgInfo vnfPkgInfo, final byte[] data) {
-		vnfPkgInfo.setChecksum(getChecksum(data));
-		vnfPackageRepository.storeBinary(vnfPkgInfo.getId(), "vnfd", new ByteArrayInputStream(data));
+	private void uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
+		vnfPackage.setChecksum(getChecksum(data));
+		vnfPackageRepository.storeBinary(vnfPackage.getId().toString(), "vnfd", new ByteArrayInputStream(data));
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
-			vnfPkgInfo.setSoftwareImages(packageProvider.getSoftwareImages());
-			vnfPkgInfo.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
+			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes();
+			vnfPackage.setVnfCompute(cNodes);
+			final Set<VnfStorage> vboNodes = packageProvider.getVnfStorages();
+			vnfPackage.setVnfStorage(vboNodes);
+			final Set<VnfVl> vvlNodes = packageProvider.getVnfVirtualLinks();
+			vnfPackage.setVnfVl(vvlNodes);
+			final Set<VduCp> vcNodes = packageProvider.getVnfVduCp();
+			vnfPackage.setSoftwareImages(packageProvider.getSoftwareImages());
+			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
 			final ProviderData pd = packageProvider.getProviderPadata();
-			mapper.map(pd, vnfPkgInfo);
+			mapper.map(pd, vnfPackage);
 		}
-		finishOnboarding(vnfPkgInfo);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgInfo.getId());
+		finishOnboarding(vnfPackage);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId().toString());
 	}
 
 	private static byte[] getUrlContent(final String uri) {
@@ -96,7 +117,8 @@ public class PackagingManager {
 		final String sha3_256hex = bytesToHex(hashbytes);
 		final Checksum checksum = new Checksum();
 
-		checksum.algorithm(Constants.HASH_ALGORITHM).hash(sha3_256hex);
+		checksum.setAlgorithm(Constants.HASH_ALGORITHM);
+		checksum.setHash(sha3_256hex);
 		return checksum;
 	}
 
@@ -112,15 +134,15 @@ public class PackagingManager {
 		return hexString.toString();
 	}
 
-	private void finishOnboarding(final VnfPkgInfo vnfPkgInfo) {
-		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
-		vnfPkgInfo.setOperationalState(PackageOperationalStateType.ENABLED);
-		vnfPackageRepository.save(vnfPkgInfo);
+	private void finishOnboarding(final VnfPackage vnfPackage) {
+		vnfPackage.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
+		vnfPackage.setOperationalState(PackageOperationalStateType.ENABLED);
+		vnfPackageJpa.save(vnfPackage);
 	}
 
-	private void startOnboarding(final VnfPkgInfo vnfPkgInfo) {
-		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.PROCESSING);
-		vnfPackageRepository.save(vnfPkgInfo);
+	private void startOnboarding(final VnfPackage vnfPackage) {
+		vnfPackage.setOnboardingState(PackageOnboardingStateType.PROCESSING);
+		vnfPackageJpa.save(vnfPackage);
 	}
 
 }

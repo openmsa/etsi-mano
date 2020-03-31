@@ -6,12 +6,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class VnfVl implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
+	@OneToOne
+	private VnfPackage vnfPackage;
 
 	@Override
 	public UUID getId() {
@@ -20,6 +24,14 @@ public class VnfVl implements BaseEntity {
 
 	public void setId(final UUID id) {
 		this.id = id;
+	}
+
+	public VnfPackage getVnfPackage() {
+		return vnfPackage;
+	}
+
+	public void setVnfPackage(final VnfPackage vnfPackage) {
+		this.vnfPackage = vnfPackage;
 	}
 
 }

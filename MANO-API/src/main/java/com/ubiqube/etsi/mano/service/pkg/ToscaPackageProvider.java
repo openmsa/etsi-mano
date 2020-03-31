@@ -5,15 +5,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
@@ -25,7 +29,11 @@ import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import tosca.nodes.nfv.VNF;
+import tosca.nodes.nfv.VduCp;
+import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
+import tosca.nodes.nfv.vdu.VirtualBlockStorage;
+import tosca.nodes.nfv.vdu.VirtualObjectStorage;
 
 public class ToscaPackageProvider implements PackageProvider {
 
@@ -49,7 +57,7 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("vnfSoftwareVersion", "softwareVersion")
 				.byDefault()
 				.register();
-		mapperFactory.classMap(ArtefactInformations.class, VnfPackageArtifactInfo.class)
+		mapperFactory.classMap(ArtefactInformations.class, AdditionalArtifact.class)
 				.field("path", "artifactPath")
 				.field("checksum", "checksum.hash")
 				.field("algorithm", "checksum.algorithm")
@@ -76,12 +84,12 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public List<VnfPackageSoftwareImageInfo> getSoftwareImages() {
+	public Set<SoftwareImage> getSoftwareImages() {
 		final List<@NonNull Compute> list = toscaApi.getObjects(root, Compute.class);
 		LOG.debug("Found {} Compute node in TOSCA model", list.size());
 		return list.stream()
-				.map(x -> mapper.map(x.getSwImageData(), VnfPackageSoftwareImageInfo.class))
-				.collect(Collectors.toList());
+				.map(x -> mapper.map(x.getSwImageData(), SoftwareImage.class))
+				.collect(Collectors.toSet());
 	}
 
 	@Override
@@ -95,9 +103,52 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public List<VnfPackageArtifactInfo> getAdditionalArtefacts() {
+	public Set<AdditionalArtifact> getAdditionalArtefacts() {
 		final List<ArtefactInformations> files = toscaParser.getFiles();
-		return files.stream().map(x -> mapper.map(x, VnfPackageArtifactInfo.class)).collect(Collectors.toList());
+		return files.stream().map(x -> mapper.map(x, AdditionalArtifact.class)).collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<VnfCompute> getVnfComputeNodes() {
+		final List<@NonNull Compute> list = toscaApi.getObjects(root, Compute.class);
+		LOG.debug("Found {} Compute node in TOSCA model", list.size());
+		return list.stream()
+				.map(x -> mapper.map(x, VnfCompute.class))
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<VnfStorage> getVnfStorages() {
+		final List<@NonNull VirtualBlockStorage> list = toscaApi.getObjects(root, VirtualBlockStorage.class);
+		LOG.debug("Found {} Block Storage node in TOSCA model", list.size());
+		final Set<@NonNull VnfStorage> res = list.stream()
+				.map(x -> mapper.map(x, VnfStorage.class))
+				.collect(Collectors.toSet());
+		final List<@NonNull VirtualObjectStorage> vos = toscaApi.getObjects(root, VirtualObjectStorage.class);
+		LOG.debug("Found {} Object Storage node in TOSCA model", vos.size());
+		final Set<@NonNull VnfStorage> resVos = vos.stream()
+				.map(x -> mapper.map(x, VnfStorage.class))
+				.collect(Collectors.toSet());
+		res.addAll(resVos);
+		return res;
+	}
+
+	@Override
+	public Set<VnfVl> getVnfVirtualLinks() {
+		final List<@NonNull VnfVirtualLink> list = toscaApi.getObjects(root, VnfVirtualLink.class);
+		LOG.debug("Found {} Compute node in TOSCA model", list.size());
+		return list.stream()
+				.map(x -> mapper.map(x, VnfVl.class))
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<VduCp> getVnfVduCp() {
+		final List<@NonNull VduCp> list = toscaApi.getObjects(root, VduCp.class);
+		LOG.debug("Found {} Compute node in TOSCA model", list.size());
+		return list.stream()
+				.map(x -> mapper.map(x, VduCp.class))
+				.collect(Collectors.toSet());
 	}
 
 }

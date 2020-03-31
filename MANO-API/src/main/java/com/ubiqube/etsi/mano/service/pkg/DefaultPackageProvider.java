@@ -1,19 +1,18 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
+import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 
+import tosca.nodes.nfv.VduCp;
+
 public class DefaultPackageProvider implements PackageProvider {
-
-	@Override
-	public List<VnfPackageSoftwareImageInfo> getSoftwareImages() {
-		return new ArrayList<>();
-	}
-
 	@Override
 	public ProviderData getProviderPadata() {
 		final ProviderData providerData = new ProviderData();
@@ -25,8 +24,33 @@ public class DefaultPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public List<VnfPackageArtifactInfo> getAdditionalArtefacts() {
-		return new ArrayList<>();
+	public Set<SoftwareImage> getSoftwareImages() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<AdditionalArtifact> getAdditionalArtefacts() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<VnfCompute> getVnfComputeNodes() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<VnfStorage> getVnfStorages() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<VnfVl> getVnfVirtualLinks() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<VduCp> getVnfVduCp() {
+		return new HashSet<>();
 	}
 
 }

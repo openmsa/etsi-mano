@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -78,20 +80,16 @@ public class VnfPackage implements BaseEntity {
 	@Fetch(FetchMode.SELECT)
 	private List<VnfUserDefinedData> userDefinedData;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
 	private Set<VnfCompute> vnfCompute;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
 	private Set<VnfVl> vnfVl;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
 	private Set<VnfStorage> vnfStorage;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
 	private Set<VnfLinkPort> vnfLinkPort;
 
 	@Override
