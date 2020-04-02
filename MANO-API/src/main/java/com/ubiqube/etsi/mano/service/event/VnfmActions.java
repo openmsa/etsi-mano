@@ -85,7 +85,7 @@ public class VnfmActions {
 		lcmOpOccs.setGrantId(grants.getId().toString());
 		vnfLcmOpOccsRepository.save(lcmOpOccs);
 		grants = pollGrants(grants);
-
+		vnfInstance.setVimConnectionInfo(grants.getVimConnections());
 		// Instantiate VDU.
 		final Set<GrantInformation> addVdu = grants.getAddResources();
 		for (final GrantInformation grantInformation : addVdu) {
