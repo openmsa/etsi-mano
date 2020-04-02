@@ -42,7 +42,7 @@ public class Grants {
 	private String vnfLcmOpOccId = null;
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<VimConnectionInformation> vimConnections = null;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "grants")
