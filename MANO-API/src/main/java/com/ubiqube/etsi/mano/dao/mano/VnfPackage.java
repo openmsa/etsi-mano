@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
@@ -80,16 +81,20 @@ public class VnfPackage implements BaseEntity {
 	@Fetch(FetchMode.SELECT)
 	private Map<String, String> userDefinedData;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<VnfCompute> vnfCompute;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<VnfVl> vnfVl;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<VnfStorage> vnfStorage;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<VnfLinkPort> vnfLinkPort;
 
 	@Override
