@@ -54,8 +54,8 @@ public class VnfPackage implements BaseEntity {
 
 	private Checksum checksum;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<SoftwareImage> softwareImages;
 
 	@ElementCollection(fetch = FetchType.EAGER)
