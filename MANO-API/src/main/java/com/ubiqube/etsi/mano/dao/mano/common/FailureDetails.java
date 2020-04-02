@@ -1,12 +1,14 @@
 package com.ubiqube.etsi.mano.dao.mano.common;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 
 @Embeddable
 public class FailureDetails {
 	private String type;
 	private String title;
 	private Long status;
+	@Lob
 	private String detail;
 	private String instance;
 

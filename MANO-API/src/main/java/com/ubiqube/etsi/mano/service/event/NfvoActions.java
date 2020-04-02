@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.GrantsJpa;
@@ -38,6 +40,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Vim;
 import com.ubiqube.etsi.mano.service.VimManager;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 @Service
 public class NfvoActions {
@@ -71,7 +74,8 @@ public class NfvoActions {
 
 	public void nsTerminate(final String nsInstanceId) {
 		// XXX This is not the correct way/
-		final Vim vim = electVim(null);
+		final VimConnectionInformation vimInfo = electVim(null);
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
@@ -118,7 +122,8 @@ public class NfvoActions {
 
 	public void nsInstantiate(final String nsInstanceId) {
 		// XXX This is not the correct way/
-		final Vim vim = electVim(null);
+		final VimConnectionInformation vimInfo = electVim(null);
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstance.getNsdId();
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
@@ -130,8 +135,8 @@ public class NfvoActions {
 		LOG.info("Creating a MSA Job: {}", processId);
 		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
 		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
-		LcmOperationStateType status = vim.waitForCompletion(processId, 1 * 60);
-		if (status != LcmOperationStateType.COMPLETED) {
+		final VimStatus status = vim.waitForCompletion(processId, 1 * 60);
+		if (status.getLcmOperationStateType() != LcmOperationStateType.COMPLETED) {
 			// update Lcm OpOccs
 			// send Notification.
 			LOG.warn("Instance #{} => {}", nsInstance.getId(), status);
@@ -160,8 +165,8 @@ public class NfvoActions {
 		// update lcm op occs
 		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		status = computeStatus(vnfLcmOpOccsIds);
-		updateOperationState(lcmOpOccs, status);
+		final LcmOperationStateType resultStatus = computeStatus(vnfLcmOpOccsIds);
+		updateOperationState(lcmOpOccs, resultStatus);
 		// event->create (we have lcm op occs.)
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
 	}
@@ -182,11 +187,11 @@ public class NfvoActions {
 			if (ret.isEmpty()) {
 				break;
 			}
-			sleepSeconds(1 * 60);
+			sleepSeconds(1 * 60L);
 		}
 	}
 
-	private void sleepSeconds(final long seconds) {
+	private static void sleepSeconds(final long seconds) {
 		try {
 			Thread.sleep(seconds * 1000L);
 		} catch (final InterruptedException e) {
@@ -213,22 +218,29 @@ public class NfvoActions {
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
 				final Vim vim = vimManager.getVimById(UUID.fromString(x.getVimConnectionId()));
-				vim.freeResources(x.getReservationId());
+				vim.freeResources(x);
 			}
 		});
-		final Vim vim = electVim(grants.getAddResources());
+		final VimConnectionInformation vimInfo = electVim(grants.getAddResources());
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
-			x.getVduId();
-			vim.allocateResources(x);
+			vim.allocateResources(vimInfo, x);
+			x.setVimConnectionId(vimInfo.getId().toString());
 		});
 
+		grants.setVimConnections(Arrays.asList(vimInfo));
+		grants.setAvailable(Boolean.TRUE);
+		grantJpa.save(grants);
+		LOG.info("Grant {} Available.", grants.getId());
 	}
 
-	private Vim electVim(final List<GrantInformation> addResources) {
+	private VimConnectionInformation electVim(final Set<GrantInformation> addResources) {
 		// XXX: Do some real elections.
 		final Set<VimConnectionInformation> vims = vimManager.getVimByType("MSA_20");
-		final VimConnectionInformation vimInfo = vims.iterator().next();
-		return vimManager.getVimById(vimInfo.getId());
+		if (vims.isEmpty()) {
+			throw new GenericException("Couldn't find a VIM.");
+		}
+		return vims.iterator().next();
 	}
 
 }

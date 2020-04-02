@@ -30,6 +30,9 @@ public class LcmGrantsSol005Api implements LcmGrants {
 	@Override
 	public ResponseEntity<Grant> grantsGrantIdGet(final String grantId, final String version) {
 		final Grants grants = grantManagement.get(UUID.fromString(grantId));
+		if (grants.getAvailable() != Boolean.TRUE) {
+			return ResponseEntity.noContent().build();
+		}
 		final Grant jsonGrant = mapper.map(grants, Grant.class);
 		return ResponseEntity.ok(jsonGrant);
 	}

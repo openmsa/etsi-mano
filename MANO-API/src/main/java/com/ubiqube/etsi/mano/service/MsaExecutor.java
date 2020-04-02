@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,12 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 /**
  * NFVO+VNFM & NVFO MSA implementation.
@@ -41,18 +46,6 @@ public class MsaExecutor implements Vim {
 		super();
 		this.orchestrationService = orchestrationService;
 		vimJpa = _vimJpa;
-		checkVimData(vimJpa);
-	}
-
-	private void checkVimData(final VimConnectionInformationJpa _vimJpa) {
-		final Set<VimConnectionInformation> vims = _vimJpa.findByVimType("MSA_20");
-		if (vims.isEmpty()) {
-			throw new GenericException("Unable to find configuration for im MSA_20");
-		}
-		final VimConnectionInformation vci = vims.iterator().next();
-		final Map<String, String> accessInfo = vci.getAccessInfo();
-		defaultfNfvo = accessInfo.get("defaultNfvo");
-		devaultfVim = accessInfo.get("defaultVim");
 	}
 
 	@Override
@@ -68,11 +61,21 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String onVnfInstantiate(final String vnfPkgId, final Map<String, String> userData) {
+	public String onVnfInstantiate(final GrantInformation grantInformation, final VnfPackage vnfPackage) {
+		final Set<VimConnectionInformation> vims = vimJpa.findByVimType("MSA_20");
+		if (vims.isEmpty()) {
+			throw new GenericException("Unable to find configuration for im MSA_20");
+		}
+		final VimConnectionInformation vci = vims.iterator().next();
+		LOG.info("VNF Instantiante using VIM {}", vci.getId());
+		final Map<String, String> accessInfo = vci.getAccessInfo();
+		defaultfNfvo = accessInfo.get("defaultNfvo");
+		devaultfVim = accessInfo.get("defaultVim");
 
 		final Map<String, String> varsMap = new HashMap<>();
+		final Map<String, String> userData = vnfPackage.getUserDefinedData();
 		final String customerId = userData.get(CUSTOMER_ID);
-		varsMap.put("vnfPkgId", vnfPkgId);
+		varsMap.put("vnfPkgId", vnfPackage.getId().toString());
 		varsMap.put(CUSTOMER_ID, customerId);
 		varsMap.put("nfvoDevice", defaultfNfvo);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
@@ -113,7 +116,7 @@ public class MsaExecutor implements Vim {
 
 	private String executeProcess(final String customerId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) {
 		try {
-			LOG.info("Calling MSA remote FW: custormerId={}, serviceId={}, serviceName={}, processName={}, params={}", customerId, serviceId, serviceName, processName, varsMap);
+			LOG.info("Calling MSA remote FW: custormerId={}, serviceId={}, servic/home/ncuser/etsi-mano/WORKFLOWS/ETSI-MANO/Reference/Common/mano.phpeName={}, processName={}, params={}", customerId, serviceId, serviceName, processName, varsMap);
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
 			return String.valueOf(resp.getProcessId().getId());
 		} catch (final ServiceException e) {
@@ -122,7 +125,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public LcmOperationStateType waitForCompletion(final String processId, final int seconds) {
+	public VimStatus waitForCompletion(final String processId, final int seconds) {
 		LOG.debug("Entering Wait for Completion.");
 		while (true) {
 			try {
@@ -131,9 +134,10 @@ public class MsaExecutor implements Vim {
 				if (!"RUNNING".equals(status)) {
 					LOG.debug("Wait for completion done with result: {}", status);
 					if ("ENDED".equals(status)) {
-						return LcmOperationStateType.COMPLETED;
+						return createResult(LcmOperationStateType.COMPLETED, "Ok");
 					}
-					return LcmOperationStateType.FAILED;
+					LOG.error("Error: {}", res);
+					return createResult(LcmOperationStateType.FAILED, res.toString());
 				}
 				Thread.sleep(15 * 1000L);
 			} catch (NumberFormatException | InterruptedException e) {
@@ -141,6 +145,19 @@ public class MsaExecutor implements Vim {
 			}
 		}
 
+	}
+
+	@Nonnull
+	private static VimStatus createResult(final LcmOperationStateType state, final String message) {
+		final VimStatus vimStatus = new VimStatus();
+		vimStatus.setLcmOperationStateType(state);
+		if (state == LcmOperationStateType.COMPLETED) {
+			return vimStatus;
+		}
+		final ProblemDetails problemDetails = new ProblemDetails();
+		problemDetails.setDetail(message);
+		vimStatus.setProblemDetails(problemDetails);
+		return vimStatus;
 	}
 
 	private static String getDefault(final String orig, final String def) {
@@ -151,13 +168,12 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public void allocateResources(final GrantInformation x) {
-		// TODO Auto-generated method stub
-
+	public void allocateResources(final VimConnectionInformation vimConnectionInformation, final GrantInformation grantInformation) {
+		System.out.println("");
 	}
 
 	@Override
-	public void freeResources(final String reservationId) {
+	public void freeResources(final GrantInformation grantInformation) {
 		// TODO Auto-generated method stub
 
 	}

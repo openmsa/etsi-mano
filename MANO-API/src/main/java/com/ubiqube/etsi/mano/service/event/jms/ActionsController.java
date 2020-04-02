@@ -2,16 +2,21 @@ package com.ubiqube.etsi.mano.service.event.jms;
 
 import java.util.Base64;
 
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import com.ubiqube.etsi.mano.service.event.NfvoActions;
 import com.ubiqube.etsi.mano.service.event.VnfmActions;
 import com.ubiqube.etsi.mano.service.pkg.PackagingManager;
 
 @Service
+@Transactional(TxType.NEVER)
 public class ActionsController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActionsController.class);
@@ -28,9 +33,11 @@ public class ActionsController {
 		this.packagingManager = packagingManager;
 	}
 
-	@JmsListener(destination = "system.actions")
+	@JmsListener(destination = "system.actions", concurrency = "5-10")
+	@Transactional(TxType.NEVER)
+	@org.springframework.transaction.annotation.Transactional(propagation = Propagation.NEVER)
 	public void onEvent(final ActionMessage ev) {
-		LOG.info("Receiving Action: {}", ev);
+		LOG.info("JMS ActionController Receiving Action: {}", ev);
 		switch (ev.getActionType()) {
 		case VNF_PKG_ONBOARD_FROM_URI:
 			packagingManager.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(ev.getObjectId(), (String) ev.getParameters().get("url"));
@@ -48,10 +55,14 @@ public class ActionsController {
 		case NS_TERMINATE:
 			nfvoActions.nsTerminate(ev.getObjectId());
 			break;
+		case GRANT_REQUEST:
+			nfvoActions.grantRequest(ev.getObjectId());
+			break;
 		default:
-			LOG.warn("Unknown event: {}", ev.getObjectId());
+			LOG.warn("Unknown event: {}", ev);
 			break;
 		}
+		LOG.info("JMS ActionController Done for event: {}", ev);
 	}
 
 }

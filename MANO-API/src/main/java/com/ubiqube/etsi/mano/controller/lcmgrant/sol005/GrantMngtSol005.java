@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -21,6 +24,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @Profile("!NFVM")
 @Service
+@Transactional(TxType.NEVER)
 public class GrantMngtSol005 implements GrantManagement {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GrantMngtSol005.class);
@@ -44,7 +48,9 @@ public class GrantMngtSol005 implements GrantManagement {
 	@Override
 	public Grants post(final GrantRequest grantRequest) {
 		Grants grants = mapper.map(grantRequest, Grants.class);
+		grants.setAvailable(Boolean.FALSE);
 		grants = grantsJpa.save(grants);
+		LOG.debug("Sending grants {}", grants.getId());
 		eventManager.sendAction(ActionType.GRANT_REQUEST, grants.getId().toString(), new HashMap<String, Object>());
 		LOG.info("Grant request {} sent.", grants.getId());
 		return grants;
