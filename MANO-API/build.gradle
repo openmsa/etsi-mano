@@ -89,6 +89,8 @@ dependencies {
 	compile 'net.rakugakibox.spring.boot:orika-spring-boot-starter:1.8.0'
 	
 	compile group: 'org.hibernate', name: 'hibernate-search', version: '5.11.5.Final'
+
+	compile group: 'org.pacesys', name: 'openstack4j', version: '3.2.0'
 }
 
 springBoot {
