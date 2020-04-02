@@ -2,15 +2,19 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -25,6 +29,12 @@ public class Grants {
 
 	private String flavourId;
 
+	private String operation;
+
+	private boolean isAutomaticInvocation;
+
+	private boolean instantiationLevelId;
+
 	// Must be string because VNFM / NFVO are differents.
 	private String vnfInstanceId = null;
 
@@ -32,7 +42,7 @@ public class Grants {
 	private String vnfLcmOpOccId = null;
 
 	@Valid
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<VimConnectionInformation> vimConnections = null;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "grants")
@@ -49,20 +59,24 @@ public class Grants {
 	private String storageReservationId = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> addResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> addResources = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> tempResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> tempResources = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> removeResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> removeResources = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> updateResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> updateResources = null;
 
 	@Embedded
 	private GrantVimAssetsEntity vimAssets = null;
@@ -77,6 +91,11 @@ public class Grants {
 
 	@Transient
 	private Map<String, String> additionalParams = null;
+
+	/**
+	 * Flag to say if grants have been, inspected.
+	 */
+	private Boolean available;
 
 	public UUID getId() {
 		return id;
@@ -150,35 +169,35 @@ public class Grants {
 		this.storageReservationId = storageReservationId;
 	}
 
-	public List<GrantInformation> getAddResources() {
+	public Set<GrantInformation> getAddResources() {
 		return addResources;
 	}
 
-	public void setAddResources(final List<GrantInformation> addResources) {
+	public void setAddResources(final Set<GrantInformation> addResources) {
 		this.addResources = addResources;
 	}
 
-	public List<GrantInformation> getTempResources() {
+	public Set<GrantInformation> getTempResources() {
 		return tempResources;
 	}
 
-	public void setTempResources(final List<GrantInformation> tempResources) {
+	public void setTempResources(final Set<GrantInformation> tempResources) {
 		this.tempResources = tempResources;
 	}
 
-	public List<GrantInformation> getRemoveResources() {
+	public Set<GrantInformation> getRemoveResources() {
 		return removeResources;
 	}
 
-	public void setRemoveResources(final List<GrantInformation> removeResources) {
+	public void setRemoveResources(final Set<GrantInformation> removeResources) {
 		this.removeResources = removeResources;
 	}
 
-	public List<GrantInformation> getUpdateResources() {
+	public Set<GrantInformation> getUpdateResources() {
 		return updateResources;
 	}
 
-	public void setUpdateResources(final List<GrantInformation> updateResources) {
+	public void setUpdateResources(final Set<GrantInformation> updateResources) {
 		this.updateResources = updateResources;
 	}
 
@@ -228,6 +247,38 @@ public class Grants {
 
 	public void setFlavourId(final String flavourId) {
 		this.flavourId = flavourId;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(final String operation) {
+		this.operation = operation;
+	}
+
+	public boolean isAutomaticInvocation() {
+		return isAutomaticInvocation;
+	}
+
+	public void setAutomaticInvocation(final boolean isAutomaticInvocation) {
+		this.isAutomaticInvocation = isAutomaticInvocation;
+	}
+
+	public boolean isInstantiationLevelId() {
+		return instantiationLevelId;
+	}
+
+	public void setInstantiationLevelId(final boolean instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
+	}
+
+	public Boolean getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(final Boolean available) {
+		this.available = available;
 	}
 
 }

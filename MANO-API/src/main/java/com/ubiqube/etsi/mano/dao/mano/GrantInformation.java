@@ -1,11 +1,20 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import javax.persistence.Embeddable;
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 
-@Embeddable
-public class GrantInformation {
+@Entity
+public class GrantInformation implements BaseEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+
 	private String resourceDefinitionId = null;
 
 	private String reservationId = null;
@@ -21,6 +30,15 @@ public class GrantInformation {
 	private TypeEnum type;
 
 	private String vduId;
+
+	@Override
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(final UUID id) {
+		this.id = id;
+	}
 
 	public String getResourceDefinitionId() {
 		return resourceDefinitionId;
