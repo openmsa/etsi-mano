@@ -1,11 +1,18 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.openstack4j.api.OSClient.OSClientV3;
+import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.compute.Flavor;
+import org.openstack4j.model.compute.Image;
+import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,9 +24,12 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  * NFVO+VNFM & NVFO MSA implementation.
@@ -41,10 +51,13 @@ public class MsaExecutor implements Vim {
 
 	private final VimConnectionInformationJpa vimJpa;
 
-	public MsaExecutor(final OrchestrationService orchestrationService, final VimConnectionInformationJpa _vimJpa) {
+	private final MapperFacade mapper;
+
+	public MsaExecutor(final OrchestrationService orchestrationService, final VimConnectionInformationJpa _vimJpa, final MapperFacade _mapper) {
 		super();
 		this.orchestrationService = orchestrationService;
 		vimJpa = _vimJpa;
+		mapper = _mapper;
 	}
 
 	@Override
@@ -180,5 +193,32 @@ public class MsaExecutor implements Vim {
 	@Override
 	public String getType() {
 		return "MSA_20";
+	}
+
+	public VimFlavor getFlavors(final String name) {
+		final OSClientV3 os = getOs();
+		final List<? extends Flavor> flavors = os.compute().flavors().list();
+		final Flavor flavor = flavors.stream()
+				.filter(x -> x.getName().equalsIgnoreCase(name))
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Flavor not found: " + name));
+		return mapper.map(flavor, VimFlavor.class);
+	}
+
+	private static OSClientV3 getOs() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.endpoint("http://10.31.1.240:5000/v3")
+				.credentials("admin", "84612d9a2e404ac9", domainIdentifier)
+				.scopeToProject(Identifier.byId("df1f081bf2d345099e6bb53f6b9407ff"))
+				.authenticate();
+	}
+
+	@Override
+	public @NonNull VimImage getImagesInformations(final String name) {
+		final OSClientV3 os = getOs();
+		final List<? extends Image> images = os.compute().images().list();
+		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new NotFoundException("Image " + name + " Cannot be found on Vim."));
+		return mapper.map(image, VimImage.class);
 	}
 }

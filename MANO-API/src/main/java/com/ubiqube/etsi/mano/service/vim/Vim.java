@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -26,5 +28,8 @@ public interface Vim {
 	void freeResources(GrantInformation grantInformation);
 
 	String getType();
+
+	@NonNull
+	VimImage getImagesInformations(String name);
 
 }

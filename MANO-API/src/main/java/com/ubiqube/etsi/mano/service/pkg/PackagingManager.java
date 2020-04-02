@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -89,12 +91,24 @@ public class PackagingManager {
 			vnfPackage.setVnfVl(vvlNodes);
 			final Set<VduCp> vcNodes = packageProvider.getVnfVduCp();
 			vnfPackage.setSoftwareImages(packageProvider.getSoftwareImages());
+			verifyImagePath(vnfPackage.getSoftwareImages());
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId().toString());
+	}
+
+	private static void verifyImagePath(final Set<SoftwareImage> softwareImages) {
+		softwareImages.forEach(x -> {
+			if (null != x.getImagePath()) {
+				final File file = new File(x.getImagePath());
+				if (!file.exists()) {
+					throw new NotFoundException("File " + x.getImagePath() + " Could not be found");
+				}
+			}
+		});
 	}
 
 	private static byte[] getUrlContent(final String uri) {

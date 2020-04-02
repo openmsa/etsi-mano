@@ -16,14 +16,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.GrantsJpa;
+import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -35,10 +40,12 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimImage;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
@@ -55,10 +62,12 @@ public class NfvoActions {
 	private final VimManager vimManager;
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
+	private final VnfPackageJpa vnfPackageJpa;
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
 	private final GrantsJpa grantJpa;
+	private final VnfInstancesRepository vnfInstancesRepository;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstancesRepository _vnfInstancesRepository) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -70,6 +79,8 @@ public class NfvoActions {
 		vnfPackageRepository = _vnfPackageRepository;
 		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
 		grantJpa = _grantJpa;
+		vnfPackageJpa = _vnfPackageJpa;
+		vnfInstancesRepository = _vnfInstancesRepository;
 	}
 
 	public void nsTerminate(final String nsInstanceId) {
@@ -229,9 +240,45 @@ public class NfvoActions {
 		});
 
 		grants.setVimConnections(Arrays.asList(vimInfo));
+		final VnfPackage vnfPackage = getPackageFromVnfInstaceId(grants.getVnfInstanceId());
+		final List<VimSoftwareImageEntity> softwareImages = getSoftwareImage(vnfPackage, vimInfo, vim);
+		setFlavors(grants, vim);
+
+		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
+		grantVimAssetsEntity.setSoftwareImages(softwareImages);
+		grants.setVimAssets(grantVimAssetsEntity);
 		grants.setAvailable(Boolean.TRUE);
 		grantJpa.save(grants);
 		LOG.info("Grant {} Available.", grants.getId());
+	}
+
+	private void setFlavors(final Grants grants, final Vim vim) {
+		// XXX todo.
+	}
+
+	private VnfPackage getPackageFromVnfInstaceId(final String vnfInstanceId) {
+		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfPackage vnfPkg = instance.getVnfPkg();
+		return vnfPkg;
+	}
+
+	private static List<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
+		final List<VimSoftwareImageEntity> listVsie = new ArrayList<>();
+		final Set<SoftwareImage> swImages = vnfPackage.getSoftwareImages();
+		for (final SoftwareImage softwareImage : swImages) {
+			final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
+			vsie.setVimSoftwareImageId(softwareImage.getVimId());
+			vsie.setVnfdSoftwareImageId(vnfPackage.getId().toString());
+			vsie.setVimConnectionId(vimInfo.getId().toString());
+			if (null != softwareImage.getVimId()) {
+				// XXX
+			} else {
+				final VimImage vimImage = vim.getImagesInformations(softwareImage.getName());
+				vsie.setVimSoftwareImageId(vimImage.getId());
+			}
+			listVsie.add(vsie);
+		}
+		return listVsie;
 	}
 
 	private VimConnectionInformation electVim(final Set<GrantInformation> addResources) {
