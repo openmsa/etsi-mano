@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 /**
  * NFVO+VNFM & NVFO MSA implementation.

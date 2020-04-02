@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.Map;
 
@@ -7,7 +7,6 @@ import javax.annotation.Nonnull;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 public interface Vim {
 
