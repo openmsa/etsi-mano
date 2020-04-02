@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
+import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public final class LcmFactory {
 	private LcmFactory() {
@@ -29,7 +30,7 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest) {
+	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest, final VnfPkgInfo vnfPkgInfo) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
 		final VnfPackage vnfPackage = new VnfPackage();
@@ -37,6 +38,9 @@ public final class LcmFactory {
 		vnfInstance.setVnfPkg(vnfPackage);
 		vnfInstance.setVnfInstanceDescription(createVnfRequest.getVnfInstanceDescription());
 		vnfInstance.setVnfInstanceName(createVnfRequest.getVnfInstanceName());
+		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
+		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
+		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
 
 		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STOPPED);

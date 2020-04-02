@@ -83,7 +83,7 @@ public class VnfInstanceLcm {
 		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
-		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest);
+		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
 
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
