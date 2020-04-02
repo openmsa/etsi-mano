@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -40,6 +42,7 @@ public class VimManager {
 		return vimAssociation.get(id);
 	}
 
+	@Nonnull
 	public Set<VimConnectionInformation> getVimByType(final String type) {
 		return vimConnectionInformationJpa.findByVimType(type);
 	}
