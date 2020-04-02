@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.Link;
@@ -19,7 +20,6 @@ import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
@@ -109,10 +109,12 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static VnfLcmOpOcc createVnfLcmOpOccs(final LcmOperationType operation, final String vnfInstanceId) {
-		final VnfLcmOpOcc vnfLcmOpOcc = new VnfLcmOpOcc();
+	public static VnfLcmOpOccs createVnfLcmOpOccs(final LcmOperationType operation, final UUID vnfInstanceId) {
+		final VnfLcmOpOccs vnfLcmOpOcc = new VnfLcmOpOccs();
 		vnfLcmOpOcc.setOperation(operation);
-		vnfLcmOpOcc.setVnfInstanceId(vnfInstanceId);
+		final VnfInstance vnfInstance = new VnfInstance();
+		vnfInstance.setId(vnfInstanceId);
+		vnfLcmOpOcc.setVnfInstance(vnfInstance);
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
 		vnfLcmOpOcc.setOperationState(LcmOperationStateType.STARTING);

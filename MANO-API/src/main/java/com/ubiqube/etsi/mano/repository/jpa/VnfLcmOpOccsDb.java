@@ -21,7 +21,6 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
@@ -29,7 +28,7 @@ import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import ma.glasnost.orika.MapperFacade;
 
 @Service
-public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
+public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOccs, VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private final CrudRepository<VnfLcmOpOccs, UUID> repository;
 
 	public VnfLcmOpOccsDb(final EntityManager em, final CrudRepository<VnfLcmOpOccs, UUID> _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
@@ -38,13 +37,13 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> imple
 	}
 
 	@Override
-	public void save(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
+	public void save(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
 		vnfLcmOpOccsIds.forEach(this::save);
 	}
 
 	@Override
-	protected Class<VnfLcmOpOcc> getFrontClass() {
-		return VnfLcmOpOcc.class;
+	protected Class<VnfLcmOpOccs> getFrontClass() {
+		return VnfLcmOpOccs.class;
 	}
 
 	@Override
@@ -58,13 +57,13 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOcc, VnfLcmOpOccs> imple
 	}
 
 	@Override
-	public VnfLcmOpOcc createLcmOpOccs(final String vnfInstanceId, final LcmOperationType operation) {
-		final VnfLcmOpOcc vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
+	public VnfLcmOpOccs createLcmOpOccs(final UUID vnfInstanceId, final LcmOperationType operation) {
+		final VnfLcmOpOccs vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
 		return save(vnfLcmOpOcc);
 	}
 
 	@Override
-	public void updateState(final VnfLcmOpOcc lcmOpOccs, final LcmOperationStateType operationState) {
+	public void updateState(final VnfLcmOpOccs lcmOpOccs, final LcmOperationStateType operationState) {
 		lcmOpOccs.setOperationState(operationState);
 		lcmOpOccs.setStateEnteredTime(new Date());
 		save(lcmOpOccs);

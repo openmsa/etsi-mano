@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -34,7 +35,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
@@ -95,9 +95,9 @@ public class NfvoActions {
 		// Delete VNF
 		final List<String> vnfs = nsdInfo.getVnfPkgIds();
 		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
-		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
+		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfs) {
-			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId);
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		waitForCompletion(vnfLcmOpOccsIds);
@@ -116,8 +116,8 @@ public class NfvoActions {
 		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
 	}
 
-	private static LcmOperationStateType computeStatus(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
-		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccsIds) {
+	private static LcmOperationStateType computeStatus(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
+		for (final VnfLcmOpOccs vnfLcmOpOcc : vnfLcmOpOccsIds) {
 			if (LcmOperationStateType.COMPLETED != vnfLcmOpOcc.getOperationState()) {
 				return vnfLcmOpOcc.getOperationState();
 			}
@@ -156,7 +156,7 @@ public class NfvoActions {
 		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);
 		// Instantiate each VNF.
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
-		List<VnfLcmOpOcc> vnfLcmOpOccsIds = new ArrayList<>();
+		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfPkgIds) {
 			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
@@ -166,7 +166,7 @@ public class NfvoActions {
 				nsInstance.getVnfInstance().add(nsVnfInstance);
 				nsInstanceRepository.save(nsInstance);
 			}
-			final VnfLcmOpOcc vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId().toString(), vnfId);
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId().toString(), vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.
@@ -182,17 +182,17 @@ public class NfvoActions {
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
 	}
 
-	private List<VnfLcmOpOcc> refreshVnfLcmOpOccsIds(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
-		final List<VnfLcmOpOcc> res = new ArrayList<>();
-		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccsIds) {
-			final VnfLcmOpOcc newLcmOpOc = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
+	private List<VnfLcmOpOccs> refreshVnfLcmOpOccsIds(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
+		final List<VnfLcmOpOccs> res = new ArrayList<>();
+		for (final VnfLcmOpOccs vnfLcmOpOcc : vnfLcmOpOccsIds) {
+			final VnfLcmOpOccs newLcmOpOc = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
 			res.add(newLcmOpOc);
 		}
 		return res;
 	}
 
-	private void waitForCompletion(@Nonnull final List<VnfLcmOpOcc> vnfLcmOpOccss) {
-		List<VnfLcmOpOcc> ret = new ArrayList<>(vnfLcmOpOccss);
+	private void waitForCompletion(@Nonnull final List<VnfLcmOpOccs> vnfLcmOpOccss) {
+		List<VnfLcmOpOccs> ret = new ArrayList<>(vnfLcmOpOccss);
 		while (true) {
 			ret = vnfCycle(ret);
 			if (ret.isEmpty()) {
@@ -211,10 +211,10 @@ public class NfvoActions {
 		}
 	}
 
-	private List<VnfLcmOpOcc> vnfCycle(final List<VnfLcmOpOcc> vnfLcmOpOccss) {
-		final List<VnfLcmOpOcc> ret = new ArrayList<>(vnfLcmOpOccss);
-		for (final VnfLcmOpOcc vnfLcmOpOcc : vnfLcmOpOccss) {
-			final VnfLcmOpOcc res = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
+	private List<VnfLcmOpOccs> vnfCycle(final List<VnfLcmOpOccs> vnfLcmOpOccss) {
+		final List<VnfLcmOpOccs> ret = new ArrayList<>(vnfLcmOpOccss);
+		for (final VnfLcmOpOccs vnfLcmOpOcc : vnfLcmOpOccss) {
+			final VnfLcmOpOccs res = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
 			if (res.getOperationState() == LcmOperationStateType.PROCESSING) {
 				ret.add(vnfLcmOpOcc);
 			}

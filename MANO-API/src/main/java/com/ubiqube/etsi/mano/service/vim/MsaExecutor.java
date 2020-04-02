@@ -23,10 +23,10 @@ import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
 import ma.glasnost.orika.MapperFacade;
@@ -166,9 +166,9 @@ public class MsaExecutor implements Vim {
 		if (state == LcmOperationStateType.COMPLETED) {
 			return vimStatus;
 		}
-		final ProblemDetails problemDetails = new ProblemDetails();
-		problemDetails.setDetail(message);
-		vimStatus.setProblemDetails(problemDetails);
+		final FailureDetails failureDetails = new FailureDetails();
+		failureDetails.setDetail(message);
+		vimStatus.setProblemDetails(failureDetails);
 		return vimStatus;
 	}
 

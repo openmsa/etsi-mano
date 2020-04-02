@@ -18,6 +18,8 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -34,7 +36,6 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
@@ -71,7 +72,7 @@ public class VnfmActions {
 	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		// Maybe e need additional parameters to say STARTING / PROCESSING ...
-		final VnfLcmOpOcc lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(vnfInstanceId, LcmOperationType.INSTANTIATE);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(UUID.fromString(vnfInstanceId), LcmOperationType.INSTANTIATE);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final Optional<VnfPackage> vnfPkgOpt = vnfPackageRepository.findById(vnfPkgId);
@@ -96,7 +97,13 @@ public class VnfmActions {
 				vnfLcmOpOccsRepository.save(lcmOpOccs);
 				break;
 			}
+			final VnfInstantiedCompute vic = new VnfInstantiedCompute();
+			vic.setComputeResource(grantInformation);
+			vic.setVduId(grantInformation.getVduId());
+			// XXX Storages.
+			// vnfInstance.getInstantiatedVnfInfo().addVnfcResourceInfoItem(vic);
 		}
+		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 		LOG.info("VNF instance {} Finished.", vnfInstanceId);
 	}
 
@@ -118,7 +125,7 @@ public class VnfmActions {
 		throw new GenericException("Unable to get grant ID " + grants.getId());
 	}
 
-	private VimStatus spawnVdu(final GrantInformation grantInformation, final VnfPackage vnfPackage, final VnfInstance vnfInstance, @Nonnull final VnfLcmOpOcc lcmOpOccs) {
+	private VimStatus spawnVdu(final GrantInformation grantInformation, final VnfPackage vnfPackage, final VnfInstance vnfInstance, @Nonnull final VnfLcmOpOccs lcmOpOccs) {
 		final Vim vim = vimManager.getVimById(UUID.fromString(grantInformation.getVimConnectionId()));
 		final String processId = vim.onVnfInstantiate(grantInformation, vnfPackage);
 		LOG.info("New VDU VNF Create job: {}", processId);
@@ -145,10 +152,10 @@ public class VnfmActions {
 		return status;
 	}
 
-	private static GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOcc lcmOpOccs, final VnfPackage vnfPackage) {
+	private static GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage) {
 		final GrantRequest grant = new GrantRequest();
 		grant.setVnfInstanceId(vnfInstance.getId().toString());
-		grant.setVnfLcmOpOccId(lcmOpOccs.getId());
+		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
 		grant.setVnfdId(vnfInstance.getVnfdId());
 		grant.setFlavourId(vnfPackage.getFlavorId());
 		grant.setIsAutomaticInvocation(Boolean.FALSE);
