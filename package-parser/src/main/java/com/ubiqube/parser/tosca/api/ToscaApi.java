@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.parser.tosca.NodeTemplate;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.Requirement;
+import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
@@ -108,7 +110,32 @@ public class ToscaApi {
 		if (null != props) {
 			handleMap(props, clazz, propsDescr, cls, null);
 		}
+
+		final RequirementDefinition req = node.getRequirements();
+		if ((null != req) && (null != req.getRequirements())) {
+			handleRequirements(req.getRequirements(), clazz, propsDescr, cls, null);
+		}
 		return cls;
+	}
+
+	private void handleRequirements(final Map<String, Requirement> requirements, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
+		requirements.forEach((x, y) -> {
+			// XXX I think it could be ONE of Node, caps, Link
+			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
+			if (props != null) {
+				methodInvoke(props.getWriteMethod(), cls, y.getNode());
+			}
+		});
+
+	}
+
+	private PropertyDescriptor getPropertyFor(final String x, final PropertyDescriptor[] propsDescr) {
+		for (final PropertyDescriptor propertyDescriptor : propsDescr) {
+			if (propertyDescriptor.getName().contentEquals(x)) {
+				return propertyDescriptor;
+			}
+		}
+		return null;
 	}
 
 	private Object handleMap(final Map<String, Object> caps, final Class clazz, final PropertyDescriptor[] props, final Object cls, final Class generic) {
@@ -209,6 +236,17 @@ public class ToscaApi {
 		}
 		m.appendTail(sb);
 		LOG.trace("Underscore:  {}<=>{}", key, sb.toString());
+		return sb.toString();
+	}
+
+	private static String underScoreToCamleCase(final String key) {
+		final Pattern p = Pattern.compile("_(.)");
+		final Matcher m = p.matcher(key);
+		final StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			m.appendReplacement(sb, m.group(1).toUpperCase());
+		}
+		m.appendTail(sb);
 		return sb.toString();
 	}
 
