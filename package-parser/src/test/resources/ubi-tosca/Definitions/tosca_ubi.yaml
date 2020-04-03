@@ -16,6 +16,8 @@ topology_template:
         software_version: 1.0.0
         descriptor_version: 1.0.0
         flavour_id: m1.small
+      requirements:
+        - virtual_link: vl01
 
     ubi01:
       type: tosca.nodes.nfv.Vdu.Compute
@@ -23,7 +25,7 @@ topology_template:
       description: A node.
       properties:
         sw_image_data:
-          name: imagename
+          name: cirros
           version: 1.0.0
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
@@ -39,4 +41,62 @@ topology_template:
             virtual_memory:
               properties:
                 virtual_mem_size: 2 GB
+            virtual_cpu:
+              properties:
+                cpu_architecture: x86_64
+                num_virtual_cpu: 1
 
+    block01:
+      type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
+      properties:
+        virtual_block_storage_data:
+          size_of_storage: 6 GB
+        sw_image_data:
+          name: imagenameBlock
+          version: 1.0.0
+          checksum:
+            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+            algorithm: SHA-256
+          container_format: BARE
+          disk_format: QCOW2
+          min_disk: 6 GB
+          min_ram: 2 GB
+          operating_system: centos8
+
+    storageVo:
+      type: tosca.nodes.nfv.Vdu.VirtualObjectStorage
+      properties:
+        virtual_object_storage_data:
+          max_size_of_storage: 6 GB
+
+    vl01:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocols: 
+            - ipv4
+          flow_pattern: line
+        description: Description of VL 01
+        vl_profile:
+          max_bitrate_requirements:
+            root: 10
+            leaf: 15
+          min_bitrate_requirements:
+            root: 11
+            leaf: 16
+          virtual_link_protocol_data:
+          qos:
+            latency: 5 ms
+            packet_delay_variation: 1 s
+            packet_loss_ratio: 0.01
+    cp01:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        bitrate_requirement: 5
+        order: 5
+        vnic_type: virtio
+      requirements:
+        - virtual_link:
+            node: vl01
+        - virtual_binding:
+            node: ubi01
