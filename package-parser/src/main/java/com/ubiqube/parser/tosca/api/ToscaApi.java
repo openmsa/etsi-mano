@@ -25,8 +25,11 @@ import com.ubiqube.parser.tosca.NodeTemplate;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
+import com.ubiqube.parser.tosca.convert.FloatConverter;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
+import com.ubiqube.parser.tosca.convert.TimeConverter;
 import com.ubiqube.parser.tosca.scalar.Size;
+import com.ubiqube.parser.tosca.scalar.Time;
 
 /**
  * Main front API around tosca files.
@@ -45,6 +48,9 @@ public class ToscaApi {
 	 */
 	public ToscaApi() {
 		conv.register(Size.class.getCanonicalName(), new SizeConverter());
+		conv.register(Time.class.getCanonicalName(), new TimeConverter());
+		conv.register(Double.class.getCanonicalName(), new FloatConverter());
+		conv.register(Float.class.getCanonicalName(), new FloatConverter());
 	}
 
 	/**
@@ -171,6 +177,9 @@ public class ToscaApi {
 
 	private Object convert(final Object res, final Class<?> parameterType) {
 		if (res.getClass().equals(parameterType)) {
+			return res;
+		}
+		if (parameterType.isAssignableFrom(res.getClass())) {
 			return res;
 		}
 		LOG.debug("Converting: {} into {}", res.getClass(), parameterType.getName());
