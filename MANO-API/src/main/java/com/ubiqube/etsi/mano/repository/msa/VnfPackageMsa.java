@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgIndex;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -22,7 +22,7 @@ import com.ubiqube.etsi.mano.repository.phys.GenericBinaryRepository;
  *
  */
 @Profile("!RDBMS")
-public class VnfPackageMsa extends GenericBinaryRepository<VnfPkgInfo> implements VnfPackageRepository {
+public class VnfPackageMsa extends GenericBinaryRepository<VnfPackage> implements VnfPackageRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageMsa.class);
 
@@ -32,18 +32,18 @@ public class VnfPackageMsa extends GenericBinaryRepository<VnfPkgInfo> implement
 	}
 
 	@Override
-	protected String setId(final VnfPkgInfo _entity) {
-		final String id = _entity.getId();
+	protected String setId(final VnfPackage _entity) {
+		final UUID id = _entity.getId();
 		if (null == id) {
-			_entity.setId(UUID.randomUUID().toString());
+			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId();
+		return _entity.getId().toString();
 	}
 
 	@Override
-	protected Class<VnfPkgInfo> getClazz() {
-		return VnfPkgInfo.class;
+	protected Class<VnfPackage> getClazz() {
+		return VnfPackage.class;
 	}
 
 	@Override
@@ -52,9 +52,9 @@ public class VnfPackageMsa extends GenericBinaryRepository<VnfPkgInfo> implement
 	}
 
 	@Override
-	public VnfPkgInfo save(final VnfPkgInfo _entity) {
-		final VnfPkgInfo vnfPkgInfo = super.save(_entity);
-		storeObject(vnfPkgInfo.getId(), "indexes.json", new VnfPkgIndex());
+	public VnfPackage save(final VnfPackage _entity) {
+		final VnfPackage vnfPkgInfo = super.save(_entity);
+		storeObject(vnfPkgInfo.getId().toString(), "indexes.json", new VnfPkgIndex());
 		return vnfPkgInfo;
 	}
 

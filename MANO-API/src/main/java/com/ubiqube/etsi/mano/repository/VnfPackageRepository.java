@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.repository;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
-public interface VnfPackageRepository extends CrudRepository<VnfPkgInfo>, BinaryRepository {
+public interface VnfPackageRepository extends CrudRepository<VnfPackage>, BinaryRepository {
 
 	// VnfLcmOpOcc createLcmOpOccs(String vnfInstanceId, LcmOperationType
 	// terminate);

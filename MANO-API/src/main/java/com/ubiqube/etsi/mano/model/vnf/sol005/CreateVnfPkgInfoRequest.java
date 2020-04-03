@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,9 +22,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class CreateVnfPkgInfoRequest {
 	@JsonProperty("userDefinedData")
-	private Map<String, Object> userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
-	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
+	public CreateVnfPkgInfoRequest userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -39,11 +38,11 @@ public class CreateVnfPkgInfoRequest {
 
 	@Valid
 
-	public Map<String, Object> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

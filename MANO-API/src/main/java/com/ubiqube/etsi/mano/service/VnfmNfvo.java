@@ -10,8 +10,8 @@ import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.controller.nslcm.sol003.Sol003LcmLinkable;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -26,9 +26,9 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfInstance createVnfInstance(final VnfPkgInfo vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
+	public VnfInstance createVnfInstance(final VnfPackage vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
 		final CreateVnfRequest createVnfRequest = new CreateVnfRequest();
-		createVnfRequest.setVnfdId(vnf.getId());
+		createVnfRequest.setVnfdId(vnf.getId().toString());
 		createVnfRequest.setVnfInstanceDescription(vnfInstanceDescription);
 		createVnfRequest.setVnfInstanceName(vnfInstanceName);
 		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance inst = lcm.post(createVnfRequest);

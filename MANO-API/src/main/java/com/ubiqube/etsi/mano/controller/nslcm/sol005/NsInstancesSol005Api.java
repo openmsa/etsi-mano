@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -43,7 +44,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.ScaleNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.TerminateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.UpdateNsRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -251,7 +251,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
 		final List<String> vnfs = nsd.getVnfPkgIds();
 		for (final String id : vnfs) {
-			final VnfPkgInfo vnf = vnfPackageRepository.get(id);
+			final VnfPackage vnf = vnfPackageRepository.get(id);
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
 			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstance.getId(), id);

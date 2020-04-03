@@ -3,8 +3,8 @@ package com.ubiqube.etsi.mano.mapper;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,12 +15,8 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -37,16 +33,20 @@ public class VnfPackageTest {
 	@Test
 	void testJsonToDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final KeyValuePairs userData = new KeyValuePairs();
+		final Map<String, String> userData = new HashMap<>();
 		userData.put("vimId", "TMA49");
-		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(userData);
-		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();
+		final VnfPackage vnf = VnfPackageFactory.createVnfPkgInfo(userData);
+		final AdditionalArtifact additionalArtifactsItem = new AdditionalArtifact();
 		final Checksum checksum = new Checksum();
-		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		additionalArtifactsItem.artifactPath("/path").checksum(checksum);
-		vnf.addAdditionalArtifactsItem(additionalArtifactsItem);
+		checksum.setAlgorithm("SHA-512");
+		checksum.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		additionalArtifactsItem.setArtifactPath("/path");
+		additionalArtifactsItem.setChecksum(checksum);
+		final Set<AdditionalArtifact> list = new HashSet<>();
+		list.add(additionalArtifactsItem);
+		vnf.setAdditionalArtifacts(list);
 		vnf.setChecksum(checksum);
-		final List<VnfPackageSoftwareImageInfo> softwareImages = new ArrayList<>();
+		final Set<SoftwareImage> softwareImages = new HashSet<>();
 		softwareImages.add(TestFactory.createVnfPackagesVnfPkgInfoSoftwareImages());
 		vnf.setSoftwareImages(softwareImages);
 

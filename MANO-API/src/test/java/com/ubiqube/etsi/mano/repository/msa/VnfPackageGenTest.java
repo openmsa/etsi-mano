@@ -47,19 +47,19 @@ public class VnfPackageGenTest {
 	@Test
 	void testName() throws Exception {
 
-		VnfPkgInfo entity = new VnfPkgInfo();
+		VnfPackage entity = new VnfPackage();
 		vnfPackage.save(entity);
 		assertNotNull(entity.getId());
 
-		entity = vnfPackage.get(entity.getId());
+		entity = vnfPackage.get(entity.getId().toString());
 		assertNotNull(entity);
 
-		List<VnfPkgInfo> res = vnfPackage.query(null);
+		List<VnfPackage> res = vnfPackage.query(null);
 		assertNotNull(res);
 		final int num = res.size();
 		assertTrue(num >= 1);
 
-		vnfPackage.delete(entity.getId());
+		vnfPackage.delete(entity.getId().toString());
 
 		res = vnfPackage.query(null);
 		assertNotNull(res);
@@ -82,13 +82,13 @@ public class VnfPackageGenTest {
 
 	@Test
 	public void testStoreScenario() {
-		final VnfPkgInfo entity = new VnfPkgInfo();
+		final VnfPackage entity = new VnfPackage();
 		vnfPackage.save(entity);
 		assertNotNull(entity.getId());
 
-		vnfPackage.storeObject(entity.getId(), "grant", new Grant());
-		vnfPackage.loadObject(entity.getId(), "grant", Grant.class);
-		vnfPackage.delete(entity.getId());
+		vnfPackage.storeObject(entity.getId().toString(), "grant", new Grant());
+		vnfPackage.loadObject(entity.getId().toString(), "grant", Grant.class);
+		vnfPackage.delete(entity.getId().toString());
 	}
 
 	@Test
@@ -100,24 +100,24 @@ public class VnfPackageGenTest {
 
 	@Test
 	public void testBinaryScenario() throws FileNotFoundException, NoSuchAlgorithmException {
-		final VnfPkgInfo entity = new VnfPkgInfo();
+		final VnfPackage entity = new VnfPackage();
 		vnfPackage.save(entity);
 		assertNotNull(entity.getId());
 
 		final InputStream stream = new FileInputStream("src/test/resources/pack.zip");
-		vnfPackage.storeBinary(entity.getId(), "file", stream);
+		vnfPackage.storeBinary(entity.getId().toString(), "file", stream);
 
-		byte[] bytes = vnfPackage.getBinary(entity.getId(), "file");
+		byte[] bytes = vnfPackage.getBinary(entity.getId().toString(), "file");
 		final MessageDigest md5 = MessageDigest.getInstance("MD5");
 		md5.update(bytes);
 		assertEquals("4d251f6f44b12f8e6a0b2e9e7e69e603", DatatypeConverter.printHexBinary(md5.digest()).toLowerCase());
 
-		bytes = vnfPackage.getBinary(entity.getId(), "file", 0, Long.decode("2"));
+		bytes = vnfPackage.getBinary(entity.getId().toString(), "file", 0, Long.decode("2"));
 
 		assertEquals(2, bytes.length);
 		assertEquals('P', bytes[0]);
 		assertEquals('K', bytes[1]);
-		vnfPackage.delete(entity.getId());
+		vnfPackage.delete(entity.getId().toString());
 	}
 
 }

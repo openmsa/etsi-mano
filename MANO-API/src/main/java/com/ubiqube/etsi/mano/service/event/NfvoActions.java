@@ -29,14 +29,12 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.GrantsJpa;
-import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -62,12 +60,11 @@ public class NfvoActions {
 	private final VimManager vimManager;
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
-	private final VnfPackageJpa vnfPackageJpa;
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
 	private final GrantsJpa grantJpa;
 	private final VnfInstancesRepository vnfInstancesRepository;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstancesRepository _vnfInstancesRepository) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -79,7 +76,6 @@ public class NfvoActions {
 		vnfPackageRepository = _vnfPackageRepository;
 		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
 		grantJpa = _grantJpa;
-		vnfPackageJpa = _vnfPackageJpa;
 		vnfInstancesRepository = _vnfInstancesRepository;
 	}
 
@@ -160,8 +156,8 @@ public class NfvoActions {
 		for (final String vnfId : vnfPkgIds) {
 			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
-				final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
-				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPkgInfo, "", "Sub-instance " + nsInstanceId);
+				final VnfPackage vnfPackage = vnfPackageRepository.get(vnfId);
+				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPackage, "", "Sub-instance " + nsInstanceId);
 				nsVnfInstance = VnfInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, "vimId?");
 				nsInstance.getVnfInstance().add(nsVnfInstance);
 				nsInstanceRepository.save(nsInstance);

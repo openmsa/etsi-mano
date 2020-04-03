@@ -12,7 +12,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public interface Vim {
 
-	String onVnfInstanceTerminate(Map<String, Object> userData);
+	String onVnfInstanceTerminate(Map<String, String> userData);
 
 	String onVnfInstantiate(GrantInformation grantInformation, VnfPackage vnfPackage);
 

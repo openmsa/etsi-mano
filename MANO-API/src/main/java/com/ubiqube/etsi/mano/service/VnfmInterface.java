@@ -6,11 +6,11 @@ import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public interface VnfmInterface {
 
-	VnfInstance createVnfInstance(final VnfPkgInfo vnf, String vnfInstanceDescription, String vnfInstanceName);
+	VnfInstance createVnfInstance(final VnfPackage vnf, String vnfInstanceDescription, String vnfInstanceName);
 
 	VnfLcmOpOccs vnfInstatiate(String vnfInstanceId, String vnfId);
 

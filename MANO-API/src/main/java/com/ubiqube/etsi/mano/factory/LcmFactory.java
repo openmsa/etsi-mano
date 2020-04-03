@@ -22,7 +22,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public final class LcmFactory {
 	private LcmFactory() {
@@ -30,7 +29,7 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest, final VnfPkgInfo vnfPkgInfo) {
+	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest, final VnfPackage vnfPkgInfo) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
 		final VnfPackage vnfPackage = new VnfPackage();

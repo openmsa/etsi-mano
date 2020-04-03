@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
@@ -26,7 +27,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -80,7 +80,7 @@ public class VnfInstanceLcm {
 
 	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
 		final String vnfId = createVnfRequest.getVnfdId();
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfId);
+		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(vnfId);
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
@@ -95,7 +95,7 @@ public class VnfInstanceLcm {
 		ensureNotInstantiated(vnfInstance);
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId().toString())) {
-			final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId().toString());
+			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId().toString());
 			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
@@ -108,7 +108,7 @@ public class VnfInstanceLcm {
 		ensureNotInstantiated(vnfInstance);
 
 		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
-		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
+		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
 		LOG.info("Instantiation Event Sucessfully sent.");
@@ -126,8 +126,8 @@ public class VnfInstanceLcm {
 		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 
-		final VnfPkgInfo vnfPkg = vnfPackageRepository.get(vnfPkgId);
-		final Map<String, Object> userData = vnfPkg.getUserDefinedData();
+		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
+		final Map<String, String> userData = vnfPkg.getUserDefinedData();
 		final String processId = vim.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
 		addVnfOperation(processId, vnfInstanceId, NsLcmOpType.TERMINATE);

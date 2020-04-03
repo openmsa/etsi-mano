@@ -25,29 +25,42 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.controller.vnf.sol003.Sol003Linkable;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+import net.rakugakibox.spring.boot.orika.OrikaAutoConfiguration;
+
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = { VnfManagement.class })
+@ContextConfiguration(classes = { VnfManagement.class, OrikaConfiguration.class, OrikaAutoConfiguration.class })
 @ExtendWith(SpringExtension.class)
 public class VnfManagementTest {
 	@MockBean
 	private VnfPackageRepository vnfPackageRepository;
 	private final ObjectMapper mapper = new ObjectMapper();
+	private final DefaultMapperFactory mapperFactory;
+
+	public VnfManagementTest() {
+		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		mapperFactory = new DefaultMapperFactory.Builder().build();
+		orikaConfiguration.configure(mapperFactory);
+	}
 
 	@Test
 	void testNullParameter() throws Exception {
-		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
+		final List<VnfPackage> vnfPkgInfos = new ArrayList<>();
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 
 		final Map<String, String> queryParameters = new HashMap<>();
 		final String res = vnfPManagement.vnfPackagesGet(queryParameters, new Sol003Linkable());
@@ -56,10 +69,11 @@ public class VnfManagementTest {
 
 	@Test
 	void testOneTupple() throws Exception {
-		final List<VnfPkgInfo> vnfPkgInfos = new ArrayList<>();
-		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs()));
+		final List<VnfPackage> vnfPkgInfos = new ArrayList<>();
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		vnfPkgInfos.add(VnfPackageFactory.createVnfPkgInfo(new HashMap<String, String>()));
 		when(vnfPackageRepository.query(null)).thenReturn(vnfPkgInfos);
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 
 		final Map<String, String> queryParameters = new HashMap<>();
 		final String res = vnfPManagement.vnfPackagesGet(queryParameters, new Sol003Linkable());
@@ -76,10 +90,10 @@ public class VnfManagementTest {
 
 	@Test
 	void testgetVnfUniq() throws Exception {
-		final VnfPkgInfo value = VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs());
+		final VnfPackage value = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, String>());
 		when(vnfPackageRepository.get("aaa")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final VnfPkgInfo res = vnfPManagement.vnfPackagesVnfPkgIdGet("aaa", new Sol003Linkable());
 		assertNotNull(res);
 		assertEquals("/aaa", res.getLinks().getSelf().getHref());
@@ -89,8 +103,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetJson() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "VnfPkgInfo.json"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		assertThrows(NotFoundException.class, () -> {
 			vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "artifactPath", null);
 		});
@@ -100,8 +114,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZip404() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		assertThrows(NotFoundException.class, () -> {
 			vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "artifactPath", null);
 		});
@@ -111,8 +125,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZipOk() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", null);
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -126,8 +140,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZipOkRanged() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", "bytes=200-1000");
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -142,8 +156,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZipOkRangedStar() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet("aaa", "nsd.json", "bytes=200-");
 
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -158,8 +172,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdVnfdGetJson() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "VnfPkgInfo.json"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet("aaa", "");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/json", res.getHeaders().get("Content-Type").get(0));
@@ -169,8 +183,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdVnfdGetZip() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet("aaa", "");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
@@ -180,8 +194,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdVnfdGetText() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "hello.txt"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet("aaa", "");
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/octet-stream", res.getHeaders().get("Content-Type").get(0));
@@ -191,8 +205,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdPackageContentGet() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", null);
 		assertTrue(res.getStatusCode().is2xxSuccessful());
 		assertEquals("application/zip", res.getHeaders().get("Content-Type").get(0));
@@ -202,8 +216,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdPackageContentGetRangeOk() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "bytes=200-1000");
 		assertEquals(1, res.getBody().size());
 		assertTrue(res.getStatusCode().is2xxSuccessful());
@@ -218,7 +232,8 @@ public class VnfManagementTest {
 	void testvnfPackagesVnfPkgIdPackageContentGetRangePartial() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
 		when(vnfPackageRepository.getBinary("aaa", "vnfd")).thenReturn(value);
-		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository);
+		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
+		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet("aaa", "bytes=200-");
 		assertEquals(1, res.getBody().size());
 		assertTrue(res.getStatusCode().is2xxSuccessful());

@@ -61,10 +61,10 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String onVnfInstanceTerminate(final Map<String, Object> userData) {
-		final String msaServiceId = (String) userData.get("msaServiceId");
+	public String onVnfInstanceTerminate(final Map<String, String> userData) {
+		final String msaServiceId = userData.get("msaServiceId");
 		final long serviceId = Long.parseLong(msaServiceId);
-		final String customerId = (String) userData.get(CUSTOMER_ID);
+		final String customerId = userData.get(CUSTOMER_ID);
 
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/Process_Delete_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/VNF_Mgmt_Based_On_Heat/VNF_Mgmt_Based_On_Heat";
