@@ -4,6 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'com.gorylenko.gradle-git-properties' version '2.2.2'
 }
+apply plugin: 'jacoco'
 
 
 repositories {
