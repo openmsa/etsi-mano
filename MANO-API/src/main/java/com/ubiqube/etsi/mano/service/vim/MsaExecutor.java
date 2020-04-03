@@ -181,7 +181,7 @@ public class MsaExecutor implements Vim {
 
 	@Override
 	public void allocateResources(final VimConnectionInformation vimConnectionInformation, final GrantInformation grantInformation) {
-		System.out.println("");
+		//
 	}
 
 	@Override

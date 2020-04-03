@@ -82,7 +82,7 @@ public class NfvoActions {
 	public void nsTerminate(final String nsInstanceId) {
 		// XXX This is not the correct way/
 		final VimConnectionInformation vimInfo = electVim(null);
-		final Vim vim = vimManager.getVimById(vimInfo.getId());
+
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
@@ -106,6 +106,7 @@ public class NfvoActions {
 			return;
 		}
 		// Release the NS.
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		final String processId = vim.onNsInstanceTerminate(nsInstance.getProcessId(), nsdInfo.getUserDefinedData());
 		vim.waitForCompletion(processId, 5 * 60);
 
@@ -122,8 +123,8 @@ public class NfvoActions {
 	}
 
 	private void updateOperationState(final NsLcmOpOcc lcmOpOccs, final LcmOperationStateType status) {
-		// TODO: Convert ? lcmOpOccs.setOperationState(status);
 		lcmOpOccs.setStateEnteredTime(OffsetDateTime.now());
+		lcmOpOccs.setOperationState(status);
 		lcmOpOccsRepository.save(lcmOpOccs);
 	}
 
@@ -254,8 +255,7 @@ public class NfvoActions {
 
 	private VnfPackage getPackageFromVnfInstaceId(final String vnfInstanceId) {
 		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
-		final VnfPackage vnfPkg = instance.getVnfPkg();
-		return vnfPkg;
+		return instance.getVnfPkg();
 	}
 
 	private static List<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {

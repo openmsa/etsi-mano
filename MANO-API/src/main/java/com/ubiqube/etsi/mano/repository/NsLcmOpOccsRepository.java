@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.repository;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 

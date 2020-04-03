@@ -111,14 +111,15 @@ public class VnfmActions {
 		int counter = 50;
 		while (counter > 0) {
 			final Grants grantOpt = grantManagement.get(grants.getId());
-			if (grantOpt.getAvailable()) {
+			if (Boolean.TRUE.equals(grantOpt.getAvailable())) {
 				return grantOpt;
 			}
 			LOG.debug("Grant ID {} not ready.", grants.getId());
 			counter--;
 			try {
-				Thread.sleep(5 * 1000);
+				Thread.sleep(5 * 1000L);
 			} catch (final InterruptedException e) {
+				Thread.currentThread().interrupt();
 				throw new GenericException(e);
 			}
 		}

@@ -58,9 +58,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
 
-		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		final ObjectMapper mapperForView = MapperForView.getMapperForView(exclude, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
+			return new ResponseEntity<>(mapperForView.writeValueAsString(result), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}

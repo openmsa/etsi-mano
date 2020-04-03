@@ -48,7 +48,7 @@ public class JsonFilter {
 			return true;
 		}
 		final DocumentStatus documentStatus = invokeGetter(_object, realProperty, 0, _node);
-		return documentStatus.getStatus().equals(DocumentStatus.Status.VALIDATED);
+		return documentStatus.getStatus() == DocumentStatus.Status.VALIDATED;
 	}
 
 	private static DocumentStatus invokeGetter(final Object _object, final JsonBeanProperty realProperty, final int index, final Node _node) {
@@ -87,7 +87,7 @@ public class JsonFilter {
 		LOG.debug("Exploring sub list.");
 		for (final Object object : list) {
 			final DocumentStatus status = invokeGetter(object, realProperty, index + 1, _node);
-			if (status.getStatus().equals(DocumentStatus.Status.NOSTATE)) {
+			if (status.getStatus() == DocumentStatus.Status.NOSTATE) {
 				continue;
 			}
 			return status;
@@ -99,25 +99,25 @@ public class JsonFilter {
 		if (null == _operand) {
 			return true;
 		}
-		if (Operand.EQ.equals(_operand)) {
+		if (Operand.EQ == _operand) {
 			return _value.equals(_objectValue);
 		}
-		if (Operand.NEQ.equals(_operand)) {
+		if (Operand.NEQ == _operand) {
 			return !_value.equals(_objectValue);
 		}
 		// GT LT GTE LTE are numerical so cast everything in integer
 		final int left = Integer.parseInt(_objectValue);
 		final int right = Integer.parseInt(_value);
-		if (Operand.GT.equals(_operand)) {
+		if (Operand.GT == _operand) {
 			return left > right;
 		}
-		if (Operand.LT.equals(_operand)) {
+		if (Operand.LT == _operand) {
 			return left < right;
 		}
-		if (Operand.GTE.equals(_operand)) {
+		if (Operand.GTE == _operand) {
 			return left >= right;
 		}
-		if (Operand.LTE.equals(_operand)) {
+		if (Operand.LTE == _operand) {
 			return left <= right;
 		}
 		return false;

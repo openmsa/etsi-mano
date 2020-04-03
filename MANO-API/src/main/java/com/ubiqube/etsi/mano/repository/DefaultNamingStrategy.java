@@ -16,7 +16,7 @@ public class DefaultNamingStrategy implements NamingStrategy {
 		root = configuration.build("repository.phys.root").notNull().build();
 	}
 
-	protected final static String sanitize(final String filename) {
+	protected static final String sanitize(final String filename) {
 		// It's ok for path segment not for a full path.
 		return filename.replaceAll("\\.+", ".");
 	}

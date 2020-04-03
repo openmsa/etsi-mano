@@ -104,9 +104,7 @@ public class WeakPatcher implements Patcher {
 		_stack.descendingIterator().forEachRemaining(sj::add);
 		final String key = sj.toString();
 		if (LOG.isDebugEnabled()) {
-			// LOG.debug("Patching object {} on field {} with value {}",
-			// _entity.getClass().getName(), key, _value);
-			LOG.debug("Patching object " + _entity.getClass().getName() + " on field " + key + " with value " + _value);
+			LOG.debug("Patching object {} on field {} with value {}", _entity.getClass().getName(), key, _value);
 		}
 		beanUtils.setProperty(_entity, key, _value);
 	}

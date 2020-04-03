@@ -30,12 +30,14 @@ import com.ubiqube.etsi.mano.repository.CrudRepository;
 /**
  * A Generic implementation of classical CRUD action around a repository. XXX:
  * This class should use lowDriver.
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  * @param <T>
  */
 public abstract class AbstractGenericRepository<T> implements CrudRepository<T>, BinaryRepository {
+	private static final String ETSI_MANO = "etsi-mano";
+	private static final String NCROOT = "ncroot";
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericRepository.class);
 	private final ObjectMapper mapper;
 	protected final JsonFilter jsonFilter;
@@ -58,7 +60,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	private void mkdir(final String uri) {
 		try {
 			if (!repositoryService.exists(uri)) {
-				repositoryService.addDirectory(uri, "", "etsi-mano", "ncroot");
+				repositoryService.addDirectory(uri, "", ETSI_MANO, NCROOT);
 			}
 		} catch (final ServiceException e) {
 			throw new GenericException(e);
@@ -93,7 +95,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		final String uri = computePath(_id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
-		repositoryService.deleteRepositoryElement(repositoryElement, "ncroot");
+		repositoryService.deleteRepositoryElement(repositoryElement, NCROOT);
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		try {
 			final String str = mapper.writeValueAsString(_entity);
 			LOG.info("Creating entity @ {}", uri);
-			repositoryService.addFile(uri, "etsi-mano", "etsi-mano", str, "ncroot");
+			repositoryService.addFile(uri, ETSI_MANO, ETSI_MANO, str, NCROOT);
 		} catch (IOException | ServiceException e) {
 			throw new GenericException(e);
 		}
@@ -119,7 +121,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		verify(path.toString());
 		path.append('/').append(_filename);
 		try {
-			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", mapper.writeValueAsString(_object), "ncroot");
+			repositoryService.addFile(path.toString(), ETSI_MANO, ETSI_MANO, mapper.writeValueAsString(_object), NCROOT);
 		} catch (final ServiceException | JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -132,7 +134,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		path.append('/').append(_filename);
 		final RepositoryElement repositoryElement = repositoryService.getElement(path.toString());
 		if (null == repositoryElement) {
-			LOG.error("Unable to find path: " + path.toString());
+			LOG.error("Unable to find path: {}", path.toString());
 		}
 		final byte[] repositoryContent = repositoryService.getRepositoryElementContent(repositoryElement);
 
@@ -151,7 +153,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		path.append('/').append(_filename);
 
 		try {
-			repositoryService.addFile(path.toString(), "etsi-mano", "etsi-mano", StreamUtils.copyToByteArray(_stream), "ncroot");
+			repositoryService.addFile(path.toString(), ETSI_MANO, ETSI_MANO, StreamUtils.copyToByteArray(_stream), NCROOT);
 		} catch (ServiceException | IOException e) {
 			throw new GenericException(e);
 		}

@@ -21,7 +21,6 @@ import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
 
 public final class LcmFactory {
 	private LcmFactory() {
@@ -101,7 +100,7 @@ public final class LcmFactory {
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
-		nsLcmOpOccsNsLcmOpOcc.setOperationState(NsLcmOperationStateType.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());
 		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
 		return nsLcmOpOccsNsLcmOpOcc;

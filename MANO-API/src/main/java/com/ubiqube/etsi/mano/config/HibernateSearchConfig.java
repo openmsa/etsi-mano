@@ -6,12 +6,17 @@ import javax.transaction.Transactional;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HibernateSearchConfig implements ApplicationListener<ContextRefreshedEvent> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(HibernateSearchConfig.class);
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -23,8 +28,8 @@ public class HibernateSearchConfig implements ApplicationListener<ContextRefresh
 		try {
 			fullTextEntityManager.createIndexer().startAndWait();
 		} catch (final InterruptedException e) {
-			System.out.println("Error occured trying to build Hibernate Search indexes "
-					+ e.toString());
+			Thread.currentThread().interrupt();
+			LOG.warn("Hibernate Search have been interrupted.");
 		}
 	}
 }
