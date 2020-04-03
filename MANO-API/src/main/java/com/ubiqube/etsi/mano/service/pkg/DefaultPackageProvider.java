@@ -6,11 +6,10 @@ import java.util.Set;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
-
-import tosca.nodes.nfv.VduCp;
 
 public class DefaultPackageProvider implements PackageProvider {
 	@Override
@@ -53,7 +52,7 @@ public class DefaultPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VduCp> getVnfVduCp() {
+	public Set<VnfLinkPort> getVnfVduCp() {
 		return new HashSet<>();
 	}
 

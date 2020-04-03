@@ -13,6 +13,8 @@ public class VnfVl implements BaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private String description;
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -20,6 +22,14 @@ public class VnfVl implements BaseEntity {
 
 	public void setId(final UUID id) {
 		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+		this.description = description;
 	}
 
 }

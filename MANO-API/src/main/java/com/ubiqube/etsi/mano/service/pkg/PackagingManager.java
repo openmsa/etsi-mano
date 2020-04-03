@@ -21,6 +21,7 @@ import org.springframework.util.StreamUtils;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -36,7 +37,6 @@ import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 
 import ma.glasnost.orika.MapperFacade;
-import tosca.nodes.nfv.VduCp;
 
 @Service
 public class PackagingManager {
@@ -89,7 +89,8 @@ public class PackagingManager {
 			vnfPackage.setVnfStorage(vboNodes);
 			final Set<VnfVl> vvlNodes = packageProvider.getVnfVirtualLinks();
 			vnfPackage.setVnfVl(vvlNodes);
-			final Set<VduCp> vcNodes = packageProvider.getVnfVduCp();
+			final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp();
+			vnfPackage.setVnfLinkPort(vcNodes);
 			vnfPackage.setSoftwareImages(packageProvider.getSoftwareImages());
 			verifyImagePath(vnfPackage.getSoftwareImages());
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());

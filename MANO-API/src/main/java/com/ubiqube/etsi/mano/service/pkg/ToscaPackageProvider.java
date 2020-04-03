@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -61,6 +62,17 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("path", "artifactPath")
 				.field("checksum", "checksum.hash")
 				.field("algorithm", "checksum.algorithm")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(VirtualBlockStorage.class, VnfStorage.class)
+				.field("swImageData", "softwareImage")
+				.field("virtualBlockStorageData.sizeOfStorage", "size")
+				.field("", "myField:{|setType('BLOCK')}")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(VirtualObjectStorage.class, VnfStorage.class)
+				.field("virtualObjectStorageData.maxSizeOfStorage", "size")
+				.field("", "myField:{|setType('OBJECT')}")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
@@ -143,11 +155,11 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VduCp> getVnfVduCp() {
+	public Set<VnfLinkPort> getVnfVduCp() {
 		final List<@NonNull VduCp> list = toscaApi.getObjects(root, VduCp.class);
 		LOG.debug("Found {} Compute node in TOSCA model", list.size());
 		return list.stream()
-				.map(x -> mapper.map(x, VduCp.class))
+				.map(x -> mapper.map(x, VnfLinkPort.class))
 				.collect(Collectors.toSet());
 	}
 
