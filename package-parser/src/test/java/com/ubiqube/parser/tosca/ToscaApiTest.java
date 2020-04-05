@@ -28,6 +28,10 @@ import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.scalar.Size;
 
 import tosca.nodes.Compute;
+import tosca.nodes.nfv.VduCp;
+import tosca.nodes.nfv.VnfVirtualLink;
+import tosca.nodes.nfv.vdu.VirtualBlockStorage;
+import tosca.nodes.nfv.vdu.VirtualObjectStorage;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ToscaApiTest {
@@ -52,7 +56,11 @@ public class ToscaApiTest {
 		final ToscaParser tp = new ToscaParser("/home/olivier/eclipse-workspace/package-parser/src/test/resources/ubi-tosca.csar");
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
-		final List<tosca.nodes.nfv.Vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.Vdu.Compute.class);
+		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.vdu.Compute.class);
+		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, VirtualBlockStorage.class);
+		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, VirtualObjectStorage.class);
+		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, VnfVirtualLink.class);
+		final List<VduCp> listVduCp = toscaApi.getObjects(root, VduCp.class);
 		System.out.println("" + res);
 	}
 
