@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class NodeTemplate {
 	private String type;
+	private String name;
 	private String description;
 	private Object capabilities;
 	private Map<String, Object> properties;
@@ -74,6 +75,14 @@ public class NodeTemplate {
 
 	public void setDescription(final String description) {
 		this.description = description;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 }

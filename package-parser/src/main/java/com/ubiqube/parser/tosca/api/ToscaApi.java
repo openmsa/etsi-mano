@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -84,7 +83,11 @@ public class ToscaApi {
 				.entrySet()
 				.stream()
 				.filter(x -> root.isAssignableFor(x.getValue().getType(), clazzname))
-				.map(Entry::getValue)
+				.map(x -> {
+					final NodeTemplate val = x.getValue();
+					val.setName(x.getKey());
+					return val;
+				})
 				.collect(Collectors.toList());
 	}
 
@@ -127,7 +130,6 @@ public class ToscaApi {
 				methodInvoke(props.getWriteMethod(), cls, y.getNode());
 			}
 		});
-
 	}
 
 	private PropertyDescriptor getPropertyFor(final String x, final PropertyDescriptor[] propsDescr) {
