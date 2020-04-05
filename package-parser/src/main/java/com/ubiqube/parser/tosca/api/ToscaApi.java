@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -196,10 +197,48 @@ public class ToscaApi {
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
 			methodInvoke(meth, cls, ret);
+		} else if (res instanceof List) {
+			final Method rm = x.getReadMethod();
+			final Class zz = getReturnType(rm);
+			BeanInfo beanInfo;
+			try {
+				beanInfo = Introspector.getBeanInfo(zz);
+			} catch (final IntrospectionException e) {
+				throw new ParseException(e);
+			}
+
+			LOG.debug("Entring List of {}", zz);
+			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
+			LOG.info("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescrNew));
+			final Object clsNew = newInstance(zz);
+			final Object ret = handleList((List) res, zz, propsDescrNew, clsNew, zz);
+			LOG.debug("return: {} for property: {}", ret, x.getName());
+			final Method meth = x.getWriteMethod();
+			methodInvoke(meth, cls, ret);
+
 		} else {
 			final Method writeMethod = x.getWriteMethod();
 			methodInvoke(writeMethod, cls, convert(res, writeMethod.getParameterTypes()[0]));
 		}
+	}
+
+	private Object handleList(final List res, final Class zz, final PropertyDescriptor[] propsDescr, final Object clsNew, final Class generic) {
+		final ArrayList ret = new ArrayList<>();
+		res.forEach(x -> {
+			Object elem;
+			if (x instanceof Map) {
+				try {
+					elem = handleMap((Map<String, Object>) x, generic, propsDescr, generic.newInstance(), null);
+				} catch (InstantiationException | IllegalAccessException e) {
+					throw new ParseException(e);
+				}
+			} else {
+				elem = x;
+			}
+			ret.add(elem);
+		});
+		return ret;
+
 	}
 
 	private Object convert(final Object res, final Class<?> parameterType) {

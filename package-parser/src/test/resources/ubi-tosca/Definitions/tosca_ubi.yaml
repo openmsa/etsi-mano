@@ -35,6 +35,9 @@ topology_template:
           min_disk: 6 GB
           min_ram: 2 GB
           operating_system: centos8
+        monitoring_parameters:
+          - name: metric name
+            performance_metric: v_cpu_usage_mean_vnf
       capabilities:
         virtual_compute:
           properties:
@@ -89,6 +92,7 @@ topology_template:
             latency: 5 ms
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
+
     cp01:
       type: tosca.nodes.nfv.VduCp
       properties:
