@@ -43,6 +43,7 @@ import com.ubiqube.parser.tosca.ValueObject;
 import com.ubiqube.parser.tosca.annotations.Capability;
 import com.ubiqube.parser.tosca.annotations.Node;
 import com.ubiqube.parser.tosca.annotations.Relationship;
+import com.ubiqube.parser.tosca.api.ToscaInernalBase;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 import com.ubiqube.parser.tosca.constraints.Equal;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
@@ -145,6 +146,8 @@ public class JavaGenerator {
 		if (null != definition.getDerivedFrom()) {
 			final JDefinedClass clazz = getExtends(definition.getDerivedFrom());
 			jc._extends(clazz);
+		} else {
+			jc._extends(ToscaInernalBase.class);
 		}
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
 

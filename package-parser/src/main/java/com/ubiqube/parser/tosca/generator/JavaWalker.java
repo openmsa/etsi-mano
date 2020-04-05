@@ -30,6 +30,7 @@ import com.sun.codemodel.JVar;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.ValueObject;
+import com.ubiqube.parser.tosca.api.ToscaInernalBase;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 import com.ubiqube.parser.tosca.constraints.Equal;
 import com.ubiqube.parser.tosca.constraints.GreaterOrEqual;
@@ -73,6 +74,9 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void onClassTerminate() {
+		if ("java.lang.Object".equals(currentClass._extends().fullName())) {
+			currentClass._extends(ToscaInernalBase.class);
+		}
 		cache.put(currentClassName, currentClass);
 		currentClass = null;
 	}
