@@ -51,6 +51,11 @@ public class JavaWalker extends AbstractWalker {
 	private final Map<String, DataType> primitive = new HashMap<>();
 	private final Map<String, JPackage> cachePackage = new HashMap<>();
 	private boolean nonnull = true;
+	private final String directoryOutput;
+
+	public JavaWalker(final String _directoryOutput) {
+		directoryOutput = _directoryOutput;
+	}
 
 	@Override
 	public void startDocument() {
@@ -214,7 +219,7 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void terminateDocument() {
 		try {
-			codeModel.build(new File("src/generated2/java"));
+			codeModel.build(new File(directoryOutput));
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
