@@ -53,7 +53,7 @@ public class Converters {
 	}
 
 	public static JExpression convert(final JCodeModel codeModel, final Object def, final Class<?> jType) {
-		LOG.info("def={} jType={}", def, jType);
+		LOG.debug("def={} jType={}", def, jType);
 		if (jType.equals(Long.class)) {
 			return JExpr.lit(Long.parseLong((String) def));
 		} else if (jType.equals(String.class)) {
@@ -78,7 +78,7 @@ public class Converters {
 	}
 
 	public static JExpression convert(final Object def, final JType type) {
-		LOG.info("def={} jType={}", def, type.name());
+		LOG.debug("def={} jType={}", def, type.name());
 		// XXX to do.
 		switch (type.name()) {
 		case "String":
@@ -91,7 +91,7 @@ public class Converters {
 			}
 			return JExpr.lit(Integer.parseInt((String) def));
 		default:
-			throw new ParseException("Unknoqn type: " + type.name());
+			throw new ParseException("Unknown type: " + type.name());
 		}
 	}
 

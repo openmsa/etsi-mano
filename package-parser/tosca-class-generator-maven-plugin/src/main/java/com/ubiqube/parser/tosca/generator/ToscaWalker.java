@@ -109,7 +109,7 @@ public class ToscaWalker {
 	}
 
 	private void generateToscaClass(final String className, final ToscaClass toscaClass, final ToscaListener listener) {
-		LOG.info("generateToscaClass class {}", className);
+		LOG.info("generate class: {}", className);
 		startClass(className, toscaClass.getDerivedFrom(), listener);
 
 		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
@@ -122,7 +122,7 @@ public class ToscaWalker {
 		if (toscaClass.getDescription() != null) {
 			listener.onClassDescription(toscaClass.getDescription());
 		}
-		LOG.info("Caching {}", className);
+		LOG.debug("Caching {}", className);
 		cache.add(className);
 		listener.terminateClass();
 	}
@@ -201,13 +201,13 @@ public class ToscaWalker {
 			return;
 		}
 		if (null != primitive.get(type)) {
-			LOG.error("Type {} is a primitive.", type);
+			LOG.warn("Type {} is a primitive.", type);
 			return;
 		}
 		final DataType dType = root.getDataTypes().get(valueObject.getType());
 		if (null != dType) {
 			if (isPrimitive(dType)) {
-				LOG.error("Type {} is an unknown primitive.", type);
+				LOG.warn("Type {} is an unknown primitive.", type);
 				primitive.put(type, dType);
 				listener.onPrimitiveObject(type, dType);
 				return;
@@ -284,7 +284,7 @@ public class ToscaWalker {
 			if (!found) {
 				throw new ParseException("Could not find parent class: " + derivedFrom);
 			}
-			LOG.info("Caching {}", derivedFrom);
+			LOG.debug("Caching {}", derivedFrom);
 			cache.add(derivedFrom);
 		}
 	}

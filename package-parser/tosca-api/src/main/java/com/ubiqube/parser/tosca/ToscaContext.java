@@ -213,7 +213,7 @@ public class ToscaContext {
 			final String derived = clazz.getDerivedFrom();
 			if ((null != derived) && !nodeType.containsKey(derived)) {
 				// Throw exception unresolvable external/.
-				LOG.error("{} not a Node Type.", derived);
+				LOG.warn("{} not a Node Type.", derived);
 			} else if (derived != null) {
 				final ToscaClassHolder parent = resolvDerived(derived);
 				final ToscaClassHolder tch = new ToscaClassHolder(entry.getKey(), clazz);
@@ -237,7 +237,7 @@ public class ToscaContext {
 
 	private void resolvTopology() {
 		if (null == topologies) {
-			LOG.info("No Topology.");
+			LOG.debug("No Topology Nodes.");
 			return;
 		}
 		final Set<Entry<String, NodeTemplate>> nodes = topologies.getNodeTemplate().entrySet();

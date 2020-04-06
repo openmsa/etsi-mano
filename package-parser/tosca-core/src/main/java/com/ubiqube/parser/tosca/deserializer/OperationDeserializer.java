@@ -32,7 +32,7 @@ public class OperationDeserializer extends StdDeserializer<OperationDefinition> 
 	@Override
 	public OperationDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		final TreeNode value = p.getCodec().readTree(p);
-		LOG.info("value {}<=>{}", value.getClass(), value);
+		LOG.debug("value {}<=>{}", value.getClass(), value);
 		if (value instanceof TextNode) {
 			final OperationDefinition od = new OperationDefinition();
 			od.setImplementation(value);

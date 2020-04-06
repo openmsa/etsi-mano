@@ -23,7 +23,6 @@ public class OccurrencesDeserializer extends StdDeserializer<Occurrences> {
 	@Override
 	public Occurrences deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final JsonNode value = p.getCodec().readTree(p);
-		System.out.println("" + value);
 		// TODO It could be a Range or a simple digit
 		return null;
 	}

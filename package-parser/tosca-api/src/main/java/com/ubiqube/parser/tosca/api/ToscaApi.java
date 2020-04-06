@@ -103,7 +103,7 @@ public class ToscaApi {
 			throw new ParseException(e);
 		}
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		LOG.info("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
+		LOG.debug("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
 		final Object cls = newInstance(clazz);
 
 		final Object caps = node.getCapabilities();
@@ -151,7 +151,7 @@ public class ToscaApi {
 		stream.forEach(x -> {
 			final Object res = caps.get(camelCaseToUnderscore(x.getName()));
 			if (null != res) {
-				LOG.info("Property: {}={}", x.getName(), res);
+				LOG.debug("Property: {}={}", x.getName(), res);
 				handleCaps(res, x, props, cls);
 			}
 		});
@@ -187,7 +187,7 @@ public class ToscaApi {
 				throw new ParseException(e);
 			}
 			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
-			LOG.info("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescr));
+			LOG.debug("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescr));
 			final Object clsNew = newInstance(zz);
 
 			Object ret = null;
