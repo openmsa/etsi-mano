@@ -119,6 +119,9 @@ public class ToscaApi {
 		if ((null != req) && (null != req.getRequirements())) {
 			handleRequirements(req.getRequirements(), clazz, propsDescr, cls, null);
 		}
+		final ToscaInernalBase tib = (ToscaInernalBase) cls;
+		tib.setInternalName(node.getName());
+		tib.setInternalDescription(node.getDescription());
 		return cls;
 	}
 
