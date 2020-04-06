@@ -115,7 +115,7 @@ public class JavaWalker extends AbstractWalker {
 			currentField = currentClass.field(JMod.PRIVATE, conv, fieldName);
 		} else {
 			currentField = currentClass.field(JMod.PRIVATE, Object.class, fieldName);
-			LOG.error("Unknown type for fieldname {}", fieldName);
+			LOG.warn("Unknown type for fieldname {}", fieldName);
 		}
 	}
 
@@ -219,6 +219,8 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void terminateDocument() {
 		try {
+			final File file = new File(directoryOutput);
+			file.mkdirs();
 			codeModel.build(new File(directoryOutput));
 		} catch (final IOException e) {
 			throw new ParseException(e);
