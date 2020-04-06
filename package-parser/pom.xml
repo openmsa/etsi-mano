@@ -16,6 +16,16 @@
 		<module>tosca-pnfd-class</module>
 		<module>tosca-nsd-class</module>
 	</modules>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://nexus2.ubiqube.com:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://nexus2.ubiqube.com:8081/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -60,8 +70,6 @@
 				<artifactId>commons-io</artifactId>
 				<version>2.6</version>
 			</dependency>
-
-
 
 			<dependency>
 				<groupId>commons-jxpath</groupId>
