@@ -9,7 +9,7 @@ public class JavaWalkerTest {
 
 	@Test
 	void testName() throws Exception {
-		final JavaWalker jw = new JavaWalker();
+		final JavaWalker jw = new JavaWalker("target/tmp");
 		final ToscaWalker tw = new ToscaWalker();
 		tw.generate("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml", jw);
 	}
