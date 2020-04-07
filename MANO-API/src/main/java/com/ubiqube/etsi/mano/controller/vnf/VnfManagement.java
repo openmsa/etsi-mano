@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -69,11 +70,12 @@ public class VnfManagement implements VnfPackageManagement {
 	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
 		final String filter = queryParameters.get("filter");
 
-		final List<VnfPackage> vnfPkginfos = vnfPackageRepository.query(filter);
-		vnfPkginfos.stream()
+		final List<VnfPackage> vnfPackageInfos = vnfPackageRepository.query(filter);
+		final List<@NonNull VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
 				.map(x -> mapper.map(x, VnfPkgInfo.class))
-				.collect(Collectors.toList())
-				.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
+				.collect(Collectors.toList());
+
+		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
