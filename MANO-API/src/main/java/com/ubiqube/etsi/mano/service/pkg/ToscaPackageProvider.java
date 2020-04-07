@@ -67,12 +67,29 @@ public class ToscaPackageProvider implements PackageProvider {
 		mapperFactory.classMap(VirtualBlockStorage.class, VnfStorage.class)
 				.field("swImageData", "softwareImage")
 				.field("virtualBlockStorageData.sizeOfStorage", "size")
+				.field("internalName", "toscaName")
 				.field("", "myField:{|setType('BLOCK')}")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(VirtualObjectStorage.class, VnfStorage.class)
 				.field("virtualObjectStorageData.maxSizeOfStorage", "size")
+				.field("internalName", "toscaName")
 				.field("", "myField:{|setType('OBJECT')}")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(Compute.class, VnfCompute.class)
+				.field("swImageData", "softwareImage")
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(VduCp.class, VnfLinkPort.class)
+				.field("virtualBindingReq", "virtualBinding")
+				.field("virtualLinkReq", "virtualLink")
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(VnfVirtualLink.class, VnfVl.class)
+				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
