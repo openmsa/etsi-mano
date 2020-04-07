@@ -22,9 +22,11 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
@@ -260,21 +262,35 @@ public class NfvoActions {
 
 	private static List<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
 		final List<VimSoftwareImageEntity> listVsie = new ArrayList<>();
-		final Set<SoftwareImage> swImages = vnfPackage.getSoftwareImages();
-		for (final SoftwareImage softwareImage : swImages) {
-			final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
-			vsie.setVimSoftwareImageId(softwareImage.getVimId());
-			vsie.setVnfdSoftwareImageId(vnfPackage.getId().toString());
-			vsie.setVimConnectionId(vimInfo.getId().toString());
-			if (null != softwareImage.getVimId()) {
-				// XXX
-			} else {
-				final VimImage vimImage = vim.getImagesInformations(softwareImage.getName());
-				vsie.setVimSoftwareImageId(vimImage.getId());
+		final Set<VnfCompute> vnfc = vnfPackage.getVnfCompute();
+		vnfc.forEach(x -> {
+			final SoftwareImage img = x.getSoftwareImage();
+			if (null != img) {
+				listVsie.add(mapSoftwareImage(img, vnfPackage, vimInfo, vim));
 			}
-			listVsie.add(vsie);
-		}
+		});
+		final Set<VnfStorage> storage = vnfPackage.getVnfStorage();
+		storage.forEach(x -> {
+			final SoftwareImage img = x.getSoftwareImage();
+			if (null != img) {
+				listVsie.add(mapSoftwareImage(img, vnfPackage, vimInfo, vim));
+			}
+		});
 		return listVsie;
+	}
+
+	private static VimSoftwareImageEntity mapSoftwareImage(final SoftwareImage softwareImage, final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
+		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
+		vsie.setVimSoftwareImageId(softwareImage.getVimId());
+		vsie.setVnfdSoftwareImageId(vnfPackage.getId().toString());
+		vsie.setVimConnectionId(vimInfo.getId().toString());
+		if (null != softwareImage.getVimId()) {
+			// XXX
+		} else {
+			final VimImage vimImage = vim.getImagesInformations(softwareImage.getName());
+			vsie.setVimSoftwareImageId(vimImage.getId());
+		}
+		return vsie;
 	}
 
 	private VimConnectionInformation electVim(final Set<GrantInformation> addResources) {

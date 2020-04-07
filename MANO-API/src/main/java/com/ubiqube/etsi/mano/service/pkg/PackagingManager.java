@@ -91,8 +91,6 @@ public class PackagingManager {
 			vnfPackage.setVnfVl(vvlNodes);
 			final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp();
 			vnfPackage.setVnfLinkPort(vcNodes);
-			vnfPackage.setSoftwareImages(packageProvider.getSoftwareImages());
-			verifyImagePath(vnfPackage.getSoftwareImages());
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
