@@ -168,6 +168,7 @@ public class MsaExecutor implements Vim {
 		}
 		final FailureDetails failureDetails = new FailureDetails();
 		failureDetails.setDetail(message);
+		failureDetails.setStatus(500);
 		vimStatus.setProblemDetails(failureDetails);
 		return vimStatus;
 	}
