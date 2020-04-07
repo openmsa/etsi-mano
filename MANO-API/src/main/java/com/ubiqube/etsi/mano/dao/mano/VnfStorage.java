@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class VnfStorage implements BaseEntity {
@@ -14,9 +16,13 @@ public class VnfStorage implements BaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private String toscaId;
+	private String toscaName;
+	private String state;
+
 	private String type;
 
-	@OneToMany
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private SoftwareImage softwareImage;
 
 	private long size;
@@ -52,6 +58,30 @@ public class VnfStorage implements BaseEntity {
 
 	public void setType(final String type) {
 		this.type = type;
+	}
+
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(final String state) {
+		this.state = state;
 	}
 
 }

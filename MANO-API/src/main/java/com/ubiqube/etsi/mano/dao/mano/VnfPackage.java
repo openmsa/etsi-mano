@@ -54,10 +54,6 @@ public class VnfPackage implements BaseEntity {
 
 	private Checksum checksum;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<SoftwareImage> softwareImages;
-
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private Set<AdditionalArtifact> additionalArtifacts;
@@ -152,14 +148,6 @@ public class VnfPackage implements BaseEntity {
 
 	public void setChecksum(final Checksum checksum) {
 		this.checksum = checksum;
-	}
-
-	public Set<SoftwareImage> getSoftwareImages() {
-		return softwareImages;
-	}
-
-	public void setSoftwareImages(final Set<SoftwareImage> softwareImages) {
-		this.softwareImages = softwareImages;
 	}
 
 	public Set<AdditionalArtifact> getAdditionalArtifacts() {

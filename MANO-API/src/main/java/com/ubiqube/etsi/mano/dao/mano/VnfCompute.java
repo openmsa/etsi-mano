@@ -1,21 +1,39 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class VnfCompute implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+	private String toscaId;
+	private String toscaName;
+	private String state;
 
 	private String name;
 
 	private String description;
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private SoftwareImage softwareImage;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> storages;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<MonitoringParams> monitoringParameters;
 
 	@Override
 	public UUID getId() {
@@ -40,6 +58,54 @@ public class VnfCompute implements BaseEntity {
 
 	public void setDescription(final String description) {
 		this.description = description;
+	}
+
+	public SoftwareImage getSoftwareImage() {
+		return softwareImage;
+	}
+
+	public void setSoftwareImage(final SoftwareImage _softwareImage) {
+		softwareImage = _softwareImage;
+	}
+
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(final String state) {
+		this.state = state;
+	}
+
+	public Set<String> getStorages() {
+		return storages;
+	}
+
+	public void setStorages(final Set<String> storages) {
+		this.storages = storages;
+	}
+
+	public Set<MonitoringParams> getMonitoringParameters() {
+		return monitoringParameters;
+	}
+
+	public void setMonitoringParameters(final Set<MonitoringParams> monitoringParameters) {
+		this.monitoringParameters = monitoringParameters;
 	}
 
 }

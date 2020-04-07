@@ -12,6 +12,9 @@ public class VnfVl implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+	private String toscaId;
+	private String toscaName;
+	private String state;
 
 	private String description;
 
@@ -30,6 +33,30 @@ public class VnfVl implements BaseEntity {
 
 	public void setDescription(final String description) {
 		this.description = description;
+	}
+
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(final String state) {
+		this.state = state;
 	}
 
 }
