@@ -19,9 +19,23 @@ topology_template:
       requirements:
         - virtual_link: vl01
 
-    ubi01:
+    ext01:
+      type: tosca.nodes.nfv.VnfExtCp
+      properties:
+        virtual_network_interface_requirements:
+          - name: vl01
+            description: descr
+            support_mandatory: false
+            network_interface_requirements: # map
+            nic_io_requirements:
+              logical_node_requirements: #map
+      requirements:
+        - external_virtual_link:
+        - internal_virtual_link:
+
+    leftVdu01:
       type: tosca.nodes.nfv.Vdu.Compute
-      name: Ubi01
+      name: Left instance
       description: A node.
       properties:
         sw_image_data:
@@ -49,13 +63,41 @@ topology_template:
                 cpu_architecture: x86_64
                 num_virtual_cpu: 1
 
+
+    rightVdu01:
+      type: tosca.nodes.nfv.Vdu.Compute
+      name: Right instance
+      description: A node.
+      properties:
+        sw_image_data:
+          name: cirros
+          version: 1.0.0
+          checksum:
+            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+            algorithm: SHA-256
+          container_format: BARE
+          disk_format: QCOW2
+          min_disk: 6 GB
+          min_ram: 2 GB
+          operating_system: centos8
+      capabilities:
+        virtual_compute:
+          properties:
+            virtual_memory:
+              properties:
+                virtual_mem_size: 2 GB
+            virtual_cpu:
+              properties:
+                cpu_architecture: x86_64
+                num_virtual_cpu: 1
+
     block01:
       type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
       properties:
         virtual_block_storage_data:
           size_of_storage: 6 GB
         sw_image_data:
-          name: imagenameBlock
+          name: cirros
           version: 1.0.0
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
@@ -72,14 +114,57 @@ topology_template:
         virtual_object_storage_data:
           max_size_of_storage: 6 GB
 
-    vl01:
+    leftVl01:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocols:
+            - ipv4
+          flow_pattern: line
+        description: Description of VL 01
+        test_access:
+          - passive_monitoring
+        monitoring_parameters:
+          - name: Vcpu Peak Usage
+            collection_period: 60 s
+            performance_metric: v_cpu_usage_mean_vnf
+        vl_profile:
+          max_bitrate_requirements:
+            root: 10
+            leaf: 15
+          min_bitrate_requirements:
+            root: 11
+            leaf: 16
+          virtual_link_protocol_data:
+            - l2_protocol_data:
+                name:
+                vlan_transparent: true
+                network_type: ntype
+                mtu: 1500
+              l3_protocol_data:
+                dhcp_enabled: true
+                cidr: 
+                gateway_ip:
+                ip_allocation_pools:
+                  - start_ip_address: 192.168.0.100
+                    end_ip_address: 192.168.0.254
+              associated_layer_protocol: ipv4
+              
+          qos:
+            latency: 5 ms
+            packet_delay_variation: 1 s
+            packet_loss_ratio: 0.01
+      requirements:
+        - virtual_storage: block01
+
+    middleVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
       properties:
         connectivity_type:
           layer_protocols: 
             - ipv4
           flow_pattern: line
-        description: Description of VL 01
+        description: Description of MiddleVL 01
         vl_profile:
           max_bitrate_requirements:
             root: 10
@@ -93,7 +178,48 @@ topology_template:
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
 
-    cp01:
+
+    rightVl01:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocols: 
+            - ipv4
+          flow_pattern: line
+        description: Right of VL 01
+        vl_profile:
+          max_bitrate_requirements:
+            root: 10
+            leaf: 15
+          min_bitrate_requirements:
+            root: 11
+            leaf: 16
+          virtual_link_protocol_data:
+          qos:
+            latency: 5 ms
+            packet_delay_variation: 1 s
+            packet_loss_ratio: 0.01
+
+    cpLc01:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        bitrate_requirement: 5
+        virtual_network_interface_requirements:
+          - name: vl01
+            description: descr
+            support_mandatory: false
+            network_interface_requirements: # map
+            nic_io_requirements:
+              logical_node_requirements: #map
+        order: 5
+        vnic_type: virtio
+      requirements:
+        - virtual_link:
+            node: leftVl01
+        - virtual_binding:
+            node: leftVdu01
+
+    cpLc02:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
@@ -101,6 +227,31 @@ topology_template:
         vnic_type: virtio
       requirements:
         - virtual_link:
-            node: vl01
+            node: middleVl01
         - virtual_binding:
-            node: ubi01
+            node: leftVdu01
+
+
+    cpRc01:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        bitrate_requirement: 5
+        order: 5
+        vnic_type: virtio
+      requirements:
+        - virtual_link:
+            node: rightVl01
+        - virtual_binding:
+            node: rightVdu01
+
+    cpRc02:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        bitrate_requirement: 5
+        order: 5
+        vnic_type: virtio
+      requirements:
+        - virtual_link:
+            node: middleVl01
+        - virtual_binding:
+            node: rightVdu01
