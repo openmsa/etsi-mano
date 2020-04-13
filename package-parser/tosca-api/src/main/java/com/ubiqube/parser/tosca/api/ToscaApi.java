@@ -272,7 +272,7 @@ public class ToscaApi {
 	}
 
 	private static String camelCaseToUnderscore(final String key) {
-		final Matcher m = Pattern.compile("(?<=[a-z])[A-Z]").matcher(key);
+		final Matcher m = Pattern.compile("(?<=[a-z0-9])[A-Z]").matcher(key);
 
 		final StringBuffer sb = new StringBuffer();
 		while (m.find()) {
