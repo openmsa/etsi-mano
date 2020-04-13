@@ -83,7 +83,7 @@ public class NfvoActions {
 
 	public void nsTerminate(final String nsInstanceId) {
 		// XXX This is not the correct way/
-		final VimConnectionInformation vimInfo = electVim(null);
+		final VimConnectionInformation vimInfo = electVim(null, null);
 
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
@@ -131,14 +131,13 @@ public class NfvoActions {
 	}
 
 	public void nsInstantiate(final String nsInstanceId) {
-		// XXX This is not the correct way/
-		final VimConnectionInformation vimInfo = electVim(null);
-		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final String nsdId = nsInstance.getNsdId();
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
 
 		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
+		final VimConnectionInformation vimInfo = electVim((String) nsdInfo.getUserDefinedData().get("vimId"), null);
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		// Create Ns.
 		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
 		final String processId = vim.onNsInstantiate(nsdId, userData);
@@ -155,7 +154,7 @@ public class NfvoActions {
 		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);
 		// Instantiate each VNF.
 		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
-		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
+		final List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final String vnfId : vnfPkgIds) {
 			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
@@ -173,7 +172,7 @@ public class NfvoActions {
 		// wait for completion
 		waitForCompletion(vnfLcmOpOccsIds);
 		// update lcm op occs
-		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
+		refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
 		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
 		final LcmOperationStateType resultStatus = computeStatus(vnfLcmOpOccsIds);
 		updateOperationState(lcmOpOccs, resultStatus);
@@ -227,11 +226,13 @@ public class NfvoActions {
 
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
+				final VimConnectionInformation vci = vimManager.findVimById(UUID.fromString(x.getVimConnectionId()));
 				final Vim vim = vimManager.getVimById(UUID.fromString(x.getVimConnectionId()));
-				vim.freeResources(x);
+				vim.freeResources(vci, x);
 			}
 		});
-		final VimConnectionInformation vimInfo = electVim(grants.getAddResources());
+		final VnfPackage vnfPackage = getPackageFromVnfInstaceId(grants.getVnfInstanceId());
+		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
@@ -239,7 +240,7 @@ public class NfvoActions {
 		});
 
 		grants.setVimConnections(Arrays.asList(vimInfo));
-		final VnfPackage vnfPackage = getPackageFromVnfInstaceId(grants.getVnfInstanceId());
+
 		final List<VimSoftwareImageEntity> softwareImages = getSoftwareImage(vnfPackage, vimInfo, vim);
 		setFlavors(grants, vim);
 
@@ -287,15 +288,20 @@ public class NfvoActions {
 		if (null != softwareImage.getVimId()) {
 			// XXX
 		} else {
-			final VimImage vimImage = vim.getImagesInformations(softwareImage.getName());
+			final VimImage vimImage = vim.getImagesInformations(vimInfo, softwareImage.getName());
 			vsie.setVimSoftwareImageId(vimImage.getId());
 		}
 		return vsie;
 	}
 
-	private VimConnectionInformation electVim(final Set<GrantInformation> addResources) {
+	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformation> set) {
 		// XXX: Do some real elections.
-		final Set<VimConnectionInformation> vims = vimManager.getVimByType("MSA_20");
+		final Set<VimConnectionInformation> vims;
+		if (null != vimId) {
+			vims = vimManager.getVimByType("MSA_20");
+		} else {
+			vims = vimManager.getVimByType("OPENSTACK_V3");
+		}
 		if (vims.isEmpty()) {
 			throw new GenericException("Couldn't find a VIM.");
 		}
