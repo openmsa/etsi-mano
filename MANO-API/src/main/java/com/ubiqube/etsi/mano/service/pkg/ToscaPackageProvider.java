@@ -90,10 +90,12 @@ public class ToscaPackageProvider implements PackageProvider {
 				.register();
 		mapperFactory.classMap(VnfVirtualLink.class, VnfVl.class)
 				.field("internalName", "toscaName")
+				.field("vlProfile", "vlProfileEntity")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new SizeConverter());
+		converterFactory.registerConverter(new TimeConverter());
 		mapper = mapperFactory.getMapperFacade();
 	}
 
