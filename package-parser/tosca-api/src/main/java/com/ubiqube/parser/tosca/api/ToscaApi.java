@@ -125,7 +125,7 @@ public class ToscaApi {
 		return cls;
 	}
 
-	private void handleRequirements(final Map<String, Requirement> requirements, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
+	private static void handleRequirements(final Map<String, Requirement> requirements, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
 		requirements.forEach((x, y) -> {
 			// XXX I think it could be ONE of Node, caps, Link
 			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
@@ -135,7 +135,7 @@ public class ToscaApi {
 		});
 	}
 
-	private PropertyDescriptor getPropertyFor(final String x, final PropertyDescriptor[] propsDescr) {
+	private static PropertyDescriptor getPropertyFor(final String x, final PropertyDescriptor[] propsDescr) {
 		for (final PropertyDescriptor propertyDescriptor : propsDescr) {
 			if (propertyDescriptor.getName().contentEquals(x)) {
 				return propertyDescriptor;
