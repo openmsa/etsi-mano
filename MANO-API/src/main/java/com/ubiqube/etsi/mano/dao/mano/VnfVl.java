@@ -2,10 +2,13 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class VnfVl implements BaseEntity {
@@ -17,6 +20,9 @@ public class VnfVl implements BaseEntity {
 	private String state;
 
 	private String description;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private VlProfileEntity vlProfileEntity;
 
 	@Override
 	public UUID getId() {
@@ -57,6 +63,14 @@ public class VnfVl implements BaseEntity {
 
 	public void setState(final String state) {
 		this.state = state;
+	}
+
+	public VlProfileEntity getVlProfileEntity() {
+		return vlProfileEntity;
+	}
+
+	public void setVlProfileEntity(final VlProfileEntity vlProfileEntity) {
+		this.vlProfileEntity = vlProfileEntity;
 	}
 
 }
