@@ -21,6 +21,11 @@ public class Time {
 		unit = m.group("unit");
 	}
 
+	public Time(final Long _time) {
+		time = _time.longValue();
+		unit = "ns";
+	}
+
 	public String getToscaForm() {
 		return time + " " + unit;
 	}
