@@ -19,8 +19,9 @@ public class UbiToscaTest {
 		final ToscaApi toscaApi = new ToscaApi();
 
 		final List<VnfVirtualLink> list = toscaApi.getObjects(root, VnfVirtualLink.class);
-		assertEquals(1, list.size());
+		assertEquals(3, list.size());
 		final VnfVirtualLink elem = list.get(0);
-		assertEquals("vl01", elem.getInternalName());
+		assertEquals("leftVl01", elem.getInternalName());
+		assertEquals("192.168.0.100", elem.getVlProfile().getVirtualLinkProtocolData().get(0).getL3ProtocolData().getIpAllocationPools().get(0).getStartIpAddress());
 	}
 }
