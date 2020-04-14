@@ -21,7 +21,12 @@ public class GrammarV25Test {
 		assertNode(nodes.get(0), "weight", Operand.EQ, "100");
 		assertNode(nodes.get(1), "weight.aa", Operand.NEQ, "100");
 		// TODO It's wrong.
-		assertNode(nodes.get(2), "weight.aa", Operand.IN, "55");
+		final Node node = nodes.get(2);
+		assertEquals("weight.aa", node.getName());
+		assertEquals(Operand.IN, node.getOp());
+		final List<String> values = node.getValues();
+		assertEquals("100", values.get(0));
+		assertEquals("55", values.get(1));
 	}
 
 	private void assertNode(final Node node, final String key, final Operand op, final String value) {

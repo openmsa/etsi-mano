@@ -1,5 +1,10 @@
 package com.ubiqube.etsi.mano.grammar;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ubiqube.etsi.mano.exception.GenericException;
+
 public class Node {
 
 	public enum Operand {
@@ -22,7 +27,7 @@ public class Node {
 
 	private String name;
 	private Operand op;
-	private String value;
+	private List<String> value = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -41,11 +46,25 @@ public class Node {
 	}
 
 	public String getValue() {
+		if (value.size() > 1) {
+			throw new GenericException("Calling a multivalue.");
+		}
+		if (value.isEmpty()) {
+			return null;
+		}
+		return value.get(0);
+	}
+
+	public List<String> getValues() {
 		return value;
 	}
 
-	public void setValue(final String value) {
-		this.value = value;
+	public void setValue(final List<String> _value) {
+		this.value = _value;
+	}
+
+	public void addValue(final String _value) {
+		value.add(_value);
 	}
 
 	@Override

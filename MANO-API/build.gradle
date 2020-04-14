@@ -86,12 +86,19 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-quartz")
 
 	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.4.0'
+	compile group: 'org.jgrapht', name: 'jgrapht-io', version: '1.4.0'
 	// https://github.com/akihyro/orika-spring-boot-starter
 	compile 'net.rakugakibox.spring.boot:orika-spring-boot-starter:1.8.0'
 	
 	compile group: 'org.hibernate', name: 'hibernate-search', version: '5.11.5.Final'
 
+	// Demo stuff
+	compile 'com.ubiqube.mano:tosca-vnfd-class:0.0.1-SNAPSHOT'
+
 	compile group: 'org.pacesys', name: 'openstack4j', version: '3.2.0'
+	compile group: 'guru.nidi', name: 'graphviz-java', version: '0.15.1'
+	//
+	compile group: 'com.github.dexecutor', name: 'dexecutor-core', version: '2.1.1'
 }
 
 springBoot {
