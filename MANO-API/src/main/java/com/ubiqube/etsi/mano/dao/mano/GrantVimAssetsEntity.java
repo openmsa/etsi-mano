@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -9,11 +10,11 @@ import javax.validation.Valid;
 @Embeddable
 public class GrantVimAssetsEntity {
 	@ElementCollection
-	private List<VimComputeResourceFlavourEntity> computeResourceFlavours = null;
+	private List<VimComputeResourceFlavourEntity> computeResourceFlavours = new ArrayList<>();
 
 	@Valid
 	@ElementCollection
-	private List<VimSoftwareImageEntity> softwareImages = null;
+	private List<VimSoftwareImageEntity> softwareImages = new ArrayList<>();
 
 	public List<VimComputeResourceFlavourEntity> getComputeResourceFlavours() {
 		return computeResourceFlavours;

@@ -1,6 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -26,7 +26,7 @@ public class VlProfileEntity {
 	private Integer linkBitrateLeaf;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<VlProtocolData> virtualLinkProtocolData;
+	private Set<VlProtocolData> virtualLinkProtocolData;
 
 	private Integer maxBitrateRequirementsRoot;
 
@@ -48,11 +48,11 @@ public class VlProfileEntity {
 		this.qos = qos;
 	}
 
-	public List<VlProtocolData> getVirtualLinkProtocolData() {
+	public Set<VlProtocolData> getVirtualLinkProtocolData() {
 		return virtualLinkProtocolData;
 	}
 
-	public void setVirtualLinkProtocolData(final List<VlProtocolData> virtualLinkProtocolData) {
+	public void setVirtualLinkProtocolData(final Set<VlProtocolData> virtualLinkProtocolData) {
 		this.virtualLinkProtocolData = virtualLinkProtocolData;
 	}
 

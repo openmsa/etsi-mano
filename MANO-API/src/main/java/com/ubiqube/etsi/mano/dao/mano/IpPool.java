@@ -1,5 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class IpPool {
 	private String startIpAddress;
 

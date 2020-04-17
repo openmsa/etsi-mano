@@ -10,6 +10,8 @@ public class L2Data {
 
 	private String networkType;
 
+	private Integer mtu;
+
 	public String getName() {
 		return name;
 	}
@@ -32,6 +34,14 @@ public class L2Data {
 
 	public void setNetworkType(final String networkType) {
 		this.networkType = networkType;
+	}
+
+	public Integer getMtu() {
+		return mtu;
+	}
+
+	public void setMtu(final Integer mtu) {
+		this.mtu = mtu;
 	}
 
 }

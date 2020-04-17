@@ -17,7 +17,7 @@ public class L3Data {
 
 	private String ipVersion;
 
-	private String name;
+	private String l3Name;
 
 	private String cidr;
 
@@ -55,12 +55,12 @@ public class L3Data {
 		this.ipVersion = ipVersion;
 	}
 
-	public String getName() {
-		return name;
+	public String getL3Name() {
+		return l3Name;
 	}
 
-	public void setName(final String name) {
-		this.name = name;
+	public void setL3Name(final String l3Name) {
+		this.l3Name = l3Name;
 	}
 
 	public String getCidr() {

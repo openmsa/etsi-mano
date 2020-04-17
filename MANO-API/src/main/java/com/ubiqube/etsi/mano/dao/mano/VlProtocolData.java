@@ -8,9 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import tosca.datatypes.nfv.L2ProtocolData;
-import tosca.datatypes.nfv.L3ProtocolData;
-
 @Entity
 public class VlProtocolData {
 	@Id
@@ -20,10 +17,10 @@ public class VlProtocolData {
 	private String associatedLayerProtocol;
 
 	@Embedded
-	private L2ProtocolData l2ProtocolData;
+	private L2Data l2ProtocolData;
 
 	@Embedded
-	private L3ProtocolData l3ProtocolData;
+	private L3Data l3ProtocolData;
 
 	public UUID getId() {
 		return id;
@@ -41,19 +38,19 @@ public class VlProtocolData {
 		this.associatedLayerProtocol = associatedLayerProtocol;
 	}
 
-	public L2ProtocolData getL2ProtocolData() {
+	public L2Data getL2ProtocolData() {
 		return l2ProtocolData;
 	}
 
-	public void setL2ProtocolData(final L2ProtocolData l2ProtocolData) {
+	public void setL2ProtocolData(final L2Data l2ProtocolData) {
 		this.l2ProtocolData = l2ProtocolData;
 	}
 
-	public L3ProtocolData getL3ProtocolData() {
+	public L3Data getL3ProtocolData() {
 		return l3ProtocolData;
 	}
 
-	public void setL3ProtocolData(final L3ProtocolData l3ProtocolData) {
+	public void setL3ProtocolData(final L3Data l3ProtocolData) {
 		this.l3ProtocolData = l3ProtocolData;
 	}
 

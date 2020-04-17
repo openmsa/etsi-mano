@@ -18,13 +18,22 @@ public class VnfCompute implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	private String toscaId;
+
 	private String toscaName;
+
 	private String state;
 
 	private String name;
 
 	private String description;
+
+	private long virtualMemorySize;
+
+	private String cpuArchitecture;
+
+	private long numVcpu;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private SoftwareImage softwareImage;
@@ -106,6 +115,30 @@ public class VnfCompute implements BaseEntity {
 
 	public void setMonitoringParameters(final Set<MonitoringParams> monitoringParameters) {
 		this.monitoringParameters = monitoringParameters;
+	}
+
+	public long getVirtualMemorySize() {
+		return virtualMemorySize;
+	}
+
+	public void setVirtualMemorySize(final long virtualMemorySize) {
+		this.virtualMemorySize = virtualMemorySize;
+	}
+
+	public String getCpuArchitecture() {
+		return cpuArchitecture;
+	}
+
+	public void setCpuArchitecture(final String cpuArchitecture) {
+		this.cpuArchitecture = cpuArchitecture;
+	}
+
+	public long getNumVcpu() {
+		return numVcpu;
+	}
+
+	public void setNumVcpu(final long numVcpu) {
+		this.numVcpu = numVcpu;
 	}
 
 }
