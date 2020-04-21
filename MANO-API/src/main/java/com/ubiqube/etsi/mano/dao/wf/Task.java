@@ -15,7 +15,7 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String nsInstanceId;
+	private String objectId;
 	private LcmOperationStateType status;
 
 	public UUID getId() {
@@ -26,12 +26,12 @@ public class Task {
 		this.id = id;
 	}
 
-	public String getNsInstanceId() {
-		return nsInstanceId;
+	public String getObjectId() {
+		return objectId;
 	}
 
-	public void setNsInstanceId(final String nsInstanceId) {
-		this.nsInstanceId = nsInstanceId;
+	public void setObjectId(final String objectId) {
+		this.objectId = objectId;
 	}
 
 	public LcmOperationStateType getStatus() {

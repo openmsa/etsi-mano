@@ -3,11 +3,13 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.jgrapht.ListenableGraph;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.compute.Flavor;
@@ -21,13 +23,17 @@ import com.ubiqube.api.entities.orchestration.ProcessInstance;
 import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.orchestration.OrchestrationService;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.service.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -186,7 +192,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public void freeResources(final GrantInformation grantInformation) {
+	public void freeResources(final VimConnectionInformation vimConnectionInformation, final GrantInformation grantInformation) {
 		// TODO Auto-generated method stub
 
 	}
@@ -216,10 +222,42 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public @NonNull VimImage getImagesInformations(final String name) {
+	public @NonNull VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
 		final OSClientV3 os = getOs();
 		final List<? extends Image> images = os.compute().images().list();
 		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new NotFoundException("Image " + name + " Cannot be found on Vim."));
 		return mapper.map(image, VimImage.class);
 	}
+
+	@Override
+	public String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, final String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
+		// MSA don't have an execution plan.
+	}
+
+	@Override
+	public Optional<SoftwareImage> getSwImageMatching(final VimConnectionInformation vimInfo, final SoftwareImage img) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SoftwareImage uploadSoftwareImage(final VimConnectionInformation vimInfo, final SoftwareImage img) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    @Override
+    public String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+	
+
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -29,6 +30,7 @@ import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import tosca.datatypes.nfv.L3ProtocolData;
 import tosca.nodes.nfv.VNF;
 import tosca.nodes.nfv.VduCp;
 import tosca.nodes.nfv.VnfVirtualLink;
@@ -80,6 +82,10 @@ public class ToscaPackageProvider implements PackageProvider {
 		mapperFactory.classMap(Compute.class, VnfCompute.class)
 				.field("swImageData", "softwareImage")
 				.field("internalName", "toscaName")
+				.field("virtualStorageReq", "storages")
+				.field("virtualCompute.virtualCpu.numVirtualCpu", "numVcpu")
+				.field("virtualCompute.virtualCpu.cpuArchitecture", "cpuArchitecture")
+				.field("virtualCompute.virtualMemory.virtualMemSize", "virtualMemorySize")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(VduCp.class, VnfLinkPort.class)
@@ -93,6 +99,12 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("vlProfile", "vlProfileEntity")
 				.byDefault()
 				.register();
+
+		mapperFactory.classMap(L3ProtocolData.class, L3Data.class)
+				.field("name", "l3Name")
+				.byDefault()
+				.register();
+
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new SizeConverter());
 		converterFactory.registerConverter(new TimeConverter());

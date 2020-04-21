@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 
 @Service
@@ -40,6 +41,10 @@ public class VimManager {
 
 	public Vim getVimById(final UUID id) {
 		return vimAssociation.get(id);
+	}
+
+	public VimConnectionInformation findVimById(final UUID id) {
+		return vimConnectionInformationJpa.findById(id).orElseThrow(() -> new NotFoundException("No connection Id " + id));
 	}
 
 	@Nonnull

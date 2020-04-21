@@ -17,6 +17,8 @@ public class MonitoringParams {
 	private String name;
 	private String value;
 	private Date timestamp;
+	private Long collectionPeriod;
+	private String performanceMetric;
 
 	public UUID getId() {
 		return id;
@@ -48,6 +50,22 @@ public class MonitoringParams {
 
 	public void setTimestamp(final Date timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getPerformanceMetric() {
+		return performanceMetric;
+	}
+
+	public void setPerformanceMetric(final String performanceMetric) {
+		this.performanceMetric = performanceMetric;
+	}
+
+	public Long getCollectionPeriod() {
+		return collectionPeriod;
+	}
+
+	public void setCollectionPeriod(final Long collectionPeriod) {
+		this.collectionPeriod = collectionPeriod;
 	}
 
 }
