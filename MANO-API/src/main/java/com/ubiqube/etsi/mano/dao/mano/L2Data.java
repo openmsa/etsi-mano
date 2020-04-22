@@ -1,9 +1,11 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class L2Data {
+public class L2Data implements Serializable {
 	private String name;
 
 	private Boolean vlanTransparent = false;

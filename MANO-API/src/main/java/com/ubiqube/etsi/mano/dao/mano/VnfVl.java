@@ -3,7 +3,9 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
-public class VnfVl implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfVl implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -20,6 +23,9 @@ public class VnfVl implements BaseEntity {
 	private String state;
 
 	private String description;
+
+	@Embedded
+	private Audit audit;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private VlProfileEntity vlProfileEntity;
@@ -71,6 +77,16 @@ public class VnfVl implements BaseEntity {
 
 	public void setVlProfileEntity(final VlProfileEntity vlProfileEntity) {
 		this.vlProfileEntity = vlProfileEntity;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

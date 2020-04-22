@@ -1,42 +1,44 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
-
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualLink;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualStorage;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 @Embeddable
 public class VnfLcmResourceChanges {
-	private List<AffectedVnfc> affectedVnfcs = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<AffectedCompute> affectedVnfcs = null;
 
-	private List<AffectedVirtualLink> affectedVirtualLinks = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<AffectedVl> affectedVirtualLinks = null;
 
-	private List<AffectedVirtualStorage> affectedVirtualStorages = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<AffectedVs> affectedVirtualStorages = null;
 
-	public List<AffectedVnfc> getAffectedVnfcs() {
+	public Set<AffectedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;
 	}
 
-	public void setAffectedVnfcs(final List<AffectedVnfc> affectedVnfcs) {
+	public void setAffectedVnfcs(final Set<AffectedCompute> affectedVnfcs) {
 		this.affectedVnfcs = affectedVnfcs;
 	}
 
-	public List<AffectedVirtualLink> getAffectedVirtualLinks() {
+	public Set<AffectedVl> getAffectedVirtualLinks() {
 		return affectedVirtualLinks;
 	}
 
-	public void setAffectedVirtualLinks(final List<AffectedVirtualLink> affectedVirtualLinks) {
+	public void setAffectedVirtualLinks(final Set<AffectedVl> affectedVirtualLinks) {
 		this.affectedVirtualLinks = affectedVirtualLinks;
 	}
 
-	public List<AffectedVirtualStorage> getAffectedVirtualStorages() {
+	public Set<AffectedVs> getAffectedVirtualStorages() {
 		return affectedVirtualStorages;
 	}
 
-	public void setAffectedVirtualStorages(final List<AffectedVirtualStorage> affectedVirtualStorages) {
+	public void setAffectedVirtualStorages(final Set<AffectedVs> affectedVirtualStorages) {
 		this.affectedVirtualStorages = affectedVirtualStorages;
 	}
 

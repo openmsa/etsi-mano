@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,7 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class VlProfileEntity {
+@EntityListeners(AuditListener.class)
+public class VlProfileEntity implements Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -31,6 +33,8 @@ public class VlProfileEntity {
 	private Integer maxBitrateRequirementsRoot;
 
 	private Integer maxBitrateRequirementsLeaf;
+
+	private Audit audit;
 
 	public UUID getId() {
 		return id;
@@ -86,6 +90,16 @@ public class VlProfileEntity {
 
 	public void setMaxBitrateRequirementsLeaf(final Integer maxBitrateRequirementsLeaf) {
 		this.maxBitrateRequirementsLeaf = maxBitrateRequirementsLeaf;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

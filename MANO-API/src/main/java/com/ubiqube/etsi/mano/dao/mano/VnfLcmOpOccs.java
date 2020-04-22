@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -24,12 +26,12 @@ import com.ubiqube.etsi.mano.model.nslcm.ExtVirtualLinkInfo;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInfoModifications;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfLcmOpOccs implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -58,6 +60,7 @@ public class VnfLcmOpOccs implements BaseEntity {
 
 	@Field
 	private Boolean isCancelPending = null;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private CancelModeType cancelMode = null;
@@ -66,14 +69,16 @@ public class VnfLcmOpOccs implements BaseEntity {
 
 	private String externalProcessId;
 
-	@Transient
-	private VnfLcmOpOccResourceChanges resourceChanges = null;
+	@Embedded
+	private VnfLcmResourceChanges resourceChanges = null;
 
 	@Transient
 	private VnfInfoModifications changedInfo = null;
 
 	@Transient
 	private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
+
+	private Audit audit;
 
 	@Override
 	public UUID getId() {
@@ -164,11 +169,11 @@ public class VnfLcmOpOccs implements BaseEntity {
 		this.error = error;
 	}
 
-	public VnfLcmOpOccResourceChanges getResourceChanges() {
+	public VnfLcmResourceChanges getResourceChanges() {
 		return resourceChanges;
 	}
 
-	public void setResourceChanges(final VnfLcmOpOccResourceChanges resourceChanges) {
+	public void setResourceChanges(final VnfLcmResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
 	}
 
@@ -194,6 +199,16 @@ public class VnfLcmOpOccs implements BaseEntity {
 
 	public void setExternalProcessId(final String externalProcessId) {
 		this.externalProcessId = externalProcessId;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

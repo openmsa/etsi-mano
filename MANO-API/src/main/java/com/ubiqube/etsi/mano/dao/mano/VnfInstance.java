@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -23,8 +25,8 @@ import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 
 @Entity
 @Indexed
-
-public class VnfInstance implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfInstance implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -58,7 +60,7 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfInstanceName = null;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private VnfPackage vnfPkg = null;
 
 	@Field
@@ -77,6 +79,8 @@ public class VnfInstance implements BaseEntity {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extensions = null;
+
+	private Audit audit;
 
 	@Override
 	public UUID getId() {
@@ -213,6 +217,16 @@ public class VnfInstance implements BaseEntity {
 
 	public void setProcessId(final String processId) {
 		this.processId = processId;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

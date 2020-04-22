@@ -1,15 +1,21 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class VlProtocolData {
+@EntityListeners(AuditListener.class)
+public class VlProtocolData implements Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -21,6 +27,9 @@ public class VlProtocolData {
 
 	@Embedded
 	private L3Data l3ProtocolData;
+
+	@Embedded
+	private Audit audit;
 
 	public UUID getId() {
 		return id;
@@ -52,6 +61,16 @@ public class VlProtocolData {
 
 	public void setL3ProtocolData(final L3Data l3ProtocolData) {
 		this.l3ProtocolData = l3ProtocolData;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

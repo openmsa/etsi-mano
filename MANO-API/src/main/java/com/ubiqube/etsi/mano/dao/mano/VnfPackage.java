@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -30,7 +32,8 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfPackage implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfPackage implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -92,6 +95,9 @@ public class VnfPackage implements BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<VnfLinkPort> vnfLinkPort;
+
+	@Embedded
+	private Audit audit;
 
 	@Override
 	public UUID getId() {
@@ -228,6 +234,16 @@ public class VnfPackage implements BaseEntity {
 
 	public void setVnfLinkPort(final Set<VnfLinkPort> vnfLinkPort) {
 		this.vnfLinkPort = vnfLinkPort;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

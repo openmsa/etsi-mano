@@ -1,24 +1,36 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class MonitoringParams {
+@EntityListeners(AuditListener.class)
+public class MonitoringParams implements Serializable, Auditable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
 	private String name;
+
 	private String value;
+
 	private Date timestamp;
+
 	private Long collectionPeriod;
+
 	private String performanceMetric;
+
+	private Audit audit;
 
 	public UUID getId() {
 		return id;
@@ -66,6 +78,16 @@ public class MonitoringParams {
 
 	public void setCollectionPeriod(final Long collectionPeriod) {
 		this.collectionPeriod = collectionPeriod;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

@@ -2,23 +2,32 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class VnfLinkPort implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfLinkPort implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	private String toscaId;
+
 	private String toscaName;
+
 	private String state;
 
 	private String virtualLink;
 
 	private String virtualBinding;
+
+	@Embedded
+	private Audit audit;
 
 	@Override
 	public UUID getId() {
@@ -67,6 +76,16 @@ public class VnfLinkPort implements BaseEntity {
 
 	public void setVirtualBinding(final String virtualBinding) {
 		this.virtualBinding = virtualBinding;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

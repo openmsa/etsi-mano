@@ -1,9 +1,12 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
-public class VnfStorage implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfStorage implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -26,6 +33,9 @@ public class VnfStorage implements BaseEntity {
 	private SoftwareImage softwareImage;
 
 	private long size;
+
+	@Embedded
+	private Audit audit;
 
 	@Override
 	public UUID getId() {
@@ -82,6 +92,20 @@ public class VnfStorage implements BaseEntity {
 
 	public void setState(final String state) {
 		this.state = state;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

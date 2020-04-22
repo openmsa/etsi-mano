@@ -1,9 +1,14 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class IpPool {
+public class IpPool implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String startIpAddress;
 
 	private String endIpAddress;
