@@ -6,7 +6,6 @@
 	},"id":"8a5878be-21c8-4123-a6a1-a9cea03123a0",
 	"onboardingState": "ONBOARDED",
 	"operationalState": "ENABLED",
-	"softwareImages": null,
 	"usageState": "IN_USE",
 	"userDefinedData": {
 		"aa": "String"
