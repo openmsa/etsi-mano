@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -224,6 +226,7 @@ public class NfvoActions {
 		final Optional<Grants> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
 		final Grants grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
 
+		// XXX We should use planner API for this.
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
 				final VimConnectionInformation vci = vimManager.findVimById(UUID.fromString(x.getVimConnectionId()));
@@ -231,7 +234,7 @@ public class NfvoActions {
 				vim.freeResources(vci, x);
 			}
 		});
-		final VnfPackage vnfPackage = getPackageFromVnfInstaceId(grants.getVnfInstanceId());
+		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(grants.getVnfInstanceId());
 		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
@@ -241,22 +244,30 @@ public class NfvoActions {
 
 		grants.setVimConnections(Arrays.asList(vimInfo));
 
-		final List<VimSoftwareImageEntity> softwareImages = getSoftwareImage(vnfPackage, vimInfo, vim);
-		setFlavors(grants, vim);
-
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
-		grantVimAssetsEntity.setSoftwareImages(softwareImages);
+		grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vnfPackage, vimInfo, vim));
+		grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
 		grants.setVimAssets(grantVimAssetsEntity);
 		grants.setAvailable(Boolean.TRUE);
 		grantJpa.save(grants);
 		LOG.info("Grant {} Available.", grants.getId());
 	}
 
-	private void setFlavors(final Grants grants, final Vim vim) {
-		// XXX todo.
+	private static List<VimComputeResourceFlavourEntity> getFlavors(final VnfPackage vnfPackage, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
+		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
+		vnfPackage.getVnfCompute().forEach(x -> {
+			final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), 10);
+			vnfPackage.setFlavorId(flavorId);
+			final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
+			vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
+			vcrfe.setVimFlavourId(flavorId);
+			vcrfe.setVnfdVirtualComputeDescId(x.getId().toString());
+			listVcrfe.add(vcrfe);
+		});
+		return listVcrfe;
 	}
 
-	private VnfPackage getPackageFromVnfInstaceId(final String vnfInstanceId) {
+	private VnfPackage getPackageFromVnfInstanceId(@NotNull final String vnfInstanceId) {
 		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
 		return instance.getVnfPkg();
 	}
@@ -265,8 +276,14 @@ public class NfvoActions {
 		final List<VimSoftwareImageEntity> listVsie = new ArrayList<>();
 		final Set<VnfCompute> vnfc = vnfPackage.getVnfCompute();
 		vnfc.forEach(x -> {
-			final SoftwareImage img = x.getSoftwareImage();
+			SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
+				// Get Vim or create vim resource via Or-Vi
+				final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
+				img = newImg.orElseGet(() -> {
+					// Use or-vi, Vim is not on the same server. and where is the path ?
+					return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
+				});
 				listVsie.add(mapSoftwareImage(img, vnfPackage, vimInfo, vim));
 			}
 		});
@@ -298,8 +315,10 @@ public class NfvoActions {
 		// XXX: Do some real elections.
 		final Set<VimConnectionInformation> vims;
 		if (null != vimId) {
+			LOG.debug("Getting MSA 2.x VIM");
 			vims = vimManager.getVimByType("MSA_20");
 		} else {
+			LOG.debug("Getting OS v3 VIM");
 			vims = vimManager.getVimByType("OPENSTACK_V3");
 		}
 		if (vims.isEmpty()) {
