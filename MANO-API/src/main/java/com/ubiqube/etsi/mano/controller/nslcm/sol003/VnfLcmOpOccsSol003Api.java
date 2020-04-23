@@ -45,11 +45,10 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final String accept, final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
 		final List<VnfLcmOpOccs> resultsDb = vnfLcmOpOccsRepository.query(filter);
-		final VnfLcmOpOcc results = mapper.map(resultsDb, VnfLcmOpOcc.class);
-		resultsDb.stream()
-				.map(x -> mapper.map(resultsDb, VnfLcmOpOcc.class))
-				.collect(Collectors.toList())
-				.forEach(x -> x.setLinks(makeLink(x)));
+		final List<VnfLcmOpOcc> results = resultsDb.stream()
+				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
+				.collect(Collectors.toList());
+		results.forEach(x -> x.setLinks(makeLink(x)));
 		final ObjectMapper mapperForView = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
 			return new ResponseEntity<>(mapperForView.writeValueAsString(results), HttpStatus.OK);
