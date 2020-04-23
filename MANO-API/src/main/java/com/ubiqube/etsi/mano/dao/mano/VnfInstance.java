@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -21,7 +22,6 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 
 @Entity
 @Indexed
@@ -31,8 +31,8 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@Transient
-	private VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = null;
+	@Embedded
+	private VnfInstantiatedInfo instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
 	@Field
@@ -87,7 +87,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 		return id;
 	}
 
-	public VnfInstanceInstantiatedVnfInfo getInstantiatedVnfInfo() {
+	public VnfInstantiatedInfo getInstantiatedVnfInfo() {
 		return instantiatedVnfInfo;
 	}
 
@@ -131,7 +131,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 		this.id = id;
 	}
 
-	public void setInstantiatedVnfInfo(final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo) {
+	public void setInstantiatedVnfInfo(final VnfInstantiatedInfo instantiatedVnfInfo) {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 

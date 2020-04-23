@@ -21,6 +21,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
+import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
@@ -32,7 +34,6 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -51,16 +52,14 @@ public class VnfInstanceLcm {
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageRepository vnfPackageRepository;
-	private final Vim vim;
 	private final NsLcmOpOccsRepository lcmOpOccsMsa;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final Vim _vim, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper) {
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
-		vim = _vim;
 		lcmOpOccsMsa = _lcmOpOccsRepository;
 		eventManager = _eventManager;
 		mapper = _mapper;
@@ -84,7 +83,16 @@ public class VnfInstanceLcm {
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
-
+		// XXX Setup instanciated resources.
+		vnfPkgInfo.getVnfCompute().forEach(x -> {
+			final VnfcResourceInfo vnfcResourceInfoItem = new VnfcResourceInfo();
+			vnfcResourceInfoItem.setVduId(x.getId().toString());
+			// vnfInstance.getInstantiatedVnfInfo().addVnfcResourceInfoItem(vnfcResourceInfoItem);
+		});
+		vnfPkgInfo.getVnfVl().forEach(x -> {
+			final VnfVirtualLinkResourceInfo virtualLinkResourceInfoItem = new VnfVirtualLinkResourceInfo();
+//			vnfInstance.getInstantiatedVnfInfo().addVirtualLinkResourceInfoItem(virtualLinkResourceInfoItem);
+		});
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstancesRepository.save(vnfInstance);
 		return mapper.map(vnfInstance, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
@@ -128,7 +136,7 @@ public class VnfInstanceLcm {
 
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		final Map<String, String> userData = vnfPkg.getUserDefinedData();
-		final String processId = vim.onVnfInstanceTerminate(userData);
+		final String processId = ""; // vim.onVnfInstanceTerminate(userData);
 		userData.put("msaTerminateServiceId", processId);
 		addVnfOperation(processId, vnfInstanceId, NsLcmOpType.TERMINATE);
 		vnfInstancesRepository.save(vnfInstance);

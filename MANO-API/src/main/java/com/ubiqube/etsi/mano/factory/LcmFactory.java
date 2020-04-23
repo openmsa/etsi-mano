@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -16,8 +18,6 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
@@ -27,6 +27,7 @@ public final class LcmFactory {
 		// Nothing.
 	}
 
+	// XXX Is it to be in LCM ?
 	@Nonnull
 	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest, final VnfPackage vnfPkgInfo) {
 		final VnfInstance vnfInstance = new VnfInstance();
@@ -40,8 +41,8 @@ public final class LcmFactory {
 		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
 		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
 
-		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
-		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STOPPED);
+		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
+		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		return vnfInstance;

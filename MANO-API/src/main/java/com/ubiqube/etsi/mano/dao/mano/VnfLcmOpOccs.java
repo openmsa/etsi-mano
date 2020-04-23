@@ -51,6 +51,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	@Field
 	private String grantId = null;
+
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private LcmOperationType operation = null;

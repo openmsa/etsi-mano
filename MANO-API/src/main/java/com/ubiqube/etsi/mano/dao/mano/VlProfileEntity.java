@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -28,6 +29,7 @@ public class VlProfileEntity implements Auditable {
 	private Integer linkBitrateLeaf;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
 	private Set<VlProtocolData> virtualLinkProtocolData;
 
 	private Integer maxBitrateRequirementsRoot;

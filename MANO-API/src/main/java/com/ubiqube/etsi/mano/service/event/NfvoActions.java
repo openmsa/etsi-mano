@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -242,7 +242,7 @@ public class NfvoActions {
 			x.setVimConnectionId(vimInfo.getId().toString());
 		});
 
-		grants.setVimConnections(Arrays.asList(vimInfo));
+		grants.setVimConnections(Collections.singleton(vimInfo));
 
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
 		grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vnfPackage, vimInfo, vim));

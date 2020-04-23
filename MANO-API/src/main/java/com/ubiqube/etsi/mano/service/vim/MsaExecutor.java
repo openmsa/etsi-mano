@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.service.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
 
 import ma.glasnost.orika.MapperFacade;
@@ -243,7 +243,7 @@ public class MsaExecutor implements Vim {
 	@Override
 	public Optional<SoftwareImage> getSwImageMatching(final VimConnectionInformation vimInfo, final SoftwareImage img) {
 		// TODO Auto-generated method stub
-		return null;
+		return Optional.empty();
 	}
 
 	@Override
@@ -252,12 +252,10 @@ public class MsaExecutor implements Vim {
 		return null;
 	}
 
-    @Override
-    public String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-	
+	@Override
+	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

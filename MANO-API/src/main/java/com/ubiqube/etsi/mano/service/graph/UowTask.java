@@ -10,16 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
+import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.ResourceHandle;
-import com.ubiqube.etsi.mano.model.nslcm.VirtualStorageResourceInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class UowTask extends Task<UnitOfWork, String> {
@@ -68,7 +68,7 @@ public class UowTask extends Task<UnitOfWork, String> {
 			failureDetails.setType("about:blank");
 			failureDetails.setInstance(instance);
 		}
-		final VnfInstanceInstantiatedVnfInfo vnfInstantiated = vnfInstance.getInstantiatedVnfInfo();
+		final VnfInstantiatedInfo vnfInstantiated = vnfInstance.getInstantiatedVnfInfo();
 		addResource(vnfInstantiated, res.get());
 		final VnfLcmResourceChanges resourceChanged = lcmOpOccs.getResourceChanges();
 		// resourceChanged.setAffectedVirtualLinks(affectedVirtualLinks);
@@ -78,7 +78,7 @@ public class UowTask extends Task<UnitOfWork, String> {
 		return res.get();
 	}
 
-	private void addResource(final VnfInstanceInstantiatedVnfInfo vnfInstantiated, final String resourceId) {
+	private void addResource(final VnfInstantiatedInfo vnfInstantiated, final String resourceId) {
 		switch (uaow.getType()) {
 		case VL:
 			vnfInstantiated.addVirtualLinkResourceInfoItem(createVl());
@@ -97,20 +97,20 @@ public class UowTask extends Task<UnitOfWork, String> {
 		}
 	}
 
-	private VirtualStorageResourceInfo createVStorage(final String resourceId) {
-		final VirtualStorageResourceInfo vsri = new VirtualStorageResourceInfo();
-		final ResourceHandle storageResource = new ResourceHandle();
+	private VirtualStorageInfo createVStorage(final String resourceId) {
+		final VirtualStorageInfo vsri = new VirtualStorageInfo();
+		final ResourceHandleEntity storageResource = new ResourceHandleEntity();
 		storageResource.setResourceId(resourceId);
 		vsri.setStorageResource(storageResource);
 		return vsri;
 	}
 
-	private VnfVirtualLinkResourceInfo createVl() {
+	private VirtualLinkInfo createVl() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private VnfcResourceInfo createCompute() {
+	private VnfInstantiedCompute createCompute() {
 		// TODO Auto-generated method stub
 		return null;
 	}

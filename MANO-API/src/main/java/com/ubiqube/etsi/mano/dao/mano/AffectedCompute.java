@@ -8,11 +8,16 @@ import java.util.UUID;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Transient;
+
+import org.hibernate.search.annotations.FieldBridge;
+
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 public class AffectedCompute {
@@ -22,12 +27,14 @@ public class AffectedCompute {
 
 	private String vduId = null;
 
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private ChangeType changeType = null;
 
 	@Embedded
 	private ResourceHandleEntity computeResource = null;
 
-	@Transient
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = new HashMap<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)

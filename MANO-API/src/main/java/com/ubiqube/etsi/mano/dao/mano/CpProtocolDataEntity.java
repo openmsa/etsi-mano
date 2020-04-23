@@ -12,6 +12,12 @@ import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.model.CpProtocolData.LayerProtocolEnum;
 
+/**
+ * Same as CpProtocolInfo.
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 public class CpProtocolDataEntity {
 	@Id

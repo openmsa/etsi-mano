@@ -43,7 +43,8 @@ public class Grants {
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<VimConnectionInformation> vimConnections = null;
+	@JoinColumn
+	private Set<VimConnectionInformation> vimConnections = null;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "grants")
 	private List<ZoneInfoEntity> zones = null;
@@ -82,14 +83,15 @@ public class Grants {
 	private GrantVimAssetsEntity vimAssets = null;
 
 	@Valid
-	@ElementCollection
-	private List<ExtVirtualLinkDataEntity> extVirtualLinks = null;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
 
 	@Valid
 	@OneToMany(mappedBy = "grants")
-	private List<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
 
-	@Transient
+	@ElementCollection
 	private Map<String, String> additionalParams = null;
 
 	/**
@@ -121,11 +123,11 @@ public class Grants {
 		this.vnfLcmOpOccId = vnfLcmOpOccId;
 	}
 
-	public List<VimConnectionInformation> getVimConnections() {
+	public Set<VimConnectionInformation> getVimConnections() {
 		return vimConnections;
 	}
 
-	public void setVimConnections(final List<VimConnectionInformation> vimConnections) {
+	public void setVimConnections(final Set<VimConnectionInformation> vimConnections) {
 		this.vimConnections = vimConnections;
 	}
 
@@ -209,19 +211,19 @@ public class Grants {
 		this.vimAssets = vimAssets;
 	}
 
-	public List<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
+	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
 		return extVirtualLinks;
 	}
 
-	public void setExtVirtualLinks(final List<ExtVirtualLinkDataEntity> extVirtualLinks) {
+	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 	}
 
-	public List<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
+	public Set<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
 		return extManagedVirtualLinks;
 	}
 
-	public void setExtManagedVirtualLinks(final List<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 

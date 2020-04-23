@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
 import org.hibernate.search.annotations.Field;
@@ -40,13 +41,17 @@ public class NsdPackage implements BaseEntity {
 	private String nsdDesigner;
 	@Field
 	private String nsdInvariantId;
+
 	@ManyToMany
+	@JoinColumn
 	private Set<VnfPackage> vnfPkgIds;
 
 	@ManyToMany
+	@JoinColumn
 	private Set<PnfDescriptor> pnfdInfoIds;
 
 	@ManyToMany
+	@JoinColumn
 	private Set<NsdPackage> nestedNsdInfoIds;
 
 	@Enumerated(EnumType.STRING)
@@ -67,7 +72,6 @@ public class NsdPackage implements BaseEntity {
 	@Field
 	private PackageUsageStateType nsdUsageState;
 
-	// @ElementCollection(fetch = FetchType.EAGER)
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<NsdUserDefinedData> userDefinedData;
 
