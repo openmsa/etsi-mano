@@ -1,11 +1,8 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
-import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Root;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
@@ -17,13 +14,11 @@ import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 
-import ma.glasnost.orika.MapperFacade;
-
 @Service
-public class NsInstanceDb extends AbstractJpa<NsdInstance, NsdInstance> implements NsInstanceRepository {
+public class NsInstanceDb extends AbstractDirectJpa<NsdInstance> implements NsInstanceRepository {
 
-	public NsInstanceDb(final EntityManager em, final CrudRepository<NsdInstance, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, mapper, contentManager, jsonMapper, namingStrategy);
+	public NsInstanceDb(final EntityManager em, final CrudRepository<NsdInstance, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, repository, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override
@@ -36,17 +31,6 @@ public class NsInstanceDb extends AbstractJpa<NsdInstance, NsdInstance> implemen
 		return NsdInstance.class;
 	}
 
-	@Override
-	protected Class<NsdInstance> getDbClass() {
-		return NsdInstance.class;
-	}
-
-	@Override
-	Map<String, From<?, ?>> getJoin(final Root<NsdInstance> root) {
-		return null;
-	}
-
-	@Override
 	protected void mapChild(final NsdInstance vnf) {
 		if (null != vnf.getAdditionalAffinityOrAntiAffinityRule()) {
 			// TODO

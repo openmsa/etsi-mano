@@ -1,16 +1,11 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Root;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
@@ -18,21 +13,17 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
-import ma.glasnost.orika.MapperFacade;
-
 @Service
-public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOccs, VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
+public class VnfLcmOpOccsDb extends AbstractDirectJpa<VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private final CrudRepository<VnfLcmOpOccs, UUID> repository;
 
-	public VnfLcmOpOccsDb(final EntityManager em, final CrudRepository<VnfLcmOpOccs, UUID> _repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, _repository, mapper, contentManager, jsonMapper, namingStrategy);
+	public VnfLcmOpOccsDb(final EntityManager em, final CrudRepository<VnfLcmOpOccs, UUID> _repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, _repository, contentManager, jsonMapper, namingStrategy);
 		repository = _repository;
 	}
 
@@ -47,22 +38,6 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOccs, VnfLcmOpOccs> impl
 	}
 
 	@Override
-	protected Class<VnfLcmOpOccs> getDbClass() {
-		return VnfLcmOpOccs.class;
-	}
-
-	@Override
-	Map<String, From<?, ?>> getJoin(final Root<VnfLcmOpOccs> root) {
-		return new HashMap<>();
-	}
-
-	@Override
-	public VnfLcmOpOccs createLcmOpOccs(final UUID vnfInstanceId, final LcmOperationType operation) {
-		final VnfLcmOpOccs vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
-		return save(vnfLcmOpOcc);
-	}
-
-	@Override
 	public void updateState(final VnfLcmOpOccs lcmOpOccs, final LcmOperationStateType operationState) {
 		lcmOpOccs.setOperationState(operationState);
 		lcmOpOccs.setStateEnteredTime(new Date());
@@ -70,17 +45,11 @@ public class VnfLcmOpOccsDb extends AbstractJpa<VnfLcmOpOccs, VnfLcmOpOccs> impl
 	}
 
 	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String id, final String processId) {
+	public void attachProcessIdToLcmOpOccs(final String id, final String processId) {
 		final Optional<VnfLcmOpOccs> optLcm = repository.findById(UUID.fromString(id));
 		final VnfLcmOpOccs lcm = optLcm.orElseThrow(() -> new NotFoundException("VNF LcmOpOccs " + id + " could not be found."));
 		lcm.setExternalProcessId(processId);
 		repository.save(lcm);
-	}
-
-	@Override
-	protected void mapChild(final VnfLcmOpOccs vnf) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -70,7 +70,6 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> imp
 		vnfLcmOpOccsIds.forEach(this::save);
 	}
 
-	@Override
 	public VnfLcmOpOccs createLcmOpOccs(final UUID vnfInstanceId, final LcmOperationType operation) {
 		final VnfLcmOpOccs vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
 		save(vnfLcmOpOcc);

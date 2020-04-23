@@ -1,14 +1,8 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
@@ -22,10 +16,10 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import ma.glasnost.orika.MapperFacade;
 
 @Service
-public class VnfPackageDb extends AbstractJpa<VnfPackage, VnfPackage> implements VnfPackageRepository {
+public class VnfPackageDb extends AbstractDirectJpa<VnfPackage> implements VnfPackageRepository {
 
 	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, mapper, contentManager, jsonMapper, namingStrategy);
+		super(em, repository, contentManager, jsonMapper, namingStrategy);
 	}
 
 	@Override
@@ -33,26 +27,4 @@ public class VnfPackageDb extends AbstractJpa<VnfPackage, VnfPackage> implements
 		return VnfPackage.class;
 	}
 
-	@Override
-	protected Class<VnfPackage> getDbClass() {
-		return VnfPackage.class;
-	}
-
-	@Override
-	Map<String, From<?, ?>> getJoin(final Root<VnfPackage> root) {
-		final Map<String, From<?, ?>> joins = new HashMap<>();
-		joins.put("ROOT", root);
-		Join<Object, Object> jTmp = root.join("softwareImages", JoinType.LEFT);
-		joins.put("softwareImages", jTmp);
-		jTmp = jTmp.join("checksum");
-		joins.put("checksum", jTmp);
-		jTmp = root.join("additionalArtifacts", JoinType.LEFT);
-		joins.put("additionalArtifacts", jTmp);
-		return joins;
-	}
-
-	@Override
-	protected void mapChild(final VnfPackage vnf) {
-		// Nothing
-	}
 }
