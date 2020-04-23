@@ -147,19 +147,20 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	private void checkUserData(final Map<String, String> userData) {
-		Assert.notNull(userData.get("customerId"), "customerId could not be null.");
-		// Not in camel case ???
-		Assert.notNull(userData.get("device_login"), "device_login could not be null.");
-		Assert.notNull(userData.get("device_password"), "device_password could not be null.");
 		final String vimId = userData.get("vimId");
 		if (null == vimId) {
-			throw new BadRequestException("vimId could not be null");
+			// Not MSA
+			return;
 		}
 		try {
 			deviceService.getDeviceId(vimId);
 		} catch (final ServiceException e) {
 			throw new BadRequestException("vimId is not found in MSA.", e);
 		}
+		Assert.notNull(userData.get("customerId"), "customerId could not be null.");
+		// Not in camel case ???
+		Assert.notNull(userData.get("device_login"), "device_login could not be null.");
+		Assert.notNull(userData.get("device_password"), "device_password could not be null.");
 		final String manufacturerId = userData.get("manufacturerId");
 		Assert.notNull(manufacturerId, "manufacturerId could not be null.");
 		final String modelId = userData.get("modelId");
