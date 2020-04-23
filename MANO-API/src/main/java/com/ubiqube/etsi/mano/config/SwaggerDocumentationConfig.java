@@ -55,7 +55,6 @@ public class SwaggerDocumentationConfig {
 			if (operationPath.startsWith(contextPath)) {
 				operationPath = operationPath.substring(contextPath.length());
 			}
-			LOG.debug("===> {}", operationPath);
 			return Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.newInstance().replacePath(operationPath).build().toString());
 		}
 
