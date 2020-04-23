@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -46,7 +47,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	@Field
 	private Date startTime = null;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private VnfInstance vnfInstance = null;
 
 	@Field
@@ -71,7 +72,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	private String externalProcessId;
 
 	@Embedded
-	private VnfLcmResourceChanges resourceChanges = null;
+	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
 
 	@Transient
 	private VnfInfoModifications changedInfo = null;

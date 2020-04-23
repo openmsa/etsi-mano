@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -30,12 +30,12 @@ public class VirtualLinkInfo {
 	/**
 	 * reservationId
 	 */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private Grants grants = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private List<LinkPortInfo> vnfLinkPorts = null;
+	private Set<LinkPortInfo> vnfLinkPorts = null;
 
 	@ElementCollection
 	private Map<String, String> metadata = null;
@@ -72,11 +72,11 @@ public class VirtualLinkInfo {
 		this.grants = grants;
 	}
 
-	public List<LinkPortInfo> getVnfLinkPorts() {
+	public Set<LinkPortInfo> getVnfLinkPorts() {
 		return vnfLinkPorts;
 	}
 
-	public void setVnfLinkPorts(final List<LinkPortInfo> vnfLinkPorts) {
+	public void setVnfLinkPorts(final Set<LinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
 	}
 

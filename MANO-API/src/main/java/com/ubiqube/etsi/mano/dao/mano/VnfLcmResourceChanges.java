@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -30,6 +31,13 @@ public class VnfLcmResourceChanges {
 		this.affectedVnfcs = affectedVnfcs;
 	}
 
+	public void addAffectedVnfcs(final AffectedCompute affectedCompute) {
+		if (null == affectedVnfcs) {
+			affectedVnfcs = new HashSet<>();
+		}
+		affectedVnfcs.add(affectedCompute);
+	}
+
 	public Set<AffectedVl> getAffectedVirtualLinks() {
 		return affectedVirtualLinks;
 	}
@@ -44,6 +52,20 @@ public class VnfLcmResourceChanges {
 
 	public void setAffectedVirtualStorages(final Set<AffectedVs> affectedVirtualStorages) {
 		this.affectedVirtualStorages = affectedVirtualStorages;
+	}
+
+	public void addAffectedVirtualLink(final AffectedVl affectedVirtualLink) {
+		if (null == affectedVirtualLinks) {
+			affectedVirtualLinks = new HashSet<>();
+		}
+		affectedVirtualLinks.add(affectedVirtualLink);
+	}
+
+	public void addAffectedVirtualStorage(final AffectedVs affectedVs) {
+		if (null == affectedVirtualStorages) {
+			affectedVirtualStorages = new HashSet<>();
+		}
+		affectedVirtualStorages.add(affectedVs);
 	}
 
 }

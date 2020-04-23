@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class AffectedCompute {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String vduId = null;
+	private UUID vduId = null;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -54,11 +55,11 @@ public class AffectedCompute {
 		this.id = id;
 	}
 
-	public String getVduId() {
+	public UUID getVduId() {
 		return vduId;
 	}
 
-	public void setVduId(final String vduId) {
+	public void setVduId(final UUID vduId) {
 		this.vduId = vduId;
 	}
 
@@ -108,6 +109,13 @@ public class AffectedCompute {
 
 	public void setRemovedStorageResourceIds(final Set<String> removedStorageResourceIds) {
 		this.removedStorageResourceIds = removedStorageResourceIds;
+	}
+
+	public void addAddedStorageResourceIds(final String y) {
+		if (null == addedStorageResourceIds) {
+			addedStorageResourceIds = new HashSet<>();
+		}
+		addedStorageResourceIds.add(y);
 	}
 
 }

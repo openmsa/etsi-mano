@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -15,8 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -41,9 +41,8 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
-	// @OneToMany // (fetch = FetchType.EAGER)
-	@Transient
-	private List<VimConnectionInformation> vimConnectionInfo = null;
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<VimConnectionInformation> vimConnectionInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> vnfConfigurableProperties = null;
@@ -60,7 +59,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@Field
 	private String vnfInstanceName = null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private VnfPackage vnfPkg = null;
 
 	@Field
@@ -72,7 +71,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	private NsdInstance nsInstance;
 
 	private String processId;
@@ -95,7 +94,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 		return instantiationState;
 	}
 
-	public List<VimConnectionInformation> getVimConnectionInfo() {
+	public Set<VimConnectionInformation> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}
 
@@ -139,7 +138,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 		this.instantiationState = instantiationState;
 	}
 
-	public void setVimConnectionInfo(final List<VimConnectionInformation> vimConnectionInfo) {
+	public void setVimConnectionInfo(final Set<VimConnectionInformation> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 

@@ -17,7 +17,7 @@ public class AffectedVs {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String virtualStorageDescId = null;
+	private UUID virtualStorageDescId = null;
 
 	private ChangeType changeType = null;
 
@@ -35,11 +35,11 @@ public class AffectedVs {
 		this.id = id;
 	}
 
-	public String getVirtualStorageDescId() {
+	public UUID getVirtualStorageDescId() {
 		return virtualStorageDescId;
 	}
 
-	public void setVirtualStorageDescId(final String virtualStorageDescId) {
+	public void setVirtualStorageDescId(final UUID virtualStorageDescId) {
 		this.virtualStorageDescId = virtualStorageDescId;
 	}
 

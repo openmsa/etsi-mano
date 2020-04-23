@@ -36,7 +36,6 @@ public class VnfInstantiatedInfo {
 	private Set<VirtualLinkInfo> extManagedVirtualLinkInfo = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<MonitoringParams> monitoringParameters = null;
 
 	private String localizationLanguage = null;

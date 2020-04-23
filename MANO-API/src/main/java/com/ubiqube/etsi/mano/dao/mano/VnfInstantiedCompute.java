@@ -3,15 +3,18 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 @Entity
 public class VnfInstantiedCompute {
@@ -23,14 +26,14 @@ public class VnfInstantiedCompute {
 	/**
 	 * Also reservationId
 	 */
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private GrantInformation computeResource = null;
 
 	@ElementCollection
 	private List<String> storageResourceIds = null;
 
-	@Transient
-	private List<CpProtocolDataEntity> vnfcCpInfo = null;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<CpProtocolDataEntity> vnfcCpInfo = null;
 
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
@@ -67,11 +70,11 @@ public class VnfInstantiedCompute {
 		this.storageResourceIds = storageResourceIds;
 	}
 
-	public List<CpProtocolDataEntity> getVnfcCpInfo() {
+	public Set<CpProtocolDataEntity> getVnfcCpInfo() {
 		return vnfcCpInfo;
 	}
 
-	public void setVnfcCpInfo(final List<CpProtocolDataEntity> vnfcCpInfo) {
+	public void setVnfcCpInfo(final Set<CpProtocolDataEntity> vnfcCpInfo) {
 		this.vnfcCpInfo = vnfcCpInfo;
 	}
 

@@ -3,8 +3,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -27,26 +30,35 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class NsdPackage implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class NsdPackage implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
+	@Embedded
+	private Audit audit;
+
 	@Field
 	private String nsdId;
+
 	@Field
 	private String nsdName;
+
 	@Field
 	private String nsdVersion;
+
 	@Field
 	private String nsdDesigner;
+
 	@Field
 	private String nsdInvariantId;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<VnfPackage> vnfPkgIds;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<PnfDescriptor> pnfdInfoIds;
 
@@ -82,6 +94,16 @@ public class NsdPackage implements BaseEntity {
 
 	public void setId(final UUID id) {
 		this.id = id;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 	public String getNsdId() {

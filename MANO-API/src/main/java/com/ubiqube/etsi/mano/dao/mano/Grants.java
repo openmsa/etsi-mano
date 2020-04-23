@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,10 +21,14 @@ import javax.persistence.Transient;
 import javax.validation.Valid;
 
 @Entity
-public class Grants {
+@EntityListeners(AuditListener.class)
+public class Grants implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
+
+	@Embedded
+	private Audit audit;
 
 	private String vnfdId;
 
@@ -99,12 +104,23 @@ public class Grants {
 	 */
 	private Boolean available;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
 
 	public void setId(final UUID id) {
 		this.id = id;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 	public String getVnfInstanceId() {
