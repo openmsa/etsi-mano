@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,18 +14,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
+import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
+import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
@@ -77,21 +87,54 @@ public class VnfmActions {
 	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		// Maybe we need additional parameters to say STARTING / PROCESSING ...
-		final VnfLcmOpOccs lcmOpOccs = vnfLcmOpOccsRepository.createLcmOpOccs(UUID.fromString(vnfInstanceId), LcmOperationType.INSTANTIATE);
-		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
+
+		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
+		final VnfLcmResourceChanges changedResources = lcmOpOccs.getResourceChanges();
+		vnfPkg.getVnfCompute().forEach(x -> {
+			final AffectedCompute affectedCompute = new AffectedCompute();
+			x.getStorages().forEach(y -> {
+				affectedCompute.addAddedStorageResourceIds(y);
+			});
+
+			// XXX affectedCompute.setAffectedVnfcCpIds(affectedVnfcCpIds);
+			affectedCompute.setChangeType(ChangeType.ADDED);
+			final ResourceHandleEntity computeResource = new ResourceHandleEntity();
+			affectedCompute.setComputeResource(computeResource);
+			affectedCompute.setVduId(x.getId());
+			changedResources.addAffectedVnfcs(affectedCompute);
+		});
+		vnfPkg.getVnfVl().forEach(x -> {
+			final AffectedVl affectedVirtualLink = new AffectedVl();
+			affectedVirtualLink.setChangeType(ChangeType.ADDED);
+			affectedVirtualLink.setVirtualLinkDescId(x.getVlProfileEntity().getId());
+			changedResources.addAffectedVirtualLink(affectedVirtualLink);
+		});
+		vnfPkg.getVnfStorage().forEach(x -> {
+			final AffectedVs affectedVs = new AffectedVs();
+			affectedVs.setChangeType(ChangeType.ADDED);
+			affectedVs.setVirtualStorageDescId(x.getId());
+			changedResources.addAffectedVirtualStorage(affectedVs);
+		});
+		lcmOpOccs.setResourceChanges(changedResources);
+		// XXX Do it for VnfInfoModifications
+		vnfLcmOpOccsRepository.save(lcmOpOccs);
+		//
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
+
 		// Send processing notification.
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 
 		// Send Grant.
 		final Grants grants = getGrants(vnfInstance, lcmOpOccs, vnfPkg);
 
-		vnfInstance.setVimConnectionInfo(grants.getVimConnections().stream().collect(Collectors.toList()));
+		vnfInstance.setVimConnectionInfo(grants.getVimConnections());
 		lcmOpOccs.setGrantId(grants.getId().toString());
 		// Save LCM
 		mergeInstanceGrants(vnfInstance, grants);
-		final List<UnitOfWork> plan = executionPlanner.plan(vnfPkg, vnfInstanceId);
+		vnfInstancesRepository.save(vnfInstance);
+		final List<UnitOfWork> plan = executionPlanner.plan(vnfInstance, vnfPkg, vnfInstanceId);
 		// XXX Multiple Vim ?
 		final Vim vim = vimManager.getVimById(grants.getVimConnections().iterator().next().getId());
 		final PlanExecutor executor = new PlanExecutor();
@@ -117,15 +160,28 @@ public class VnfmActions {
 		LOG.info("VNF instance {} Finished.", vnfInstanceId);
 	}
 
-	private void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
-		grants.getAddResources().forEach(x -> {
-			//
-			findVnfInstanceResource(x.getVduId(), vnfInstance);
-		});
+	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
+		grants.getAddResources().forEach(x -> setGrantResource(x, vnfInstance));
 	}
 
-	private void findVnfInstanceResource(final String string, final VnfInstance vnfInstance) {
-		// vnfInstance.getInstantiatedVnfInfo().get
+	private static void setGrantResource(final GrantInformation grantInformation, final VnfInstance vnfInstance) {
+		final Optional<VirtualLinkInfo> resVlr = vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().stream().filter(x -> x.getId().equals(grantInformation.getId())).findFirst();
+		if (resVlr.isPresent()) {
+			resVlr.get().setGrantInformation(grantInformation);
+			return;
+		}
+
+		final Optional<VirtualStorageInfo> resVsr = vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().stream().filter(x -> x.getId().equals(grantInformation.getId())).findFirst();
+		if (resVsr.isPresent()) {
+			resVsr.get().setReservationId(grantInformation.getReservationId());
+			return;
+		}
+
+		final Optional<VnfInstantiedCompute> resCompute = vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().stream().filter(x -> x.getId().toString().equals(grantInformation.getId())).findFirst();
+		if (resCompute.isPresent()) {
+			resCompute.get().setComputeResource(grantInformation);
+			return;
+		}
 	}
 
 	private Grants pollGrants(final Grants grants) {

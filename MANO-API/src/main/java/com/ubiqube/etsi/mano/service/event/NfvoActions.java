@@ -269,7 +269,7 @@ public class NfvoActions {
 
 	private VnfPackage getPackageFromVnfInstanceId(@NotNull final String vnfInstanceId) {
 		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
-		return instance.getVnfPkg();
+		return vnfPackageRepository.get(instance.getVnfPkg().getId().toString());
 	}
 
 	private static List<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
