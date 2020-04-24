@@ -20,8 +20,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.VlProtocolDataJpa;
+import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
+import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 @Service
@@ -31,33 +38,47 @@ public class ExecutionPlanner {
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 
-	public ExecutionPlanner(final VnfInstancesRepository _vnfInstancesRepository) {
+	private final VlProtocolDataJpa vlProtocolDataJpa;
+
+	private final VnfStorageJpa vnfStorageJpa;
+
+	private final VnfComputeJpa vnfComputeJpa;
+
+	public ExecutionPlanner(final VnfInstancesRepository _vnfInstancesRepository, final VlProtocolDataJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa) {
 		vnfInstancesRepository = _vnfInstancesRepository;
+		vlProtocolDataJpa = _vlProtocolDataJpa;
+		vnfStorageJpa = _vnfStorageJpa;
+		vnfComputeJpa = _vnfComputeJpa;
 	}
 
-	public List<UnitOfWork> plan(final VnfPackage vnfPackage, final String vnfInstanceId) {
+	public List<UnitOfWork> plan(final VnfInstance vnfInstance, final VnfPackage vnfPackage, final String vnfInstanceId) {
 		final Map<String, UnitOfWork> vertex = new HashMap<>();
 		// Vertex everyThing
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph(ConnectivityEdge.class));
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
-		vnfPackage.getVnfVl().forEach(x -> {
-			x.getVlProfileEntity().getVirtualLinkProtocolData().forEach(y -> {
-				final UnitOfWork uow = new VirtualLinkUow(y, String.format("%s_%04d", x.getToscaName(), 0));
-				vertex.put(x.getToscaName(), uow);
-				g.addVertex(uow);
-			});
 
+		vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().forEach(x -> {
+			final VlProtocolData vlProtocol = vlProtocolDataJpa.findById(x.getGrantInformation().getVduId()).orElseThrow(() -> new NotFoundException(""));
+			final UnitOfWork uow = new VirtualLinkUow(vlProtocol, vlProtocol.getId().toString());
+			vertex.put(vlProtocol.getId().toString(), uow);
+			g.addVertex(uow);
+			x.getGrantInformation().getReservationId();
+			;
 		});
 
-		vnfPackage.getVnfStorage().forEach(x -> {
-			final UnitOfWork uow = new StorageUow(x);
-			vertex.put(x.getToscaName(), uow);
+		vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().forEach(x -> {
+			x.getReservationId();
+			final VnfStorage vstorage = vnfStorageJpa.findById(x.getVirtualStorageDescId()).orElseThrow(() -> new NotFoundException(""));
+			final UnitOfWork uow = new StorageUow(vstorage);
+			vertex.put(vstorage.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 
-		vnfPackage.getVnfCompute().forEach(x -> {
-			final UnitOfWork uow = new ComputeUow(x);
-			vertex.put(x.getToscaName(), uow);
+		vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().forEach(x -> {
+			final VnfCompute compute = vnfComputeJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException(""));
+			final UnitOfWork uow = new ComputeUow(compute);
+			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 
@@ -76,8 +97,7 @@ public class ExecutionPlanner {
 					g.addEdge(vertex.get(y), vertex.get(x.getToscaName()));
 				});
 			}
-			// do the same for swImages ?
-			// Do the same for Monitoring.
+			// XXX do the same for swImages ?
 			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
 				final UnitOfWork uow = new MonitoringUow(x, makeUowMonitoringName(x));
 				vertex.put(makeUowMonitoringName(x), uow);
