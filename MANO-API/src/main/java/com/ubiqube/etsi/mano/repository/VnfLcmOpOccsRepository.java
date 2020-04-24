@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
-public interface VnfLcmOpOccsRepository extends CrudRepository<VnfLcmOpOccs>, BinaryRepository {
+public interface VnfLcmOpOccsRepository extends CrudRepositoryNg<VnfLcmOpOccs> {
 
 	void save(List<VnfLcmOpOccs> vnfLcmOpOccsIds);
 

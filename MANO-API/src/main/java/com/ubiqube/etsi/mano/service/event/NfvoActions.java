@@ -234,7 +234,7 @@ public class NfvoActions {
 				vim.freeResources(vci, x);
 			}
 		});
-		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(grants.getVnfInstanceId());
+		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
 		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
@@ -267,7 +267,7 @@ public class NfvoActions {
 		return listVcrfe;
 	}
 
-	private VnfPackage getPackageFromVnfInstanceId(@NotNull final String vnfInstanceId) {
+	private VnfPackage getPackageFromVnfInstanceId(@NotNull final UUID vnfInstanceId) {
 		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
 		return vnfPackageRepository.get(instance.getVnfPkg().getId());
 	}

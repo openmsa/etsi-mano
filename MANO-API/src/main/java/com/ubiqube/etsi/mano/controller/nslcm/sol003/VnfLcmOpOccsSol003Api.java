@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -70,7 +71,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String accept, final String version) {
-		final VnfLcmOpOccs resultDb = vnfLcmOpOccsRepository.get(vnfLcmOpOccId);
+		final VnfLcmOpOccs resultDb = vnfLcmOpOccsRepository.get(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		entity.setLinks(makeLink(entity));
 		return new ResponseEntity<>(entity, HttpStatus.OK);

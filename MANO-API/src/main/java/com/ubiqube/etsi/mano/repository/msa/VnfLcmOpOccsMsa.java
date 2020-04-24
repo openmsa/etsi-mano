@@ -104,4 +104,14 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> imp
 		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
 	}
 
+	@Override
+	public VnfLcmOpOccs get(final UUID id) {
+		return get(id.toString());
+	}
+
+	@Override
+	public void delete(final UUID id) {
+		delete(id.toString());
+	}
+
 }

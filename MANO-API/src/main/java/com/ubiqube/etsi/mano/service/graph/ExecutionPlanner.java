@@ -144,7 +144,7 @@ public class ExecutionPlanner {
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
-		vnfInstancesRepository.storeBinary(_id, "plan.dot", _stream);
+		// vnfInstancesRepository.storeBinary(_id, "plan.dot", _stream);
 	}
 
 	private static void dumpPlan(final List<UnitOfWork> ret) {

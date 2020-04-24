@@ -100,7 +100,7 @@ public class VnfInstanceLcm {
 	}
 
 	public void delete(@Nonnull final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureNotInstantiated(vnfInstance);
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId().toString())) {
@@ -108,12 +108,12 @@ public class VnfInstanceLcm {
 			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
-		vnfInstancesRepository.delete(vnfInstanceId);
+		vnfInstancesRepository.delete(UUID.fromString(vnfInstanceId));
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 
 	public void instantiate(@Nonnull final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, @Nonnull final LcmLinkable links) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureNotInstantiated(vnfInstance);
 
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
@@ -128,7 +128,7 @@ public class VnfInstanceLcm {
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
 

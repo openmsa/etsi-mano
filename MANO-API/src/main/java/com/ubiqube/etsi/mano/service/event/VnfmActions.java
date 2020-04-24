@@ -85,7 +85,7 @@ public class VnfmActions {
 	}
 
 	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		// Maybe we need additional parameters to say STARTING / PROCESSING ...
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
