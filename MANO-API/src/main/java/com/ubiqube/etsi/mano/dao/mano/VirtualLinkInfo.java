@@ -31,7 +31,7 @@ public class VirtualLinkInfo {
 	 * reservationId
 	 */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private Grants grants = null;
+	private GrantInformation grantInformation = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
@@ -64,12 +64,12 @@ public class VirtualLinkInfo {
 		this.networkResource = networkResource;
 	}
 
-	public Grants getGrants() {
-		return grants;
+	public GrantInformation getGrantInformation() {
+		return grantInformation;
 	}
 
-	public void setGrants(final Grants grants) {
-		this.grants = grants;
+	public void setGrantInformation(final GrantInformation grantInformation) {
+		this.grantInformation = grantInformation;
 	}
 
 	public Set<LinkPortInfo> getVnfLinkPorts() {

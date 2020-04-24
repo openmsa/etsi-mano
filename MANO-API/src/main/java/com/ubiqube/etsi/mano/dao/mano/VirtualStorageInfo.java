@@ -15,7 +15,7 @@ public class VirtualStorageInfo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String virtualStorageDescId = null;
+	private UUID virtualStorageDescId = null;
 
 	private ResourceHandleEntity storageResource = null;
 
@@ -32,11 +32,11 @@ public class VirtualStorageInfo {
 		this.id = id;
 	}
 
-	public String getVirtualStorageDescId() {
+	public UUID getVirtualStorageDescId() {
 		return virtualStorageDescId;
 	}
 
-	public void setVirtualStorageDescId(final String virtualStorageDescId) {
+	public void setVirtualStorageDescId(final UUID virtualStorageDescId) {
 		this.virtualStorageDescId = virtualStorageDescId;
 	}
 

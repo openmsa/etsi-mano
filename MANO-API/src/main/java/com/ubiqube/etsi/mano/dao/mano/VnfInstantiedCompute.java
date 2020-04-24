@@ -22,7 +22,7 @@ public class VnfInstantiedCompute {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String vduId = null;
+	private UUID vduId = null;
 	/**
 	 * Also reservationId
 	 */
@@ -46,11 +46,11 @@ public class VnfInstantiedCompute {
 		this.id = id;
 	}
 
-	public String getVduId() {
+	public UUID getVduId() {
 		return vduId;
 	}
 
-	public void setVduId(final String vduId) {
+	public void setVduId(final UUID vduId) {
 		this.vduId = vduId;
 	}
 

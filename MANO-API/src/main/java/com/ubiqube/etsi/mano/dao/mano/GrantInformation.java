@@ -29,7 +29,7 @@ public class GrantInformation implements BaseEntity {
 
 	private TypeEnum type;
 
-	private String vduId;
+	private UUID vduId;
 
 	@Override
 	public UUID getId() {
@@ -96,11 +96,11 @@ public class GrantInformation implements BaseEntity {
 		this.type = type;
 	}
 
-	public String getVduId() {
+	public UUID getVduId() {
 		return vduId;
 	}
 
-	public void setVduId(final String vduId) {
+	public void setVduId(final UUID vduId) {
 		this.vduId = vduId;
 	}
 
