@@ -93,7 +93,7 @@ public class VnfPkgTest {
 	void testVnfPackageDeleteNonDisabled() throws Exception {
 		final String vnfPkgId = "aaa";
 		final VnfPackage value = objectMapper.readValue(new File("src/test/resources/VnfPkgInfo.json"), VnfPackage.class);
-		when(vnfPackageRepository.get(vnfPkgId)).thenReturn(value);
+		when(vnfPackageRepository.get(UUID.fromString(vnfPkgId))).thenReturn(value);
 
 		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/sol005/vnfpkgm/v1/vnf_packages/{vnfPkgId}", vnfPkgId)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +111,7 @@ public class VnfPkgTest {
 	void testVnfPackageDeleteDisabled() throws Exception {
 		final String vnfPkgId = "aaa";
 		final VnfPackage value = objectMapper.readValue(new File("src/test/resources/VnfPkgInfo-disabled.json"), VnfPackage.class);
-		when(vnfPackageRepository.get(vnfPkgId)).thenReturn(value);
+		when(vnfPackageRepository.get(UUID.fromString(vnfPkgId))).thenReturn(value);
 
 		final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/sol005/vnfpkgm/v1/vnf_packages/{vnfPkgId}", vnfPkgId)
 				.contentType(MediaType.APPLICATION_JSON)

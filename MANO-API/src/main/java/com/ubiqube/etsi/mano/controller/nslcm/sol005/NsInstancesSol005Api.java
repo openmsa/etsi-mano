@@ -10,6 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -251,7 +252,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
 		final List<String> vnfs = nsd.getVnfPkgIds();
 		for (final String id : vnfs) {
-			final VnfPackage vnf = vnfPackageRepository.get(id);
+			final VnfPackage vnf = vnfPackageRepository.get(UUID.fromString(id));
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
 			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstance.getId(), id);

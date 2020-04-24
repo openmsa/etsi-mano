@@ -53,7 +53,7 @@ public class VnfPackageGenTest {
 		vnfPackage.save(entity);
 		assertNotNull(entity.getId());
 
-		entity = vnfPackage.get(entity.getId().toString());
+		entity = vnfPackage.get(entity.getId());
 		assertNotNull(entity);
 
 		List<VnfPackage> res = vnfPackage.query(null);
@@ -66,13 +66,6 @@ public class VnfPackageGenTest {
 		res = vnfPackage.query(null);
 		assertNotNull(res);
 		assertEquals(num - 1, res.size());
-	}
-
-	@Test
-	void testNotFound() throws Exception {
-		assertThrows(NotFoundException.class, () -> {
-			vnfPackage.get("DEADBEEF");
-		});
 	}
 
 	@Test

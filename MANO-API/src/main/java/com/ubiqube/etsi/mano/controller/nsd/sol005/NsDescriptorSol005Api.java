@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -243,7 +244,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdDescriptor.setNsdName((String) userDefinedData.get("name"));
 		final List<String> vnfPkgIds = Optional.ofNullable((List<String>) userDefinedData.get("vnfPkgIds")).orElse(new ArrayList<String>());
 		// Verify if VNF Package exists.
-		vnfPkgIds.stream().forEach(vnfPackageRepository::get);
+		vnfPkgIds.stream().forEach(x -> vnfPackageRepository.get(UUID.fromString(x)));
 		nsdDescriptor.setVnfPkgIds(vnfPkgIds);
 		userDefinedData.remove("vnfPkgIds");
 

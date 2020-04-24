@@ -8,6 +8,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -79,7 +80,7 @@ public class VnfInstanceLcm {
 
 	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
 		final String vnfId = createVnfRequest.getVnfdId();
-		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(vnfId);
+		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(UUID.fromString(vnfId));
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
@@ -103,7 +104,7 @@ public class VnfInstanceLcm {
 		ensureNotInstantiated(vnfInstance);
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId().toString())) {
-			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId().toString());
+			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId());
 			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
@@ -115,7 +116,7 @@ public class VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
-		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
+		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
@@ -131,7 +132,7 @@ public class VnfInstanceLcm {
 		ensureInstantiated(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
 
-		final String vnfPkgId = vnfInstance.getVnfPkg().getId().toString();
+		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);

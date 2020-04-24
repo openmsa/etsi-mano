@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -97,24 +98,24 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, final String accept, final String range) throws ServiceException {
 		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, range);
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
 	}
 
 	@Override
 	// TODO: Same as SOL003 ?
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, links);
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), links);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
+		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
 	}
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId), accept);
 	}
 
 	/**
@@ -180,7 +181,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
 		ensureDisabled(vnfPackage);
 		ensureNotInUse(vnfPackage);
 		vnfPackageRepository.delete(vnfPkgId);
@@ -198,7 +199,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
 		patcher.patch(body, vnfPackage);
 		vnfPackageRepository.save(vnfPackage);
 
@@ -219,7 +220,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> parameters = new HashMap<>();
 		try {
@@ -242,7 +243,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final UploadVnfPkgFromUriRequest contentUploadFromUriPostRequest) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
 		ensureNotOnboarded(vnfPackage);
 
 		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();

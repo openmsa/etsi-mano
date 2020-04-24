@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.util.UUID;
+
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -53,7 +55,7 @@ public class UriUploadListener implements JobListener {
 		final JobDataMap datamap = context.getJobDetail().getJobDataMap();
 		final String vnfPkgId = (String) datamap.get("objectId");
 		LOG.info("Rollbacking vnf package {}", vnfPkgId);
-		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
 		vnfPackage.setOnboardingState(PackageOnboardingStateType.CREATED);
 		vnfPackageRepository.save(vnfPackage);
 		LOG.info("Rollback successfull.");

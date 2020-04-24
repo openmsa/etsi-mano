@@ -160,7 +160,7 @@ public class NfvoActions {
 		for (final String vnfId : vnfPkgIds) {
 			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
-				final VnfPackage vnfPackage = vnfPackageRepository.get(vnfId);
+				final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfId));
 				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPackage, "", "Sub-instance " + nsInstanceId);
 				nsVnfInstance = VnfInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, "vimId?");
 				nsInstance.getVnfInstance().add(nsVnfInstance);
@@ -269,7 +269,7 @@ public class NfvoActions {
 
 	private VnfPackage getPackageFromVnfInstanceId(@NotNull final String vnfInstanceId) {
 		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
-		return vnfPackageRepository.get(instance.getVnfPkg().getId().toString());
+		return vnfPackageRepository.get(instance.getVnfPkg().getId());
 	}
 
 	private static List<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {

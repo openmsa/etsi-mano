@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -56,6 +57,10 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 				.collect(Collectors.toList());
 	}
 
+	public final T get(final UUID _id) {
+		return get(_id.toString());
+	}
+
 	@Override
 	public final T get(final String _id) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
@@ -67,6 +72,10 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	public final void delete(final UUID _id) {
+		delete(_id.toString());
 	}
 
 	@Override

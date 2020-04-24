@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.ContentManager;
-import com.ubiqube.etsi.mano.repository.CrudRepository;
+import com.ubiqube.etsi.mano.repository.CrudRepositoryNg;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
-public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBinaryRepository implements CrudRepository<U> {
+public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBinaryRepository implements CrudRepositoryNg<U> {
 
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
@@ -25,19 +25,24 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 		this.repository = repository;
 	}
 
-	@Override
+	@Deprecated
 	public final U get(final String id) {
-		final Optional<U> vnfPackage = repository.findById(UUID.fromString(id));
-		return vnfPackage.orElseThrow(() -> new NotFoundException(getFrontClass().getSimpleName() + " entity " + id + " not found."));
+		return get(UUID.fromString(id));
+	}
+
+	@Override
+	public final U get(final UUID id) {
+		final Optional<U> entity = repository.findById(id);
+		return entity.orElseThrow(() -> new NotFoundException(getFrontClass().getSimpleName() + " entity " + id + " not found."));
 	}
 
 	@Override
 	protected abstract Class<U> getFrontClass();
 
 	@Override
-	public final void delete(final String id) {
-		repository.deleteById(UUID.fromString(id));
-		super.delete(id);
+	public final void delete(final UUID id) {
+		repository.deleteById(id);
+		super.delete(id.toString());
 	}
 
 	@Override

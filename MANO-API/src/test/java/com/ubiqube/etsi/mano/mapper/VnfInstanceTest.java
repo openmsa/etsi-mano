@@ -3,10 +3,10 @@ package com.ubiqube.etsi.mano.mapper;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
@@ -47,7 +48,7 @@ public class VnfInstanceTest {
 		nsInstancesNsInstanceVnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance o = mapper.map(nsInstancesNsInstanceVnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class);
-		final VnfInstanceInstantiatedVnfInfo ivi = o.getInstantiatedVnfInfo();
+		final VnfInstantiatedInfo ivi = o.getInstantiatedVnfInfo();
 		assertNotNull(ivi);
 		assertEquals("flavour", ivi.getFlavourId());
 		assertEquals("STARTED", ivi.getVnfState().toString());
@@ -60,7 +61,7 @@ public class VnfInstanceTest {
 	void testDaoToJson() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = new com.ubiqube.etsi.mano.dao.mano.VnfInstance();
-		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
+		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
 		final NsdInstance nsInstance = new NsdInstance();
@@ -69,7 +70,7 @@ public class VnfInstanceTest {
 		nsdInfoId.setId(UUID.randomUUID());
 		nsInstance.setNsdInfo(nsdInfoId);
 		vnfInstance.setNsInstance(nsInstance);
-		final List<VimConnectionInformation> vimConnectionInfo = new ArrayList<>();
+		final Set<VimConnectionInformation> vimConnectionInfo = new HashSet<>();
 		vimConnectionInfo.add(new VimConnectionInformation());
 		vnfInstance.setVimConnectionInfo(vimConnectionInfo);
 		vnfInstance.setVnfProvider("provider");
