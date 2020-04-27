@@ -239,6 +239,8 @@ public class NfvoActions {
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
+			x.setResourceDefinitionId(x.getVduId().toString());
+			x.setResourceProviderId(vim.getType());
 			x.setVimConnectionId(vimInfo.getId().toString());
 		});
 
