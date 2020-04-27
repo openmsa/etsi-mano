@@ -8,7 +8,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
+import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,12 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
@@ -48,6 +52,7 @@ import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
@@ -85,42 +90,20 @@ public class VnfmActions {
 	}
 
 	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		@SuppressWarnings("null")
+		VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		// Maybe we need additional parameters to say STARTING / PROCESSING ...
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
 
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
-		final VnfLcmResourceChanges changedResources = lcmOpOccs.getResourceChanges();
-		vnfPkg.getVnfCompute().forEach(x -> {
-			final AffectedCompute affectedCompute = new AffectedCompute();
-			x.getStorages().forEach(y -> {
-				affectedCompute.addAddedStorageResourceIds(y);
-			});
-
-			// XXX affectedCompute.setAffectedVnfcCpIds(affectedVnfcCpIds);
-			affectedCompute.setChangeType(ChangeType.ADDED);
-			final ResourceHandleEntity computeResource = new ResourceHandleEntity();
-			affectedCompute.setComputeResource(computeResource);
-			affectedCompute.setVduId(x.getId());
-			changedResources.addAffectedVnfcs(affectedCompute);
-		});
-		vnfPkg.getVnfVl().forEach(x -> {
-			final AffectedVl affectedVirtualLink = new AffectedVl();
-			affectedVirtualLink.setChangeType(ChangeType.ADDED);
-			affectedVirtualLink.setVirtualLinkDescId(x.getVlProfileEntity().getId());
-			changedResources.addAffectedVirtualLink(affectedVirtualLink);
-		});
-		vnfPkg.getVnfStorage().forEach(x -> {
-			final AffectedVs affectedVs = new AffectedVs();
-			affectedVs.setChangeType(ChangeType.ADDED);
-			affectedVs.setVirtualStorageDescId(x.getId());
-			changedResources.addAffectedVirtualStorage(affectedVs);
-		});
-		lcmOpOccs.setResourceChanges(changedResources);
-		// XXX Do it for VnfInfoModifications
+		copyVnfPkgToLcm(vnfPkg, lcmOpOccs);
 		vnfLcmOpOccsRepository.save(lcmOpOccs);
-		//
+		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.NOT_INSTANTIATED) {
+			copyVnfPkgToInstance(vnfPkg, vnfInstance);
+			vnfInstance = vnfInstancesRepository.save(vnfInstance);
+		}
+		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
 
 		// Send processing notification.
@@ -128,17 +111,17 @@ public class VnfmActions {
 
 		// Send Grant.
 		final Grants grants = getGrants(vnfInstance, lcmOpOccs, vnfPkg);
-
 		vnfInstance.setVimConnectionInfo(grants.getVimConnections());
 		lcmOpOccs.setGrantId(grants.getId().toString());
 		// Save LCM
 		mergeInstanceGrants(vnfInstance, grants);
 		vnfInstancesRepository.save(vnfInstance);
-		final List<UnitOfWork> plan = executionPlanner.plan(vnfInstance, vnfPkg, vnfInstanceId);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
 		// XXX Multiple Vim ?
-		final Vim vim = vimManager.getVimById(grants.getVimConnections().iterator().next().getId());
+		final VimConnectionInformation vimConnection = grants.getVimConnections().iterator().next();
+		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		final PlanExecutor executor = new PlanExecutor();
-		executor.getClass();
+		executor.exec(plan, vimConnection, vim);
 		// vim.refineExecutionPlan(g);
 		// Instantiate VDU.
 		final Set<GrantInformation> addVdu = grants.getAddResources();
@@ -160,28 +143,79 @@ public class VnfmActions {
 		LOG.info("VNF instance {} Finished.", vnfInstanceId);
 	}
 
+	private static void copyVnfPkgToInstance(final VnfPackage vnfPkg, final VnfInstance vnfInstance) {
+		final VnfInstantiatedInfo instantiedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
+		vnfPkg.getVnfCompute().forEach(x -> {
+			final VnfInstantiedCompute createCompute = new VnfInstantiedCompute();
+			createCompute.setVduId(x.getId());
+			createCompute.setStorageResourceIds(new ArrayList<>(x.getStorages()));
+			instantiedVnfInfo.addVnfcResourceInfoItem(createCompute);
+		});
+
+		vnfPkg.getVnfVl().forEach(x -> {
+			final VirtualLinkInfo virtualLink = new VirtualLinkInfo();
+			virtualLink.setVnfVirtualLinkDescId(x.getId());
+			instantiedVnfInfo.addVirtualLinkResourceInfoItem(virtualLink);
+		});
+		vnfPkg.getVnfStorage().forEach(x -> {
+			final VirtualStorageInfo vStorage = new VirtualStorageInfo();
+			vStorage.setVirtualStorageDescId(x.getId());
+			instantiedVnfInfo.addVirtualStorageResourceInfoItem(vStorage);
+		});
+	}
+
+	private static void copyVnfPkgToLcm(final VnfPackage vnfPkg, final VnfLcmOpOccs lcmOpOccs) {
+		final VnfLcmResourceChanges changedResources = lcmOpOccs.getResourceChanges();
+
+		vnfPkg.getVnfCompute().forEach(x -> {
+			final AffectedCompute affectedCompute = new AffectedCompute();
+			affectedCompute.setAddedStorageResourceIds(x.getStorages());
+			// XXX affectedCompute.setAffectedVnfcCpIds(affectedVnfcCpIds);
+			affectedCompute.setChangeType(ChangeType.ADDED);
+			final ResourceHandleEntity computeResource = new ResourceHandleEntity();
+
+			affectedCompute.setComputeResource(computeResource);
+			affectedCompute.setVduId(x.getId());
+			changedResources.addAffectedVnfcs(affectedCompute);
+		});
+		vnfPkg.getVnfVl().forEach(x -> {
+			final AffectedVl affectedVirtualLink = new AffectedVl();
+			affectedVirtualLink.setChangeType(ChangeType.ADDED);
+			affectedVirtualLink.setVirtualLinkDescId(x.getVlProfileEntity().getId());
+			changedResources.addAffectedVirtualLink(affectedVirtualLink);
+		});
+		vnfPkg.getVnfStorage().forEach(x -> {
+			final AffectedVs affectedVs = new AffectedVs();
+			affectedVs.setChangeType(ChangeType.ADDED);
+			affectedVs.setVirtualStorageDescId(x.getId());
+			changedResources.addAffectedVirtualStorage(affectedVs);
+		});
+
+	}
+
 	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
 		grants.getAddResources().forEach(x -> setGrantResource(x, vnfInstance));
 	}
 
 	private static void setGrantResource(final GrantInformation grantInformation, final VnfInstance vnfInstance) {
-		final Optional<VirtualLinkInfo> resVlr = vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().stream().filter(x -> x.getId().equals(grantInformation.getId())).findFirst();
+		final Optional<VirtualLinkInfo> resVlr = vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().stream().filter(x -> 0 == x.getVnfVirtualLinkDescId().compareTo(grantInformation.getVduId())).findFirst();
 		if (resVlr.isPresent()) {
 			resVlr.get().setGrantInformation(grantInformation);
 			return;
 		}
 
-		final Optional<VirtualStorageInfo> resVsr = vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().stream().filter(x -> x.getId().equals(grantInformation.getId())).findFirst();
+		final Optional<VirtualStorageInfo> resVsr = vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().stream().filter(x -> 0 == x.getVirtualStorageDescId().compareTo(grantInformation.getVduId())).findFirst();
 		if (resVsr.isPresent()) {
 			resVsr.get().setReservationId(grantInformation.getReservationId());
 			return;
 		}
 
-		final Optional<VnfInstantiedCompute> resCompute = vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().stream().filter(x -> x.getId().toString().equals(grantInformation.getId())).findFirst();
+		final Optional<VnfInstantiedCompute> resCompute = vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().stream().filter(x -> 0 == x.getVduId().compareTo(grantInformation.getVduId())).findFirst();
 		if (resCompute.isPresent()) {
 			resCompute.get().setComputeResource(grantInformation);
 			return;
 		}
+		LOG.warn("Unable to find resource: {}", grantInformation.getVduId());
 	}
 
 	private Grants pollGrants(final Grants grants) {
@@ -212,7 +246,7 @@ public class VnfmActions {
 		return grants;
 	}
 
-	private VimStatus spawnVdu(final GrantInformation grantInformation, final VnfPackage vnfPackage, final VnfInstance vnfInstance, @Nonnull final VnfLcmOpOccs lcmOpOccs) {
+	private VimStatus spawnVdu(final GrantInformation grantInformation, final VnfPackage vnfPackage, final VnfInstance vnfInstance, @NotNull final VnfLcmOpOccs lcmOpOccs) {
 		final Vim vim = vimManager.getVimById(UUID.fromString(grantInformation.getVimConnectionId()));
 		final String processId = vim.onVnfInstantiate(grantInformation, vnfPackage);
 		LOG.info("New VDU VNF Create job: {}", processId);
@@ -259,10 +293,12 @@ public class VnfmActions {
 		final List<ResourceDefinition> listVl = vl.stream().map(VnfmActions::mapVl).collect(Collectors.toList());
 		addResources.addAll(listVl);
 
-		final Set<VnfLinkPort> linkPort = vnfPackage.getVnfLinkPort();
-		final List<ResourceDefinition> listLinkPort = linkPort.stream().map(VnfmActions::mapLinkPort).collect(Collectors.toList());
-		addResources.addAll(listLinkPort);
-
+		/*
+		 * final Set<VnfLinkPort> linkPort = vnfPackage.getVnfLinkPort(); final
+		 * List<ResourceDefinition> listLinkPort =
+		 * linkPort.stream().map(VnfmActions::mapLinkPort).collect(Collectors.toList());
+		 * addResources.addAll(listLinkPort);
+		 */
 		final Set<VnfStorage> storage = vnfPackage.getVnfStorage();
 		final List<ResourceDefinition> listStorage = storage.stream().map(VnfmActions::mapStorage).collect(Collectors.toList());
 		addResources.addAll(listStorage);
