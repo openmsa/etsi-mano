@@ -14,11 +14,11 @@ package com.ubiqube.etsi.mano.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
@@ -47,7 +47,7 @@ public class VnfVirtualLinkResourceInfo {
 	private List<VnfLinkPortInfo> vnfLinkPorts = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public VnfVirtualLinkResourceInfo id(final String id) {
 		this.id = id;
@@ -163,7 +163,7 @@ public class VnfVirtualLinkResourceInfo {
 		this.vnfLinkPorts = vnfLinkPorts;
 	}
 
-	public VnfVirtualLinkResourceInfo metadata(final KeyValuePairs metadata) {
+	public VnfVirtualLinkResourceInfo metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -175,11 +175,11 @@ public class VnfVirtualLinkResourceInfo {
 	 **/
 	@JsonProperty("metadata")
 	@ApiModelProperty(value = "Metadata about this resource. ")
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
