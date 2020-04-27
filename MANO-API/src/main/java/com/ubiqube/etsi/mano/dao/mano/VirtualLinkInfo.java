@@ -22,7 +22,7 @@ public class VirtualLinkInfo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String vnfVirtualLinkDescId = null;
+	private UUID vnfVirtualLinkDescId = null;
 
 	@Embedded
 	private ResourceHandleEntity networkResource = null;
@@ -48,11 +48,11 @@ public class VirtualLinkInfo {
 		this.id = id;
 	}
 
-	public String getVnfVirtualLinkDescId() {
+	public UUID getVnfVirtualLinkDescId() {
 		return vnfVirtualLinkDescId;
 	}
 
-	public void setVnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
+	public void setVnfVirtualLinkDescId(final UUID vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 	}
 

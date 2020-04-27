@@ -79,4 +79,14 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 		return instance == null;
 	}
 
+	@Override
+	public VnfInstance get(final UUID id) {
+		return get(id.toString());
+	}
+
+	@Override
+	public void delete(final UUID id) {
+		delete(id.toString());
+	}
+
 }
