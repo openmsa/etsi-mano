@@ -79,6 +79,9 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extensions = null;
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
+	private Set<VnfLcmOpOccs> lcmOpOccs;
+
 	private Audit audit;
 
 	@Override
@@ -216,6 +219,14 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public void setProcessId(final String processId) {
 		this.processId = processId;
+	}
+
+	public Set<VnfLcmOpOccs> getLcmOpOccs() {
+		return lcmOpOccs;
+	}
+
+	public void setLcmOpOccs(final Set<VnfLcmOpOccs> lcmOpOccs) {
+		this.lcmOpOccs = lcmOpOccs;
 	}
 
 	@Override

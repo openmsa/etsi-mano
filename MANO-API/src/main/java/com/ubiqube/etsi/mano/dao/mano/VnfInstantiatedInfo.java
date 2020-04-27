@@ -140,25 +140,25 @@ public class VnfInstantiatedInfo {
 		this.virtualStorageResourceInfo = virtualStorageResourceInfo;
 	}
 
-	public void addVirtualStorageResourceInfoItem(final VirtualStorageInfo createVStorage) {
+	public void addVirtualStorageResourceInfoItem(final VirtualStorageInfo vStorage) {
 		if (null == virtualStorageResourceInfo) {
 			virtualStorageResourceInfo = new HashSet<>();
 		}
-		virtualStorageResourceInfo.add(createVStorage);
+		virtualStorageResourceInfo.add(vStorage);
 	}
 
-	public void addVnfcResourceInfoItem(final VnfInstantiedCompute createCompute) {
+	public void addVnfcResourceInfoItem(final VnfInstantiedCompute compute) {
 		if (null == vnfcResourceInfo) {
 			vnfcResourceInfo = new HashSet<>();
 		}
-		vnfcResourceInfo.add(createCompute);
+		vnfcResourceInfo.add(compute);
 	}
 
-	public void addVirtualLinkResourceInfoItem(final VirtualLinkInfo createVl) {
+	public void addVirtualLinkResourceInfoItem(final VirtualLinkInfo virtualLink) {
 		if (null == virtualLinkResourceInfo) {
 			virtualLinkResourceInfo = new HashSet<>();
 		}
-		virtualLinkResourceInfo.add(createVl);
+		virtualLinkResourceInfo.add(virtualLink);
 	}
 
 }
