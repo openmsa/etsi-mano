@@ -23,7 +23,7 @@ public class AffectedVl {
 
 	private ChangeType changeType = null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ResourceHandleEntity networkResource = null;
 
 	@ElementCollection

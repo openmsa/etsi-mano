@@ -43,6 +43,10 @@ public class VimManager {
 		return vimAssociation.get(id);
 	}
 
+	public void rebuildCache() {
+		init();
+	}
+
 	public VimConnectionInformation findVimById(final UUID id) {
 		return vimConnectionInformationJpa.findById(id).orElseThrow(() -> new NotFoundException("No connection Id " + id));
 	}

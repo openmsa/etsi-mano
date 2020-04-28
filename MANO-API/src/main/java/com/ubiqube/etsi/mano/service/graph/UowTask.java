@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -67,8 +68,12 @@ public class UowTask extends Task<UnitOfWork, String> {
 			failureDetails.setTitle("Task " + uaow.getName() + " Failed.");
 			failureDetails.setType("about:blank");
 			failureDetails.setInstance(instance);
+			lcmOpOccs.setError(failureDetails);
 		}
 		final VnfInstantiatedInfo vnfInstantiated = vnfInstance.getInstantiatedVnfInfo();
+		final ResourceHandleEntity resource = this.uaow.getResourceHandleEntity();
+		resource.setEndTime(new Date());
+		resource.setResourceId(res.get());
 		addResource(vnfInstantiated, res.get());
 		final VnfLcmResourceChanges resourceChanged = lcmOpOccs.getResourceChanges();
 		// resourceChanged.setAffectedVirtualLinks(affectedVirtualLinks);
