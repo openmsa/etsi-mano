@@ -2,8 +2,9 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.persistence.Embedded;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ public class ExtLinkPortDataEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@Embedded
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ResourceHandleEntity resourceHandle = null;
 
 	@OneToOne

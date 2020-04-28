@@ -29,6 +29,9 @@ public class VnfInstantiedCompute {
 	@OneToOne(fetch = FetchType.LAZY)
 	private GrantInformation computeResource = null;
 
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private ResourceHandleEntity compResource = null;
+
 	@ElementCollection
 	private List<String> storageResourceIds = null;
 
@@ -84,6 +87,14 @@ public class VnfInstantiedCompute {
 
 	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public ResourceHandleEntity getCompResource() {
+		return compResource;
+	}
+
+	public void setCompResource(final ResourceHandleEntity networkResource) {
+		this.compResource = networkResource;
 	}
 
 }

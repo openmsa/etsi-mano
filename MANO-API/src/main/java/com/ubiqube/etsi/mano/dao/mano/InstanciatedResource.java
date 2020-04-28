@@ -23,7 +23,7 @@ public class InstanciatedResource {
 	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private VimConnectionInformation vimConnectionInformation;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private VnfInstance instance;
 
 	private String vimResourceId;

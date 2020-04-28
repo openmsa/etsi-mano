@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.Embedded;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
@@ -21,7 +23,7 @@ public class AffectedVs {
 
 	private ChangeType changeType = null;
 
-	@Embedded
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private ResourceHandleEntity storageResource = null;
 
 	@Transient

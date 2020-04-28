@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -29,6 +32,9 @@ public class MonitoringParams implements Serializable, Auditable {
 	private Long collectionPeriod;
 
 	private String performanceMetric;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private ResourceHandleEntity networkResource = null;
 
 	private Audit audit;
 
@@ -88,6 +94,14 @@ public class MonitoringParams implements Serializable, Auditable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	public ResourceHandleEntity getNetworkResource() {
+		return networkResource;
+	}
+
+	public void setNetworkResource(final ResourceHandleEntity networkResource) {
+		this.networkResource = networkResource;
 	}
 
 }
