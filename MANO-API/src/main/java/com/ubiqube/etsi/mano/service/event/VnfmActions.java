@@ -102,6 +102,7 @@ public class VnfmActions {
 		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.NOT_INSTANTIATED) {
 			copyVnfPkgToInstance(vnfPkg, vnfInstance);
 			vnfInstance = vnfInstancesRepository.save(vnfInstance);
+			copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
 		}
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
@@ -143,23 +144,73 @@ public class VnfmActions {
 		LOG.info("VNF instance {} Finished.", vnfInstanceId);
 	}
 
+	private static void copyVnfInstanceToLcmOpOccs(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
+		final VnfInstantiatedInfo inst = vnfInstance.getInstantiatedVnfInfo();
+		inst.getVnfcResourceInfo().forEach(x -> {
+			final AffectedCompute affected = findLcmOpOccsCompute(lcmOpOccs.getResourceChanges().getAffectedVnfcs(), x.getId());
+			affected.setComputeResource(x.getCompResource());
+		});
+
+		inst.getVirtualLinkResourceInfo().forEach(x -> {
+			final AffectedVl affected = findLcmOpOccsVl(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks(), x.getId());
+			affected.setNetworkResource(x.getNetworkResource());
+		});
+
+		inst.getVirtualStorageResourceInfo().forEach(x -> {
+			final AffectedVs affected = findLcmOpOccsStorage(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages(), x.getId());
+			affected.setStorageResource(x.getStorageResource());
+		});
+	}
+
+	private static AffectedVs findLcmOpOccsStorage(final Set<AffectedVs> affectedVirtualStorages, final UUID id) {
+		return affectedVirtualStorages.stream()
+				.filter(x -> x.getVirtualStorageDescId().compareTo(id) == 0)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find compute resource: " + id));
+	}
+
+	private static AffectedVl findLcmOpOccsVl(final Set<AffectedVl> affectedVirtualLinks, final UUID id) {
+		// TODO Auto-generated method stub
+		return affectedVirtualLinks.stream()
+				.filter(x -> x.getVirtualLinkDescId().compareTo(id) == 0)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find compute resource: " + id));
+	}
+
+	private static AffectedCompute findLcmOpOccsCompute(final Set<AffectedCompute> affectedVnfcs, final UUID id) {
+		return affectedVnfcs.stream()
+				.filter(x -> x.getVduId().compareTo(id) == 0)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find compute resource: " + id));
+	}
+
 	private static void copyVnfPkgToInstance(final VnfPackage vnfPkg, final VnfInstance vnfInstance) {
 		final VnfInstantiatedInfo instantiedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
 		vnfPkg.getVnfCompute().forEach(x -> {
 			final VnfInstantiedCompute createCompute = new VnfInstantiedCompute();
 			createCompute.setVduId(x.getId());
 			createCompute.setStorageResourceIds(new ArrayList<>(x.getStorages()));
+			final ResourceHandleEntity networkResource = new ResourceHandleEntity();
+			networkResource.setResourceId(x.getId().toString());
+			createCompute.setCompResource(networkResource);
 			instantiedVnfInfo.addVnfcResourceInfoItem(createCompute);
 		});
 
 		vnfPkg.getVnfVl().forEach(x -> {
 			final VirtualLinkInfo virtualLink = new VirtualLinkInfo();
 			virtualLink.setVnfVirtualLinkDescId(x.getId());
+			final ResourceHandleEntity networkResource = new ResourceHandleEntity();
+			networkResource.setResourceId(x.getId().toString());
+			virtualLink.setNetworkResource(networkResource);
 			instantiedVnfInfo.addVirtualLinkResourceInfoItem(virtualLink);
 		});
+
 		vnfPkg.getVnfStorage().forEach(x -> {
 			final VirtualStorageInfo vStorage = new VirtualStorageInfo();
 			vStorage.setVirtualStorageDescId(x.getId());
+			final ResourceHandleEntity networkResource = new ResourceHandleEntity();
+			networkResource.setResourceId(x.getId().toString());
+			vStorage.setStorageResource(networkResource);
 			instantiedVnfInfo.addVirtualStorageResourceInfoItem(vStorage);
 		});
 	}
