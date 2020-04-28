@@ -2,17 +2,19 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class StorageUow implements UnitOfWork {
+public class StorageUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	private final VnfStorage vnfStorage;
 
-	public StorageUow(final VnfStorage x) {
+	public StorageUow(final ResourceHandleEntity resourceHandleEntity, final VnfStorage x) {
+		super(resourceHandleEntity);
 		vnfStorage = x;
 	}
 

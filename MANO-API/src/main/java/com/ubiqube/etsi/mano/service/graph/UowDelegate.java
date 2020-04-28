@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.InstanciatedResource;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.InstanciatedResourceJpa;
@@ -60,6 +61,11 @@ public class UowDelegate implements UnitOfWork {
 	@Override
 	public UowType getType() {
 		return delegate.getType();
+	}
+
+	@Override
+	public ResourceHandleEntity getResourceHandleEntity() {
+		return delegate.getResourceHandleEntity();
 	}
 
 }

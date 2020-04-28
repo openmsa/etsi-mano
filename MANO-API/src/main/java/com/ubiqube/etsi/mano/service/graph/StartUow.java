@@ -5,9 +5,13 @@ import java.util.Map;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class StartUow implements UnitOfWork {
+public class StartUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
+	public StartUow() {
+		super(null);
+	}
 
 	@Override
 	public String getName() {

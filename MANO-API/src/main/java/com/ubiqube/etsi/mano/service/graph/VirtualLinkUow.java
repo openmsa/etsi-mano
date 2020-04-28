@@ -2,11 +2,12 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class VirtualLinkUow implements UnitOfWork {
+public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -14,7 +15,8 @@ public class VirtualLinkUow implements UnitOfWork {
 	private final VlProtocolData vlProtocolData;
 	private final String name;
 
-	public VirtualLinkUow(final VlProtocolData _vlProtocolData, final String _name) {
+	public VirtualLinkUow(final ResourceHandleEntity resourceHandleEntity, final VlProtocolData _vlProtocolData, final String _name) {
+		super(resourceHandleEntity);
 		vlProtocolData = _vlProtocolData;
 		name = _name;
 	}

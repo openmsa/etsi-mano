@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -18,7 +19,7 @@ public interface UnitOfWork extends Serializable {
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE");
 
-		private String value;
+		private final String value;
 
 		UowType(final String value) {
 			this.value = value;
@@ -45,4 +46,6 @@ public interface UnitOfWork extends Serializable {
 	String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, Map<String, String> context);
 
 	UowType getType();
+
+	ResourceHandleEntity getResourceHandleEntity();
 }

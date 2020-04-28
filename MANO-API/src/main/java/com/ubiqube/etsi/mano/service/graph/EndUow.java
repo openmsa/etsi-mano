@@ -1,14 +1,18 @@
 package com.ubiqube.etsi.mano.service.graph;
 
-import java.io.Serializable;
 import java.util.Map;
 
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class EndUow implements UnitOfWork, Serializable {
+public class EndUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
+	public EndUow(final ResourceHandleEntity resourceHandleEntity) {
+		super(resourceHandleEntity);
+	}
 
 	@Override
 	public String getName() {

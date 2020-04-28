@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -59,7 +60,7 @@ public class ExecutionPlanner {
 
 		vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().forEach(x -> {
 			final VnfVl vlProtocol = vnfVl.findById(x.getGrantInformation().getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getGrantInformation().getVduId()));
-			final UnitOfWork uow = new VirtualLinkUow(vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
+			final UnitOfWork uow = new VirtualLinkUow(x.getNetworkResource(), vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
 			vertex.put(vlProtocol.getToscaName(), uow);
 			g.addVertex(uow);
 		});
@@ -67,14 +68,14 @@ public class ExecutionPlanner {
 		vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().forEach(x -> {
 			x.getReservationId();
 			final VnfStorage vstorage = vnfStorageJpa.findById(x.getVirtualStorageDescId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getVirtualStorageDescId()));
-			final UnitOfWork uow = new StorageUow(vstorage);
+			final UnitOfWork uow = new StorageUow(x.getStorageResource(), vstorage);
 			vertex.put(vstorage.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 
 		vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().forEach(x -> {
 			final VnfCompute compute = vnfComputeJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-			final UnitOfWork uow = new ComputeUow(compute);
+			final UnitOfWork uow = new ComputeUow(x.getCompResource(), compute);
 			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
@@ -96,7 +97,7 @@ public class ExecutionPlanner {
 			}
 			// XXX do the same for swImages ?
 			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
-				final UnitOfWork uow = new MonitoringUow(x, makeUowMonitoringName(x));
+				final UnitOfWork uow = new MonitoringUow(new ResourceHandleEntity(), x, makeUowMonitoringName(x));
 				vertex.put(makeUowMonitoringName(x), uow);
 				g.addVertex(uow);
 				LOG.debug("Monitoring: {} -> {}", x.getToscaName(), uow.getName());
@@ -116,7 +117,7 @@ public class ExecutionPlanner {
 					}
 				});
 		// And end Node
-		final UnitOfWork end = new EndUow();
+		final UnitOfWork end = new EndUow(new ResourceHandleEntity());
 		g.addVertex(end);
 		g.vertexSet().stream()
 				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
