@@ -15,13 +15,13 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class PlanExecutor {
 
-	public void exec(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
+	public ExecutionResults<UnitOfWork, String> exec(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
 		final ExecutorService executorService = Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
 		final DexecutorConfig<UnitOfWork, String> config = new DexecutorConfig<>(executorService, new UowTaskProvider(vimConnectionInformation, vim));
 		// config.setExecutionListener(listener);
 		final DefaultDexecutor<UnitOfWork, String> executor = new DefaultDexecutor<>(config);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
-		final ExecutionResults<UnitOfWork, String> res = executor.execute(ExecutionConfig.TERMINATING);
+		return executor.execute(ExecutionConfig.TERMINATING);
 	}
 }

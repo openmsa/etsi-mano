@@ -23,7 +23,7 @@ public class AffectedVs {
 
 	private ChangeType changeType = null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ResourceHandleEntity storageResource = null;
 
 	@Transient

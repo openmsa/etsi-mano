@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
 import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
@@ -99,11 +100,10 @@ public class VnfmActions {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
 		copyVnfPkgToLcm(vnfPkg, lcmOpOccs);
 		vnfLcmOpOccsRepository.save(lcmOpOccs);
-		if (vnfInstance.getInstantiationState() == InstantiationStateEnum.NOT_INSTANTIATED) {
-			copyVnfPkgToInstance(vnfPkg, vnfInstance);
-			vnfInstance = vnfInstancesRepository.save(vnfInstance);
-			copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
-		}
+		copyVnfPkgToInstance(vnfPkg, vnfInstance);
+
+		vnfInstance = vnfInstancesRepository.save(vnfInstance);
+		copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
 
@@ -122,42 +122,29 @@ public class VnfmActions {
 		final VimConnectionInformation vimConnection = grants.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		final PlanExecutor executor = new PlanExecutor();
-		executor.exec(plan, vimConnection, vim);
-		// vim.refineExecutionPlan(g);
-		// Instantiate VDU.
-		final Set<GrantInformation> addVdu = grants.getAddResources();
-		for (final GrantInformation grantInformation : addVdu) {
-			final VimStatus status = spawnVdu(grantInformation, vnfPkg, vnfInstance, lcmOpOccs);
-			if (status.getLcmOperationStateType() == LcmOperationStateType.FAILED) {
-				lcmOpOccs.setError(status.getProblemDetails());
-				lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-				vnfLcmOpOccsRepository.save(lcmOpOccs);
-				break;
-			}
-			final VnfInstantiedCompute vic = new VnfInstantiedCompute();
-			vic.setComputeResource(grantInformation);
-			vic.setVduId(grantInformation.getVduId());
-			// XXX Storages.
-			// vnfInstance.getInstantiatedVnfInfo().addVnfcResourceInfoItem(vic);
+		final ExecutionResults<UnitOfWork, String> results = executor.exec(plan, vimConnection, vim);
+		if (results.getErrored().isEmpty()) {
+			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
+		} else {
+			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 		}
-		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 		LOG.info("VNF instance {} Finished.", vnfInstanceId);
 	}
 
 	private static void copyVnfInstanceToLcmOpOccs(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		final VnfInstantiatedInfo inst = vnfInstance.getInstantiatedVnfInfo();
 		inst.getVnfcResourceInfo().forEach(x -> {
-			final AffectedCompute affected = findLcmOpOccsCompute(lcmOpOccs.getResourceChanges().getAffectedVnfcs(), x.getId());
+			final AffectedCompute affected = findLcmOpOccsCompute(lcmOpOccs.getResourceChanges().getAffectedVnfcs(), x.getVduId());
 			affected.setComputeResource(x.getCompResource());
 		});
 
 		inst.getVirtualLinkResourceInfo().forEach(x -> {
-			final AffectedVl affected = findLcmOpOccsVl(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks(), x.getId());
+			final AffectedVl affected = findLcmOpOccsVl(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks(), x.getVnfVirtualLinkDescId());
 			affected.setNetworkResource(x.getNetworkResource());
 		});
 
 		inst.getVirtualStorageResourceInfo().forEach(x -> {
-			final AffectedVs affected = findLcmOpOccsStorage(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages(), x.getId());
+			final AffectedVs affected = findLcmOpOccsStorage(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages(), x.getVirtualStorageDescId());
 			affected.setStorageResource(x.getStorageResource());
 		});
 	}
@@ -170,7 +157,6 @@ public class VnfmActions {
 	}
 
 	private static AffectedVl findLcmOpOccsVl(final Set<AffectedVl> affectedVirtualLinks, final UUID id) {
-		// TODO Auto-generated method stub
 		return affectedVirtualLinks.stream()
 				.filter(x -> x.getVirtualLinkDescId().compareTo(id) == 0)
 				.findFirst()
@@ -232,7 +218,7 @@ public class VnfmActions {
 		vnfPkg.getVnfVl().forEach(x -> {
 			final AffectedVl affectedVirtualLink = new AffectedVl();
 			affectedVirtualLink.setChangeType(ChangeType.ADDED);
-			affectedVirtualLink.setVirtualLinkDescId(x.getVlProfileEntity().getId());
+			affectedVirtualLink.setVirtualLinkDescId(x.getId());
 			changedResources.addAffectedVirtualLink(affectedVirtualLink);
 		});
 		vnfPkg.getVnfStorage().forEach(x -> {
@@ -241,7 +227,6 @@ public class VnfmActions {
 			affectedVs.setVirtualStorageDescId(x.getId());
 			changedResources.addAffectedVirtualStorage(affectedVs);
 		});
-
 	}
 
 	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
