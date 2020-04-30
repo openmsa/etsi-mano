@@ -41,6 +41,8 @@ public class VnfInstantiedCompute {
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
 
+	private String flavorId;
+
 	public UUID getId() {
 		return id;
 	}
@@ -95,6 +97,14 @@ public class VnfInstantiedCompute {
 
 	public void setCompResource(final ResourceHandleEntity networkResource) {
 		this.compResource = networkResource;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
 	}
 
 }

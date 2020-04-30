@@ -1,11 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
 
 @Embeddable
 public class L3Data implements Serializable {
@@ -13,9 +10,6 @@ public class L3Data implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private boolean dhcpEnabled;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<IpPool> ipAllocationPools;
 
 	private String ipv6AddressMode;
 
@@ -33,14 +27,6 @@ public class L3Data implements Serializable {
 
 	public void setDhcpEnabled(final boolean dhcpEnabled) {
 		this.dhcpEnabled = dhcpEnabled;
-	}
-
-	public List<IpPool> getIpAllocationPools() {
-		return ipAllocationPools;
-	}
-
-	public void setIpAllocationPools(final List<IpPool> ipAllocationPools) {
-		this.ipAllocationPools = ipAllocationPools;
 	}
 
 	public String getIpv6AddressMode() {

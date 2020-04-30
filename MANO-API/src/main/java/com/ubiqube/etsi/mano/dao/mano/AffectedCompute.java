@@ -33,7 +33,7 @@ public class AffectedCompute {
 	@FieldBridge(impl = EnumFieldBridge.class)
 	private ChangeType changeType = null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private ResourceHandleEntity computeResource = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)

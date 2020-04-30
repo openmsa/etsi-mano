@@ -28,9 +28,12 @@ public class ResourceHandleEntity implements Serializable {
 
 	private String resourceProviderId = null;
 
+	/** Vim resource ID. */
 	private String resourceId = null;
 
 	private String vimLevelResourceType = null;
+
+	private UUID vduId;
 
 	@Enumerated(EnumType.STRING)
 	private InstantiationStatusType status = InstantiationStatusType.NOT_STARTED;
@@ -77,6 +80,14 @@ public class ResourceHandleEntity implements Serializable {
 
 	public void setVimLevelResourceType(final String vimLevelResourceType) {
 		this.vimLevelResourceType = vimLevelResourceType;
+	}
+
+	public UUID getVduId() {
+		return vduId;
+	}
+
+	public void setVduId(final UUID vduId) {
+		this.vduId = vduId;
 	}
 
 	public InstantiationStatusType getStatus() {

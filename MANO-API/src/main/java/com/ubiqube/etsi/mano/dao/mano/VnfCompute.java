@@ -48,6 +48,9 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> storages;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> networks;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MonitoringParams> monitoringParameters;
 
@@ -159,6 +162,14 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	public Set<String> getNetworks() {
+		return networks;
+	}
+
+	public void setNetworks(final Set<String> networks) {
+		this.networks = networks;
 	}
 
 }

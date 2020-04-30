@@ -1,14 +1,19 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -30,6 +35,10 @@ public class VlProtocolData implements Auditable, Serializable {
 
 	@Embedded
 	private Audit audit;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<IpPool> ipAllocationPools;
 
 	public UUID getId() {
 		return id;
@@ -71,6 +80,14 @@ public class VlProtocolData implements Auditable, Serializable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	public Set<IpPool> getIpAllocationPools() {
+		return ipAllocationPools;
+	}
+
+	public void setIpAllocationPools(final Set<IpPool> ipAllocationPools) {
+		this.ipAllocationPools = ipAllocationPools;
 	}
 
 }
