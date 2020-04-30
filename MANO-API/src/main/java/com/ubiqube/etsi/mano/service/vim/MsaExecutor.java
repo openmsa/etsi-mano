@@ -26,7 +26,9 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -254,6 +256,24 @@ public class MsaExecutor implements Vim {
 
 	@Override
 	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final VnfCompute vnfCompute, final List<String> networks, final List<String> storages) {
 		// TODO Auto-generated method stub
 		return null;
 	}

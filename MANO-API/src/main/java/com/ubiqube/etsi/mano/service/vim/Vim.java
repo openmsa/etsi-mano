@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service.vim;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,7 +13,9 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
 
@@ -48,4 +51,10 @@ public interface Vim {
 
 	@Nonnull
 	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk);
+
+	String createStorage(VimConnectionInformation vimConnectionInformation, VnfStorage vnfStorage);
+
+	String createCompute(VimConnectionInformation vimConnectionInformation, VnfCompute vnfCompute, List<String> networks, List<String> storages);
+
+	String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage);
 }
