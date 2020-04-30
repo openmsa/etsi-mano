@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.event;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -274,8 +275,8 @@ public class NfvoActions {
 		return vnfPackageRepository.get(instance.getVnfPkg().getId());
 	}
 
-	private static List<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
-		final List<VimSoftwareImageEntity> listVsie = new ArrayList<>();
+	private static Set<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
+		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
 		final Set<VnfCompute> vnfc = vnfPackage.getVnfCompute();
 		vnfc.forEach(x -> {
 			SoftwareImage img = x.getSoftwareImage();
@@ -286,23 +287,23 @@ public class NfvoActions {
 					// Use or-vi, Vim is not on the same server. and where is the path ?
 					return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
 				});
-				listVsie.add(mapSoftwareImage(img, vnfPackage, vimInfo, vim));
+				listVsie.add(mapSoftwareImage(img, x.getId(), vimInfo, vim));
 			}
 		});
 		final Set<VnfStorage> storage = vnfPackage.getVnfStorage();
 		storage.forEach(x -> {
 			final SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
-				listVsie.add(mapSoftwareImage(img, vnfPackage, vimInfo, vim));
+				listVsie.add(mapSoftwareImage(img, x.getId(), vimInfo, vim));
 			}
 		});
 		return listVsie;
 	}
 
-	private static VimSoftwareImageEntity mapSoftwareImage(final SoftwareImage softwareImage, final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
+	private static VimSoftwareImageEntity mapSoftwareImage(final SoftwareImage softwareImage, final UUID vduId, final VimConnectionInformation vimInfo, final Vim vim) {
 		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
 		vsie.setVimSoftwareImageId(softwareImage.getVimId());
-		vsie.setVnfdSoftwareImageId(vnfPackage.getId().toString());
+		vsie.setVnfdSoftwareImageId(vduId.toString());
 		vsie.setVimConnectionId(vimInfo.getId().toString());
 		if (null != softwareImage.getVimId()) {
 			// XXX
