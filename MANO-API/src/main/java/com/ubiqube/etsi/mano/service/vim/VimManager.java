@@ -3,10 +3,12 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
@@ -39,8 +41,9 @@ public class VimManager {
 		vimsIs.forEach(x -> vimAssociation.put(x.getId(), vim));
 	}
 
+	@NotNull
 	public Vim getVimById(final UUID id) {
-		return vimAssociation.get(id);
+		return Optional.ofNullable(vimAssociation.get(id)).orElseThrow(() -> new NotFoundException("No such Vim: " + id));
 	}
 
 	public void rebuildCache() {
