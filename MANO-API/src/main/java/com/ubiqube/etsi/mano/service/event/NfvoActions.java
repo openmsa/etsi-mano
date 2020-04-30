@@ -259,9 +259,9 @@ public class NfvoActions {
 		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
 			final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), 10);
-			vnfPackage.setFlavorId(flavorId);
 			final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
 			vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
+			vcrfe.setResourceProviderId(vim.getType());
 			vcrfe.setVimFlavourId(flavorId);
 			vcrfe.setVnfdVirtualComputeDescId(x.getId().toString());
 			listVcrfe.add(vcrfe);
