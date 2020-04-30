@@ -95,8 +95,8 @@ dependencies {
 	// Demo stuff
 	compile 'com.ubiqube.mano:tosca-vnfd-class:0.0.1-SNAPSHOT'
 
-	compile group: 'org.pacesys', name: 'openstack4j', version: '3.2.0'
-	compile group: 'guru.nidi', name: 'graphviz-java', version: '0.15.1'
+	compile group: 'com.github.openstack4j.core', name: 'openstack4j', version: '3.6'
+	compile group: 'guru.nidi', name: 'graphviz-java', version: '0.16.0'
 	//
 	compile group: 'com.github.dexecutor', name: 'dexecutor-core', version: '2.1.1'
 }
