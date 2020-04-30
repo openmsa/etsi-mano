@@ -54,7 +54,7 @@ public interface Vim {
 
 	String createStorage(VimConnectionInformation vimConnectionInformation, VnfStorage vnfStorage);
 
-	String createCompute(VimConnectionInformation vimConnectionInformation, VnfCompute vnfCompute, List<String> networks, List<String> storages);
+	String createCompute(VimConnectionInformation vimConnectionInformation, VnfCompute vnfCompute, String flavorId, String imageId, List<String> networks, List<String> storages);
 
 	String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage);
 }

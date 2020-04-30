@@ -273,7 +273,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final VnfCompute vnfCompute, final List<String> networks, final List<String> storages) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final VnfCompute vnfCompute, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
 		// TODO Auto-generated method stub
 		return null;
 	}
