@@ -43,6 +43,8 @@ public class VnfInstantiedCompute {
 
 	private String flavorId;
 
+	private String imageId;
+
 	public UUID getId() {
 		return id;
 	}
@@ -105,6 +107,14 @@ public class VnfInstantiedCompute {
 
 	public void setFlavorId(final String flavorId) {
 		this.flavorId = flavorId;
+	}
+
+	public String getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(final String imageId) {
+		this.imageId = imageId;
 	}
 
 }
