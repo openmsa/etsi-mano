@@ -132,11 +132,10 @@ public class ExecutionPlanner {
 						g.addEdge(key, end);
 					}
 				});
-		exportGraph(g, vnfPackage.getId(), vnfInstance);
 		return g;
 	}
 
-	private void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @NotNull final UUID _id, final VnfInstance vnfInstance) {
+	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @NotNull final UUID _id, final VnfInstance vnfInstance) {
 		final DOTExporter<UnitOfWork, ConnectivityEdge> exporter = new DOTExporter<>(UnitOfWork::getName);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
