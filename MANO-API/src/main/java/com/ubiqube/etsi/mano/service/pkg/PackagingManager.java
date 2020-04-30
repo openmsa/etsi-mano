@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -91,12 +92,27 @@ public class PackagingManager {
 			vnfPackage.setVnfVl(vvlNodes);
 			final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp();
 			vnfPackage.setVnfLinkPort(vcNodes);
+			remapNetworks(cNodes, vcNodes);
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId().toString());
+	}
+
+	private static void remapNetworks(final Set<VnfCompute> cNodes, final Set<VnfLinkPort> vcNodes) {
+		cNodes.forEach(x -> {
+			final Set<String> nodes = filter(vcNodes, x.getToscaName());
+			x.setNetworks(nodes);
+		});
+	}
+
+	private static Set<String> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
+		return vcNodes.stream()
+				.filter(x -> x.getToscaName().equals(toscaName))
+				.map(x -> x.getVirtualLink())
+				.collect(Collectors.toSet());
 	}
 
 	private static void verifyImagePath(final Set<SoftwareImage> softwareImages) {
