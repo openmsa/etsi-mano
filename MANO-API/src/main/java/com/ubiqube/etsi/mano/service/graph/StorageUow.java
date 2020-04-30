@@ -20,13 +20,12 @@ public class StorageUow extends AbstractUnitOfWork {
 
 	@Override
 	public String getName() {
-		return vnfStorage.getToscaName();
+		return "block_storage_" + vnfStorage.getToscaName();
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
-		return null;
+		return vim.createStorage(vimConnectionInformation, vnfStorage);
 	}
 
 	@Override
