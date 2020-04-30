@@ -25,7 +25,9 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -237,18 +239,30 @@ public class VnfmActions {
 
 	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
 		grants.getAddResources().forEach(x -> setGrantResource(x, vnfInstance));
-		// Map flavor.
+		// Map flavor & ImageId.
 		vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().forEach(x -> {
 			final String flavorId = findFlavor(grants, x.getVduId());
 			x.setFlavorId(flavorId);
+			final String imageId = findImage(grants, x.getVduId());
+			x.setImageId(imageId);
 		});
 	}
 
+	private static String findImage(final Grants grants, final UUID vduId) {
+		return grants.getVimAssets().getSoftwareImages().stream()
+				.filter(x -> x.getVnfdSoftwareImageId().equals(vduId.toString()))
+				.map(VimSoftwareImageEntity::getVimSoftwareImageId)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find ImageId: " + vduId));
+	}
+
 	private static String findFlavor(final Grants grants, final UUID vduId) {
-		grants.getVimAssets().getComputeResourceFlavours().forEach(x -> {
-			x.getVnfdVirtualComputeDescId();
-		});
-		return null;
+		return grants.getVimAssets().getComputeResourceFlavours().stream()
+				.filter(x -> x.getVnfdVirtualComputeDescId().equals(vduId.toString()))
+				.map(VimComputeResourceFlavourEntity::getVimFlavourId)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find flavor: " + vduId));
+
 	}
 
 	private static void setGrantResource(final GrantInformation grantInformation, final VnfInstance vnfInstance) {
