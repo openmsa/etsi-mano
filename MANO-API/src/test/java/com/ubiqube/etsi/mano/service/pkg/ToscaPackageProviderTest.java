@@ -12,6 +12,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -76,6 +77,8 @@ public class ToscaPackageProviderTest {
 		assertEquals(3, vnfVl.size());
 		final VnfVl vl = vnfVl.iterator().next();
 		// assertEquals("middleVl01", vl.getToscaName());
+		final Set<IpPool> ipPool = vl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next().getIpAllocationPools();
+		assertEquals(1, ipPool.size());
 	}
 
 	@Test

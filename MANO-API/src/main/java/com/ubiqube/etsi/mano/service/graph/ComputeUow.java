@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.service.graph;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -20,13 +22,14 @@ public class ComputeUow extends AbstractUnitOfWork {
 
 	@Override
 	public String getName() {
-		return vnfCompute.getToscaName();
+		return "compute_" + vnfCompute.getToscaName();
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
-		return null;
+		final List<String> storages = vnfCompute.getStorages().stream().map(context::get).collect(Collectors.toList());
+		final List<String> networks = vnfCompute.getNetworks().stream().map(context::get).collect(Collectors.toList());
+		return vim.createCompute(vimConnectionInformation, vnfCompute, networks, storages);
 	}
 
 	@Override
