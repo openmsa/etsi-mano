@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -31,6 +32,7 @@ import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import tosca.datatypes.nfv.L3ProtocolData;
+import tosca.datatypes.nfv.VirtualLinkProtocolData;
 import tosca.nodes.nfv.VNF;
 import tosca.nodes.nfv.VduCp;
 import tosca.nodes.nfv.VnfVirtualLink;
@@ -99,7 +101,10 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("vlProfile", "vlProfileEntity")
 				.byDefault()
 				.register();
-
+		mapperFactory.classMap(VirtualLinkProtocolData.class, VlProtocolData.class)
+				.field("l3ProtocolData.ipAllocationPools", "ipAllocationPools")
+				.byDefault()
+				.register();
 		mapperFactory.classMap(L3ProtocolData.class, L3Data.class)
 				.field("name", "l3Name")
 				.byDefault()
@@ -179,7 +184,7 @@ public class ToscaPackageProvider implements PackageProvider {
 	@Override
 	public Set<VnfVl> getVnfVirtualLinks() {
 		final List<@NonNull VnfVirtualLink> list = toscaApi.getObjects(root, VnfVirtualLink.class);
-		LOG.debug("Found {} Compute node in TOSCA model", list.size());
+		LOG.debug("Found {} Vl node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfVl.class))
 				.collect(Collectors.toSet());
@@ -188,7 +193,7 @@ public class ToscaPackageProvider implements PackageProvider {
 	@Override
 	public Set<VnfLinkPort> getVnfVduCp() {
 		final List<@NonNull VduCp> list = toscaApi.getObjects(root, VduCp.class);
-		LOG.debug("Found {} Compute node in TOSCA model", list.size());
+		LOG.debug("Found {} VduCp node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfLinkPort.class))
 				.collect(Collectors.toSet());
