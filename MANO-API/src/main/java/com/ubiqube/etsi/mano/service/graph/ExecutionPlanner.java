@@ -68,7 +68,13 @@ public class ExecutionPlanner {
 		vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().forEach(x -> {
 			x.getReservationId();
 			final VnfStorage vstorage = vnfStorageJpa.findById(x.getVirtualStorageDescId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getVirtualStorageDescId()));
-			final UnitOfWork uow = new StorageUow(x.getStorageResource(), vstorage);
+			UnitOfWork uow;
+			if ("BLOCK".equals(vstorage.getType())) {
+				uow = new StorageUow(x.getStorageResource(), vstorage);
+			} else {
+				uow = new ObjectStorageUow(x.getStorageResource());
+
+			}
 			vertex.put(vstorage.getToscaName(), uow);
 			g.addVertex(uow);
 		});
