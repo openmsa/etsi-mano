@@ -278,4 +278,10 @@ public class MsaExecutor implements Vim {
 		return null;
 	}
 
+	@Override
+	public List<String> getZoneAvailableList(final VimConnectionInformation vimConnectionInformation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

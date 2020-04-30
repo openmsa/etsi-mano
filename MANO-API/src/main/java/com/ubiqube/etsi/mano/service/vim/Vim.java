@@ -57,4 +57,6 @@ public interface Vim {
 	String createCompute(VimConnectionInformation vimConnectionInformation, VnfCompute vnfCompute, String flavorId, String imageId, List<String> networks, List<String> storages);
 
 	String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage);
+
+	List<String> getZoneAvailableList(VimConnectionInformation vimConnectionInformation);
 }

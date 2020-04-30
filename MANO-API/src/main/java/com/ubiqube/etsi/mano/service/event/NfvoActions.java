@@ -237,12 +237,15 @@ public class NfvoActions {
 		});
 		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
 		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
+		// XXX One timeor for each resources?
+		final String zoneId = chooseZone(vimInfo);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
 			x.setResourceDefinitionId(x.getVduId().toString());
 			x.setResourceProviderId(vim.getType());
 			x.setVimConnectionId(vimInfo.getId().toString());
+			x.setZoneId(zoneId);
 		});
 
 		grants.setVimConnections(Collections.singleton(vimInfo));
@@ -254,6 +257,12 @@ public class NfvoActions {
 		grants.setAvailable(Boolean.TRUE);
 		grantJpa.save(grants);
 		LOG.info("Grant {} Available.", grants.getId());
+	}
+
+	private String chooseZone(final VimConnectionInformation vimInfo) {
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
+		final List<String> list = vim.getZoneAvailableList(vimInfo);
+		return list.get(0);
 	}
 
 	private static List<VimComputeResourceFlavourEntity> getFlavors(final VnfPackage vnfPackage, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
