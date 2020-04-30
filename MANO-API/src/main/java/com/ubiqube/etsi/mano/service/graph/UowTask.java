@@ -48,7 +48,7 @@ public class UowTask extends Task<UnitOfWork, String> {
 			LOG.info("Task {} Started.", uaow.getName());
 			res = Optional.ofNullable(uaow.exec(vimConnectionInformation, vim, context));
 			res.ifPresent(x -> {
-				context.put(uaow.getName(), x);
+				context.put(uaow.getToscaName(), x);
 				LOG.debug("Adding to context: {} => {}", uaow.getName(), x);
 				resource.setResourceId(x);
 			});

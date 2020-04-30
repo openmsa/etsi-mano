@@ -14,13 +14,8 @@ public class StorageUow extends AbstractUnitOfWork {
 	private final VnfStorage vnfStorage;
 
 	public StorageUow(final ResourceHandleEntity resourceHandleEntity, final VnfStorage x) {
-		super(resourceHandleEntity);
+		super(resourceHandleEntity, x.getToscaName());
 		vnfStorage = x;
-	}
-
-	@Override
-	public String getName() {
-		return "block_storage_" + vnfStorage.getToscaName();
 	}
 
 	@Override
@@ -31,6 +26,11 @@ public class StorageUow extends AbstractUnitOfWork {
 	@Override
 	public UowType getType() {
 		return UowType.VSTORAGE;
+	}
+
+	@Override
+	protected String getPrefix() {
+		return "block_storage";
 	}
 
 }

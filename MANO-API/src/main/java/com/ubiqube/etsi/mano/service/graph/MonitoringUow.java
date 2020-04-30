@@ -15,14 +15,9 @@ public class MonitoringUow extends AbstractUnitOfWork {
 	private final String name;
 
 	public MonitoringUow(final ResourceHandleEntity resourceHandleEntity, final VnfCompute x, final String _name) {
-		super(resourceHandleEntity);
+		super(resourceHandleEntity, _name);
 		vnfCompute = x;
 		name = _name;
-	}
-
-	@Override
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -34,6 +29,11 @@ public class MonitoringUow extends AbstractUnitOfWork {
 	@Override
 	public UowType getType() {
 		return UowType.MONITORINGPARAM;
+	}
+
+	@Override
+	protected String getPrefix() {
+		return "monitoring";
 	}
 
 }

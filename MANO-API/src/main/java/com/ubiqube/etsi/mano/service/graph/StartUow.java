@@ -11,12 +11,7 @@ public class StartUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	public StartUow() {
-		super(new ResourceHandleEntity());
-	}
-
-	@Override
-	public String getName() {
-		return "manoInternalStart";
+		super(new ResourceHandleEntity(), "");
 	}
 
 	@Override
@@ -29,6 +24,11 @@ public class StartUow extends AbstractUnitOfWork {
 	public UowType getType() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected String getPrefix() {
+		return "mano_start";
 	}
 
 }

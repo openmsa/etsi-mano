@@ -19,7 +19,7 @@ public interface UnitOfWork extends Serializable {
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE");
 
-		private final String value;
+		private String value;
 
 		UowType(final String value) {
 			this.value = value;
@@ -48,4 +48,6 @@ public interface UnitOfWork extends Serializable {
 	UowType getType();
 
 	ResourceHandleEntity getResourceHandleEntity();
+
+	String getToscaName();
 }

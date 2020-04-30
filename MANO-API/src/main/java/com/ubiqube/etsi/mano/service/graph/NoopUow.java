@@ -11,16 +11,9 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 public class NoopUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	private final String name;
 
 	public NoopUow() {
-		super(new ResourceHandleEntity());
-		name = RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789");
-	}
-
-	@Override
-	public String getName() {
-		return "Noop_operation_" + name;
+		super(new ResourceHandleEntity(), RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
 	}
 
 	@Override
@@ -33,6 +26,11 @@ public class NoopUow extends AbstractUnitOfWork {
 	public UowType getType() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected String getPrefix() {
+		return "noop";
 	}
 
 }

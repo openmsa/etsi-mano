@@ -6,13 +6,14 @@ import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class EndUow extends AbstractUnitOfWork {
+public class ObjectStorageUow extends AbstractUnitOfWork {
+
+	public ObjectStorageUow(final ResourceHandleEntity _resourceHandleEntity, final String _name) {
+		super(_resourceHandleEntity, _name);
+	}
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-
-	public EndUow(final ResourceHandleEntity resourceHandleEntity) {
-		super(resourceHandleEntity, "");
-	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
@@ -22,13 +23,12 @@ public class EndUow extends AbstractUnitOfWork {
 
 	@Override
 	public UowType getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return UowType.VSTORAGE;
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "mano_end";
+		return "object_storage";
 	}
 
 }

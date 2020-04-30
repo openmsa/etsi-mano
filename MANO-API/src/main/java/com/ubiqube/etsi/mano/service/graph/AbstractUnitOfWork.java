@@ -13,14 +13,28 @@ public abstract class AbstractUnitOfWork implements UnitOfWork {
 
 	private final ResourceHandleEntity resourceHandleEntity;
 
+	private final String name;
+
 	// Nothing.
-	public AbstractUnitOfWork(final ResourceHandleEntity _resourceHandleEntity) {
+	public AbstractUnitOfWork(final ResourceHandleEntity _resourceHandleEntity, final String _name) {
 		resourceHandleEntity = _resourceHandleEntity;
+		name = _name;
 	}
 
 	@Override
-	public ResourceHandleEntity getResourceHandleEntity() {
+	public final ResourceHandleEntity getResourceHandleEntity() {
 		return resourceHandleEntity;
 	}
 
+	@Override
+	public final String getName() {
+		return getPrefix() + "_" + name;
+	}
+
+	protected abstract String getPrefix();
+
+	@Override
+	public final String getToscaName() {
+		return name;
+	}
 }

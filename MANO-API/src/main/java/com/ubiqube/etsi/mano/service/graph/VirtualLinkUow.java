@@ -16,14 +16,9 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	private final String name;
 
 	public VirtualLinkUow(final ResourceHandleEntity resourceHandleEntity, final VlProtocolData _vlProtocolData, final String _name) {
-		super(resourceHandleEntity);
+		super(resourceHandleEntity, _name);
 		vlProtocolData = _vlProtocolData;
 		name = _name;
-	}
-
-	@Override
-	public String getName() {
-		return "vl_" + name;
 	}
 
 	public VlProtocolData getVlProtocolData() {
@@ -43,6 +38,11 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	@Override
 	public String toString() {
 		return "VirtualLinkUow [name=" + name + "]";
+	}
+
+	@Override
+	protected String getPrefix() {
+		return "vl";
 	}
 
 }

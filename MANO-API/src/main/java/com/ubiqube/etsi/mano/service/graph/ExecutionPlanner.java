@@ -72,8 +72,7 @@ public class ExecutionPlanner {
 			if ("BLOCK".equals(vstorage.getType())) {
 				uow = new StorageUow(x.getStorageResource(), vstorage);
 			} else {
-				uow = new ObjectStorageUow(x.getStorageResource());
-
+				uow = new ObjectStorageUow(x.getStorageResource(), vstorage.getToscaName());
 			}
 			vertex.put(vstorage.getToscaName(), uow);
 			g.addVertex(uow);
@@ -81,7 +80,7 @@ public class ExecutionPlanner {
 
 		vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().forEach(x -> {
 			final VnfCompute compute = vnfComputeJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-			final UnitOfWork uow = new ComputeUow(x.getCompResource(), compute);
+			final UnitOfWork uow = new ComputeUow(x, compute);
 			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});

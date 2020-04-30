@@ -68,4 +68,9 @@ public class UowDelegate implements UnitOfWork {
 		return delegate.getResourceHandleEntity();
 	}
 
+	@Override
+	public String getToscaName() {
+		return delegate.getToscaName();
+	}
+
 }

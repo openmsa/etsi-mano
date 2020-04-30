@@ -110,7 +110,7 @@ public class PackagingManager {
 
 	private static Set<String> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
 		return vcNodes.stream()
-				.filter(x -> x.getToscaName().equals(toscaName))
+				.filter(x -> x.getVirtualBinding().equals(toscaName))
 				.map(x -> x.getVirtualLink())
 				.collect(Collectors.toSet());
 	}
