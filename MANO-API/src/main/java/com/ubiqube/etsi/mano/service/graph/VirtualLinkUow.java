@@ -23,7 +23,7 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	@Override
 	public String getName() {
-		return name;
+		return "vl_" + name;
 	}
 
 	public VlProtocolData getVlProtocolData() {
@@ -38,6 +38,11 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	@Override
 	public UowType getType() {
 		return UowType.VL;
+	}
+
+	@Override
+	public String toString() {
+		return "VirtualLinkUow [name=" + name + "]";
 	}
 
 }
