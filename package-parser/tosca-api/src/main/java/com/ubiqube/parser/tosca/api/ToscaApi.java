@@ -119,10 +119,22 @@ public class ToscaApi {
 		if ((null != req) && (null != req.getRequirements())) {
 			handleRequirements(req.getRequirements(), clazz, propsDescr, cls, null);
 		}
+		// XXX it looks the same ?
 		final ToscaInernalBase tib = (ToscaInernalBase) cls;
 		tib.setInternalName(node.getName());
 		tib.setInternalDescription(node.getDescription());
+		setProperty(cls, "setName", node.getName());
+		setProperty(cls, "setDescription", node.getDescription());
 		return cls;
+	}
+
+	private static void setProperty(final Object cls, final String methodName, final String name) {
+		try {
+			final Method meth = cls.getClass().getMethod(methodName, String.class);
+			meth.invoke(cls, name);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			LOG.trace("", e);
+		}
 	}
 
 	private static void handleRequirements(final Map<String, Requirement> requirements, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
