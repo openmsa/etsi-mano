@@ -29,6 +29,7 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.TriggerDefinition;
 import com.ubiqube.parser.tosca.ValueObject;
 import com.ubiqube.parser.tosca.api.ToscaInernalBase;
 import com.ubiqube.parser.tosca.constraints.Constraint;
@@ -267,6 +268,9 @@ public class JavaWalker extends AbstractWalker {
 			if (null != jTy) {
 				return codeModel.ref(List.class).narrow(jTy);
 			}
+			if ("trigger".equals(subType)) {
+				return codeModel.ref(List.class).narrow(TriggerDefinition.class);
+			}
 			final JDefinedClass cached = cache.get(subType);
 			if (null != cached) {
 				return codeModel.ref(List.class).narrow(cached);
@@ -282,6 +286,9 @@ public class JavaWalker extends AbstractWalker {
 			if (null != cahed) {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
 			}
+		}
+		if ("trigger".equals(type)) {
+			return codeModel.ref(TriggerDefinition.class);
 		}
 		final Class<?> conv = Converters.convert(valueObject.getType());
 		if (null != conv) {

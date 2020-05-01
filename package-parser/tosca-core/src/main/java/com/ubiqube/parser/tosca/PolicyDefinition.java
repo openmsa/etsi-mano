@@ -4,13 +4,22 @@ import java.util.List;
 import java.util.Map;
 
 public class PolicyDefinition {
+	private String name;
 	private String type;
 	private String description;
 	private Map<String, String> metadata;
 	// Normally it should be a ToscaProperties.
-	private Object properties;
+	private Map<String, Object> properties;
 	private List<String> targets;
 	private Map<String, TriggerDefinition> triggers;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+	}
 
 	public String getType() {
 		return type;
@@ -36,11 +45,11 @@ public class PolicyDefinition {
 		this.metadata = metadata;
 	}
 
-	public Object getProperties() {
+	public Map<String, Object> getProperties() {
 		return properties;
 	}
 
-	public void setProperties(final Object properties) {
+	public void setProperties(final Map<String, Object> properties) {
 		this.properties = properties;
 	}
 

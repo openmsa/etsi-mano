@@ -27,11 +27,13 @@ import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.scalar.Size;
 
+import tosca.groups.nfv.PlacementGroup;
 import tosca.nodes.Compute;
 import tosca.nodes.nfv.VduCp;
 import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.VduInstantiationLevels;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ToscaApiTest {
@@ -58,9 +60,17 @@ public class ToscaApiTest {
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.vdu.Compute.class);
 		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, VirtualBlockStorage.class);
+		assertEquals(1, list.size());
 		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, VirtualObjectStorage.class);
+		assertEquals(1, vos.size());
 		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, VnfVirtualLink.class);
+		assertEquals(3, listVl.size());
 		final List<VduCp> listVduCp = toscaApi.getObjects(root, VduCp.class);
+		assertEquals(4, listVduCp.size());
+		final List<PlacementGroup> listPg = toscaApi.getObjects(root, PlacementGroup.class);
+		assertEquals(1, listPg.size());
+		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, VduInstantiationLevels.class);
+		assertEquals(1, listvduIl.size());
 		System.out.println("" + res);
 	}
 

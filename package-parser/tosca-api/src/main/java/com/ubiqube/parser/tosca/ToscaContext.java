@@ -373,8 +373,25 @@ public class ToscaContext {
 
 	public boolean isAssignableFor(final String source, final String clazz) {
 		final ToscaClassHolder ch = classHierarchy.get(source);
-		final boolean res = ch.isInstanceOf(clazz);
-		LOG.debug("isAssignalbe for: {}=>{} {}", source, clazz, res);
-		return res;
+		if (null != ch) {
+			final boolean res = ch.isInstanceOf(clazz);
+			LOG.debug("isAssignalbe for: {}=>{} {}", source, clazz, res);
+			return res;
+		}
+		final PolicyType policy = policiesType.get(source);
+		if (null != policy) {
+			if (source.equalsIgnoreCase(clazz)) {
+				return true;
+			}
+		}
+		final GroupType group = groupType.get(source);
+		if (null != group) {
+			if (source.equalsIgnoreCase(clazz)) {
+				return true;
+			}
+		}
+		LOG.debug("Not found: {}", source);
+		return false;
 	}
+
 }

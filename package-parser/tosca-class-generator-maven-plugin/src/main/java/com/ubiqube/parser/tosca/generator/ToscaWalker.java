@@ -105,11 +105,15 @@ public class ToscaWalker {
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		// add members
-		final ValueObject vo = ValueObject.createList("string");
+		ValueObject vo = ValueObject.createList("string");
 		listener.startField("targets", vo);
 		if (null != definition.getTargets()) {
 			definition.getTargets().forEach(listener::onClassDescription);
 		}
+		listener.onFieldTerminate();
+		// triggers
+		vo = ValueObject.createList("trigger");
+		listener.startField("triggers", vo);
 		listener.onFieldTerminate();
 		LOG.debug("generateClassPolicyType end {}", className);
 		cache.add(className);

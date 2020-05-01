@@ -21,8 +21,10 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.NodeTemplate;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.ToscaContext;
@@ -65,7 +67,52 @@ public class ToscaApi {
 	 */
 	public <T> List<T> getObjects(final ToscaContext root, final Class<T> destination) {
 		final List<NodeTemplate> nodes = getNodeMatching(root, destination);
-		return mapToscaToClass(nodes, destination);
+		if (!nodes.isEmpty()) {
+			return mapToscaToClass(nodes, destination);
+		}
+		final List<GroupDefinition> groups = getGroupsMatching(root, destination);
+		if (!groups.isEmpty()) {
+			return mapGroupsToClass(groups, destination);
+		}
+		final List<PolicyDefinition> policies = getPoliciesMatching(root, destination);
+		if (!policies.isEmpty()) {
+			return mapPoliciesToClass(policies, destination);
+		}
+		return new ArrayList<>();
+	}
+
+	private static <T> List<PolicyDefinition> getPoliciesMatching(final ToscaContext root, final Class<T> destination) {
+		final Map<String, PolicyDefinition> policies = root.getPolicies();
+		if (null == policies) {
+			return new ArrayList<>();
+		}
+		final String clazzname = destination.getName();
+		return policies.entrySet()
+				.stream()
+				.filter(x -> root.isAssignableFor(x.getValue().getType(), clazzname))
+				.map(x -> {
+					final PolicyDefinition val = x.getValue();
+					val.setName(x.getKey());
+					return val;
+				})
+				.collect(Collectors.toList());
+	}
+
+	private static <T> List<GroupDefinition> getGroupsMatching(final ToscaContext root, final Class<T> destination) {
+		final Map<String, GroupDefinition> groups = root.getGroupDefinition();
+		if (null == groups) {
+			return new ArrayList<>();
+		}
+		final String clazzname = destination.getName();
+		return groups.entrySet()
+				.stream()
+				.filter(x -> root.isAssignableFor(x.getValue().getType(), clazzname))
+				.map(x -> {
+					final GroupDefinition val = x.getValue();
+					val.setName(x.getKey());
+					return val;
+				})
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -89,10 +136,77 @@ public class ToscaApi {
 					return val;
 				})
 				.collect(Collectors.toList());
+
+	}
+
+	private <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
+		return (List<T>) policies.stream().map(x -> handlePolicy(x, destination)).collect(Collectors.toList());
+	}
+
+	private <T> List<T> mapGroupsToClass(final List<GroupDefinition> groups, final Class<T> destination) {
+		return (List<T>) groups.stream().map(x -> handleGroup(x, destination)).collect(Collectors.toList());
 	}
 
 	private <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
 		return (List<T>) nodes.stream().map(x -> handleObject(x, destination)).collect(Collectors.toList());
+	}
+
+	private Object handlePolicy(final PolicyDefinition policy, final Class clazz) {
+		BeanInfo beanInfo;
+		try {
+			beanInfo = Introspector.getBeanInfo(clazz);
+		} catch (final IntrospectionException e) {
+			throw new ParseException(e);
+		}
+		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
+		LOG.debug("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
+		final Object cls = newInstance(clazz);
+		final Map<String, Object> props = policy.getProperties();
+		if (null != props) {
+			handleMap(props, clazz, propsDescr, cls, null);
+		}
+		// Fixed fields
+		setProperty2(cls, findReadMethod(propsDescr, "targets"), policy.getTargets());
+		setProperty2(cls, findReadMethod(propsDescr, "triggers"), policy.getTriggers());
+		// XXX it looks the same ?
+		final ToscaInernalBase tib = (ToscaInernalBase) cls;
+		tib.setInternalName(policy.getName());
+		tib.setInternalDescription(policy.getDescription());
+		setProperty(cls, "setName", policy.getName());
+		setProperty(cls, "setDescription", policy.getDescription());
+		return cls;
+	}
+
+	private Object handleGroup(final GroupDefinition group, final Class clazz) {
+		BeanInfo beanInfo;
+		try {
+			beanInfo = Introspector.getBeanInfo(clazz);
+		} catch (final IntrospectionException e) {
+			throw new ParseException(e);
+		}
+		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
+		LOG.debug("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
+		final Object cls = newInstance(clazz);
+		final Map<String, Object> props = group.getProperties();
+		if (null != props) {
+			handleMap(props, clazz, propsDescr, cls, null);
+		}
+		// Fixed fields
+		setProperty2(cls, findReadMethod(propsDescr, "members"), group.getMembers());
+		// XXX it looks the same ?
+		final ToscaInernalBase tib = (ToscaInernalBase) cls;
+		tib.setInternalName(group.getName());
+		tib.setInternalDescription(group.getDescription());
+		setProperty(cls, "setName", group.getName());
+		setProperty(cls, "setDescription", group.getDescription());
+		return cls;
+	}
+
+	private static Method findReadMethod(final PropertyDescriptor[] propsDescr, final String string) {
+		return Arrays.stream(propsDescr)
+				.filter(x -> x.getName().equals(string))
+				.map(x -> x.getWriteMethod())
+				.findFirst().orElseThrow(() -> new ParseException("Method: " + string + " doesn't have a write method."));
 	}
 
 	private Object handleObject(final NodeTemplate node, final Class clazz) {
@@ -128,10 +242,18 @@ public class ToscaApi {
 		return cls;
 	}
 
-	private static void setProperty(final Object cls, final String methodName, final String name) {
+	private static void setProperty2(final Object cls, final Method write, final Object value) {
+		try {
+			write.invoke(cls, value);
+		} catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			LOG.trace("", e);
+		}
+	}
+
+	private static void setProperty(final Object cls, final String methodName, final String value) {
 		try {
 			final Method meth = cls.getClass().getMethod(methodName, String.class);
-			meth.invoke(cls, name);
+			meth.invoke(cls, value);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			LOG.trace("", e);
 		}
