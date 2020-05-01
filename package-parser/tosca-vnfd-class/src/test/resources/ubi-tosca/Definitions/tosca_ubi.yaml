@@ -46,18 +46,21 @@ topology_template:
             algorithm: SHA-256
           container_format: BARE
           disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
+          min_disk: 6 GiB
+          min_ram: 2 GiB
           operating_system: centos8
         monitoring_parameters:
           - name: metric name
             performance_metric: v_cpu_usage_mean_vnf
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 2
       capabilities:
         virtual_compute:
           properties:
             virtual_memory:
               properties:
-                virtual_mem_size: 2 GB
+                virtual_mem_size: 2 GiB
             virtual_cpu:
               properties:
                 cpu_architecture: x86_64
@@ -85,7 +88,7 @@ topology_template:
           properties:
             virtual_memory:
               properties:
-                virtual_mem_size: 2 GB
+                virtual_mem_size: 2 GiB
             virtual_cpu:
               properties:
                 cpu_architecture: x86_64
@@ -137,25 +140,28 @@ topology_template:
             leaf: 16
           virtual_link_protocol_data:
             - l2_protocol_data:
-                name:
+                name: vl01L2
                 vlan_transparent: true
-                network_type: ntype
+                network_type: VXLAN
                 mtu: 1500
               l3_protocol_data:
                 dhcp_enabled: true
-                cidr: 
-                gateway_ip:
+                cidr: 192.168.0.0/24
+                gateway_ip: 192.168.0.12
+                ip_version: V4
+                name: vl01L3
+                ipv6_address_mode: anycast
                 ip_allocation_pools:
                   - start_ip_address: 192.168.0.100
                     end_ip_address: 192.168.0.254
               associated_layer_protocol: ipv4
-              
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
       requirements:
-        - virtual_storage: block01
+        - virtual_storage: 
+            node: block01
 
     middleVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
@@ -177,7 +183,23 @@ topology_template:
             latency: 5 ms
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
-
+          virtual_link_protocol_data:
+            - l2_protocol_data:
+                name: vl01L2
+                vlan_transparent: true
+                network_type: VXLAN
+                mtu: 1500
+              l3_protocol_data:
+                dhcp_enabled: true
+                cidr: 192.168.10.0/24
+                gateway_ip: 192.168.10.12
+                ip_version: V4
+                name: vl01L3
+                ipv6_address_mode: anycast
+                ip_allocation_pools:
+                  - start_ip_address: 192.168.10.100
+                    end_ip_address: 192.168.10.254
+              associated_layer_protocol: ipv4
 
     rightVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
@@ -199,6 +221,23 @@ topology_template:
             latency: 5 ms
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
+          virtual_link_protocol_data:
+            - l2_protocol_data:
+                name: vl01L2
+                vlan_transparent: true
+                network_type: VXLAN
+                mtu: 1500
+              l3_protocol_data:
+                dhcp_enabled: true
+                cidr: 192.168.20.0/24
+                gateway_ip: 192.168.20.17
+                ip_version: V4
+                name: vl01L3
+                ipv6_address_mode: anycast
+                ip_allocation_pools:
+                  - start_ip_address: 192.168.20.100
+                    end_ip_address: 192.168.20.254
+              associated_layer_protocol: ipv4
 
     cpLc01:
       type: tosca.nodes.nfv.VduCp
@@ -255,3 +294,47 @@ topology_template:
             node: middleVl01
         - virtual_binding:
             node: rightVdu01
+
+
+
+groups:
+  server_group_1:
+    type: tosca.groups.nfv.PlacementGroup
+    members: [ server1, server2 ]
+    properties:
+      description: My placement group.
+
+policies:
+  my_scaling_ha_policy:
+    type: tosca.policies.nfv.VduInstantiationLevels
+    description: My policy.
+    properties:
+      level:
+        s0:
+          number_of_instances: 1
+        s1:
+          number_of_instances: 2
+    targets:
+      - leftVdu01
+    triggers:
+      trigger_name:
+        description: Trigger desc.
+        event: eventName
+        schedule:
+          start_time: 12345
+          end_time: 54321
+          target_filter:
+            description: Trigger description.
+          condition:
+            - my_attribute: [{equal: my_value}]
+            - my_other_attribute: [{equal: my_other_value}]
+          action:
+            - delegate: myWorkflow
+
+
+
+
+
+
+
+
