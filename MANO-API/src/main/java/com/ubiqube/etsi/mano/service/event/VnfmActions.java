@@ -66,6 +66,8 @@ import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 @Service
 public class VnfmActions {
+	private static final String COULD_NOT_FIND_COMPUTE_RESOURCE = "Could not find compute resource: ";
+
 	private static final Logger LOG = LoggerFactory.getLogger(VnfmActions.class);
 
 	private final VnfInstancesRepository vnfInstancesRepository;
@@ -104,7 +106,7 @@ public class VnfmActions {
 		copyVnfPkgToInstance(vnfPkg, vnfInstance);
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 
-		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
+		VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
 		copyVnfPkgToLcm(vnfPkg, lcmOpOccs);
 		copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
 		vnfLcmOpOccsRepository.save(lcmOpOccs);
@@ -121,19 +123,21 @@ public class VnfmActions {
 		lcmOpOccs.setGrantId(grants.getId().toString());
 		// Save LCM
 		mergeInstanceGrants(vnfInstance, grants);
-		vnfInstancesRepository.save(vnfInstance);
+		vnfInstance = vnfInstancesRepository.save(vnfInstance);
+		lcmOpOccs = vnfLcmOpOccsRepository.get(lcmOpOccs.getId());
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grants.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance);
+		vnfInstance = vnfInstancesRepository.get(vnfInstance.getId());
 		final ExecutionResults<UnitOfWork, String> results = executor.exec(plan, vimConnection, vim);
 		if (results.getErrored().isEmpty()) {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
 			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
-			vnfInstancesRepository.save(vnfInstance);
+			vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		} else {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
@@ -164,21 +168,21 @@ public class VnfmActions {
 		return affectedVirtualStorages.stream()
 				.filter(x -> x.getVirtualStorageDescId().compareTo(id) == 0)
 				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find compute resource: " + id));
+				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
 	private static AffectedVl findLcmOpOccsVl(final Set<AffectedVl> affectedVirtualLinks, final UUID id) {
 		return affectedVirtualLinks.stream()
 				.filter(x -> x.getVirtualLinkDescId().compareTo(id) == 0)
 				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find compute resource: " + id));
+				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
 	private static AffectedCompute findLcmOpOccsCompute(final Set<AffectedCompute> affectedVnfcs, final UUID id) {
 		return affectedVnfcs.stream()
 				.filter(x -> x.getVduId().compareTo(id) == 0)
 				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find compute resource: " + id));
+				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
 	private static void copyVnfPkgToInstance(final VnfPackage vnfPkg, final VnfInstance vnfInstance) {
@@ -280,7 +284,12 @@ public class VnfmActions {
 
 		final Optional<VnfInstantiedCompute> resCompute = vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().stream().filter(x -> 0 == x.getVduId().compareTo(grantInformation.getVduId())).findFirst();
 		if (resCompute.isPresent()) {
-			resCompute.get().setComputeResource(grantInformation);
+			final VnfInstantiedCompute res = resCompute.get();
+			res.setComputeResource(grantInformation);
+			res.getCompResource().setResourceProviderId(grantInformation.getResourceProviderId());
+			final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
+			vimConnectionInformation.setId(UUID.fromString(grantInformation.getVimConnectionId()));
+			res.getCompResource().setVimConnectionInformation(vimConnectionInformation);
 			return;
 		}
 		LOG.warn("Unable to find resource: {}", grantInformation.getVduId());
