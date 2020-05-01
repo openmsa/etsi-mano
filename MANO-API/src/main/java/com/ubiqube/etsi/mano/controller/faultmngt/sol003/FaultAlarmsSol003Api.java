@@ -4,13 +4,15 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:03:26.781+02:00")
 
-@Controller
+@RestController
+@RequestMapping("/sol003/vnffm/v1")
 public class FaultAlarmsSol003Api implements FaultAlarmsSol003 {
 
 	private final ObjectMapper objectMapper;
