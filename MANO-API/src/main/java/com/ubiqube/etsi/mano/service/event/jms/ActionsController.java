@@ -49,6 +49,9 @@ public class ActionsController {
 		case VNF_INSTANTIATE:
 			vnfmActions.vnfInstantiate(ev.getObjectId());
 			break;
+		case VNF_TERMINATE:
+			vnfmActions.vnfTerminate(ev.getObjectId());
+			break;
 		case NS_INSTANTIATE:
 			nfvoActions.nsInstantiate(ev.getObjectId());
 			break;

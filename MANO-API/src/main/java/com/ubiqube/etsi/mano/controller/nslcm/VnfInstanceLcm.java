@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
@@ -131,15 +130,7 @@ public class VnfInstanceLcm {
 		ensureInstantiated(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
 
-		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
-		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-
-		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
-		final Map<String, String> userData = vnfPkg.getUserDefinedData();
-		final String processId = ""; // vim.onVnfInstanceTerminate(userData);
-		userData.put("msaTerminateServiceId", processId);
-		addVnfOperation(processId, vnfInstanceId, NsLcmOpType.TERMINATE);
-		vnfInstancesRepository.save(vnfInstance);
+		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
 	}
 
 	private NsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final NsLcmOpType _lcmOperationType) {

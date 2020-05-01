@@ -410,4 +410,9 @@ public class VnfmActions {
 		resourceDefinition.setVduId(vnfCompute.getId().toString());
 		return resourceDefinition;
 	}
+
+	public void vnfTerminate(final String objectId) {
+		// TODO Auto-generated method stub
+
+	}
 }

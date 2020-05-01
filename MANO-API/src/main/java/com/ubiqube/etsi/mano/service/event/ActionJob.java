@@ -57,6 +57,9 @@ public class ActionJob extends QuartzJobBean {
 		case VNF_INSTANTIATE:
 			vnfmActions.vnfInstantiate(objectId);
 			break;
+		case VNF_TERMINATE:
+			vnfmActions.vnfTerminate(objectId);
+			break;
 		case NS_INSTANTIATE:
 			nfvoActions.nsInstantiate(objectId);
 			break;
