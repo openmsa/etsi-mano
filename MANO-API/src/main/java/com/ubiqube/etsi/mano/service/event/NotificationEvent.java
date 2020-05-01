@@ -13,6 +13,7 @@ public enum NotificationEvent {
 	VNF_PKG_ONCHANGE(String.valueOf("VNF_PKG_ONCHANGE")),
 	VNF_PKG_ONDELETION(String.valueOf("VNF_PKG_ONDELETION")),
 
+	VNF_INSTANCE_CREATE(String.valueOf("VNF_INSTANCE_CREATE")),
 	VNF_INSTANTIATE(String.valueOf("VNF_INSTANTIATE")),
 	VNF_SCALE(String.valueOf("VNF_SCALE")),
 	VNF_UPDATE(String.valueOf("VNF_UPDATE")),
