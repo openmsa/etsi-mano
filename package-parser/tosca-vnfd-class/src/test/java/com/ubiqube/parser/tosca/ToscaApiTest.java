@@ -53,7 +53,7 @@ public class ToscaApiTest {
 
 	@Test
 	public void testUbiCsar() throws Exception {
-		final ToscaParser tp = new ToscaParser("/home/olivier/eclipse-workspace/package-parser/src/test/resources/ubi-tosca.csar");
+		final ToscaParser tp = new ToscaParser("src/test/resources/ubi-tosca.csar");
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.vdu.Compute.class);
