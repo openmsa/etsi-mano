@@ -1,19 +1,18 @@
 package com.ubiqube.parser.tosca;
 
 import java.util.List;
-import java.util.Map;
 
 public class PolicyType extends ToscaBaseEntity {
-	private Map<String, Object> properties;
+	private ToscaProperties properties;
 	private List<String> targets;
 	// Map of Triggers definitions.
 	private Object triggers;
 
-	public Map<String, Object> getProperties() {
+	public ToscaProperties getProperties() {
 		return properties;
 	}
 
-	public void setProperties(final Map<String, Object> properties) {
+	public void setProperties(final ToscaProperties properties) {
 		this.properties = properties;
 	}
 

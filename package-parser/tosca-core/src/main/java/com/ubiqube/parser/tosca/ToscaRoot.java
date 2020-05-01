@@ -17,7 +17,9 @@ public class ToscaRoot {
 	private Map<String, InterfaceDefinition> interface_types;
 	private Map<String, DataType> data_types;
 	private Map<String, PolicyType> policy_types;
+	private Map<String, PolicyDefinition> policies;
 	private Map<String, GroupType> group_types;
+	private Map<String, GroupDefinition> groups;
 	private Map<String, String> metadata;
 
 	public Imports getImports() {
@@ -128,6 +130,22 @@ public class ToscaRoot {
 
 	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public Map<String, GroupDefinition> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(final Map<String, GroupDefinition> groups) {
+		this.groups = groups;
+	}
+
+	public Map<String, PolicyDefinition> getPolicies() {
+		return policies;
+	}
+
+	public void setPolicies(final Map<String, PolicyDefinition> policies) {
+		this.policies = policies;
 	}
 
 	@Override

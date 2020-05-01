@@ -20,11 +20,18 @@ public class ToscaContext {
 	private Map<String, RelationshipType> relationship = new HashMap<>();
 	private Map<String, ToscaClass> artifacts = new HashMap<>();
 	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
+	private Map<String, GroupType> groupType = new HashMap<>();
 	// Below goes internal Properties.
 	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
 	private final IResolver resolver;
 
 	private Map<String, DataType> dataTypes = new HashMap<>();
+
+	private Map<String, GroupDefinition> groupDefinition = new HashMap<>();
+
+	private Map<String, PolicyType> policiesType = new HashMap<>();
+
+	private Map<String, PolicyDefinition> policies = new HashMap<>();
 
 	public ToscaContext(final ToscaRoot root, final IResolver _resolver) {
 
@@ -37,6 +44,10 @@ public class ToscaContext {
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
 		dataTypes = root.getData_types();
+		groupType = root.getGroup_types();
+		groupDefinition = root.getGroups();
+		policiesType = root.getPolicy_types();
+		policies = root.getPolicies();
 		resolver = _resolver;
 	}
 
@@ -108,6 +119,22 @@ public class ToscaContext {
 		return dataTypes;
 	}
 
+	public Map<String, GroupType> getGroupType() {
+		return groupType;
+	}
+
+	public Map<String, GroupDefinition> getGroupDefinition() {
+		return groupDefinition;
+	}
+
+	public Map<String, PolicyType> getPoliciesType() {
+		return policiesType;
+	}
+
+	public Map<String, PolicyDefinition> getPolicies() {
+		return policies;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -174,6 +201,20 @@ public class ToscaContext {
 		mergeHash(nodeType, context.getNodeType());
 		// mergeHash(relationship, context.getRelationship());
 		// topologies.merge(context.getTopologies());
+		// group
+		if (null != context.getGroupDefinition()) {
+			groupDefinition.putAll(context.getGroupDefinition());
+		}
+		if (null != context.getGroupType()) {
+			groupType.putAll(context.getGroupType());
+		}
+		// policy
+		if (null != context.getPolicies()) {
+			policies.putAll(context.getPolicies());
+		}
+		if (null != context.getPoliciesType()) {
+			policiesType.putAll(context.getPoliciesType());
+		}
 	}
 
 	private static void mergeHash(final Map<String, ToscaClass> dst, final Map<String, ToscaClass> src) {
@@ -299,6 +340,35 @@ public class ToscaContext {
 			}
 		}
 
+		if (null != root2.getGroups()) {
+			if (null == groupDefinition) {
+				groupDefinition = root2.getGroups();
+			} else {
+				groupDefinition.putAll(root2.getGroups());
+			}
+		}
+		if (null != root2.getGroup_types()) {
+			if (null == groupType) {
+				groupType = root2.getGroup_types();
+			} else {
+				groupType.putAll(root2.getGroup_types());
+			}
+		}
+
+		if (null != root2.getPolicies()) {
+			if (null == policies) {
+				policies = root2.getPolicies();
+			} else {
+				policies.putAll(root2.getPolicies());
+			}
+		}
+		if (null != root2.getPolicy_types()) {
+			if (null == policiesType) {
+				policiesType = root2.getPolicy_types();
+			} else {
+				policiesType.putAll(root2.getPolicy_types());
+			}
+		}
 	}
 
 	public boolean isAssignableFor(final String source, final String clazz) {

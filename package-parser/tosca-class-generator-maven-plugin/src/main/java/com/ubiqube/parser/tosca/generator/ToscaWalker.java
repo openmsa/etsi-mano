@@ -16,7 +16,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.parser.tosca.CapabilityDefinition;
 import com.ubiqube.parser.tosca.CapabilityTypes;
 import com.ubiqube.parser.tosca.DataType;
+import com.ubiqube.parser.tosca.GroupType;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.PolicyType;
 import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.ToscaClass;
@@ -24,6 +26,7 @@ import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.ValueObject;
 import com.ubiqube.parser.tosca.annotations.Capability;
+import com.ubiqube.parser.tosca.annotations.Members;
 import com.ubiqube.parser.tosca.annotations.Node;
 import com.ubiqube.parser.tosca.annotations.Relationship;
 import com.ubiqube.parser.tosca.constraints.Constraint;
@@ -79,7 +82,56 @@ public class ToscaWalker {
 			generateToscaClass(entry.getKey(), entry.getValue(), listener);
 		}
 
+		final Set<Entry<String, GroupType>> groups = root.getGroupType().entrySet();
+		for (final Entry<String, GroupType> entry : groups) {
+			if (cache.contains(entry.getKey())) {
+				continue;
+			}
+			generateGroupType(entry.getKey(), entry.getValue(), listener);
+		}
+		final Set<Entry<String, PolicyType>> policies = root.getPoliciesType().entrySet();
+		for (final Entry<String, PolicyType> entry : policies) {
+			if (cache.contains(entry.getKey())) {
+				continue;
+			}
+			generatePolicyType(entry.getKey(), entry.getValue(), listener);
+		}
 		listener.terminateDocument();
+	}
+
+	private void generatePolicyType(final String className, final PolicyType definition, final ToscaListener listener) {
+		LOG.debug("generateClassPolicyType class={}", className);
+		startClass(className, definition.getDerivedFrom(), listener);
+		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
+		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
+		// add members
+		final ValueObject vo = ValueObject.createList("string");
+		listener.startField("targets", vo);
+		if (null != definition.getTargets()) {
+			definition.getTargets().forEach(listener::onClassDescription);
+		}
+		listener.onFieldTerminate();
+		LOG.debug("generateClassPolicyType end {}", className);
+		cache.add(className);
+		listener.terminateClass();
+	}
+
+	private void generateGroupType(final String className, final GroupType definition, final ToscaListener listener) {
+		LOG.debug("generateClassGroupType class={}", className);
+		startClass(className, definition.getDerivedFrom(), listener);
+		Optional.ofNullable(definition.getAttributes()).ifPresent(x -> generateFields(listener, x));
+		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
+		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
+		// add members
+		final ValueObject vo = ValueObject.createList("string");
+		listener.startField("members", vo);
+		if (null != definition.getMembers()) {
+			definition.getMembers().forEach(x -> listener.onFieldAnnotate(Members.class, x));
+		}
+		listener.onFieldTerminate();
+		LOG.debug("generateClassGroupType end {}", className);
+		cache.add(className);
+		listener.terminateClass();
 	}
 
 	private void generateClassFromDataType(final String className, final DataType definition, final ToscaListener listener) {
@@ -87,9 +139,7 @@ public class ToscaWalker {
 		startClass(className, definition.getDerivedFrom(), listener);
 
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
-		if (definition.getDescription() != null) {
-			listener.onClassDescription(definition.getDescription());
-		}
+		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		LOG.debug("generateClassFromDataType end {}", className);
 		cache.add(className);
 		listener.terminateClass();
@@ -101,9 +151,7 @@ public class ToscaWalker {
 
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		cache.add(className);
-		if (definition.getDescription() != null) {
-			listener.onClassDescription(definition.getDescription());
-		}
+		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		listener.terminateClass();
 		LOG.debug("generateClass end {}", className);
 	}
@@ -111,17 +159,11 @@ public class ToscaWalker {
 	private void generateToscaClass(final String className, final ToscaClass toscaClass, final ToscaListener listener) {
 		LOG.info("generate class: {}", className);
 		startClass(className, toscaClass.getDerivedFrom(), listener);
-
 		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
-
 		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(listener, x));
-
 		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(listener, x));
-
 		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(listener, x));
-		if (toscaClass.getDescription() != null) {
-			listener.onClassDescription(toscaClass.getDescription());
-		}
+		Optional.ofNullable(toscaClass.getDescription()).ifPresent(listener::onClassDescription);
 		LOG.debug("Caching {}", className);
 		cache.add(className);
 		listener.terminateClass();
@@ -172,7 +214,7 @@ public class ToscaWalker {
 		}
 	}
 
-	private boolean isContainer(final String type) {
+	private static boolean isContainer(final String type) {
 		return "list".equals(type) || "map".equals(type);
 	}
 
