@@ -71,7 +71,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest);
 		vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
-		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
+		return ResponseEntity.accepted().header("Location", vnfInstance.getLinks().getSelf().getHref()).build();
 	}
 
 	@Override
