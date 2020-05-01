@@ -1,9 +1,13 @@
 package com.ubiqube.etsi.mano.dao.mano.common;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Checksum {
+public class Checksum implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private String algorithm;
 	private String hash;
 

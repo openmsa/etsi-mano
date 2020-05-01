@@ -1,6 +1,6 @@
 {
-  "vnfInstanceId": "string",
-  "vnfLcmOpOccId": "string",
+  "vnfInstanceId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
+  "vnfLcmOpOccId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
   "vnfdId": "string",
   "flavourId": "string",
   "operation": "INSTANTIATE",
@@ -8,26 +8,26 @@
   "instantiationLevelId": "string",
   "addResources": [
     {
-      "id": "string",
+      "id": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "type": "COMPUTE",
-      "vduId": "string",
-      "resourceTemplateId": "string",
+      "vduId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
+      "resourceTemplateId": "stringb",
       "resource": {
-        "vimConnectionId": "string",
-        "resourceProviderId": "string",
-        "resourceId": "string",
-        "vimLevelResourceType": "string"
+        "vimConnectionId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
+        "resourceProviderId": "stringc",
+        "resourceId": "stringd",
+        "vimLevelResourceType": "stringe"
       }
     }
   ],
   "tempResources": [
     {
-      "id": "string",
+      "id": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "type": "COMPUTE",
-      "vduId": "string",
+      "vduId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "resourceTemplateId": "string",
       "resource": {
-        "vimConnectionId": "string",
+        "vimConnectionId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
         "resourceProviderId": "string",
         "resourceId": "string",
         "vimLevelResourceType": "string"
@@ -36,12 +36,12 @@
   ],
   "removeResources": [
     {
-      "id": "string",
+      "id": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "type": "COMPUTE",
-      "vduId": "string",
+      "vduId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "resourceTemplateId": "string",
       "resource": {
-        "vimConnectionId": "string",
+        "vimConnectionId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
         "resourceProviderId": "string",
         "resourceId": "string",
         "vimLevelResourceType": "string"
@@ -50,12 +50,12 @@
   ],
   "updateResources": [
     {
-      "id": "string",
+      "id": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "type": "COMPUTE",
-      "vduId": "string",
+      "vduId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
       "resourceTemplateId": "string",
       "resource": {
-        "vimConnectionId": "string",
+        "vimConnectionId": "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad",
         "resourceProviderId": "string",
         "resourceId": "string",
         "vimLevelResourceType": "string"

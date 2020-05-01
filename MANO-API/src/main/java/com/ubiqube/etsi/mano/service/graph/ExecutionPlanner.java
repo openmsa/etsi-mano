@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -141,11 +140,6 @@ public class ExecutionPlanner {
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
 		vnfPackageRepository.storeBinary(_id.toString(), "plan-" + vnfInstance.getId() + ".dot", _stream);
-	}
-
-	private static void dumpPlan(final List<UnitOfWork> ret) {
-		LOG.info("Dumping plan:");
-		ret.forEach(x -> LOG.info("\t{}", x.getName()));
 	}
 
 	private static String makeUowMonitoringName(final VnfCompute x) {

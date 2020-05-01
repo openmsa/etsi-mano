@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +16,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerDocumentationConfig {
-
-	private static final Logger LOG = LoggerFactory.getLogger(SwaggerDocumentationConfig.class);
 	@Value("${server.servlet.contextPath}")
 	private String contextPath;
 

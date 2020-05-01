@@ -91,7 +91,7 @@ public class VnfPkgTest {
 
 	@Test
 	void testVnfPackageDeleteNonDisabled() throws Exception {
-		final String vnfPkgId = "aaa";
+		final String vnfPkgId = "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad";
 		final VnfPackage value = objectMapper.readValue(new File("src/test/resources/VnfPkgInfo.json"), VnfPackage.class);
 		when(vnfPackageRepository.get(UUID.fromString(vnfPkgId))).thenReturn(value);
 
@@ -109,7 +109,7 @@ public class VnfPkgTest {
 
 	@Test
 	void testVnfPackageDeleteDisabled() throws Exception {
-		final String vnfPkgId = "aaa";
+		final String vnfPkgId = "d03233e2-2efc-4c4b-a3c1-02c8efbce2ad";
 		final VnfPackage value = objectMapper.readValue(new File("src/test/resources/VnfPkgInfo-disabled.json"), VnfPackage.class);
 		when(vnfPackageRepository.get(UUID.fromString(vnfPkgId))).thenReturn(value);
 

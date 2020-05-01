@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.persistence.Transient;
 
 import com.ubiqube.etsi.mano.dao.mano.InstanciatedResource;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
@@ -26,6 +27,7 @@ public class UowDelegate implements UnitOfWork {
 	private final UnitOfWork delegate;
 
 	protected final InstanciatedResource instanciatedResource;
+	@Transient
 	private final InstanciatedResourceJpa instanciatedResourceJpa;
 
 	public UowDelegate(@Nonnull final InstanciatedResource _instanciatedResource, final InstanciatedResourceJpa _instanciatedResourceJpa, @Nonnull final UnitOfWork _uow) {
