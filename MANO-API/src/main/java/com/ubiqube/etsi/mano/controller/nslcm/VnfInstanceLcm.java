@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -83,19 +84,17 @@ public class VnfInstanceLcm {
 		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(UUID.fromString(vnfId));
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
-		final VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
-		// XXX Setup instanciated resources.
+		VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
 		vnfPkgInfo.getVnfCompute().forEach(x -> {
 			final VnfcResourceInfo vnfcResourceInfoItem = new VnfcResourceInfo();
 			vnfcResourceInfoItem.setVduId(x.getId().toString());
-			// vnfInstance.getInstantiatedVnfInfo().addVnfcResourceInfoItem(vnfcResourceInfoItem);
 		});
 		vnfPkgInfo.getVnfVl().forEach(x -> {
 			final VnfVirtualLinkResourceInfo virtualLinkResourceInfoItem = new VnfVirtualLinkResourceInfo();
-//			vnfInstance.getInstantiatedVnfInfo().addVirtualLinkResourceInfoItem(virtualLinkResourceInfoItem);
 		});
 		// VnfIdentifierCreationNotification NFVO + EM
-		vnfInstancesRepository.save(vnfInstance);
+		vnfInstance = vnfInstancesRepository.save(vnfInstance);
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CREATE, vnfInstance.getId().toString());
 		return mapper.map(vnfInstance, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
 	}
 
