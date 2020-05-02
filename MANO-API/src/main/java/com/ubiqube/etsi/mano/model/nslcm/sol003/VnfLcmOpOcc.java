@@ -15,11 +15,11 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
 import com.ubiqube.etsi.mano.model.nslcm.ExtVirtualLinkInfo;
@@ -60,7 +60,7 @@ public class VnfLcmOpOcc {
 	private Boolean isAutomaticInvocation = null;
 
 	@JsonProperty("operationParams")
-	private KeyValuePairs operationParams = null;
+	private Map<String, String> operationParams = null;
 
 	@JsonProperty("isCancelPending")
 	private Boolean isCancelPending = null;
@@ -255,7 +255,7 @@ public class VnfLcmOpOcc {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
-	public VnfLcmOpOcc operationParams(final KeyValuePairs operationParams) {
+	public VnfLcmOpOcc operationParams(final Map<String, String> operationParams) {
 		this.operationParams = operationParams;
 		return this;
 	}
@@ -275,11 +275,11 @@ public class VnfLcmOpOcc {
 	@JsonProperty("operationParams")
 	@ApiModelProperty(required = true, value = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE: TerminateVnfRequest * MODIFY_INFO: VnfInfoModificationRequest ")
 	@NotNull
-	public KeyValuePairs getOperationParams() {
+	public Map<String, String> getOperationParams() {
 		return operationParams;
 	}
 
-	public void setOperationParams(final KeyValuePairs operationParams) {
+	public void setOperationParams(final Map<String, String> operationParams) {
 		this.operationParams = operationParams;
 	}
 

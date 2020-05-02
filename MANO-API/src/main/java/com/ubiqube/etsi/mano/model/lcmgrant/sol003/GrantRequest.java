@@ -204,11 +204,11 @@ public class GrantRequest {
 	@ApiModelProperty(required = true, value = "Set to true if this VNF LCM operation occurrence has been triggered by an automated procedure inside the VNFM (i.e. ScaleVnf / ScaleVnfToLevel triggered by auto-scale, or HealVnf triggered by auto-heal). Set to false otherwise. ")
 	@NotNull
 
-	public Boolean isIsAutomaticInvocation() {
+	public Boolean isAutomaticInvocation() {
 		return isAutomaticInvocation;
 	}
 
-	public void setIsAutomaticInvocation(final Boolean isAutomaticInvocation) {
+	public void setAutomaticInvocation(final Boolean isAutomaticInvocation) {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 

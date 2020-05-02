@@ -25,14 +25,19 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class VnfPackageTest {
 	private final DefaultMapperFactory mapperFactory;
+	private final PodamFactoryImpl podam;
 
 	public VnfPackageTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+
+		podam = new PodamFactoryImpl();
+		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 	}
 
 	@Test
@@ -107,6 +112,6 @@ public class VnfPackageTest {
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfDao, VnfPkgInfo.class);
 		final List<VnfPackageSoftwareImageInfo> swImages = vnfPkgInfo.getSoftwareImages();
 		assertEquals(2, swImages.size());
-
 	}
+
 }

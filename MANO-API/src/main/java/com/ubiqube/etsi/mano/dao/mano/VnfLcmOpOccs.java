@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -15,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -23,10 +21,8 @@ import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.ExtVirtualLinkInfo;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInfoModifications;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -74,11 +70,10 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	@Embedded
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
 
-	@Transient
-	private VnfInfoModifications changedInfo = null;
+	// private VnfInfoModifications changedInfo = null;
 
-	@Transient
-	private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
+	// @Transient
+	// private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
 
 	private Audit audit;
 
@@ -177,22 +172,6 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	public void setResourceChanges(final VnfLcmResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
-	}
-
-	public VnfInfoModifications getChangedInfo() {
-		return changedInfo;
-	}
-
-	public void setChangedInfo(final VnfInfoModifications changedInfo) {
-		this.changedInfo = changedInfo;
-	}
-
-	public List<ExtVirtualLinkInfo> getChangedExtConnectivity() {
-		return changedExtConnectivity;
-	}
-
-	public void setChangedExtConnectivity(final List<ExtVirtualLinkInfo> changedExtConnectivity) {
-		this.changedExtConnectivity = changedExtConnectivity;
 	}
 
 	public String getExternalProcessId() {

@@ -364,7 +364,7 @@ public class VnfmActions {
 		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
 		grant.setVnfdId(vnfInstance.getVnfdId());
 		grant.setFlavourId(vnfPackage.getFlavorId());
-		grant.setIsAutomaticInvocation(Boolean.FALSE);
+		grant.setAutomaticInvocation(Boolean.FALSE);
 		grant.setOperation(GrantedLcmOperationType.INSTANTIATE);
 		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
 		grant.setInstantiationLevelId("0");
@@ -448,7 +448,7 @@ public class VnfmActions {
 		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
 		grant.setVnfdId(vnfInstance.getVnfdId());
 		grant.setFlavourId(vnfPackage.getFlavorId());
-		grant.setIsAutomaticInvocation(Boolean.FALSE);
+		grant.setAutomaticInvocation(Boolean.FALSE);
 		grant.setOperation(GrantedLcmOperationType.TERMINATE);
 		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
 		grant.setInstantiationLevelId("0");
