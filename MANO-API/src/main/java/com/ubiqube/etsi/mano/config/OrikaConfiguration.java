@@ -10,11 +10,15 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
+import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -158,7 +162,34 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vimConnectionId", "vimConnectionInformation.id")
 				.byDefault()
 				.register();
-
+		orikaMapperFactory.classMap(VnfPackage.class, VnfInstance.class)
+				.exclude("audit")
+				.exclude("id")
+				.field("id", "vnfPkg.id")
+				.field("vnfCompute", "instantiatedVnfInfo.vnfcResourceInfo")
+				.field("vnfVl", "instantiatedVnfInfo.virtualLinkResourceInfo")
+				.field("vnfStorage", "instantiatedVnfInfo.virtualStorageResourceInfo")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiedCompute.class)
+				.field("id", "vduId")
+				.field("id", "compResource.vduId")
+				.field("id", "computeResource.vduId")
+				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
+				.field("storages", "storageResourceIds")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfVl.class, VirtualLinkInfo.class)
+				.field("id", "vnfVirtualLinkDescId")
+				.field("id", "networkResource.vduId")
+				.field("id", "grantInformation.vduId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfStorage.class, VirtualStorageInfo.class)
+				.field("id", "storageResource.vduId")
+				.field("id", "virtualStorageDescId")
+				.byDefault()
+				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());
 		converterFactory.registerConverter(new OffsetDateTimeToDateConverter());

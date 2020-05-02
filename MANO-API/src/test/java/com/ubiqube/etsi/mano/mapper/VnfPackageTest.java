@@ -16,6 +16,7 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
@@ -114,4 +115,15 @@ public class VnfPackageTest {
 		assertEquals(2, swImages.size());
 	}
 
+	@Test
+	void testVnfPackage2VnfInstance() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);
+		final VnfInstance avc = mapper.map(avcDb, VnfInstance.class);
+		assertEquals(avcDb.getVnfdVersion(), avc.getVnfdVersion());
+		assertEquals(avcDb.getId(), avc.getVnfPkg().getId());
+		assertEquals(avcDb.getVnfProductName(), avc.getVnfProductName());
+		assertEquals(avcDb.getVnfProvider(), avc.getVnfProvider());
+		assertEquals(avcDb.getVnfSoftwareVersion(), avc.getVnfSoftwareVersion());
+	}
 }
