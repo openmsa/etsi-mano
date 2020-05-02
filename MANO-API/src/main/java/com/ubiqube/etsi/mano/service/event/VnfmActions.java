@@ -8,7 +8,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
 import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
@@ -52,9 +51,6 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
@@ -63,7 +59,6 @@ import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -330,34 +325,6 @@ public class VnfmActions {
 		return grants;
 	}
 
-	private VimStatus spawnVdu(final GrantInformation grantInformation, final VnfPackage vnfPackage, final VnfInstance vnfInstance, @NotNull final VnfLcmOpOccs lcmOpOccs) {
-		final Vim vim = vimManager.getVimById(UUID.fromString(grantInformation.getVimConnectionId()));
-		final String processId = vim.onVnfInstantiate(grantInformation, vnfPackage);
-		LOG.info("New VDU VNF Create job: {}", processId);
-		vnfInstance.setProcessId(processId);
-		vnfInstancesRepository.save(vnfInstance);
-		final VimStatus status = vim.waitForCompletion(processId, 1 * 60);
-		vnfLcmOpOccsRepository.updateState(lcmOpOccs, status.getLcmOperationStateType());
-
-		if (status.getLcmOperationStateType() == LcmOperationStateType.COMPLETED) {
-			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
-			vnfPackage.setUsageState(PackageUsageStateType.IN_USE);
-			final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
-			instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);
-			// XXX vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
-			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
-		} else {
-			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-			lcmOpOccs.setError(status.getProblemDetails());
-			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
-
-		}
-		vnfInstancesRepository.save(vnfInstance);
-		vnfPackageRepository.save(vnfPackage);
-		LOG.debug("VDU Done {}", status.getLcmOperationStateType());
-		return status;
-	}
-
 	private static GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage) {
 		final GrantRequest grant = new GrantRequest();
 		grant.setVnfInstanceId(vnfInstance.getId().toString());
@@ -454,6 +421,7 @@ public class VnfmActions {
 		grant.setInstantiationLevelId("0");
 
 		final VnfInstantiatedInfo instantiated = vnfInstance.getInstantiatedVnfInfo();
+
 		final List<ResourceDefinition> virtualCompute = instantiated.getVnfcResourceInfo().stream()
 				.map(x -> {
 					final ResourceDefinition resourceDefinition = new ResourceDefinition();
@@ -463,6 +431,8 @@ public class VnfmActions {
 					return resourceDefinition;
 				})
 				.collect(Collectors.toList());
+		final List<ResourceDefinition> res = new ArrayList<>(virtualCompute);
+
 		final List<ResourceDefinition> vitualLink = instantiated.getVirtualLinkResourceInfo().stream()
 				.map(x -> {
 					final ResourceDefinition resourceDefinition = new ResourceDefinition();
@@ -472,6 +442,8 @@ public class VnfmActions {
 					return resourceDefinition;
 				})
 				.collect(Collectors.toList());
+		res.addAll(vitualLink);
+
 		final List<ResourceDefinition> virtualStorage = instantiated.getVirtualStorageResourceInfo().stream()
 				.map(x -> {
 					final ResourceDefinition resourceDefinition = new ResourceDefinition();
@@ -481,9 +453,8 @@ public class VnfmActions {
 					return resourceDefinition;
 				})
 				.collect(Collectors.toList());
-		final List<ResourceDefinition> res = new ArrayList<>(virtualCompute);
-		res.addAll(vitualLink);
 		res.addAll(virtualStorage);
+
 		grant.setRemoveResources(res);
 
 		return grant;
