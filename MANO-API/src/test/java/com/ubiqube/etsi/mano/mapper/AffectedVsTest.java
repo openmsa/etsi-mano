@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualStorage;
 
 import ma.glasnost.orika.MapperFacade;
@@ -44,6 +45,7 @@ public class AffectedVsTest {
 	void testDaoToJson() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final AffectedVs avsDb = podam.manufacturePojo(AffectedVs.class);
+		avsDb.setChangeType(ChangeType.ADDED);
 		final AffectedVirtualStorage avs = mapper.map(avsDb, AffectedVirtualStorage.class);
 		assertEquals(avs.getChangeType().toString(), avsDb.getChangeType().toString());
 		assertEquals(avs.getId(), avsDb.getId().toString());
