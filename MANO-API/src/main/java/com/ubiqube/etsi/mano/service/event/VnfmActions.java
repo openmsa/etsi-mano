@@ -44,6 +44,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
+import com.ubiqube.etsi.mano.model.ResourceHandle;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
@@ -64,6 +65,8 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
+import ma.glasnost.orika.MapperFacade;
+
 @Service
 public class VnfmActions {
 	private static final String COULD_NOT_FIND_COMPUTE_RESOURCE = "Could not find compute resource: ";
@@ -83,9 +86,12 @@ public class VnfmActions {
 	private final GrantManagement grantManagement;
 
 	private final ExecutionPlanner executionPlanner;
+
 	private final PlanExecutor executor;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final GrantManagement _grantManagement, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor) {
+	private final MapperFacade mapper;
+
+	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final GrantManagement _grantManagement, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final MapperFacade _mapper) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vimManager = _vimManager;
@@ -95,6 +101,7 @@ public class VnfmActions {
 		grantManagement = _grantManagement;
 		executionPlanner = _executionPlanner;
 		executor = _executor;
+		mapper = _mapper;
 	}
 
 	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
@@ -411,8 +418,74 @@ public class VnfmActions {
 		return resourceDefinition;
 	}
 
-	public void vnfTerminate(final String objectId) {
-		// TODO Auto-generated method stub
+	public void vnfTerminate(final String vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
+		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
 
+		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
+		copyVnfPkgToLcm(vnfPkg, lcmOpOccs);
+		copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
+		vnfLcmOpOccsRepository.save(lcmOpOccs);
+
+		// XXX Do it for VnfInfoModifications
+		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId().toString());
+		final Grants grants = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
+	}
+
+	private Grants getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
+		final GrantRequest grantRequest = createTerminateGrant(vnfInstance, lcmOpOccs, vnfPkg);
+		Grants grants = grantManagement.post(grantRequest);
+		lcmOpOccs.setGrantId(grants.getId().toString());
+		vnfLcmOpOccsRepository.save(lcmOpOccs);
+		grants = pollGrants(grants);
+		return grants;
+	}
+
+	private GrantRequest createTerminateGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage) {
+		final GrantRequest grant = new GrantRequest();
+		grant.setVnfInstanceId(vnfInstance.getId().toString());
+		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
+		grant.setVnfdId(vnfInstance.getVnfdId());
+		grant.setFlavourId(vnfPackage.getFlavorId());
+		grant.setIsAutomaticInvocation(Boolean.FALSE);
+		grant.setOperation(GrantedLcmOperationType.TERMINATE);
+		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
+		grant.setInstantiationLevelId("0");
+
+		final VnfInstantiatedInfo instantiated = vnfInstance.getInstantiatedVnfInfo();
+		final List<ResourceDefinition> virtualCompute = instantiated.getVnfcResourceInfo().stream()
+				.map(x -> {
+					final ResourceDefinition resourceDefinition = new ResourceDefinition();
+					resourceDefinition.setType(TypeEnum.COMPUTE);
+					resourceDefinition.setVduId(x.getId().toString());
+					resourceDefinition.setResource(mapper.map(x.getCompResource(), ResourceHandle.class));
+					return resourceDefinition;
+				})
+				.collect(Collectors.toList());
+		final List<ResourceDefinition> vitualLink = instantiated.getVirtualLinkResourceInfo().stream()
+				.map(x -> {
+					final ResourceDefinition resourceDefinition = new ResourceDefinition();
+					resourceDefinition.setType(TypeEnum.VL);
+					resourceDefinition.setVduId(x.getId().toString());
+					resourceDefinition.setResource(mapper.map(x.getNetworkResource(), ResourceHandle.class));
+					return resourceDefinition;
+				})
+				.collect(Collectors.toList());
+		final List<ResourceDefinition> virtualStorage = instantiated.getVirtualStorageResourceInfo().stream()
+				.map(x -> {
+					final ResourceDefinition resourceDefinition = new ResourceDefinition();
+					resourceDefinition.setType(TypeEnum.STORAGE);
+					resourceDefinition.setVduId(x.getId().toString());
+					resourceDefinition.setResource(mapper.map(x.getStorageResource(), ResourceHandle.class));
+					return resourceDefinition;
+				})
+				.collect(Collectors.toList());
+		final List<ResourceDefinition> res = new ArrayList<>(virtualCompute);
+		res.addAll(vitualLink);
+		res.addAll(virtualStorage);
+		grant.setRemoveResources(res);
+
+		return grant;
 	}
 }

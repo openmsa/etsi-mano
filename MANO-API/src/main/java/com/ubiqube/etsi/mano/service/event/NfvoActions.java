@@ -251,6 +251,7 @@ public class NfvoActions {
 		grants.setVimConnections(Collections.singleton(vimInfo));
 
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
+		// XXX Push only needed ones. ( in case of terminate no need to push assets.)
 		grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vnfPackage, vimInfo, vim));
 		grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
 		grants.setVimAssets(grantVimAssetsEntity);
