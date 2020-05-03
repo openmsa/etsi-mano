@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
@@ -132,19 +133,24 @@ public class VnfmActions {
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance);
-		vnfInstance = vnfInstancesRepository.get(vnfInstance.getId());
+
 		final ExecutionResults<UnitOfWork, String> results = executor.exec(plan, vimConnection, vim);
+		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results);
+
+		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
+	}
+
+	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		if (results.getErrored().isEmpty()) {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
 			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
-			vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		} else {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-			vnfInstancesRepository.save(vnfInstance);
 		}
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
+		vnfInstancesRepository.save(vnfInstance);
 	}
 
 	private static void copyVnfInstanceToLcmOpOccs(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
@@ -362,7 +368,7 @@ public class VnfmActions {
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
 
-		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
+		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.TERMINATE, UUID.fromString(vnfInstanceId));
 		copyVnfPkgToLcm(vnfPkg, lcmOpOccs);
 		copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
 		vnfLcmOpOccsRepository.save(lcmOpOccs);
@@ -370,6 +376,8 @@ public class VnfmActions {
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId().toString());
 		getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
+		// Make plan
+		// execute plan.
 	}
 
 	private Grants getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
