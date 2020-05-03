@@ -17,6 +17,7 @@ import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
@@ -125,5 +126,13 @@ public class VnfPackageTest {
 		assertEquals(avcDb.getVnfProductName(), avc.getVnfProductName());
 		assertEquals(avcDb.getVnfProvider(), avc.getVnfProvider());
 		assertEquals(avcDb.getVnfSoftwareVersion(), avc.getVnfSoftwareVersion());
+	}
+
+	@Test
+	void testVnfPackage2Lcm() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);
+		final VnfLcmOpOccs avc = mapper.map(avcDb, VnfLcmOpOccs.class);
+		System.out.println("" + avc);
 	}
 }

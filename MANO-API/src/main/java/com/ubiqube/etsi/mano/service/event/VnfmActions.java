@@ -23,7 +23,6 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
@@ -187,35 +186,8 @@ public class VnfmActions {
 				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
-	private static void copyVnfPkgToInstance(final VnfPackage vnfPkg, final VnfInstance vnfInstance) {
-		final VnfInstantiatedInfo instantiedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
-		vnfPkg.getVnfCompute().forEach(x -> {
-			final VnfInstantiedCompute instatiedCompute = new VnfInstantiedCompute();
-			instatiedCompute.setVduId(x.getId());
-			instatiedCompute.setStorageResourceIds(new ArrayList<>(x.getStorages()));
-			final ResourceHandleEntity resource = new ResourceHandleEntity();
-			resource.setVduId(x.getId());
-			instatiedCompute.setCompResource(resource);
-			instantiedVnfInfo.addVnfcResourceInfoItem(instatiedCompute);
-		});
-
-		vnfPkg.getVnfVl().forEach(x -> {
-			final VirtualLinkInfo virtualLink = new VirtualLinkInfo();
-			virtualLink.setVnfVirtualLinkDescId(x.getId());
-			final ResourceHandleEntity resource = new ResourceHandleEntity();
-			resource.setVduId(x.getId());
-			virtualLink.setNetworkResource(resource);
-			instantiedVnfInfo.addVirtualLinkResourceInfoItem(virtualLink);
-		});
-
-		vnfPkg.getVnfStorage().forEach(x -> {
-			final VirtualStorageInfo vStorage = new VirtualStorageInfo();
-			vStorage.setVirtualStorageDescId(x.getId());
-			final ResourceHandleEntity resource = new ResourceHandleEntity();
-			resource.setVduId(x.getId());
-			vStorage.setStorageResource(resource);
-			instantiedVnfInfo.addVirtualStorageResourceInfoItem(vStorage);
-		});
+	private void copyVnfPkgToInstance(final VnfPackage vnfPkg, final VnfInstance vnfInstance) {
+		mapper.map(vnfPkg, vnfInstance);
 	}
 
 	private static void copyVnfPkgToLcm(final VnfPackage vnfPkg, final VnfLcmOpOccs lcmOpOccs) {
@@ -397,7 +369,7 @@ public class VnfmActions {
 
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId().toString());
-		final Grants grants = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
+		getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
 	}
 
 	private Grants getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {

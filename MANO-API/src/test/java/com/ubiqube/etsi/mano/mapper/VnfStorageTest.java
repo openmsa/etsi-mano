@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 
@@ -32,6 +33,17 @@ public class VnfStorageTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfStorage avcDb = podam.manufacturePojo(VnfStorage.class);
 		final VirtualStorageInfo avc = mapper.map(avcDb, VirtualStorageInfo.class);
+		assertNull(avc.getId());
+		assertNotNull(avc.getStorageResource());
+		assertEquals(avcDb.getId(), avc.getStorageResource().getVduId());
+		assertEquals(avcDb.getId(), avc.getVirtualStorageDescId());
+	}
+
+	@Test
+	void testVnfStorage2AffectedVs() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfStorage avcDb = podam.manufacturePojo(VnfStorage.class);
+		final AffectedVs avc = mapper.map(avcDb, AffectedVs.class);
 		assertNull(avc.getId());
 		assertNotNull(avc.getStorageResource());
 		assertEquals(avcDb.getId(), avc.getStorageResource().getVduId());

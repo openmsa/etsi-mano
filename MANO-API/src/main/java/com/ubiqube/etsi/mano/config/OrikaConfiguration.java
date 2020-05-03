@@ -4,6 +4,9 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
@@ -186,6 +189,32 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfStorage.class, VirtualStorageInfo.class)
+				.field("id", "storageResource.vduId")
+				.field("id", "virtualStorageDescId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfPackage.class, VnfLcmOpOccs.class)
+				.exclude("audit")
+				.exclude("id")
+				.field("vnfCompute", "resourceChanges.affectedVnfcs")
+				.field("vnfVl", "resourceChanges.affectedVirtualLinks")
+				.field("vnfStorage", "resourceChanges.affectedVirtualStorages")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfCompute.class, AffectedCompute.class)
+				.field("id", "vduId")
+				.field("id", "computeResource.vduId")
+				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
+				.field("storages", "storageResourceIds")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfVl.class, AffectedVl.class)
+				.field("id", "vnfVirtualLinkDescId")
+				.field("id", "networkResource.vduId")
+				.field("id", "grantInformation.vduId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfStorage.class, AffectedVs.class)
 				.field("id", "storageResource.vduId")
 				.field("id", "virtualStorageDescId")
 				.byDefault()
