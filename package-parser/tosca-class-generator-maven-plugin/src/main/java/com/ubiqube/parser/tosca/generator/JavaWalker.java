@@ -172,8 +172,8 @@ public class JavaWalker extends AbstractWalker {
 			// XXX .
 		} else if (x instanceof InRange) {
 			final InRange ir = (InRange) x;
-			currentField.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
-			currentField.annotate(Max.class).param(VALUE, Integer.parseInt(ir.getMax()));
+			currentField.annotate(Min.class).param(VALUE, Double.valueOf(ir.getMin()).intValue());
+			currentField.annotate(Max.class).param(VALUE, Double.valueOf(ir.getMax()).intValue());
 		} else if (x instanceof MinLength) {
 			final MinLength ml = (MinLength) x;
 			currentField.annotate(javax.validation.constraints.Size.class).param("min", Integer.parseInt(ml.getValue()));
