@@ -5,6 +5,7 @@ import java.util.Set;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -25,5 +26,7 @@ public interface PackageProvider {
 	Set<VnfVl> getVnfVirtualLinks();
 
 	Set<VnfLinkPort> getVnfVduCp();
+
+	Set<VnfExtCp> getVnfExtCp();
 
 }

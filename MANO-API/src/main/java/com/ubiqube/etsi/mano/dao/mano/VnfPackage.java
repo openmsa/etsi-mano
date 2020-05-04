@@ -96,6 +96,10 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@JoinColumn
 	private Set<VnfLinkPort> vnfLinkPort;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfExtCp> vnfExtCp;
+
 	@Embedded
 	private Audit audit;
 
@@ -244,6 +248,14 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	public Set<VnfExtCp> getVnfExtCp() {
+		return vnfExtCp;
+	}
+
+	public void setVnfExtCp(final Set<VnfExtCp> vnfExtCp) {
+		this.vnfExtCp = vnfExtCp;
 	}
 
 }

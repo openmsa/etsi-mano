@@ -17,6 +17,7 @@ import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -109,6 +110,11 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("name", "l3Name")
 				.byDefault()
 				.register();
+		mapperFactory.classMap(tosca.nodes.nfv.VnfExtCp.class, VnfExtCp.class)
+				.field("externalVirtualLinkReq", "externalVirtualLink")
+				.field("internalVirtualLinkReq", "internalVirtualLink")
+				.byDefault()
+				.register();
 
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new SizeConverter());
@@ -196,6 +202,15 @@ public class ToscaPackageProvider implements PackageProvider {
 		LOG.debug("Found {} VduCp node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfLinkPort.class))
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<VnfExtCp> getVnfExtCp() {
+		final List<tosca.nodes.nfv.VnfExtCp> list = toscaApi.getObjects(root, tosca.nodes.nfv.VnfExtCp.class);
+		LOG.debug("Found {} ExtCp node in TOSCA model", list.size());
+		return list.stream()
+				.map(x -> mapper.map(x, VnfExtCp.class))
 				.collect(Collectors.toSet());
 	}
 

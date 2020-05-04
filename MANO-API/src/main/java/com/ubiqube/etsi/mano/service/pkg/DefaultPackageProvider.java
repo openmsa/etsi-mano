@@ -6,6 +6,7 @@ import java.util.Set;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -53,6 +54,11 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public Set<VnfLinkPort> getVnfVduCp() {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<VnfExtCp> getVnfExtCp() {
 		return new HashSet<>();
 	}
 

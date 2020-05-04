@@ -15,6 +15,7 @@ import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -87,5 +88,11 @@ public class ToscaPackageProviderTest {
 		assertEquals(4, vnfCp.size());
 		final VnfLinkPort cp = vnfCp.iterator().next();
 		// assertEquals("cpLc02", cp.getToscaName());
+	}
+
+	@Test
+	void testVnfExtCp() throws Exception {
+		final Set<VnfExtCp> extCp = tpp.getVnfExtCp();
+		assertEquals(4, extCp.size());
 	}
 }

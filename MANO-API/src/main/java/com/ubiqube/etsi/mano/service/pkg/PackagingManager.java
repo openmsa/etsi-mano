@@ -22,6 +22,7 @@ import org.springframework.util.StreamUtils;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -94,6 +95,8 @@ public class PackagingManager {
 			vnfPackage.setVnfLinkPort(vcNodes);
 			remapNetworks(cNodes, vcNodes);
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
+			final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp();
+			vnfPackage.setVnfExtCp(vnfExtCp);
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
 		}
