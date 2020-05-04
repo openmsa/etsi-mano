@@ -132,7 +132,7 @@ public class VnfmActions {
 		final VimConnectionInformation vimConnection = grants.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
-		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance);
+		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "create");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.exec(plan, vimConnection, vim);
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results);

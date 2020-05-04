@@ -227,7 +227,7 @@ public class NfvoActions {
 		final Optional<Grants> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
 		final Grants grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
 
-		// XXX We should use planner API for this.
+		// Free Lease if any.
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
 				final VimConnectionInformation vci = vimManager.findVimById(UUID.fromString(x.getVimConnectionId()));
@@ -237,7 +237,7 @@ public class NfvoActions {
 		});
 		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
 		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
-		// XXX One timeor for each resources?
+		// XXX Choose Zone One time or for each resources?
 		final String zoneId = chooseZone(vimInfo);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		grants.getAddResources().forEach(x -> {
