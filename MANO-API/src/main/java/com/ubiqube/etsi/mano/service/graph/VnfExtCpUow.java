@@ -4,20 +4,13 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class MonitoringUow extends AbstractUnitOfWork {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+public class VnfExtCpUow extends AbstractUnitOfWork {
 
-	private final VnfCompute vnfCompute;
-	private final String name;
-
-	public MonitoringUow(final ResourceHandleEntity resourceHandleEntity, final VnfCompute x, final String _name) {
-		super(resourceHandleEntity, _name);
-		vnfCompute = x;
-		name = _name;
+	public VnfExtCpUow(final VnfExtCp vnfExtCp) {
+		super(new ResourceHandleEntity(), vnfExtCp.getToscaName());
 	}
 
 	@Override
@@ -28,12 +21,12 @@ public class MonitoringUow extends AbstractUnitOfWork {
 
 	@Override
 	public UowType getType() {
-		return UowType.MONITORINGPARAM;
+		return UowType.EXTCP;
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "monitoring";
+		return "extcp";
 	}
 
 	@Override

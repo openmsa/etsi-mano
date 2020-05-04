@@ -45,4 +45,10 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 		return "vl";
 	}
 
+	@Override
+	public void rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

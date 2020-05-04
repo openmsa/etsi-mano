@@ -50,13 +50,72 @@ public class ExecutionPlanner {
 		vnfComputeJpa = _vnfComputeJpa;
 	}
 
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfInstance vnfInstance, @NotNull final VnfPackage vnfPackage) {
-		final Map<String, UnitOfWork> vertex = new HashMap<>();
+	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
 		// Vertex everyThing
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph(ConnectivityEdge.class));
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
+		return g;
+	}
 
+	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfInstance vnfInstance, @NotNull final VnfPackage vnfPackage) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
+		final Map<String, UnitOfWork> vertex = buildVertex(g, vnfInstance);
+		// Connect LinkPort to VM
+		vnfPackage.getVnfLinkPort().forEach(x -> {
+			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
+			g.addEdge(vertex.get(x.getVirtualLink()), vertex.get(x.getVirtualBinding()));
+		});
+
+		// Connect Vdu
+		vnfPackage.getVnfCompute().forEach(x -> {
+			final Set<String> storages = x.getStorages();
+			if (null != storages) {
+				storages.forEach(y -> {
+					LOG.debug("Storage link {} -> {}", y, x.getToscaName());
+					g.addEdge(vertex.get(y), vertex.get(x.getToscaName()));
+				});
+			}
+			// XXX do the same for swImages ?
+			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
+				final UnitOfWork uow = new MonitoringUow(new ResourceHandleEntity(), x, makeUowMonitoringName(x));
+				vertex.put(makeUowMonitoringName(x), uow);
+				g.addVertex(uow);
+				LOG.debug("Monitoring: {} -> {}", x.getToscaName(), uow.getName());
+				g.addEdge(vertex.get(x.getToscaName()), uow);
+			}
+		});
+
+		vnfPackage.getVnfExtCp().forEach(x -> {
+			LOG.debug("ExtCp: {} -> {}", x.getToscaName(), x.getExternalVirtualLink());
+			g.addEdge(vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
+		});
+		// Add start
+		final UnitOfWork root = new StartUow();
+		g.addVertex(root);
+		g.vertexSet().stream()
+				.filter(key -> g.incomingEdgesOf(key).isEmpty())
+				.forEach(key -> {
+					if (key != root) {
+						LOG.debug("Connecting root to {}", key.getName());
+						g.addEdge(root, key);
+					}
+				});
+		// And end Node
+		final UnitOfWork end = new EndUow(new ResourceHandleEntity());
+		g.addVertex(end);
+		g.vertexSet().stream()
+				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
+				.forEach(key -> {
+					if (key != end) {
+						g.addEdge(key, end);
+					}
+				});
+		return g;
+	}
+
+	private Map<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfInstance vnfInstance) {
+		final Map<String, UnitOfWork> vertex = new HashMap<>();
 		vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().forEach(x -> {
 			final VnfVl vlProtocol = vnfVl.findById(x.getGrantInformation().getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getGrantInformation().getVduId()));
 			final UnitOfWork uow = new VirtualLinkUow(x.getNetworkResource(), vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
@@ -83,67 +142,28 @@ public class ExecutionPlanner {
 			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
-
-		// Connect LinkPort to VM
-		vnfPackage.getVnfLinkPort().forEach(x -> {
-			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
-			g.addEdge(vertex.get(x.getVirtualLink()), vertex.get(x.getVirtualBinding()));
-		});
-
-		// Connect Vdu
-		vnfPackage.getVnfCompute().forEach(x -> {
-			final Set<String> storages = x.getStorages();
-			if (null != storages) {
-				storages.forEach(y -> {
-					LOG.debug("Storage link {} -> {}", y, x.getToscaName());
-					g.addEdge(vertex.get(y), vertex.get(x.getToscaName()));
-				});
-			}
-			// XXX do the same for swImages ?
-			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
-				final UnitOfWork uow = new MonitoringUow(new ResourceHandleEntity(), x, makeUowMonitoringName(x));
-				vertex.put(makeUowMonitoringName(x), uow);
-				g.addVertex(uow);
-				LOG.debug("Monitoring: {} -> {}", x.getToscaName(), uow.getName());
-				g.addEdge(vertex.get(x.getToscaName()), uow);
-			}
-		});
-
-		// Add start
-		final UnitOfWork root = new StartUow();
-		g.addVertex(root);
-		g.vertexSet().stream()
-				.filter(key -> g.incomingEdgesOf(key).isEmpty())
-				.forEach(key -> {
-					if (key != root) {
-						LOG.debug("Connecting root to {}", key.getName());
-						g.addEdge(root, key);
-					}
-				});
-		// And end Node
-		final UnitOfWork end = new EndUow(new ResourceHandleEntity());
-		g.addVertex(end);
-		g.vertexSet().stream()
-				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
-				.forEach(key -> {
-					if (key != end) {
-						g.addEdge(key, end);
-					}
-				});
-		return g;
+		// XXX ExtCP
+		return vertex;
 	}
 
-	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @NotNull final UUID _id, final VnfInstance vnfInstance) {
+	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @NotNull final UUID _id, final VnfInstance vnfInstance, final String subName) {
 		final DOTExporter<UnitOfWork, ConnectivityEdge> exporter = new DOTExporter<>(UnitOfWork::getName);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
-		vnfPackageRepository.storeBinary(_id.toString(), "plan-" + vnfInstance.getId() + ".dot", _stream);
+		vnfPackageRepository.storeBinary(_id.toString(), subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
 	private static String makeUowMonitoringName(final VnfCompute x) {
 		return x.getToscaName() + "MON";
+	}
+
+	public ListenableGraph<UnitOfWork, ConnectivityEdge> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> gNew = createGraph();
+		g.vertexSet().forEach(x -> gNew.addVertex(x));
+		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
+		return gNew;
 	}
 
 }

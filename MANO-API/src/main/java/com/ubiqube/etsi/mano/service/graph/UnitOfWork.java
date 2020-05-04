@@ -50,4 +50,6 @@ public interface UnitOfWork extends Serializable {
 	ResourceHandleEntity getResourceHandleEntity();
 
 	String getToscaName();
+
+	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, Map<String, String> context);
 }

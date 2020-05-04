@@ -30,6 +30,6 @@ public class UowTaskProvider implements TaskProvider<UnitOfWork, String> {
 	@Override
 	public Task<UnitOfWork, String> provideTask(final UnitOfWork uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowTask(vimConnectionInformation, vim, uaow, resourceHandleEntityJpa, context);
+		return new UowExecTask(vimConnectionInformation, vim, uaow, resourceHandleEntityJpa, context);
 	}
 }
