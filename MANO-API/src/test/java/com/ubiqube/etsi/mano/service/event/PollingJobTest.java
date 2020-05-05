@@ -9,6 +9,8 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ubiqube.etsi.mano.service.event.quartz.PollingJob;
+
 //@RunWith(SpringRunner.class)
 //@SpringBootTest
 public class PollingJobTest {

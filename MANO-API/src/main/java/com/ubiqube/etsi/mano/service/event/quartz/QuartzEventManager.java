@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.service.event.quartz;
 
 import java.util.Map;
 import java.util.UUID;
@@ -15,6 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.event.ActionJob;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.event.NotificationJob;
 
 /**
  * Simple implementation using Quartz.

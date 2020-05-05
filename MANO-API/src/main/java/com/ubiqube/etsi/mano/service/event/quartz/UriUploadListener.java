@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.service.event.quartz;
 
 import java.util.UUID;
 
