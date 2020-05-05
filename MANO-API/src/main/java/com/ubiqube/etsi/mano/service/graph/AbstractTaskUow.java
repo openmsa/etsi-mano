@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -42,13 +41,14 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 		resourceHandleEntityJpa = _resourceHandleEntityJpa;
 		if (_create) {
 			function = x -> {
-				final Optional<String> res = Optional.ofNullable(uaow.exec(vimConnectionInformation, vim, context));
-				res.ifPresent(obj -> {
-					context.put(uaow.getToscaName(), obj);
-					LOG.debug("Adding to context: {} => {}", uaow.getName(), obj);
-					uaow.getResourceHandleEntity().setResourceId(obj);
-				});
-				return res.get();
+				final String res = uaow.exec(vimConnectionInformation, vim, context);
+				if (null != res) {
+					context.put(uaow.getToscaName(), res);
+					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
+					uaow.getResourceHandleEntity().setResourceId(res);
+				}
+				;
+				return res;
 			};
 		} else {
 			function = x -> uaow.rollback(x.vimConnectionInformationLocal, x.vimLocal, x.contextLocal);
