@@ -205,13 +205,13 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("id", "vduId")
 				.field("id", "computeResource.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
-				.field("storages", "storageResourceIds")
+				// XXX .field("storages", "storageResourceIds")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfVl.class, AffectedVl.class)
-				.field("id", "vnfVirtualLinkDescId")
+				.field("id", "virtualLinkDescId")
 				.field("id", "networkResource.vduId")
-				.field("id", "grantInformation.vduId")
+				// XXX .field("id", "grantInformation.vduId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfStorage.class, AffectedVs.class)
