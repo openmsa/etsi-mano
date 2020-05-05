@@ -29,9 +29,11 @@ import org.openstack4j.model.compute.ext.AvailabilityZone;
 import org.openstack4j.model.image.ContainerFormat;
 import org.openstack4j.model.image.DiskFormat;
 import org.openstack4j.model.image.builder.ImageBuilder;
+import org.openstack4j.model.network.AttachInterfaceType;
 import org.openstack4j.model.network.IPVersionType;
 import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.NetworkType;
+import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
 import org.openstack4j.model.network.builder.SubnetBuilder;
@@ -388,5 +390,19 @@ public class OpenStackVim implements Vim {
 		return list.stream().filter(x -> x.getZoneState().getAvailable())
 				.map(AvailabilityZone::getZoneName)
 				.collect(Collectors.toList());
+	}
+
+	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String networkId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final Network net = os.networking().network().get(networkId);
+		// XXX get first one ?
+		final String psubnetId = net.getNeutronSubnets().get(0).getId();
+		final Router routerBuilder = Builders.router()
+				.name(name)
+				.externalGateway(networkId)
+				.build();
+		final Router router = os.networking().router().create(routerBuilder);
+		os.networking().router().attachInterface(router.getId(), AttachInterfaceType.SUBNET, psubnetId);
+		return router.getId();
 	}
 }
