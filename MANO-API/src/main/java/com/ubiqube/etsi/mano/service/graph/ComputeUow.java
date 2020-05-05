@@ -41,9 +41,9 @@ public class ComputeUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public void rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 }
