@@ -30,7 +30,7 @@ public class VirtualLinkInfo {
 	/**
 	 * reservationId
 	 */
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private GrantInformation grantInformation = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
