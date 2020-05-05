@@ -284,4 +284,28 @@ public class MsaExecutor implements Vim {
 		return null;
 	}
 
+	@Override
+	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteVirtualLink(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteObjectStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

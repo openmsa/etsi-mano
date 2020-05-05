@@ -18,7 +18,6 @@ public class NoopUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		//
 		return null;
 	}
 
@@ -34,8 +33,7 @@ public class NoopUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
+	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		return null;
 	}
 

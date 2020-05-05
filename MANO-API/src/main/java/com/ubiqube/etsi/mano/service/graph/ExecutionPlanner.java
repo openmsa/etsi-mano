@@ -130,7 +130,7 @@ public class ExecutionPlanner {
 			if ("BLOCK".equals(vstorage.getType())) {
 				uow = new StorageUow(x.getStorageResource(), vstorage);
 			} else {
-				uow = new ObjectStorageUow(x.getStorageResource(), vstorage.getToscaName());
+				uow = new ObjectStorageUow(x.getStorageResource(), vstorage, vstorage.getToscaName());
 			}
 			vertex.put(vstorage.getToscaName(), uow);
 			g.addVertex(uow);

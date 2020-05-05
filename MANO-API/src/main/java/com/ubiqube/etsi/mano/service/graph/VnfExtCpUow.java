@@ -30,7 +30,7 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		// TODO Auto-generated method stub
 		return null;
 	}

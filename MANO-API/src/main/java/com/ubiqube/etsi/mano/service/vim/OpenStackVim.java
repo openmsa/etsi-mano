@@ -405,4 +405,33 @@ public class OpenStackVim implements Vim {
 		os.networking().router().attachInterface(router.getId(), AttachInterfaceType.SUBNET, psubnetId);
 		return router.getId();
 	}
+
+	@Override
+	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().servers().delete(resourceId);
+	}
+
+	@Override
+	public void deleteVirtualLink(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.networking().network().delete(resourceId);
+	}
+
+	@Override
+	public void deleteStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.blockStorage().volumes().delete(resourceId);
+	}
+
+	@Override
+	public void deleteObjectStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.objectStorage().containers().delete(resourceId);
+	}
+
+	public void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.networking().subnet().delete(resourceId);
+	}
 }

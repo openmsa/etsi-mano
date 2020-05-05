@@ -51,7 +51,7 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 				return res;
 			};
 		} else {
-			function = x -> uaow.rollback(x.vimConnectionInformationLocal, x.vimLocal, x.contextLocal);
+			function = x -> uaow.rollback(x.vimConnectionInformationLocal, x.vimLocal, x.resourceId, x.contextLocal);
 		}
 	}
 
@@ -64,7 +64,7 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 		resourceHandleEntityJpa.save(resource);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
-			function.apply(new Parameters(vimConnectionInformation, vim, context));
+			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getResourceId()));
 			resource.setStatus(InstantiationStatusType.SUCCESS);
 		} catch (final RuntimeException e) {
 			eRoot = e;
@@ -80,14 +80,16 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 	}
 
 	class Parameters {
-		public Parameters(final VimConnectionInformation _vimConnectionInformation, final Vim _vim, final Map<String, String> _context) {
+		public Parameters(final VimConnectionInformation _vimConnectionInformation, final Vim _vim, final Map<String, String> _context, final String _resourceId) {
 			vimConnectionInformationLocal = _vimConnectionInformation;
 			vimLocal = _vim;
 			contextLocal = _context;
+			resourceId = _resourceId;
 		}
 
 		private final VimConnectionInformation vimConnectionInformationLocal;
 		private final Vim vimLocal;
 		private final Map<String, String> contextLocal;
+		private final String resourceId;
 	}
 }

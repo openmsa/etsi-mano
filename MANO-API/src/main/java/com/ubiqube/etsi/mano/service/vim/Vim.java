@@ -59,4 +59,12 @@ public interface Vim {
 	String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage);
 
 	List<String> getZoneAvailableList(VimConnectionInformation vimConnectionInformation);
+
+	void deleteCompute(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	void deleteVirtualLink(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	void deleteStorage(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	void deleteObjectStorage(VimConnectionInformation vimConnectionInformation, String resourceId);
 }

@@ -46,8 +46,8 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
+	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
+		vim.deleteVirtualLink(vimConnectionInformation, resourceId);
 		return null;
 	}
 

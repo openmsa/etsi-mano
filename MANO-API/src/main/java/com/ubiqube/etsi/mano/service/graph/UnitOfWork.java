@@ -19,7 +19,7 @@ public interface UnitOfWork extends Serializable {
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE");
 
-		private String value;
+		private final String value;
 
 		UowType(final String value) {
 			this.value = value;
@@ -51,5 +51,5 @@ public interface UnitOfWork extends Serializable {
 
 	String getToscaName();
 
-	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, Map<String, String> context);
+	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, String resourceId, Map<String, String> context);
 }
