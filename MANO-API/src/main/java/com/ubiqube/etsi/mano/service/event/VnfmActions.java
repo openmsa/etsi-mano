@@ -134,7 +134,7 @@ public class VnfmActions {
 		vim.refineExecutionPlan(plan);
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "create");
 
-		final ExecutionResults<UnitOfWork, String> results = executor.exec(plan, vimConnection, vim);
+		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim);
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results);
 
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
@@ -375,9 +375,20 @@ public class VnfmActions {
 
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId().toString());
-		getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
+		final Grants grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
 		// Make plan
-		// execute plan.
+		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
+		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
+		// XXX Multiple Vim ?
+		final Vim vim = vimManager.getVimById(vimConnection.getId());
+		vim.refineExecutionPlan(plan);
+		plan = executionPlanner.revert(plan);
+		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "delete");
+
+		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
+		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results);
+
+		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
 	}
 
 	private Grants getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
