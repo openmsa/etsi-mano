@@ -55,4 +55,10 @@ public class TestUnitOfWork implements UnitOfWork {
 		return null;
 	}
 
+	@Override
+	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
