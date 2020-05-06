@@ -57,6 +57,9 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	@Embedded
 	private Audit audit;
 
+	@Embedded
+	private VduProfile vduProfile;
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -170,6 +173,14 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	public void setNetworks(final Set<String> networks) {
 		this.networks = networks;
+	}
+
+	public VduProfile getVduProfile() {
+		return vduProfile;
+	}
+
+	public void setVduProfile(final VduProfile vduProfile) {
+		this.vduProfile = vduProfile;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -60,6 +61,12 @@ public class DefaultPackageProvider implements PackageProvider {
 	@Override
 	public Set<VnfExtCp> getVnfExtCp() {
 		return new HashSet<>();
+	}
+
+	@Override
+	public Set<ScalingAspect> getScalingAspects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

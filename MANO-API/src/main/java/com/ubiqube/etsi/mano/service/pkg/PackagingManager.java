@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -97,6 +98,8 @@ public class PackagingManager {
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
 			final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp();
 			vnfPackage.setVnfExtCp(vnfExtCp);
+			final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects();
+			vnfPackage.setScalingAspects(scalingAspects);
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
 		}

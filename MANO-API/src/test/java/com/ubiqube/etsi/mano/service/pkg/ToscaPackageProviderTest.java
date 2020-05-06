@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
+import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -94,5 +95,11 @@ public class ToscaPackageProviderTest {
 	void testVnfExtCp() throws Exception {
 		final Set<VnfExtCp> extCp = tpp.getVnfExtCp();
 		assertEquals(4, extCp.size());
+	}
+
+	@Test
+	void testScalingAspect() throws Exception {
+		final Set<ScalingAspect> list = tpp.getScalingAspects();
+		System.out.println("" + list);
 	}
 }

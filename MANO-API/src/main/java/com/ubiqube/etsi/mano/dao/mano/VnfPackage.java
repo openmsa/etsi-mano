@@ -100,6 +100,9 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@JoinColumn
 	private Set<VnfExtCp> vnfExtCp;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<ScalingAspect> scalingAspects;
+
 	@Embedded
 	private Audit audit;
 
@@ -238,6 +241,14 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	public void setVnfLinkPort(final Set<VnfLinkPort> vnfLinkPort) {
 		this.vnfLinkPort = vnfLinkPort;
+	}
+
+	public Set<ScalingAspect> getScalingAspects() {
+		return scalingAspects;
+	}
+
+	public void setScalingAspects(final Set<ScalingAspect> scalingAspects) {
+		this.scalingAspects = scalingAspects;
 	}
 
 	@Override

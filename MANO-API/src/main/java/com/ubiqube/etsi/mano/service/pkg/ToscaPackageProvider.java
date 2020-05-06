@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
+import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -40,6 +43,7 @@ import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.ScalingAspects;
 
 public class ToscaPackageProvider implements PackageProvider {
 
@@ -212,6 +216,21 @@ public class ToscaPackageProvider implements PackageProvider {
 		return list.stream()
 				.map(x -> mapper.map(x, VnfExtCp.class))
 				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<ScalingAspect> getScalingAspects() {
+		final List<ScalingAspects> list = toscaApi.getObjects(root, ScalingAspects.class);
+		final Set<ScalingAspect> ret = new HashSet<>();
+		for (final ScalingAspects scalingAspects : list) {
+			final Map<String, tosca.datatypes.nfv.ScalingAspect> sa = scalingAspects.getAspects();
+			final Set<ScalingAspect> tmp = sa.entrySet().stream().map(x -> {
+				x.getKey();
+				return mapper.map(x.getValue(), ScalingAspect.class);
+			}).collect(Collectors.toSet());
+			ret.addAll(tmp);
+		}
+		return ret;
 	}
 
 }
