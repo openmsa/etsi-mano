@@ -40,6 +40,8 @@ public final class LcmFactory {
 		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
 		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
 		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
+		vnfInstance.setVnfdId(vnfPkgInfo.getVnfdId());
+		vnfInstance.setVnfdVersion(vnfPackage.getVnfdVersion());
 
 		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
 		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
