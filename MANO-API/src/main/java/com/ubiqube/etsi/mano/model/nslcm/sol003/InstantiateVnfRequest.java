@@ -14,13 +14,14 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -37,19 +38,22 @@ public class InstantiateVnfRequest {
 	private String instantiationLevelId = null;
 
 	@JsonProperty("extVirtualLinks")
+	@Valid
 	private List<ExtVirtualLinkData> extVirtualLinks = null;
 
 	@JsonProperty("extManagedVirtualLinks")
+	@Valid
 	private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
 
 	@JsonProperty("vimConnectionInfo")
+	@Valid
 	private List<VimConnectionInfo> vimConnectionInfo = null;
 
 	@JsonProperty("localizationLanguage")
 	private String localizationLanguage = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public InstantiateVnfRequest flavourId(final String flavourId) {
 		this.flavourId = flavourId;
@@ -129,7 +133,7 @@ public class InstantiateVnfRequest {
 
 	public InstantiateVnfRequest addExtManagedVirtualLinksItem(final ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
 		if (this.extManagedVirtualLinks == null) {
-			this.extManagedVirtualLinks = new ArrayList<ExtManagedVirtualLinkData>();
+			this.extManagedVirtualLinks = new ArrayList<>();
 		}
 		this.extManagedVirtualLinks.add(extManagedVirtualLinksItem);
 		return this;
@@ -157,7 +161,7 @@ public class InstantiateVnfRequest {
 
 	public InstantiateVnfRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
-			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
+			this.vimConnectionInfo = new ArrayList<>();
 		}
 		this.vimConnectionInfo.add(vimConnectionInfoItem);
 		return this;
@@ -202,7 +206,7 @@ public class InstantiateVnfRequest {
 		this.localizationLanguage = localizationLanguage;
 	}
 
-	public InstantiateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public InstantiateVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -216,11 +220,11 @@ public class InstantiateVnfRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"InstantiateVnfOpConfig\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
