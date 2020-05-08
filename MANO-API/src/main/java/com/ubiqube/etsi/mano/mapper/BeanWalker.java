@@ -93,7 +93,7 @@ public class BeanWalker {
 		beanListener.endMap(name);
 	}
 
-	private void handleComplex(final Object source, final FeatureDescriptor propertyDescriptor, final Method readMethod, final BeanListener beanListener) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
+	private void handleComplex(final Object source, final FeatureDescriptor propertyDescriptor, final Method readMethod, final BeanListener beanListener) throws IllegalAccessException, InvocationTargetException, IntrospectionException {
 		beanListener.complexStart(propertyDescriptor.getName());
 		final Object val = readMethod.invoke(source);
 		makeFieldInner(val, beanListener);

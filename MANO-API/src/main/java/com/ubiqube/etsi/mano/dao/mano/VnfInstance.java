@@ -1,36 +1,38 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 
 @Entity
 @Indexed
-
-public class VnfInstance implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfInstance implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@Transient
-	private VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = null;
+	@Embedded
+	private VnfInstantiatedInfo instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
 	@Field
@@ -39,9 +41,8 @@ public class VnfInstance implements BaseEntity {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
-	// @OneToMany // (fetch = FetchType.EAGER)
-	@Transient
-	private List<VimConnectionInformation> vimConnectionInfo = null;
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<VimConnectionInformation> vimConnectionInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> vnfConfigurableProperties = null;
@@ -58,7 +59,7 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfInstanceName = null;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private VnfPackage vnfPkg = null;
 
 	@Field
@@ -70,7 +71,7 @@ public class VnfInstance implements BaseEntity {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	private NsdInstance nsInstance;
 
 	private String processId;
@@ -78,12 +79,17 @@ public class VnfInstance implements BaseEntity {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extensions = null;
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
+	private Set<VnfLcmOpOccs> lcmOpOccs;
+
+	private Audit audit;
+
 	@Override
 	public UUID getId() {
 		return id;
 	}
 
-	public VnfInstanceInstantiatedVnfInfo getInstantiatedVnfInfo() {
+	public VnfInstantiatedInfo getInstantiatedVnfInfo() {
 		return instantiatedVnfInfo;
 	}
 
@@ -91,7 +97,7 @@ public class VnfInstance implements BaseEntity {
 		return instantiationState;
 	}
 
-	public List<VimConnectionInformation> getVimConnectionInfo() {
+	public Set<VimConnectionInformation> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}
 
@@ -127,7 +133,7 @@ public class VnfInstance implements BaseEntity {
 		this.id = id;
 	}
 
-	public void setInstantiatedVnfInfo(final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo) {
+	public void setInstantiatedVnfInfo(final VnfInstantiatedInfo instantiatedVnfInfo) {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 
@@ -135,7 +141,7 @@ public class VnfInstance implements BaseEntity {
 		this.instantiationState = instantiationState;
 	}
 
-	public void setVimConnectionInfo(final List<VimConnectionInformation> vimConnectionInfo) {
+	public void setVimConnectionInfo(final Set<VimConnectionInformation> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
@@ -213,6 +219,24 @@ public class VnfInstance implements BaseEntity {
 
 	public void setProcessId(final String processId) {
 		this.processId = processId;
+	}
+
+	public Set<VnfLcmOpOccs> getLcmOpOccs() {
+		return lcmOpOccs;
+	}
+
+	public void setLcmOpOccs(final Set<VnfLcmOpOccs> lcmOpOccs) {
+		this.lcmOpOccs = lcmOpOccs;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

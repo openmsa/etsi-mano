@@ -1,33 +1,40 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.validation.Valid;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Embeddable
 public class GrantVimAssetsEntity {
-	@ElementCollection
-	private List<VimComputeResourceFlavourEntity> computeResourceFlavours = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VimComputeResourceFlavourEntity> computeResourceFlavours = new HashSet<>();
 
 	@Valid
-	@ElementCollection
-	private List<VimSoftwareImageEntity> softwareImages = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VimSoftwareImageEntity> softwareImages = new HashSet<>();
 
-	public List<VimComputeResourceFlavourEntity> getComputeResourceFlavours() {
+	public Set<VimComputeResourceFlavourEntity> getComputeResourceFlavours() {
 		return computeResourceFlavours;
 	}
 
-	public void setComputeResourceFlavours(final List<VimComputeResourceFlavourEntity> computeResourceFlavours) {
+	public void setComputeResourceFlavours(final Set<VimComputeResourceFlavourEntity> computeResourceFlavours) {
 		this.computeResourceFlavours = computeResourceFlavours;
 	}
 
-	public List<VimSoftwareImageEntity> getSoftwareImages() {
+	public Set<VimSoftwareImageEntity> getSoftwareImages() {
 		return softwareImages;
 	}
 
-	public void setSoftwareImages(final List<VimSoftwareImageEntity> softwareImages) {
+	public void setSoftwareImages(final Set<VimSoftwareImageEntity> softwareImages) {
 		this.softwareImages = softwareImages;
 	}
 

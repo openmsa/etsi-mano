@@ -12,7 +12,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 public class NsInstanceFactory {
 
@@ -37,14 +36,14 @@ public class NsInstanceFactory {
 	}
 
 	@Nonnull
-	public static VnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance _vnfInstance, final VnfPkgInfo _vnfPkgInfo) {
+	public static VnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance _vnfInstance, final VnfPackage _vnfPkgInfo) {
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
 		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		nsInstancesNsInstanceVnfInstance.setVnfdId(_vnfPkgInfo.getVnfdId());
 		nsInstancesNsInstanceVnfInstance.setVnfdVersion(_vnfPkgInfo.getVnfdVersion());
 		final VnfPackage vnfPackage = new VnfPackage();
-		vnfPackage.setId(UUID.fromString(_vnfPkgInfo.getId()));
+		vnfPackage.setId(_vnfPkgInfo.getId());
 		nsInstancesNsInstanceVnfInstance.setVnfPkg(vnfPackage);
 		return nsInstancesNsInstanceVnfInstance;
 	}

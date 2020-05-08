@@ -41,6 +41,6 @@ public class VimConnectionTest {
 		assertEquals("Default", map.get("projectDomain"));
 
 		map = res.getInterfaceInfo();
-		assertEquals("https://10.18.54.42:13001/v3/", map.get("endpoint"));
+		assertEquals("http://10.31.1.240:5000/v3", map.get("endpoint"));
 	}
 }

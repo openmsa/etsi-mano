@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 
 import io.swagger.annotations.ApiModel;
@@ -100,7 +101,7 @@ public class LifecycleChangeNotificationsFilter {
 
 	/**
 	 * Filter criteria to select NS instances about which to notify.
-	 * 
+	 *
 	 * @return nsInstanceSubscriptionFilter
 	 **/
 	@ApiModelProperty(value = "Filter criteria to select NS instances about which to notify. ")
@@ -132,7 +133,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * Match particular notification types. Permitted values: -
 	 * NsLcmOperationOccurenceNotification - NsIdentifierCreationNotification -
 	 * NsIdentifierDeletionNotification - NsChangeNotification
-	 * 
+	 *
 	 * @return notificationTypes
 	 **/
 	@ApiModelProperty(value = "Match particular notification types. Permitted values: - NsLcmOperationOccurenceNotification - NsIdentifierCreationNotification - NsIdentifierDeletionNotification - NsChangeNotification ")
@@ -163,7 +164,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * NsLcmOperationOccurrenceNotification. May be present if the
 	 * \"notificationTypes\" attribute contains the value
 	 * \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise.
-	 * 
+	 *
 	 * @return operationTypes
 	 **/
 	@ApiModelProperty(value = "Match particular NS lifecycle operation types for the notification of type NsLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
@@ -196,7 +197,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * type NsLcmOperationOccurrenceNotification. May be present if the
 	 * \"notificationTypes\" attribute contains the value
 	 * \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise.
-	 * 
+	 *
 	 * @return operationStates
 	 **/
 	@ApiModelProperty(value = "Match particular LCM operation state values as reported in notifications of type NsLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
@@ -228,7 +229,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * Match particular NS component types for the notification of type
 	 * NsChangeNotification. May be present if the \"notificationTypes\" attribute
 	 * contains the value \"NsChang.
-	 * 
+	 *
 	 * @return nsComponentTypes
 	 **/
 	@ApiModelProperty(value = "Match particular NS component types for the notification of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChang. ")
@@ -260,7 +261,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * Match particular LCM operation names for the notification of type
 	 * NsChangeNotification. May be present if the \"notificationTypes\" attribute
 	 * contains the value \"NsChangeNotification\", and shall be absent otherwise.
-	 * 
+	 *
 	 * @return lcmOpNameImpactingNsComponent
 	 **/
 	@ApiModelProperty(value = "Match particular LCM operation names for the notification of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChangeNotification\", and shall be absent otherwise. ")
@@ -293,7 +294,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * type NsChangeNotification. May be present if the \"notificationTypes\"
 	 * attribute contains the value \"NsChangeNotification\", and shall be absent
 	 * otherwise.
-	 * 
+	 *
 	 * @return lcmOpOccStatusImpactingNsComponent
 	 **/
 	@ApiModelProperty(value = "Match particular LCM operation status values as reported in notifications of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChangeNotification\", and shall be absent otherwise. ")

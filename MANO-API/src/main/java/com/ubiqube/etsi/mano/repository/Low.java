@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * Todo maybe we can change String to Path.
- * 
+ * XXX Maybe we can change String to Path.
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */

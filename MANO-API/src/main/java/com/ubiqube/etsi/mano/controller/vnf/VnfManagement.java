@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -23,6 +26,7 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.exception.ServiceException;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -30,6 +34,8 @@ import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  * This implementation cover VNFO + NFVM & VNFO only.
@@ -44,17 +50,20 @@ public class VnfManagement implements VnfPackageManagement {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfManagement.class);
 
 	private final VnfPackageRepository vnfPackageRepository;
+	private final MapperFacade mapper;
 
-	public VnfManagement(final VnfPackageRepository _vnfPackageRepository) {
+	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final MapperFacade _mapper) {
 		super();
-		LOG.info("Starting VNF Package Management For NFVO+VNFM or NFVO Only Management.");
 		vnfPackageRepository = _vnfPackageRepository;
+		mapper = _mapper;
+		LOG.info("Starting VNF Package Management For NFVO+VNFM or NFVO Only Management.");
 	}
 
 	@Override
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final String vnfPkgId, final Linkable links) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Linkable links) {
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
+		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId.toString()));
 		return vnfPkgInfo;
 	}
 
@@ -62,8 +71,12 @@ public class VnfManagement implements VnfPackageManagement {
 	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
 		final String filter = queryParameters.get("filter");
 
-		final List<VnfPkgInfo> vnfPkginfos = vnfPackageRepository.query(filter);
-		vnfPkginfos.stream().forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
+		final List<VnfPackage> vnfPackageInfos = vnfPackageRepository.query(filter);
+		final List<@NonNull VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
+				.map(x -> mapper.map(x, VnfPkgInfo.class))
+				.collect(Collectors.toList());
+
+		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
@@ -88,8 +101,8 @@ public class VnfManagement implements VnfPackageManagement {
 	 * @throws ServiceException
 	 */
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String rangeHeader) {
-		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath, final String rangeHeader) {
+		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId.toString(), "vnfd");
 
 		final InputStream bis = new ByteArrayInputStream(content);
 		final ZipInputStream zis = new ZipInputStream(bis);
@@ -112,10 +125,10 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final String accept) {
 		vnfPackageRepository.get(vnfPkgId);
 
-		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId.toString(), "vnfd");
 		final String mime = MimeType.findMatch(content);
 		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
 		final BodyBuilder bodyBuilder = ResponseEntity.ok();
@@ -124,8 +137,8 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String _vnfPkgId, final String _range) {
-		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID _vnfPkgId, final String _range) {
+		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId.toString(), "vnfd");
 		return SpringUtil.handleBytes(bytes, _range);
 	}
 

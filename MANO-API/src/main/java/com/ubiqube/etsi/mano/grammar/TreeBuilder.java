@@ -28,7 +28,7 @@ public class TreeBuilder extends EtsiFilterBaseListener {
 
 	@Override
 	public void exitValue(final ValueContext ctx) {
-		currentNode.setValue(ctx.getText());
+		currentNode.addValue(ctx.getText());
 		super.exitValue(ctx);
 	}
 

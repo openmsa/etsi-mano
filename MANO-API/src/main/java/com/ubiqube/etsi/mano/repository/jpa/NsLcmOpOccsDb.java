@@ -26,13 +26,11 @@ import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOcc, NsLcmOpOccs> implements NsLcmOpOccsRepository {
-	private final MapperFacade mapper;
 
 	private final CrudRepository<NsLcmOpOccs, UUID> repository;
 
 	public NsLcmOpOccsDb(final EntityManager em, final CrudRepository<NsLcmOpOccs, UUID> _repository, final MapperFacade _mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(em, _repository, _mapper, contentManager, jsonMapper, namingStrategy);
-		mapper = _mapper;
 		repository = _repository;
 	}
 

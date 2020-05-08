@@ -4,21 +4,11 @@
 		"algorithm": "ABCDEFGHIJKLM",
 		"hash": "ABCDEFGHIJKLMNOPQRSTUVWXYZAB"
 	},"id":"8a5878be-21c8-4123-a6a1-a9cea03123a0",
-	"_links": {
-		"packageContent": null,
-		"self": {
-			"href": "http://warm64:8380/etsi-api/vnf_packages/8a5878be-21c8-4123-a6a1-a9cea03123a0"
-		},
-		"vnfd": null
-	},
 	"onboardingState": "ONBOARDED",
 	"operationalState": "ENABLED",
-	"softwareImages": null,
 	"usageState": "IN_USE",
 	"userDefinedData": {
-		"aa": {
-			"token": "string"
-		}
+		"aa": "String"
 	},
 	"vnfdId": null,
 	"vnfdVersion": null,

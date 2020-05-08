@@ -3,8 +3,10 @@ package com.ubiqube.etsi.mano.mapper;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -13,42 +15,51 @@ import com.ubiqube.bean.TestFactory;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.VnfUserDefinedData;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class VnfPackageTest {
 	private final DefaultMapperFactory mapperFactory;
+	private final PodamFactoryImpl podam;
 
 	public VnfPackageTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+
+		podam = new PodamFactoryImpl();
+		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 	}
 
 	@Test
 	void testJsonToDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final KeyValuePairs userData = new KeyValuePairs();
+		final Map<String, String> userData = new HashMap<>();
 		userData.put("vimId", "TMA49");
-		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(userData);
-		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();
+		final VnfPackage vnf = VnfPackageFactory.createVnfPkgInfo(userData);
+		final AdditionalArtifact additionalArtifactsItem = new AdditionalArtifact();
 		final Checksum checksum = new Checksum();
-		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		additionalArtifactsItem.artifactPath("/path").checksum(checksum);
-		vnf.addAdditionalArtifactsItem(additionalArtifactsItem);
+		checksum.setAlgorithm("SHA-512");
+		checksum.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		additionalArtifactsItem.setArtifactPath("/path");
+		additionalArtifactsItem.setChecksum(checksum);
+		final Set<AdditionalArtifact> list = new HashSet<>();
+		list.add(additionalArtifactsItem);
+		vnf.setAdditionalArtifacts(list);
 		vnf.setChecksum(checksum);
-		final List<VnfPackageSoftwareImageInfo> softwareImages = new ArrayList<>();
+		final Set<SoftwareImage> softwareImages = new HashSet<>();
 		softwareImages.add(TestFactory.createVnfPackagesVnfPkgInfoSoftwareImages());
-		vnf.setSoftwareImages(softwareImages);
 
 		final VnfPackage vnfDao = mapper.map(vnf, VnfPackage.class);
 		System.out.println("" + vnfDao);
@@ -64,21 +75,64 @@ public class VnfPackageTest {
 		assertEquals("SHA-512", check.getAlgorithm());
 		assertEquals("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", check.getHash());
 
-		final Set<SoftwareImage> sil = vnfDao.getSoftwareImages();
-		assertEquals(1, sil.size());
-		final SoftwareImage si = sil.iterator().next();
-		assertNotNull(si.getChecksum());
-		assertEquals("SHA-512", si.getChecksum().getAlgorithm());
-		assertEquals("e7c22b994c59d9cf2b48e549b1e24666636045930d3da7c1acb299d1c3b7f931f94aae41edda2c2b207a36e10f8bcb8d45223e54878f5b316e7ce3b6bc019629", si.getChecksum().getHash());
-		assertNotNull(si.getContainerFormat());
-		assertEquals("BARE", si.getContainerFormat().toString());
-		assertEquals("/mnt/images/myimages.raw", si.getImagePath());
-		assertEquals(12345, si.getSize());
-
-		final List<VnfUserDefinedData> udd = vnfDao.getUserDefinedData();
+		final Map<String, String> udd = vnfDao.getUserDefinedData();
 		assertEquals(1, udd.size());
-		assertEquals("vimId", udd.get(0).getName());
-		assertEquals("TMA49", udd.get(0).getValue());
+		assertEquals("TMA49", udd.get("vimId"));
+	}
 
+	@Test
+	void testDaoToJson() throws Exception {
+		final VnfPackage vnfDao = new VnfPackage();
+		final Set<VnfCompute> vnfCompute = new HashSet<>();
+		final VnfCompute compute = new VnfCompute();
+		final SoftwareImage softwareImage1 = new SoftwareImage();
+
+		final Checksum checksum = new Checksum();
+		checksum.setAlgorithm("SHA-512");
+		checksum.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+		softwareImage1.setChecksum(checksum);
+		softwareImage1.setContainerFormat("BARE");
+		softwareImage1.setChecksum(checksum);
+		compute.setSoftwareImage(softwareImage1);
+		vnfCompute.add(compute);
+		vnfDao.setVnfCompute(vnfCompute);
+
+		final Set<VnfStorage> vnfStorage = new HashSet<>();
+		final VnfStorage vnfStorage1 = new VnfStorage();
+		final SoftwareImage softwareImage2 = new SoftwareImage();
+
+		final Checksum checksum2 = new Checksum();
+		checksum2.setAlgorithm("SHA-512");
+		checksum2.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		softwareImage2.setChecksum(checksum2);
+		vnfStorage1.setSoftwareImage(softwareImage2);
+		vnfStorage.add(vnfStorage1);
+		vnfDao.setVnfStorage(vnfStorage);
+
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfDao, VnfPkgInfo.class);
+		final List<VnfPackageSoftwareImageInfo> swImages = vnfPkgInfo.getSoftwareImages();
+		assertEquals(2, swImages.size());
+	}
+
+	@Test
+	void testVnfPackage2VnfInstance() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);
+		final VnfInstance avc = mapper.map(avcDb, VnfInstance.class);
+		assertEquals(avcDb.getVnfdVersion(), avc.getVnfdVersion());
+		assertEquals(avcDb.getId(), avc.getVnfPkg().getId());
+		assertEquals(avcDb.getVnfProductName(), avc.getVnfProductName());
+		assertEquals(avcDb.getVnfProvider(), avc.getVnfProvider());
+		assertEquals(avcDb.getVnfSoftwareVersion(), avc.getVnfSoftwareVersion());
+	}
+
+	@Test
+	void testVnfPackage2Lcm() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);
+		final VnfLcmOpOccs avc = mapper.map(avcDb, VnfLcmOpOccs.class);
+		System.out.println("" + avc);
 	}
 }

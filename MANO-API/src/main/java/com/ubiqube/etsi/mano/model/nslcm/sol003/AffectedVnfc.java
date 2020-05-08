@@ -14,13 +14,13 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
@@ -83,7 +83,7 @@ public class AffectedVnfc {
 	private ResourceHandle computeResource = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	@JsonProperty("affectedVnfcCpIds")
 	private List<String> affectedVnfcCpIds = null;
@@ -184,7 +184,7 @@ public class AffectedVnfc {
 		this.computeResource = computeResource;
 	}
 
-	public AffectedVnfc metadata(final KeyValuePairs metadata) {
+	public AffectedVnfc metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -198,11 +198,11 @@ public class AffectedVnfc {
 	 **/
 	@JsonProperty("metadata")
 	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfcResourceInfo structure. ")
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

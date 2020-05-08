@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 /**
  * Enum for all asynchronous event.
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -15,6 +15,7 @@ public enum ActionType {
 	NS_TERMINATE("NS_TERMINATE"),
 	VNF_INSTANTIATE("VNF_INSTANTIATE"),
 	VNF_TERMINATE("VNF_TERMINATE"),
+	GRANT_REQUEST("GRANT_REQUEST"),
 	;
 
 	private String value;

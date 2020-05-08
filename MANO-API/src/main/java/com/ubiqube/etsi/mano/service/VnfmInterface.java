@@ -1,19 +1,21 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.util.UUID;
+
 import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public interface VnfmInterface {
 
-	VnfInstance createVnfInstance(final VnfPkgInfo vnf, String vnfInstanceDescription, String vnfInstanceName);
+	VnfInstance createVnfInstance(final VnfPackage vnf, String vnfInstanceDescription, String vnfInstanceName);
 
-	VnfLcmOpOcc vnfInstatiate(String vnfInstanceId, String vnfId);
+	VnfLcmOpOccs vnfInstatiate(String vnfInstanceId, String vnfId);
 
-	VnfLcmOpOcc getVnfLcmOpOccs(@NotNull String id);
+	VnfLcmOpOccs getVnfLcmOpOccs(@NotNull UUID id);
 
-	VnfLcmOpOcc vnfTerminate(String nsInstanceId, String vnfId);
+	VnfLcmOpOccs vnfTerminate(String nsInstanceId, String vnfId);
 
 }

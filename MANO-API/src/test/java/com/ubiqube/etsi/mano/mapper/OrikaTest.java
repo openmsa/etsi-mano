@@ -2,20 +2,20 @@ package com.ubiqube.etsi.mano.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
+import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -34,13 +34,17 @@ public class OrikaTest {
 	void testMapVnfArtifactChecksum() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 
-		final VnfPkgInfo vnf = VnfPackageFactory.createVnfPkgInfo(new KeyValuePairs());
-		final VnfPackageArtifactInfo additionalArtifactsItem = new VnfPackageArtifactInfo();
+		final VnfPackage vnf = VnfPackageFactory.createVnfPkgInfo(new HashMap<String, String>());
+		final AdditionalArtifact additionalArtifactsItem = new AdditionalArtifact();
 		final Checksum checksum = new Checksum();
-		checksum.algorithm("SHA-512").hash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-		additionalArtifactsItem.artifactPath("/path").checksum(checksum);
-		vnf.addAdditionalArtifactsItem(additionalArtifactsItem);
+		checksum.setAlgorithm("SHA-512");
+		checksum.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		additionalArtifactsItem.setArtifactPath("/path");
+		additionalArtifactsItem.setChecksum(checksum);
 
+		final Set<AdditionalArtifact> additionalArtifacts = new HashSet<>();
+		additionalArtifacts.add(additionalArtifactsItem);
+		vnf.setAdditionalArtifacts(additionalArtifacts);
 		final VnfPackage cnv = mapper.map(vnf, VnfPackage.class);
 		System.out.println("" + cnv);
 	}

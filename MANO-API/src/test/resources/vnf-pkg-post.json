@@ -1,106 +1,11 @@
 {
-        "userDefinedData": {
-            "customerId": "TMAA6",
-            "vimId": "TMA125",
-            "manufacturerId": "18",
-            "modelId": "121",
-            "device_login": "aa",
-            "device_password": "pp",
-            "heat": {
-                "heat_template_version": "2015-04-30",
-                "description": "HOT template (Heat Orchestration Template) for NTR\n",
-                "parameters": {
-                    "key_name": {
-                        "type": "string",
-                        "description": "Name of key-pair to be used for compute instance",
-                        "default": ""
-                    },
-                    "flavor": {
-                        "type": "string",
-                        "description": "Type of instance (flavor) to be used",
-                        "default": "vnf.medium"
-                    },
-                    "simulator_image_id": {
-                        "type": "string",
-                        "description": "Image Name",
-                        "default": "juniper-vsrx"
-                    },
-                    "private_network_id": {
-                        "type": "string",
-                        "description": "Private network ID",
-                        "default": "ext-net"
-                    },
-                    "private_subnetwork": {
-                        "type": "string",
-                        "description": "Private sub-network name or ID",
-                        "default": "ext-subnet"
-                    },
-                    "public_network": {
-                        "type": "string",
-                        "description": "Network private IP's to attach instance to .",
-                        "default": "public"
-                    }
-                },
-                "resources": {
-                    "Junipervsrx": {
-                        "type": "OS::Nova::Server",
-                        "properties": {
-                            "name": "juniervsrx",
-                            "key_name": {
-                                "get_param": "key_name"
-                            },
-                            "image": {
-                                "get_param": "simulator_image_id"
-                            },
-                            "flavor": {
-                                "get_param": "flavor"
-                            },
-                            "config_drive": true,
-                            "networks": [
-                                {
-                                    "port": {
-                                        "get_resource": "simulator_port"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "simulator_port": {
-                        "type": "OS::Neutron::Port",
-                        "properties": {
-                            "network_id": {
-                                "get_param": "private_network_id"
-                            }
-                        }
-                    },
-                    "simulator_floating_ip": {
-                        "type": "OS::Neutron::FloatingIP",
-                        "properties": {
-                            "floating_network": {
-                                "get_param": "public_network"
-                            }
-                        }
-                    },
-                    "simulator_floating_ip_association": {
-                        "type": "OS::Neutron::FloatingIPAssociation",
-                        "properties": {
-                            "floatingip_id": {
-                                "get_resource": "simulator_floating_ip"
-                            },
-                            "port_id": {
-                                "get_attr": [
-                                    "Junipervsrx",
-                                    "addresses",
-                                    {
-                                        "get_param": "private_network_id"
-                                    },
-                                    0,
-                                    "port"
-                                ]
-                            }
-                        }
-                    }
-                }
-            }
-        }
+	"userDefinedData": {
+		"customerId": "TMAA6",
+		"vimId": "TMA125",
+		"manufacturerId": "18",
+		"modelId": "121",
+		"device_login": "aa",
+		"device_password": "pp",
+		"heat":"Hello"
+	}
 }

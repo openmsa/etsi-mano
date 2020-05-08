@@ -14,9 +14,9 @@ package com.ubiqube.etsi.mano.model.nslcm.sol003;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
@@ -40,13 +40,13 @@ public class VnfInfoModifications {
 	private String vnfInstanceDescription = null;
 
 	@JsonProperty("vnfConfigurableProperties")
-	private KeyValuePairs vnfConfigurableProperties = null;
+	private Map<String, String> vnfConfigurableProperties = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	@JsonProperty("extensions")
-	private KeyValuePairs extensions = null;
+	private Map<String, String> extensions = null;
 
 	@JsonProperty("vimConnectionInfo")
 	private List<VimConnectionInfo> vimConnectionInfo = null;
@@ -111,7 +111,7 @@ public class VnfInfoModifications {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 	}
 
-	public VnfInfoModifications vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public VnfInfoModifications vnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -125,15 +125,15 @@ public class VnfInfoModifications {
 	 **/
 	@JsonProperty("vnfConfigurableProperties")
 	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". ")
-	public KeyValuePairs getVnfConfigurableProperties() {
+	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public VnfInfoModifications metadata(final KeyValuePairs metadata) {
+	public VnfInfoModifications metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -146,15 +146,15 @@ public class VnfInfoModifications {
 	 **/
 	@JsonProperty("metadata")
 	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"metadata\" attribute in \"VnfInstance\". ")
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInfoModifications extensions(final KeyValuePairs extensions) {
+	public VnfInfoModifications extensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -167,11 +167,11 @@ public class VnfInfoModifications {
 	 **/
 	@JsonProperty("extensions")
 	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"extensions\" attribute in \"VnfInstance\". ")
-	public KeyValuePairs getExtensions() {
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(final KeyValuePairs extensions) {
+	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 	}
 
@@ -182,7 +182,7 @@ public class VnfInfoModifications {
 
 	public VnfInfoModifications addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
-			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
+			this.vimConnectionInfo = new ArrayList<>();
 		}
 		this.vimConnectionInfo.add(vimConnectionInfoItem);
 		return this;

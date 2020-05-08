@@ -74,7 +74,7 @@ public class LowPhys implements Low {
 		final Path path = Paths.get(_path);
 		try (final Stream<Path> walk = Files.walk(path)) {
 			return walk.filter(x -> x.toString().endsWith(_pattern))
-					.map(x -> x.toString())
+					.map(Path::toString)
 					.collect(Collectors.toList());
 		} catch (final IOException e) {
 			throw new GenericException(e);

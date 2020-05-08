@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
@@ -22,27 +23,31 @@ import com.ubiqube.etsi.mano.model.vnf.VnfPkgOperation;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
+import ma.glasnost.orika.MapperFacade;
+
 @Profile("!RDBMS")
-public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> implements VnfLcmOpOccsRepository {
+public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private static final String INDEXES_JSON = "indexes.json";
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageMsa vnfPackageMsa;
+	private final MapperFacade mapper;
 	private static final String REPOSITORY_VNF_LCM_OP_OCCS_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf-lcm-op-occs";
 
-	public VnfLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfInstancesRepository _vnfInstancesRepository, final VnfPackageMsa _vnfPackageMsa) {
+	public VnfLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfInstancesRepository _vnfInstancesRepository, final VnfPackageMsa _vnfPackageMsa, final MapperFacade _orikamapper) {
 		super(_mapper, _repositoryService, _jsonFilter);
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfPackageMsa = _vnfPackageMsa;
+		mapper = _orikamapper;
 	}
 
 	@Override
-	String setId(final VnfLcmOpOcc _entity) {
-		final String id = _entity.getId();
+	String setId(final VnfLcmOpOccs _entity) {
+		final String id = _entity.getId().toString();
 		if (null == id) {
-			_entity.setId(UUID.randomUUID().toString());
+			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId();
+		return _entity.getId().toString();
 	}
 
 	@Override
@@ -61,19 +66,18 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 	}
 
 	@Override
-	public void save(final List<VnfLcmOpOcc> vnfLcmOpOccsIds) {
+	public void save(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
 		vnfLcmOpOccsIds.forEach(this::save);
 	}
 
-	@Override
-	public VnfLcmOpOcc createLcmOpOccs(final String vnfInstanceId, final LcmOperationType operation) {
-		final VnfLcmOpOcc vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
+	public VnfLcmOpOccs createLcmOpOccs(final UUID vnfInstanceId, final LcmOperationType operation) {
+		final VnfLcmOpOccs vnfLcmOpOcc = LcmFactory.createVnfLcmOpOccs(operation, vnfInstanceId);
 		save(vnfLcmOpOcc);
 
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
-		final VnfPkgInstance instance = new VnfPkgInstance(vnfInstanceId);
-		final VnfPkgOperation vnfPackageOperation = new VnfPkgOperation(vnfLcmOpOcc.getId());
+		final VnfPkgInstance instance = new VnfPkgInstance(vnfInstanceId.toString());
+		final VnfPkgOperation vnfPackageOperation = new VnfPkgOperation(vnfLcmOpOcc.getId().toString());
 		instance.addOperation(vnfPackageOperation);
 		vnfPkgIndex.addVnfPkgInstance(instance);
 		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
@@ -81,7 +85,7 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 	}
 
 	@Override
-	public void updateState(final VnfLcmOpOcc lcmOpOccs, final LcmOperationStateType operationState) {
+	public void updateState(final VnfLcmOpOccs lcmOpOccs, final LcmOperationStateType operationState) {
 		lcmOpOccs.setOperationState(operationState);
 		lcmOpOccs.setStateEnteredTime(new Date());
 		save(lcmOpOccs);
@@ -89,15 +93,25 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOcc> impl
 
 	@Override
 	public void attachProcessIdToLcmOpOccs(final String id, final String processId) {
-		final VnfLcmOpOcc lcmOpOccs = get(id);
+		final VnfLcmOpOccs lcmOpOccs = get(id);
 		@NotNull
-		final String vnfInstanceId = lcmOpOccs.getVnfInstanceId();
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final String vnfInstanceId = lcmOpOccs.getVnfInstance().getId().toString();
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance indexInstance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 		final VnfPkgOperation operation = indexInstance.getOperation(id);
 		operation.setProcessId(processId);
 		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
+	}
+
+	@Override
+	public VnfLcmOpOccs get(final UUID id) {
+		return get(id.toString());
+	}
+
+	@Override
+	public void delete(final UUID id) {
+		delete(id.toString());
 	}
 
 }

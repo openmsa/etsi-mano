@@ -1,18 +1,25 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
@@ -25,7 +32,8 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
-public class VnfPackage implements BaseEntity {
+@EntityListeners(AuditListener.class)
+public class VnfPackage implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -45,12 +53,12 @@ public class VnfPackage implements BaseEntity {
 	@Field
 	private String vnfdVersion;
 
+	private String flavorId;
+
 	private Checksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<SoftwareImage> softwareImages;
-
-	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
@@ -69,7 +77,34 @@ public class VnfPackage implements BaseEntity {
 	private PackageUsageStateType usageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<VnfUserDefinedData> userDefinedData;
+	@Fetch(FetchMode.SELECT)
+	private Map<String, String> userDefinedData;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfCompute> vnfCompute;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfVl> vnfVl;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfStorage> vnfStorage;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfLinkPort> vnfLinkPort;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfExtCp> vnfExtCp;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<ScalingAspect> scalingAspects;
+
+	@Embedded
+	private Audit audit;
 
 	@Override
 	public UUID getId() {
@@ -128,14 +163,6 @@ public class VnfPackage implements BaseEntity {
 		this.checksum = checksum;
 	}
 
-	public Set<SoftwareImage> getSoftwareImages() {
-		return softwareImages;
-	}
-
-	public void setSoftwareImages(final Set<SoftwareImage> softwareImages) {
-		this.softwareImages = softwareImages;
-	}
-
 	public Set<AdditionalArtifact> getAdditionalArtifacts() {
 		return additionalArtifacts;
 	}
@@ -168,12 +195,78 @@ public class VnfPackage implements BaseEntity {
 		this.usageState = usageState;
 	}
 
-	public List<VnfUserDefinedData> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final List<VnfUserDefinedData> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
+	}
+
+	public Set<VnfCompute> getVnfCompute() {
+		return vnfCompute;
+	}
+
+	public void setVnfCompute(final Set<VnfCompute> vnfCompute) {
+		this.vnfCompute = vnfCompute;
+	}
+
+	public Set<VnfVl> getVnfVl() {
+		return vnfVl;
+	}
+
+	public void setVnfVl(final Set<VnfVl> vnfVl) {
+		this.vnfVl = vnfVl;
+	}
+
+	public Set<VnfStorage> getVnfStorage() {
+		return vnfStorage;
+	}
+
+	public void setVnfStorage(final Set<VnfStorage> vnfStorage) {
+		this.vnfStorage = vnfStorage;
+	}
+
+	public Set<VnfLinkPort> getVnfLinkPort() {
+		return vnfLinkPort;
+	}
+
+	public void setVnfLinkPort(final Set<VnfLinkPort> vnfLinkPort) {
+		this.vnfLinkPort = vnfLinkPort;
+	}
+
+	public Set<ScalingAspect> getScalingAspects() {
+		return scalingAspects;
+	}
+
+	public void setScalingAspects(final Set<ScalingAspect> scalingAspects) {
+		this.scalingAspects = scalingAspects;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
+	}
+
+	public Set<VnfExtCp> getVnfExtCp() {
+		return vnfExtCp;
+	}
+
+	public void setVnfExtCp(final Set<VnfExtCp> vnfExtCp) {
+		this.vnfExtCp = vnfExtCp;
 	}
 
 }

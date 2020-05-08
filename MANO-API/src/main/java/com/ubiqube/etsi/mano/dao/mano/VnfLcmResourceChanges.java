@@ -1,43 +1,71 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
-
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualLink;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualStorage;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Embeddable
 public class VnfLcmResourceChanges {
-	private List<AffectedVnfc> affectedVnfcs = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<AffectedCompute> affectedVnfcs = null;
 
-	private List<AffectedVirtualLink> affectedVirtualLinks = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<AffectedVl> affectedVirtualLinks = null;
 
-	private List<AffectedVirtualStorage> affectedVirtualStorages = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<AffectedVs> affectedVirtualStorages = null;
 
-	public List<AffectedVnfc> getAffectedVnfcs() {
+	public Set<AffectedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;
 	}
 
-	public void setAffectedVnfcs(final List<AffectedVnfc> affectedVnfcs) {
+	public void setAffectedVnfcs(final Set<AffectedCompute> affectedVnfcs) {
 		this.affectedVnfcs = affectedVnfcs;
 	}
 
-	public List<AffectedVirtualLink> getAffectedVirtualLinks() {
+	public void addAffectedVnfcs(final AffectedCompute affectedCompute) {
+		if (null == affectedVnfcs) {
+			affectedVnfcs = new HashSet<>();
+		}
+		affectedVnfcs.add(affectedCompute);
+	}
+
+	public Set<AffectedVl> getAffectedVirtualLinks() {
 		return affectedVirtualLinks;
 	}
 
-	public void setAffectedVirtualLinks(final List<AffectedVirtualLink> affectedVirtualLinks) {
+	public void setAffectedVirtualLinks(final Set<AffectedVl> affectedVirtualLinks) {
 		this.affectedVirtualLinks = affectedVirtualLinks;
 	}
 
-	public List<AffectedVirtualStorage> getAffectedVirtualStorages() {
+	public Set<AffectedVs> getAffectedVirtualStorages() {
 		return affectedVirtualStorages;
 	}
 
-	public void setAffectedVirtualStorages(final List<AffectedVirtualStorage> affectedVirtualStorages) {
+	public void setAffectedVirtualStorages(final Set<AffectedVs> affectedVirtualStorages) {
 		this.affectedVirtualStorages = affectedVirtualStorages;
+	}
+
+	public void addAffectedVirtualLink(final AffectedVl affectedVirtualLink) {
+		if (null == affectedVirtualLinks) {
+			affectedVirtualLinks = new HashSet<>();
+		}
+		affectedVirtualLinks.add(affectedVirtualLink);
+	}
+
+	public void addAffectedVirtualStorage(final AffectedVs affectedVs) {
+		if (null == affectedVirtualStorages) {
+			affectedVirtualStorages = new HashSet<>();
+		}
+		affectedVirtualStorages.add(affectedVs);
 	}
 
 }

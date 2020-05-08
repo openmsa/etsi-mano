@@ -4,6 +4,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -58,9 +59,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
 
-		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		final ObjectMapper mapperForView = MapperForView.getMapperForView(exclude, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
+			return new ResponseEntity<>(mapperForView.writeValueAsString(result), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -70,12 +71,12 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest);
 		vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
-		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
+		return ResponseEntity.accepted().header("Location", vnfInstance.getLinks().getSelf().getHref()).build();
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId, final ChangeExtVnfConnectivityRequest changeExtVnfConnectivityRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.
@@ -86,7 +87,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.
@@ -103,7 +104,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
-		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
@@ -111,7 +112,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 
 		throw new GenericException("TODO");
@@ -130,7 +131,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.
@@ -141,7 +142,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		throw new GenericException("TODO");
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -151,7 +152,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.
@@ -162,7 +163,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.

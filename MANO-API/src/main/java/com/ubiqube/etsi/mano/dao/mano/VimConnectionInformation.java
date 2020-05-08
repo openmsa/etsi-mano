@@ -1,17 +1,23 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class VimConnectionInformation {
+@EntityListeners(AuditListener.class)
+public class VimConnectionInformation implements Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -22,10 +28,14 @@ public class VimConnectionInformation {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> interfaceInfo = null;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> accessInfo = null;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extra = null;
+
+	private Audit audit;
 
 	public UUID getId() {
 		return id;
@@ -73,6 +83,16 @@ public class VimConnectionInformation {
 
 	public void setVimId(final String vimId) {
 		this.vimId = vimId;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

@@ -45,7 +45,7 @@ public class TreeBuilderV25 extends EtsiFilterV25BaseListener {
 
 	@Override
 	public void exitFilter(final FilterContext ctx) {
-		currentNode.setValue(ctx.getText());
+		currentNode.addValue(ctx.getText());
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class TreeBuilderV25 extends EtsiFilterV25BaseListener {
 
 	@Override
 	public void exitValue(final ValueContext ctx) {
-		currentNode.setValue(ctx.getText());
+		currentNode.addValue(ctx.getText());
 	}
 
 }

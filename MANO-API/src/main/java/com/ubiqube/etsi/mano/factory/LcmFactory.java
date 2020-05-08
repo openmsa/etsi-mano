@@ -6,7 +6,10 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.Link;
@@ -15,21 +18,18 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOperationStateType;
 
 public final class LcmFactory {
 	private LcmFactory() {
 		// Nothing.
 	}
 
+	// XXX Is it to be in LCM ?
 	@Nonnull
-	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest) {
+	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest, final VnfPackage vnfPkgInfo) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
 		final VnfPackage vnfPackage = new VnfPackage();
@@ -37,9 +37,12 @@ public final class LcmFactory {
 		vnfInstance.setVnfPkg(vnfPackage);
 		vnfInstance.setVnfInstanceDescription(createVnfRequest.getVnfInstanceDescription());
 		vnfInstance.setVnfInstanceName(createVnfRequest.getVnfInstanceName());
+		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
+		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
+		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
 
-		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
-		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STOPPED);
+		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
+		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		return vnfInstance;
@@ -98,17 +101,19 @@ public final class LcmFactory {
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
-		nsLcmOpOccsNsLcmOpOcc.setOperationState(NsLcmOperationStateType.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());
 		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
 
 	@Nonnull
-	public static VnfLcmOpOcc createVnfLcmOpOccs(final LcmOperationType operation, final String vnfInstanceId) {
-		final VnfLcmOpOcc vnfLcmOpOcc = new VnfLcmOpOcc();
+	public static VnfLcmOpOccs createVnfLcmOpOccs(final LcmOperationType operation, final UUID vnfInstanceId) {
+		final VnfLcmOpOccs vnfLcmOpOcc = new VnfLcmOpOccs();
 		vnfLcmOpOcc.setOperation(operation);
-		vnfLcmOpOcc.setVnfInstanceId(vnfInstanceId);
+		final VnfInstance vnfInstance = new VnfInstance();
+		vnfInstance.setId(vnfInstanceId);
+		vnfLcmOpOcc.setVnfInstance(vnfInstance);
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
 		vnfLcmOpOcc.setOperationState(LcmOperationStateType.STARTING);

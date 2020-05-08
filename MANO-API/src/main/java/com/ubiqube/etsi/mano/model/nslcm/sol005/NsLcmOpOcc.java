@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 
@@ -30,7 +31,7 @@ public class NsLcmOpOcc {
 	private String id = null;
 
 	@JsonProperty("operationState")
-	private NsLcmOperationStateType operationState = null;
+	private LcmOperationStateType operationState = null;
 
 	@JsonProperty("stateEnteredTime")
 	private OffsetDateTime stateEnteredTime = null;
@@ -86,7 +87,7 @@ public class NsLcmOpOcc {
 		this.id = id;
 	}
 
-	public NsLcmOpOcc operationState(final NsLcmOperationStateType operationState) {
+	public NsLcmOpOcc operationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 		return this;
 	}
@@ -101,11 +102,11 @@ public class NsLcmOpOcc {
 
 	@Valid
 
-	public NsLcmOperationStateType getOperationState() {
+	public LcmOperationStateType getOperationState() {
 		return operationState;
 	}
 
-	public void setOperationState(final NsLcmOperationStateType operationState) {
+	public void setOperationState(final LcmOperationStateType operationState) {
 		this.operationState = operationState;
 	}
 

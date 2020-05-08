@@ -1,36 +1,55 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-
 @Entity
-public class Grants {
+@EntityListeners(AuditListener.class)
+public class Grants implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
+	@Embedded
+	private Audit audit;
+
+	private String vnfdId;
+
+	private String flavourId;
+
+	private String operation;
+
+	private boolean isAutomaticInvocation;
+
+	private boolean instantiationLevelId;
+
+	// Must be string because VNFM / NFVO are differents.
 	private String vnfInstanceId = null;
 
-	@OneToOne
-	private VnfLcmOpOccs vnfLcmOpOccId = null;
+	// Must be string because VNFM / NFVO are differents.
+	private String vnfLcmOpOccId = null;
 
 	@Valid
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<VimConnectionInformation> vimConnections = null;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VimConnectionInformation> vimConnections = null;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "grants")
 	private List<ZoneInfoEntity> zones = null;
@@ -46,41 +65,62 @@ public class Grants {
 	private String storageReservationId = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> addResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> addResources = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> tempResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> tempResources = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> removeResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> removeResources = null;
 
 	@Valid
-	@ElementCollection
-	private List<GrantInformation> updateResources = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<GrantInformation> updateResources = null;
 
 	@Embedded
 	private GrantVimAssetsEntity vimAssets = null;
 
 	@Valid
-	@ElementCollection
-	private List<ExtVirtualLinkDataEntity> extVirtualLinks = null;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
 
 	@Valid
 	@OneToMany(mappedBy = "grants")
-	private List<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
 
-	@Transient
-	private KeyValuePairs additionalParams = null;
+	@ElementCollection
+	private Map<String, String> additionalParams = null;
 
+	/**
+	 * Flag to say if grants have been, inspected.
+	 */
+	private Boolean available;
+
+	@Override
 	public UUID getId() {
 		return id;
 	}
 
 	public void setId(final UUID id) {
 		this.id = id;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 	public String getVnfInstanceId() {
@@ -91,19 +131,19 @@ public class Grants {
 		this.vnfInstanceId = vnfInstanceId;
 	}
 
-	public VnfLcmOpOccs getVnfLcmOpOccId() {
+	public String getVnfLcmOpOccId() {
 		return vnfLcmOpOccId;
 	}
 
-	public void setVnfLcmOpOccId(final VnfLcmOpOccs vnfLcmOpOccId) {
+	public void setVnfLcmOpOccId(final String vnfLcmOpOccId) {
 		this.vnfLcmOpOccId = vnfLcmOpOccId;
 	}
 
-	public List<VimConnectionInformation> getVimConnections() {
+	public Set<VimConnectionInformation> getVimConnections() {
 		return vimConnections;
 	}
 
-	public void setVimConnections(final List<VimConnectionInformation> vimConnections) {
+	public void setVimConnections(final Set<VimConnectionInformation> vimConnections) {
 		this.vimConnections = vimConnections;
 	}
 
@@ -147,35 +187,35 @@ public class Grants {
 		this.storageReservationId = storageReservationId;
 	}
 
-	public List<GrantInformation> getAddResources() {
+	public Set<GrantInformation> getAddResources() {
 		return addResources;
 	}
 
-	public void setAddResources(final List<GrantInformation> addResources) {
+	public void setAddResources(final Set<GrantInformation> addResources) {
 		this.addResources = addResources;
 	}
 
-	public List<GrantInformation> getTempResources() {
+	public Set<GrantInformation> getTempResources() {
 		return tempResources;
 	}
 
-	public void setTempResources(final List<GrantInformation> tempResources) {
+	public void setTempResources(final Set<GrantInformation> tempResources) {
 		this.tempResources = tempResources;
 	}
 
-	public List<GrantInformation> getRemoveResources() {
+	public Set<GrantInformation> getRemoveResources() {
 		return removeResources;
 	}
 
-	public void setRemoveResources(final List<GrantInformation> removeResources) {
+	public void setRemoveResources(final Set<GrantInformation> removeResources) {
 		this.removeResources = removeResources;
 	}
 
-	public List<GrantInformation> getUpdateResources() {
+	public Set<GrantInformation> getUpdateResources() {
 		return updateResources;
 	}
 
-	public void setUpdateResources(final List<GrantInformation> updateResources) {
+	public void setUpdateResources(final Set<GrantInformation> updateResources) {
 		this.updateResources = updateResources;
 	}
 
@@ -187,28 +227,76 @@ public class Grants {
 		this.vimAssets = vimAssets;
 	}
 
-	public List<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
+	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
 		return extVirtualLinks;
 	}
 
-	public void setExtVirtualLinks(final List<ExtVirtualLinkDataEntity> extVirtualLinks) {
+	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
 	}
 
-	public List<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
+	public Set<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
 		return extManagedVirtualLinks;
 	}
 
-	public void setExtManagedVirtualLinks(final List<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
+	}
+
+	public String getVnfdId() {
+		return vnfdId;
+	}
+
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
+
+	public String getFlavourId() {
+		return flavourId;
+	}
+
+	public void setFlavourId(final String flavourId) {
+		this.flavourId = flavourId;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(final String operation) {
+		this.operation = operation;
+	}
+
+	public boolean isAutomaticInvocation() {
+		return isAutomaticInvocation;
+	}
+
+	public void setAutomaticInvocation(final boolean isAutomaticInvocation) {
+		this.isAutomaticInvocation = isAutomaticInvocation;
+	}
+
+	public boolean isInstantiationLevelId() {
+		return instantiationLevelId;
+	}
+
+	public void setInstantiationLevelId(final boolean instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
+	}
+
+	public Boolean getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(final Boolean available) {
+		this.available = available;
 	}
 
 }

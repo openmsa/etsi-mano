@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
@@ -43,6 +44,8 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -73,14 +76,16 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 	private final EventManager eventManager;
+	private final MapperFacade mapper;
 
-	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService, final EventManager _eventManager) {
+	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService, final EventManager _eventManager, final MapperFacade _mapper) {
 		vnfManagement = _vnfManagement;
 		manufacturerModel = _manufacturerModel;
 		deviceService = _deviceService;
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
+		mapper = _mapper;
 		LOG.info("Starting VNF Package SOL005 Controller.");
 	}
 
@@ -93,24 +98,24 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, final String accept, final String range) throws ServiceException {
 		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, range);
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
 	}
 
 	@Override
 	// TODO: Same as SOL003 ?
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, links);
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), links);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
+		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
 	}
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, accept);
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId), accept);
 	}
 
 	/**
@@ -121,44 +126,45 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesPost(final String accept, final String contentType, final CreateVnfPkgInfoRequest vnfPackagePostQuery) {
-		final Map<String, Object> userData = vnfPackagePostQuery.getUserDefinedData();
+		final Map<String, String> userData = vnfPackagePostQuery.getUserDefinedData();
 
-		VnfPkgInfo vnfPkgInfo = VnfPackageFactory.createVnfPkgInfo(userData);
+		VnfPackage vnfPackage = VnfPackageFactory.createVnfPkgInfo(userData);
 
 		checkUserData(userData);
 		final Object heatDoc = userData.remove("heat");
-		vnfPkgInfo = vnfPackageRepository.save(vnfPkgInfo);
-		@NotNull
-		final String vnfPkgId = vnfPkgInfo.getId();
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		vnfPackage = vnfPackageRepository.save(vnfPackage);
+		final String vnfPkgId = vnfPackage.getId().toString();
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
-			vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
-			vnfPkgInfo.setOperationalState(PackageOperationalStateType.ENABLED);
-			vnfPackageRepository.save(vnfPkgInfo);
+			vnfPackage.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
+			vnfPackage.setOperationalState(PackageOperationalStateType.ENABLED);
+			vnfPackageRepository.save(vnfPackage);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
+		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.CREATED);
 	}
 
-	private void checkUserData(final Map<String, Object> userData) {
-		Assert.notNull(userData.get("customerId"), "customerId could not be null.");
-		// Not in camel case ???
-		Assert.notNull(userData.get("device_login"), "device_login could not be null.");
-		Assert.notNull(userData.get("device_password"), "device_password could not be null.");
-		final String vimId = (String) userData.get("vimId");
+	private void checkUserData(final Map<String, String> userData) {
+		final String vimId = userData.get("vimId");
 		if (null == vimId) {
-			throw new BadRequestException("vimId could not be null");
+			// Not MSA
+			return;
 		}
 		try {
 			deviceService.getDeviceId(vimId);
 		} catch (final ServiceException e) {
 			throw new BadRequestException("vimId is not found in MSA.", e);
 		}
-		final String manufacturerId = (String) userData.get("manufacturerId");
+		Assert.notNull(userData.get("customerId"), "customerId could not be null.");
+		// Not in camel case ???
+		Assert.notNull(userData.get("device_login"), "device_login could not be null.");
+		Assert.notNull(userData.get("device_password"), "device_password could not be null.");
+		final String manufacturerId = userData.get("manufacturerId");
 		Assert.notNull(manufacturerId, "manufacturerId could not be null.");
-		final String modelId = (String) userData.get("modelId");
+		final String modelId = userData.get("modelId");
 		Assert.notNull(modelId, "modelId could not be null.");
 		// Probably not the best place to do that.
 		final String manufacturer = manufacturerModel.getManufacturerById(manufacturerId);
@@ -175,9 +181,9 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		ensureDisabled(vnfPkgInfo);
-		ensureNotInUse(vnfPkgInfo);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		ensureDisabled(vnfPackage);
+		ensureNotInUse(vnfPackage);
 		vnfPackageRepository.delete(vnfPkgId);
 		return ResponseEntity.noContent().build();
 	}
@@ -193,10 +199,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		patcher.patch(body, vnfPkgInfo);
-		vnfPackageRepository.save(vnfPkgInfo);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		patcher.patch(body, vnfPackage);
+		vnfPackageRepository.save(vnfPackage);
 
+		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		// On change Notification
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
@@ -213,8 +220,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		ensureNotOnboarded(vnfPkgInfo);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> parameters = new HashMap<>();
 		try {
 			parameters.put("data", file.getBytes());
@@ -236,8 +243,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final UploadVnfPkgFromUriRequest contentUploadFromUriPostRequest) {
-		final VnfPkgInfo vnfPkgInfo = vnfPackageRepository.get(vnfPkgId);
-		ensureNotOnboarded(vnfPkgInfo);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		ensureNotOnboarded(vnfPackage);
 
 		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();

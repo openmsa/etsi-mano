@@ -1,10 +1,11 @@
 package com.ubiqube.bean;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
@@ -13,8 +14,6 @@ import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 
 public class TestFactory {
@@ -41,13 +40,16 @@ public class TestFactory {
 		return fd;
 	}
 
-	public static VnfPackageSoftwareImageInfo createVnfPackagesVnfPkgInfoSoftwareImages() {
-		final VnfPackageSoftwareImageInfo si = new VnfPackageSoftwareImageInfo();
-		si.setChecksum(new Checksum().algorithm("SHA-512").hash("e7c22b994c59d9cf2b48e549b1e24666636045930d3da7c1acb299d1c3b7f931f94aae41edda2c2b207a36e10f8bcb8d45223e54878f5b316e7ce3b6bc019629"));
-		si.setContainerFormat(ContainerFormatEnum.BARE);
-		si.setCreatedAt(OffsetDateTime.now());
+	public static SoftwareImage createVnfPackagesVnfPkgInfoSoftwareImages() {
+		final SoftwareImage si = new SoftwareImage();
+		final Checksum checksum = new Checksum();
+		checksum.setAlgorithm("SHA-512");
+		checksum.setHash("e7c22b994c59d9cf2b48e549b1e24666636045930d3da7c1acb299d1c3b7f931f94aae41edda2c2b207a36e10f8bcb8d45223e54878f5b316e7ce3b6bc019629");
+		si.setChecksum(checksum);
+		si.setContainerFormat(ContainerFormatEnum.BARE.name());
+		// si.setCreatedAt(OffsetDateTime.now());
 		si.setImagePath("/mnt/images/myimages.raw");
-		si.setSize(12345);
+		si.setSize(12345L);
 		return si;
 	}
 

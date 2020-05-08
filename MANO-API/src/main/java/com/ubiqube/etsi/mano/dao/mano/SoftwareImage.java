@@ -1,25 +1,69 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.util.UUID;
+
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
-@Embeddable
-public class SoftwareImage {
+@Entity
+@EntityListeners(AuditListener.class)
+public class SoftwareImage implements Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id = null;
+
+	private String vimId;
+
 	private String name;
+
 	private String provider;
+
 	private String version;
+
 	@Embedded
 	private Checksum checksum;
-	// Probably an Enum.
+
+	// XXX: Probably an Enum.
 	private String containerFormat;
-	// Probably an Enum.
+
+	// XXX: Probably an Enum.
 	private String diskFormat;
+
 	private long minDisk;
+
 	private long minRam;
+
 	private long size;
+
 	private String imagePath;
+
+	private Audit audit;
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(final UUID id) {
+		this.id = id;
+	}
+
+	public String getVimId() {
+		return vimId;
+	}
+
+	public void setVimId(final String vimId) {
+		this.vimId = vimId;
+	}
 
 	public String getName() {
 		return name;
@@ -99,6 +143,16 @@ public class SoftwareImage {
 
 	public void setImagePath(final String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

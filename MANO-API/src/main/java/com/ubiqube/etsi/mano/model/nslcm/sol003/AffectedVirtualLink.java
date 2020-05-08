@@ -12,12 +12,13 @@
 
 package com.ubiqube.etsi.mano.model.nslcm.sol003;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 
 import io.swagger.annotations.ApiModel;
@@ -85,7 +86,7 @@ public class AffectedVirtualLink {
 	private ResourceHandle networkResource = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public AffectedVirtualLink id(final String id) {
 		this.id = id;
@@ -178,7 +179,7 @@ public class AffectedVirtualLink {
 		this.networkResource = networkResource;
 	}
 
-	public AffectedVirtualLink metadata(final KeyValuePairs metadata) {
+	public AffectedVirtualLink metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -192,11 +193,11 @@ public class AffectedVirtualLink {
 	 **/
 	@JsonProperty("metadata")
 	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure. ")
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
