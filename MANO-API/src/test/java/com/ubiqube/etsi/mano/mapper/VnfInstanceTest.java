@@ -12,9 +12,11 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
+import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -91,6 +93,24 @@ public class VnfInstanceTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfInstance avcDb = podam.manufacturePojo(VnfInstance.class);
 		final VnfLcmOpOccs avc = mapper.map(avcDb, VnfLcmOpOccs.class);
+		System.out.println("" + avc);
+	}
+
+	@Test
+	void testInstantiateVnfRequest2VnfInstance() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final VnfInstantiatedInfo vii = new VnfInstantiatedInfo();
+		final Set<ExtCpInfo> extCpInfo = new HashSet<>();
+		final ExtCpInfo extcpInfo = new ExtCpInfo();
+		extcpInfo.setCpdId("abcdef");
+		extCpInfo.add(extcpInfo);
+		vii.setExtCpInfo(extCpInfo);
+		final Set<VirtualLinkInfo> extManagedVirtualLinkInfo = new HashSet<>();
+		extManagedVirtualLinkInfo.add(podam.manufacturePojo(VirtualLinkInfo.class));
+		vii.setExtManagedVirtualLinkInfo(extManagedVirtualLinkInfo);
+		vii.setFlavourId("abcd");
+		vii.setLocalizationLanguage("abc");
+		final VnfInstantiatedInfo avc = mapper.map(vii, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
 		System.out.println("" + avc);
 	}
 }
