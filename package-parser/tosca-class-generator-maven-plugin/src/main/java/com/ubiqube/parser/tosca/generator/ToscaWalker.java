@@ -267,7 +267,7 @@ public class ToscaWalker {
 			final String fieldName = fieldCamelCase(x + "_req");
 			final List<String> occ = y.getOccurrences();
 			LOG.debug("Forcing field Object");
-			listener.startField(fieldName, "java.lang.Object", isList(occ));
+			listener.startField(fieldName, "string", true);
 
 			// XXX: Probably one may be a concrete type.
 			if (null != y.getNode()) {
