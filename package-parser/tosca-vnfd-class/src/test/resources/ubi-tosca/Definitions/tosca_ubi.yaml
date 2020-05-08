@@ -14,8 +14,8 @@ topology_template:
         provider: Ubiqube internal.
         product_name: Integration tests
         software_version: 1.0.0
-        descriptor_version: 1.0.0
-        flavour_id: m1.small
+        descriptor_version: 1.0.1
+        flavour_id: flavor01
       requirements:
         - virtual_link: vl01
 
@@ -30,8 +30,10 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
       requirements:
-        - external_virtual_link:
-        - internal_virtual_link:
+        - external_virtual_link: 
+            node: public
+        - internal_virtual_link: 
+            node: leftVl01
 
     leftVdu01:
       type: tosca.nodes.nfv.Vdu.Compute
@@ -72,6 +74,9 @@ topology_template:
       name: Right instance
       description: A node.
       properties:
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 2
         sw_image_data:
           name: cirros
           version: 1.0.0
@@ -305,6 +310,77 @@ groups:
       description: My placement group.
 
 policies:
+  instantiation_levels:
+    type: tosca.policies.nfv.InstantiationLevels
+    properties:
+      levels:
+        small:
+          description: First step.
+          scale_info:
+            aspect_id:
+              scale_level: 1
+        big:
+          description: Second step.
+          scale_info:
+            aspect_id:
+              scale_level: 2
+      default_level: small
+
+# Vdu
+  vdu_il:
+    type: tosca.policies.nfv.VduInstantiationLevels
+    targets: [ "leftVdu01" ]
+    properties:
+      levels:
+        small_vdu_left:
+          number_of_instances: 1
+        big_vdu_left:
+          number_of_instances: 2
+
+# scaling aspect
+  scaling_aspects:
+    type: tosca.policies.nfv.ScalingAspects
+    properties:
+      aspects:
+        aspect_id:
+          name: aspect_id
+          description: description
+          max_scale_level: 1
+          step_deltas:
+            - delta_1
+        aspect_id2:
+          name: aspect_id2
+          description: description
+          max_scale_level: 2
+          step_deltas:
+            - delta_1
+            - delta_2
+            - delta_1
+
+  leftVdu01_initial_delta:
+    type: tosca.policies.nfv.VduInitialDelta
+    properties:
+      initial_delta:
+        number_of_instances: 1
+    targets: [ leftVdu01 ]
+
+
+# tosca.policies.nfv.VduScalingAspectDeltas
+  vdu_scaling_aspect:
+    type: tosca.policies.nfv.VduScalingAspectDeltas
+    targets: [ "leftVdu01" ]
+    properties:
+      aspect: string
+      deltas:
+        delta_1:
+          number_of_instances: 1
+        delta_2:
+          number_of_instances: 2
+
+
+
+
+
   my_scaling_ha_policy:
     type: tosca.policies.nfv.VduInstantiationLevels
     description: My policy.
