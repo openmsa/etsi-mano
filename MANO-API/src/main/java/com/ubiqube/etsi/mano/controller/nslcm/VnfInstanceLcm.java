@@ -18,16 +18,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -117,6 +116,9 @@ public class VnfInstanceLcm {
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
+		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
+		vnfInstance.setInstantiatedVnfInfo(ivf);
+		vnfInstancesRepository.save(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
 		LOG.info("Instantiation Event Sucessfully sent.");
 	}
@@ -131,13 +133,6 @@ public class VnfInstanceLcm {
 		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
 
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
-	}
-
-	private NsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final NsLcmOpType _lcmOperationType) {
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
-		lcmOpOccsMsa.save(lcmOpOccs);
-		lcmOpOccsMsa.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), _processId);
-		return lcmOpOccs;
 	}
 
 }
