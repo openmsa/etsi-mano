@@ -65,6 +65,9 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("vnfProvider", "provider")
 				.field("vnfProductName", "productName")
 				.field("vnfSoftwareVersion", "softwareVersion")
+				.field("vnfdVersion", "descriptorVersion")
+				.field("vnfdId", "descriptorId")
+				.field("flavorId", "flavourId")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(ArtefactInformations.class, AdditionalArtifact.class)

@@ -10,6 +10,12 @@ public class ProviderData {
 
 	private String vnfVersion;
 
+	private String flavorId;
+
+	private String vnfdVersion;
+
+	private String vnfdId;
+
 	public String getVnfProvider() {
 		return vnfProvider;
 	}
@@ -40,6 +46,30 @@ public class ProviderData {
 
 	public void setVnfVersion(final String vnfVersion) {
 		this.vnfVersion = vnfVersion;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
+	}
+
+	public String getVnfdVersion() {
+		return vnfdVersion;
+	}
+
+	public void setVnfdVersion(final String vnfdVersion) {
+		this.vnfdVersion = vnfdVersion;
+	}
+
+	public String getVnfdId() {
+		return vnfdId;
+	}
+
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
 	}
 
 }
