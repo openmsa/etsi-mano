@@ -109,6 +109,7 @@ public class VnfmActions {
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 
 		VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.INSTANTIATE, UUID.fromString(vnfInstanceId));
+
 		copyVnfPkgToLcm(vnfPkg, lcmOpOccs);
 		copyVnfInstanceToLcmOpOccs(vnfInstance, lcmOpOccs);
 		vnfLcmOpOccsRepository.save(lcmOpOccs);
@@ -135,20 +136,20 @@ public class VnfmActions {
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "create");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim);
-		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results);
+		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
 	}
 
-	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results) {
+	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		if (results.getErrored().isEmpty()) {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
-			vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
 			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
 		} else {
 			vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
-			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
 		vnfInstancesRepository.save(vnfInstance);
 	}
@@ -222,6 +223,7 @@ public class VnfmActions {
 	}
 
 	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
+		// XXX Normally we have to remap ExtCP VL but we have those since instantiate.
 		grants.getAddResources().forEach(x -> setGrantResource(x, vnfInstance));
 		// Map flavor & ImageId.
 		vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().forEach(x -> {
@@ -364,6 +366,7 @@ public class VnfmActions {
 	}
 
 	public void vnfTerminate(final String vnfInstanceId) {
+		LOG.info("Eecuting Terminate on instance {}", vnfInstanceId);
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
@@ -386,7 +389,7 @@ public class VnfmActions {
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "delete");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
-		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results);
+		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
 
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
 	}
