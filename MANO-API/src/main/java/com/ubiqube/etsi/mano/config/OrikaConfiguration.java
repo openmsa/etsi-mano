@@ -25,6 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
@@ -163,6 +164,11 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(ResourceHandle.class, ResourceHandleEntity.class)
 				.field("vimConnectionId", "vimConnectionInformation.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ResourceHandleEntity.class)
+				.field("vimId", "vimConnectionInformation.id")
+				.field("extManagedVirtualLinkId", "vduId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfPackage.class, VnfInstance.class)
