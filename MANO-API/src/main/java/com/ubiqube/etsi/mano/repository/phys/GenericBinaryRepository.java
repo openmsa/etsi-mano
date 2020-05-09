@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.repository.phys;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -101,7 +103,7 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 		try {
 			final String content = objectMapper.writeValueAsString(_object);
 			path = namingStrategy.getRoot(getClazz(), _id, _filename);
-			lowDriver.add(path.toString(), content.getBytes());
+			lowDriver.add(path.toString(), content.getBytes(Charset.defaultCharset()));
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -141,11 +143,11 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 		}
 	}
 
-	protected abstract String setId(T entity);
+	protected abstract @Nonnull String setId(T entity);
 
-	protected abstract Class<T> getClazz();
+	protected abstract @Nonnull Class<T> getClazz();
 
-	protected abstract String getFilename();
+	protected abstract @Nonnull String getFilename();
 
 	private void verifyPath(final Path path) {
 		if (!lowDriver.exist(path.toString())) {
