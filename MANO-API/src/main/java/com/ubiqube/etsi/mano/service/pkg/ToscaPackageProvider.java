@@ -120,6 +120,7 @@ public class ToscaPackageProvider implements PackageProvider {
 		mapperFactory.classMap(tosca.nodes.nfv.VnfExtCp.class, VnfExtCp.class)
 				.field("externalVirtualLinkReq", "externalVirtualLink")
 				.field("internalVirtualLinkReq", "internalVirtualLink")
+				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
 
