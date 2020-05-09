@@ -59,6 +59,7 @@ public class VnfLcmOpOcc {
 	@JsonProperty("isAutomaticInvocation")
 	private Boolean isAutomaticInvocation = null;
 
+	// XXX Clarify, This is probably the Query.
 	@JsonProperty("operationParams")
 	private Map<String, String> operationParams = null;
 
