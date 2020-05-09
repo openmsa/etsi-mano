@@ -21,8 +21,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
@@ -83,13 +81,6 @@ public class VnfInstanceLcm {
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
-		vnfPkgInfo.getVnfCompute().forEach(x -> {
-			final VnfcResourceInfo vnfcResourceInfoItem = new VnfcResourceInfo();
-			vnfcResourceInfoItem.setVduId(x.getId().toString());
-		});
-		vnfPkgInfo.getVnfVl().forEach(x -> {
-			final VnfVirtualLinkResourceInfo virtualLinkResourceInfoItem = new VnfVirtualLinkResourceInfo();
-		});
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CREATE, vnfInstance.getId().toString());
@@ -119,19 +110,17 @@ public class VnfInstanceLcm {
 		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
 		vnfInstance.setInstantiatedVnfInfo(ivf);
 		vnfInstancesRepository.save(vnfInstance);
-		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<>());
 		LOG.info("Instantiation Event Sucessfully sent.");
 	}
 
 	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		// TODO: A little bit wrong , move this to async.
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
-
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
 	}
 
