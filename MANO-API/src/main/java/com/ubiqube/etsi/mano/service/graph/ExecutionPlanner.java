@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import org.jgrapht.ListenableGraph;
@@ -20,12 +21,14 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
+import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -43,21 +46,24 @@ public class ExecutionPlanner {
 
 	private final VnfComputeJpa vnfComputeJpa;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfVlJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa) {
+	private final VnfExtCpJpa vnfExtCpJpa;
+
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfVlJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfVl = _vlProtocolDataJpa;
 		vnfStorageJpa = _vnfStorageJpa;
 		vnfComputeJpa = _vnfComputeJpa;
+		vnfExtCpJpa = _vnfExtCpJpa;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
 		// Vertex everyThing
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph(ConnectivityEdge.class));
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
 		return g;
 	}
 
+	@NotNull
 	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfInstance vnfInstance, @NotNull final VnfPackage vnfPackage) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
 		final Map<String, UnitOfWork> vertex = buildVertex(g, vnfInstance);
@@ -142,11 +148,16 @@ public class ExecutionPlanner {
 			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
-		// XXX ExtCP
+		vnfInstance.getExtManagedVirtualLinks().forEach(x -> {
+			final VnfExtCp extCp = vnfExtCpJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVduId()));
+			final UnitOfWork uow = new VnfExtCpUow(x, extCp);
+			vertex.put(extCp.getToscaName(), uow);
+			g.addVertex(uow);
+		});
 		return vertex;
 	}
 
-	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @NotNull final UUID _id, final VnfInstance vnfInstance, final String subName) {
+	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @Nonnull final UUID _id, final VnfInstance vnfInstance, final String subName) {
 		final DOTExporter<UnitOfWork, ConnectivityEdge> exporter = new DOTExporter<>(UnitOfWork::getName);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
@@ -161,7 +172,7 @@ public class ExecutionPlanner {
 
 	public ListenableGraph<UnitOfWork, ConnectivityEdge> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> gNew = createGraph();
-		g.vertexSet().forEach(x -> gNew.addVertex(x));
+		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
 	}
