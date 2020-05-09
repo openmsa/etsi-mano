@@ -50,7 +50,9 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		final OpenStackVim osVim = (OpenStackVim) vim;
-		osVim.deleteSubnet(vimConnectionInformation, resourceId);
+		LOG.debug("Deleting subnetwork: {}", resourceId);
+		// XXX Don't delete for the momment osVim.deleteSubnet(vimConnectionInformation,
+		// resourceId);
 		return null;
 	}
 
