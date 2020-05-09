@@ -308,4 +308,22 @@ public class MsaExecutor implements Vim {
 
 	}
 
+	@Override
+	public List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String networkId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteRouter(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

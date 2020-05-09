@@ -67,4 +67,10 @@ public interface Vim {
 	void deleteStorage(VimConnectionInformation vimConnectionInformation, String resourceId);
 
 	void deleteObjectStorage(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation);
+
+	String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId);
+
+	void deleteRouter(VimConnectionInformation vimConnectionInformation, String resourceId);
 }

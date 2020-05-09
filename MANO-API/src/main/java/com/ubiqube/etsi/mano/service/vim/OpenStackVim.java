@@ -392,18 +392,25 @@ public class OpenStackVim implements Vim {
 				.collect(Collectors.toList());
 	}
 
-	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String networkId) {
+	@Override
+	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		final Network net = os.networking().network().get(networkId);
+		final Network net = os.networking().network().get(internalNetworkId);
 		// XXX get first one ?
 		final String psubnetId = net.getNeutronSubnets().get(0).getId();
 		final Router routerBuilder = Builders.router()
 				.name(name)
-				.externalGateway(networkId)
+				.externalGateway(externalNetworkId)
 				.build();
 		final Router router = os.networking().router().create(routerBuilder);
 		os.networking().router().attachInterface(router.getId(), AttachInterfaceType.SUBNET, psubnetId);
 		return router.getId();
+	}
+
+	@Override
+	public void deleteRouter(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.networking().router().delete(resourceId);
 	}
 
 	@Override
@@ -433,5 +440,13 @@ public class OpenStackVim implements Vim {
 	public void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		os.networking().subnet().delete(resourceId);
+	}
+
+	@Override
+	public List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		return os.compute().hostAggregates().list().stream().map(x -> new ServerGroup(x.getId(), x.getName(), x.getAvailabilityZone()))
+				.collect(Collectors.toList());
+
 	}
 }
