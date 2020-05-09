@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -81,6 +82,14 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private Set<VnfLcmOpOccs> lcmOpOccs;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ResourceHandleEntity> extManagedVirtualLinks;
 
 	private Audit audit;
 
@@ -227,6 +236,22 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public void setLcmOpOccs(final Set<VnfLcmOpOccs> lcmOpOccs) {
 		this.lcmOpOccs = lcmOpOccs;
+	}
+
+	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
+		return extVirtualLinks;
+	}
+
+	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+	}
+
+	public Set<ResourceHandleEntity> getExtManagedVirtualLinks() {
+		return extManagedVirtualLinks;
+	}
+
+	public void setExtManagedVirtualLinks(final Set<ResourceHandleEntity> extManagedVirtualLinks) {
+		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
 	@Override

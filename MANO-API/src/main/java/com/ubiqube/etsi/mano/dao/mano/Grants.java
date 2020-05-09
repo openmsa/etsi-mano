@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 
 @Entity
@@ -38,7 +37,7 @@ public class Grants implements BaseEntity, Auditable {
 
 	private boolean isAutomaticInvocation;
 
-	private boolean instantiationLevelId;
+	private String instantiationLevelId;
 
 	// Must be string because VNFM / NFVO are differents.
 	private String vnfInstanceId = null;
@@ -51,11 +50,11 @@ public class Grants implements BaseEntity, Auditable {
 	@JoinColumn
 	private Set<VimConnectionInformation> vimConnections = null;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "grants")
-	private List<ZoneInfoEntity> zones = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
+	private Set<ZoneInfoEntity> zones = null;
 
 	@Valid
-	@Transient
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ZoneGroupInformation> zoneGroups = null;
 
 	private String computeReservationId = null;
@@ -147,11 +146,11 @@ public class Grants implements BaseEntity, Auditable {
 		this.vimConnections = vimConnections;
 	}
 
-	public List<ZoneInfoEntity> getZones() {
+	public Set<ZoneInfoEntity> getZones() {
 		return zones;
 	}
 
-	public void setZones(final List<ZoneInfoEntity> zones) {
+	public void setZones(final Set<ZoneInfoEntity> zones) {
 		this.zones = zones;
 	}
 
@@ -283,11 +282,11 @@ public class Grants implements BaseEntity, Auditable {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
-	public boolean isInstantiationLevelId() {
+	public String isInstantiationLevelId() {
 		return instantiationLevelId;
 	}
 
-	public void setInstantiationLevelId(final boolean instantiationLevelId) {
+	public void setInstantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
 	}
 
