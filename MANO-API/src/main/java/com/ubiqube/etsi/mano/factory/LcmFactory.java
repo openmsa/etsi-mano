@@ -32,16 +32,14 @@ public final class LcmFactory {
 	public static VnfInstance createVnfInstance(final CreateVnfRequest createVnfRequest, final VnfPackage vnfPkgInfo) {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setVnfdId(createVnfRequest.getVnfdId());
-		final VnfPackage vnfPackage = new VnfPackage();
-		vnfPackage.setId(UUID.fromString(createVnfRequest.getVnfdId()));
-		vnfInstance.setVnfPkg(vnfPackage);
+		vnfInstance.setVnfPkg(vnfPkgInfo);
 		vnfInstance.setVnfInstanceDescription(createVnfRequest.getVnfInstanceDescription());
 		vnfInstance.setVnfInstanceName(createVnfRequest.getVnfInstanceName());
 		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
 		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
 		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
 		vnfInstance.setVnfdId(vnfPkgInfo.getVnfdId());
-		vnfInstance.setVnfdVersion(vnfPackage.getVnfdVersion());
+		vnfInstance.setVnfdVersion(vnfPkgInfo.getVnfdVersion());
 
 		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
 		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
@@ -119,6 +117,8 @@ public final class LcmFactory {
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
 		vnfLcmOpOcc.setOperationState(LcmOperationStateType.STARTING);
+		vnfLcmOpOcc.setIsAutomaticInvocation(Boolean.FALSE);
+		vnfLcmOpOcc.setIsCancelPending(Boolean.FALSE);
 		return vnfLcmOpOcc;
 	}
 
