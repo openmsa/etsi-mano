@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -30,6 +32,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
+import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
@@ -47,6 +51,7 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimImage;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -237,15 +242,25 @@ public class NfvoActions {
 		});
 		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
 		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
-		// XXX Choose Zone One time or for each resources?
+		// Zones.
 		final String zoneId = chooseZone(vimInfo);
+		final Set<ZoneInfoEntity> zones = Collections.singleton(mapZone(zoneId, vimInfo));
+		grants.setZones(zones);
+		// Zone Group
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
+		final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
+		final List<String> sgList = sg.stream().map(x -> x.getId()).collect(Collectors.toList());
+		final ZoneGroupInformation zgi = new ZoneGroupInformation();
+		zgi.setZoneId(sgList);
+		grants.setZoneGroups(Arrays.asList(zgi));
+		// XXX It depends on Grant policy GRANT_RESERVE_SINGLE.
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
 			x.setResourceDefinitionId(x.getVduId().toString());
 			x.setResourceProviderId(vim.getType());
 			x.setVimConnectionId(vimInfo.getId().toString());
 			x.setZoneId(zoneId);
+			x.setResourceGroupId(zgi.getZoneId().get(0));
 		});
 
 		grants.setVimConnections(Collections.singleton(vimInfo));
@@ -258,6 +273,14 @@ public class NfvoActions {
 		grants.setAvailable(Boolean.TRUE);
 		grantJpa.save(grants);
 		LOG.info("Grant {} Available.", grants.getId());
+	}
+
+	private static ZoneInfoEntity mapZone(final String zoneId, final VimConnectionInformation vimInfo) {
+		final ZoneInfoEntity zoneInfoEntity = new ZoneInfoEntity();
+		zoneInfoEntity.setVimConnectionId(vimInfo.getId().toString());
+		zoneInfoEntity.setResourceProviderId(vimInfo.getVimType());
+		zoneInfoEntity.setZoneId(zoneId);
+		return zoneInfoEntity;
 	}
 
 	private String chooseZone(final VimConnectionInformation vimInfo) {
@@ -315,6 +338,7 @@ public class NfvoActions {
 		vsie.setVimSoftwareImageId(softwareImage.getVimId());
 		vsie.setVnfdSoftwareImageId(vduId.toString());
 		vsie.setVimConnectionId(vimInfo.getId().toString());
+		vsie.setResourceProviderId(vim.getType());
 		if (null != softwareImage.getVimId()) {
 			// XXX
 		} else {
