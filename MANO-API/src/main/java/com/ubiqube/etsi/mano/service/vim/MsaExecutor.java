@@ -315,15 +315,15 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String networkId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void deleteRouter(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
