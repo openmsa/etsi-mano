@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -19,9 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
-import com.ubiqube.etsi.mano.dao.mano.Grants;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
@@ -37,7 +36,7 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
-import com.ubiqube.etsi.mano.jpa.GrantsJpa;
+import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -71,10 +70,10 @@ public class NfvoActions {
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
-	private final GrantsJpa grantJpa;
+	private final GrantsResponseJpa grantJpa;
 	private final VnfInstancesRepository vnfInstancesRepository;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository) {
+	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository) {
 		super();
 		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
@@ -229,8 +228,8 @@ public class NfvoActions {
 	}
 
 	public void grantRequest(final String objectId) {
-		final Optional<Grants> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
-		final Grants grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
+		final Optional<GrantResponse> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
+		final GrantResponse grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
 
 		// Free Lease if any.
 		grants.getRemoveResources().forEach(x -> {
@@ -252,7 +251,7 @@ public class NfvoActions {
 		final List<String> sgList = sg.stream().map(x -> x.getId()).collect(Collectors.toList());
 		final ZoneGroupInformation zgi = new ZoneGroupInformation();
 		zgi.setZoneId(sgList);
-		grants.setZoneGroups(Arrays.asList(zgi));
+		grants.setZoneGroups(Collections.singleton(zgi));
 		// XXX It depends on Grant policy GRANT_RESERVE_SINGLE.
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
@@ -348,7 +347,7 @@ public class NfvoActions {
 		return vsie;
 	}
 
-	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformation> set) {
+	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformationExt> set) {
 		// XXX: Do some real elections.
 		final Set<VimConnectionInformation> vims;
 		if (null != vimId) {

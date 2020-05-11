@@ -42,6 +42,9 @@ public class ResourceHandleEntity implements Serializable {
 
 	private Date endTime;
 
+	@ManyToOne
+	private VnfInstance vnfInstance;
+
 	public UUID getId() {
 		return id;
 	}
@@ -112,6 +115,14 @@ public class ResourceHandleEntity implements Serializable {
 
 	public void setEndTime(final Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
+	}
+
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
 	}
 
 }

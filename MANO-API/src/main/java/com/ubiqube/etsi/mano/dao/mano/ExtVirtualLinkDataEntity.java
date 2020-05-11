@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
@@ -30,6 +31,9 @@ public class ExtVirtualLinkDataEntity {
 	@Valid
 	@OneToMany(mappedBy = "extVirtualLinkDataEntity")
 	private List<ExtLinkPortDataEntity> extLinkPorts = null;
+
+	@ManyToOne
+	private VnfInstance vnfInstance;
 
 	public UUID getId() {
 		return id;
@@ -77,6 +81,14 @@ public class ExtVirtualLinkDataEntity {
 
 	public void setExtLinkPorts(final List<ExtLinkPortDataEntity> extLinkPorts) {
 		this.extLinkPorts = extLinkPorts;
+	}
+
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
+	}
+
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
 	}
 
 }

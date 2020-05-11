@@ -4,14 +4,14 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.dao.mano.Grants;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 
 public interface GrantManagement {
 	@Nonnull
-	Grants get(UUID grantId);
+	GrantResponse get(UUID grantId);
 
 	@Nonnull
-	Grants post(GrantRequest grant);
+	GrantResponse post(GrantRequest grant);
 
 }

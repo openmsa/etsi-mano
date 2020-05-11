@@ -23,7 +23,7 @@ public class ZoneInfoEntity {
 	private String zoneId = null;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private Grants grants;
+	private GrantResponse grants;
 
 	public UUID getId() {
 		return id;
@@ -57,11 +57,11 @@ public class ZoneInfoEntity {
 		this.zoneId = zoneId;
 	}
 
-	public Grants getGrants() {
+	public GrantResponse getGrants() {
 		return grants;
 	}
 
-	public void setGrants(final Grants grants) {
+	public void setGrants(final GrantResponse grants) {
 		this.grants = grants;
 	}
 

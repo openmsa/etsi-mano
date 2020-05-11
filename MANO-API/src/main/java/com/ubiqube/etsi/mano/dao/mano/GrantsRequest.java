@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,11 +18,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class Grants implements BaseEntity, Auditable {
+public class GrantsRequest implements BaseEntity, Auditable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -39,11 +41,11 @@ public class Grants implements BaseEntity, Auditable {
 
 	private String instantiationLevelId;
 
-	// Must be string because VNFM / NFVO are differents.
-	private String vnfInstanceId = null;
+	@OneToOne
+	private VnfInstance vnfInstance = null;
 
-	// Must be string because VNFM / NFVO are differents.
-	private String vnfLcmOpOccId = null;
+	@OneToOne
+	private VnfLcmOpOccs vnfLcmOpOccs = null;
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -65,23 +67,19 @@ public class Grants implements BaseEntity, Auditable {
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<GrantInformation> addResources = null;
+	private Set<GrantInformation> addResources = new HashSet<>();
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<GrantInformation> tempResources = null;
+	private Set<GrantInformation> tempResources = new HashSet<>();
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<GrantInformation> removeResources = null;
+	private Set<GrantInformation> removeResources = new HashSet<>();
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<GrantInformation> updateResources = null;
+	private Set<GrantInformation> updateResources = new HashSet<>();
 
 	@Embedded
 	private GrantVimAssetsEntity vimAssets = null;
@@ -92,10 +90,10 @@ public class Grants implements BaseEntity, Auditable {
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
 
 	@Valid
-	@OneToMany(mappedBy = "grants")
+	@OneToMany(mappedBy = "grants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> additionalParams = null;
 
 	/**
@@ -120,22 +118,6 @@ public class Grants implements BaseEntity, Auditable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
-	}
-
-	public String getVnfInstanceId() {
-		return vnfInstanceId;
-	}
-
-	public void setVnfInstanceId(final String vnfInstanceId) {
-		this.vnfInstanceId = vnfInstanceId;
-	}
-
-	public String getVnfLcmOpOccId() {
-		return vnfLcmOpOccId;
-	}
-
-	public void setVnfLcmOpOccId(final String vnfLcmOpOccId) {
-		this.vnfLcmOpOccId = vnfLcmOpOccId;
 	}
 
 	public Set<VimConnectionInformation> getVimConnections() {
@@ -296,6 +278,26 @@ public class Grants implements BaseEntity, Auditable {
 
 	public void setAvailable(final Boolean available) {
 		this.available = available;
+	}
+
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
+	}
+
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
+	}
+
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
+	}
+
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
+	}
+
+	public String getInstantiationLevelId() {
+		return instantiationLevelId;
 	}
 
 }

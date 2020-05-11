@@ -1,7 +1,5 @@
 package com.ubiqube.etsi.mano.service.event;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +20,8 @@ import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
 import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.Grants;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -42,11 +41,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
+import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
-import com.ubiqube.etsi.mano.model.ResourceHandle;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
@@ -86,7 +84,9 @@ public class VnfmActions {
 
 	private final MapperFacade mapper;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final GrantManagement _grantManagement, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final MapperFacade _mapper) {
+	private final GrantRequestJpa grantRequestJpa;
+
+	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final GrantManagement _grantManagement, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final MapperFacade _mapper, final GrantRequestJpa _grantsJpa) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vimManager = _vimManager;
@@ -97,6 +97,7 @@ public class VnfmActions {
 		executionPlanner = _executionPlanner;
 		executor = _executor;
 		mapper = _mapper;
+		grantRequestJpa = _grantsJpa;
 	}
 
 	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
@@ -121,16 +122,28 @@ public class VnfmActions {
 		vnfLcmOpOccsRepository.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 
 		// Send Grant.
-		final Grants grants = getGrants(vnfInstance, lcmOpOccs, vnfPkg);
-		vnfInstance.setVimConnectionInfo(grants.getVimConnections());
-		lcmOpOccs.setGrantId(grants.getId().toString());
+		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, GrantedLcmOperationType.INSTANTIATE);
+		addGrantsCompute(grants, vnfPkg.getVnfCompute());
+		addGrantsVl(grants, vnfPkg.getVnfVl());
+		addGrantsStorage(grants, vnfPkg.getVnfStorage());
+		addGrantsLinkPorts(grants, vnfPkg.getVnfLinkPort());
+
+		grants = grantRequestJpa.save(grants);
+		final GrantRequest req = mapper.map(grants, GrantRequest.class);
+		final GrantResponse grantsResp = sendAndWaitGrantRequest(req);
+
+		lcmOpOccs.setGrantId(grantsResp.getId().toString());
+		vnfLcmOpOccsRepository.save(lcmOpOccs);
+
+		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
+		lcmOpOccs.setGrantId(grantsResp.getId().toString());
 		// Save LCM
-		mergeInstanceGrants(vnfInstance, grants);
+		mergeInstanceGrants(vnfInstance, grantsResp);
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		lcmOpOccs = vnfLcmOpOccsRepository.get(lcmOpOccs.getId());
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
 		// XXX Multiple Vim ?
-		final VimConnectionInformation vimConnection = grants.getVimConnections().iterator().next();
+		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "create");
@@ -139,6 +152,95 @@ public class VnfmActions {
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
+	}
+
+	private GrantResponse sendAndWaitGrantRequest(final GrantRequest grantRequest) {
+		final GrantResponse grants = grantManagement.post(grantRequest);
+		return pollGrants(grants);
+	}
+
+	private static void addGrantsLinkPorts(final GrantsRequest grants, final Set<VnfLinkPort> vnfLinkPort) {
+		final Set<GrantInformation> res = vnfLinkPort.stream().map(x -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(x.getId());
+			gi.setType(TypeEnum.LINKPORT);
+			return gi;
+		}).collect(Collectors.toSet());
+		grants.getAddResources().addAll(res);
+	}
+
+	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfStorage> vnfStorage) {
+		final Set<GrantInformation> res = vnfStorage.stream().map(x -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(x.getId());
+			gi.setType(TypeEnum.STORAGE);
+			return gi;
+		}).collect(Collectors.toSet());
+		grants.getAddResources().addAll(res);
+	}
+
+	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfVl> vnfVl) {
+		final Set<GrantInformation> res = vnfVl.stream().map(x -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(x.getId());
+			gi.setType(TypeEnum.VL);
+			return gi;
+		}).collect(Collectors.toSet());
+		grants.getAddResources().addAll(res);
+	}
+
+	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfCompute> vnfCompute) {
+		final Set<GrantInformation> res = vnfCompute.stream()
+				.map(x -> {
+					final GrantInformation gi = new GrantInformation();
+					gi.setVduId(x.getId());
+					gi.setType(TypeEnum.COMPUTE);
+					return gi;
+				})
+				.collect(Collectors.toSet());
+		grants.getAddResources().addAll(res);
+	}
+
+	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfLinkPort> vnfLinkPort) {
+		final Set<GrantInformation> res = vnfLinkPort.stream().map(x -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(x.getId());
+			gi.setType(TypeEnum.LINKPORT);
+			return gi;
+		}).collect(Collectors.toSet());
+		grants.getRemoveResources().addAll(res);
+	}
+
+	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfStorage> vnfStorage) {
+		final Set<GrantInformation> res = vnfStorage.stream().map(x -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(x.getId());
+			gi.setType(TypeEnum.STORAGE);
+			return gi;
+		}).collect(Collectors.toSet());
+		grants.getRemoveResources().addAll(res);
+	}
+
+	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfVl> vnfVl) {
+		final Set<GrantInformation> res = vnfVl.stream().map(x -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(x.getId());
+			gi.setType(TypeEnum.VL);
+			return gi;
+		}).collect(Collectors.toSet());
+		grants.getRemoveResources().addAll(res);
+	}
+
+	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfCompute> vnfCompute) {
+		final Set<GrantInformation> res = vnfCompute.stream()
+				.map(x -> {
+					final GrantInformation gi = new GrantInformation();
+					gi.setVduId(x.getId());
+					gi.setType(TypeEnum.COMPUTE);
+					return gi;
+				})
+				.collect(Collectors.toSet());
+		grants.getRemoveResources().addAll(res);
 	}
 
 	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
@@ -222,7 +324,7 @@ public class VnfmActions {
 		});
 	}
 
-	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final Grants grants) {
+	private static void mergeInstanceGrants(final VnfInstance vnfInstance, final GrantResponse grants) {
 		// XXX Normally we have to remap ExtCP VL but we have those since instantiate.
 		grants.getAddResources().forEach(x -> setGrantResource(x, vnfInstance));
 		// Map flavor & ImageId.
@@ -234,7 +336,7 @@ public class VnfmActions {
 		});
 	}
 
-	private static String findImage(final Grants grants, final UUID vduId) {
+	private static String findImage(final GrantResponse grants, final UUID vduId) {
 		return grants.getVimAssets().getSoftwareImages().stream()
 				.filter(x -> x.getVnfdSoftwareImageId().equals(vduId.toString()))
 				.map(VimSoftwareImageEntity::getVimSoftwareImageId)
@@ -242,7 +344,7 @@ public class VnfmActions {
 				.orElseThrow(() -> new NotFoundException("Could not find ImageId: " + vduId));
 	}
 
-	private static String findFlavor(final Grants grants, final UUID vduId) {
+	private static String findFlavor(final GrantResponse grants, final UUID vduId) {
 		return grants.getVimAssets().getComputeResourceFlavours().stream()
 				.filter(x -> x.getVnfdVirtualComputeDescId().equals(vduId.toString()))
 				.map(VimComputeResourceFlavourEntity::getVimFlavourId)
@@ -277,10 +379,10 @@ public class VnfmActions {
 		LOG.warn("Unable to find resource: {}", grantInformation.getVduId());
 	}
 
-	private Grants pollGrants(final Grants grants) {
+	private GrantResponse pollGrants(final GrantResponse grants) {
 		int counter = 50;
 		while (counter > 0) {
-			final Grants grantOpt = grantManagement.get(grants.getId());
+			final GrantResponse grantOpt = grantManagement.get(grants.getId());
 			if (Boolean.TRUE.equals(grantOpt.getAvailable())) {
 				return grantOpt;
 			}
@@ -296,73 +398,20 @@ public class VnfmActions {
 		throw new GenericException("Unable to get grant ID " + grants.getId());
 	}
 
-	private Grants getGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
-		final GrantRequest grantRequest = createGrant(vnfInstance, lcmOpOccs, vnfPkg);
-		Grants grants = grantManagement.post(grantRequest);
-		lcmOpOccs.setGrantId(grants.getId().toString());
-		vnfLcmOpOccsRepository.save(lcmOpOccs);
-		grants = pollGrants(grants);
-		return grants;
-	}
-
-	private static GrantRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage) {
-		final GrantRequest grant = new GrantRequest();
-		grant.setVnfInstanceId(vnfInstance.getId().toString());
-		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
-		grant.setVnfdId(vnfInstance.getVnfdId());
-		grant.setFlavourId(vnfPackage.getFlavorId());
-		grant.setAutomaticInvocation(Boolean.FALSE);
-		grant.setOperation(GrantedLcmOperationType.INSTANTIATE);
+	private static GrantsRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage, final GrantedLcmOperationType state) {
+		final GrantsRequest grants = new GrantsRequest();
+		grants.setVnfInstance(vnfInstance);
+		grants.setVnfLcmOpOccs(lcmOpOccs);
+		grants.setVnfdId(vnfInstance.getVnfdId());
+		grants.setFlavourId(vnfPackage.getFlavorId());
+		grants.setAutomaticInvocation(false);
+		grants.setOperation(state.toString());
 		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
-		grant.setInstantiationLevelId("0");
-		final List<ResourceDefinition> addResources = new ArrayList<>();
-		final Set<VnfCompute> compute = vnfPackage.getVnfCompute();
-		final List<ResourceDefinition> listCompute = compute.stream().map(VnfmActions::mapCompute).collect(Collectors.toList());
-		addResources.addAll(listCompute);
-
-		final Set<VnfVl> vl = vnfPackage.getVnfVl();
-		final List<ResourceDefinition> listVl = vl.stream().map(VnfmActions::mapVl).collect(Collectors.toList());
-		addResources.addAll(listVl);
-
-		/*
-		 * final Set<VnfLinkPort> linkPort = vnfPackage.getVnfLinkPort(); final
-		 * List<ResourceDefinition> listLinkPort =
-		 * linkPort.stream().map(VnfmActions::mapLinkPort).collect(Collectors.toList());
-		 * addResources.addAll(listLinkPort);
-		 */
-		final Set<VnfStorage> storage = vnfPackage.getVnfStorage();
-		final List<ResourceDefinition> listStorage = storage.stream().map(VnfmActions::mapStorage).collect(Collectors.toList());
-		addResources.addAll(listStorage);
-		grant.setAddResources(addResources);
-		return grant;
-	}
-
-	private static ResourceDefinition mapStorage(final VnfStorage vnfStorage) {
-		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.STORAGE);
-		resourceDefinition.setVduId(vnfStorage.getId().toString());
-		return resourceDefinition;
-	}
-
-	private static ResourceDefinition mapLinkPort(final VnfLinkPort vnfLinkPort) {
-		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.LINKPORT);
-		resourceDefinition.setVduId(vnfLinkPort.getId().toString());
-		return resourceDefinition;
-	}
-
-	private static ResourceDefinition mapVl(final VnfVl vnfVl) {
-		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.VL);
-		resourceDefinition.setVduId(vnfVl.getId().toString());
-		return resourceDefinition;
-	}
-
-	private static ResourceDefinition mapCompute(final VnfCompute vnfCompute) {
-		final ResourceDefinition resourceDefinition = new ResourceDefinition();
-		resourceDefinition.setType(TypeEnum.COMPUTE);
-		resourceDefinition.setVduId(vnfCompute.getId().toString());
-		return resourceDefinition;
+		grants.setInstantiationLevelId("0");
+		grants.setVnfInstance(vnfInstance);
+		grants.setVnfLcmOpOccs(lcmOpOccs);
+		// grants.setInstantiationLevelId(vnfInstance.getI);
+		return grants;
 	}
 
 	public void vnfTerminate(final String vnfInstanceId) {
@@ -378,7 +427,9 @@ public class VnfmActions {
 
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId().toString());
-		final Grants grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
+		final GrantResponse grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
+		lcmOpOccs.setGrantId(grant.getId().toString());
+		vnfLcmOpOccsRepository.save(lcmOpOccs);
 		// Make plan
 		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
 		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
@@ -394,63 +445,15 @@ public class VnfmActions {
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
 	}
 
-	private Grants getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
-		final GrantRequest grantRequest = createTerminateGrant(vnfInstance, lcmOpOccs, vnfPkg);
-		Grants grants = grantManagement.post(grantRequest);
-		lcmOpOccs.setGrantId(grants.getId().toString());
-		vnfLcmOpOccsRepository.save(lcmOpOccs);
-		grants = pollGrants(grants);
-		return grants;
+	private GrantResponse getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
+		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, GrantedLcmOperationType.TERMINATE);
+		removeGrantsCompute(grants, vnfPkg.getVnfCompute());
+		removeGrantsVl(grants, vnfPkg.getVnfVl());
+		removeGrantsStorage(grants, vnfPkg.getVnfStorage());
+		removeGrantsLinkPorts(grants, vnfPkg.getVnfLinkPort());
+		grants = grantRequestJpa.save(grants);
+		final GrantRequest req = mapper.map(grants, GrantRequest.class);
+		return sendAndWaitGrantRequest(req);
 	}
 
-	private GrantRequest createTerminateGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage) {
-		final GrantRequest grant = new GrantRequest();
-		grant.setVnfInstanceId(vnfInstance.getId().toString());
-		grant.setVnfLcmOpOccId(lcmOpOccs.getId().toString());
-		grant.setVnfdId(vnfInstance.getVnfdId());
-		grant.setFlavourId(vnfPackage.getFlavorId());
-		grant.setAutomaticInvocation(Boolean.FALSE);
-		grant.setOperation(GrantedLcmOperationType.TERMINATE);
-		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
-		grant.setInstantiationLevelId("0");
-
-		final VnfInstantiatedInfo instantiated = vnfInstance.getInstantiatedVnfInfo();
-
-		final List<ResourceDefinition> virtualCompute = instantiated.getVnfcResourceInfo().stream()
-				.map(x -> {
-					final ResourceDefinition resourceDefinition = new ResourceDefinition();
-					resourceDefinition.setType(TypeEnum.COMPUTE);
-					resourceDefinition.setVduId(x.getId().toString());
-					resourceDefinition.setResource(mapper.map(x.getCompResource(), ResourceHandle.class));
-					return resourceDefinition;
-				})
-				.collect(Collectors.toList());
-		final List<ResourceDefinition> res = new ArrayList<>(virtualCompute);
-
-		final List<ResourceDefinition> vitualLink = instantiated.getVirtualLinkResourceInfo().stream()
-				.map(x -> {
-					final ResourceDefinition resourceDefinition = new ResourceDefinition();
-					resourceDefinition.setType(TypeEnum.VL);
-					resourceDefinition.setVduId(x.getId().toString());
-					resourceDefinition.setResource(mapper.map(x.getNetworkResource(), ResourceHandle.class));
-					return resourceDefinition;
-				})
-				.collect(Collectors.toList());
-		res.addAll(vitualLink);
-
-		final List<ResourceDefinition> virtualStorage = instantiated.getVirtualStorageResourceInfo().stream()
-				.map(x -> {
-					final ResourceDefinition resourceDefinition = new ResourceDefinition();
-					resourceDefinition.setType(TypeEnum.STORAGE);
-					resourceDefinition.setVduId(x.getId().toString());
-					resourceDefinition.setResource(mapper.map(x.getStorageResource(), ResourceHandle.class));
-					return resourceDefinition;
-				})
-				.collect(Collectors.toList());
-		res.addAll(virtualStorage);
-
-		grant.setRemoveResources(res);
-
-		return grant;
-	}
 }
