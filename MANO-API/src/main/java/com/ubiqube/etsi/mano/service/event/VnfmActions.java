@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.event;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -18,6 +19,7 @@ import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
 import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
 import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
@@ -160,87 +162,67 @@ public class VnfmActions {
 	}
 
 	private static void addGrantsLinkPorts(final GrantsRequest grants, final Set<VnfLinkPort> vnfLinkPort) {
-		final Set<GrantInformation> res = vnfLinkPort.stream().map(x -> {
-			final GrantInformation gi = new GrantInformation();
-			gi.setVduId(x.getId());
-			gi.setType(TypeEnum.LINKPORT);
-			return gi;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfLinkPort.stream()
+				.map(mapEntityGrantInformation(TypeEnum.LINKPORT))
+				.collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfStorage> vnfStorage) {
-		final Set<GrantInformation> res = vnfStorage.stream().map(x -> {
-			final GrantInformation gi = new GrantInformation();
-			gi.setVduId(x.getId());
-			gi.setType(TypeEnum.STORAGE);
-			return gi;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfStorage.stream()
+				.map(mapEntityGrantInformation(TypeEnum.STORAGE))
+				.collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfVl> vnfVl) {
-		final Set<GrantInformation> res = vnfVl.stream().map(x -> {
-			final GrantInformation gi = new GrantInformation();
-			gi.setVduId(x.getId());
-			gi.setType(TypeEnum.VL);
-			return gi;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfVl.stream().map(mapEntityGrantInformation(TypeEnum.VL))
+				.collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfCompute> vnfCompute) {
 		final Set<GrantInformation> res = vnfCompute.stream()
-				.map(x -> {
-					final GrantInformation gi = new GrantInformation();
-					gi.setVduId(x.getId());
-					gi.setType(TypeEnum.COMPUTE);
-					return gi;
-				})
+				.map(mapEntityGrantInformation(TypeEnum.COMPUTE))
 				.collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfLinkPort> vnfLinkPort) {
-		final Set<GrantInformation> res = vnfLinkPort.stream().map(x -> {
-			final GrantInformation gi = new GrantInformation();
-			gi.setVduId(x.getId());
-			gi.setType(TypeEnum.LINKPORT);
-			return gi;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfLinkPort.stream()
+				.map(mapEntityGrantInformation(TypeEnum.LINKPORT))
+				.collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfStorage> vnfStorage) {
-		final Set<GrantInformation> res = vnfStorage.stream().map(x -> {
-			final GrantInformation gi = new GrantInformation();
-			gi.setVduId(x.getId());
-			gi.setType(TypeEnum.STORAGE);
-			return gi;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfStorage.stream()
+				.map(mapEntityGrantInformation(TypeEnum.STORAGE))
+				.collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfVl> vnfVl) {
-		final Set<GrantInformation> res = vnfVl.stream().map(x -> {
-			final GrantInformation gi = new GrantInformation();
-			gi.setVduId(x.getId());
-			gi.setType(TypeEnum.VL);
-			return gi;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfVl.stream()
+				.map(mapEntityGrantInformation(TypeEnum.VL))
+				.collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfCompute> vnfCompute) {
 		final Set<GrantInformation> res = vnfCompute.stream()
-				.map(x -> {
-					final GrantInformation gi = new GrantInformation();
-					gi.setVduId(x.getId());
-					gi.setType(TypeEnum.COMPUTE);
-					return gi;
-				})
+				.map(mapEntityGrantInformation(TypeEnum.COMPUTE))
 				.collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
+	}
+
+	private static Function<BaseEntity, GrantInformation> mapEntityGrantInformation(final TypeEnum type) {
+		return entity -> {
+			final GrantInformation gi = new GrantInformation();
+			gi.setVduId(entity.getId());
+			gi.setType(type);
+			return gi;
+		};
 	}
 
 	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
