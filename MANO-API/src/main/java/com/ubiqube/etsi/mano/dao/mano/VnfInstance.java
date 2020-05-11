@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -27,7 +28,10 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfInstance implements BaseEntity, Auditable {
+public class VnfInstance implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -83,8 +87,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private Set<VnfLcmOpOccs> lcmOpOccs;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
