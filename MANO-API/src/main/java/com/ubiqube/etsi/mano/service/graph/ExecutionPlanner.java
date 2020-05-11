@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -32,6 +33,7 @@ import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
 
 @Service
 public class ExecutionPlanner {
@@ -48,12 +50,15 @@ public class ExecutionPlanner {
 
 	private final VnfExtCpJpa vnfExtCpJpa;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfVlJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa) {
+	private final VnfInstanceService vnfInstanceService;
+
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfVlJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstanceService _vnfInstanceService) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfVl = _vlProtocolDataJpa;
 		vnfStorageJpa = _vnfStorageJpa;
 		vnfComputeJpa = _vnfComputeJpa;
 		vnfExtCpJpa = _vnfExtCpJpa;
+		vnfInstanceService = _vnfInstanceService;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
@@ -92,9 +97,11 @@ public class ExecutionPlanner {
 			}
 		});
 
+		// XXX Move this elsewhere.
 		vnfPackage.getVnfExtCp().forEach(x -> {
-			LOG.debug("ExtCp: {} -> {}", x.getToscaName(), x.getExternalVirtualLink());
-			g.addEdge(vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
+			LOG.debug("ExtCp_{}: {} -> {}", x.getToscaName(), x.getInternalVirtualLink(), x.getExternalVirtualLink());
+			// g.addEdge(vertex.get(x.getInternalVirtualLink()),
+			// vertex.get(x.getToscaName()));
 		});
 		// Add start
 		final UnitOfWork root = new StartUow();
@@ -148,7 +155,8 @@ public class ExecutionPlanner {
 			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
-		vnfInstance.getExtManagedVirtualLinks().forEach(x -> {
+		final List<ResourceHandleEntity> extVl = vnfInstanceService.getExtManagedVirtualLinks(vnfInstance);
+		extVl.forEach(x -> {
 			final VnfExtCp extCp = vnfExtCpJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVduId()));
 			final UnitOfWork uow = new VnfExtCpUow(x, extCp);
 			vertex.put(extCp.getToscaName(), uow);
