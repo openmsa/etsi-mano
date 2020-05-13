@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -22,13 +23,20 @@ public class VnfInstantiedCompute {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
+	/*
+	 * Vnf Compute.
+	 */
 	private UUID vduId = null;
+
 	/**
 	 * Also reservationId
 	 */
 	@OneToOne(fetch = FetchType.LAZY)
 	private GrantInformation computeResource = null;
 
+	/**
+	 * VIM Resources.
+	 */
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ResourceHandleEntity compResource = null;
 
@@ -40,6 +48,9 @@ public class VnfInstantiedCompute {
 
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
+
+	@ManyToOne
+	private VduInstantiationLevel instantiationLevel;
 
 	private String flavorId;
 
@@ -115,6 +126,14 @@ public class VnfInstantiedCompute {
 
 	public void setImageId(final String imageId) {
 		this.imageId = imageId;
+	}
+
+	public VduInstantiationLevel getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
 	}
 
 }

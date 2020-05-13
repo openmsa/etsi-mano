@@ -23,6 +23,10 @@ public class VnfLcmResourceChanges {
 	@JoinColumn
 	private Set<AffectedVs> affectedVirtualStorages = null;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<AffectedExtCp> affectedExtCp = null;
+
 	public Set<AffectedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;
 	}
@@ -66,6 +70,14 @@ public class VnfLcmResourceChanges {
 			affectedVirtualStorages = new HashSet<>();
 		}
 		affectedVirtualStorages.add(affectedVs);
+	}
+
+	public Set<AffectedExtCp> getAffectedExtCp() {
+		return affectedExtCp;
+	}
+
+	public void setAffectedExtCp(final Set<AffectedExtCp> affectedExtCp) {
+		this.affectedExtCp = affectedExtCp;
 	}
 
 }

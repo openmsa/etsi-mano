@@ -34,17 +34,27 @@ public class AffectedCompute {
 	private ChangeType changeType = null;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	private ResourceHandleEntity computeResource = null;
+	private VnfInstantiedCompute vnfInstantiedCompute;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = new HashMap<>();
 
+	/**
+	 * XXX Should be computed.
+	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> affectedVnfcCpIds = null;
 
+	/**
+	 * XXX Should be computed.
+	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> addedStorageResourceIds = null;
 
+	/**
+	 * XXX Should be computed. This is a vien of current
+	 * VnfStorage.changeType==Removed.
+	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> removedStorageResourceIds = null;
 
@@ -72,12 +82,12 @@ public class AffectedCompute {
 		this.changeType = changeType;
 	}
 
-	public ResourceHandleEntity getComputeResource() {
-		return computeResource;
+	public VnfInstantiedCompute getVnfInstantiedCompute() {
+		return vnfInstantiedCompute;
 	}
 
-	public void setComputeResource(final ResourceHandleEntity computeResource) {
-		this.computeResource = computeResource;
+	public void setVnfInstantiedCompute(final VnfInstantiedCompute vnfInstantiedCompute) {
+		this.vnfInstantiedCompute = vnfInstantiedCompute;
 	}
 
 	public Map<String, String> getMetadata() {

@@ -19,7 +19,7 @@ public class AffectedVl {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private UUID virtualLinkDescId = null;
+	private VnfVl virtualLinkDesc = null;
 
 	private ChangeType changeType = null;
 
@@ -37,12 +37,12 @@ public class AffectedVl {
 		this.id = id;
 	}
 
-	public UUID getVirtualLinkDescId() {
-		return virtualLinkDescId;
+	public VnfVl getVirtualLinkDesc() {
+		return virtualLinkDesc;
 	}
 
-	public void setVirtualLinkDescId(final UUID virtualLinkDescId) {
-		this.virtualLinkDescId = virtualLinkDescId;
+	public void setVirtualLinkDesc(final VnfVl virtualLinkDesc) {
+		this.virtualLinkDesc = virtualLinkDesc;
 	}
 
 	public ChangeType getChangeType() {

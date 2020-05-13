@@ -38,6 +38,8 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private String defaultInstantiationLevel;
+
 	@Field
 	private String vnfdId;
 
@@ -267,6 +269,14 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	public void setVnfExtCp(final Set<VnfExtCp> vnfExtCp) {
 		this.vnfExtCp = vnfExtCp;
+	}
+
+	public String getDefaultInstantiationLevel() {
+		return defaultInstantiationLevel;
+	}
+
+	public void setDefaultInstantiationLevel(final String defaultInstantiationLevel) {
+		this.defaultInstantiationLevel = defaultInstantiationLevel;
 	}
 
 }

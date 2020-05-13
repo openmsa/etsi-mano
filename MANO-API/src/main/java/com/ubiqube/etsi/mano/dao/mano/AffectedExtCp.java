@@ -14,12 +14,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-public class AffectedVs {
+public class AffectedExtCp {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private VnfStorage virtualStorageDesc = null;
+	private VnfExtCp extCpId = null;
 
 	private ChangeType changeType = null;
 
@@ -37,12 +37,12 @@ public class AffectedVs {
 		this.id = id;
 	}
 
-	public VnfStorage getVirtualStorageDesc() {
-		return virtualStorageDesc;
+	public VnfExtCp getExtCpId() {
+		return extCpId;
 	}
 
-	public void setVirtualStorageDesc(final VnfStorage virtualStorageDesc) {
-		this.virtualStorageDesc = virtualStorageDesc;
+	public void setExtCpId(final VnfExtCp extCpId) {
+		this.extCpId = extCpId;
 	}
 
 	public ChangeType getChangeType() {
