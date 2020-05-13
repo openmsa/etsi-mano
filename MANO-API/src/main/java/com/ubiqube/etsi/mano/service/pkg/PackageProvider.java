@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -13,6 +14,11 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
+
+import tosca.policies.nfv.InstantiationLevels;
+import tosca.policies.nfv.VduInitialDelta;
+import tosca.policies.nfv.VduInstantiationLevels;
+import tosca.policies.nfv.VduScalingAspectDeltas;
 
 public interface PackageProvider {
 
@@ -42,5 +48,17 @@ public interface PackageProvider {
 
 	@Nonnull
 	Set<ScalingAspect> getScalingAspects();
+
+	@Nonnull
+	List<InstantiationLevels> getInstatiationLevels();
+
+	@Nonnull
+	List<VduInstantiationLevels> getVduInstantiationLevels();
+
+	@Nonnull
+	List<VduInitialDelta> getVduInitialDelta();
+
+	@Nonnull
+	List<VduScalingAspectDeltas> getVduScalingAspectDeltas();
 
 }

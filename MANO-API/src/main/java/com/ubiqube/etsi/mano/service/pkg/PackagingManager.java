@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import org.springframework.util.StreamUtils;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -40,6 +42,10 @@ import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 
 import ma.glasnost.orika.MapperFacade;
+import tosca.policies.nfv.InstantiationLevels;
+import tosca.policies.nfv.VduInitialDelta;
+import tosca.policies.nfv.VduInstantiationLevels;
+import tosca.policies.nfv.VduScalingAspectDeltas;
 
 @Service
 public class PackagingManager {
@@ -100,11 +106,53 @@ public class PackagingManager {
 			vnfPackage.setVnfExtCp(vnfExtCp);
 			final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects();
 			vnfPackage.setScalingAspects(scalingAspects);
+			// XXX Normally, Tosca object must not traverse this layer.
+			final List<InstantiationLevels> instantiationLevels = packageProvider.getInstatiationLevels();
+			final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels();
+			final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta();
+			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas();
+			rebuildScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas);
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId().toString());
+	}
+
+	private static void rebuildScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas) {
+		instantiationLevels.stream()
+				.forEach(x -> {
+					vnfPackage.setDefaultInstantiationLevel(x.getDefaultLevel());
+					x.getLevels().entrySet().forEach(y -> {
+						final String levelId = y.getKey();
+						y.getValue().getScaleInfo().entrySet().forEach(z -> {
+							final String aspectId = z.getKey();
+							z.getValue().getScaleLevel();
+						});
+					});
+				});
+		vduInstantiationLevels.forEach(x -> {
+			x.getInternalName();
+			final Set<VduInstantiationLevel> ils = x.getLevels().entrySet().stream().map(y -> {
+				final VduInstantiationLevel vduInstantiationLevel = new VduInstantiationLevel();
+				vduInstantiationLevel.setLevelName(y.getKey());
+				vduInstantiationLevel.setNumberOfInstances(y.getValue().getNumberOfInstances());
+				return vduInstantiationLevel;
+			}).collect(Collectors.toSet());
+			;
+			x.getTargets().forEach(y -> {
+				final VnfCompute vnfCompute = findVnfCompute(vnfPackage, y);
+				vnfCompute.setInstantiationLevel(ils);
+			});
+		});
+
+	}
+
+	private static VnfCompute findVnfCompute(final VnfPackage vnfPackage, final String y) {
+		return vnfPackage.getVnfCompute().stream()
+				.filter(x -> x.getToscaName().equals(y))
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Unable to find VDU: " + y));
 	}
 
 	private static void remapNetworks(final Set<VnfCompute> cNodes, final Set<VnfLinkPort> vcNodes) {

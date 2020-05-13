@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -100,8 +101,8 @@ public class ExecutionPlanner {
 		// XXX Move this elsewhere.
 		vnfPackage.getVnfExtCp().forEach(x -> {
 			LOG.debug("ExtCp_{}: {} -> {}", x.getToscaName(), x.getInternalVirtualLink(), x.getExternalVirtualLink());
-			// g.addEdge(vertex.get(x.getInternalVirtualLink()),
-			// vertex.get(x.getToscaName()));
+			Optional.ofNullable(vertex.get(x.getToscaName()))
+					.ifPresent(y -> g.addEdge(vertex.get(x.getInternalVirtualLink()), y));
 		});
 		// Add start
 		final UnitOfWork root = new StartUow();
