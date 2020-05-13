@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -19,6 +20,7 @@ public class AffectedVl {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
+	@ManyToOne
 	private VnfVl virtualLinkDesc = null;
 
 	private ChangeType changeType = null;

@@ -199,20 +199,20 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VnfCompute.class, AffectedCompute.class)
 				.field("id", "vduId")
-				.field("id", "computeResource.vduId")
+				.field("id", "vnfInstantiedCompute.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
 				// XXX .field("storages", "storageResourceIds")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfVl.class, AffectedVl.class)
-				.field("id", "virtualLinkDescId")
+				.field("id", "virtualLinkDesc.id")
 				.field("id", "networkResource.vduId")
 				// XXX .field("id", "grantInformation.vduId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfStorage.class, AffectedVs.class)
 				.field("id", "storageResource.vduId")
-				.field("id", "virtualStorageDescId")
+				.field("id", "virtualStorageDesc.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformation.class, GrantInformationExt.class)
