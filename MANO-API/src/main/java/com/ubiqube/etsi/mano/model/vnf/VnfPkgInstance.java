@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.model.vnf;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class VnfPkgInstance {
 	private String instanceId;
-	private Map<String, VnfPkgOperation> operations = new HashMap<>();
+	private Map<UUID, VnfPkgOperation> operations = new HashMap<>();
 
 	public VnfPkgInstance() {
 		// Nothing.
@@ -29,19 +30,19 @@ public class VnfPkgInstance {
 	}
 
 	@JsonProperty("Operations")
-	public Map<String, VnfPkgOperation> getOperations() {
+	public Map<UUID, VnfPkgOperation> getOperations() {
 		return operations;
 	}
 
-	public void setOperations(final Map<String, VnfPkgOperation> operations) {
+	public void setOperations(final Map<UUID, VnfPkgOperation> operations) {
 		this.operations = operations;
 	}
 
-	public VnfPkgOperation getOperation(@NotNull final String id) {
+	public VnfPkgOperation getOperation(@NotNull final UUID id) {
 		return operations.get(id);
 	}
 
 	public void addOperation(final VnfPkgOperation vnfPackageOperation) {
-		operations.put(vnfPackageOperation.getId(), vnfPackageOperation);
+		operations.put(UUID.fromString(vnfPackageOperation.getId()), vnfPackageOperation);
 	}
 }

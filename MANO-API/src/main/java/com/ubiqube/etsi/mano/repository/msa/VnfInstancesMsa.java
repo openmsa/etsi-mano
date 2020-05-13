@@ -26,13 +26,13 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 	}
 
 	@Override
-	String setId(final VnfInstance _entity) {
+	UUID setId(final VnfInstance _entity) {
 		final String id = _entity.getId().toString();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId().toString();
+		return UUID.fromString(_entity.getId().toString());
 	}
 
 	@Override
@@ -53,40 +53,30 @@ public class VnfInstancesMsa extends AbstractGenericRepository<VnfInstance> impl
 	@Override
 	public VnfInstance save(final VnfInstance _entity) {
 		final VnfInstance vnfInstance = super.save(_entity);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, VnfPkgIndex.class);
 		vnfPkgIndex.addVnfPkgInstance(new VnfPkgInstance(vnfInstance.getId().toString()));
-		vnfPackageRepository.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
+		vnfPackageRepository.storeObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, vnfPkgIndex);
 		return vnfInstance;
 	}
 
 	@Override
-	public void delete(final String _id) {
+	public void delete(final UUID _id) {
 		final VnfInstance vnfInstance = get(_id);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(_id);
 		// TODO We should remove lcm but this will lead to a circular dependency.
 		// instance.getOperations().values().stream().forEach(x ->
 		// lcmOpOccsMsa.delete(x.getId()));
 		vnfPkgIndex.remove(instance);
-		vnfPackageRepository.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
+		vnfPackageRepository.storeObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, vnfPkgIndex);
 		super.delete(_id);
 	}
 
 	@Override
-	public boolean isInstantiate(@NotNull final String vnfPkgId) {
+	public boolean isInstantiate(@NotNull final UUID vnfPkgId) {
 		final VnfPkgIndex vnfPkgIndex = vnfPackageRepository.loadObject(vnfPkgId, INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(vnfPkgId);
 		return instance == null;
-	}
-
-	@Override
-	public VnfInstance get(final UUID id) {
-		return get(id.toString());
-	}
-
-	@Override
-	public void delete(final UUID id) {
-		delete(id.toString());
 	}
 
 }

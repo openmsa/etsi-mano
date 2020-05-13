@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -58,7 +59,7 @@ public class VnfSubscriptionManagement {
 	}
 
 	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage) {
-		final String subscriptionId = notificationsMessage.getSubscriptionId();
+		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
@@ -68,7 +69,7 @@ public class VnfSubscriptionManagement {
 	}
 
 	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
-		final String subscriptionId = notificationsMessage.getSubscriptionId();
+		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
 		final PkgmSubscription req = subscriptionsRepository.getPkgmSubscription();
 		final String cbUrl = req.getCallbackUri();
@@ -78,12 +79,13 @@ public class VnfSubscriptionManagement {
 	}
 
 	public void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId) {
-		subscriptionRepository.get(_subscriptionId);
-		subscriptionRepository.delete(_subscriptionId);
+		final UUID subscriptionId = UUID.fromString(_subscriptionId);
+		subscriptionRepository.get(subscriptionId);
+		subscriptionRepository.delete(subscriptionId);
 	}
 
 	public PkgmSubscription subscriptionsSubscriptionIdGet(@Nonnull final String _subscriptionId, final Linkable links) {
-		return subscriptionRepository.get(_subscriptionId).getPkgmSubscription().links(links.createSubscriptionsPkgmSubscriptionLinks(_subscriptionId));
+		return subscriptionRepository.get(UUID.fromString(_subscriptionId)).getPkgmSubscription().links(links.createSubscriptionsPkgmSubscriptionLinks(_subscriptionId));
 	}
 
 }

@@ -76,8 +76,8 @@ public class VnfmActions {
 		grantService = _grantService;
 	}
 
-	public void vnfInstantiate(@Nonnull final String vnfInstanceId) {
-		VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+	public void vnfInstantiate(@Nonnull final UUID vnfInstanceId) {
+		VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		// Maybe we need additional parameters to say STARTING / PROCESSING ...
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
@@ -87,7 +87,7 @@ public class VnfmActions {
 		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfPkg, vnfInstance);
 
 		// XXX Do it for VnfInfoModifications
-		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId().toString());
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 
 		// Send processing notification.
 		vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
@@ -188,16 +188,16 @@ public class VnfmActions {
 		LOG.warn("Unable to find resource: {}", grantInformation.getVduId());
 	}
 
-	public void vnfTerminate(final String vnfInstanceId) {
+	public void vnfTerminate(@Nonnull final UUID vnfInstanceId) {
 		LOG.info("Eecuting Terminate on instance {}", vnfInstanceId);
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
 
 		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfPkg, vnfInstance);
 
 		// XXX Do it for VnfInfoModifications
-		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId().toString());
+		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		final GrantResponse grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
 		vnfLcmService.setGrant(lcmOpOccs, grant.getId());
 		// Make plan

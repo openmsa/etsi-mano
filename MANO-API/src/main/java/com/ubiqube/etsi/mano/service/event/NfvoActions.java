@@ -88,14 +88,14 @@ public class NfvoActions {
 		vnfInstancesRepository = _vnfInstancesRepository;
 	}
 
-	public void nsTerminate(final String nsInstanceId) {
+	public void nsTerminate(final UUID nsInstanceId) {
 		// XXX This is not the correct way/
 		final VimConnectionInformation vimInfo = electVim(null, null);
 
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
-		final String nsdId = nsInstance.getNsdId();
+		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
 		// Delete VNF
 		final List<String> vnfs = nsdInfo.getVnfPkgIds();
@@ -137,9 +137,9 @@ public class NfvoActions {
 		lcmOpOccsRepository.save(lcmOpOccs);
 	}
 
-	public void nsInstantiate(final String nsInstanceId) {
+	public void nsInstantiate(final UUID nsInstanceId) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		final String nsdId = nsInstance.getNsdId();
+		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
 
 		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
@@ -150,7 +150,7 @@ public class NfvoActions {
 		final String processId = vim.onNsInstantiate(nsdId, userData);
 		LOG.info("Creating a MSA Job: {}", processId);
 		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
-		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), processId);
+		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(UUID.fromString(lcmOpOccs.getId()), processId);
 		final VimStatus status = vim.waitForCompletion(processId, 1 * 60);
 		if (status.getLcmOperationStateType() != LcmOperationStateType.COMPLETED) {
 			// update Lcm OpOccs
@@ -171,7 +171,7 @@ public class NfvoActions {
 				nsInstance.getVnfInstance().add(nsVnfInstance);
 				nsInstanceRepository.save(nsInstance);
 			}
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId().toString(), vnfId);
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId(), vnfId);
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.
@@ -227,8 +227,8 @@ public class NfvoActions {
 		return ret;
 	}
 
-	public void grantRequest(final String objectId) {
-		final Optional<GrantResponse> grantsOpt = grantJpa.findById(UUID.fromString(objectId));
+	public void grantRequest(final UUID objectId) {
+		final Optional<GrantResponse> grantsOpt = grantJpa.findById(objectId);
 		final GrantResponse grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
 
 		// Free Lease if any.

@@ -50,14 +50,14 @@ public class NsLcmOpOccsDb extends AbstractJpa<NsLcmOpOcc, NsLcmOpOccs> implemen
 	}
 
 	@Override
-	public NsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final NsLcmOpType state) {
+	public NsLcmOpOcc createLcmOpOccs(final UUID nsInstanceId, final NsLcmOpType state) {
 		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, state);
 		return save(lcmOpOccs);
 	}
 
 	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
-		final Optional<NsLcmOpOccs> optLcm = repository.findById(UUID.fromString(lcmOpOccsId));
+	public void attachProcessIdToLcmOpOccs(@NotNull final UUID lcmOpOccsId, final String processId) {
+		final Optional<NsLcmOpOccs> optLcm = repository.findById(lcmOpOccsId);
 		final NsLcmOpOccs lcm = optLcm.orElseThrow(() -> new NotFoundException("VNF LcmOpOccs " + lcmOpOccsId + " could not be found."));
 		lcm.setExternalProcessId(processId);
 		repository.save(lcm);

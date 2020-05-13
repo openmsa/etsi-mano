@@ -17,13 +17,13 @@ public class NsdRepositoryPhys extends GenericBinaryRepository<NsdInfo> implemen
 	}
 
 	@Override
-	protected String setId(final NsdInfo _entity) {
+	protected UUID setId(final NsdInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getId();
+		return UUID.fromString(_entity.getId());
 	}
 
 	@Override

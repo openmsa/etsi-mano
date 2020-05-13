@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.controller.vnf;
 
+import java.util.UUID;
+
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionLinks;
@@ -22,9 +24,9 @@ public interface Linkable {
 	 */
 	VnfPkgInfoLinks getVnfLinks(@Nonnull String _vnfPkgId);
 
-	PkgmLinks createNotificationLink(@Nonnull String _vnfPkgId, String _subscriptionId);
+	PkgmLinks createNotificationLink(@Nonnull UUID _vnfPkgId, UUID _subscriptionId);
 
-	PkgmLinks createVnfPackageOnboardingNotificationLinks(@Nonnull String _vnfPkgId, String _subscriptionId);
+	PkgmLinks createVnfPackageOnboardingNotificationLinks(@Nonnull UUID _vnfPkgId, UUID _subscriptionId);
 
 	PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(@Nonnull String _subscriptionId);
 

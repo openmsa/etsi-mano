@@ -28,13 +28,13 @@ public class NsdPackageMsa extends AbstractGenericRepository<NsdInfo> implements
 	private static final String REPOSITORY_NVFO_NSD_DATAFILE_BASE_PATH = "Datafiles/NFVO/nsd";
 
 	@Override
-	String setId(final NsdInfo _entity) {
+	UUID setId(final NsdInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getId();
+		return UUID.fromString(_entity.getId());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class NsdPackageMsa extends AbstractGenericRepository<NsdInfo> implements
 	@Override
 	public NsdInfo save(final NsdInfo _entity) {
 		final NsdInfo nsdDescriptor = super.save(_entity);
-		storeObject(nsdDescriptor.getId(), "indexes.json", new VnfPkgIndex());
+		storeObject(UUID.fromString(nsdDescriptor.getId()), "indexes.json", new VnfPkgIndex());
 		return nsdDescriptor;
 	}
 

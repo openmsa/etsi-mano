@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.util.UUID;
+
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -32,7 +34,7 @@ public class ActionJob extends QuartzJobBean {
 	protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
 		final JobDataMap jobDataMap = context.getMergedJobDataMap();
 		final ActionType eventType = ActionType.valueOf(jobDataMap.getString("eventType"));
-		final String objectId = jobDataMap.getString("objectId");
+		final UUID objectId = UUID.fromString(jobDataMap.getString("objectId"));
 		LOG.info("Quartz event start {} / {}", eventType, objectId);
 		if (null == objectId) {
 			throw new IllegalArgumentException("Event received With no ObjectId.");

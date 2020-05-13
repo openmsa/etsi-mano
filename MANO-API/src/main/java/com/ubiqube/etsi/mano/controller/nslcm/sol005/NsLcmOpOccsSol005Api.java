@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -82,7 +83,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
-		final NsLcmOpOcc nsLcmOpOccs = nsLcmOpOccsRepository.get(nsLcmOpOccId);
+		final NsLcmOpOcc nsLcmOpOccs = nsLcmOpOccsRepository.get(UUID.fromString(nsLcmOpOccId));
 		nsLcmOpOccs.setLinks(makeLink(nsLcmOpOccs));
 
 		return new ResponseEntity<>(nsLcmOpOccs, HttpStatus.OK);

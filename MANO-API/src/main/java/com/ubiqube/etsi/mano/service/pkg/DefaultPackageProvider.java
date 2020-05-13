@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
@@ -12,6 +14,11 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
+
+import tosca.policies.nfv.InstantiationLevels;
+import tosca.policies.nfv.VduInitialDelta;
+import tosca.policies.nfv.VduInstantiationLevels;
+import tosca.policies.nfv.VduScalingAspectDeltas;
 
 public class DefaultPackageProvider implements PackageProvider {
 	@Override
@@ -65,8 +72,27 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public Set<ScalingAspect> getScalingAspects() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
+	}
+
+	@Override
+	public List<InstantiationLevels> getInstatiationLevels() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<VduInstantiationLevels> getVduInstantiationLevels() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<VduInitialDelta> getVduInitialDelta() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas() {
+		return new ArrayList<>();
 	}
 
 }

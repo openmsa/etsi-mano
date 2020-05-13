@@ -43,7 +43,11 @@ import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.InstantiationLevels;
 import tosca.policies.nfv.ScalingAspects;
+import tosca.policies.nfv.VduInitialDelta;
+import tosca.policies.nfv.VduInstantiationLevels;
+import tosca.policies.nfv.VduScalingAspectDeltas;
 
 public class ToscaPackageProvider implements PackageProvider {
 
@@ -235,6 +239,30 @@ public class ToscaPackageProvider implements PackageProvider {
 			ret.addAll(tmp);
 		}
 		return ret;
+	}
+
+	@Override
+	public List<InstantiationLevels> getInstatiationLevels() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VduInstantiationLevels> getVduInstantiationLevels() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VduInitialDelta> getVduInitialDelta() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

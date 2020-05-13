@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,13 +30,13 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 		namingStrategy = _namingStrategy;
 	}
 
-	protected void mkdir(final String _id) {
+	protected void mkdir(final UUID _id) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
 		contentManager.mkdir(path);
 	}
 
 	@Override
-	public final void storeObject(final String _id, final String _filename, final Object _object) {
+	public final void storeObject(final UUID _id, final String _filename, final Object _object) {
 		try {
 			final String str = jsonMapper.writeValueAsString(_object);
 			storeBinary(_id, _filename, new ByteArrayInputStream(str.getBytes()));
@@ -45,18 +46,18 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
+	public final void storeBinary(final UUID _id, final String _filename, final InputStream _stream) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
 		contentManager.store(path, _stream);
 	}
 
 	@Override
-	public final byte[] getBinary(final String _id, final String _filename) {
+	public final byte[] getBinary(final UUID _id, final String _filename) {
 		return getBinary(_id, _filename, 0, null);
 	}
 
 	@Override
-	public final byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
+	public final byte[] getBinary(final UUID _id, final String _filename, final int min, final Long max) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
 		final InputStream os = contentManager.load(path, min, max);
 		try {
@@ -67,7 +68,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final <T, U extends Class> T loadObject(@NotNull final String _id, final String _filename, final U t) {
+	public final <T, U extends Class> T loadObject(@NotNull final UUID _id, final String _filename, final U t) {
 		final byte[] content = getBinary(_id, _filename, 0, null);
 		try {
 			return (T) jsonMapper.readValue(content, t);
@@ -77,13 +78,13 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+	public void delete(@NotNull final UUID _id, @NotNull final String _filename) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
 		contentManager.delete(path);
 	}
 
 	@Override
-	public void delete(@NotNull final String _id) {
+	public void delete(@NotNull final UUID _id) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
 		contentManager.delete(path);
 	}

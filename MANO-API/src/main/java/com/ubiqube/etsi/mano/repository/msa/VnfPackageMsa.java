@@ -32,13 +32,13 @@ public class VnfPackageMsa extends GenericBinaryRepository<VnfPackage> implement
 	}
 
 	@Override
-	protected String setId(final VnfPackage _entity) {
+	protected UUID setId(final VnfPackage _entity) {
 		final UUID id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId().toString();
+		return _entity.getId();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class VnfPackageMsa extends GenericBinaryRepository<VnfPackage> implement
 	@Override
 	public VnfPackage save(final VnfPackage _entity) {
 		final VnfPackage vnfPkgInfo = super.save(_entity);
-		storeObject(vnfPkgInfo.getId().toString(), "indexes.json", new VnfPkgIndex());
+		storeObject(vnfPkgInfo.getId(), "indexes.json", new VnfPkgIndex());
 		return vnfPkgInfo;
 	}
 

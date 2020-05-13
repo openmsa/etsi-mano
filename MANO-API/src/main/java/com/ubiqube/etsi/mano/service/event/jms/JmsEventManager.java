@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.event.jms;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,13 @@ public class JmsEventManager implements EventManager {
 	}
 
 	@Override
-	public void sendNotification(final NotificationEvent notificationEvent, final String objectId) {
+	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId) {
 		final EventMessage msg = new EventMessage(notificationEvent, objectId);
 		jmsTemplate.convertAndSend("system.notifications", msg);
 	}
 
 	@Override
-	public void sendAction(final ActionType actionType, final String objectId, final Map<String, Object> parameters) {
+	public void sendAction(final ActionType actionType, final UUID objectId, final Map<String, Object> parameters) {
 		final ActionMessage msg = new ActionMessage(actionType, objectId, parameters);
 		jmsTemplate.convertAndSend("system.actions", msg);
 	}

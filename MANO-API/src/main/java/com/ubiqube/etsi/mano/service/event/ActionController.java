@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Base64;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,14 +30,14 @@ public class ActionController {
 		this.packagingManager = packagingManager;
 	}
 
-	public void dispatch(final ActionType eventType, @NotNull final String objectId, final Map<String, Object> parameters) {
+	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
 		switch (eventType) {
 		case VNF_PKG_ONBOARD_FROM_URI:
-			packagingManager.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId, (String) parameters.get("url"));
+			packagingManager.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("url"));
 			break;
 		case VNF_PKG_ONBOARD_FROM_BYTES:
 			final byte[] bytes = Base64.getDecoder().decode((String) parameters.get("data"));
-			packagingManager.vnfPackagesVnfPkgIdPackageContentPut(objectId, bytes);
+			packagingManager.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString(), bytes);
 			break;
 		case VNF_INSTANTIATE:
 			vnfmActions.vnfInstantiate(objectId);

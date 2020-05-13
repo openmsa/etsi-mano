@@ -172,7 +172,7 @@ public class ExecutionPlanner {
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
-		vnfPackageRepository.storeBinary(_id.toString(), subName + "-" + vnfInstance.getId() + ".dot", _stream);
+		vnfPackageRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
 	private static String makeUowMonitoringName(final VnfCompute x) {

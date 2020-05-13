@@ -65,7 +65,7 @@ public class GrantMngtSol005 implements GrantManagement {
 		grants.setAvailable(Boolean.FALSE);
 		grants = grantsJpa.save(grants);
 		LOG.debug("Sending grants {}", grants.getId());
-		eventManager.sendAction(ActionType.GRANT_REQUEST, grants.getId().toString(), new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.GRANT_REQUEST, grants.getId(), new HashMap<String, Object>());
 		LOG.info("Grant request {} sent.", grants.getId());
 		return grants;
 	}

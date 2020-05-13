@@ -98,7 +98,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(final String vnfInstanceId) {
-		vnfInstanceLcm.delete(vnfInstanceId);
+		vnfInstanceLcm.delete(UUID.fromString(vnfInstanceId));
 		return ResponseEntity.noContent().build();
 	}
 
@@ -125,7 +125,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
-		vnfInstanceLcm.instantiate(vnfInstanceId, instantiateVnfRequest, links);
+		vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest, links);
 		return ResponseEntity.accepted().build();
 	}
 
@@ -174,9 +174,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		vnfInstanceLcm.terminate(vnfInstanceId, terminateVnfRequest);
+		vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), terminateVnfRequest);
 
-		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstanceId);
+		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, UUID.fromString(vnfInstanceId));
 		return ResponseEntity.noContent().build();
 	}
 

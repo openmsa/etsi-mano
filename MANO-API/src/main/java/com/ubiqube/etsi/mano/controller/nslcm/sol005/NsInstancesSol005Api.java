@@ -113,11 +113,12 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureNotInstantiated(nsInstance);
 
-		nsInstanceRepository.delete(nsInstanceId);
+		nsInstanceRepository.delete(nsInstanceUuid);
 	}
 
 	/**
@@ -129,8 +130,9 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final InlineResponse200 resp = new InlineResponse200();
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		nsInstance.setLinks(makeLink(nsInstanceId));
 		resp.setNsInstance(nsInstance);
@@ -148,10 +150,11 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final HealNsRequest body) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, NsLcmOpType.HEAL);
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceUuid, NsLcmOpType.HEAL);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -164,11 +167,12 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final InstantiateNsRequest body) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureNotInstantiated(nsInstance);
 
-		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceId, new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceUuid, new HashMap<String, Object>());
 
 		nsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
@@ -182,10 +186,11 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final ScaleNsRequest body) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, NsLcmOpType.SCALE);
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceUuid, NsLcmOpType.SCALE);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -203,11 +208,12 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final TerminateNsRequest body) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
 
-		eventManager.sendAction(ActionType.NS_TERMINATE, nsInstanceId, new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.NS_TERMINATE, nsInstanceUuid, new HashMap<String, Object>());
 
 		nsInstance.setLinks(makeLink(nsInstanceId));
 		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
@@ -221,10 +227,11 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final UpdateNsRequest body) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceId);
+		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
+		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, NsLcmOpType.UPDATE);
+		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceUuid, NsLcmOpType.UPDATE);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -240,7 +247,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
 		}
-		final NsdInfo nsd = nsdRepository.get(req.getNsdId());
+		final NsdInfo nsd = nsdRepository.get(UUID.fromString(req.getNsdId()));
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
 		nsd.setNsdUsageState(NsdUsageStateType.IN_USE);

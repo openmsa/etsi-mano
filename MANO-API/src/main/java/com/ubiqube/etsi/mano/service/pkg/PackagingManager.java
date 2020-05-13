@@ -89,7 +89,7 @@ public class PackagingManager {
 
 	private void uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
 		vnfPackage.setChecksum(getChecksum(data));
-		vnfPackageRepository.storeBinary(vnfPackage.getId().toString(), "vnfd", new ByteArrayInputStream(data));
+		vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes();
@@ -116,7 +116,7 @@ public class PackagingManager {
 			mapper.map(pd, vnfPackage);
 		}
 		finishOnboarding(vnfPackage);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId().toString());
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 	}
 
 	private static void rebuildScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas) {

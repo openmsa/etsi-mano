@@ -27,13 +27,13 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOcc> implem
 	}
 
 	@Override
-	String setId(final NsLcmOpOcc _entity) {
+	UUID setId(final NsLcmOpOcc _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getId();
+		return UUID.fromString(_entity.getId());
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOcc> implem
 	}
 
 	@Override
-	public NsLcmOpOcc createLcmOpOccs(final String nsInstanceId, final NsLcmOpType state) {
+	public NsLcmOpOcc createLcmOpOccs(final UUID nsInstanceId, final NsLcmOpType state) {
 		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceId, state);
 		save(lcmOpOccs);
 		// Add newly created instance to Indexes.json
@@ -63,12 +63,12 @@ public class NsLcmOpOccsMsa extends AbstractGenericRepository<NsLcmOpOcc> implem
 	}
 
 	@Override
-	public void attachProcessIdToLcmOpOccs(@NotNull final String lcmOpOccsId, final String processId) {
+	public void attachProcessIdToLcmOpOccs(@NotNull final UUID lcmOpOccsId, final String processId) {
 		final NsLcmOpOcc lcmOpOccs = get(lcmOpOccsId);
-		final NsInstanceIndex nsInstanceIndex = nsdPackageMsa.loadObject(lcmOpOccs.getNsInstanceId(), "indexes.json", NsInstanceIndex.class);
+		final NsInstanceIndex nsInstanceIndex = nsdPackageMsa.loadObject(UUID.fromString(lcmOpOccs.getNsInstanceId()), "indexes.json", NsInstanceIndex.class);
 		final NsLcmOpOccsIndex lcmIdx = nsInstanceIndex.getLcmOpOccs(lcmOpOccsId);
 		lcmIdx.setProcessId(processId);
-		nsdPackageMsa.storeObject(lcmOpOccs.getNsInstanceId(), "indexes.json", nsInstanceIndex);
+		nsdPackageMsa.storeObject(UUID.fromString(lcmOpOccs.getNsInstanceId()), "indexes.json", nsInstanceIndex);
 
 	}
 

@@ -39,8 +39,8 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 	}
 
 	@Override
-	public final T get(final String id) {
-		final Optional<U> vnfPackage = repository.findById(UUID.fromString(id));
+	public final T get(final UUID id) {
+		final Optional<U> vnfPackage = repository.findById(id);
 		return mapper.map(vnfPackage.orElseThrow(() -> new NotFoundException(getDbClass().getSimpleName() + " entity " + id + " not found.")), getFrontClass());
 	}
 
@@ -50,8 +50,8 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 	protected abstract Class<U> getDbClass();
 
 	@Override
-	public final void delete(final String id) {
-		repository.deleteById(UUID.fromString(id));
+	public final void delete(final UUID id) {
+		repository.deleteById(id);
 		super.delete(id);
 	}
 
@@ -60,7 +60,7 @@ public abstract class AbstractJpa<T, U extends BaseEntity> extends AbstractBinar
 		U vnf = mapper.map(entity, getDbClass());
 		mapChild(vnf);
 		vnf = repository.save(vnf);
-		mkdir(vnf.getId().toString());
+		mkdir(vnf.getId());
 		mapper.map(vnf, getFrontClass());
 		mapper.map(vnf, entity);
 		return entity;

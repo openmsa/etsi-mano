@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -145,7 +146,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String onNsInstantiate(final String nsdId, final Map<String, Object> userData) {
+	public String onNsInstantiate(final UUID nsdId, final Map<String, Object> userData) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(final String pnfdInfoId) {
-		pnfdInfoRepository.delete(pnfdInfoId);
+		pnfdInfoRepository.delete(UUID.fromString(pnfdInfoId));
 		return ResponseEntity.noContent().build();
 	}
 
@@ -85,7 +86,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId, final String accept) {
-		final PnfdInfo pnfdInfo = pnfdInfoRepository.get(pnfdInfoId);
+		final PnfdInfo pnfdInfo = pnfdInfoRepository.get(UUID.fromString(pnfdInfoId));
 		pnfdInfo.setLinks(makeLinks(pnfdInfo));
 		return new ResponseEntity<>(pnfdInfo, HttpStatus.OK);
 	}

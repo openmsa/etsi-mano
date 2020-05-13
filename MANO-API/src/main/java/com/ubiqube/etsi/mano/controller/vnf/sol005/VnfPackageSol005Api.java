@@ -133,7 +133,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		checkUserData(userData);
 		final Object heatDoc = userData.remove("heat");
 		vnfPackage = vnfPackageRepository.save(vnfPackage);
-		final String vnfPkgId = vnfPackage.getId().toString();
+		final UUID vnfPkgId = vnfPackage.getId();
 		if (null != heatDoc) {
 			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
 			vnfPackage.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
@@ -142,7 +142,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
 		}
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId.toString()));
 
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.CREATED);
 	}
@@ -181,10 +181,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureDisabled(vnfPackage);
 		ensureNotInUse(vnfPackage);
-		vnfPackageRepository.delete(vnfPkgId);
+		vnfPackageRepository.delete(vnfPkgUuid);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -199,14 +200,15 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		patcher.patch(body, vnfPackage);
 		vnfPackageRepository.save(vnfPackage);
 
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgUuid.toString()));
 		// On change Notification
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgUuid);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
@@ -220,7 +222,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> parameters = new HashMap<>();
 		try {
@@ -228,7 +231,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, vnfPkgId, parameters);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, vnfPkgUuid, parameters);
 		return ResponseEntity.accepted().build();
 	}
 
@@ -243,13 +246,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final UploadVnfPkgFromUriRequest contentUploadFromUriPostRequest) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureNotOnboarded(vnfPackage);
 
 		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("url", uddList.get("url"));
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgUuid, parameters);
 
 		return ResponseEntity.noContent().build();
 	}

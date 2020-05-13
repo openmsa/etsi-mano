@@ -94,12 +94,12 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static NsLcmOpOcc createNsLcmOpOcc(final String nsInstanceId, final NsLcmOpType lcmOperationType) {
+	public static NsLcmOpOcc createNsLcmOpOcc(final UUID nsInstanceId, final NsLcmOpType lcmOperationType) {
 		final NsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOcc();
 		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(Boolean.TRUE);
 		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(Boolean.FALSE);
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
-		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId);
+		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId.toString());
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
 		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -105,11 +106,11 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String onNsInstantiate(final String nsdId, final Map<String, Object> userData) {
+	public String onNsInstantiate(final UUID nsdId, final Map<String, Object> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = (String) userData.get(CUSTOMER_ID);
 		varsMap.put("deviceid", getDefault((String) userData.get("vimId"), devaultfVim));
-		varsMap.put("nsPkgId", nsdId);
+		varsMap.put("nsPkgId", nsdId.toString());
 		varsMap.put("nfvoDevice", defaultfNfvo);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";

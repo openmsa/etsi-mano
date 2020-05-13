@@ -42,13 +42,13 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 	@Override
 	public final void delete(final UUID id) {
 		repository.deleteById(id);
-		super.delete(id.toString());
+		super.delete(id);
 	}
 
 	@Override
 	public final U save(final U entity) {
 		final U res = repository.save(entity);
-		mkdir(res.getId().toString());
+		mkdir(res.getId());
 		return res;
 	}
 

@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.repository.jpa;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -49,8 +50,8 @@ public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription
 	}
 
 	@Override
-	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
-		final List<Subscription> lst = repository.findEventAndVnfPkg(NotificationTypesEnum.fromValue(event), vnfPkgId);
+	public List<SubscriptionObject> selectNotifications(final UUID vnfPkgId, final String event) {
+		final List<Subscription> lst = repository.findEventAndVnfPkg(NotificationTypesEnum.fromValue(event), vnfPkgId.toString());
 		return lst.stream()
 				.map(x -> mapper.map(x, SubscriptionObject.class))
 				.collect(Collectors.toList());

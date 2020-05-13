@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.model.vnf;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +20,7 @@ public class VnfPkgIndex {
 		this.instances = instances;
 	}
 
-	public VnfPkgInstance getVnfPkgInstance(final String _id) {
+	public VnfPkgInstance getVnfPkgInstance(final UUID _id) {
 		return instances.get(_id);
 	}
 

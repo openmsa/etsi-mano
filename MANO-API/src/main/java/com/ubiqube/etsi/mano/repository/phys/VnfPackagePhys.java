@@ -21,13 +21,13 @@ public class VnfPackagePhys extends GenericBinaryRepository<VnfPackage> implemen
 	}
 
 	@Override
-	protected String setId(final VnfPackage _entity) {
+	protected UUID setId(final VnfPackage _entity) {
 		final UUID id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId().toString();
+		return _entity.getId();
 	}
 
 	@Override

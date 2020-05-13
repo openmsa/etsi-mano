@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +26,7 @@ public interface Vim {
 
 	String onVnfInstantiate(GrantInformation grantInformation, VnfPackage vnfPackage);
 
-	String onNsInstantiate(String nsdId, Map<String, Object> userData);
+	String onNsInstantiate(UUID nsdId, Map<String, Object> userData);
 
 	String onNsInstanceTerminate(String processId, Map<String, Object> userData);
 
