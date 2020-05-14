@@ -243,26 +243,22 @@ public class ToscaPackageProvider implements PackageProvider {
 
 	@Override
 	public List<InstantiationLevels> getInstatiationLevels() {
-		// TODO Auto-generated method stub
-		return null;
+		return toscaApi.getObjects(root, InstantiationLevels.class);
 	}
 
 	@Override
 	public List<VduInstantiationLevels> getVduInstantiationLevels() {
-		// TODO Auto-generated method stub
-		return null;
+		return toscaApi.getObjects(root, VduInstantiationLevels.class);
 	}
 
 	@Override
 	public List<VduInitialDelta> getVduInitialDelta() {
-		// TODO Auto-generated method stub
-		return null;
+		return toscaApi.getObjects(root, VduInitialDelta.class);
 	}
 
 	@Override
 	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas() {
-		// TODO Auto-generated method stub
-		return null;
+		return toscaApi.getObjects(root, VduScalingAspectDeltas.class);
 	}
 
 }

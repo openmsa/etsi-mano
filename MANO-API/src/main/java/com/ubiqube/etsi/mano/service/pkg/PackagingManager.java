@@ -139,9 +139,10 @@ public class PackagingManager {
 				vduInstantiationLevel.setNumberOfInstances(y.getValue().getNumberOfInstances());
 				return vduInstantiationLevel;
 			}).collect(Collectors.toSet());
-			;
+
 			x.getTargets().forEach(y -> {
 				final VnfCompute vnfCompute = findVnfCompute(vnfPackage, y);
+				ils.forEach(z -> z.setVnfCompute(vnfCompute));
 				vnfCompute.setInstantiationLevel(ils);
 			});
 		});
