@@ -57,6 +57,8 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
 	private Set<VduInstantiationLevel> instantiationLevel;
 
+	private int initialNumberOfInstance;
+
 	@Embedded
 	private Audit audit;
 
@@ -192,6 +194,14 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	public void setInstantiationLevel(final Set<VduInstantiationLevel> instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
+	}
+
+	public int getInitialNumberOfInstance() {
+		return initialNumberOfInstance;
+	}
+
+	public void setInitialNumberOfInstance(final int initialNumberOfInstance) {
+		this.initialNumberOfInstance = initialNumberOfInstance;
 	}
 
 }
