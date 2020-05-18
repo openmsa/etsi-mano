@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.graph;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +22,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
+import com.ubiqube.etsi.mano.dao.mano.AffectedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -35,6 +45,7 @@ import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 
 @Service
 public class ExecutionPlanner {
@@ -51,15 +62,18 @@ public class ExecutionPlanner {
 
 	private final VnfExtCpJpa vnfExtCpJpa;
 
+	private final VnfPackageService vnfPackageService;
+
 	private final VnfInstanceService vnfInstanceService;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfVlJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstanceService _vnfInstanceService) {
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfVlJpa _vlProtocolDataJpa, final VnfStorageJpa _vnfStorageJpa, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfVl = _vlProtocolDataJpa;
 		vnfStorageJpa = _vnfStorageJpa;
 		vnfComputeJpa = _vnfComputeJpa;
 		vnfExtCpJpa = _vnfExtCpJpa;
 		vnfInstanceService = _vnfInstanceService;
+		vnfPackageService = _vnfPackageService;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
@@ -70,9 +84,9 @@ public class ExecutionPlanner {
 	}
 
 	@NotNull
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfInstance vnfInstance, @NotNull final VnfPackage vnfPackage) {
+	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
-		final Map<String, UnitOfWork> vertex = buildVertex(g, vnfInstance);
+		final Map<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs);
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
 			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
@@ -128,18 +142,18 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private Map<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfInstance vnfInstance) {
+	private Map<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs) {
 		final Map<String, UnitOfWork> vertex = new HashMap<>();
-		vnfInstance.getInstantiatedVnfInfo().getVirtualLinkResourceInfo().forEach(x -> {
-			final VnfVl vlProtocol = vnfVl.findById(x.getGrantInformation().getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getGrantInformation().getVduId()));
+
+		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().forEach(x -> {
+			final VnfVl vlProtocol = vnfVl.findById(x.getNetworkResource().getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getNetworkResource().getVduId()));
 			final UnitOfWork uow = new VirtualLinkUow(x.getNetworkResource(), vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
 			vertex.put(vlProtocol.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 
-		vnfInstance.getInstantiatedVnfInfo().getVirtualStorageResourceInfo().forEach(x -> {
-			x.getReservationId();
-			final VnfStorage vstorage = vnfStorageJpa.findById(x.getVirtualStorageDescId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getVirtualStorageDescId()));
+		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualStorages().forEach(x -> {
+			final VnfStorage vstorage = vnfStorageJpa.findById(x.getStorageResource().getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getVirtualStorageDesc().getId()));
 			UnitOfWork uow;
 			if ("BLOCK".equals(vstorage.getType())) {
 				uow = new StorageUow(x.getStorageResource(), vstorage);
@@ -150,17 +164,17 @@ public class ExecutionPlanner {
 			g.addVertex(uow);
 		});
 
-		vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().forEach(x -> {
+		vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().forEach(x -> {
 			final VnfCompute compute = vnfComputeJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-			final UnitOfWork uow = new ComputeUow(x, compute);
+			final UnitOfWork uow = new ComputeUow(x.getVnfInstantiedCompute(), compute);
 			vertex.put(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
-		final List<ResourceHandleEntity> extVl = vnfInstanceService.getExtManagedVirtualLinks(vnfInstance);
-		extVl.forEach(x -> {
-			final VnfExtCp extCp = vnfExtCpJpa.findById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVduId()));
-			final UnitOfWork uow = new VnfExtCpUow(x, extCp);
-			vertex.put(extCp.getToscaName(), uow);
+		final Set<AffectedExtCp> extCp = vnfLcmOpOccs.getResourceChanges().getAffectedExtCp();
+		extCp.forEach(x -> {
+			final VnfExtCp lextCp = vnfExtCpJpa.findById(x.getStorageResource().getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getStorageResource().getVduId()));
+			final UnitOfWork uow = new VnfExtCpUow(x.getStorageResource(), lextCp);
+			vertex.put(lextCp.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 		return vertex;
@@ -184,6 +198,74 @@ public class ExecutionPlanner {
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
+	}
+
+	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
+		// instantiationLevelId is aspectId
+		final VnfInstantiationLevels instantiationLevel = vnfPakage.getVnfInstantiationLevels().stream()
+				.filter(x -> x.getLevelName().equals(instantiationLevelId))
+				.findFirst().orElseThrow(() -> new NotFoundException("Aspectid not found: "));
+		vnfPakage.getVnfCompute().forEach(x -> {
+			final List<VnfComputeAspectDelta> res = vnfPackageService.findAspectDeltaByAspectId(x, instantiationLevelId);
+			Integer numInst = null;
+			if (res.size() <= instantiationLevel.getScaleInfoLevel()) {
+				numInst = res.get(instantiationLevel.getScaleInfoLevel() - 1).getNumberOfInstances();
+			} else if (res.isEmpty()) {
+				numInst = x.getInitialNumberOfInstance();
+			} else {
+				numInst = res.get(res.size() - 1).getNumberOfInstances();
+			}
+			final int wantedNumInst = numInst.intValue();
+			final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
+			if (currentInst < wantedNumInst) {
+				addVnfComputeInstance(lcmOpOccs, x, vnfPakage, wantedNumInst - currentInst);
+			} else if (currentInst > wantedNumInst) {
+				removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, currentInst - wantedNumInst);
+			}
+		});
+		vnfPakage.getVnfVl().forEach(x -> {
+			// XXX They should scale.
+			final int num = vnfInstanceService.getNumberOfLiveVl(vnfInstance, x);
+			if (num == 0) {
+				final AffectedVl aVl = new AffectedVl();
+				aVl.setChangeType(ChangeType.ADDED);
+				aVl.setVirtualLinkDesc(x);
+				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
+			}
+		});
+	}
+
+	private void addVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfCompute vnfCompute, final VnfPackage vnfPackage, final int number) {
+		for (int i = 0; i < number; i++) {
+			final AffectedCompute affectedCompute = new AffectedCompute();
+			affectedCompute.setChangeType(ChangeType.ADDED);
+			affectedCompute.setVduId(vnfCompute.getId());
+			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
+			vnfCompute.getStorages().forEach(y -> {
+				// XX Add Storage
+				affectedCompute.getAddedStorageResourceIds().add(y);
+				final VnfStorage storage = vnfPackageService.findStorageByName(vnfPackage, y)
+						.orElseThrow(() -> new NotFoundException("could not find: " + y));
+				final AffectedVs vs = new AffectedVs();
+				vs.setChangeType(ChangeType.ADDED);
+				vs.setVirtualStorageDesc(storage);
+				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(vs);
+			});
+		}
+	}
+
+	private void removeVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance, final VnfCompute x, final int number) {
+		final Deque<VnfInstantiedCompute> instantied = vnfInstanceService.getLiveComputeInstanceOf(vnfInstance, x);
+		for (int i = 0; i < number; i++) {
+			final AffectedCompute affectedCompute = new AffectedCompute();
+			affectedCompute.setChangeType(ChangeType.REMOVED);
+			affectedCompute.setVduId(x.getId());
+			affectedCompute.setVnfInstantiedCompute(instantied.pop());
+			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
+			x.getStorages().forEach(y -> {
+				// XXX Delete Storage, but we need a vdu.
+			});
+		}
 	}
 
 }

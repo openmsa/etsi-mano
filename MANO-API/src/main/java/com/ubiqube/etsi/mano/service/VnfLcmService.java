@@ -129,4 +129,9 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.findById(id).orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
+	@Nonnull
+	public VnfLcmOpOccs save(final VnfLcmOpOccs lcmOpOccs) {
+		return vnfLcmOpOccsJpa.save(lcmOpOccs);
+	}
+
 }

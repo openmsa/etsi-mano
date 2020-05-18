@@ -86,6 +86,8 @@ public class VnfmActions {
 
 		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfPkg, vnfInstance);
 
+		executionPlanner.makePrePlan(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
+		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 
@@ -103,7 +105,7 @@ public class VnfmActions {
 		mergeInstanceGrants(vnfInstance, grantsResp);
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		lcmOpOccs = vnfLcmService.findById(lcmOpOccs.getId());
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
@@ -201,7 +203,7 @@ public class VnfmActions {
 		final GrantResponse grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
 		vnfLcmService.setGrant(lcmOpOccs, grant.getId());
 		// Make plan
-		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(vnfInstance, vnfPkg);
+		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
 		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
 		// XXX Multiple Vim ?
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
