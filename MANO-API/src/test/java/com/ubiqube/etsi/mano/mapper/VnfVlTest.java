@@ -48,6 +48,6 @@ public class VnfVlTest {
 		assertNull(avc.getId());
 		assertNotNull(avc.getNetworkResource());
 		assertEquals(avcDb.getId(), avc.getNetworkResource().getVduId());
-		assertEquals(avcDb.getId(), avc.getVirtualLinkDescId());
+		assertEquals(avcDb.getId(), avc.getVirtualLinkDesc().getId());
 	}
 }

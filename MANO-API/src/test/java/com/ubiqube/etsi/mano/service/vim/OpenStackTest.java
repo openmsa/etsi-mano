@@ -159,6 +159,8 @@ public class OpenStackTest {
 		os.compute().zones().list().forEach(System.out::println);
 		System.out.println("================= SERVER GROUPS");
 		os.compute().serverGroups().list().forEach(System.out::println);
+		System.out.println("================= Agregates");
+		os.compute().hostAggregates().list().forEach(System.out::println);
 	}
 
 	@Test

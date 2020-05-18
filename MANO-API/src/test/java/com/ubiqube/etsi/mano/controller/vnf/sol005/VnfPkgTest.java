@@ -86,7 +86,7 @@ public class VnfPkgTest {
 		final String resultServ = result.getResponse().getContentAsString();
 
 		verify(vnfPackageRepository, atLeast(2)).save(Mockito.any(VnfPackage.class));
-		verify(eventManager).sendNotification(Mockito.any(), Mockito.anyString());
+		verify(eventManager).sendNotification(Mockito.any(), Mockito.any(UUID.class));
 	}
 
 	@Test

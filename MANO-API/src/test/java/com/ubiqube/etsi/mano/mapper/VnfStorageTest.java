@@ -47,6 +47,6 @@ public class VnfStorageTest {
 		assertNull(avc.getId());
 		assertNotNull(avc.getStorageResource());
 		assertEquals(avcDb.getId(), avc.getStorageResource().getVduId());
-		assertEquals(avcDb.getId(), avc.getVirtualStorageDescId());
+		assertEquals(avcDb.getId(), avc.getVirtualStorageDesc().getId());
 	}
 }

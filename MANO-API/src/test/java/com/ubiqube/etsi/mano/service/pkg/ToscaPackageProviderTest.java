@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
+
+import tosca.policies.nfv.VduScalingAspectDeltas;
 
 public class ToscaPackageProviderTest {
 	private final ToscaPackageProvider tpp;
@@ -100,6 +103,12 @@ public class ToscaPackageProviderTest {
 	@Test
 	void testScalingAspect() throws Exception {
 		final Set<ScalingAspect> list = tpp.getScalingAspects();
+		System.out.println("" + list);
+	}
+
+	@Test
+	void testVduScalingAspectDeltas() throws Exception {
+		final List<VduScalingAspectDeltas> list = tpp.getVduScalingAspectDeltas();
 		System.out.println("" + list);
 	}
 }

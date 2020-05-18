@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.repository.msa;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,18 +60,11 @@ public class VnfPackageGenTest {
 		final int num = res.size();
 		assertTrue(num >= 1);
 
-		vnfPackage.delete(entity.getId().toString());
+		vnfPackage.delete(entity.getId());
 
 		res = vnfPackage.query(null);
 		assertNotNull(res);
 		assertEquals(num - 1, res.size());
-	}
-
-	@Test
-	public void testStoreError() {
-		assertThrows(NotFoundException.class, () -> {
-			vnfPackage.storeObject("BAD", "grant", new Grant());
-		});
 	}
 
 	@Test
@@ -81,16 +73,9 @@ public class VnfPackageGenTest {
 		vnfPackage.save(entity);
 		assertNotNull(entity.getId());
 
-		vnfPackage.storeObject(entity.getId().toString(), "grant", new Grant());
-		vnfPackage.loadObject(entity.getId().toString(), "grant", Grant.class);
-		vnfPackage.delete(entity.getId().toString());
-	}
-
-	@Test
-	public void testLoadObjectError() {
-		assertThrows(NotFoundException.class, () -> {
-			vnfPackage.loadObject("BAD", "grant", NsInstance.class);
-		});
+		vnfPackage.storeObject(entity.getId(), "grant", new Grant());
+		vnfPackage.loadObject(entity.getId(), "grant", Grant.class);
+		vnfPackage.delete(entity.getId());
 	}
 
 	@Test
@@ -100,19 +85,19 @@ public class VnfPackageGenTest {
 		assertNotNull(entity.getId());
 
 		final InputStream stream = new FileInputStream("src/test/resources/pack.zip");
-		vnfPackage.storeBinary(entity.getId().toString(), "file", stream);
+		vnfPackage.storeBinary(entity.getId(), "file", stream);
 
-		byte[] bytes = vnfPackage.getBinary(entity.getId().toString(), "file");
+		byte[] bytes = vnfPackage.getBinary(entity.getId(), "file");
 		final MessageDigest md5 = MessageDigest.getInstance("MD5");
 		md5.update(bytes);
 		assertEquals("4d251f6f44b12f8e6a0b2e9e7e69e603", DatatypeConverter.printHexBinary(md5.digest()).toLowerCase());
 
-		bytes = vnfPackage.getBinary(entity.getId().toString(), "file", 0, Long.decode("2"));
+		bytes = vnfPackage.getBinary(entity.getId(), "file", 0, Long.decode("2"));
 
 		assertEquals(2, bytes.length);
 		assertEquals('P', bytes[0]);
 		assertEquals('K', bytes[1]);
-		vnfPackage.delete(entity.getId().toString());
+		vnfPackage.delete(entity.getId());
 	}
 
 }

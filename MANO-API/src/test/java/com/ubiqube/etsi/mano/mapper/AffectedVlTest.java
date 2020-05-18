@@ -32,7 +32,7 @@ public class AffectedVlTest {
 		final AffectedVl avlDb = mapper.map(avl, AffectedVl.class);
 		assertEquals(avl.getChangeType().toString(), avlDb.getChangeType().toString());
 		assertEquals(avl.getId(), avlDb.getId().toString());
-		assertEquals(avl.getVirtualLinkDescId(), avlDb.getVirtualLinkDescId().toString());
+		assertEquals(avl.getVirtualLinkDescId(), avlDb.getVirtualLinkDesc().getId());
 		assertEquals(avl.getNetworkResource().getResourceId(), avlDb.getNetworkResource().getResourceId());
 		assertEquals(avl.getNetworkResource().getResourceProviderId(), avlDb.getNetworkResource().getResourceProviderId());
 		assertEquals(avl.getNetworkResource().getVimConnectionId(), avlDb.getNetworkResource().getVimConnectionInformation().getId().toString());
@@ -46,7 +46,7 @@ public class AffectedVlTest {
 		final AffectedVirtualLink avl = mapper.map(avlDb, AffectedVirtualLink.class);
 		assertEquals(avl.getChangeType().toString(), avlDb.getChangeType().toString());
 		assertEquals(avl.getId(), avlDb.getId().toString());
-		assertEquals(avl.getVirtualLinkDescId(), avlDb.getVirtualLinkDescId().toString());
+		assertEquals(avl.getVirtualLinkDescId(), avlDb.getVirtualLinkDesc().getId());
 		assertEquals(avl.getNetworkResource().getResourceId(), avlDb.getNetworkResource().getResourceId());
 		assertEquals(avl.getNetworkResource().getResourceProviderId(), avlDb.getNetworkResource().getResourceProviderId());
 		assertEquals(avl.getNetworkResource().getVimConnectionId(), avlDb.getNetworkResource().getVimConnectionInformation().getId().toString());
