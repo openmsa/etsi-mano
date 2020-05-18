@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,9 +25,9 @@ public class SerializationTest {
 
 		final String str = mapper.writeValueAsString(index);
 		final VnfPkgIndex vnfPkgIndex = mapper.readValue(str.getBytes(), VnfPkgIndex.class);
-		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance("DEADBEEF");
+		final VnfPkgInstance instance = vnfPkgIndex.getVnfPkgInstance(UUID.fromString("7caabacb-8bc2-4b83-8323-f90498854015"));
 		assertNotNull(instance);
-		final Map<String, VnfPkgOperation> ope = instance.getOperations();
+		final Map<UUID, VnfPkgOperation> ope = instance.getOperations();
 		assertEquals(1, ope.size());
 
 	}
