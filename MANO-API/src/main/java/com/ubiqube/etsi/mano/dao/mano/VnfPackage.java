@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -33,7 +35,10 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfPackage implements BaseEntity, Auditable {
+public class VnfPackage implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -107,6 +112,9 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	@Embedded
 	private Audit audit;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
 	@Override
 	public UUID getId() {
@@ -277,6 +285,22 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	public void setDefaultInstantiationLevel(final String defaultInstantiationLevel) {
 		this.defaultInstantiationLevel = defaultInstantiationLevel;
+	}
+
+	public Set<VnfInstantiationLevels> getVnfInstantiationLevels() {
+		return vnfInstantiationLevels;
+	}
+
+	public void setVnfInstantiationLevels(final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
+		this.vnfInstantiationLevels = vnfInstantiationLevels;
+	}
+
+	public void addInstantiationLevel(final VnfInstantiationLevels il) {
+		if (null == vnfInstantiationLevels) {
+			vnfInstantiationLevels = new HashSet<>();
+		}
+		il.setVnfPackage(this);
+		vnfInstantiationLevels.add(il);
 	}
 
 }

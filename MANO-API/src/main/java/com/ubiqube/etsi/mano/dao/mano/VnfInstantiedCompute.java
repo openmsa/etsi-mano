@@ -8,7 +8,9 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class VnfInstantiedCompute {
+@EntityListeners(AuditListener.class)
+public class VnfInstantiedCompute implements Auditable, BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -56,6 +59,15 @@ public class VnfInstantiedCompute {
 
 	private String imageId;
 
+	@ManyToOne
+	private VnfCompute vnfCompute;
+
+	@ManyToOne
+	private VnfInstance vnfInstance;
+	@Embedded
+	private Audit audit;
+
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -134,6 +146,32 @@ public class VnfInstantiedCompute {
 
 	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
+	}
+
+	public VnfCompute getVnfCompute() {
+		return vnfCompute;
+	}
+
+	public void setVnfCompute(final VnfCompute _vnfCompute) {
+		vnfCompute = _vnfCompute;
+	}
+
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
+	}
+
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
+	}
+
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
 	}
 
 }

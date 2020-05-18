@@ -77,7 +77,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	private String vnfSoftwareVersion = null;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	private NsdInstance nsInstance;
+	private transient NsdInstance nsInstance;
 
 	private String processId;
 
@@ -85,10 +85,10 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	private Map<String, String> extensions = null;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private Set<VnfLcmOpOccs> lcmOpOccs;
+	private transient Set<VnfLcmOpOccs> lcmOpOccs;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn

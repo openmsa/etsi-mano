@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Embeddable
-public class VnfInstantiatedInfo {
+public class VnfInstantiatedInfo implements Serializable {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	private String flavourId = null;
 
@@ -40,8 +44,7 @@ public class VnfInstantiatedInfo {
 
 	private String localizationLanguage = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vnsInstance")
 	private Set<VnfInstantiedCompute> vnfcResourceInfo = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -51,6 +54,8 @@ public class VnfInstantiatedInfo {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<VirtualStorageInfo> virtualStorageResourceInfo = null;
+
+	private String instantiationLevelId = null;
 
 	public String getFlavourId() {
 		return flavourId;
@@ -159,6 +164,14 @@ public class VnfInstantiatedInfo {
 			virtualLinkResourceInfo = new HashSet<>();
 		}
 		virtualLinkResourceInfo.add(virtualLink);
+	}
+
+	public String getInstantiationLevelId() {
+		return instantiationLevelId;
+	}
+
+	public void setInstantiationLevelId(final String instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
 	}
 
 }
