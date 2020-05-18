@@ -233,8 +233,9 @@ public class ToscaPackageProvider implements PackageProvider {
 		for (final ScalingAspects scalingAspects : list) {
 			final Map<String, tosca.datatypes.nfv.ScalingAspect> sa = scalingAspects.getAspects();
 			final Set<ScalingAspect> tmp = sa.entrySet().stream().map(x -> {
-				x.getKey();
-				return mapper.map(x.getValue(), ScalingAspect.class);
+				final ScalingAspect scaleRet = mapper.map(x.getValue(), ScalingAspect.class);
+				scaleRet.setName(x.getKey());
+				return scaleRet;
 			}).collect(Collectors.toSet());
 			ret.addAll(tmp);
 		}

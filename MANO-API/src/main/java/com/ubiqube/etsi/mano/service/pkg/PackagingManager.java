@@ -25,7 +25,9 @@ import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -111,6 +113,7 @@ public class PackagingManager {
 			final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels();
 			final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta();
 			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas();
+
 			rebuildScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas);
 			final ProviderData pd = packageProvider.getProviderPadata();
 			mapper.map(pd, vnfPackage);
@@ -127,7 +130,9 @@ public class PackagingManager {
 						final String levelId = y.getKey();
 						y.getValue().getScaleInfo().entrySet().forEach(z -> {
 							final String aspectId = z.getKey();
-							z.getValue().getScaleLevel();
+
+							final VnfInstantiationLevels il = new VnfInstantiationLevels(levelId, aspectId, z.getValue().getScaleLevel());
+							vnfPackage.addInstantiationLevel(il);
 						});
 					});
 				});
@@ -136,7 +141,7 @@ public class PackagingManager {
 			final Set<VduInstantiationLevel> ils = x.getLevels().entrySet().stream().map(y -> {
 				final VduInstantiationLevel vduInstantiationLevel = new VduInstantiationLevel();
 				vduInstantiationLevel.setLevelName(y.getKey());
-				vduInstantiationLevel.setNumberOfInstances(y.getValue().getNumberOfInstances());
+				vduInstantiationLevel.setNumberOfInstances(y.getValue().getNumberOfInstances().intValue());
 				return vduInstantiationLevel;
 			}).collect(Collectors.toSet());
 
@@ -146,9 +151,18 @@ public class PackagingManager {
 				vnfCompute.setInstantiationLevel(ils);
 			});
 		});
+		vduScalingAspectDeltas.forEach(x -> {
+			x.getTargets().forEach(y -> {
+				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+				x.getDeltas().entrySet().forEach(z -> {
+					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), z.getKey(), z.getValue().getNumberOfInstances()));
+				});
+			});
+		});
 
 	}
 
+	@Nonnull
 	private static VnfCompute findVnfCompute(final VnfPackage vnfPackage, final String y) {
 		return vnfPackage.getVnfCompute().stream()
 				.filter(x -> x.getToscaName().equals(y))
