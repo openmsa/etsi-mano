@@ -165,9 +165,9 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.exclude("audit")
 				.exclude("id")
 				// .field("id", "vnfPkg.id")
-				.field("vnfCompute", "instantiatedVnfInfo.vnfcResourceInfo")
-				.field("vnfVl", "instantiatedVnfInfo.virtualLinkResourceInfo")
-				.field("vnfStorage", "instantiatedVnfInfo.virtualStorageResourceInfo")
+				// .field("vnfCompute", "instantiatedVnfInfo.vnfcResourceInfo")
+				// .field("vnfVl", "instantiatedVnfInfo.virtualLinkResourceInfo")
+				// .field("vnfStorage", "instantiatedVnfInfo.virtualStorageResourceInfo")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiedCompute.class)
@@ -176,6 +176,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				// Don't save this one.field("id", "computeResource.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
 				.field("storages", "storageResourceIds")
+				.exclude("instantiationLevel")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfVl.class, VirtualLinkInfo.class)
@@ -227,7 +228,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vduId", "vduId")
 				.register();
 		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformation.class)
-				.exclude("id")
+				.fieldBToA("id", "id")
 				.field("resource.vimConnectionId", "vimConnectionId")
 				.field("resource.resourceProviderId", "resourceProviderId")
 				.field("type", "type")
