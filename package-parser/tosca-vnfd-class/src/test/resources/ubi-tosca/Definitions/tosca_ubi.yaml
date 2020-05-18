@@ -17,7 +17,7 @@ topology_template:
         descriptor_version: 1.0.1
         flavour_id: flavor01
       requirements:
-        - virtual_link: vl01
+        - virtual_link: public
 
     ext01:
       type: tosca.nodes.nfv.VnfExtCp
@@ -305,7 +305,7 @@ topology_template:
 groups:
   server_group_1:
     type: tosca.groups.nfv.PlacementGroup
-    members: [ server1, server2 ]
+    members: [ leftVdu01, rightVdu01 ]
     properties:
       description: My placement group.
 
@@ -314,17 +314,25 @@ policies:
     type: tosca.policies.nfv.InstantiationLevels
     properties:
       levels:
-        small:
-          description: First step.
+        demo:
+          description: Default instantiation level.
           scale_info:
-            aspect_id:
+            left_aspect:
+              scale_level: 0
+            right_aspect:
+              scale_level: 0
+            middle_aspect:
               scale_level: 1
-        big:
-          description: Second step.
+        premium:
+          description: Premium instantiation level.
           scale_info:
-            aspect_id:
-              scale_level: 2
-      default_level: small
+            left_aspect:
+              scale_level: 1
+            right_aspect:
+              scale_level: 1
+            middle_aspect:
+              scale_level: 0
+      default_level: demo
 
 # Vdu
   vdu_il:
@@ -336,62 +344,6 @@ policies:
           number_of_instances: 1
         big_vdu_left:
           number_of_instances: 2
-
-# scaling aspect
-  scaling_aspects:
-    type: tosca.policies.nfv.ScalingAspects
-    properties:
-      aspects:
-        aspect_id:
-          name: aspect_id
-          description: description
-          max_scale_level: 1
-          step_deltas:
-            - delta_1
-        aspect_id2:
-          name: aspect_id2
-          description: description
-          max_scale_level: 2
-          step_deltas:
-            - delta_1
-            - delta_2
-            - delta_1
-
-  leftVdu01_initial_delta:
-    type: tosca.policies.nfv.VduInitialDelta
-    properties:
-      initial_delta:
-        number_of_instances: 1
-    targets: [ leftVdu01 ]
-
-
-# tosca.policies.nfv.VduScalingAspectDeltas
-  vdu_scaling_aspect:
-    type: tosca.policies.nfv.VduScalingAspectDeltas
-    targets: [ "leftVdu01" ]
-    properties:
-      aspect: string
-      deltas:
-        delta_1:
-          number_of_instances: 1
-        delta_2:
-          number_of_instances: 2
-
-
-
-
-
-  my_scaling_ha_policy:
-    type: tosca.policies.nfv.VduInstantiationLevels
-    description: My policy.
-    properties:
-      level:
-        s0:
-          number_of_instances: 1
-        s1:
-          number_of_instances: 2
-    targets:
-      - leftVdu01
     triggers:
       trigger_name:
         description: Trigger desc.
@@ -406,6 +358,130 @@ policies:
             - my_other_attribute: [{equal: my_other_value}]
           action:
             - delegate: myWorkflow
+
+# scaling aspect
+  scaling_aspects:
+    type: tosca.policies.nfv.ScalingAspects
+    properties:
+      aspects:
+        left_aspect:
+          name: left_aspect
+          description: description left
+          max_scale_level: 1
+          step_deltas:
+            - delta_1
+        right_aspect:
+          name: right_aspect
+          description: description right
+          max_scale_level: 3
+          step_deltas:
+            - delta_1
+            - delta_2
+            - delta_1
+
+  leftVdu01_initial_delta:
+    type: tosca.policies.nfv.VduInitialDelta
+    properties:
+      initial_delta:
+        number_of_instances: 1
+    targets: [ leftVdu01 ]
+
+  rightVdu01_initial_delta:
+    type: tosca.policies.nfv.VduInitialDelta
+    properties:
+      initial_delta:
+        number_of_instances: 1
+    targets: [ rightVdu01 ]
+
+
+# tosca.policies.nfv.VduScalingAspectDeltas
+  left_vdu_scaling_aspect:
+    type: tosca.policies.nfv.VduScalingAspectDeltas
+    targets: [ "leftVdu01" ]
+    properties:
+      aspect: left_aspect
+      deltas:
+        delta_1:
+          number_of_instances: 1
+
+
+  right_vdu_scaling_aspect:
+    type: tosca.policies.nfv.VduScalingAspectDeltas
+    targets: [ "rightVdu01" ]
+    properties:
+      aspect: right_aspect
+      deltas:
+        delta_1:
+          number_of_instances: 1
+        delta_2:
+          number_of_instances: 2
+
+  vlright:
+    type: tosca.policies.nfv.VirtualLinkInstantiationLevels
+    targets: [ vl01 ]
+    properties:
+      levels:
+        level01:
+          bitrate_requirements:
+            root: 500
+            leaf: 1000
+
+  aaa:
+    type: tosca.policies.nfv.VirtualLinkBitrateScalingAspectDeltas
+    tagets: [ vl02 ]
+    properties:
+      aspect: demo
+      deltas:
+        level_1:
+          bitrate_requirements:
+            root: 500
+            leaf: 1000
+        level_2:
+          bitrate_requirements:
+            root: 500
+            leaf: 1000
+
+  vl01_initial_delta:
+    type: tosca.policies.nfv.VirtualLinkBitrateInitialDelta
+    targets: [ vl01 ]
+    properties:
+      bitrate_requirements:
+        root: 500
+        leaf: 1000
+
+  affinity_01:
+    type: tosca.policies.nfv.AffinityRule
+    targets: [ vdu01, vl02, server_group_1 ]
+    properties:
+      scope: nfvi_pop
+
+  security:
+    type: tosca.policies.nfv.SecurityGroupRule
+    properties:
+      description: Descr.
+      direction: ingress
+      ether_type: ipv4
+      protocol: tcp
+      port_range_min: 0
+      port_range_max: 65535
+
+  supported_vnf_int:
+    type: tosca.policies.nfv.SupportedVnfInterface
+    targets: [ extCp, VduCp ]
+    properties:
+      interface_name: vnf_indicator
+      details:
+        uri_components:
+          scheme: http
+          authority:
+            user_info: ubiqube
+            host: auth.ubiqube.com
+            port: 80
+          path: /
+          query: r=1
+          fragment: frag
+        interface_specific_data: # map of Strings
+ 
 
 
 
