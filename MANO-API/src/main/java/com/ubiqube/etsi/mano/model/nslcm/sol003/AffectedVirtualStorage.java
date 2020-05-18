@@ -16,10 +16,9 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.model.ResourceHandle;
+import com.ubiqube.etsi.mano.model.nslcm.ChangeTypeEnum;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,43 +35,6 @@ public class AffectedVirtualStorage {
 
 	@JsonProperty("virtualStorageDescId")
 	private String virtualStorageDescId = null;
-
-	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure
-	 * exists as long as the temporary resource exists.
-	 */
-	public enum ChangeTypeEnum {
-		ADDED("ADDED"),
-
-		REMOVED("REMOVED"),
-
-		MODIFIED("MODIFIED"),
-
-		TEMPORARY("TEMPORARY");
-
-		private final String value;
-
-		ChangeTypeEnum(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static ChangeTypeEnum fromValue(final String text) {
-			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
 
 	@JsonProperty("changeType")
 	private ChangeTypeEnum changeType = null;
