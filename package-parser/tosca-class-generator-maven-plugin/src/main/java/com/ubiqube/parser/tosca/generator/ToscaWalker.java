@@ -99,6 +99,38 @@ public class ToscaWalker {
 		listener.terminateDocument();
 	}
 
+	private void generateArtifactToscaClass(final String className, final ToscaClass toscaClass, final ToscaListener listener) {
+		LOG.info("generate Artifact class: {}", className);
+		startClass(className, toscaClass.getDerivedFrom(), listener);
+		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
+		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(listener, x));
+		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(listener, x));
+		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(listener, x));
+		Optional.ofNullable(toscaClass.getDescription()).ifPresent(listener::onClassDescription);
+		// Add members
+		// Description
+		final ValueObject vo = ValueObject.createList("string");
+		listener.startField("description", vo);
+		listener.onClassDescription("The optional description for the artifact definition.");
+		listener.onFieldTerminate();
+		// file.
+		listener.startField("file", vo);
+		listener.onFieldNonNull();
+		listener.onClassDescription("The required URI string (relative or absolute) which can be used to locate the artifact’s file.");
+		listener.onFieldTerminate();
+		// repository
+		listener.startField("repository", vo);
+		listener.onClassDescription("The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.");
+		listener.onFieldTerminate();
+		// deploy_path
+		listener.startField("deployPath", vo);
+		listener.onClassDescription("The file path the associated file would be deployed into within the target node’s container. ");
+		listener.onFieldTerminate();
+		LOG.debug("Caching {}", className);
+		cache.add(className);
+		listener.terminateClass();
+	}
+
 	private void generatePolicyType(final String className, final PolicyType definition, final ToscaListener listener) {
 		LOG.debug("generateClassPolicyType class={}", className);
 		startClass(className, definition.getDerivedFrom(), listener);
