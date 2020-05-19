@@ -348,4 +348,19 @@ public class OpenStackTest {
 		final List<String> storages = new ArrayList<>();
 		vim.createCompute(vimConnectionInformation, vnfc, "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages);
 	}
+
+	@Test
+	void testTrain() throws Exception {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		final OSClientV3 os = OSFactory.builderV3()
+				.endpoint("http://10.31.1.15:5000/v3")
+				.credentials("admin", "5fd399078a8844de", domainIdentifier)
+				.scopeToProject(Identifier.byId("ede0540276a94b75ae3de044cd7cc235"))
+				.authenticate();
+
+		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
+		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
+		System.out.println("l=" + l.get());
+
+	}
 }
