@@ -299,11 +299,16 @@ public class ToscaApi {
 		caps.forEach((x, y) -> {
 			Object res;
 			try {
-				res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.newInstance(), null);
-			} catch (InstantiationException | IllegalAccessException e) {
+				if (y instanceof Map) {
+					res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.newInstance(), null);
+					map.put(x, res);
+				} else {
+					map.put(x, y);
+				}
+			} catch (ClassCastException | InstantiationException | IllegalAccessException e) {
 				throw new ParseException(e);
 			}
-			map.put(x, res);
+
 		});
 	}
 
