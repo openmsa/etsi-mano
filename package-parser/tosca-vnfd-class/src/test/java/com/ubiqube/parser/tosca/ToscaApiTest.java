@@ -38,7 +38,10 @@ import tosca.policies.nfv.VduInstantiationLevels;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ToscaApiTest {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaApiTest.class);
+
 	private final ConvertApi conv = new ConvertApi();
+
+	private final Map<String, String> parameters = new HashMap<>();
 
 	public ToscaApiTest() {
 		conv.register(Size.class.getCanonicalName(), new SizeConverter());
@@ -49,7 +52,7 @@ public class ToscaApiTest {
 		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
-		final List<Compute> res = toscaApi.getObjects(root, Compute.class);
+		final List<Compute> res = toscaApi.getObjects(root, parameters, Compute.class);
 		System.out.println("" + res);
 	}
 
@@ -58,18 +61,18 @@ public class ToscaApiTest {
 		final ToscaParser tp = new ToscaParser("src/test/resources/ubi-tosca.csar");
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
-		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, tosca.nodes.nfv.vdu.Compute.class);
-		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, VirtualBlockStorage.class);
+		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
+		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
 		assertEquals(1, list.size());
-		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, VirtualObjectStorage.class);
+		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, parameters, VirtualObjectStorage.class);
 		assertEquals(1, vos.size());
-		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, VnfVirtualLink.class);
+		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
 		assertEquals(3, listVl.size());
-		final List<VduCp> listVduCp = toscaApi.getObjects(root, VduCp.class);
+		final List<VduCp> listVduCp = toscaApi.getObjects(root, parameters, VduCp.class);
 		assertEquals(4, listVduCp.size());
-		final List<PlacementGroup> listPg = toscaApi.getObjects(root, PlacementGroup.class);
+		final List<PlacementGroup> listPg = toscaApi.getObjects(root, parameters, PlacementGroup.class);
 		assertEquals(1, listPg.size());
-		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, VduInstantiationLevels.class);
+		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
 		assertEquals(1, listvduIl.size());
 		System.out.println("" + res);
 	}
@@ -79,7 +82,7 @@ public class ToscaApiTest {
 		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
-		final List<NodeTemplate> res = toscaApi.getNodeMatching(root, Compute.class);
+		final List<NodeTemplate> res = toscaApi.getNodeMatching(root, parameters, Compute.class);
 		assertEquals(2, res.size(), "Size of the list must be 2");
 		final NodeTemplate obj = res.get(0);
 		final Map<String, Object> caps = (Map<String, Object>) obj.getCapabilities();

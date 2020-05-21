@@ -2,9 +2,11 @@ package com.ubiqube.parser.tosca;
 
 import java.util.Map;
 
+import com.ubiqube.parser.tosca.scripting.ScriptingValue;
+
 public class NodeTemplate {
 	private String type;
-	private String name;
+	private ScriptingValue name;
 	private String description;
 	private Object capabilities;
 	private Map<String, Object> properties;
@@ -77,11 +79,11 @@ public class NodeTemplate {
 		this.description = description;
 	}
 
-	public String getName() {
+	public ScriptingValue getName() {
 		return name;
 	}
 
-	public void setName(final String name) {
+	public void setName(final ScriptingValue name) {
 		this.name = name;
 	}
 
