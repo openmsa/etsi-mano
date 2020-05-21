@@ -8,8 +8,8 @@ public class ToscaInernalBase {
 		return internalName;
 	}
 
-	public void setInternalName(final String internalName) {
-		this.internalName = internalName;
+	public void setInternalName(final String scriptingValue) {
+		this.internalName = scriptingValue;
 	}
 
 	public String getInternalDescription() {

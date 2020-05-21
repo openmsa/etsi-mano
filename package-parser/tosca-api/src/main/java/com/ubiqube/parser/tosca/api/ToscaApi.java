@@ -9,7 +9,6 @@ import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.NodeTemplate;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.ToscaContext;
-import com.ubiqube.parser.tosca.scripting.ScriptingValue;
 
 /**
  * Main front API around tosca files.
@@ -103,7 +102,8 @@ public class ToscaApi {
 				.filter(x -> root.isAssignableFor(x.getValue().getType(), clazzname))
 				.map(x -> {
 					final NodeTemplate val = x.getValue();
-					val.setName(contextResolver.resolvValue(x.getKey(), ScriptingValue.class));
+					// val.setName(contextResolver.resolvValue(x.getKey(), ScriptingValue.class));
+					val.setName(x.getKey());
 					return val;
 				})
 				.collect(Collectors.toList());
