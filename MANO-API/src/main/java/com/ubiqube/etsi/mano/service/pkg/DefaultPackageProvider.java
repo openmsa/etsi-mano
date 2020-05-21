@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.pkg;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
@@ -32,17 +33,17 @@ public class DefaultPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<SoftwareImage> getSoftwareImages() {
+	public Set<SoftwareImage> getSoftwareImages(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<AdditionalArtifact> getAdditionalArtefacts() {
+	public Set<AdditionalArtifact> getAdditionalArtefacts(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<VnfCompute> getVnfComputeNodes() {
+	public Set<VnfCompute> getVnfComputeNodes(final Map<String, String> parameters) {
 		final HashSet<VnfCompute> set = new HashSet<>();
 		// Create One VDU. for one call on OS createStack.
 		final VnfCompute vnfCompute = new VnfCompute();
@@ -51,47 +52,47 @@ public class DefaultPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VnfStorage> getVnfStorages() {
+	public Set<VnfStorage> getVnfStorages(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<VnfVl> getVnfVirtualLinks() {
+	public Set<VnfVl> getVnfVirtualLinks(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<VnfLinkPort> getVnfVduCp() {
+	public Set<VnfLinkPort> getVnfVduCp(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<VnfExtCp> getVnfExtCp() {
+	public Set<VnfExtCp> getVnfExtCp(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<ScalingAspect> getScalingAspects() {
+	public Set<ScalingAspect> getScalingAspects(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public List<InstantiationLevels> getInstatiationLevels() {
+	public List<InstantiationLevels> getInstatiationLevels(final Map<String, String> parameters) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<VduInstantiationLevels> getVduInstantiationLevels() {
+	public List<VduInstantiationLevels> getVduInstantiationLevels(final Map<String, String> parameters) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<VduInitialDelta> getVduInitialDelta() {
+	public List<VduInitialDelta> getVduInitialDelta(final Map<String, String> parameters) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas() {
+	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
 		return new ArrayList<>();
 	}
 

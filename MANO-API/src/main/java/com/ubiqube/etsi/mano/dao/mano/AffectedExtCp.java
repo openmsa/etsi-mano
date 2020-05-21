@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -19,12 +20,15 @@ public class AffectedExtCp {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private VnfExtCp extCpId = null;
+	private VnfExtCp extCp = null;
 
 	private ChangeType changeType = null;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ResourceHandleEntity storageResource = null;
+
+	@ManyToOne
+	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	@Transient
 	private Map<String, String> metadata = new HashMap<>();
@@ -37,12 +41,12 @@ public class AffectedExtCp {
 		this.id = id;
 	}
 
-	public VnfExtCp getExtCpId() {
-		return extCpId;
+	public VnfExtCp getExtCp() {
+		return extCp;
 	}
 
-	public void setExtCpId(final VnfExtCp extCpId) {
-		this.extCpId = extCpId;
+	public void setExtCp(final VnfExtCp extCpId) {
+		this.extCp = extCpId;
 	}
 
 	public ChangeType getChangeType() {
@@ -67,6 +71,14 @@ public class AffectedExtCp {
 
 	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
+	}
+
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
 	}
 
 }

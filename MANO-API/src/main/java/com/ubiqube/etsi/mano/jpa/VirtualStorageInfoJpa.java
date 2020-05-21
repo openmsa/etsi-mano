@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 
 public interface VirtualStorageInfoJpa extends CrudRepository<VirtualStorageInfo, UUID> {
-
+	// Nothing.
 }

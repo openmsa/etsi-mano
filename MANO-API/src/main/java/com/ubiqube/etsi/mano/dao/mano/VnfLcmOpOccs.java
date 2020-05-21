@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -14,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -28,7 +31,10 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfLcmOpOccs implements BaseEntity, Auditable {
+public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -74,6 +80,9 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	// @Transient
 	// private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfLcmOpOccs")
+	private Set<ResourceHandleEntity> resourceHAndleEntity;
 
 	private Audit audit;
 
@@ -190,6 +199,14 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	public Set<ResourceHandleEntity> getResourceHAndleEntity() {
+		return resourceHAndleEntity;
+	}
+
+	public void setResourceHAndleEntity(final Set<ResourceHandleEntity> resourceHAndleEntity) {
+		this.resourceHAndleEntity = resourceHAndleEntity;
 	}
 
 }

@@ -21,6 +21,9 @@ public class AffectedVl {
 	private UUID id = null;
 
 	@ManyToOne
+	private VnfInstantiationLevels instantiationLevel;
+
+	@ManyToOne
 	private VnfVl virtualLinkDesc = null;
 
 	private ChangeType changeType = null;
@@ -30,6 +33,9 @@ public class AffectedVl {
 
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
+
+	@ManyToOne
+	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	public UUID getId() {
 		return id;
@@ -69,6 +75,22 @@ public class AffectedVl {
 
 	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public VnfInstantiationLevels getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final VnfInstantiationLevels instantiationLevel2) {
+		this.instantiationLevel = instantiationLevel2;
+	}
+
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
+	}
+
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
 	}
 
 }

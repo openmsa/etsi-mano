@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -18,6 +19,9 @@ public class AffectedVs {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
+
+	@ManyToOne
+	private VduInstantiationLevel instantiationLevel;
 
 	private VnfStorage virtualStorageDesc = null;
 
@@ -28,6 +32,9 @@ public class AffectedVs {
 
 	@Transient
 	private Map<String, String> metadata = new HashMap<>();
+
+	@ManyToOne
+	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	public UUID getId() {
 		return id;
@@ -67,6 +74,22 @@ public class AffectedVs {
 
 	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public VduInstantiationLevel getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
+
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
+	}
+
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
@@ -18,7 +19,7 @@ public class ComputeUow extends AbstractUnitOfWork {
 	private final VnfInstantiedCompute vnfInstantiedCompute;
 
 	public ComputeUow(final VnfInstantiedCompute _vnfInstantiedCompute, final VnfCompute _vnfCompute) {
-		super(_vnfInstantiedCompute.getCompResource(), _vnfCompute.getToscaName());
+		super(new ResourceHandleEntity(), _vnfCompute.getToscaName());
 		vnfInstantiedCompute = _vnfInstantiedCompute;
 		vnfCompute = _vnfCompute;
 	}

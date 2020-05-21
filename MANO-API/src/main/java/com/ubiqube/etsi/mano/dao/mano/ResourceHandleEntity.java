@@ -43,7 +43,7 @@ public class ResourceHandleEntity implements Serializable {
 	private Date endTime;
 
 	@ManyToOne
-	private VnfInstance vnfInstance;
+	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	public UUID getId() {
 		return id;
@@ -117,12 +117,12 @@ public class ResourceHandleEntity implements Serializable {
 		this.endTime = endTime;
 	}
 
-	public VnfInstance getVnfInstance() {
-		return vnfInstance;
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
 	}
 
-	public void setVnfInstance(final VnfInstance vnfInstance) {
-		this.vnfInstance = vnfInstance;
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
 	}
 
 }

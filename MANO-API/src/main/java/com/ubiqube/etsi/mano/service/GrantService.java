@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -9,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
+import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
+import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
@@ -21,6 +26,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.jpa.GrantInformationJpa;
 import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
@@ -36,19 +42,22 @@ public class GrantService {
 	private final GrantRequestJpa grantRequestJpa;
 	private final MapperFacade mapper;
 	private final GrantManagement grantManagement;
+	private final GrantInformationJpa grantInformationJpa;
 
-	public GrantService(final GrantRequestJpa _grantRequestJpa, final MapperFacade _mapper, final GrantManagement _grantManagement) {
+	public GrantService(final GrantRequestJpa _grantRequestJpa, final MapperFacade _mapper, final GrantManagement _grantManagement, final GrantInformationJpa _grantInformationJpa) {
 		grantRequestJpa = _grantRequestJpa;
 		mapper = _mapper;
 		grantManagement = _grantManagement;
+		grantInformationJpa = _grantInformationJpa;
 	}
 
 	public GrantRequest createInstantiateGrantRequest(final VnfPackage vnfPkg, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, GrantedLcmOperationType.INSTANTIATE);
-		addGrantsCompute(grants, vnfPkg.getVnfCompute());
-		addGrantsVl(grants, vnfPkg.getVnfVl());
-		addGrantsStorage(grants, vnfPkg.getVnfStorage());
-		addGrantsLinkPorts(grants, vnfPkg.getVnfLinkPort());
+		addGrantsCompute(grants, lcmOpOccs.getResourceChanges().getAffectedVnfcs());
+		addGrantsVl(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualLinks());
+		addGrantsStorage(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualStorages());
+		// addGrantsLinkPorts(grants,
+		// lcmOpOccs.getResourceChanges().getAffectedExtCp());
 
 		grants = grantRequestJpa.save(grants);
 		return mapper.map(grants, GrantRequest.class);
@@ -89,18 +98,36 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfStorage> vnfStorage) {
-		final Set<GrantInformation> res = vnfStorage.stream().map(mapEntityGrantInformation(TypeEnum.STORAGE)).collect(Collectors.toSet());
+	private static void addGrantsStorage(final GrantsRequest grants, final Set<AffectedVs> affectedStorage) {
+		final Set<GrantInformation> res = affectedStorage.stream().map(x -> {
+			final GrantInformation grantInformation = new GrantInformation();
+			grantInformation.setResourceDefinitionId(x.getId().toString());
+			grantInformation.setType(TypeEnum.STORAGE);
+			grantInformation.setVduId(x.getVirtualStorageDesc().getId());
+			return grantInformation;
+		}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfVl> vnfVl) {
-		final Set<GrantInformation> res = vnfVl.stream().map(mapEntityGrantInformation(TypeEnum.VL)).collect(Collectors.toSet());
+	private static void addGrantsVl(final GrantsRequest grants, final Set<AffectedVl> set) {
+		final Set<GrantInformation> res = set.stream().map(x -> {
+			final GrantInformation grantInformation = new GrantInformation();
+			grantInformation.setResourceDefinitionId(x.getId().toString());
+			grantInformation.setType(TypeEnum.VL);
+			grantInformation.setVduId(x.getVirtualLinkDesc().getId());
+			return grantInformation;
+		}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfCompute> vnfCompute) {
-		final Set<GrantInformation> res = vnfCompute.stream().map(mapEntityGrantInformation(TypeEnum.COMPUTE)).collect(Collectors.toSet());
+	private static void addGrantsCompute(final GrantsRequest grants, final Set<AffectedCompute> affectedComputes) {
+		final Set<GrantInformation> res = affectedComputes.stream().map(x -> {
+			final GrantInformation grantInformation = new GrantInformation();
+			grantInformation.setResourceDefinitionId(x.getId().toString());
+			grantInformation.setType(TypeEnum.COMPUTE);
+			grantInformation.setVduId(x.getVnfCompute().getId());
+			return grantInformation;
+		}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
@@ -150,6 +177,10 @@ public class GrantService {
 			}
 		}
 		throw new GenericException("Unable to get grant ID " + grants.getId());
+	}
+
+	public Optional<GrantInformation> getGrantInformation(final UUID grantUuid) {
+		return grantInformationJpa.findById(grantUuid);
 	}
 
 }

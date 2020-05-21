@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -23,42 +24,42 @@ import tosca.policies.nfv.VduScalingAspectDeltas;
 public interface PackageProvider {
 
 	@Nonnull
-	Set<SoftwareImage> getSoftwareImages();
+	Set<SoftwareImage> getSoftwareImages(Map<String, String> parameters);
 
 	@Nonnull
 	ProviderData getProviderPadata();
 
 	@Nonnull
-	Set<AdditionalArtifact> getAdditionalArtefacts();
+	Set<AdditionalArtifact> getAdditionalArtefacts(Map<String, String> parameters);
 
 	@Nonnull
-	Set<VnfCompute> getVnfComputeNodes();
+	Set<VnfCompute> getVnfComputeNodes(Map<String, String> parameters);
 
 	@Nonnull
-	Set<VnfStorage> getVnfStorages();
+	Set<VnfStorage> getVnfStorages(Map<String, String> parameters);
 
 	@Nonnull
-	Set<VnfVl> getVnfVirtualLinks();
+	Set<VnfVl> getVnfVirtualLinks(Map<String, String> parameters);
 
 	@Nonnull
-	Set<VnfLinkPort> getVnfVduCp();
+	Set<VnfLinkPort> getVnfVduCp(Map<String, String> parameters);
 
 	@Nonnull
-	Set<VnfExtCp> getVnfExtCp();
+	Set<VnfExtCp> getVnfExtCp(Map<String, String> parameters);
 
 	@Nonnull
-	Set<ScalingAspect> getScalingAspects();
+	Set<ScalingAspect> getScalingAspects(Map<String, String> parameters);
 
 	@Nonnull
-	List<InstantiationLevels> getInstatiationLevels();
+	List<InstantiationLevels> getInstatiationLevels(Map<String, String> parameters);
 
 	@Nonnull
-	List<VduInstantiationLevels> getVduInstantiationLevels();
+	List<VduInstantiationLevels> getVduInstantiationLevels(Map<String, String> parameters);
 
 	@Nonnull
-	List<VduInitialDelta> getVduInitialDelta();
+	List<VduInitialDelta> getVduInitialDelta(Map<String, String> parameters);
 
 	@Nonnull
-	List<VduScalingAspectDeltas> getVduScalingAspectDeltas();
+	List<VduScalingAspectDeltas> getVduScalingAspectDeltas(Map<String, String> parameters);
 
 }

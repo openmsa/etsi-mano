@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -150,8 +151,8 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<SoftwareImage> getSoftwareImages() {
-		final List<@NonNull Compute> list = toscaApi.getObjects(root, Compute.class);
+	public Set<SoftwareImage> getSoftwareImages(final Map<String, String> parameters) {
+		final List<@NonNull Compute> list = toscaApi.getObjects(root, parameters, Compute.class);
 		LOG.debug("Found {} Compute node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x.getSwImageData(), SoftwareImage.class))
@@ -160,7 +161,7 @@ public class ToscaPackageProvider implements PackageProvider {
 
 	@Override
 	public ProviderData getProviderPadata() {
-		final List<@NonNull VNF> vnfs = toscaApi.getObjects(root, VNF.class);
+		final List<@NonNull VNF> vnfs = toscaApi.getObjects(root, new HashMap<String, String>(), VNF.class);
 		if (vnfs.isEmpty()) {
 			LOG.warn("No VNF node found in the package.");
 			return new ProviderData();
@@ -169,14 +170,14 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<AdditionalArtifact> getAdditionalArtefacts() {
+	public Set<AdditionalArtifact> getAdditionalArtefacts(final Map<String, String> parameters) {
 		final List<ArtefactInformations> files = toscaParser.getFiles();
 		return files.stream().map(x -> mapper.map(x, AdditionalArtifact.class)).collect(Collectors.toSet());
 	}
 
 	@Override
-	public Set<VnfCompute> getVnfComputeNodes() {
-		final List<@NonNull Compute> list = toscaApi.getObjects(root, Compute.class);
+	public Set<VnfCompute> getVnfComputeNodes(final Map<String, String> parameters) {
+		final List<@NonNull Compute> list = toscaApi.getObjects(root, parameters, Compute.class);
 		LOG.debug("Found {} Compute node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfCompute.class))
@@ -184,13 +185,13 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VnfStorage> getVnfStorages() {
-		final List<@NonNull VirtualBlockStorage> list = toscaApi.getObjects(root, VirtualBlockStorage.class);
+	public Set<VnfStorage> getVnfStorages(final Map<String, String> parameters) {
+		final List<@NonNull VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
 		LOG.debug("Found {} Block Storage node in TOSCA model", list.size());
 		final Set<@NonNull VnfStorage> res = list.stream()
 				.map(x -> mapper.map(x, VnfStorage.class))
 				.collect(Collectors.toSet());
-		final List<@NonNull VirtualObjectStorage> vos = toscaApi.getObjects(root, VirtualObjectStorage.class);
+		final List<@NonNull VirtualObjectStorage> vos = toscaApi.getObjects(root, parameters, VirtualObjectStorage.class);
 		LOG.debug("Found {} Object Storage node in TOSCA model", vos.size());
 		final Set<@NonNull VnfStorage> resVos = vos.stream()
 				.map(x -> mapper.map(x, VnfStorage.class))
@@ -200,8 +201,8 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VnfVl> getVnfVirtualLinks() {
-		final List<@NonNull VnfVirtualLink> list = toscaApi.getObjects(root, VnfVirtualLink.class);
+	public Set<VnfVl> getVnfVirtualLinks(final Map<String, String> parameters) {
+		final List<@NonNull VnfVirtualLink> list = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
 		LOG.debug("Found {} Vl node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfVl.class))
@@ -209,8 +210,8 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VnfLinkPort> getVnfVduCp() {
-		final List<@NonNull VduCp> list = toscaApi.getObjects(root, VduCp.class);
+	public Set<VnfLinkPort> getVnfVduCp(final Map<String, String> parameters) {
+		final List<@NonNull VduCp> list = toscaApi.getObjects(root, parameters, VduCp.class);
 		LOG.debug("Found {} VduCp node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfLinkPort.class))
@@ -218,8 +219,8 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<VnfExtCp> getVnfExtCp() {
-		final List<tosca.nodes.nfv.VnfExtCp> list = toscaApi.getObjects(root, tosca.nodes.nfv.VnfExtCp.class);
+	public Set<VnfExtCp> getVnfExtCp(final Map<String, String> parameters) {
+		final List<tosca.nodes.nfv.VnfExtCp> list = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.VnfExtCp.class);
 		LOG.debug("Found {} ExtCp node in TOSCA model", list.size());
 		return list.stream()
 				.map(x -> mapper.map(x, VnfExtCp.class))
@@ -227,8 +228,8 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public Set<ScalingAspect> getScalingAspects() {
-		final List<ScalingAspects> list = toscaApi.getObjects(root, ScalingAspects.class);
+	public Set<ScalingAspect> getScalingAspects(final Map<String, String> parameters) {
+		final List<ScalingAspects> list = toscaApi.getObjects(root, parameters, ScalingAspects.class);
 		final Set<ScalingAspect> ret = new HashSet<>();
 		for (final ScalingAspects scalingAspects : list) {
 			final Map<String, tosca.datatypes.nfv.ScalingAspect> sa = scalingAspects.getAspects();
@@ -243,23 +244,23 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public List<InstantiationLevels> getInstatiationLevels() {
-		return toscaApi.getObjects(root, InstantiationLevels.class);
+	public List<InstantiationLevels> getInstatiationLevels(final Map<String, String> parameters) {
+		return toscaApi.getObjects(root, parameters, InstantiationLevels.class);
 	}
 
 	@Override
-	public List<VduInstantiationLevels> getVduInstantiationLevels() {
-		return toscaApi.getObjects(root, VduInstantiationLevels.class);
+	public List<VduInstantiationLevels> getVduInstantiationLevels(final Map<String, String> parameters) {
+		return toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
 	}
 
 	@Override
-	public List<VduInitialDelta> getVduInitialDelta() {
-		return toscaApi.getObjects(root, VduInitialDelta.class);
+	public List<VduInitialDelta> getVduInitialDelta(final Map<String, String> parameters) {
+		return toscaApi.getObjects(root, parameters, VduInitialDelta.class);
 	}
 
 	@Override
-	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas() {
-		return toscaApi.getObjects(root, VduScalingAspectDeltas.class);
+	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
+		return toscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
 	}
 
 }

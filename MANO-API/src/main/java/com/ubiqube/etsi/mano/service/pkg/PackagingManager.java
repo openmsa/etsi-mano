@@ -94,25 +94,25 @@ public class PackagingManager {
 		vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
-			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes();
+			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfCompute(cNodes);
-			final Set<VnfStorage> vboNodes = packageProvider.getVnfStorages();
+			final Set<VnfStorage> vboNodes = packageProvider.getVnfStorages(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfStorage(vboNodes);
-			final Set<VnfVl> vvlNodes = packageProvider.getVnfVirtualLinks();
+			final Set<VnfVl> vvlNodes = packageProvider.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfVl(vvlNodes);
-			final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp();
+			final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfLinkPort(vcNodes);
 			remapNetworks(cNodes, vcNodes);
-			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts());
-			final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp();
+			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));
+			final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfExtCp(vnfExtCp);
-			final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects();
+			final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects(vnfPackage.getUserDefinedData());
 			vnfPackage.setScalingAspects(scalingAspects);
 			// XXX Normally, Tosca object must not traverse this layer.
-			final List<InstantiationLevels> instantiationLevels = packageProvider.getInstatiationLevels();
-			final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels();
-			final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta();
-			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas();
+			final List<InstantiationLevels> instantiationLevels = packageProvider.getInstatiationLevels(vnfPackage.getUserDefinedData());
+			final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels(vnfPackage.getUserDefinedData());
+			final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta(vnfPackage.getUserDefinedData());
+			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas(vnfPackage.getUserDefinedData());
 
 			rebuildScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas);
 			final ProviderData pd = packageProvider.getProviderPadata();

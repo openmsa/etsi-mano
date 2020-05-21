@@ -37,6 +37,8 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	private String description;
 
+	private String bootData;
+
 	private long virtualMemorySize;
 
 	private String cpuArchitecture;
@@ -223,6 +225,16 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 		if (null == scalingAspectDeltas) {
 			scalingAspectDeltas = new HashSet<>();
 		}
+		scalingDelta.setVnfCompute(this);
 		scalingAspectDeltas.add(scalingDelta);
 	}
+
+	public String getBootData() {
+		return bootData;
+	}
+
+	public void setBootData(final String bootData) {
+		this.bootData = bootData;
+	}
+
 }

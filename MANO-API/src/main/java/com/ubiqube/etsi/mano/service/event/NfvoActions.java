@@ -255,7 +255,6 @@ public class NfvoActions {
 		// XXX It depends on Grant policy GRANT_RESERVE_SINGLE.
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
-			x.setResourceDefinitionId(x.getVduId().toString());
 			x.setResourceProviderId(vim.getType());
 			x.setVimConnectionId(vimInfo.getId().toString());
 			x.setZoneId(zoneId);

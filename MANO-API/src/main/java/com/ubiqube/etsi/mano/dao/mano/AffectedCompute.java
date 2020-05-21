@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.search.annotations.FieldBridge;
@@ -22,12 +23,15 @@ import org.hibernate.search.annotations.FieldBridge;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
-public class AffectedCompute {
+public class AffectedCompute implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
 	private UUID vduId = null;
+
+	@ManyToOne
+	private VduInstantiationLevel instantiationLevel;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -35,6 +39,9 @@ public class AffectedCompute {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private VnfInstantiedCompute vnfInstantiedCompute;
+
+	@ManyToOne
+	private VnfCompute vnfCompute;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = new HashMap<>();
@@ -58,6 +65,10 @@ public class AffectedCompute {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> removedStorageResourceIds = null;
 
+	@ManyToOne
+	private VnfLcmOpOccs vnfLcmOpOccs;
+
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -127,6 +138,30 @@ public class AffectedCompute {
 			addedStorageResourceIds = new HashSet<>();
 		}
 		addedStorageResourceIds.add(y);
+	}
+
+	public VnfCompute getVnfCompute() {
+		return vnfCompute;
+	}
+
+	public void setVnfCompute(final VnfCompute vnfCompute) {
+		this.vnfCompute = vnfCompute;
+	}
+
+	public VduInstantiationLevel getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
+
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
+	}
+
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
 	}
 
 }

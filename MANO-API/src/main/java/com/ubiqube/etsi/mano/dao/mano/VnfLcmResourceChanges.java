@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,22 +11,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Embeddable
-public class VnfLcmResourceChanges {
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<AffectedCompute> affectedVnfcs = null;
+public class VnfLcmResourceChanges implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedVl> affectedVirtualLinks = null;
+	private Set<AffectedCompute> affectedVnfcs = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedVs> affectedVirtualStorages = null;
+	private Set<AffectedVl> affectedVirtualLinks = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedExtCp> affectedExtCp = null;
+	private Set<AffectedVs> affectedVirtualStorages = new HashSet<>();
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<AffectedExtCp> affectedExtCp = new HashSet<>();
 
 	public Set<AffectedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;

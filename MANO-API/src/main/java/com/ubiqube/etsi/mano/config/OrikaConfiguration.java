@@ -218,12 +218,12 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantInformation.class, GrantInformationExt.class)
 				.exclude("id")
-				.field("id", "externalId")
+				.field("id", "resourceDefinitionId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformationExt.class)
 				.exclude("id")
-				.field("id", "externalId")
+				.field("id", "resourceDefinitionId")
 				.field("type", "type")
 				.field("vduId", "vduId")
 				.register();

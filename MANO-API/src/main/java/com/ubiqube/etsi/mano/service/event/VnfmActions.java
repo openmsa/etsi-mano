@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
@@ -22,15 +25,19 @@ import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.GrantService;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
@@ -63,7 +70,9 @@ public class VnfmActions {
 
 	private final GrantService grantService;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final GrantService _grantService) {
+	private final VnfInstanceService vnfInstancesService;
+
+	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService) {
 		super();
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vimManager = _vimManager;
@@ -74,10 +83,12 @@ public class VnfmActions {
 		mapper = _mapper;
 		vnfLcmService = _vnfLcmService;
 		grantService = _grantService;
+		vnfInstancesService = _vnfInstancesService;
 	}
 
 	public void vnfInstantiate(@Nonnull final UUID vnfInstanceId) {
 		VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+
 		// Maybe we need additional parameters to say STARTING / PROCESSING ...
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
@@ -85,11 +96,12 @@ public class VnfmActions {
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 
 		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfPkg, vnfInstance);
-
 		executionPlanner.makePrePlan(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
+
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
+		final String instantiationLevelId = vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId();
 
 		// Send processing notification.
 		vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
@@ -98,13 +110,14 @@ public class VnfmActions {
 		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, lcmOpOccs);
 		final GrantResponse grantsResp = grantService.sendAndWaitGrantRequest(req);
 
+		createInstanceResources(lcmOpOccs, grantsResp, vnfInstance);
 		vnfLcmService.setGrant(lcmOpOccs, grantsResp.getId());
-
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// Save LCM
 		mergeInstanceGrants(vnfInstance, grantsResp);
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		lcmOpOccs = vnfLcmService.findById(lcmOpOccs.getId());
+		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
@@ -116,6 +129,72 @@ public class VnfmActions {
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
+	}
+
+	private void createInstanceResources(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp, final VnfInstance vnfInstance) {
+		// XXX need to remap the vim inside our vim.
+		final VimConnectionInformation vimConnectionInformation = vimManager.findVimById(grantsResp.getVimConnections().iterator().next().getId());
+		// XXX instantiation level cannot be null
+		final VduInstantiationLevel instantiationLevel = null;
+		grantsResp.getAddResources().forEach(x -> {
+			// Get VNFM Grant Resource information ID.
+			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
+			final GrantInformation grantInformation = grantService.getGrantInformation(grantUuid).orElseThrow(() -> new NotFoundException("Could not find Grant id: " + grantUuid));
+			if (x.getType() == TypeEnum.COMPUTE) {
+				vnfLcmService.getAffectedComputeById(UUID.fromString(grantInformation.getResourceDefinitionId())).ifPresent(y -> {
+					final VnfInstantiedCompute vnfInstantiedCompute = new VnfInstantiedCompute();
+
+					final ResourceHandleEntity networkResource = new ResourceHandleEntity();
+					networkResource.setResourceProviderId(x.getResourceProviderId());
+					networkResource.setStatus(InstantiationStatusType.NOT_STARTED);
+					networkResource.setVduId(y.getVduId());
+					networkResource.setVimConnectionInformation(vimConnectionInformation);
+					networkResource.setVnfLcmOpOccs(lcmOpOccs);
+					vnfInstantiedCompute.setCompResource(networkResource);
+
+					vnfInstantiedCompute.setComputeResource(x);
+					vnfInstantiedCompute.setInstantiationLevel(instantiationLevel);
+					vnfInstantiedCompute.setVduId(y.getVduId());
+					vnfInstantiedCompute.setVnfCompute(y.getVnfCompute());
+					vnfInstancesService.save(vnfInstantiedCompute);
+				});
+			} else if (x.getType() == TypeEnum.VL) {
+				vnfLcmService.getAffectedVirtualLinkById(UUID.fromString(grantInformation.getResourceDefinitionId())).ifPresent(y -> {
+					final VnfInstantiedVirtualLink vnfInstantiedVirtualLink = new VnfInstantiedVirtualLink();
+					final ResourceHandleEntity networkResource = new ResourceHandleEntity();
+					networkResource.setResourceProviderId(x.getResourceProviderId());
+					networkResource.setStatus(InstantiationStatusType.NOT_STARTED);
+					networkResource.setVduId(y.getVirtualLinkDesc().getId());
+					networkResource.setVimConnectionInformation(vimConnectionInformation);
+					networkResource.setVnfLcmOpOccs(lcmOpOccs);
+					vnfInstantiedVirtualLink.setCompResource(networkResource);
+
+					vnfInstantiedVirtualLink.setComputeResource(x);
+					vnfInstantiedVirtualLink.setInstantiationLevel(instantiationLevel);
+					vnfInstantiedVirtualLink.setVduId(y.getId());
+					vnfInstantiedVirtualLink.setVnfVirtualLink(y.getVirtualLinkDesc());
+					vnfInstancesService.save(vnfInstantiedVirtualLink);
+				});
+			} else if (x.getType() == TypeEnum.LINKPORT) {
+				vnfLcmService.getAffectedExtCpById(UUID.fromString(grantInformation.getResourceDefinitionId())).ifPresent(y -> {
+					final VnfInstantiedExtCp vnfInstantiedExtCp = new VnfInstantiedExtCp();
+					final ResourceHandleEntity networkResource = new ResourceHandleEntity();
+					networkResource.setResourceProviderId(x.getResourceProviderId());
+					networkResource.setStatus(InstantiationStatusType.NOT_STARTED);
+					networkResource.setVduId(y.getExtCp().getId());
+					networkResource.setVimConnectionInformation(vimConnectionInformation);
+					networkResource.setVnfLcmOpOccs(lcmOpOccs);
+					vnfInstantiedExtCp.setCompResource(networkResource);
+
+					vnfInstantiedExtCp.setComputeResource(x);
+					vnfInstantiedExtCp.setInstantiationLevel(instantiationLevel);
+					vnfInstantiedExtCp.setVduId(y.getId());
+					vnfInstantiedExtCp.setVnfExtCp(y.getExtCp());
+					vnfInstancesService.save(vnfInstantiedExtCp);
+				});
+			}
+			x.getResourceDefinitionId();
+		});
 	}
 
 	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
