@@ -2,9 +2,9 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfExtCpUow extends AbstractUnitOfWork {
@@ -13,8 +13,8 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 
 	private final VnfExtCp extCp;
 
-	public VnfExtCpUow(final ResourceHandleEntity _resourceHandleEntity, final VnfExtCp _extCp) {
-		super(_resourceHandleEntity, _extCp.getToscaName());
+	public VnfExtCpUow(final VnfInstantiedExtCp x, final VnfExtCp _extCp) {
+		super(x, _extCp.getToscaName());
 		extCp = _extCp;
 	}
 

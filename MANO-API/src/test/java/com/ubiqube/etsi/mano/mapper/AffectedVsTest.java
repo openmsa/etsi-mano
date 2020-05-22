@@ -34,11 +34,7 @@ public class AffectedVsTest {
 		final AffectedVs avsDb = mapper.map(avs, AffectedVs.class);
 		assertEquals(avs.getChangeType().toString(), avsDb.getChangeType().toString());
 		assertEquals(avs.getId(), avsDb.getId().toString());
-		assertEquals(avs.getVirtualStorageDescId(), avsDb.getVirtualStorageDesc().getId());
-		assertEquals(avs.getStorageResource().getResourceId(), avsDb.getStorageResource().getResourceId());
-		assertEquals(avs.getStorageResource().getResourceProviderId(), avsDb.getStorageResource().getResourceProviderId());
-		assertEquals(avs.getStorageResource().getVimConnectionId(), avsDb.getStorageResource().getVimConnectionInformation().getId().toString());
-		assertEquals(avs.getStorageResource().getVimLevelResourceType(), avsDb.getStorageResource().getVimLevelResourceType());
+		assertEquals(avs.getVirtualStorageDescId(), avsDb.getVirtualStorage().getId());
 	}
 
 	@Test
@@ -49,10 +45,6 @@ public class AffectedVsTest {
 		final AffectedVirtualStorage avs = mapper.map(avsDb, AffectedVirtualStorage.class);
 		assertEquals(avs.getChangeType().toString(), avsDb.getChangeType().toString());
 		assertEquals(avs.getId(), avsDb.getId().toString());
-		assertEquals(avs.getVirtualStorageDescId(), avsDb.getVirtualStorageDesc().getId().toString());
-		assertEquals(avs.getStorageResource().getResourceId(), avsDb.getStorageResource().getResourceId());
-		assertEquals(avs.getStorageResource().getResourceProviderId(), avsDb.getStorageResource().getResourceProviderId());
-		assertEquals(avs.getStorageResource().getVimConnectionId(), avsDb.getStorageResource().getVimConnectionInformation().getId().toString());
-		assertEquals(avs.getStorageResource().getVimLevelResourceType(), avsDb.getStorageResource().getVimLevelResourceType());
+		assertEquals(avs.getVirtualStorageDescId(), avsDb.getVirtualStorage().getId().toString());
 	}
 }

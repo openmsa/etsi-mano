@@ -361,6 +361,9 @@ public class OpenStackTest {
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
 		System.out.println("l=" + l.get());
+		os.networking().agent().list().forEach(x -> {
+			System.out.println("" + x.getBinary());
+		});
 
 	}
 }

@@ -44,7 +44,7 @@ public class VnfInstantiatedInfo implements Serializable {
 
 	private String localizationLanguage = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfInstantiedCompute> vnfcResourceInfo = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

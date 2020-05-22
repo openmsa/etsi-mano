@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+
+import org.hibernate.search.annotations.FieldBridge;
+
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 public class AffectedVl {
@@ -24,18 +27,20 @@ public class AffectedVl {
 	private VnfInstantiationLevels instantiationLevel;
 
 	@ManyToOne
-	private VnfVl virtualLinkDesc = null;
+	private VnfVl virtualLink = null;
 
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private ChangeType changeType = null;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	private ResourceHandleEntity networkResource = null;
 
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
 
 	@ManyToOne
 	private VnfLcmOpOccs vnfLcmOpOccs;
+
+	@ManyToOne
+	private VnfInstantiedVirtualLink instantiedVirtualLink;
 
 	public UUID getId() {
 		return id;
@@ -45,28 +50,12 @@ public class AffectedVl {
 		this.id = id;
 	}
 
-	public VnfVl getVirtualLinkDesc() {
-		return virtualLinkDesc;
-	}
-
-	public void setVirtualLinkDesc(final VnfVl virtualLinkDesc) {
-		this.virtualLinkDesc = virtualLinkDesc;
-	}
-
 	public ChangeType getChangeType() {
 		return changeType;
 	}
 
 	public void setChangeType(final ChangeType changeType) {
 		this.changeType = changeType;
-	}
-
-	public ResourceHandleEntity getNetworkResource() {
-		return networkResource;
-	}
-
-	public void setNetworkResource(final ResourceHandleEntity networkResource) {
-		this.networkResource = networkResource;
 	}
 
 	public Map<String, String> getMetadata() {
@@ -91,6 +80,22 @@ public class AffectedVl {
 
 	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
 		this.vnfLcmOpOccs = vnfLcmOpOccs;
+	}
+
+	public VnfVl getVirtualLink() {
+		return virtualLink;
+	}
+
+	public void setVirtualLink(final VnfVl virtualLink) {
+		this.virtualLink = virtualLink;
+	}
+
+	public VnfInstantiedVirtualLink getInstantiedVirtualLink() {
+		return instantiedVirtualLink;
+	}
+
+	public void setInstantiedVirtualLink(final VnfInstantiedVirtualLink instantiedVirtualLink) {
+		this.instantiedVirtualLink = instantiedVirtualLink;
 	}
 
 }

@@ -11,15 +11,18 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
 import com.ubiqube.etsi.mano.dao.mano.AffectedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.jpa.AffectedComputeJpa;
@@ -88,7 +91,7 @@ public class VnfLcmService {
 		final VnfLcmResourceChanges changedResources = lcmOpOccs.getResourceChanges();
 
 		vnfPkg.getVnfCompute().forEach(x -> {
-			final AffectedCompute affectedCompute = new AffectedCompute();
+			final VnfInstantiedCompute affectedCompute = new VnfInstantiedCompute();
 			affectedCompute.setAddedStorageResourceIds(x.getStorages());
 			// XXX affectedCompute.setAffectedVnfcCpIds(affectedVnfcCpIds);
 			affectedCompute.setChangeType(ChangeType.ADDED);
@@ -97,15 +100,15 @@ public class VnfLcmService {
 			changedResources.addAffectedVnfcs(affectedCompute);
 		});
 		vnfPkg.getVnfVl().forEach(x -> {
-			final AffectedVl affectedVirtualLink = new AffectedVl();
+			final VnfInstantiedVirtualLink affectedVirtualLink = new VnfInstantiedVirtualLink();
 			affectedVirtualLink.setChangeType(ChangeType.ADDED);
-			affectedVirtualLink.setVirtualLinkDesc(x);
+			affectedVirtualLink.setVnfVirtualLink(x);
 			changedResources.addAffectedVirtualLink(affectedVirtualLink);
 		});
 		vnfPkg.getVnfStorage().forEach(x -> {
-			final AffectedVs affectedVs = new AffectedVs();
+			final VnfInstantiedStorage affectedVs = new VnfInstantiedStorage();
 			affectedVs.setChangeType(ChangeType.ADDED);
-			affectedVs.setVirtualStorageDesc(x);
+			affectedVs.setVnfVirtualStorage(x);
 			changedResources.addAffectedVirtualStorage(affectedVs);
 		});
 	}
@@ -113,55 +116,61 @@ public class VnfLcmService {
 	private static void copyVnfInstanceToLcmOpOccs(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		final VnfInstantiatedInfo inst = vnfInstance.getInstantiatedVnfInfo();
 		inst.getVnfcResourceInfo().forEach(x -> {
-			final AffectedCompute affected = findLcmOpOccsCompute(lcmOpOccs.getResourceChanges().getAffectedVnfcs(), x.getVduId());
+			final VnfInstantiedCompute affected = findLcmOpOccsCompute(lcmOpOccs.getResourceChanges().getAffectedVnfcs(), x.getVduId());
 			// XXX affected.setComputeResource(x.getCompResource());
 		});
 
 		inst.getVirtualLinkResourceInfo().forEach(x -> {
-			final AffectedVl affected = findLcmOpOccsVl(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks(), x.getVnfVirtualLinkDescId());
-			affected.setNetworkResource(x.getNetworkResource());
+			final VnfInstantiedVirtualLink affected = findLcmOpOccsVl(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks(), x.getVnfVirtualLinkDescId());
+			// XXX affected.setVirtualLinkDesc(x.getVnfVirtualLinkDescId());
 		});
 
 		inst.getVirtualStorageResourceInfo().forEach(x -> {
-			final AffectedVs affected = findLcmOpOccsStorage(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages(), x.getVirtualStorageDescId());
-			affected.setStorageResource(x.getStorageResource());
+			final VnfInstantiedStorage affected = findLcmOpOccsStorage(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages(), x.getVirtualStorageDescId());
+			// XXX affected.setStorageResource(x.getStorageResource());
 		});
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
-	private static AffectedVs findLcmOpOccsStorage(final Set<AffectedVs> affectedVirtualStorages, final UUID id) {
+	private static VnfInstantiedStorage findLcmOpOccsStorage(final Set<VnfInstantiedStorage> affectedVirtualStorages, final UUID id) {
 		return affectedVirtualStorages.stream()
-				.filter(x -> x.getVirtualStorageDesc().getId().compareTo(id) == 0)
+				.filter(x -> x.getVnfVirtualStorage().getId().compareTo(id) == 0)
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
-	private static AffectedVl findLcmOpOccsVl(final Set<AffectedVl> affectedVirtualLinks, final UUID id) {
+	private static VnfInstantiedVirtualLink findLcmOpOccsVl(final Set<VnfInstantiedVirtualLink> affectedVirtualLinks, final UUID id) {
 		return affectedVirtualLinks.stream()
-				.filter(x -> x.getVirtualLinkDesc().getId().compareTo(id) == 0)
+				.filter(x -> x.getVnfVirtualLink().getId().compareTo(id) == 0)
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
-	private static AffectedCompute findLcmOpOccsCompute(final Set<AffectedCompute> affectedVnfcs, final UUID id) {
+	private static VnfInstantiedCompute findLcmOpOccsCompute(final Set<VnfInstantiedCompute> affectedVnfcs, final UUID id) {
 		return affectedVnfcs.stream()
 				.filter(x -> x.getVduId().compareTo(id) == 0)
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
 	public VnfLcmOpOccs findById(final UUID id) {
 		return vnfLcmOpOccsJpa.findById(id).orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
 	public VnfLcmOpOccs save(final VnfLcmOpOccs lcmOpOccs) {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
 	public ResourceHandleEntity save(final ResourceHandleEntity res) {
 		return resourceHandleEntityJpa.save(res);
@@ -171,8 +180,8 @@ public class VnfLcmService {
 		return affectedComputeJpa.findById(uuId);
 	}
 
-	public Optional<AffectedVl> getAffectedVirtualLinkByVdu(final UUID uuid) {
-		return affectedVlJpa.findByVirtualLinkDescId(uuid);
+	public Optional<AffectedVl> getAffectedVirtualLinkByVdu(final VnfVl uuid) {
+		return affectedVlJpa.findByVirtualLink(uuid);
 	}
 
 	public Optional<AffectedExtCp> getAffectedExtCpByVdu(final UUID uuid) {

@@ -1,6 +1,6 @@
 package com.ubiqube.etsi.mano.service.graph;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 
 /**
  *
@@ -11,18 +11,18 @@ public abstract class AbstractUnitOfWork implements UnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final ResourceHandleEntity resourceHandleEntity;
+	private final VnfInstantiatedBase resourceHandleEntity;
 
 	private final String name;
 
 	// Nothing.
-	public AbstractUnitOfWork(final ResourceHandleEntity _resourceHandleEntity, final String _name) {
+	public AbstractUnitOfWork(final VnfInstantiatedBase _resourceHandleEntity, final String _name) {
 		resourceHandleEntity = _resourceHandleEntity;
 		name = _name;
 	}
 
 	@Override
-	public final ResourceHandleEntity getResourceHandleEntity() {
+	public final VnfInstantiatedBase getResourceHandleEntity() {
 		return resourceHandleEntity;
 	}
 

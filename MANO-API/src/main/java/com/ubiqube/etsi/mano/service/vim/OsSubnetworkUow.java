@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 public class OsSubnetworkUow extends AbstractUnitOfWork {
@@ -22,7 +22,7 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 
 	private final String parentName;
 
-	public OsSubnetworkUow(final ResourceHandleEntity resourceHandleEntity, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
+	public OsSubnetworkUow(final VnfInstantiatedBase resourceHandleEntity, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
 		super(resourceHandleEntity, _ipAllocationPool.getStartIpAddress().replaceAll("\\.", "_"));
 		vlProtocolData = y;
 		ipAllocationPool = _ipAllocationPool;

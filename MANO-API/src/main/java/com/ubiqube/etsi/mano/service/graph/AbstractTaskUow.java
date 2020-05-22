@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.jpa.ResourceHandleEntityJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -58,10 +58,10 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 	@Override
 	public final String execute() {
 		RuntimeException eRoot = null;
-		final ResourceHandleEntity resource = this.uaow.getResourceHandleEntity();
+		final VnfInstantiatedBase resource = this.uaow.getResourceHandleEntity();
 		resource.setStartTime(new Date());
 		resource.setStatus(InstantiationStatusType.STARTED);
-		resourceHandleEntityJpa.save(resource);
+		// XXX resourceHandleEntityJpa.save(resource);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
 			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getResourceId()));
@@ -72,7 +72,7 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 		}
 		LOG.info("Task {} Finished.", uaow.getName());
 		resource.setEndTime(new Date());
-		resourceHandleEntityJpa.save(resource);
+		// XXX resourceHandleEntityJpa.save(resource);
 		if (eRoot != null) {
 			throw eRoot;
 		}

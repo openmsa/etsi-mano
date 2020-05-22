@@ -2,9 +2,9 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class MonitoringUow extends AbstractUnitOfWork {
@@ -14,7 +14,7 @@ public class MonitoringUow extends AbstractUnitOfWork {
 	private final VnfCompute vnfCompute;
 	private final String name;
 
-	public MonitoringUow(final ResourceHandleEntity resourceHandleEntity, final VnfCompute x, final String _name) {
+	public MonitoringUow(final VnfInstantiatedBase resourceHandleEntity, final VnfCompute x, final String _name) {
 		super(resourceHandleEntity, _name);
 		vnfCompute = x;
 		name = _name;

@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
-import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -98,29 +98,29 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsStorage(final GrantsRequest grants, final Set<AffectedVs> affectedStorage) {
+	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiedStorage> affectedStorage) {
 		final Set<GrantInformation> res = affectedStorage.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.STORAGE);
-			grantInformation.setVduId(x.getVirtualStorageDesc().getId());
+			grantInformation.setVduId(x.getVnfVirtualStorage().getId());
 			return grantInformation;
 		}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsVl(final GrantsRequest grants, final Set<AffectedVl> set) {
-		final Set<GrantInformation> res = set.stream().map(x -> {
+	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfInstantiedVirtualLink> instantiatedVirtualLink) {
+		final Set<GrantInformation> res = instantiatedVirtualLink.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.VL);
-			grantInformation.setVduId(x.getVirtualLinkDesc().getId());
+			grantInformation.setVduId(x.getVnfVirtualLink().getId());
 			return grantInformation;
 		}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsCompute(final GrantsRequest grants, final Set<AffectedCompute> affectedComputes) {
+	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiedCompute> affectedComputes) {
 		final Set<GrantInformation> res = affectedComputes.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());

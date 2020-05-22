@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public interface UnitOfWork extends Serializable {
@@ -19,7 +19,7 @@ public interface UnitOfWork extends Serializable {
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE");
 
-		private final String value;
+		private String value;
 
 		UowType(final String value) {
 			this.value = value;
@@ -47,7 +47,7 @@ public interface UnitOfWork extends Serializable {
 
 	UowType getType();
 
-	ResourceHandleEntity getResourceHandleEntity();
+	VnfInstantiatedBase getResourceHandleEntity();
 
 	String getToscaName();
 

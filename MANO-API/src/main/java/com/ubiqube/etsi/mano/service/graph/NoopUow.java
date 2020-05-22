@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class NoopUow extends AbstractUnitOfWork {
@@ -13,7 +13,7 @@ public class NoopUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	public NoopUow() {
-		super(new ResourceHandleEntity(), RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
+		super(new VnfInstantiedCompute(), RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
 	}
 
 	@Override

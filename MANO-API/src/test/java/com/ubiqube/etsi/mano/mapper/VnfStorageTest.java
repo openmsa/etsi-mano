@@ -45,8 +45,5 @@ public class VnfStorageTest {
 		final VnfStorage avcDb = podam.manufacturePojo(VnfStorage.class);
 		final AffectedVs avc = mapper.map(avcDb, AffectedVs.class);
 		assertNull(avc.getId());
-		assertNotNull(avc.getStorageResource());
-		assertEquals(avcDb.getId(), avc.getStorageResource().getVduId());
-		assertEquals(avcDb.getId(), avc.getVirtualStorageDesc().getId());
 	}
 }

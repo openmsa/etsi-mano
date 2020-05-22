@@ -11,25 +11,32 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfInstantiedVirtualLink extends VnfInstantiatedBase {
+public class VnfInstantiedStorage extends VnfInstantiatedBase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
 	@ManyToOne
-	private VduInstantiationLevel instantiationLevel;
+	private VnfStorage vnfVirtualStorage;
 
 	@ManyToOne
-	private VnfVl vnfVirtualLink;
+	private VduInstantiationLevel instantiationLevel;
 
 	@Override
 	public UUID getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(final UUID id) {
 		this.id = id;
+	}
+
+	public VnfStorage getVnfVirtualStorage() {
+		return vnfVirtualStorage;
+	}
+
+	public void setVnfVirtualStorage(final VnfStorage vnfVirtualStorage) {
+		this.vnfVirtualStorage = vnfVirtualStorage;
 	}
 
 	@Override
@@ -40,14 +47,6 @@ public class VnfInstantiedVirtualLink extends VnfInstantiatedBase {
 	@Override
 	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
-	}
-
-	public VnfVl getVnfVirtualLink() {
-		return vnfVirtualLink;
-	}
-
-	public void setVnfVirtualLink(final VnfVl vnfVirtualLink) {
-		this.vnfVirtualLink = vnfVirtualLink;
 	}
 
 }

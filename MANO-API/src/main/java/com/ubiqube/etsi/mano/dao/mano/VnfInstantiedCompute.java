@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -17,31 +16,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfInstantiedCompute implements Auditable, BaseEntity {
+public class VnfInstantiedCompute extends VnfInstantiatedBase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
-
-	/*
-	 * Vnf Compute.
-	 */
-	private UUID vduId = null;
-
-	/**
-	 * Also reservationId
-	 */
-	@OneToOne(fetch = FetchType.LAZY)
-	private GrantInformation computeResource = null;
-
-	/**
-	 * VIM Resources.
-	 */
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private ResourceHandleEntity compResource = null;
 
 	@ElementCollection
 	private List<String> storageResourceIds = null;
@@ -50,47 +31,42 @@ public class VnfInstantiedCompute implements Auditable, BaseEntity {
 	private Set<CpProtocolDataEntity> vnfcCpInfo = null;
 
 	@ElementCollection
-	private Map<String, String> metadata = new HashMap<>();
-
-	@ManyToOne
-	private VduInstantiationLevel instantiationLevel;
+	private final Map<String, String> metadata = new HashMap<>();
 
 	private String flavorId;
 
 	private String imageId;
 
-	@ManyToOne
-	private VnfCompute vnfCompute;
+	/**
+	 * XXX Should be computed.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> affectedVnfcCpIds = null;
+
+	/**
+	 * XXX Should be computed.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> addedStorageResourceIds = null;
+
+	/**
+	 * XXX Should be computed. This is a vien of current
+	 * VnfStorage.changeType==Removed.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> removedStorageResourceIds = null;
 
 	@ManyToOne
-	private VnfLcmOpOccs vnfLcmOpOccs;
-
-	@Embedded
-	private Audit audit;
+	private VduInstantiationLevel instantiationLevel;
 
 	@Override
 	public UUID getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public UUID getVduId() {
-		return vduId;
-	}
-
-	public void setVduId(final UUID vduId) {
-		this.vduId = vduId;
-	}
-
-	public GrantInformation getComputeResource() {
-		return computeResource;
-	}
-
-	public void setComputeResource(final GrantInformation computeResource) {
-		this.computeResource = computeResource;
 	}
 
 	public List<String> getStorageResourceIds() {
@@ -109,22 +85,6 @@ public class VnfInstantiedCompute implements Auditable, BaseEntity {
 		this.vnfcCpInfo = vnfcCpInfo;
 	}
 
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final Map<String, String> metadata) {
-		this.metadata = metadata;
-	}
-
-	public ResourceHandleEntity getCompResource() {
-		return compResource;
-	}
-
-	public void setCompResource(final ResourceHandleEntity networkResource) {
-		this.compResource = networkResource;
-	}
-
 	public String getFlavorId() {
 		return flavorId;
 	}
@@ -141,38 +101,38 @@ public class VnfInstantiedCompute implements Auditable, BaseEntity {
 		this.imageId = imageId;
 	}
 
+	public Set<String> getAffectedVnfcCpIds() {
+		return affectedVnfcCpIds;
+	}
+
+	public void setAffectedVnfcCpIds(final Set<String> affectedVnfcCpIds) {
+		this.affectedVnfcCpIds = affectedVnfcCpIds;
+	}
+
+	public Set<String> getAddedStorageResourceIds() {
+		return addedStorageResourceIds;
+	}
+
+	public void setAddedStorageResourceIds(final Set<String> addedStorageResourceIds) {
+		this.addedStorageResourceIds = addedStorageResourceIds;
+	}
+
+	public Set<String> getRemovedStorageResourceIds() {
+		return removedStorageResourceIds;
+	}
+
+	public void setRemovedStorageResourceIds(final Set<String> removedStorageResourceIds) {
+		this.removedStorageResourceIds = removedStorageResourceIds;
+	}
+
+	@Override
 	public VduInstantiationLevel getInstantiationLevel() {
 		return instantiationLevel;
 	}
 
+	@Override
 	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
-	}
-
-	public VnfCompute getVnfCompute() {
-		return vnfCompute;
-	}
-
-	public void setVnfCompute(final VnfCompute _vnfCompute) {
-		vnfCompute = _vnfCompute;
-	}
-
-	public VnfLcmOpOccs getVnfLcmOpOccs() {
-		return vnfLcmOpOccs;
-	}
-
-	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
-		this.vnfLcmOpOccs = vnfLcmOpOccs;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
 	}
 
 }

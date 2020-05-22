@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+
+import org.hibernate.search.annotations.FieldBridge;
+
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 public class AffectedExtCp {
@@ -22,10 +25,9 @@ public class AffectedExtCp {
 
 	private VnfExtCp extCp = null;
 
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private ChangeType changeType = null;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private ResourceHandleEntity storageResource = null;
 
 	@ManyToOne
 	private VnfLcmOpOccs vnfLcmOpOccs;
@@ -55,14 +57,6 @@ public class AffectedExtCp {
 
 	public void setChangeType(final ChangeType changeType) {
 		this.changeType = changeType;
-	}
-
-	public ResourceHandleEntity getStorageResource() {
-		return storageResource;
-	}
-
-	public void setStorageResource(final ResourceHandleEntity storageResource) {
-		this.storageResource = storageResource;
 	}
 
 	public Map<String, String> getMetadata() {

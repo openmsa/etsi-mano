@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.mapper;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,9 +33,6 @@ public class VnfComputeTest {
 		final VnfCompute avcDb = podam.manufacturePojo(VnfCompute.class);
 		final VnfInstantiedCompute avc = mapper.map(avcDb, VnfInstantiedCompute.class);
 		assertNull(avc.getId());
-		assertNotNull(avc.getCompResource());
-		assertEquals(avcDb.getId(), avc.getCompResource().getVduId());
-		assertEquals(avcDb.getId(), avc.getComputeResource().getVduId());
 		assertEquals(avcDb.getId(), avc.getVduId());
 		assertEquals(avcDb.getStorages().size(), avc.getStorageResourceIds().size());
 	}
@@ -47,8 +43,6 @@ public class VnfComputeTest {
 		final VnfCompute avcDb = podam.manufacturePojo(VnfCompute.class);
 		final AffectedCompute avc = mapper.map(avcDb, AffectedCompute.class);
 		assertNull(avc.getId());
-		assertNotNull(avc.getComputeResource());
-		assertEquals(avcDb.getId(), avc.getComputeResource().getVduId());
 		assertEquals(avcDb.getId(), avc.getVduId());
 	}
 }

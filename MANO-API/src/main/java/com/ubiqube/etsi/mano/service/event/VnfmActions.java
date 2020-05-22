@@ -16,7 +16,6 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -143,50 +142,35 @@ public class VnfmActions {
 			if (x.getType() == TypeEnum.COMPUTE) {
 				vnfLcmService.getAffectedComputeById(UUID.fromString(grantInformation.getResourceDefinitionId())).ifPresent(y -> {
 					final VnfInstantiedCompute vnfInstantiedCompute = new VnfInstantiedCompute();
-
-					final ResourceHandleEntity networkResource = new ResourceHandleEntity();
-					networkResource.setResourceProviderId(x.getResourceProviderId());
-					networkResource.setStatus(InstantiationStatusType.NOT_STARTED);
-					networkResource.setVduId(y.getVduId());
-					networkResource.setVimConnectionInformation(vimConnectionInformation);
-					networkResource.setVnfLcmOpOccs(lcmOpOccs);
-					vnfInstantiedCompute.setCompResource(networkResource);
-
-					vnfInstantiedCompute.setComputeResource(x);
-					vnfInstantiedCompute.setInstantiationLevel(instantiationLevel);
+					vnfInstantiedCompute.setResourceProviderId(x.getResourceProviderId());
+					vnfInstantiedCompute.setStatus(InstantiationStatusType.NOT_STARTED);
 					vnfInstantiedCompute.setVduId(y.getVduId());
+					vnfInstantiedCompute.setVimConnectionInformation(vimConnectionInformation);
+					vnfInstantiedCompute.setVnfLcmOpOccs(lcmOpOccs);
+					vnfInstantiedCompute.setInstantiationLevel(instantiationLevel);
 					vnfInstantiedCompute.setVnfCompute(y.getVnfCompute());
 					vnfInstancesService.save(vnfInstantiedCompute);
 				});
 			} else if (x.getType() == TypeEnum.VL) {
 				vnfLcmService.getAffectedVirtualLinkById(UUID.fromString(grantInformation.getResourceDefinitionId())).ifPresent(y -> {
 					final VnfInstantiedVirtualLink vnfInstantiedVirtualLink = new VnfInstantiedVirtualLink();
-					final ResourceHandleEntity networkResource = new ResourceHandleEntity();
-					networkResource.setResourceProviderId(x.getResourceProviderId());
-					networkResource.setStatus(InstantiationStatusType.NOT_STARTED);
-					networkResource.setVduId(y.getVirtualLinkDesc().getId());
-					networkResource.setVimConnectionInformation(vimConnectionInformation);
-					networkResource.setVnfLcmOpOccs(lcmOpOccs);
-					vnfInstantiedVirtualLink.setCompResource(networkResource);
-
-					vnfInstantiedVirtualLink.setComputeResource(x);
+					vnfInstantiedVirtualLink.setResourceProviderId(x.getResourceProviderId());
+					vnfInstantiedVirtualLink.setStatus(InstantiationStatusType.NOT_STARTED);
+					vnfInstantiedVirtualLink.setVduId(y.getVirtualLink().getId());
+					vnfInstantiedVirtualLink.setVimConnectionInformation(vimConnectionInformation);
+					vnfInstantiedVirtualLink.setVnfLcmOpOccs(lcmOpOccs);
 					vnfInstantiedVirtualLink.setInstantiationLevel(instantiationLevel);
-					vnfInstantiedVirtualLink.setVduId(y.getId());
-					vnfInstantiedVirtualLink.setVnfVirtualLink(y.getVirtualLinkDesc());
+					vnfInstantiedVirtualLink.setVnfVirtualLink(y.getVirtualLink());
 					vnfInstancesService.save(vnfInstantiedVirtualLink);
 				});
 			} else if (x.getType() == TypeEnum.LINKPORT) {
 				vnfLcmService.getAffectedExtCpById(UUID.fromString(grantInformation.getResourceDefinitionId())).ifPresent(y -> {
 					final VnfInstantiedExtCp vnfInstantiedExtCp = new VnfInstantiedExtCp();
-					final ResourceHandleEntity networkResource = new ResourceHandleEntity();
-					networkResource.setResourceProviderId(x.getResourceProviderId());
-					networkResource.setStatus(InstantiationStatusType.NOT_STARTED);
-					networkResource.setVduId(y.getExtCp().getId());
-					networkResource.setVimConnectionInformation(vimConnectionInformation);
-					networkResource.setVnfLcmOpOccs(lcmOpOccs);
-					vnfInstantiedExtCp.setCompResource(networkResource);
-
-					vnfInstantiedExtCp.setComputeResource(x);
+					vnfInstantiedExtCp.setResourceProviderId(x.getResourceProviderId());
+					vnfInstantiedExtCp.setStatus(InstantiationStatusType.NOT_STARTED);
+					vnfInstantiedExtCp.setVduId(y.getExtCp().getId());
+					vnfInstantiedExtCp.setVimConnectionInformation(vimConnectionInformation);
+					vnfInstantiedExtCp.setVnfLcmOpOccs(lcmOpOccs);
 					vnfInstantiedExtCp.setInstantiationLevel(instantiationLevel);
 					vnfInstantiedExtCp.setVduId(y.getId());
 					vnfInstantiedExtCp.setVnfExtCp(y.getExtCp());
@@ -259,11 +243,13 @@ public class VnfmActions {
 		final Optional<VnfInstantiedCompute> resCompute = vnfInstance.getInstantiatedVnfInfo().getVnfcResourceInfo().stream().filter(x -> 0 == x.getVduId().compareTo(grantInformation.getVduId())).findFirst();
 		if (resCompute.isPresent()) {
 			final VnfInstantiedCompute res = resCompute.get();
-			res.setComputeResource(grantInformation);
-			res.getCompResource().setResourceProviderId(grantInformation.getResourceProviderId());
+			res.setReservationId(grantInformation.getReservationId());
+			res.setResourceGroupId(grantInformation.getResourceGroupId());
+			res.setZoneId(grantInformation.getZoneId());
+			res.setResourceProviderId(grantInformation.getResourceProviderId());
 			final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
 			vimConnectionInformation.setId(UUID.fromString(grantInformation.getVimConnectionId()));
-			res.getCompResource().setVimConnectionInformation(vimConnectionInformation);
+			res.setVimConnectionInformation(vimConnectionInformation);
 			return;
 		}
 		LOG.warn("Unable to find resource: {}", grantInformation.getVduId());

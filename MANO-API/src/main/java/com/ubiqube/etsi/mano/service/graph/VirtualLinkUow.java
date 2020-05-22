@@ -2,9 +2,9 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VirtualLinkUow extends AbstractUnitOfWork {
@@ -15,8 +15,8 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	private final VlProtocolData vlProtocolData;
 	private final String name;
 
-	public VirtualLinkUow(final ResourceHandleEntity resourceHandleEntity, final VlProtocolData _vlProtocolData, final String _name) {
-		super(resourceHandleEntity, _name);
+	public VirtualLinkUow(final VnfInstantiedVirtualLink vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name) {
+		super(vnfInstantiedVirtualLink, _name);
 		vlProtocolData = _vlProtocolData;
 		name = _name;
 	}

@@ -5,8 +5,6 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
@@ -172,7 +170,6 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiedCompute.class)
 				.field("id", "vduId")
-				.field("id", "compResource.vduId")
 				// Don't save this one.field("id", "computeResource.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
 				.field("storages", "storageResourceIds")
@@ -203,17 +200,6 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("id", "vnfInstantiedCompute.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
 				// XXX .field("storages", "storageResourceIds")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(VnfVl.class, AffectedVl.class)
-				.field("id", "virtualLinkDesc.id")
-				.field("id", "networkResource.vduId")
-				// XXX .field("id", "grantInformation.vduId")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(VnfStorage.class, AffectedVs.class)
-				.field("id", "storageResource.vduId")
-				.field("id", "virtualStorageDesc.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformation.class, GrantInformationExt.class)

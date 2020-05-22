@@ -17,70 +17,70 @@ public class VnfLcmResourceChanges implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedCompute> affectedVnfcs = new HashSet<>();
+	private Set<VnfInstantiedCompute> affectedVnfcs = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedVl> affectedVirtualLinks = new HashSet<>();
+	private Set<VnfInstantiedVirtualLink> affectedVirtualLinks = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedVs> affectedVirtualStorages = new HashSet<>();
+	private Set<VnfInstantiedStorage> affectedVirtualStorages = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AffectedExtCp> affectedExtCp = new HashSet<>();
+	private Set<VnfInstantiedExtCp> affectedExtCp = new HashSet<>();
 
-	public Set<AffectedCompute> getAffectedVnfcs() {
+	public Set<VnfInstantiedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;
 	}
 
-	public void setAffectedVnfcs(final Set<AffectedCompute> affectedVnfcs) {
+	public void setAffectedVnfcs(final Set<VnfInstantiedCompute> affectedVnfcs) {
 		this.affectedVnfcs = affectedVnfcs;
 	}
 
-	public void addAffectedVnfcs(final AffectedCompute affectedCompute) {
+	public void addAffectedVnfcs(final VnfInstantiedCompute affectedCompute) {
 		if (null == affectedVnfcs) {
 			affectedVnfcs = new HashSet<>();
 		}
 		affectedVnfcs.add(affectedCompute);
 	}
 
-	public Set<AffectedVl> getAffectedVirtualLinks() {
+	public Set<VnfInstantiedVirtualLink> getAffectedVirtualLinks() {
 		return affectedVirtualLinks;
 	}
 
-	public void setAffectedVirtualLinks(final Set<AffectedVl> affectedVirtualLinks) {
+	public void setAffectedVirtualLinks(final Set<VnfInstantiedVirtualLink> affectedVirtualLinks) {
 		this.affectedVirtualLinks = affectedVirtualLinks;
 	}
 
-	public Set<AffectedVs> getAffectedVirtualStorages() {
+	public Set<VnfInstantiedStorage> getAffectedVirtualStorages() {
 		return affectedVirtualStorages;
 	}
 
-	public void setAffectedVirtualStorages(final Set<AffectedVs> affectedVirtualStorages) {
+	public void setAffectedVirtualStorages(final Set<VnfInstantiedStorage> affectedVirtualStorages) {
 		this.affectedVirtualStorages = affectedVirtualStorages;
 	}
 
-	public void addAffectedVirtualLink(final AffectedVl affectedVirtualLink) {
+	public void addAffectedVirtualLink(final VnfInstantiedVirtualLink affectedVirtualLink) {
 		if (null == affectedVirtualLinks) {
 			affectedVirtualLinks = new HashSet<>();
 		}
 		affectedVirtualLinks.add(affectedVirtualLink);
 	}
 
-	public void addAffectedVirtualStorage(final AffectedVs affectedVs) {
+	public void addAffectedVirtualStorage(final VnfInstantiedStorage affectedVs) {
 		if (null == affectedVirtualStorages) {
 			affectedVirtualStorages = new HashSet<>();
 		}
 		affectedVirtualStorages.add(affectedVs);
 	}
 
-	public Set<AffectedExtCp> getAffectedExtCp() {
+	public Set<VnfInstantiedExtCp> getAffectedExtCp() {
 		return affectedExtCp;
 	}
 
-	public void setAffectedExtCp(final Set<AffectedExtCp> affectedExtCp) {
+	public void setAffectedExtCp(final Set<VnfInstantiedExtCp> affectedExtCp) {
 		this.affectedExtCp = affectedExtCp;
 	}
 

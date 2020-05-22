@@ -2,15 +2,15 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class EndUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public EndUow(final ResourceHandleEntity resourceHandleEntity) {
+	public EndUow(final VnfInstantiatedBase resourceHandleEntity) {
 		super(resourceHandleEntity, "");
 	}
 

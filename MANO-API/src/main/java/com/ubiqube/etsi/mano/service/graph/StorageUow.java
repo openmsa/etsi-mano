@@ -2,8 +2,8 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -13,8 +13,8 @@ public class StorageUow extends AbstractUnitOfWork {
 
 	private final VnfStorage vnfStorage;
 
-	public StorageUow(final ResourceHandleEntity resourceHandleEntity, final VnfStorage x) {
-		super(resourceHandleEntity, x.getToscaName());
+	public StorageUow(final VnfInstantiedStorage vnfInstantiedStorage, final VnfStorage x) {
+		super(vnfInstantiedStorage, x.getToscaName());
 		vnfStorage = x;
 	}
 

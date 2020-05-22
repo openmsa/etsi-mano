@@ -46,8 +46,5 @@ public class VnfVlTest {
 		final VnfVl avcDb = podam.manufacturePojo(VnfVl.class);
 		final AffectedVl avc = mapper.map(avcDb, AffectedVl.class);
 		assertNull(avc.getId());
-		assertNotNull(avc.getNetworkResource());
-		assertEquals(avcDb.getId(), avc.getNetworkResource().getVduId());
-		assertEquals(avcDb.getId(), avc.getVirtualLinkDesc().getId());
 	}
 }

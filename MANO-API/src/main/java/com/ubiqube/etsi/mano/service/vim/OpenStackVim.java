@@ -50,11 +50,11 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
@@ -241,7 +241,7 @@ public class OpenStackVim implements Vim {
 				g.removeAllEdges(new ArrayList<>(out));
 				final VlProtocolData vnfVl = vlu.getVlProtocolData();
 				vnfVl.getIpAllocationPools().forEach(y -> {
-					final OsSubnetworkUow subUow = new OsSubnetworkUow(new ResourceHandleEntity(), vnfVl, y, x.getToscaName());
+					final OsSubnetworkUow subUow = new OsSubnetworkUow(new VnfInstantiedVirtualLink(), vnfVl, y, x.getToscaName());
 					vertexPool.add(subUow);
 					g.addVertex(subUow);
 					g.addEdge(x, subUow);

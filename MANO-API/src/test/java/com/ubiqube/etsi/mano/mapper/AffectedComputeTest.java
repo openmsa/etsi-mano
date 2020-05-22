@@ -34,10 +34,6 @@ public class AffectedComputeTest {
 		assertEquals(avc.getChangeType().toString(), avcDb.getChangeType().toString());
 		assertEquals(avc.getId(), avcDb.getId().toString());
 		assertEquals(avc.getVduId(), avcDb.getVduId().toString());
-		assertEquals(avc.getComputeResource().getResourceId(), avcDb.getComputeResource().getResourceId());
-		assertEquals(avc.getComputeResource().getResourceProviderId(), avcDb.getComputeResource().getResourceProviderId());
-		assertEquals(avc.getComputeResource().getVimConnectionId(), avcDb.getComputeResource().getVimConnectionInformation().getId().toString());
-		assertEquals(avc.getComputeResource().getVimLevelResourceType(), avcDb.getComputeResource().getVimLevelResourceType());
 	}
 
 	@Test
@@ -49,9 +45,5 @@ public class AffectedComputeTest {
 		assertEquals(avc.getChangeType().toString(), avcDb.getChangeType().toString());
 		assertEquals(avc.getId(), avcDb.getId().toString());
 		assertEquals(avc.getVduId(), avcDb.getVduId().toString());
-		assertEquals(avc.getComputeResource().getResourceId(), avcDb.getComputeResource().getResourceId());
-		assertEquals(avc.getComputeResource().getResourceProviderId(), avcDb.getComputeResource().getResourceProviderId());
-		assertEquals(avc.getComputeResource().getVimConnectionId(), avcDb.getComputeResource().getVimConnectionInformation().getId().toString());
-		assertEquals(avc.getComputeResource().getVimLevelResourceType(), avcDb.getComputeResource().getVimLevelResourceType());
 	}
 }
