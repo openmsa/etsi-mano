@@ -53,7 +53,7 @@ public class VnfInstantiatedInfo implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<VirtualStorageInfo> virtualStorageResourceInfo = null;
+	private Set<VnfInstantiedStorage> virtualStorageResourceInfo = null;
 
 	private String instantiationLevelId = null;
 
@@ -137,15 +137,15 @@ public class VnfInstantiatedInfo implements Serializable {
 		this.virtualLinkResourceInfo = virtualLinkResourceInfo;
 	}
 
-	public Set<VirtualStorageInfo> getVirtualStorageResourceInfo() {
+	public Set<VnfInstantiedStorage> getVirtualStorageResourceInfo() {
 		return virtualStorageResourceInfo;
 	}
 
-	public void setVirtualStorageResourceInfo(final Set<VirtualStorageInfo> virtualStorageResourceInfo) {
+	public void setVirtualStorageResourceInfo(final Set<VnfInstantiedStorage> virtualStorageResourceInfo) {
 		this.virtualStorageResourceInfo = virtualStorageResourceInfo;
 	}
 
-	public void addVirtualStorageResourceInfoItem(final VirtualStorageInfo vStorage) {
+	public void addVirtualStorageResourceInfoItem(final VnfInstantiedStorage vStorage) {
 		if (null == virtualStorageResourceInfo) {
 			virtualStorageResourceInfo = new HashSet<>();
 		}

@@ -42,9 +42,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 	private String instantiationLevelId;
 
 	@OneToOne
-	private VnfInstance vnfInstance = null;
-
-	@OneToOne
 	private VnfLcmOpOccs vnfLcmOpOccs = null;
 
 	@Valid
@@ -278,14 +275,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	public void setAvailable(final Boolean available) {
 		this.available = available;
-	}
-
-	public VnfInstance getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final VnfInstance vnfInstance) {
-		this.vnfInstance = vnfInstance;
 	}
 
 	public VnfLcmOpOccs getVnfLcmOpOccs() {

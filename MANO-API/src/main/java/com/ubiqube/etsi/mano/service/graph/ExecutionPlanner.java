@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -87,7 +89,12 @@ public class ExecutionPlanner {
 			}
 			// XXX do the same for swImages ?
 			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
-				final UnitOfWork uow = new MonitoringUow(new VnfInstantiedCompute(), x, makeUowMonitoringName(x));
+				final VnfInstantiedCompute instanceMonotor = new VnfInstantiedCompute();
+				instanceMonotor.setChangeType(ChangeType.ADDED);
+				instanceMonotor.setVnfLcmOpOccs(vnfLcmOpOccs);
+				instanceMonotor.setVnfCompute(x);
+				instanceMonotor.setStatus(InstantiationStatusType.NOT_STARTED);
+				final UnitOfWork uow = new MonitoringUow(instanceMonotor, x, makeUowMonitoringName(x));
 				vertex.put(makeUowMonitoringName(x), uow);
 				g.addVertex(uow);
 				LOG.debug("Monitoring: {} -> {}", x.getToscaName(), uow.getName());
@@ -101,8 +108,12 @@ public class ExecutionPlanner {
 			Optional.ofNullable(vertex.get(x.getToscaName()))
 					.ifPresent(y -> g.addEdge(vertex.get(x.getInternalVirtualLink()), y));
 		});
+		final VnfInstantiedCompute vnfInstantiedStart = new VnfInstantiedCompute();
+		vnfInstantiedStart.setChangeType(ChangeType.ADDED);
+		vnfInstantiedStart.setVnfLcmOpOccs(vnfLcmOpOccs);
+		vnfInstantiedStart.setStatus(InstantiationStatusType.NOT_STARTED);
 		// Add start
-		final UnitOfWork root = new StartUow();
+		final UnitOfWork root = new StartUow(vnfInstantiedStart);
 		g.addVertex(root);
 		g.vertexSet().stream()
 				.filter(key -> g.incomingEdgesOf(key).isEmpty())
@@ -113,7 +124,11 @@ public class ExecutionPlanner {
 					}
 				});
 		// And end Node
-		final UnitOfWork end = new EndUow(new VnfInstantiedCompute());
+		final VnfInstantiedCompute vnfInstantiedEnd = new VnfInstantiedCompute();
+		vnfInstantiedEnd.setChangeType(ChangeType.ADDED);
+		vnfInstantiedEnd.setVnfLcmOpOccs(vnfLcmOpOccs);
+		vnfInstantiedEnd.setStatus(InstantiationStatusType.NOT_STARTED);
+		final UnitOfWork end = new EndUow(vnfInstantiedEnd);
 		g.addVertex(end);
 		g.vertexSet().stream()
 				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
@@ -185,42 +200,46 @@ public class ExecutionPlanner {
 
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		// instantiationLevelId is aspectId
-		final VnfInstantiationLevels instantiationLevel = vnfPakage.getVnfInstantiationLevels().stream()
+		final List<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels().stream()
 				.filter(x -> x.getLevelName().equals(instantiationLevelId))
-				.findFirst().orElseThrow(() -> new NotFoundException("Aspectid not found: "));
-		vnfPakage.getVnfCompute().forEach(x -> {
-			final List<VnfComputeAspectDelta> res = vnfPackageService.findAspectDeltaByAspectId(x, instantiationLevel.getScaleInfoName());
-			Integer numInst = null;
-			if (!res.isEmpty()) {
-				if (res.size() <= instantiationLevel.getScaleInfoLevel()) {
-					numInst = res.get(instantiationLevel.getScaleInfoLevel() - 1).getNumberOfInstances();
-				} else if (res.isEmpty()) {
-					numInst = x.getInitialNumberOfInstance();
+				.collect(Collectors.toList());
+		instantiationLevels.forEach(instantiationLevel -> {
+			LOG.info("Pre-Planning {}", instantiationLevel.getScaleInfoName());
+			vnfPakage.getVnfCompute().forEach(x -> {
+				final List<VnfComputeAspectDelta> res = vnfPackageService.findAspectDeltaByAspectId(x, instantiationLevel.getScaleInfoName());
+				Integer numInst = null;
+				if (!res.isEmpty()) {
+					if (res.size() <= instantiationLevel.getScaleInfoLevel()) {
+						numInst = res.get(instantiationLevel.getScaleInfoLevel() - 1).getNumberOfInstances();
+					} else if (res.isEmpty()) {
+						numInst = x.getInitialNumberOfInstance();
+					} else {
+						numInst = res.get(res.size() - 1).getNumberOfInstances();
+					}
+					final int wantedNumInst = numInst.intValue();
+					final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
+					final VduInstantiationLevel vduInstantiationLevel = vnfPackageService.findByVnfComputeAndInstantiationLevel(x, instantiationLevel.getScaleInfoName());
+					if (currentInst < wantedNumInst) {
+						addVnfComputeInstance(lcmOpOccs, x, vnfPakage, vduInstantiationLevel, wantedNumInst - currentInst, vnfInstance);
+					} else if (currentInst > wantedNumInst) {
+						removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, vduInstantiationLevel, currentInst - wantedNumInst);
+					}
 				} else {
-					numInst = res.get(res.size() - 1).getNumberOfInstances();
+					LOG.warn("Unknown aspect {} for Vdu {} ", instantiationLevel.getScaleInfoName(), x.getToscaName());
 				}
-				final int wantedNumInst = numInst.intValue();
-				final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
-				final VduInstantiationLevel vduInstantiationLevel = vnfPackageService.findByVnfComputeAndInstantiationLevel(x, instantiationLevel.getScaleInfoName());
-				if (currentInst < wantedNumInst) {
-					addVnfComputeInstance(lcmOpOccs, x, vnfPakage, vduInstantiationLevel, wantedNumInst - currentInst, vnfInstance);
-				} else if (currentInst > wantedNumInst) {
-					removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, vduInstantiationLevel, currentInst - wantedNumInst);
-				}
-			} else {
-				LOG.warn("Unknown aspect {} for Vdu {} ", instantiationLevel.getScaleInfoName(), x.getToscaName());
-			}
+			});
 		});
 		vnfPakage.getVnfVl().forEach(x -> {
 			// XXX They should scale.
 			final int num = vnfInstanceService.getNumberOfLiveVl(vnfInstance, x);
 			if (num == 0) {
-				VnfInstantiedVirtualLink aVl = new VnfInstantiedVirtualLink();
+				final VnfInstantiedVirtualLink aVl = new VnfInstantiedVirtualLink();
 				aVl.setChangeType(ChangeType.ADDED);
 				aVl.setVnfVirtualLink(x);
-				// XXX aVl.setInstantiationLevel(instantiationLevel);
+				// XXX it's not a Vdu il.
+				aVl.setInstantiationLevel(null);
 				aVl.setVnfLcmOpOccs(lcmOpOccs);
-				aVl = vnfInstanceService.save(aVl);
+				// aVl = vnfInstanceService.save(aVl);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
 		});
@@ -234,13 +253,14 @@ public class ExecutionPlanner {
 			vnfInstantiedCompute.setVduId(vnfCompute.getId());
 			vnfInstantiedCompute.setVnfCompute(vnfCompute);
 			vnfInstantiedCompute.setVnfLcmOpOccs(lcmOpOccs);
-			final VnfInstantiedCompute savedVnfInstantiedCompute = vnfInstanceService.save(vnfInstantiedCompute);
+			// final VnfInstantiedCompute savedVnfInstantiedCompute =
+			// vnfInstanceService.save(vnfInstantiedCompute);
 
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
 			vnfCompute.getStorages().forEach(y -> {
 				// XX Add Storage.
-				savedVnfInstantiedCompute.getAddedStorageResourceIds().add(y);
-				savedVnfInstantiedCompute.setInstantiationLevel(scaleLevel);
+				vnfInstantiedCompute.getAddedStorageResourceIds().add(y);
+				vnfInstantiedCompute.setInstantiationLevel(scaleLevel);
 				final VnfStorage storage = vnfPackageService.findStorageByName(vnfPackage, y)
 						.orElseThrow(() -> new NotFoundException("could not find: " + y));
 				VnfInstantiedStorage vs = new VnfInstantiedStorage();

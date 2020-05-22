@@ -11,7 +11,7 @@ import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
-import com.ubiqube.etsi.mano.jpa.ResourceHandleEntityJpa;
+import com.ubiqube.etsi.mano.jpa.VnfInstantiedBaseJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
@@ -28,11 +28,11 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 
 	private final Map<String, String> context;
 
-	private final transient ResourceHandleEntityJpa resourceHandleEntityJpa;
+	private final transient VnfInstantiedBaseJpa resourceHandleEntityJpa;
 
 	private final transient Function<Parameters, String> function;
 
-	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork uaow, final ResourceHandleEntityJpa _resourceHandleEntityJpa, final Map<String, String> _context, final boolean _create) {
+	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork uaow, final VnfInstantiedBaseJpa _resourceHandleEntityJpa, final Map<String, String> _context, final boolean _create) {
 		super();
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
@@ -47,7 +47,6 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
 					uaow.getResourceHandleEntity().setResourceId(res);
 				}
-				;
 				return res;
 			};
 		} else {
@@ -61,18 +60,19 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 		final VnfInstantiatedBase resource = this.uaow.getResourceHandleEntity();
 		resource.setStartTime(new Date());
 		resource.setStatus(InstantiationStatusType.STARTED);
-		// XXX resourceHandleEntityJpa.save(resource);
+		resourceHandleEntityJpa.save(resource);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
 			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getResourceId()));
 			resource.setStatus(InstantiationStatusType.SUCCESS);
 		} catch (final RuntimeException e) {
+			LOG.warn("Task {} failed.", uaow.getName(), e);
 			eRoot = e;
 			resource.setStatus(InstantiationStatusType.FAILED);
 		}
 		LOG.info("Task {} Finished.", uaow.getName());
 		resource.setEndTime(new Date());
-		// XXX resourceHandleEntityJpa.save(resource);
+		resourceHandleEntityJpa.save(resource);
 		if (eRoot != null) {
 			throw eRoot;
 		}

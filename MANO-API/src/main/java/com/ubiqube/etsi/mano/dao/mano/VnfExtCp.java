@@ -32,8 +32,6 @@ public class VnfExtCp implements Serializable {
 
 	private String internalVirtualLink;
 
-	private ResourceHandleEntity vimResource;
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
@@ -92,14 +90,6 @@ public class VnfExtCp implements Serializable {
 
 	public void setVirtualNetworkInterfaceRequirements(final Set<VirtualNicReq> virtualNetworkInterfaceRequirements) {
 		this.virtualNetworkInterfaceRequirements = virtualNetworkInterfaceRequirements;
-	}
-
-	public ResourceHandleEntity getVimResource() {
-		return vimResource;
-	}
-
-	public void setVimResource(final ResourceHandleEntity vimResource) {
-		this.vimResource = vimResource;
 	}
 
 }

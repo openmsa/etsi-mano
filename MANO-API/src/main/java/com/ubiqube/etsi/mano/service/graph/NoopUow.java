@@ -12,8 +12,8 @@ public class NoopUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NoopUow() {
-		super(new VnfInstantiedCompute(), RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
+	public NoopUow(final VnfInstantiedCompute vnfInstantiedCompute) {
+		super(vnfInstantiedCompute, RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
 	}
 
 	@Override

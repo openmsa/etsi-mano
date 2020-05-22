@@ -82,7 +82,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	// private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfLcmOpOccs")
-	private Set<ResourceHandleEntity> resourceHAndleEntity;
+	private Set<VnfInstantiatedBase> resourceHandleEntity;
 
 	private Audit audit;
 
@@ -191,6 +191,14 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 		this.externalProcessId = externalProcessId;
 	}
 
+	public Set<VnfInstantiatedBase> getResourceHandleEntity() {
+		return resourceHandleEntity;
+	}
+
+	public void setResourceHandleEntity(final Set<VnfInstantiatedBase> resourceHandleEntity) {
+		this.resourceHandleEntity = resourceHandleEntity;
+	}
+
 	@Override
 	public Audit getAudit() {
 		return audit;
@@ -199,14 +207,6 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
-	}
-
-	public Set<ResourceHandleEntity> getResourceHAndleEntity() {
-		return resourceHAndleEntity;
-	}
-
-	public void setResourceHAndleEntity(final Set<ResourceHandleEntity> resourceHAndleEntity) {
-		this.resourceHAndleEntity = resourceHAndleEntity;
 	}
 
 }

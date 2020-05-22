@@ -125,14 +125,4 @@ public class VnfInstantiedCompute extends VnfInstantiatedBase {
 		this.removedStorageResourceIds = removedStorageResourceIds;
 	}
 
-	@Override
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	@Override
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
-	}
-
 }

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
-import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 
@@ -37,12 +36,4 @@ public class VnfComputeTest {
 		assertEquals(avcDb.getStorages().size(), avc.getStorageResourceIds().size());
 	}
 
-	@Test
-	void testVnfc2AffectedCompute() throws Exception {
-		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final VnfCompute avcDb = podam.manufacturePojo(VnfCompute.class);
-		final AffectedCompute avc = mapper.map(avcDb, AffectedCompute.class);
-		assertNull(avc.getId());
-		assertEquals(avcDb.getId(), avc.getVduId());
-	}
 }

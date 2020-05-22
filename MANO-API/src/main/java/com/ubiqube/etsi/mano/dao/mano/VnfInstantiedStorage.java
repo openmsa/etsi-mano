@@ -27,6 +27,7 @@ public class VnfInstantiedStorage extends VnfInstantiatedBase {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -37,16 +38,6 @@ public class VnfInstantiedStorage extends VnfInstantiatedBase {
 
 	public void setVnfVirtualStorage(final VnfStorage vnfVirtualStorage) {
 		this.vnfVirtualStorage = vnfVirtualStorage;
-	}
-
-	@Override
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	@Override
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
 	}
 
 }

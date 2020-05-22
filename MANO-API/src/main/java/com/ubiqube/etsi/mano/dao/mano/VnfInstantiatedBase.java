@@ -226,11 +226,11 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 		this.instantiationLevel = instantiationLevel;
 	}
 
-	public final Map<String, String> getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public final void setMetadata(final Map<String, String> metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

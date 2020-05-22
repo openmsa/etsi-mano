@@ -92,7 +92,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<ResourceHandleEntity> extManagedVirtualLinks;
+	private Set<VnfInstantiatedBase> extManagedVirtualLinks;
 
 	private Audit audit;
 
@@ -249,11 +249,11 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		this.extVirtualLinks = extVirtualLinks;
 	}
 
-	public Set<ResourceHandleEntity> getExtManagedVirtualLinks() {
+	public Set<VnfInstantiatedBase> getExtManagedVirtualLinks() {
 		return extManagedVirtualLinks;
 	}
 
-	public void setExtManagedVirtualLinks(final Set<ResourceHandleEntity> extManagedVirtualLinks) {
+	public void setExtManagedVirtualLinks(final Set<VnfInstantiatedBase> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 

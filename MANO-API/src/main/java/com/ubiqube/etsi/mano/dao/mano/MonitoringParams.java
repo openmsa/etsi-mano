@@ -1,21 +1,17 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class MonitoringParams implements Serializable, Auditable {
+public class MonitoringParams extends VnfInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -33,15 +29,14 @@ public class MonitoringParams implements Serializable, Auditable {
 
 	private String performanceMetric;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private ResourceHandleEntity networkResource = null;
-
 	private Audit audit;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -84,24 +79,6 @@ public class MonitoringParams implements Serializable, Auditable {
 
 	public void setCollectionPeriod(final Long collectionPeriod) {
 		this.collectionPeriod = collectionPeriod;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	public ResourceHandleEntity getNetworkResource() {
-		return networkResource;
-	}
-
-	public void setNetworkResource(final ResourceHandleEntity networkResource) {
-		this.networkResource = networkResource;
 	}
 
 }

@@ -12,38 +12,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
-public class VirtualLinkInfo {
+public class VirtualLinkInfo extends VnfInstantiatedBase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
 	private UUID vnfVirtualLinkDescId = null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private ResourceHandleEntity networkResource = null;
-
-	/**
-	 * reservationId
-	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	private GrantInformation grantInformation = null;
-
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<LinkPortInfo> vnfLinkPorts = null;
 
 	@ElementCollection
-	private Map<String, String> metadata = null;
+	private final Map<String, String> metadata = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -56,36 +47,12 @@ public class VirtualLinkInfo {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 	}
 
-	public ResourceHandleEntity getNetworkResource() {
-		return networkResource;
-	}
-
-	public void setNetworkResource(final ResourceHandleEntity networkResource) {
-		this.networkResource = networkResource;
-	}
-
-	public GrantInformation getGrantInformation() {
-		return grantInformation;
-	}
-
-	public void setGrantInformation(final GrantInformation grantInformation) {
-		this.grantInformation = grantInformation;
-	}
-
 	public Set<LinkPortInfo> getVnfLinkPorts() {
 		return vnfLinkPorts;
 	}
 
 	public void setVnfLinkPorts(final Set<LinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
-	}
-
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final Map<String, String> metadata) {
-		this.metadata = metadata;
 	}
 
 }

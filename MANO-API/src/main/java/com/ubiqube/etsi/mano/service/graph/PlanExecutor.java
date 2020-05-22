@@ -13,24 +13,24 @@ import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.ResourceHandleEntityJpa;
+import com.ubiqube.etsi.mano.jpa.VnfInstantiedBaseJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 @Service
 public class PlanExecutor {
 
-	private final ResourceHandleEntityJpa resourceHandleEntityJpa;
+	private final VnfInstantiedBaseJpa vnfInstantiedBaseJpa;
 
-	public PlanExecutor(final ResourceHandleEntityJpa _resourceHandleEntityJpa) {
-		resourceHandleEntityJpa = _resourceHandleEntityJpa;
+	public PlanExecutor(final VnfInstantiedBaseJpa _vnfInstantiedBaseJpa) {
+		vnfInstantiedBaseJpa = _vnfInstantiedBaseJpa;
 	}
 
 	public ExecutionResults<UnitOfWork, String> execCreate(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, resourceHandleEntityJpa));
+		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
 	}
 
 	public ExecutionResults<UnitOfWork, String> execDelete(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutor(g, new UowTaskDeleteProvider(vimConnectionInformation, vim, resourceHandleEntityJpa));
+		return createExecutor(g, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
 	}
 
 	private static ExecutionResults<UnitOfWork, String> createExecutor(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final TaskProvider<UnitOfWork, String> uowTaskProvider) {

@@ -32,16 +32,6 @@ public class VnfInstantiedVirtualLink extends VnfInstantiatedBase {
 		this.id = id;
 	}
 
-	@Override
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	@Override
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
-	}
-
 	public VnfVl getVnfVirtualLink() {
 		return vnfVirtualLink;
 	}

@@ -10,8 +10,8 @@ public class StartUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public StartUow() {
-		super(new VnfInstantiedCompute(), "");
+	public StartUow(final VnfInstantiedCompute vnfInstantiedCompute) {
+		super(vnfInstantiedCompute, "");
 	}
 
 	@Override

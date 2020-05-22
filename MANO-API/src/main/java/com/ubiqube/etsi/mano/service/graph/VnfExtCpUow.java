@@ -12,16 +12,18 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	private final VnfExtCp extCp;
+	private final VnfInstantiedExtCp vnfInstantiedExtCp;
 
 	public VnfExtCpUow(final VnfInstantiedExtCp x, final VnfExtCp _extCp) {
 		super(x, _extCp.getToscaName());
 		extCp = _extCp;
+		vnfInstantiedExtCp = x;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
 		final String networkId = context.get(extCp.getInternalVirtualLink());
-		return vim.createRouter(vimConnectionInformation, extCp.getToscaName(), networkId, extCp.getVimResource().getResourceId());
+		return vim.createRouter(vimConnectionInformation, extCp.getToscaName(), networkId, vnfInstantiedExtCp.getResourceId());
 	}
 
 	@Override

@@ -54,6 +54,7 @@ import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -234,7 +235,9 @@ public class OpenStackVim implements Vim {
 			if (x instanceof VirtualLinkUow) {
 				LOG.debug("Found VL: {}", x.getName());
 				final VirtualLinkUow vlu = (VirtualLinkUow) x;
-				final NoopUow noop = new NoopUow();
+				final VnfInstantiedCompute vnfInstantiedCompute = new VnfInstantiedCompute();
+				// XXX There is a big question here, we don"t have access to mano internal.
+				final NoopUow noop = new NoopUow(vnfInstantiedCompute);
 				g.addVertex(noop);
 
 				final ArrayList<ConnectivityEdge> out = new ArrayList<>(g.outgoingEdgesOf(x));
