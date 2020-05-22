@@ -95,7 +95,7 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-search', version: '5.11.5.Final'
 
 	// Demo stuff
-	compile 'com.ubiqube.mano:tosca-vnfd-class:0.0.2-SNAPSHOT'
+	compile 'com.ubiqube.mano:tosca-vnfd-class:0.1.0-SNAPSHOT'
 
 	compile group: 'com.github.openstack4j.core', name: 'openstack4j', version: '3.6'
 	compile group: 'guru.nidi', name: 'graphviz-java', version: '0.16.0'
@@ -106,7 +106,10 @@ dependencies {
 springBoot {
 	mainClassName = 'com.ubiqube.etsi.mano.Application'
 }
-
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
 test {
 	useJUnitPlatform() {
 		excludeTags 'Remote'
