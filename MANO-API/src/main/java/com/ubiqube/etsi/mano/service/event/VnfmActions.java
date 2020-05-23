@@ -95,12 +95,12 @@ public class VnfmActions {
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 
-		// Send processing notification.
-		vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
-
 		// Send Grant.
 		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, lcmOpOccs);
 		final GrantResponse grantsResp = grantService.sendAndWaitGrantRequest(req);
+		// Send processing notification.
+		vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
+		// XXX Send processing event.
 
 		mapInstanceResources(lcmOpOccs, grantsResp);
 		// lcmOpOccs = vnfLcmService.save(lcmOpOccs);
@@ -118,8 +118,9 @@ public class VnfmActions {
 		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "create");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim);
+		vnfLcmService.save(lcmOpOccs);
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
-
+		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
 	}
 
