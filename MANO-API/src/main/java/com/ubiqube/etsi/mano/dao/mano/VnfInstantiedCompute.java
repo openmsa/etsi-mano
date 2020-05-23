@@ -20,6 +20,9 @@ import javax.persistence.OneToMany;
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfInstantiedCompute extends VnfInstantiatedBase {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -36,7 +39,10 @@ public class VnfInstantiedCompute extends VnfInstantiatedBase {
 	private String flavorId;
 
 	private String imageId;
-
+	/**
+	 * Vim name.
+	 */
+	private String aliasName;
 	/**
 	 * XXX Should be computed.
 	 */
@@ -123,6 +129,24 @@ public class VnfInstantiedCompute extends VnfInstantiatedBase {
 
 	public void setRemovedStorageResourceIds(final Set<String> removedStorageResourceIds) {
 		this.removedStorageResourceIds = removedStorageResourceIds;
+	}
+
+	public String getAliasName() {
+		return aliasName;
+	}
+
+	public void setAliasName(final String aliasName) {
+		this.aliasName = aliasName;
+	}
+
+	@Override
+	public VduInstantiationLevel getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	@Override
+	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
 	}
 
 }

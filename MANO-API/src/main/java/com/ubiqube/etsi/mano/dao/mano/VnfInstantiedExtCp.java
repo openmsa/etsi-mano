@@ -19,6 +19,8 @@ public class VnfInstantiedExtCp extends VnfInstantiatedBase {
 	@ManyToOne
 	private VnfExtCp vnfExtCp;
 
+	private String aliasName;
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -35,6 +37,14 @@ public class VnfInstantiedExtCp extends VnfInstantiatedBase {
 
 	public void setVnfExtCp(final VnfExtCp vnfExtCp) {
 		this.vnfExtCp = vnfExtCp;
+	}
+
+	public String getAliasName() {
+		return aliasName;
+	}
+
+	public void setAliasName(final String aliasName) {
+		this.aliasName = aliasName;
 	}
 
 }

@@ -13,14 +13,17 @@ public class StorageUow extends AbstractUnitOfWork {
 
 	private final VnfStorage vnfStorage;
 
-	public StorageUow(final VnfInstantiedStorage vnfInstantiedStorage, final VnfStorage x) {
-		super(vnfInstantiedStorage, x.getToscaName());
+	VnfInstantiedStorage vnfInstantiedStorage;
+
+	public StorageUow(final VnfInstantiedStorage _vnfInstantiedStorage, final VnfStorage x) {
+		super(_vnfInstantiedStorage, x.getToscaName());
 		vnfStorage = x;
+		vnfInstantiedStorage = _vnfInstantiedStorage;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		return vim.createStorage(vimConnectionInformation, vnfStorage);
+		return vim.createStorage(vimConnectionInformation, vnfStorage, vnfInstantiedStorage.getAliasName());
 	}
 
 	@Override

@@ -14,11 +14,13 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	private final VlProtocolData vlProtocolData;
 	private final String name;
+	private final VnfInstantiedVirtualLink vnfInstantiedVirtualLink;
 
-	public VirtualLinkUow(final VnfInstantiedVirtualLink vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name) {
-		super(vnfInstantiedVirtualLink, _name);
+	public VirtualLinkUow(final VnfInstantiedVirtualLink _vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name) {
+		super(_vnfInstantiedVirtualLink, _name);
 		vlProtocolData = _vlProtocolData;
 		name = _name;
+		vnfInstantiedVirtualLink = _vnfInstantiedVirtualLink;
 	}
 
 	public VlProtocolData getVlProtocolData() {
@@ -27,7 +29,7 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		return vim.createNetwork(vimConnectionInformation, vlProtocolData, name);
+		return vim.createNetwork(vimConnectionInformation, vlProtocolData, vnfInstantiedVirtualLink.getAliasName());
 	}
 
 	@Override

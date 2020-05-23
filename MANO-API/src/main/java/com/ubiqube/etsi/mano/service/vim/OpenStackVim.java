@@ -53,7 +53,6 @@ import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -259,12 +258,12 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final VnfCompute vnfc, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();
 		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
 		bs.image(imageId);
-		bs.name(vnfc.getName());
+		bs.name(instanceName);
 		bs.flavor(flavorId);
 		if (!networks.isEmpty()) {
 			bs.networks(networks);
@@ -281,7 +280,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage) {
+	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage, final String aliasName) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final Object imgName = vnfStorage.getSoftwareImage().getName();
 		final Image image = os.compute().images().list().stream()
@@ -290,7 +289,7 @@ public class OpenStackVim implements Vim {
 				.orElseThrow(() -> new NotFoundException("Image " + vnfStorage.getSoftwareImage().getName() + " not found"));
 		final VolumeBuilder bv = Builders.volume();
 		bv.size((int) (vnfStorage.getSize() / GIGA));
-		bv.name(vnfStorage.getToscaName());
+		bv.name(aliasName);
 		bv.imageRef(image.getId());
 		final Volume res = os.blockStorage().volumes().create(bv.build());
 		waitForVolumeCompletion(os.blockStorage().volumes(), res);

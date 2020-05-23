@@ -25,15 +25,9 @@ public class ComputeUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		try {
-			Thread.sleep(1000L);
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		final List<String> storages = vnfCompute.getStorages().stream().map(context::get).collect(Collectors.toList());
 		final List<String> networks = vnfCompute.getNetworks().stream().map(context::get).collect(Collectors.toList());
-		return vim.createCompute(vimConnectionInformation, vnfCompute, vnfInstantiedCompute.getFlavorId(), vnfInstantiedCompute.getImageId(), networks, storages);
+		return vim.createCompute(vimConnectionInformation, vnfInstantiedCompute.getAliasName(), vnfInstantiedCompute.getFlavorId(), vnfInstantiedCompute.getImageId(), networks, storages);
 	}
 
 	@Override

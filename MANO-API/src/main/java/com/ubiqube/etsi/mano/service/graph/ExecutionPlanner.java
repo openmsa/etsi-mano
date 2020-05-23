@@ -3,10 +3,9 @@ package com.ubiqube.etsi.mano.service.graph;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,6 +21,8 @@ import org.jgrapht.nio.dot.DOTExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
@@ -55,10 +56,13 @@ public class ExecutionPlanner {
 
 	private final VnfInstanceService vnfInstanceService;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
+	private final VduNamingStrategy vduNamingStrategy;
+
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
+		vduNamingStrategy = _vduNamingStrategy;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
@@ -71,11 +75,11 @@ public class ExecutionPlanner {
 	@NotNull
 	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
-		final Map<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs);
+		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs);
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
 			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
-			g.addEdge(vertex.get(x.getVirtualLink()), vertex.get(x.getVirtualBinding()));
+			addEdge(g, vertex.get(x.getVirtualLink()), vertex.get(x.getVirtualBinding()));
 		});
 
 		// Connect Vdu
@@ -84,7 +88,7 @@ public class ExecutionPlanner {
 			if (null != storages) {
 				storages.forEach(y -> {
 					LOG.debug("Storage link {} -> {}", y, x.getToscaName());
-					g.addEdge(vertex.get(y), vertex.get(x.getToscaName()));
+					addEdge(g, vertex.get(y), vertex.get(x.getToscaName()));
 				});
 			}
 			// XXX do the same for swImages ?
@@ -95,10 +99,10 @@ public class ExecutionPlanner {
 				instanceMonotor.setVnfCompute(x);
 				instanceMonotor.setStatus(InstantiationStatusType.NOT_STARTED);
 				final UnitOfWork uow = new MonitoringUow(instanceMonotor, x, makeUowMonitoringName(x));
-				vertex.put(makeUowMonitoringName(x), uow);
+				vertex.add(makeUowMonitoringName(x), uow);
 				g.addVertex(uow);
 				LOG.debug("Monitoring: {} -> {}", x.getToscaName(), uow.getName());
-				g.addEdge(vertex.get(x.getToscaName()), uow);
+				addEdge(g, vertex.get(x.getToscaName()), Arrays.asList(uow));
 			}
 		});
 
@@ -106,7 +110,7 @@ public class ExecutionPlanner {
 		vnfPackage.getVnfExtCp().forEach(x -> {
 			LOG.debug("ExtCp_{}: {} -> {}", x.getToscaName(), x.getInternalVirtualLink(), x.getExternalVirtualLink());
 			Optional.ofNullable(vertex.get(x.getToscaName()))
-					.ifPresent(y -> g.addEdge(vertex.get(x.getInternalVirtualLink()), y));
+					.ifPresent(y -> addEdge(g, vertex.get(x.getInternalVirtualLink()), y));
 		});
 		final VnfInstantiedCompute vnfInstantiedStart = new VnfInstantiedCompute();
 		vnfInstantiedStart.setChangeType(ChangeType.ADDED);
@@ -140,13 +144,24 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private Map<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs) {
-		final Map<String, UnitOfWork> vertex = new HashMap<>();
+	private static void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
+		if ((null == left) || (null == right)) {
+			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
+			return;
+		}
+		left.forEach(x -> right.forEach(y -> {
+			LOG.info("  - Adding {} <-> {}", x, y);
+			g.addEdge(x, y);
+		}));
+	}
+
+	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs) {
+		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().forEach(x -> {
 			final VnfVl vlProtocol = vnfPackageService.findVirtualLnkById(x.getVnfVirtualLink().getId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
 			final UnitOfWork uow = new VirtualLinkUow(x, vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
-			vertex.put(vlProtocol.getToscaName(), uow);
+			vertex.add(vlProtocol.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 
@@ -158,21 +173,21 @@ public class ExecutionPlanner {
 			} else {
 				uow = new ObjectStorageUow(x, vstorage, vstorage.getToscaName());
 			}
-			vertex.put(vstorage.getToscaName(), uow);
+			vertex.add(vstorage.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().forEach(x -> {
 			final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
 			final UnitOfWork uow = new ComputeUow(x, compute);
-			vertex.put(compute.getToscaName(), uow);
+			vertex.add(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 		final Set<VnfInstantiedExtCp> extCp = vnfLcmOpOccs.getResourceChanges().getAffectedExtCp();
 		extCp.forEach(x -> {
 			final VnfExtCp lextCp = vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVnfExtCp().getId()));
 			final UnitOfWork uow = new VnfExtCpUow(x, lextCp);
-			vertex.put(lextCp.getToscaName(), uow);
+			vertex.add(lextCp.getToscaName(), uow);
 			g.addVertex(uow);
 		});
 		return vertex;
@@ -220,12 +235,12 @@ public class ExecutionPlanner {
 					final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
 					final VduInstantiationLevel vduInstantiationLevel = vnfPackageService.findByVnfComputeAndInstantiationLevel(x, instantiationLevel.getScaleInfoName());
 					if (currentInst < wantedNumInst) {
-						addVnfComputeInstance(lcmOpOccs, x, vnfPakage, vduInstantiationLevel, wantedNumInst - currentInst, vnfInstance);
+						addVnfComputeInstance(lcmOpOccs, x, vnfPakage, vduInstantiationLevel, currentInst, wantedNumInst - currentInst);
 					} else if (currentInst > wantedNumInst) {
 						removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, vduInstantiationLevel, currentInst - wantedNumInst);
 					}
 				} else {
-					LOG.warn("Unknown aspect {} for Vdu {} ", instantiationLevel.getScaleInfoName(), x.getToscaName());
+					LOG.debug("Unknown aspect {} for Vdu {} ", instantiationLevel.getScaleInfoName(), x.getToscaName());
 				}
 			});
 		});
@@ -239,6 +254,7 @@ public class ExecutionPlanner {
 				// XXX it's not a Vdu il.
 				aVl.setInstantiationLevel(null);
 				aVl.setVnfLcmOpOccs(lcmOpOccs);
+				aVl.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
 				// aVl = vnfInstanceService.save(aVl);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
@@ -253,6 +269,7 @@ public class ExecutionPlanner {
 				aVs.setInstantiationLevel(null);
 				aVs.setVnfLcmOpOccs(lcmOpOccs);
 				aVs.setVduId(x.getId());
+				aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
 				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(aVs);
 			}
 		});
@@ -267,22 +284,25 @@ public class ExecutionPlanner {
 				aVs.setInstantiationLevel(null);
 				aVs.setVduId(x.getId());
 				aVs.setVnfLcmOpOccs(lcmOpOccs);
+				aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
 				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
 			}
 		});
 	}
 
-	private void addVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfCompute vnfCompute, final VnfPackage vnfPackage, final VduInstantiationLevel scaleLevel, final int number, final VnfInstance vnfInstance) {
+	private void addVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfCompute vnfCompute, final VnfPackage vnfPackage, final VduInstantiationLevel scaleLevel, final int currentCount, final int number) {
 		for (int i = 0; i < number; i++) {
 			final VnfInstantiedCompute vnfInstantiedCompute = new VnfInstantiedCompute();
 			vnfInstantiedCompute.setChangeType(ChangeType.ADDED);
 			vnfInstantiedCompute.setVduId(vnfCompute.getId());
 			vnfInstantiedCompute.setVnfCompute(vnfCompute);
 			vnfInstantiedCompute.setVnfLcmOpOccs(lcmOpOccs);
+			vnfInstantiedCompute.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName(), currentCount + i));
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
 			// vnfInstanceService.save(vnfInstantiedCompute);
 
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
+			final int ci = i;
 			vnfCompute.getStorages().forEach(y -> {
 				// XX Add Storage.
 				vnfInstantiedCompute.getAddedStorageResourceIds().add(y);
@@ -293,6 +313,7 @@ public class ExecutionPlanner {
 				vs.setInstantiationLevel(scaleLevel);
 				vs.setChangeType(ChangeType.ADDED);
 				vs.setVnfVirtualStorage(storage);
+				vs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName() + "-storage", currentCount + ci));
 
 				vs = vnfInstanceService.save(vs);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(vs);
