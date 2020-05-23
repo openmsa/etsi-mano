@@ -84,4 +84,11 @@ public class VnfLcmResourceChanges implements Serializable {
 		this.affectedExtCp = affectedExtCp;
 	}
 
+	public void addAffectedExtCp(final VnfInstantiedExtCp _affectedExtCp) {
+		if (null == affectedVirtualStorages) {
+			affectedVirtualStorages = new HashSet<>();
+		}
+		affectedExtCp.add(_affectedExtCp);
+	}
+
 }

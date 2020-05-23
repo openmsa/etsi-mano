@@ -15,6 +15,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
@@ -87,6 +88,11 @@ public class VnfInstanceService {
 
 	public VnfInstantiedStorage save(final VnfInstantiedStorage vs) {
 		return vnfInstantiedStorageJpa.save(vs);
+	}
+
+	public int getNumberOfLiveStorage(final VnfInstance vnfInstance, final VnfStorage x) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -243,7 +243,33 @@ public class ExecutionPlanner {
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
 		});
+		vnfPakage.getVnfStorage().stream().forEach(x -> {
+			final int num = vnfInstanceService.getNumberOfLiveStorage(vnfInstance, x);
+			if (num == 0) {
+				final VnfInstantiedStorage aVs = new VnfInstantiedStorage();
+				aVs.setChangeType(ChangeType.ADDED);
+				aVs.setVnfVirtualStorage(x);
+				// XXX it's not a Vdu il.
+				aVs.setInstantiationLevel(null);
+				aVs.setVnfLcmOpOccs(lcmOpOccs);
+				aVs.setVduId(x.getId());
+				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(aVs);
+			}
+		});
 		// No ExtCp when spawning.
+		vnfPakage.getVnfExtCp().stream().forEach(x -> {
+			final int num = vnfInstanceService.getNumberOfLiveExtCp(vnfInstance, x);
+			if (num == 0) {
+				final VnfInstantiedExtCp aVs = new VnfInstantiedExtCp();
+				aVs.setChangeType(ChangeType.ADDED);
+				aVs.setVnfExtCp(x);
+				// XXX it's not a Vdu il.
+				aVs.setInstantiationLevel(null);
+				aVs.setVduId(x.getId());
+				aVs.setVnfLcmOpOccs(lcmOpOccs);
+				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
+			}
+		});
 	}
 
 	private void addVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfCompute vnfCompute, final VnfPackage vnfPackage, final VduInstantiationLevel scaleLevel, final int number, final VnfInstance vnfInstance) {
