@@ -60,7 +60,6 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 		final VnfInstantiatedBase resource = this.uaow.getResourceHandleEntity();
 		resource.setStartTime(new Date());
 		resource.setStatus(InstantiationStatusType.STARTED);
-		resourceHandleEntityJpa.save(resource);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
 			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getResourceId()));
@@ -72,7 +71,6 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 		}
 		LOG.info("Task {} Finished.", uaow.getName());
 		resource.setEndTime(new Date());
-		resourceHandleEntityJpa.save(resource);
 		if (eRoot != null) {
 			throw eRoot;
 		}
