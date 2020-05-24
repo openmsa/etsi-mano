@@ -14,4 +14,6 @@ public interface VnfInstantiedComputeJpa extends CrudRepository<VnfInstantiedCom
 
 	List<VnfInstantiedCompute> findByVnfLcmOpOccsVnfInstanceAndVduId(VnfInstance vnfInstance, UUID id);
 
+	List<VnfInstantiedCompute> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
+
 }

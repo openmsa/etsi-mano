@@ -34,6 +34,7 @@ import org.openstack4j.model.network.AttachInterfaceType;
 import org.openstack4j.model.network.IPVersionType;
 import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.NetworkType;
+import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
@@ -410,39 +411,50 @@ public class OpenStackVim implements Vim {
 		return router.getId();
 	}
 
+	private static void checkResult(final ActionResponse action) {
+		if (!action.isSuccess()) {
+			throw new VimException(action.getCode() + ' ' + action.getFault());
+		}
+	}
+
 	@Override
 	public void deleteRouter(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.networking().router().delete(resourceId);
+		final List<? extends Port> routerList = os.networking().port().list();
+		routerList.stream()
+				.filter(x -> x.getDeviceId().equals(resourceId))
+				.map(x -> x.getId())
+				.forEach(x -> os.networking().router().detachInterface(resourceId, null, x));
+		checkResult(os.networking().router().delete(resourceId));
 	}
 
 	@Override
 	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.compute().servers().delete(resourceId);
+		checkResult(os.compute().servers().delete(resourceId));
 	}
 
 	@Override
 	public void deleteVirtualLink(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.networking().network().delete(resourceId);
+		checkResult(os.networking().network().delete(resourceId));
 	}
 
 	@Override
 	public void deleteStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.blockStorage().volumes().delete(resourceId);
+		checkResult(os.blockStorage().volumes().delete(resourceId));
 	}
 
 	@Override
 	public void deleteObjectStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.objectStorage().containers().delete(resourceId);
+		checkResult(os.objectStorage().containers().delete(resourceId));
 	}
 
 	public void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.networking().subnet().delete(resourceId);
+		checkResult(os.networking().subnet().delete(resourceId));
 	}
 
 	@Override

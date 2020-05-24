@@ -254,6 +254,7 @@ public class ExecutionPlanner {
 				// XXX it's not a Vdu il.
 				aVl.setInstantiationLevel(null);
 				aVl.setVnfLcmOpOccs(lcmOpOccs);
+				aVl.setVduId(x.getId());
 				aVl.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
 				// aVl = vnfInstanceService.save(aVl);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
@@ -309,13 +310,12 @@ public class ExecutionPlanner {
 				vnfInstantiedCompute.setInstantiationLevel(scaleLevel);
 				final VnfStorage storage = vnfPackageService.findStorageByName(vnfPackage, y)
 						.orElseThrow(() -> new NotFoundException("could not find: " + y));
-				VnfInstantiedStorage vs = new VnfInstantiedStorage();
+				final VnfInstantiedStorage vs = new VnfInstantiedStorage();
 				vs.setInstantiationLevel(scaleLevel);
 				vs.setChangeType(ChangeType.ADDED);
 				vs.setVnfVirtualStorage(storage);
 				vs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName() + "-storage", currentCount + ci));
 
-				vs = vnfInstanceService.save(vs);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(vs);
 			});
 		}
@@ -326,8 +326,11 @@ public class ExecutionPlanner {
 		for (int i = 0; i < number; i++) {
 			final VnfInstantiedCompute affectedCompute = new VnfInstantiedCompute();
 			affectedCompute.setChangeType(ChangeType.REMOVED);
+			affectedCompute.setStatus(InstantiationStatusType.NOT_STARTED);
 			affectedCompute.setVduId(x.getId());
-			affectedCompute.setRemovedInstantiated(instantied.pop().getId());
+			final VnfInstantiedCompute poped = instantied.pop();
+			affectedCompute.setRemovedInstantiated(poped.getId());
+			affectedCompute.setResourceId(poped.getResourceId());
 			affectedCompute.setInstantiationLevel(scaleLevel);
 			affectedCompute.setVnfLcmOpOccs(lcmOpOccs);
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
@@ -335,6 +338,57 @@ public class ExecutionPlanner {
 				// XXX Delete Storage, but we need a vdu.
 			});
 		}
+	}
+
+	public void terminatePlan(final VnfLcmOpOccs lcmOpOccs) {
+		final List<VnfInstantiedCompute> instantiedCompute = vnfInstanceService.getLiveComputeInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiedCompute.forEach(x -> {
+			final VnfInstantiedCompute affectedCompute = new VnfInstantiedCompute();
+			affectedCompute.setChangeType(ChangeType.REMOVED);
+			affectedCompute.setStatus(InstantiationStatusType.STARTED);
+			affectedCompute.setVduId(x.getVduId());
+			affectedCompute.setRemovedInstantiated(x.getId());
+			affectedCompute.setResourceId(x.getResourceId());
+			affectedCompute.setVnfLcmOpOccs(lcmOpOccs);
+			affectedCompute.setVnfCompute(x.getVnfCompute());
+			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
+		});
+		final List<VnfInstantiedExtCp> instantiedExtCps = vnfInstanceService.getLiveExtCpInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiedExtCps.forEach(x -> {
+			final VnfInstantiedExtCp affectedCompute = new VnfInstantiedExtCp();
+			affectedCompute.setChangeType(ChangeType.REMOVED);
+			affectedCompute.setStatus(InstantiationStatusType.STARTED);
+			affectedCompute.setVduId(x.getVduId());
+			affectedCompute.setRemovedInstantiated(x.getId());
+			affectedCompute.setResourceId(x.getResourceId());
+			affectedCompute.setVnfLcmOpOccs(lcmOpOccs);
+			affectedCompute.setVnfExtCp(x.getVnfExtCp());
+			lcmOpOccs.getResourceChanges().addAffectedExtCp(affectedCompute);
+		});
+		final List<VnfInstantiedStorage> instantiedStorages = vnfInstanceService.getLiveStorageInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiedStorages.forEach(x -> {
+			final VnfInstantiedStorage affectedStorage = new VnfInstantiedStorage();
+			affectedStorage.setChangeType(ChangeType.REMOVED);
+			affectedStorage.setStatus(InstantiationStatusType.STARTED);
+			affectedStorage.setVduId(x.getVduId());
+			affectedStorage.setRemovedInstantiated(x.getId());
+			affectedStorage.setResourceId(x.getResourceId());
+			affectedStorage.setVnfLcmOpOccs(lcmOpOccs);
+			affectedStorage.setVnfVirtualStorage(x.getVnfVirtualStorage());
+			lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(affectedStorage);
+		});
+		final List<VnfInstantiedVirtualLink> instantiedVirtualLinks = vnfInstanceService.getLiveVirtualLinkInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiedVirtualLinks.forEach(x -> {
+			final VnfInstantiedVirtualLink affectedVirtualLink = new VnfInstantiedVirtualLink();
+			affectedVirtualLink.setChangeType(ChangeType.REMOVED);
+			affectedVirtualLink.setStatus(InstantiationStatusType.STARTED);
+			affectedVirtualLink.setVduId(x.getVduId());
+			affectedVirtualLink.setRemovedInstantiated(x.getId());
+			affectedVirtualLink.setResourceId(x.getResourceId());
+			affectedVirtualLink.setVnfLcmOpOccs(lcmOpOccs);
+			affectedVirtualLink.setVnfVirtualLink(x.getVnfVirtualLink());
+			lcmOpOccs.getResourceChanges().addAffectedVirtualLink(affectedVirtualLink);
+		});
 	}
 
 }

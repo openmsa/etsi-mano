@@ -95,4 +95,20 @@ public class VnfInstanceService {
 		return 0;
 	}
 
+	public List<VnfInstantiedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance) {
+		return vnfInstantiedComputeJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
+	}
+
+	public List<VnfInstantiedExtCp> getLiveExtCpInstanceOf(final VnfInstance vnfInstance) {
+		return vnfInstantiedExtCpJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
+	}
+
+	public List<VnfInstantiedStorage> getLiveStorageInstanceOf(final VnfInstance vnfInstance) {
+		return vnfInstantiedStorageJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
+	}
+
+	public List<VnfInstantiedVirtualLink> getLiveVirtualLinkInstanceOf(final VnfInstance vnfInstance) {
+		return vnfInstantiedVirtualLinkJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
+	}
+
 }

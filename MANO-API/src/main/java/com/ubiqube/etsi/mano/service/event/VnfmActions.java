@@ -143,6 +143,9 @@ public class VnfmActions {
 							y.setVimConnectionInformation(vimConnectionInformation);
 							y.setVnfLcmOpOccs(lcmOpOccs);
 							y.setInstantiationLevel(instantiationLevel);
+							y.setZoneId(x.getZoneId());
+							y.setResourceGroupId(x.getResourceGroupId());
+							y.setReservationId(x.getReservationId());
 							final String flavorId = findFlavor(grantsResp, x.getVduId());
 							y.setFlavorId(flavorId);
 							final String imageId = findImage(grantsResp, x.getVduId());
@@ -159,6 +162,9 @@ public class VnfmActions {
 							y.setVimConnectionInformation(vimConnectionInformation);
 							y.setVnfLcmOpOccs(lcmOpOccs);
 							y.setInstantiationLevel(instantiationLevel);
+							y.setZoneId(x.getZoneId());
+							y.setResourceGroupId(x.getResourceGroupId());
+							y.setReservationId(x.getReservationId());
 							vnfInstancesService.save(y);
 						});
 			} else if (x.getType() == TypeEnum.LINKPORT) {
@@ -171,6 +177,9 @@ public class VnfmActions {
 							y.setVimConnectionInformation(vimConnectionInformation);
 							y.setVnfLcmOpOccs(lcmOpOccs);
 							y.setInstantiationLevel(instantiationLevel);
+							y.setZoneId(x.getZoneId());
+							y.setResourceGroupId(x.getResourceGroupId());
+							y.setReservationId(x.getReservationId());
 							vnfInstancesService.save(y);
 						});
 			} else if (x.getType() == TypeEnum.STORAGE) {
@@ -183,6 +192,9 @@ public class VnfmActions {
 							y.setVimConnectionInformation(vimConnectionInformation);
 							y.setVnfLcmOpOccs(lcmOpOccs);
 							y.setInstantiationLevel(instantiationLevel);
+							y.setZoneId(x.getZoneId());
+							y.setResourceGroupId(x.getResourceGroupId());
+							y.setReservationId(x.getReservationId());
 							vnfInstancesService.save(y);
 						});
 			}
@@ -229,12 +241,14 @@ public class VnfmActions {
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
 
-		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfInstance);
+		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfInstance);
+		executionPlanner.terminatePlan(lcmOpOccs);
 
+		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
-		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		final GrantResponse grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
 		vnfLcmService.setGrant(lcmOpOccs, grant.getId());
+		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		// Make plan
 		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
 		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
