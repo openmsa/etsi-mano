@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
@@ -102,7 +103,7 @@ public class VnfmActions {
 		vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
 		// XXX Send processing event.
 
-		mapInstanceResources(lcmOpOccs, grantsResp);
+		copyGrantResourcesToInstantiated(lcmOpOccs, grantsResp);
 		// lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		vnfLcmService.setGrant(lcmOpOccs, grantsResp.getId());
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
@@ -124,7 +125,7 @@ public class VnfmActions {
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
 	}
 
-	private void mapInstanceResources(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
+	private void copyGrantResourcesToInstantiated(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
 		// XXX need to remap the vim inside our vim.
 		final VimConnectionInformation vimConnectionInformation = vimManager.findVimById(grantsResp.getVimConnections().iterator().next().getId());
 		// XXX instantiation level cannot be null
@@ -134,71 +135,87 @@ public class VnfmActions {
 			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
 			final GrantInformation grantInformation = grantService.getGrantInformation(grantUuid).orElseThrow(() -> new NotFoundException("Could not find Grant id: " + grantUuid));
 			if (x.getType() == TypeEnum.COMPUTE) {
-				lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream()
-						.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-						.findFirst()
-						.ifPresent(y -> {
-							y.setResourceProviderId(x.getResourceProviderId());
-							y.setStatus(InstantiationStatusType.NOT_STARTED);
-							y.setVimConnectionInformation(vimConnectionInformation);
-							y.setVnfLcmOpOccs(lcmOpOccs);
-							y.setInstantiationLevel(instantiationLevel);
-							y.setZoneId(x.getZoneId());
-							y.setResourceGroupId(x.getResourceGroupId());
-							y.setReservationId(x.getReservationId());
-							final String flavorId = findFlavor(grantsResp, x.getVduId());
-							y.setFlavorId(flavorId);
-							final String imageId = findImage(grantsResp, x.getVduId());
-							y.setImageId(imageId);
-							vnfInstancesService.save(y);
-						});
+				copyGrantToAffectedCompute(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, grantsResp, x);
 			} else if (x.getType() == TypeEnum.VL) {
-				lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
-						.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-						.findFirst()
-						.ifPresent(y -> {
-							y.setResourceProviderId(x.getResourceProviderId());
-							y.setStatus(InstantiationStatusType.NOT_STARTED);
-							y.setVimConnectionInformation(vimConnectionInformation);
-							y.setVnfLcmOpOccs(lcmOpOccs);
-							y.setInstantiationLevel(instantiationLevel);
-							y.setZoneId(x.getZoneId());
-							y.setResourceGroupId(x.getResourceGroupId());
-							y.setReservationId(x.getReservationId());
-							vnfInstancesService.save(y);
-						});
+				copyGrantToAffectedVirtualLink(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x);
 			} else if (x.getType() == TypeEnum.LINKPORT) {
-				lcmOpOccs.getResourceChanges().getAffectedExtCp().stream()
-						.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-						.findFirst()
-						.ifPresent(y -> {
-							y.setResourceProviderId(x.getResourceProviderId());
-							y.setStatus(InstantiationStatusType.NOT_STARTED);
-							y.setVimConnectionInformation(vimConnectionInformation);
-							y.setVnfLcmOpOccs(lcmOpOccs);
-							y.setInstantiationLevel(instantiationLevel);
-							y.setZoneId(x.getZoneId());
-							y.setResourceGroupId(x.getResourceGroupId());
-							y.setReservationId(x.getReservationId());
-							vnfInstancesService.save(y);
-						});
+				copyGrantToAffectedLinkPort(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x);
 			} else if (x.getType() == TypeEnum.STORAGE) {
-				lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
-						.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-						.findFirst()
-						.ifPresent(y -> {
-							y.setResourceProviderId(x.getResourceProviderId());
-							y.setStatus(InstantiationStatusType.NOT_STARTED);
-							y.setVimConnectionInformation(vimConnectionInformation);
-							y.setVnfLcmOpOccs(lcmOpOccs);
-							y.setInstantiationLevel(instantiationLevel);
-							y.setZoneId(x.getZoneId());
-							y.setResourceGroupId(x.getResourceGroupId());
-							y.setReservationId(x.getReservationId());
-							vnfInstancesService.save(y);
-						});
+				copyGrantToAffectedStorage(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x);
 			}
 		});
+	}
+
+	private void copyGrantToAffectedStorage(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
+		lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
+				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
+				.findFirst()
+				.ifPresent(y -> {
+					y.setResourceProviderId(x.getResourceProviderId());
+					y.setStatus(InstantiationStatusType.NOT_STARTED);
+					y.setVimConnectionInformation(vimConnectionInformation);
+					y.setVnfLcmOpOccs(lcmOpOccs);
+					y.setInstantiationLevel(instantiationLevel);
+					y.setZoneId(x.getZoneId());
+					y.setResourceGroupId(x.getResourceGroupId());
+					y.setReservationId(x.getReservationId());
+					vnfInstancesService.save(y);
+				});
+	}
+
+	private void copyGrantToAffectedLinkPort(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
+		lcmOpOccs.getResourceChanges().getAffectedExtCp().stream()
+				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
+				.findFirst()
+				.ifPresent(y -> {
+					y.setResourceProviderId(x.getResourceProviderId());
+					y.setStatus(InstantiationStatusType.NOT_STARTED);
+					y.setVimConnectionInformation(vimConnectionInformation);
+					y.setVnfLcmOpOccs(lcmOpOccs);
+					y.setInstantiationLevel(instantiationLevel);
+					y.setZoneId(x.getZoneId());
+					y.setResourceGroupId(x.getResourceGroupId());
+					y.setReservationId(x.getReservationId());
+					vnfInstancesService.save(y);
+				});
+	}
+
+	private void copyGrantToAffectedVirtualLink(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
+		lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
+				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
+				.findFirst()
+				.ifPresent(y -> {
+					y.setResourceProviderId(x.getResourceProviderId());
+					y.setStatus(InstantiationStatusType.NOT_STARTED);
+					y.setVimConnectionInformation(vimConnectionInformation);
+					y.setVnfLcmOpOccs(lcmOpOccs);
+					y.setInstantiationLevel(instantiationLevel);
+					y.setZoneId(x.getZoneId());
+					y.setResourceGroupId(x.getResourceGroupId());
+					y.setReservationId(x.getReservationId());
+					vnfInstancesService.save(y);
+				});
+	}
+
+	private void copyGrantToAffectedCompute(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantResponse grantsResp, final GrantInformationExt x) {
+		lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream()
+				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
+				.findFirst()
+				.ifPresent(y -> {
+					y.setResourceProviderId(x.getResourceProviderId());
+					y.setStatus(InstantiationStatusType.NOT_STARTED);
+					y.setVimConnectionInformation(vimConnectionInformation);
+					y.setVnfLcmOpOccs(lcmOpOccs);
+					y.setInstantiationLevel(instantiationLevel);
+					y.setZoneId(x.getZoneId());
+					y.setResourceGroupId(x.getResourceGroupId());
+					y.setReservationId(x.getReservationId());
+					final String flavorId = findFlavor(grantsResp, x.getVduId());
+					y.setFlavorId(flavorId);
+					final String imageId = findImage(grantsResp, x.getVduId());
+					y.setImageId(imageId);
+					vnfInstancesService.save(y);
+				});
 	}
 
 	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
