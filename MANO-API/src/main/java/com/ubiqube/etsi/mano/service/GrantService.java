@@ -14,10 +14,10 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -87,7 +87,7 @@ public class GrantService {
 		return pollGrants(grants);
 	}
 
-	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiedStorage> affectedStorage) {
+	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> affectedStorage) {
 		final Set<GrantInformation> res = affectedStorage.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
@@ -98,7 +98,7 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfInstantiedVirtualLink> instantiatedVirtualLink) {
+	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> instantiatedVirtualLink) {
 		final Set<GrantInformation> res = instantiatedVirtualLink.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
@@ -109,7 +109,7 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiedCompute> affectedComputes) {
+	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> affectedComputes) {
 		final Set<GrantInformation> res = affectedComputes.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
@@ -120,7 +120,7 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfInstantiedExtCp> vnfLinkPort) {
+	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfInstantiatedExtCp> vnfLinkPort) {
 		final Set<GrantInformation> res = vnfLinkPort.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
@@ -131,7 +131,7 @@ public class GrantService {
 		grants.getRemoveResources().addAll(res);
 	}
 
-	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiedStorage> vnfStorage) {
+	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfStorage) {
 		final Set<GrantInformation> res = vnfStorage.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
@@ -142,7 +142,7 @@ public class GrantService {
 		grants.getRemoveResources().addAll(res);
 	}
 
-	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfInstantiedVirtualLink> vnfVl) {
+	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfVl) {
 		final Set<GrantInformation> res = vnfVl.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
@@ -153,7 +153,7 @@ public class GrantService {
 		grants.getRemoveResources().addAll(res);
 	}
 
-	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiedCompute> vnfCompute) {
+	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfCompute) {
 		final Set<GrantInformation> res = vnfCompute.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());

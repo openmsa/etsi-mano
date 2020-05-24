@@ -6,14 +6,14 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 
-public interface VnfInstantiedComputeJpa extends CrudRepository<VnfInstantiedCompute, UUID> {
+public interface VnfInstantiedComputeJpa extends CrudRepository<VnfInstantiatedCompute, UUID> {
 
 	int countByVnfLcmOpOccsVnfInstanceAndVduId(VnfInstance vnfInstance, UUID vduId);
 
-	List<VnfInstantiedCompute> findByVnfLcmOpOccsVnfInstanceAndVduId(VnfInstance vnfInstance, UUID id);
+	List<VnfInstantiatedCompute> findByVnfLcmOpOccsVnfInstanceAndVduId(VnfInstance vnfInstance, UUID id);
 
-	List<VnfInstantiedCompute> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
+	List<VnfInstantiatedCompute> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
 
 }

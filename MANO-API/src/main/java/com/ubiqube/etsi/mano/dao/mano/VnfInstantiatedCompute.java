@@ -19,7 +19,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfInstantiedCompute extends VnfInstantiatedBase {
+public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

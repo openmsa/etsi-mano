@@ -33,10 +33,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -94,7 +94,7 @@ public class ExecutionPlanner {
 			}
 			// XXX do the same for swImages ?
 			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
-				final VnfInstantiedCompute instanceMonotor = new VnfInstantiedCompute();
+				final VnfInstantiatedCompute instanceMonotor = new VnfInstantiatedCompute();
 				instanceMonotor.setChangeType(ChangeType.ADDED);
 				instanceMonotor.setVnfLcmOpOccs(vnfLcmOpOccs);
 				instanceMonotor.setVnfCompute(x);
@@ -113,7 +113,7 @@ public class ExecutionPlanner {
 			Optional.ofNullable(vertex.get(x.getToscaName()))
 					.ifPresent(y -> addEdge(g, vertex.get(x.getInternalVirtualLink()), y));
 		});
-		final VnfInstantiedCompute vnfInstantiedStart = new VnfInstantiedCompute();
+		final VnfInstantiatedCompute vnfInstantiedStart = new VnfInstantiatedCompute();
 		vnfInstantiedStart.setChangeType(ChangeType.ADDED);
 		vnfInstantiedStart.setVnfLcmOpOccs(vnfLcmOpOccs);
 		vnfInstantiedStart.setStatus(InstantiationStatusType.NOT_STARTED);
@@ -129,7 +129,7 @@ public class ExecutionPlanner {
 					}
 				});
 		// And end Node
-		final VnfInstantiedCompute vnfInstantiedEnd = new VnfInstantiedCompute();
+		final VnfInstantiatedCompute vnfInstantiedEnd = new VnfInstantiatedCompute();
 		vnfInstantiedEnd.setChangeType(ChangeType.ADDED);
 		vnfInstantiedEnd.setVnfLcmOpOccs(vnfLcmOpOccs);
 		vnfInstantiedEnd.setStatus(InstantiationStatusType.NOT_STARTED);
@@ -184,7 +184,7 @@ public class ExecutionPlanner {
 			vertex.add(compute.getToscaName(), uow);
 			g.addVertex(uow);
 		});
-		final Set<VnfInstantiedExtCp> extCp = vnfLcmOpOccs.getResourceChanges().getAffectedExtCp();
+		final Set<VnfInstantiatedExtCp> extCp = vnfLcmOpOccs.getResourceChanges().getAffectedExtCp();
 		extCp.forEach(x -> {
 			final VnfExtCp lextCp = vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVnfExtCp().getId()));
 			final UnitOfWork uow = new VnfExtCpUow(x, lextCp);
@@ -249,7 +249,7 @@ public class ExecutionPlanner {
 			// XXX They should scale.
 			final int num = vnfInstanceService.getNumberOfLiveVl(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiedVirtualLink aVl = new VnfInstantiedVirtualLink();
+				final VnfInstantiatedVirtualLink aVl = new VnfInstantiatedVirtualLink();
 				aVl.setChangeType(ChangeType.ADDED);
 				aVl.setVnfVirtualLink(x);
 				// XXX it's not a Vdu il.
@@ -264,7 +264,7 @@ public class ExecutionPlanner {
 		vnfPakage.getVnfStorage().stream().forEach(x -> {
 			final int num = vnfInstanceService.getNumberOfLiveStorage(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiedStorage aVs = new VnfInstantiedStorage();
+				final VnfInstantiatedStorage aVs = new VnfInstantiatedStorage();
 				aVs.setChangeType(ChangeType.ADDED);
 				aVs.setVnfVirtualStorage(x);
 				// XXX it's not a Vdu il.
@@ -279,7 +279,7 @@ public class ExecutionPlanner {
 		vnfPakage.getVnfExtCp().stream().forEach(x -> {
 			final int num = vnfInstanceService.getNumberOfLiveExtCp(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiedExtCp aVs = new VnfInstantiedExtCp();
+				final VnfInstantiatedExtCp aVs = new VnfInstantiatedExtCp();
 				aVs.setChangeType(ChangeType.ADDED);
 				aVs.setVnfExtCp(x);
 				// XXX it's not a Vdu il.
@@ -294,7 +294,7 @@ public class ExecutionPlanner {
 
 	private void addVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfCompute vnfCompute, final VnfPackage vnfPackage, final VduInstantiationLevel scaleLevel, final int currentCount, final int number) {
 		for (int i = 0; i < number; i++) {
-			final VnfInstantiedCompute vnfInstantiedCompute = new VnfInstantiedCompute();
+			final VnfInstantiatedCompute vnfInstantiedCompute = new VnfInstantiatedCompute();
 			vnfInstantiedCompute.setChangeType(ChangeType.ADDED);
 			vnfInstantiedCompute.setVduId(vnfCompute.getId());
 			vnfInstantiedCompute.setVnfCompute(vnfCompute);
@@ -311,7 +311,7 @@ public class ExecutionPlanner {
 				vnfInstantiedCompute.setInstantiationLevel(scaleLevel);
 				final VnfStorage storage = vnfPackageService.findStorageByName(vnfPackage, y)
 						.orElseThrow(() -> new NotFoundException("could not find: " + y));
-				final VnfInstantiedStorage vs = new VnfInstantiedStorage();
+				final VnfInstantiatedStorage vs = new VnfInstantiatedStorage();
 				vs.setInstantiationLevel(scaleLevel);
 				vs.setChangeType(ChangeType.ADDED);
 				vs.setVnfVirtualStorage(storage);
@@ -323,18 +323,18 @@ public class ExecutionPlanner {
 	}
 
 	private void removeVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance, final VnfCompute x, final VduInstantiationLevel scaleLevel, final int number) {
-		final Deque<VnfInstantiedCompute> instantied = vnfInstanceService.getLiveComputeInstanceOf(vnfInstance, x);
+		final Deque<VnfInstantiatedCompute> instantiated = vnfInstanceService.getLiveComputeInstanceOf(vnfInstance, x);
 		for (int i = 0; i < number; i++) {
-			final VnfInstantiedCompute affectedCompute = new VnfInstantiedCompute();
-			affectedCompute.setChangeType(ChangeType.REMOVED);
-			affectedCompute.setStatus(InstantiationStatusType.NOT_STARTED);
-			affectedCompute.setVduId(x.getId());
-			final VnfInstantiedCompute poped = instantied.pop();
-			affectedCompute.setRemovedInstantiated(poped.getId());
-			affectedCompute.setResourceId(poped.getResourceId());
-			affectedCompute.setInstantiationLevel(scaleLevel);
-			affectedCompute.setVnfLcmOpOccs(lcmOpOccs);
-			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
+			final VnfInstantiatedCompute instantiatedCompute = new VnfInstantiatedCompute();
+			instantiatedCompute.setChangeType(ChangeType.REMOVED);
+			instantiatedCompute.setStatus(InstantiationStatusType.NOT_STARTED);
+			instantiatedCompute.setVduId(x.getId());
+			final VnfInstantiatedCompute poped = instantiated.pop();
+			instantiatedCompute.setRemovedInstantiated(poped.getId());
+			instantiatedCompute.setResourceId(poped.getResourceId());
+			instantiatedCompute.setInstantiationLevel(scaleLevel);
+			instantiatedCompute.setVnfLcmOpOccs(lcmOpOccs);
+			lcmOpOccs.getResourceChanges().addAffectedVnfcs(instantiatedCompute);
 			x.getStorages().forEach(y -> {
 				// XXX Delete Storage, but we need a vdu.
 			});
@@ -342,39 +342,39 @@ public class ExecutionPlanner {
 	}
 
 	public void terminatePlan(final VnfLcmOpOccs lcmOpOccs) {
-		final List<VnfInstantiedCompute> instantiedCompute = vnfInstanceService.getLiveComputeInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiedCompute.forEach(x -> {
-			final VnfInstantiedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiedCompute(), lcmOpOccs);
+		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstanceService.getLiveComputeInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiatedCompute.forEach(x -> {
+			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
 			affectedCompute.setVnfCompute(x.getVnfCompute());
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
 		});
-		final List<VnfInstantiedExtCp> instantiedExtCps = vnfInstanceService.getLiveExtCpInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiedExtCps.forEach(x -> {
-			final VnfInstantiedExtCp affectedCompute = copyInstantiedResource(x, new VnfInstantiedExtCp(), lcmOpOccs);
+		final List<VnfInstantiatedExtCp> instantiatedExtCps = vnfInstanceService.getLiveExtCpInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiatedExtCps.forEach(x -> {
+			final VnfInstantiatedExtCp affectedCompute = copyInstantiedResource(x, new VnfInstantiatedExtCp(), lcmOpOccs);
 			affectedCompute.setVnfExtCp(x.getVnfExtCp());
 			lcmOpOccs.getResourceChanges().addAffectedExtCp(affectedCompute);
 		});
-		final List<VnfInstantiedStorage> instantiedStorages = vnfInstanceService.getLiveStorageInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiedStorages.forEach(x -> {
-			final VnfInstantiedStorage affectedStorage = copyInstantiedResource(x, new VnfInstantiedStorage(), lcmOpOccs);
+		final List<VnfInstantiatedStorage> instantiatedStorages = vnfInstanceService.getLiveStorageInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiatedStorages.forEach(x -> {
+			final VnfInstantiatedStorage affectedStorage = copyInstantiedResource(x, new VnfInstantiatedStorage(), lcmOpOccs);
 			affectedStorage.setVnfVirtualStorage(x.getVnfVirtualStorage());
 			lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(affectedStorage);
 		});
-		final List<VnfInstantiedVirtualLink> instantiedVirtualLinks = vnfInstanceService.getLiveVirtualLinkInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiedVirtualLinks.forEach(x -> {
-			final VnfInstantiedVirtualLink affectedVirtualLink = copyInstantiedResource(x, new VnfInstantiedVirtualLink(), lcmOpOccs);
+		final List<VnfInstantiatedVirtualLink> instantiatedVirtualLinks = vnfInstanceService.getLiveVirtualLinkInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiatedVirtualLinks.forEach(x -> {
+			final VnfInstantiatedVirtualLink affectedVirtualLink = copyInstantiedResource(x, new VnfInstantiatedVirtualLink(), lcmOpOccs);
 			affectedVirtualLink.setVnfVirtualLink(x.getVnfVirtualLink());
 			lcmOpOccs.getResourceChanges().addAffectedVirtualLink(affectedVirtualLink);
 		});
 	}
 
-	private static <T extends VnfInstantiatedBase> T copyInstantiedResource(final VnfInstantiatedBase source, final T instantied, final VnfLcmOpOccs lcmOpOccs) {
-		instantied.setChangeType(ChangeType.REMOVED);
-		instantied.setStatus(InstantiationStatusType.STARTED);
-		instantied.setVduId(source.getVduId());
-		instantied.setRemovedInstantiated(source.getId());
-		instantied.setResourceId(source.getResourceId());
-		instantied.setVnfLcmOpOccs(lcmOpOccs);
-		return instantied;
+	private static <T extends VnfInstantiatedBase> T copyInstantiedResource(final VnfInstantiatedBase source, final T inst, final VnfLcmOpOccs lcmOpOccs) {
+		inst.setChangeType(ChangeType.REMOVED);
+		inst.setStatus(InstantiationStatusType.STARTED);
+		inst.setVduId(source.getVduId());
+		inst.setRemovedInstantiated(source.getId());
+		inst.setResourceId(source.getResourceId());
+		inst.setVnfLcmOpOccs(lcmOpOccs);
+		return inst;
 	}
 }

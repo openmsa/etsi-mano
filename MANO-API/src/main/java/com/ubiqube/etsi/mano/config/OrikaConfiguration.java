@@ -13,7 +13,7 @@ import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -152,7 +152,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				// .field("vnfStorage", "instantiatedVnfInfo.virtualStorageResourceInfo")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiedCompute.class)
+		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiatedCompute.class)
 				.field("id", "vduId")
 				// Don't save this one.field("id", "computeResource.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")

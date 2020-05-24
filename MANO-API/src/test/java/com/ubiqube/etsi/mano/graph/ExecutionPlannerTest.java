@@ -20,7 +20,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -65,7 +65,7 @@ public class ExecutionPlannerTest {
 		final VnfLcmOpOccs lcmOpOccs = new VnfLcmOpOccs();
 		executionPlanner.makePrePlan("demo", vnfPakage, null, lcmOpOccs);
 		assertEquals(1, lcmOpOccs.getResourceChanges().getAffectedVnfcs().size());
-		final VnfInstantiedCompute affec = lcmOpOccs.getResourceChanges().getAffectedVnfcs().iterator().next();
+		final VnfInstantiatedCompute affec = lcmOpOccs.getResourceChanges().getAffectedVnfcs().iterator().next();
 		assertEquals(ChangeType.ADDED, affec.getChangeType());
 		assertEquals(id, affec.getVduId());
 	}
@@ -94,9 +94,9 @@ public class ExecutionPlannerTest {
 		aspectDelta.setNumberOfInstances(1);
 		res.add(aspectDelta);
 		vnfPakage.setVnfStorage(new HashSet<VnfStorage>());
-		final Deque<VnfInstantiedCompute> instantied = new ArrayDeque<>();
-		instantied.add(new VnfInstantiedCompute());
-		instantied.add(new VnfInstantiedCompute());
+		final Deque<VnfInstantiatedCompute> instantied = new ArrayDeque<>();
+		instantied.add(new VnfInstantiatedCompute());
+		instantied.add(new VnfInstantiatedCompute());
 
 		when(vnfPackageService.findAspectDeltaByAspectId(vnfCompute, "demo")).thenReturn(res);
 		when(vnfInstanceService.getNumberOfLiveInstance(null, vnfCompute)).thenReturn(2);
@@ -104,7 +104,7 @@ public class ExecutionPlannerTest {
 		final VnfLcmOpOccs lcmOpOccs = new VnfLcmOpOccs();
 		executionPlanner.makePrePlan("demo", vnfPakage, null, lcmOpOccs);
 		assertEquals(1, lcmOpOccs.getResourceChanges().getAffectedVnfcs().size());
-		final VnfInstantiedCompute affec = lcmOpOccs.getResourceChanges().getAffectedVnfcs().iterator().next();
+		final VnfInstantiatedCompute affec = lcmOpOccs.getResourceChanges().getAffectedVnfcs().iterator().next();
 		assertEquals(ChangeType.REMOVED, affec.getChangeType());
 		assertEquals(id, affec.getVduId());
 	}

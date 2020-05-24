@@ -54,8 +54,8 @@ import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
@@ -235,7 +235,7 @@ public class OpenStackVim implements Vim {
 			if (x instanceof VirtualLinkUow) {
 				LOG.debug("Found VL: {}", x.getName());
 				final VirtualLinkUow vlu = (VirtualLinkUow) x;
-				final VnfInstantiedCompute vnfInstantiedCompute = new VnfInstantiedCompute();
+				final VnfInstantiatedCompute vnfInstantiedCompute = new VnfInstantiatedCompute();
 				// XXX There is a big question here, we don"t have access to mano internal.
 				final NoopUow noop = new NoopUow(vnfInstantiedCompute);
 				g.addVertex(noop);
@@ -244,7 +244,7 @@ public class OpenStackVim implements Vim {
 				g.removeAllEdges(new ArrayList<>(out));
 				final VlProtocolData vnfVl = vlu.getVlProtocolData();
 				vnfVl.getIpAllocationPools().forEach(y -> {
-					final OsSubnetworkUow subUow = new OsSubnetworkUow(new VnfInstantiedVirtualLink(), vnfVl, y, x.getToscaName());
+					final OsSubnetworkUow subUow = new OsSubnetworkUow(new VnfInstantiatedVirtualLink(), vnfVl, y, x.getToscaName());
 					vertexPool.add(subUow);
 					g.addVertex(subUow);
 					g.addEdge(x, subUow);

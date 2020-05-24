@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfExtCpUow extends AbstractUnitOfWork {
@@ -12,9 +12,9 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	private final VnfExtCp extCp;
-	private final VnfInstantiedExtCp vnfInstantiedExtCp;
+	private final VnfInstantiatedExtCp vnfInstantiedExtCp;
 
-	public VnfExtCpUow(final VnfInstantiedExtCp x, final VnfExtCp _extCp) {
+	public VnfExtCpUow(final VnfInstantiatedExtCp x, final VnfExtCp _extCp) {
 		super(x, _extCp.getToscaName());
 		extCp = _extCp;
 		vnfInstantiedExtCp = x;

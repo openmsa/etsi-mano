@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -30,7 +30,7 @@ public class VnfComputeTest {
 	void testVnfc2VnfInstantiedCompute() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfCompute avcDb = podam.manufacturePojo(VnfCompute.class);
-		final VnfInstantiedCompute avc = mapper.map(avcDb, VnfInstantiedCompute.class);
+		final VnfInstantiatedCompute avc = mapper.map(avcDb, VnfInstantiatedCompute.class);
 		assertNull(avc.getId());
 		assertEquals(avcDb.getId(), avc.getVduId());
 		assertEquals(avcDb.getStorages().size(), avc.getStorageResourceIds().size());

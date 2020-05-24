@@ -5,14 +5,14 @@ import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class NoopUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NoopUow(final VnfInstantiedCompute vnfInstantiedCompute) {
+	public NoopUow(final VnfInstantiatedCompute vnfInstantiedCompute) {
 		super(vnfInstantiedCompute, RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
 	}
 

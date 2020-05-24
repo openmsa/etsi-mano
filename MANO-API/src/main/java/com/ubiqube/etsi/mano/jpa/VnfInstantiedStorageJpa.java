@@ -6,10 +6,10 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 
-public interface VnfInstantiedStorageJpa extends CrudRepository<VnfInstantiedStorage, UUID> {
+public interface VnfInstantiedStorageJpa extends CrudRepository<VnfInstantiatedStorage, UUID> {
 
-	List<VnfInstantiedStorage> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
+	List<VnfInstantiatedStorage> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
 
 }

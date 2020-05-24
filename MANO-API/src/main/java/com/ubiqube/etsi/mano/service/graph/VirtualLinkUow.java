@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VirtualLinkUow extends AbstractUnitOfWork {
@@ -14,9 +14,9 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	private final VlProtocolData vlProtocolData;
 	private final String name;
-	private final VnfInstantiedVirtualLink vnfInstantiedVirtualLink;
+	private final VnfInstantiatedVirtualLink vnfInstantiedVirtualLink;
 
-	public VirtualLinkUow(final VnfInstantiedVirtualLink _vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name) {
+	public VirtualLinkUow(final VnfInstantiatedVirtualLink _vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name) {
 		super(_vnfInstantiedVirtualLink, _name);
 		vlProtocolData = _vlProtocolData;
 		name = _name;

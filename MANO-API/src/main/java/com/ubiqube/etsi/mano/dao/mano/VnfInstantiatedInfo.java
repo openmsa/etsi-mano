@@ -45,7 +45,7 @@ public class VnfInstantiatedInfo implements Serializable {
 	private String localizationLanguage = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<VnfInstantiedCompute> vnfcResourceInfo = null;
+	private Set<VnfInstantiatedCompute> vnfcResourceInfo = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
@@ -53,7 +53,7 @@ public class VnfInstantiatedInfo implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<VnfInstantiedStorage> virtualStorageResourceInfo = null;
+	private Set<VnfInstantiatedStorage> virtualStorageResourceInfo = null;
 
 	private String instantiationLevelId = null;
 
@@ -121,11 +121,11 @@ public class VnfInstantiatedInfo implements Serializable {
 		this.localizationLanguage = localizationLanguage;
 	}
 
-	public Set<VnfInstantiedCompute> getVnfcResourceInfo() {
+	public Set<VnfInstantiatedCompute> getVnfcResourceInfo() {
 		return vnfcResourceInfo;
 	}
 
-	public void setVnfcResourceInfo(final Set<VnfInstantiedCompute> vnfcResourceInfo) {
+	public void setVnfcResourceInfo(final Set<VnfInstantiatedCompute> vnfcResourceInfo) {
 		this.vnfcResourceInfo = vnfcResourceInfo;
 	}
 
@@ -137,22 +137,22 @@ public class VnfInstantiatedInfo implements Serializable {
 		this.virtualLinkResourceInfo = virtualLinkResourceInfo;
 	}
 
-	public Set<VnfInstantiedStorage> getVirtualStorageResourceInfo() {
+	public Set<VnfInstantiatedStorage> getVirtualStorageResourceInfo() {
 		return virtualStorageResourceInfo;
 	}
 
-	public void setVirtualStorageResourceInfo(final Set<VnfInstantiedStorage> virtualStorageResourceInfo) {
+	public void setVirtualStorageResourceInfo(final Set<VnfInstantiatedStorage> virtualStorageResourceInfo) {
 		this.virtualStorageResourceInfo = virtualStorageResourceInfo;
 	}
 
-	public void addVirtualStorageResourceInfoItem(final VnfInstantiedStorage vStorage) {
+	public void addVirtualStorageResourceInfoItem(final VnfInstantiatedStorage vStorage) {
 		if (null == virtualStorageResourceInfo) {
 			virtualStorageResourceInfo = new HashSet<>();
 		}
 		virtualStorageResourceInfo.add(vStorage);
 	}
 
-	public void addVnfcResourceInfoItem(final VnfInstantiedCompute compute) {
+	public void addVnfcResourceInfoItem(final VnfInstantiatedCompute compute) {
 		if (null == vnfcResourceInfo) {
 			vnfcResourceInfo = new HashSet<>();
 		}

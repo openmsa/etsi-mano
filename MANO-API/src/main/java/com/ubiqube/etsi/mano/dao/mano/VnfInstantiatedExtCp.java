@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfInstantiedExtCp extends VnfInstantiatedBase {
+public class VnfInstantiatedExtCp extends VnfInstantiatedBase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;

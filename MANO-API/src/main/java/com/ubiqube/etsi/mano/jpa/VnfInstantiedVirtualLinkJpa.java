@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 
-public interface VnfInstantiedVirtualLinkJpa extends CrudRepository<VnfInstantiedVirtualLink, UUID> {
+public interface VnfInstantiedVirtualLinkJpa extends CrudRepository<VnfInstantiatedVirtualLink, UUID> {
 
-	List<VnfInstantiedVirtualLink> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
+	List<VnfInstantiatedVirtualLink> findAllByVnfLcmOpOccs_VnfInstance(VnfInstance vnfInstance);
 }

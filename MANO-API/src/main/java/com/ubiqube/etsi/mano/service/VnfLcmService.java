@@ -8,9 +8,9 @@ import javax.annotation.Nonnull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -82,15 +82,15 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
-	public Optional<VnfInstantiedCompute> getInstatiedComputeById(final UUID id) {
+	public Optional<VnfInstantiatedCompute> getInstatiedComputeById(final UUID id) {
 		return vnfInstantiedComputeJpa.findById(id);
 	}
 
-	public Optional<VnfInstantiedVirtualLink> getInstatiedVirtualLinkById(final UUID id) {
+	public Optional<VnfInstantiatedVirtualLink> getInstatiedVirtualLinkById(final UUID id) {
 		return vnfInstantiedVirtualLinkJpa.findById(id);
 	}
 
-	public Optional<VnfInstantiedExtCp> getInstatiedExtCpById(final UUID id) {
+	public Optional<VnfInstantiatedExtCp> getInstatiedExtCpById(final UUID id) {
 		return vnfInstantiedExtCpJpa.findById(id);
 	}
 }

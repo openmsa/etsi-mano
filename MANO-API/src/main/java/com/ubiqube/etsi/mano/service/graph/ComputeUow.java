@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class ComputeUow extends AbstractUnitOfWork {
@@ -15,9 +15,9 @@ public class ComputeUow extends AbstractUnitOfWork {
 
 	private final VnfCompute vnfCompute;
 
-	private final VnfInstantiedCompute vnfInstantiedCompute;
+	private final VnfInstantiatedCompute vnfInstantiedCompute;
 
-	public ComputeUow(final VnfInstantiedCompute _vnfInstantiedCompute, final VnfCompute _vnfCompute) {
+	public ComputeUow(final VnfInstantiatedCompute _vnfInstantiedCompute, final VnfCompute _vnfCompute) {
 		super(_vnfInstantiedCompute, _vnfCompute.getToscaName());
 		vnfInstantiedCompute = _vnfInstantiedCompute;
 		vnfCompute = _vnfCompute;

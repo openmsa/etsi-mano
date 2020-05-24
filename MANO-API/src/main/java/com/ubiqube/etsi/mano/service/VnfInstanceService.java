@@ -11,10 +11,10 @@ import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
@@ -59,7 +59,7 @@ public class VnfInstanceService {
 		return vnfInstantiedComputeJpa.countByVnfLcmOpOccsVnfInstanceAndVduId(vnfInstance, vnfCompute.getId());
 	}
 
-	public Deque<VnfInstantiedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
+	public Deque<VnfInstantiatedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
 		// XXX maybe we have a sort problem.
 		return vnfInstantiedComputeJpa.findByVnfLcmOpOccsVnfInstanceAndVduId(vnfInstance, vnfCompute.getId()).stream().collect(Collectors.toCollection(ArrayDeque::new));
 	}
@@ -74,19 +74,19 @@ public class VnfInstanceService {
 		return 0;
 	}
 
-	public VnfInstantiedCompute save(final VnfInstantiedCompute vnfInstantiedCompute) {
+	public VnfInstantiatedCompute save(final VnfInstantiatedCompute vnfInstantiedCompute) {
 		return vnfInstantiedComputeJpa.save(vnfInstantiedCompute);
 	}
 
-	public VnfInstantiedVirtualLink save(final VnfInstantiedVirtualLink vnfInstantiedVirtualLink) {
+	public VnfInstantiatedVirtualLink save(final VnfInstantiatedVirtualLink vnfInstantiedVirtualLink) {
 		return vnfInstantiedVirtualLinkJpa.save(vnfInstantiedVirtualLink);
 	}
 
-	public VnfInstantiedExtCp save(final VnfInstantiedExtCp vnfInstantiedExtCp) {
+	public VnfInstantiatedExtCp save(final VnfInstantiatedExtCp vnfInstantiedExtCp) {
 		return vnfInstantiedExtCpJpa.save(vnfInstantiedExtCp);
 	}
 
-	public VnfInstantiedStorage save(final VnfInstantiedStorage vs) {
+	public VnfInstantiatedStorage save(final VnfInstantiatedStorage vs) {
 		return vnfInstantiedStorageJpa.save(vs);
 	}
 
@@ -95,19 +95,19 @@ public class VnfInstanceService {
 		return 0;
 	}
 
-	public List<VnfInstantiedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance) {
+	public List<VnfInstantiatedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedComputeJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
 	}
 
-	public List<VnfInstantiedExtCp> getLiveExtCpInstanceOf(final VnfInstance vnfInstance) {
+	public List<VnfInstantiatedExtCp> getLiveExtCpInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedExtCpJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
 	}
 
-	public List<VnfInstantiedStorage> getLiveStorageInstanceOf(final VnfInstance vnfInstance) {
+	public List<VnfInstantiatedStorage> getLiveStorageInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedStorageJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
 	}
 
-	public List<VnfInstantiedVirtualLink> getLiveVirtualLinkInstanceOf(final VnfInstance vnfInstance) {
+	public List<VnfInstantiatedVirtualLink> getLiveVirtualLinkInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedVirtualLinkJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
 	}
 
