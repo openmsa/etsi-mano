@@ -36,38 +36,6 @@ topology_template:
         - virtual_link: public
 
 
-    leftVdu_params:
-      type: tosca.nodes.nfv.Vdu.Compute
-      name: name
-      description: A node.
-      properties:
-        sw_image_data:
-          name: { get_input: VL1_name}
-          version: { get_input: VL1_name}
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: { get_input: VL1_name}
-          min_disk: { get_input: param_size}
-          min_ram: { get_input: param_size}
-          operating_system: { get_input: VL1_name}
-        monitoring_parameters:
-          - name: { get_input: VL1_name}
-            performance_metric: { get_input: VL1_name}
-        vdu_profile:
-          min_number_of_instances: { get_input: param_int}
-          max_number_of_instances: { get_input: param_int}
-      capabilities:
-        virtual_compute:
-          properties:
-            virtual_memory:
-              properties:
-                virtual_mem_size: { get_input: param_size}
-            virtual_cpu:
-              properties:
-                cpu_architecture: { get_input: VL1_name}
-                num_virtual_cpu: { get_input: param_int}
 
 
 
