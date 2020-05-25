@@ -50,7 +50,24 @@ topology_template:
 
 
   sap01:
-    type:
+    type: tosca.nodes.nfv.Sap
+    properties:
+      layer_protocols:
+        - ipv4
+      role: root
+      description: Description.
+      protocol: # tosca.datatypes.nfv.CpProtocolData
+        - associated_layer_protocol: mpls
+          address_data: # tosca.datatypes.nfv.AddressData
+            address_type: ip_address
+            l2_address_data: # tosca.datatypes.nfv.L2AddressData
+              mac_address_assignment: 00:11:22:33:44:55
+            l3_address_data: # tosca.datatypes.nfv.L3AddressData
+              ip_address_assignment: true
+              floating_ip_activated: true
+              ip_address_type: ipv4
+              number_of_ip_address: 10
+      trunk_mode: false
     requirements:
       - external_virtual_link:
       - internal_virtual_link: # Must be defined
