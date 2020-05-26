@@ -32,8 +32,10 @@ import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
+import com.ubiqube.parser.tosca.convert.FrequencyConverter;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.convert.TimeConverter;
+import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Size;
 import com.ubiqube.parser.tosca.scalar.Time;
 
@@ -55,6 +57,7 @@ public class ContextResolver {
 		conv.register(Time.class.getCanonicalName(), new TimeConverter());
 		conv.register(Double.class.getCanonicalName(), new FloatConverter());
 		conv.register(Float.class.getCanonicalName(), new FloatConverter());
+		conv.register(Frequency.class.getCanonicalName(), new FrequencyConverter());
 	}
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
