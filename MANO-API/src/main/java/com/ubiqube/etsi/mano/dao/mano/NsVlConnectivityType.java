@@ -3,9 +3,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +22,7 @@ public class NsVlConnectivityType implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> layerProtocols;
 
 	private String flowPattern;

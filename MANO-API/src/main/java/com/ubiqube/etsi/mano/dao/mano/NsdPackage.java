@@ -56,7 +56,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Field
 	private String nsdInvariantId;
 
-	private int instantiationLevel;
+	private String instantiationLevel;
 
 	private int minNumberOfInstance;
 
@@ -226,11 +226,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.userDefinedData = userDefinedData;
 	}
 
-	public int getInstantiationLevel() {
+	public String getInstantiationLevel() {
 		return instantiationLevel;
 	}
 
-	public void setInstantiationLevel(final int instantiationLevel) {
+	public void setInstantiationLevel(final String instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
 	}
 
