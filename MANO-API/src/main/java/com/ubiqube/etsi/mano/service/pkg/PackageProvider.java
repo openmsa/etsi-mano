@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -61,5 +63,17 @@ public interface PackageProvider {
 
 	@Nonnull
 	List<VduScalingAspectDeltas> getVduScalingAspectDeltas(Map<String, String> parameters);
+
+	@Nonnull
+	NsInformations getNsInformations(Map<String, String> userData);
+
+	@Nonnull
+	Set<NsVirtualLink> getNsVirtualLink(Map<String, String> userData);
+
+	@Nonnull
+	Set<NsSap> getNsSap(Map<String, String> userData);
+
+	@Nonnull
+	Set<SecurityGroupAdapter> getSecurityGroups(Map<String, String> userData);
 
 }

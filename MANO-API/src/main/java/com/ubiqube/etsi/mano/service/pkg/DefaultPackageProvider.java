@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -94,6 +96,30 @@ public class DefaultPackageProvider implements PackageProvider {
 	@Override
 	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
 		return new ArrayList<>();
+	}
+
+	@Override
+	public NsInformations getNsInformations(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<NsSap> getNsSap(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

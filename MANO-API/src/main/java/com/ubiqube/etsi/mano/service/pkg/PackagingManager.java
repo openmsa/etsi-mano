@@ -8,12 +8,14 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
@@ -35,9 +40,12 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
+import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
@@ -64,13 +72,19 @@ public class PackagingManager {
 
 	private final VnfPackageJpa vnfPackageJpa;
 
-	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper, final VnfPackageJpa _vnfPackageJpa) {
+	private final NsdRepository nsdRepository;
+
+	private final NsdPackageJpa nsdPackageJpa;
+
+	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper, final VnfPackageJpa _vnfPackageJpa, final NsdRepository _nsdRepository, final NsdPackageJpa _nsdPackageJpa) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
 		mapper = _mapper;
 		vnfPackageJpa = _vnfPackageJpa;
+		nsdRepository = _nsdRepository;
+		nsdPackageJpa = _nsdPackageJpa;
 	}
 
 	public void vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
@@ -241,6 +255,29 @@ public class PackagingManager {
 	private void startOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(PackageOnboardingStateType.PROCESSING);
 		vnfPackageJpa.save(vnfPackage);
+	}
+
+	public void nsOnboarding(@NotNull final UUID objectId) {
+		final NsdPackage nsPackage = nsdPackageJpa.findById(objectId).orElseThrow(() -> new NotFoundException("NS Package " + objectId + " Not found."));
+		final Map<String, String> userData = nsPackage.getUserDefinedData();
+		final byte[] data = nsdRepository.getBinary(objectId, "nsd");
+		final PackageProvider packageProvider = packageManager.getProviderFor(data);
+		if (null != packageProvider) {
+			final NsInformations nsInformations = packageProvider.getNsInformations(userData);
+			mapper.map(nsInformations, nsPackage);
+			final Set<NsSap> nsSap = packageProvider.getNsSap(userData);
+			nsPackage.setNsSaps(nsSap);
+			final Set<NsVirtualLink> nsVirtualLink = packageProvider.getNsVirtualLink(userData);
+			nsPackage.setNsVirtualLinks(nsVirtualLink);
+			final Set<SecurityGroupAdapter> sgAdapters = packageProvider.getSecurityGroups(userData);
+			sgAdapters.forEach(x -> nsPackage.getNsSaps().stream()
+					.filter(y -> x.getTargets().contains(y.getToscaName()))
+					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
+		}
+		nsPackage.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
+		nsPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
+		nsdPackageJpa.save(nsPackage);
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());
 	}
 
 }
