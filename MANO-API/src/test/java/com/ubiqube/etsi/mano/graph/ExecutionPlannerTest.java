@@ -19,13 +19,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
+import com.ubiqube.etsi.mano.service.graph.DefaultVduNamingStrategy;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +39,7 @@ public class ExecutionPlannerTest {
 	@Test
 	void testName() throws Exception {
 
-		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService);
+		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy());
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
 		final VnfInstantiationLevels inst = new VnfInstantiationLevels();
@@ -72,7 +73,7 @@ public class ExecutionPlannerTest {
 
 	@Test
 	void testRemove() throws Exception {
-		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService);
+		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy());
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
 		final VnfInstantiationLevels inst = new VnfInstantiationLevels();

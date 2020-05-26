@@ -18,7 +18,6 @@ import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
@@ -120,9 +119,6 @@ public class VnfInstanceTest {
 
 		final Set<ExtVirtualLinkDataEntity> extVirtualLinkInfo = new HashSet<>();
 		final VirtualLinkInfo vlii = new VirtualLinkInfo();
-		final ResourceHandleEntity networkResource = new ResourceHandleEntity();
-		networkResource.setResourceId("eeeee");
-		vlii.setNetworkResource(networkResource);
 		extManagedVirtualLinkInfo.add(vlii);
 		final ExtVirtualLinkDataEntity extVirtualLinkDataEntity = new ExtVirtualLinkDataEntity();
 		extVirtualLinkDataEntity.setResourceId("zzzzz");

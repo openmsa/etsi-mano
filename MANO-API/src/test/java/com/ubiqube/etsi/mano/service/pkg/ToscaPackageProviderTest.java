@@ -112,4 +112,5 @@ public class ToscaPackageProviderTest {
 		final List<VduScalingAspectDeltas> list = tpp.getVduScalingAspectDeltas(new HashMap<String, String>());
 		System.out.println("" + list);
 	}
+
 }
