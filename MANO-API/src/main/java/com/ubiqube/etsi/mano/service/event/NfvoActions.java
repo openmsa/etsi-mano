@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -37,8 +38,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
@@ -54,7 +53,6 @@ import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimImage;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mano.service.vim.VimStatus;
 
 @Service
 public class NfvoActions {
@@ -96,13 +94,13 @@ public class NfvoActions {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
-		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
+		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Delete VNF
-		final List<String> vnfs = nsdInfo.getVnfPkgIds();
+		final Set<VnfPackage> vnfs = nsdInfo.getVnfPkgIds();
 		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
 		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
-		for (final String vnfId : vnfs) {
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId);
+		for (final VnfPackage vnfId : vnfs) {
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId.getId());
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		waitForCompletion(vnfLcmOpOccsIds);
@@ -116,8 +114,8 @@ public class NfvoActions {
 		}
 		// Release the NS.
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
-		final String processId = vim.onNsInstanceTerminate(nsInstance.getProcessId(), nsdInfo.getUserDefinedData());
-		vim.waitForCompletion(processId, 5 * 60);
+		// final String processId = vim.onNsInstanceTerminate(nsInstance.getProcessId(),
+		// nsdInfo.getUserDefinedData());
 
 		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
 	}
@@ -142,36 +140,28 @@ public class NfvoActions {
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
 
-		final NsdInfo nsdInfo = nsdRepository.get(nsdId);
-		final VimConnectionInformation vimInfo = electVim((String) nsdInfo.getUserDefinedData().get("vimId"), null);
-		final Vim vim = vimManager.getVimById(vimInfo.getId());
+		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
+		// final VimConnectionInformation vimInfo = electVim((String)
+		// nsdInfo.getUserDefinedData().get("vimId"), null);
+		final Vim vim = null; // vimManager.getVimById(vimInfo.getId());
 		// Create Ns.
-		final Map<String, Object> userData = nsdInfo.getUserDefinedData();
-		final String processId = vim.onNsInstantiate(nsdId, userData);
-		LOG.info("Creating a MSA Job: {}", processId);
+		final Map<String, String> userData = nsdInfo.getUserDefinedData();
+		// final String processId = vim.onNsInstantiate(nsdId, userData);
 		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
-		nsLcmOpOccsRepository.attachProcessIdToLcmOpOccs(UUID.fromString(lcmOpOccs.getId()), processId);
-		final VimStatus status = vim.waitForCompletion(processId, 1 * 60);
-		if (status.getLcmOperationStateType() != LcmOperationStateType.COMPLETED) {
-			// update Lcm OpOccs
-			// send Notification.
-			LOG.warn("Instance #{} => {}", nsInstance.getId(), status);
-			return;
-		}
-		nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);
+		// nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);
 		// Instantiate each VNF.
-		final List<String> vnfPkgIds = nsdInfo.getVnfPkgIds();
+		final Set<VnfPackage> vnfPkgIds = nsdInfo.getVnfPkgIds();
 		final List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
-		for (final String vnfId : vnfPkgIds) {
+		for (final VnfPackage vnfId : vnfPkgIds) {
 			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
 			if (null == nsVnfInstance) {
-				final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfId));
+				final VnfPackage vnfPackage = vnfPackageRepository.get(vnfId.getId());
 				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPackage, "", "Sub-instance " + nsInstanceId);
 				nsVnfInstance = VnfInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, "vimId?");
 				nsInstance.getVnfInstance().add(nsVnfInstance);
 				nsInstanceRepository.save(nsInstance);
 			}
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId(), vnfId);
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId(), vnfId.getId());
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		// Link VNF lcm OP OCCS to this operation.

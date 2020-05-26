@@ -9,10 +9,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -27,21 +29,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
-import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfoLinks;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 import io.swagger.annotations.Api;
+import ma.glasnost.orika.MapperFacade;
 
 /**
  * SOL005 - NSD Management Interface
@@ -65,11 +69,15 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	private final NsdRepository nsdRepository;
 	private final Patcher patcher;
 	private final VnfPackageRepository vnfPackageRepository;
+	private final EventManager eventManager;
+	private final MapperFacade mapper;
 
-	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository, final Patcher _patcher) {
+	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository, final Patcher _patcher, final EventManager _eventManager, final MapperFacade _mapper) {
 		nsdRepository = _nsdRepository;
 		vnfPackageRepository = _vnfPackageRepository;
 		patcher = _patcher;
+		eventManager = _eventManager;
+		mapper = _mapper;
 		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
@@ -84,13 +92,16 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsDescriptorsGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsdInfo> nsds = nsdRepository.query(filter);
+		final List<NsdPackage> nsds = nsdRepository.query(filter);
 
-		nsds.forEach(x -> x.setLinks(makeLinks(x.getId())));
+		final List<NsdInfo> list = nsds.stream()
+				.map(x -> mapper.map(x, NsdInfo.class))
+				.collect(Collectors.toList());
+		list.forEach(x -> x.setLinks(makeLinks(x.getId())));
 
-		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		final ObjectMapper lmapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(nsds), HttpStatus.OK);
+			return new ResponseEntity<>(lmapper.writeValueAsString(list), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -109,9 +120,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(final String nsdInfoId) {
 		final UUID nsdInfoUuid = UUID.fromString(nsdInfoId);
-		final NsdInfo nsdInfo = nsdRepository.get(nsdInfoUuid);
-		ensureDisabled(nsdInfo);
-		ensureNotInUse(nsdInfo);
+		final NsdPackage nsdPackage = nsdRepository.get(nsdInfoUuid);
+		ensureDisabled(nsdPackage);
+		ensureNotInUse(nsdPackage);
 
 		nsdRepository.delete(nsdInfoUuid);
 		// NsdDeletionNotification OSS/BSS
@@ -129,8 +140,8 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId, final String accept) {
-		final NsdInfo nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
-
+		final NsdPackage nsdPackage = nsdRepository.get(UUID.fromString(nsdInfoId));
+		final NsdInfo nsdInfo = mapper.map(nsdPackage, NsdInfo.class);
 		nsdInfo.setLinks(makeLinks(nsdInfoId));
 		return new ResponseEntity<>(nsdInfo, HttpStatus.OK);
 	}
@@ -160,7 +171,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
-		final NsdInfo nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
+		final NsdPackage nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
 		ensureIsOnboarded(nsdInfo);
 		final byte[] bytes = nsdRepository.getBinary(UUID.fromString(nsdInfoId), "nsd");
 		return SpringUtil.handleBytes(bytes, range);
@@ -187,7 +198,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
-		final NsdInfo nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
+		final NsdPackage nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
 		ensureNotOnboarded(nsdInfo);
 		try {
 			// Must be Async.
@@ -196,11 +207,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 			throw new GenericException(e);
 		}
 
-		nsdInfo.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
-		nsdInfo.setNsdOperationalState(NsdOperationalStateType.ENABLED);
-		nsdRepository.save(nsdInfo);
-		nsdInfo.setLinks(makeLinks(nsdInfoId));
-		// NsdOnBoardingNotification to OSS/BSS
+		eventManager.sendAction(ActionType.NSD_PKG_ONBOARD_FROM_BYTES, nsdInfo.getId(), new HashMap<>());
 		return ResponseEntity.accepted().build();
 	}
 
@@ -222,12 +229,13 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final String body, final String contentType) {
-		final NsdInfo nsdPkgInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
+		NsdPackage nsdPkgInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
 		patcher.patch(body, nsdPkgInfo);
-		nsdRepository.save(nsdPkgInfo);
-		nsdPkgInfo.setLinks(makeLinks(nsdInfoId));
+		nsdPkgInfo = nsdRepository.save(nsdPkgInfo);
+		final NsdInfo ret = mapper.map(nsdPkgInfo, NsdInfo.class);
+		ret.setLinks(makeLinks(nsdInfoId));
 		// NsdChangeNotification OSS/BSS
-		return new ResponseEntity<>(nsdPkgInfo, HttpStatus.OK);
+		return new ResponseEntity<>(ret, HttpStatus.OK);
 	}
 
 	/**
@@ -239,10 +247,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String accept, final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) {
-		final NsdInfo nsdDescriptor = NsdFactories.createNsdInfo();
+		NsdInfo nsdDescriptor = NsdFactories.createNsdInfo();
 		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
 		nsdDescriptor.setUserDefinedData(userDefinedData);
-		nsdDescriptor.setNsdName((String) userDefinedData.get("name"));
 		final List<String> vnfPkgIds = Optional.ofNullable((List<String>) userDefinedData.get("vnfPkgIds")).orElse(new ArrayList<String>());
 		// Verify if VNF Package exists.
 		vnfPkgIds.stream().forEach(x -> vnfPackageRepository.get(UUID.fromString(x)));
@@ -252,16 +259,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final List<String> pnfPkgIds = (List<String>) userDefinedData.get("pnfPkgIds");
 		// TODO: verify PNF ids.
 		nsdDescriptor.setPnfdInfoIds(pnfPkgIds);
-		final Object heatDoc = userDefinedData.remove("heat");
-		nsdRepository.save(nsdDescriptor);
-
-		// TODO Remove.
-		if (null != heatDoc) {
-			nsdRepository.storeObject(UUID.fromString(nsdDescriptor.getId()), "nsd", heatDoc);
-			nsdDescriptor.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
-			nsdDescriptor.setNsdOperationalState(NsdOperationalStateType.ENABLED);
-			nsdRepository.save(nsdDescriptor);
-		}
+		NsdPackage nsdPackage = mapper.map(nsdDescriptor, NsdPackage.class);
+		nsdPackage = nsdRepository.save(nsdPackage);
+		nsdDescriptor = mapper.map(nsdPackage, NsdInfo.class);
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
 		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
 	}

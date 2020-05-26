@@ -10,6 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -32,8 +34,6 @@ import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.HealNsRequest;
@@ -45,6 +45,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.ScaleNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.TerminateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.UpdateNsRequest;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -247,22 +248,22 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
 		}
-		final NsdInfo nsd = nsdRepository.get(UUID.fromString(req.getNsdId()));
+		final NsdPackage nsd = nsdRepository.get(UUID.fromString(req.getNsdId()));
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
-		nsd.setNsdUsageState(NsdUsageStateType.IN_USE);
+		nsd.setNsdUsageState(PackageUsageStateType.IN_USE);
 		nsdRepository.save(nsd);
 
 		final NsdInstance nsInstance = NsInstanceFactory.createNsInstancesNsInstance(req, nsd);
 		nsInstanceRepository.save(nsInstance);
 
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
-		final List<String> vnfs = nsd.getVnfPkgIds();
-		for (final String id : vnfs) {
-			final VnfPackage vnf = vnfPackageRepository.get(UUID.fromString(id));
+		final Set<VnfPackage> vnfs = nsd.getVnfPkgIds();
+		for (final VnfPackage id : vnfs) {
+			final VnfPackage vnf = vnfPackageRepository.get(id.getId());
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
-			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstance.getId(), id);
+			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstance.getId(), id.getId().toString());
 			final VnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, vnf);
 			vnfInstances.add(nsInstancesNsInstanceVnfInstance);
 		}

@@ -12,10 +12,10 @@ public interface VnfmInterface {
 
 	VnfInstance createVnfInstance(final VnfPackage vnf, String vnfInstanceDescription, String vnfInstanceName);
 
-	VnfLcmOpOccs vnfInstatiate(UUID vnfInstanceId, String vnfId);
+	VnfLcmOpOccs vnfInstatiate(UUID vnfInstanceId, UUID vnfId);
 
 	VnfLcmOpOccs getVnfLcmOpOccs(@NotNull UUID id);
 
-	VnfLcmOpOccs vnfTerminate(UUID nsInstanceId, String vnfId);
+	VnfLcmOpOccs vnfTerminate(UUID nsInstanceId, UUID uuid);
 
 }

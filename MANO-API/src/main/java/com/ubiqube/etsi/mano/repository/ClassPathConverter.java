@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -27,7 +28,8 @@ public class ClassPathConverter {
 	private final Map<Class<?>, String> path = new HashMap<>();
 
 	public ClassPathConverter() {
-		path.put(NsdInfo.class, "nsd");
+		path.put(NsdInfo.class, "nsd-package");
+		path.put(NsdPackage.class, "nsd-package");
 		path.put(NsLcmOpOcc.class, "nsd-lcm-op-occs");
 		path.put(NsInstance.class, "nsd-instances");
 		path.put(NsdInstance.class, "nsd-instances");

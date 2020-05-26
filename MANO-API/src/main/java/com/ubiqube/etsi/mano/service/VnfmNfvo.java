@@ -36,7 +36,7 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final String vnfId) {
+	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final UUID vnfId) {
 		lcm.instantiate(vnfInstanceId, null, new Sol003LcmLinkable());
 		// TODO It's a little more complex, we need to subscribe and wait for the URL to
 		// be called.
@@ -51,7 +51,7 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId, final String vnfId) {
+	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId, final UUID vnfId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
