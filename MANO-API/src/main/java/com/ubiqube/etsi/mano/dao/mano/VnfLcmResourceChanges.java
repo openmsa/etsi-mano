@@ -31,6 +31,10 @@ public class VnfLcmResourceChanges implements Serializable {
 	@JoinColumn
 	private Set<VnfInstantiatedExtCp> affectedExtCp = new HashSet<>();
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfInstantiatedMonitoring> instanceMonitors;
+
 	public Set<VnfInstantiatedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;
 	}
@@ -89,6 +93,21 @@ public class VnfLcmResourceChanges implements Serializable {
 			affectedVirtualStorages = new HashSet<>();
 		}
 		affectedExtCp.add(_affectedExtCp);
+	}
+
+	public Set<VnfInstantiatedMonitoring> getInstanceMonitors() {
+		return instanceMonitors;
+	}
+
+	public void setInstanceMonitors(final Set<VnfInstantiatedMonitoring> instanceMonotors) {
+		this.instanceMonitors = instanceMonotors;
+	}
+
+	public void addAffectedMonitoring(final VnfInstantiatedMonitoring instanceMonotor) {
+		if (null == instanceMonitors) {
+			instanceMonitors = new HashSet<>();
+		}
+		instanceMonitors.add(instanceMonotor);
 	}
 
 }

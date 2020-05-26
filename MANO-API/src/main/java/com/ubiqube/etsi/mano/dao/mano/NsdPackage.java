@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -54,6 +56,14 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Field
 	private String nsdInvariantId;
 
+	private int instantiationLevel;
+
+	private int minNumberOfInstance;
+
+	private int maxNumberOfInstance;
+
+	private String flavorId;
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<VnfPackage> vnfPkgIds;
@@ -85,7 +95,13 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private PackageUsageStateType nsdUsageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<NsdUserDefinedData> userDefinedData;
+	private Map<String, String> userDefinedData;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<NsSap> nsSaps;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<NsVirtualLink> nsVirtualLinks;
 
 	@Override
 	public UUID getId() {
@@ -202,12 +218,60 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.nsdUsageState = nsdUsageState;
 	}
 
-	public Set<NsdUserDefinedData> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Set<NsdUserDefinedData> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
+	}
+
+	public int getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final int instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
+
+	public int getMinNumberOfInstance() {
+		return minNumberOfInstance;
+	}
+
+	public void setMinNumberOfInstance(final int minNumberOfInstance) {
+		this.minNumberOfInstance = minNumberOfInstance;
+	}
+
+	public int getMaxNumberOfInstance() {
+		return maxNumberOfInstance;
+	}
+
+	public void setMaxNumberOfInstance(final int maxNumberOfInstance) {
+		this.maxNumberOfInstance = maxNumberOfInstance;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
+	}
+
+	public Set<NsSap> getNsSaps() {
+		return nsSaps;
+	}
+
+	public void setNsSaps(final Set<NsSap> nsSaps) {
+		this.nsSaps = nsSaps;
+	}
+
+	public Set<NsVirtualLink> getNsVirtualLinks() {
+		return nsVirtualLinks;
+	}
+
+	public void setNsVirtualLinks(final Set<NsVirtualLink> nsVirtualLinks) {
+		this.nsVirtualLinks = nsVirtualLinks;
 	}
 
 }

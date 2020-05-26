@@ -43,6 +43,7 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	 * Vim name.
 	 */
 	private String aliasName;
+
 	/**
 	 * XXX Should be computed.
 	 */
