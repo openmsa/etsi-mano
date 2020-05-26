@@ -21,56 +21,60 @@ topology_template:
         invariant_id: 65f6fbed-654b-4d68-b730-5d8d72a8b865
         flavour_id: flavor01
         ns_profile: # tosca.datatypes.nfv.NsProfile
-          ns_instantiation_level: 0
+          ns_instantiation_level: demo
           min_number_of_instances: 1
           max_number_of_instances: 1
           flavour_id: flavor02
       requirements:
-        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
+        #- virtual_link: # tosca.nodes.nfv.NsVirtualLink
 
 
-  vl01:
-    type: tosca.nodes.nfv.NsVirtualLink
-    properties:
-      description: First VL
-      vl_profile: # tosca.datatypes.nfv.NsVlProfile
-        max_bitrate_requirements: 1000
-        min_bitrate_requirements: 1000
-        qos: # tosca.datatypes.nfv.NsVirtualLinkQos
-          priority: 0
-        service_availability: # tosca.datatypes.nfv.ServiceAvailability
-          level: level1
-      connectivity_type: # tosca.datatypes.nfv.ConnectivityType
+    vl01:
+      type: tosca.nodes.nfv.NsVirtualLink
+      properties:
+        description: First VL
+        vl_profile: # tosca.datatypes.nfv.NsVlProfile
+          max_bitrate_requirements:
+            root: 1000
+            leaf: 5000
+          min_bitrate_requirements:
+            root: 200
+            leaf: 400
+          qos: # tosca.datatypes.nfv.NsVirtualLinkQos
+            priority: 0
+          service_availability: # tosca.datatypes.nfv.ServiceAvailability
+            level: level1
+        connectivity_type: # tosca.datatypes.nfv.ConnectivityType
+          layer_protocols:
+            - ipv4
+          flow_pattern: mesh
+        test_access:
+          - test
+  
+  
+  
+    sap01:
+      type: tosca.nodes.nfv.Sap
+      properties:
         layer_protocols:
           - ipv4
-        flow_pattern: mesh
-      test_access:
-        - test
-
-
-
-  sap01:
-    type: tosca.nodes.nfv.Sap
-    properties:
-      layer_protocols:
-        - ipv4
-      role: root
-      description: Description.
-      protocol: # tosca.datatypes.nfv.CpProtocolData
-        - associated_layer_protocol: mpls
-          address_data: # tosca.datatypes.nfv.AddressData
-            address_type: ip_address
-            l2_address_data: # tosca.datatypes.nfv.L2AddressData
-              mac_address_assignment: 00:11:22:33:44:55
-            l3_address_data: # tosca.datatypes.nfv.L3AddressData
-              ip_address_assignment: true
-              floating_ip_activated: true
-              ip_address_type: ipv4
-              number_of_ip_address: 10
-      trunk_mode: false
-    requirements:
-      - external_virtual_link:
-      - internal_virtual_link: # Must be defined
+        role: root
+        description: Description.
+        protocol: # tosca.datatypes.nfv.CpProtocolData
+          - associated_layer_protocol: mpls
+            address_data: # tosca.datatypes.nfv.AddressData
+              - address_type: ip_address
+                l2_address_data: # tosca.datatypes.nfv.L2AddressData
+                  mac_address_assignment: true
+                l3_address_data: # tosca.datatypes.nfv.L3AddressData
+                  ip_address_assignment: true
+                  floating_ip_activated: true
+                  ip_address_type: ipv4
+                  number_of_ip_address: 10
+        trunk_mode: false
+      requirements:
+        # - external_virtual_link:
+        # - internal_virtual_link: # Must be defined
 
 
 policies:
