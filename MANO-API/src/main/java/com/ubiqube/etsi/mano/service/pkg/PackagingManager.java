@@ -108,6 +108,11 @@ public class PackagingManager {
 		vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
+			final ProviderData pd = packageProvider.getProviderPadata();
+			vnfPackageJpa.findByDescriptorId(pd.getDescriptorId()).ifPresent(x -> {
+				throw new GenericException("Package " + x.getDescriptorId() + " allready onboarded.");
+			});
+			mapper.map(pd, vnfPackage);
 			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfCompute(cNodes);
 			final Set<VnfStorage> vboNodes = packageProvider.getVnfStorages(vnfPackage.getUserDefinedData());
@@ -129,8 +134,6 @@ public class PackagingManager {
 			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas(vnfPackage.getUserDefinedData());
 
 			rebuildScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas);
-			final ProviderData pd = packageProvider.getProviderPadata();
-			mapper.map(pd, vnfPackage);
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());

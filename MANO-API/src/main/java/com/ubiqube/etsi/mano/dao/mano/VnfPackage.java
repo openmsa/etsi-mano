@@ -62,6 +62,8 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 
 	private String flavorId;
 
+	private String descriptorId;
+
 	private Checksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -219,6 +221,14 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 
 	public void setFlavorId(final String flavorId) {
 		this.flavorId = flavorId;
+	}
+
+	public String getDescriptorId() {
+		return descriptorId;
+	}
+
+	public void setDescriptorId(final String descriptorId) {
+		this.descriptorId = descriptorId;
 	}
 
 	public Set<VnfCompute> getVnfCompute() {

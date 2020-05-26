@@ -16,6 +16,8 @@ public class ProviderData {
 
 	private String vnfdId;
 
+	private String descriptorId;
+
 	public String getVnfProvider() {
 		return vnfProvider;
 	}
@@ -70,6 +72,14 @@ public class ProviderData {
 
 	public void setVnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
+	}
+
+	public String getDescriptorId() {
+		return descriptorId;
+	}
+
+	public void setDescriptorId(final String descriptorId) {
+		this.descriptorId = descriptorId;
 	}
 
 }
