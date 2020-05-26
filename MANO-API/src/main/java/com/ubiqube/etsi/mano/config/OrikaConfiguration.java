@@ -48,8 +48,6 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfPkgIds{}", "vnfPkgIds{id}")
 				.field("pnfdInfoIds{}", "pnfdInfoIds{id}")
 				.field("nestedNsdInfoIds{}", "nestedNsdInfoIds{id}")
-				.field("userDefinedData{key}", "userDefinedData{name}")
-				.field("userDefinedData{value}", "userDefinedData{value}")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class, VnfInstance.class)
