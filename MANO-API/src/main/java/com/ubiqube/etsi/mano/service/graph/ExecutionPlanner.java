@@ -32,11 +32,12 @@ import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedMonitoring;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -94,6 +95,7 @@ public class ExecutionPlanner {
 			}
 			// XXX do the same for swImages ?
 			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
+				// XXX Move this.
 				final VnfInstantiatedCompute instanceMonotor = new VnfInstantiatedCompute();
 				instanceMonotor.setChangeType(ChangeType.ADDED);
 				instanceMonotor.setVnfLcmOpOccs(vnfLcmOpOccs);
@@ -107,7 +109,7 @@ public class ExecutionPlanner {
 			}
 		});
 
-		// XXX Move this elsewhere.
+		// XXX Ok to add to the plan, but only if we have a ExtCp from NS.
 		vnfPackage.getVnfExtCp().forEach(x -> {
 			LOG.debug("ExtCp_{}: {} -> {}", x.getToscaName(), x.getInternalVirtualLink(), x.getExternalVirtualLink());
 			Optional.ofNullable(vertex.get(x.getToscaName()))
@@ -302,8 +304,16 @@ public class ExecutionPlanner {
 			vnfInstantiedCompute.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName(), currentCount + i));
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
 			// vnfInstanceService.save(vnfInstantiedCompute);
-
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
+			if ((null != vnfCompute.getMonitoringParameters()) && !vnfCompute.getMonitoringParameters().isEmpty()) {
+				final VnfInstantiatedMonitoring instanceMonotor = new VnfInstantiatedMonitoring();
+				instanceMonotor.setChangeType(ChangeType.ADDED);
+				instanceMonotor.setVnfLcmOpOccs(lcmOpOccs);
+				instanceMonotor.setVnfCompute(vnfCompute);
+				instanceMonotor.setStatus(InstantiationStatusType.NOT_STARTED);
+				instanceMonotor.setVnfInstantiatedCompute(vnfInstantiedCompute);
+				lcmOpOccs.getResourceChanges().addAffectedMonitoring(instanceMonotor);
+			}
 			final int ci = i;
 			vnfCompute.getStorages().forEach(y -> {
 				// XX Add Storage.
