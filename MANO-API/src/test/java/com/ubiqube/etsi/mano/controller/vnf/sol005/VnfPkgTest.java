@@ -34,7 +34,6 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
@@ -53,8 +52,6 @@ public class VnfPkgTest {
 	private Patcher patcher;
 	@MockBean
 	private VnfPackageRepository vnfPackageRepository;
-	@MockBean
-	private ManufacturerModel manufacturerModel;
 	@MockBean
 	private DeviceService deviseService;
 	@MockBean
