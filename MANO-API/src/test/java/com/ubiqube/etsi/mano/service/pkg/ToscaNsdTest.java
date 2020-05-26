@@ -53,4 +53,16 @@ public class ToscaNsdTest {
 		final Set<SecurityGroupAdapter> list = tpp.getSecurityGroups(new HashMap<String, String>());
 		System.out.println();
 	}
+
+	@Test
+	void testUbiqube01() throws Exception {
+		final Set<String> list = tpp.getVnfd(new HashMap<String, String>());
+		System.out.println("" + list);
+	}
+
+	@Test
+	void testUbiqube02() throws Exception {
+		final Set<String> list = tpp.getNestedNsd(new HashMap<String, String>());
+		System.out.println("" + list);
+	}
 }

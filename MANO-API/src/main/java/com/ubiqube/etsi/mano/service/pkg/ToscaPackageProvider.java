@@ -45,6 +45,7 @@ import tosca.datatypes.nfv.AddressData;
 import tosca.datatypes.nfv.L3ProtocolData;
 import tosca.datatypes.nfv.VirtualLinkProtocolData;
 import tosca.nodes.nfv.NS;
+import tosca.nodes.nfv.NsTopology;
 import tosca.nodes.nfv.Sap;
 import tosca.nodes.nfv.VNF;
 import tosca.nodes.nfv.VduCp;
@@ -329,6 +330,16 @@ public class ToscaPackageProvider implements PackageProvider {
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
 		final List<SecurityGroupRule> sgr = toscaApi.getObjects(root, userData, SecurityGroupRule.class);
 		return sgr.stream().map(x -> new SecurityGroupAdapter(mapper.map(x, SecurityGroup.class), x.getTargets())).collect(Collectors.toSet());
+	}
+
+	public Set<String> getNestedNsd(final Map<String, String> userData) {
+		final List<NsTopology> sgr = toscaApi.getObjects(root, userData, NsTopology.class);
+		return sgr.stream().flatMap(x -> x.getNestedNsdInvariant().stream()).collect(Collectors.toSet());
+	}
+
+	public Set<String> getVnfd(final Map<String, String> userData) {
+		final List<NsTopology> sgr = toscaApi.getObjects(root, userData, NsTopology.class);
+		return sgr.stream().flatMap(x -> x.getVnfdInvariant().stream()).collect(Collectors.toSet());
 	}
 
 }
