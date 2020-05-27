@@ -5,12 +5,13 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 
-public interface NsLcmOpOccsRepository extends CrudRepository<NsLcmOpOcc> {
+public interface NsLcmOpOccsRepository extends CrudRepository<NsLcmOpOccs> {
 
-	NsLcmOpOcc createLcmOpOccs(UUID nsInstanceId, @Nonnull NsLcmOpType instantiate);
+	NsLcmOpOccs createLcmOpOccs(NsdInstance nsInstance, @Nonnull NsLcmOpType instantiate);
 
 	void attachProcessIdToLcmOpOccs(@NotNull UUID lcmOpOccsId, String processId);
 

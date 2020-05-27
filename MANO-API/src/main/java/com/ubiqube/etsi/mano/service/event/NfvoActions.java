@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.service.event;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
@@ -41,7 +42,6 @@ import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -97,9 +97,8 @@ public class NfvoActions {
 	public void nsTerminate(final UUID nsInstanceId) {
 		// XXX This is not the correct way/
 		final VimConnectionInformation vimInfo = electVim(null, null);
-
-		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstanceId, NsLcmOpType.TERMINATE);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstance, NsLcmOpType.TERMINATE);
 
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
@@ -137,8 +136,8 @@ public class NfvoActions {
 		return LcmOperationStateType.COMPLETED;
 	}
 
-	private void updateOperationState(final NsLcmOpOcc lcmOpOccs, final LcmOperationStateType status) {
-		lcmOpOccs.setStateEnteredTime(OffsetDateTime.now());
+	private void updateOperationState(final NsLcmOpOccs lcmOpOccs, final LcmOperationStateType status) {
+		lcmOpOccs.setStateEnteredTime(new Date());
 		lcmOpOccs.setOperationState(status);
 		lcmOpOccsRepository.save(lcmOpOccs);
 	}
@@ -146,7 +145,7 @@ public class NfvoActions {
 	public void nsInstantiate(final UUID nsInstanceId) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
-		final NsLcmOpOcc lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsdId, NsLcmOpType.INSTANTIATE);
+		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Make plan in lcmOpOccs
 		executionPlanner.makePrePlan(nsInstance, nsdInfo, lcmOpOccs);

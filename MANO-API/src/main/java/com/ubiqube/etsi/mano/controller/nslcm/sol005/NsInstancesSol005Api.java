@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -41,7 +43,6 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstanceLinks;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.ScaleNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.TerminateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.UpdateNsRequest;
@@ -94,13 +95,14 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<String> nsInstancesGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsdInstance> result = nsInstanceRepository.query(filter);
-		result.stream().forEach(x -> {
+		final List<NsInstance> list = result.stream().map(x -> {
 			final NsInstance nsi = mapper.map(x, NsInstance.class);
 			nsi.setLinks(makeLink(x.getId().toString()));
-		});
+			return nsi;
+		}).collect(Collectors.toList());
 		final ObjectMapper objectMapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			return new ResponseEntity<>(objectMapper.writeValueAsString(result), HttpStatus.OK);
+			return new ResponseEntity<>(objectMapper.writeValueAsString(list), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -155,7 +157,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceUuid, NsLcmOpType.HEAL);
+		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsLcmOpType.HEAL);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -191,7 +193,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceUuid, NsLcmOpType.SCALE);
+		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsLcmOpType.SCALE);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -232,7 +234,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceUuid, NsLcmOpType.UPDATE);
+		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsLcmOpType.UPDATE);
 		lcmOpOccsRepository.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}

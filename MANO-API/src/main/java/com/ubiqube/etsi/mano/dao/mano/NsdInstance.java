@@ -202,9 +202,4 @@ public class NsdInstance implements BaseEntity {
 		this.processId = processId;
 	}
 
-	public int countLiveInstanceOfSap(final UUID id2) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

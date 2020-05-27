@@ -1,11 +1,12 @@
 package com.ubiqube.etsi.mano.factory;
 
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
@@ -20,7 +21,6 @@ import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 
 public final class LcmFactory {
 	private LcmFactory() {
@@ -94,16 +94,16 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static NsLcmOpOcc createNsLcmOpOcc(final UUID nsInstanceId, final NsLcmOpType lcmOperationType) {
-		final NsLcmOpOcc nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOcc();
+	public static NsLcmOpOccs createNsLcmOpOcc(final NsdInstance nsInstance, final NsLcmOpType lcmOperationType) {
+		final NsLcmOpOccs nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOccs();
 		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(Boolean.TRUE);
 		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(Boolean.FALSE);
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
-		nsLcmOpOccsNsLcmOpOcc.setNsInstanceId(nsInstanceId.toString());
+		nsLcmOpOccsNsLcmOpOcc.setNsInstance(nsInstance);
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
 		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
-		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());
-		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
+		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
+		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
 

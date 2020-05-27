@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
@@ -22,14 +24,18 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccLinks;
 import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 
+import ma.glasnost.orika.MapperFacade;
+
 @Profile({ "!VNFM" })
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
 	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
+	private final MapperFacade mapper;
 
-	public NsLcmOpOccsSol005Api(final NsLcmOpOccsRepository _nsLcmOpOccsRepository) {
+	public NsLcmOpOccsSol005Api(final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final MapperFacade _mapper) {
 		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
+		mapper = _mapper;
 	}
 
 	/**
@@ -44,11 +50,17 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsLcmOpOcc> result = nsLcmOpOccsRepository.query(filter);
-		result.stream().forEach(x -> x.setLinks(makeLink(x)));
+		final List<NsLcmOpOccs> result = nsLcmOpOccsRepository.query(filter);
+		final List<NsLcmOpOcc> list = result.stream()
+				.map(x -> {
+					final NsLcmOpOcc res = mapper.map(x, NsLcmOpOcc.class);
+					res.setLinks(makeLink(res));
+					return res;
+				})
+				.collect(Collectors.toList());
 		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(result), HttpStatus.OK);
+			return new ResponseEntity<>(mapper.writeValueAsString(list), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -83,10 +95,11 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
-		final NsLcmOpOcc nsLcmOpOccs = nsLcmOpOccsRepository.get(UUID.fromString(nsLcmOpOccId));
-		nsLcmOpOccs.setLinks(makeLink(nsLcmOpOccs));
+		final NsLcmOpOccs nsLcmOpOccs = nsLcmOpOccsRepository.get(UUID.fromString(nsLcmOpOccId));
+		final NsLcmOpOcc res = mapper.map(nsLcmOpOccs, NsLcmOpOcc.class);
+		res.setLinks(makeLink(res));
 
-		return new ResponseEntity<>(nsLcmOpOccs, HttpStatus.OK);
+		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
 	/**

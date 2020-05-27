@@ -26,6 +26,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
@@ -45,7 +46,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -395,9 +395,9 @@ public class ExecutionPlanner {
 		return inst;
 	}
 
-	public void makePrePlan(final NsdInstance nsInstance, final NsdPackage nsdInfo, final NsLcmOpOcc lcmOpOccs) {
+	public void makePrePlan(final NsdInstance nsInstance, final NsdPackage nsdInfo, final NsLcmOpOccs lcmOpOccs) {
 		nsdInfo.getNsSaps().forEach(x -> {
-			final int c = nsInstance.countLiveInstanceOfSap(x.getId());
+			final int c = nsInstanceService.countLiveInstanceOfSap(x.getId());
 			if (c == 0) {
 				//
 			}
