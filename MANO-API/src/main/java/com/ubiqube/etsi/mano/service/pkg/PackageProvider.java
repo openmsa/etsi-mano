@@ -76,4 +76,9 @@ public interface PackageProvider {
 	@Nonnull
 	Set<SecurityGroupAdapter> getSecurityGroups(Map<String, String> userData);
 
+	@Nonnull
+	Set<String> getNestedNsd(final Map<String, String> userData);
+
+	@Nonnull
+	Set<String> getVnfd(final Map<String, String> userData);
 }

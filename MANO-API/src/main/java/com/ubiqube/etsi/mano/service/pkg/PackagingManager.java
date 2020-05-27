@@ -276,6 +276,14 @@ public class PackagingManager {
 			sgAdapters.forEach(x -> nsPackage.getNsSaps().stream()
 					.filter(y -> x.getTargets().contains(y.getToscaName()))
 					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
+			final Set<VnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
+					.map(x -> vnfPackageJpa.findByDescriptorId(x).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x)))
+					.collect(Collectors.toSet());
+			nsPackage.setVnfPkgIds(vnfds);
+			final Set<NsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
+					.map(x -> nsdPackageJpa.findByNsdInvariantId(x).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x)))
+					.collect(Collectors.toSet());
+			nsPackage.setNestedNsdInfoIds(nsds);
 		}
 		nsPackage.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
 		nsPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);

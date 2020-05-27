@@ -122,4 +122,16 @@ public class DefaultPackageProvider implements PackageProvider {
 		return null;
 	}
 
+	@Override
+	public Set<String> getNestedNsd(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<String> getVnfd(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
