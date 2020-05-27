@@ -201,7 +201,6 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final NsdPackage nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
 		ensureNotOnboarded(nsdInfo);
 		try {
-			// Must be Async.
 			nsdRepository.storeBinary(UUID.fromString(nsdInfoId), "nsd", file.getInputStream());
 		} catch (final IOException e) {
 			throw new GenericException(e);

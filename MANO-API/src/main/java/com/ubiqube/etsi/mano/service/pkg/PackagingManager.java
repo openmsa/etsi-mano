@@ -110,7 +110,7 @@ public class PackagingManager {
 		if (null != packageProvider) {
 			final ProviderData pd = packageProvider.getProviderPadata();
 			vnfPackageJpa.findByDescriptorId(pd.getDescriptorId()).ifPresent(x -> {
-				throw new GenericException("Package " + x.getDescriptorId() + " allready onboarded.");
+				throw new GenericException("Package " + x.getDescriptorId() + " already onboarded.");
 			});
 			mapper.map(pd, vnfPackage);
 			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes(vnfPackage.getUserDefinedData());
