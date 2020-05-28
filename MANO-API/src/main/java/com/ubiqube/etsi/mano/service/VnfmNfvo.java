@@ -12,6 +12,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -37,6 +39,7 @@ public class VnfmNfvo implements VnfmInterface {
 
 	@Override
 	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final UUID vnfId) {
+		// XXX Need to add request for profile.
 		lcm.instantiate(vnfInstanceId, null, new Sol003LcmLinkable());
 		// TODO It's a little more complex, we need to subscribe and wait for the URL to
 		// be called.
@@ -52,7 +55,10 @@ public class VnfmNfvo implements VnfmInterface {
 
 	@Override
 	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId, final UUID vnfId) {
-		// TODO Auto-generated method stub
+		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
+		terminateVnfRequest.setTerminationType(TerminationTypeEnum.FORCEFUL);
+		lcm.terminate(nsInstanceId, terminateVnfRequest);
+		// TODO Wait for it.
 		return null;
 	}
 
