@@ -33,6 +33,9 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 	@Enumerated(EnumType.STRING)
 	private InstantiationStatusType changeResult = InstantiationStatusType.NOT_STARTED;
 
+	// Vim or VNFM resourceId.
+	private String resourceId;
+
 	@Embedded
 	private Audit audit;
 
@@ -75,6 +78,14 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 
 	public void setChangeResult(final InstantiationStatusType changeResult) {
 		this.changeResult = changeResult;
+	}
+
+	public String getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(final String resourceId) {
+		this.resourceId = resourceId;
 	}
 
 	@Override
