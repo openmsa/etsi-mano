@@ -3,12 +3,14 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -40,7 +42,7 @@ public class NsdInstance implements BaseEntity {
 	private String nsdId = null;
 
 	// @OneToOne(fetch = FetchType.EAGER)
-	@Transient
+	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackage nsdInfo = null;
 
 	@Field

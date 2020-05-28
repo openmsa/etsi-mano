@@ -277,7 +277,12 @@ public class PackagingManager {
 					.filter(y -> x.getTargets().contains(y.getToscaName()))
 					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
 			final Set<VnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
-					.map(x -> vnfPackageJpa.findByDescriptorId(x).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x)))
+					.map(x -> {
+						final VnfPackage vnfPackage = vnfPackageJpa.findByDescriptorId(x).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						vnfPackage.addNsdPackage(nsPackage);
+						vnfPackageJpa.save(vnfPackage);
+						return vnfPackage;
+					})
 					.collect(Collectors.toSet());
 			nsPackage.setVnfPkgIds(vnfds);
 			final Set<NsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()

@@ -26,7 +26,14 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedSap;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVl;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccsResourceChanges;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
@@ -396,15 +403,84 @@ public class ExecutionPlanner {
 	}
 
 	public void makePrePlan(final NsdInstance nsInstance, final NsdPackage nsdInfo, final NsLcmOpOccs lcmOpOccs) {
-		nsdInfo.getNsSaps().forEach(x -> {
-			final int c = nsInstanceService.countLiveInstanceOfSap(x.getId());
+		final NsLcmOpOccsResourceChanges changes = lcmOpOccs.getResourceChanges();
+		final Set<NsSap> saps = nsInstanceService.findSapsByNsInstance(nsdInfo);
+		saps.forEach(x -> {
+			final int c = nsInstanceService.countLiveInstanceOfSap(nsInstance, x.getId());
 			if (c == 0) {
-				//
+				final NsInstantiatedSap sap = new NsInstantiatedSap();
+				sap.setSapd(x);
+				sap.setSapName(x.getToscaName());
+				changes.addInstantiatedSap(sap);
 			}
 		});
-		nsdInfo.getNsVirtualLinks();
-		nsdInfo.getNestedNsdInfoIds();
-		nsdInfo.getVnfPkgIds();
+		final Set<NsVirtualLink> vls = nsInstanceService.findVlsByNsInstance(nsdInfo);
+		vls.forEach(x -> {
+			final int c = nsInstanceService.countLiveInstanceOfVirtualLink(nsInstance, x.getId());
+			if (c == 0) {
+				final NsInstantiatedVl sap = new NsInstantiatedVl();
+				sap.setNsVirtualLinkDesc(x);
+				sap.setVlProfileId(x.getNsVlProfile().getId());
+				changes.addInstantiatedVirtualLink(sap);
+			}
+		});
+		final Set<NsdPackage> nsds = nsInstanceService.findNestedNsdByNsInstance(nsdInfo);
+		nsds.forEach(x -> {
+			final int c = nsInstanceService.countLiveInstanceOfNsd(nsInstance, x.getId());
+			if (c == 0) {
+				final NsInstantiatedNs sap = new NsInstantiatedNs();
+				sap.setNsdPackage(x);
+				changes.addInstantiatedNs(sap);
+			}
+		});
+		final Set<VnfPackage> vnfs = nsInstanceService.findVnfPackageByNsInstance(nsdInfo);
+		vnfs.forEach(x -> {
+			final int c = nsInstanceService.countLiveInstanceOfVnf(nsInstance, x.getId());
+			if (c == 0) {
+				final NsInstantiatedVnf sap = new NsInstantiatedVnf();
+				sap.setVnfd(x);
+				sap.setVnfName(x.getVnfProductName());
+				// XXX Not sure whet the profileId is.
+				changes.addInstantiatedVnf(sap);
+			}
+		});
 
+	}
+
+	public void plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
+		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, lcmOpOccs);
+	}
+
+	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, ConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs) {
+		final MultiValueMap<String, NsUnitOfWork> vertex = new LinkedMultiValueMap<>();
+		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
+		resources.getAffectedNss().forEach(x -> {
+			x.getNsdPackage();
+			final NsUnitOfWork uow = new NsUow(x);
+			vertex.add(x.getNsdPackage().getNsdName(), uow);
+			g.addVertex(uow);
+		});
+		resources.getAffectedPnfs().forEach(x -> {
+			final NsUnitOfWork uow = new PnfUow(x);
+			g.addVertex(uow);
+		});
+		resources.getAffectedSaps().stream().forEach(x -> {
+			final NsUnitOfWork uow = new SapUow(x);
+			g.addVertex(uow);
+		});
+		resources.getAffectedVls().stream().forEach(x -> {
+			final NsUnitOfWork uow = new NsVlUow(x);
+			g.addVertex(uow);
+		});
+		resources.getAffectedVnffgs().forEach(x -> {
+			final NsUnitOfWork uow = new VnffgUow(x);
+			g.addVertex(uow);
+		});
+		resources.getAffectedVnfs().forEach(x -> {
+			final NsUnitOfWork uow = new VnfUow(x);
+			g.addVertex(uow);
+		});
+		return vertex;
 	}
 }

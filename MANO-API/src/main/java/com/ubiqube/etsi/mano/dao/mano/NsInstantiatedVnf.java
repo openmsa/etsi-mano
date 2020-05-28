@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnfChangedInfo;
@@ -21,9 +23,11 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String vnfInstanceId = null;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private VnfInstance vnfInstance = null;
 
-	private String vnfdId = null;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	private VnfPackage vnfd = null;
 
 	private String vnfProfileId = null;
 
@@ -43,20 +47,12 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 		this.id = id;
 	}
 
-	public String getVnfInstanceId() {
-		return vnfInstanceId;
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
 	}
 
-	public void setVnfInstanceId(final String vnfInstanceId) {
-		this.vnfInstanceId = vnfInstanceId;
-	}
-
-	public String getVnfdId() {
-		return vnfdId;
-	}
-
-	public void setVnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
+	public VnfPackage getVnfd() {
+		return vnfd;
 	}
 
 	public String getVnfProfileId() {
@@ -81,6 +77,14 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	public void setChangedInfo(final AffectedVnfChangedInfo changedInfo) {
 		this.changedInfo = changedInfo;
+	}
+
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
+	}
+
+	public void setVnfd(final VnfPackage vnfd) {
+		this.vnfd = vnfd;
 	}
 
 }

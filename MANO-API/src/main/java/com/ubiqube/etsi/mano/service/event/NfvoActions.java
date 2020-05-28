@@ -144,16 +144,18 @@ public class NfvoActions {
 
 	public void nsInstantiate(final UUID nsInstanceId) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
-		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
+		final UUID nsdId = nsInstance.getNsdInfo().getId();
+		NsLcmOpOccs lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Make plan in lcmOpOccs
 		executionPlanner.makePrePlan(nsInstance, nsdInfo, lcmOpOccs);
-
+		lcmOpOccs = nsLcmOpOccsRepository.save(lcmOpOccs);
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		// Create Ns.
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
+		// XXX elect vim?
+		executionPlanner.plan(lcmOpOccs, nsInstance);
 		// final String processId = vim.onNsInstantiate(nsdId, userData);
 		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
 		// nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);

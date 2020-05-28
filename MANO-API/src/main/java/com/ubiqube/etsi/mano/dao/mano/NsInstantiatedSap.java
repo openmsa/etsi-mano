@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -20,7 +22,8 @@ public class NsInstantiatedSap extends NsInstantiatedBase {
 
 	private String sapInstanceId = null;
 
-	private String sapdId = null;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	private NsSap sapd = null;
 
 	private String sapName = null;
 
@@ -42,12 +45,12 @@ public class NsInstantiatedSap extends NsInstantiatedBase {
 		this.sapInstanceId = sapInstanceId;
 	}
 
-	public String getSapdId() {
-		return sapdId;
+	public NsSap getSapd() {
+		return sapd;
 	}
 
-	public void setSapdId(final String sapdId) {
-		this.sapdId = sapdId;
+	public void setSapd(final NsSap sapd) {
+		this.sapd = sapd;
 	}
 
 	public String getSapName() {

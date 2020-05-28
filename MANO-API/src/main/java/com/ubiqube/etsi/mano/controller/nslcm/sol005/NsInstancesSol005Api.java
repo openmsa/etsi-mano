@@ -178,7 +178,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceUuid, new HashMap<String, Object>());
 
 		nsInstance.setLinks(makeLink(nsInstanceId));
-		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
+		return ResponseEntity.accepted().build();
 	}
 
 	/**
@@ -250,13 +250,23 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
 		}
-		final NsdPackage nsd = nsdRepository.get(UUID.fromString(req.getNsdId()));
+
+		final NsdInstance nsInstance = nestedNsd(UUID.fromString(req.getNsdId()));
+		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
+
+		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
+		return new ResponseEntity<>(nsInstanceWeb, HttpStatus.OK);
+	}
+
+	private NsdInstance nestedNsd(final UUID nsdId) {
+		final NsdPackage nsd = nsdRepository.get(nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
 		nsd.setNsdUsageState(PackageUsageStateType.IN_USE);
 		nsdRepository.save(nsd);
 
-		final NsdInstance nsInstance = NsInstanceFactory.createNsInstancesNsInstance(req, nsd);
+		final NsdInstance nsInstance = new NsdInstance();
+		nsInstance.setNsdInfo(nsd);
 		nsInstanceRepository.save(nsInstance);
 
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
@@ -269,13 +279,14 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 			final VnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, vnf);
 			vnfInstances.add(nsInstancesNsInstanceVnfInstance);
 		}
-
+		nsd.getNestedNsdInfoIds().forEach(x -> {
+			// create nested instance.
+			final CreateNsRequest reqNested = new CreateNsRequest();
+			reqNested.setNsdId(x.getId().toString());
+			nsInstancesPost(reqNested);
+		});
 		nsInstance.setVnfInstance(vnfInstances);
-		nsInstanceRepository.save(nsInstance);
-		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
-
-		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
-		return new ResponseEntity<>(nsInstanceWeb, HttpStatus.OK);
+		return nsInstanceRepository.save(nsInstance);
 	}
 
 	private static NsInstanceLinks makeLink(@Nonnull final String id) {

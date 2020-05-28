@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,7 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -21,7 +22,6 @@ import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -39,7 +39,7 @@ public class NsLcmOpOccs implements BaseEntity {
 	@Field
 	private Date stateEnteredTime = null;
 
-	@OneToOne(optional = false)
+	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance = null;
 
 	@Enumerated(EnumType.STRING)
@@ -71,7 +71,7 @@ public class NsLcmOpOccs implements BaseEntity {
 	private String externalProcessId;
 
 	@Embedded
-	private NsLcmOpOccResourceChanges resourceChanges = null;
+	private NsLcmOpOccsResourceChanges resourceChanges = new NsLcmOpOccsResourceChanges();
 
 	@Override
 	public UUID getId() {
@@ -162,11 +162,11 @@ public class NsLcmOpOccs implements BaseEntity {
 		this.error = error;
 	}
 
-	public NsLcmOpOccResourceChanges getResourceChanges() {
+	public NsLcmOpOccsResourceChanges getResourceChanges() {
 		return resourceChanges;
 	}
 
-	public void setResourceChanges(final NsLcmOpOccResourceChanges resourceChanges) {
+	public void setResourceChanges(final NsLcmOpOccsResourceChanges resourceChanges) {
 		this.resourceChanges = resourceChanges;
 	}
 

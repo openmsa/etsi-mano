@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -39,7 +39,7 @@ public class NsSap implements BaseEntity, Auditable, Serializable {
 	private String description;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> layerProtocols;
+	private Set<String> layerProtocols;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
@@ -49,6 +49,9 @@ public class NsSap implements BaseEntity, Auditable, Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<SecurityGroup> securityGroups;
+
+	@ManyToOne
+	private NsdPackage nsdPackage;
 
 	@Embedded
 	private Audit audit;
@@ -102,11 +105,11 @@ public class NsSap implements BaseEntity, Auditable, Serializable {
 		this.description = description;
 	}
 
-	public List<String> getLayerProtocols() {
+	public Set<String> getLayerProtocols() {
 		return layerProtocols;
 	}
 
-	public void setLayerProtocols(final List<String> layerProtocols) {
+	public void setLayerProtocols(final Set<String> layerProtocols) {
 		this.layerProtocols = layerProtocols;
 	}
 
@@ -139,6 +142,14 @@ public class NsSap implements BaseEntity, Auditable, Serializable {
 
 	public void setSecurityGroups(final Set<SecurityGroup> securityGroup) {
 		securityGroups = securityGroup;
+	}
+
+	public NsdPackage getNsdPackage() {
+		return nsdPackage;
+	}
+
+	public void setNsdPackage(final NsdPackage nsdPackage) {
+		this.nsdPackage = nsdPackage;
 	}
 
 	@Override

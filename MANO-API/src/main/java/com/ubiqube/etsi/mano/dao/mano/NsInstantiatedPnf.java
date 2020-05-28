@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
@@ -31,7 +31,7 @@ public class NsInstantiatedPnf extends NsInstantiatedBase {
 	private String pnfName = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> cpInstanceId = new ArrayList<>();
+	private Set<String> cpInstanceId = new HashSet<>();
 
 	@Override
 	public UUID getId() {
@@ -75,11 +75,11 @@ public class NsInstantiatedPnf extends NsInstantiatedBase {
 		this.pnfName = pnfName;
 	}
 
-	public List<String> getCpInstanceId() {
+	public Set<String> getCpInstanceId() {
 		return cpInstanceId;
 	}
 
-	public void setCpInstanceId(final List<String> cpInstanceId) {
+	public void setCpInstanceId(final Set<String> cpInstanceId) {
 		this.cpInstanceId = cpInstanceId;
 	}
 

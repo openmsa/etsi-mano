@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.search.annotations.Indexed;
@@ -27,6 +28,9 @@ public class NsVirtualLink implements BaseEntity, Auditable {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private NsVlConnectivityType vlConnectivityType;
+
+	@ManyToOne
+	private NsdPackage nsdPackage;
 
 	@Embedded
 	private Audit audit;
@@ -54,6 +58,14 @@ public class NsVirtualLink implements BaseEntity, Auditable {
 
 	public void setVlConnectivityType(final NsVlConnectivityType vlConnectivityType) {
 		this.vlConnectivityType = vlConnectivityType;
+	}
+
+	public NsdPackage getNsdPackage() {
+		return nsdPackage;
+	}
+
+	public void setNsdPackage(final NsdPackage nsdPackage) {
+		this.nsdPackage = nsdPackage;
 	}
 
 	@Override

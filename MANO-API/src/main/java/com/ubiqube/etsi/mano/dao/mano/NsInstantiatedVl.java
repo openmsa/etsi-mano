@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -20,9 +22,10 @@ public class NsInstantiatedVl extends NsInstantiatedBase {
 
 	private String nsVirtualLinkInstanceId = null;
 
-	private String nsVirtualLinkDescId = null;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	private NsVirtualLink nsVirtualLinkDesc = null;
 
-	private String vlProfileId = null;
+	private UUID vlProfileId = null;
 
 	@Override
 	public UUID getId() {
@@ -42,19 +45,19 @@ public class NsInstantiatedVl extends NsInstantiatedBase {
 		this.nsVirtualLinkInstanceId = nsVirtualLinkInstanceId;
 	}
 
-	public String getNsVirtualLinkDescId() {
-		return nsVirtualLinkDescId;
+	public NsVirtualLink getNsVirtualLinkDesc() {
+		return nsVirtualLinkDesc;
 	}
 
-	public void setNsVirtualLinkDescId(final String nsVirtualLinkDescId) {
-		this.nsVirtualLinkDescId = nsVirtualLinkDescId;
+	public void setNsVirtualLinkDesc(final NsVirtualLink nsVirtualLinkDesc) {
+		this.nsVirtualLinkDesc = nsVirtualLinkDesc;
 	}
 
-	public String getVlProfileId() {
+	public UUID getVlProfileId() {
 		return vlProfileId;
 	}
 
-	public void setVlProfileId(final String vlProfileId) {
+	public void setVlProfileId(final UUID vlProfileId) {
 		this.vlProfileId = vlProfileId;
 	}
 

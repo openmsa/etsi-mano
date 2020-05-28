@@ -1,6 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
@@ -23,7 +23,7 @@ public class NsVlConnectivityType implements BaseEntity, Auditable {
 	private UUID id;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> layerProtocols;
+	private Set<String> layerProtocols;
 
 	private String flowPattern;
 
@@ -39,11 +39,11 @@ public class NsVlConnectivityType implements BaseEntity, Auditable {
 		this.id = id;
 	}
 
-	public List<String> getLayerProtocols() {
+	public Set<String> getLayerProtocols() {
 		return layerProtocols;
 	}
 
-	public void setLayerProtocols(final List<String> layerProtocols) {
+	public void setLayerProtocols(final Set<String> layerProtocols) {
 		this.layerProtocols = layerProtocols;
 	}
 

@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
@@ -112,11 +113,17 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ScalingAspect> scalingAspects;
 
+	@ManyToMany
+	private Set<NsdInstance> nsInstance;
+
 	@Embedded
 	private Audit audit;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
+
+	@ManyToMany(cascade = CascadeType.DETACH)
+	private Set<NsdPackage> nsdPackages;
 
 	@Override
 	public UUID getId() {
@@ -305,6 +312,14 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 		this.vnfInstantiationLevels = vnfInstantiationLevels;
 	}
 
+	public Set<NsdInstance> getNsInstance() {
+		return nsInstance;
+	}
+
+	public void setNsInstance(final Set<NsdInstance> nsInstance) {
+		this.nsInstance = nsInstance;
+	}
+
 	public void addInstantiationLevel(final VnfInstantiationLevels il) {
 		if (null == vnfInstantiationLevels) {
 			vnfInstantiationLevels = new HashSet<>();
@@ -313,4 +328,18 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 		vnfInstantiationLevels.add(il);
 	}
 
+	public Set<NsdPackage> getNsdPackages() {
+		return nsdPackages;
+	}
+
+	public void setNsdPackages(final Set<NsdPackage> nsdPackages) {
+		this.nsdPackages = nsdPackages;
+	}
+
+	public void addNsdPackage(final NsdPackage nsdPackage) {
+		if (null == nsdPackages) {
+			nsdPackages = new HashSet<>();
+		}
+		nsdPackages.add(nsdPackage);
+	}
 }

@@ -72,7 +72,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@JoinColumn
 	private Set<PnfDescriptor> pnfdInfoIds;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<NsdPackage> nestedNsdInfoIds;
 
@@ -102,6 +102,9 @@ public class NsdPackage implements BaseEntity, Auditable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<NsVirtualLink> nsVirtualLinks;
+
+	@OneToMany(cascade = CascadeType.DETACH)
+	private Set<NsdInstance> nsInstance;
 
 	@Override
 	public UUID getId() {
@@ -272,6 +275,14 @@ public class NsdPackage implements BaseEntity, Auditable {
 
 	public void setNsVirtualLinks(final Set<NsVirtualLink> nsVirtualLinks) {
 		this.nsVirtualLinks = nsVirtualLinks;
+	}
+
+	public Set<NsdInstance> getNsInstance() {
+		return nsInstance;
+	}
+
+	public void setNsInstance(final Set<NsdInstance> nsInstance) {
+		this.nsInstance = nsInstance;
 	}
 
 }

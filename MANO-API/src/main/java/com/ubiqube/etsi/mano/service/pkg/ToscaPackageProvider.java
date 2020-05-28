@@ -336,13 +336,18 @@ public class ToscaPackageProvider implements PackageProvider {
 	@Override
 	public Set<String> getNestedNsd(final Map<String, String> userData) {
 		final List<NsTopology> sgr = toscaApi.getObjects(root, userData, NsTopology.class);
-		return sgr.stream().flatMap(x -> x.getNestedNsdInvariant().stream()).collect(Collectors.toSet());
+		return sgr.stream()
+				.filter(x -> x.getNestedNsdInvariant() != null)
+				.flatMap(x -> x.getNestedNsdInvariant().stream())
+				.collect(Collectors.toSet());
 	}
 
 	@Override
 	public Set<String> getVnfd(final Map<String, String> userData) {
 		final List<NsTopology> sgr = toscaApi.getObjects(root, userData, NsTopology.class);
-		return sgr.stream().flatMap(x -> x.getVnfdInvariant().stream()).collect(Collectors.toSet());
+		return sgr.stream()
+				.filter(x -> x.getVnfdInvariant() != null)
+				.flatMap(x -> x.getVnfdInvariant().stream()).collect(Collectors.toSet());
 	}
 
 }
