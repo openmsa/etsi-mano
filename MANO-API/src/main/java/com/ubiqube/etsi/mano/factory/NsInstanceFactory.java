@@ -1,12 +1,8 @@
 package com.ubiqube.etsi.mano.factory;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -19,17 +15,11 @@ public class NsInstanceFactory {
 	}
 
 	@Nonnull
-	public static NsdInstance createNsInstancesNsInstance(final CreateNsRequest nsInstancesCreateNsRequest, final NsdPackage nsd) {
+	public static NsdInstance createNsInstancesNsInstance(final CreateNsRequest nsInstancesCreateNsRequest) {
 		final NsdInstance nsInstance = new NsdInstance();
 		nsInstance.setNsdId(nsInstancesCreateNsRequest.getNsdId());
 		nsInstance.setNsInstanceDescription(nsInstancesCreateNsRequest.getNsDescription());
 		nsInstance.setNsInstanceName(nsInstancesCreateNsRequest.getNsName());
-		final List<NsdInstance> l = nsd.getNestedNsdInfoIds().stream().map(x -> {
-			final NsdInstance r = new NsdInstance();
-			r.setId(x.getId());
-			return r;
-		}).collect(Collectors.toList());
-		nsInstance.setNestedNsInstance(l);
 		nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
 		return nsInstance;
 	}
