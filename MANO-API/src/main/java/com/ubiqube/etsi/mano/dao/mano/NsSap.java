@@ -38,6 +38,10 @@ public class NsSap implements BaseEntity, Auditable, Serializable {
 
 	private String description;
 
+	private String externalVirtualLink;
+
+	private String internalVirtualLink;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> layerProtocols;
 
@@ -150,6 +154,22 @@ public class NsSap implements BaseEntity, Auditable, Serializable {
 
 	public void setNsdPackage(final NsdPackage nsdPackage) {
 		this.nsdPackage = nsdPackage;
+	}
+
+	public String getExternalVirtualLink() {
+		return externalVirtualLink;
+	}
+
+	public void setExternalVirtualLink(final String externalVirtualLink) {
+		this.externalVirtualLink = externalVirtualLink;
+	}
+
+	public String getInternalVirtualLink() {
+		return internalVirtualLink;
+	}
+
+	public void setInternalVirtualLink(final String internalVirtualLink) {
+		this.internalVirtualLink = internalVirtualLink;
 	}
 
 	@Override
