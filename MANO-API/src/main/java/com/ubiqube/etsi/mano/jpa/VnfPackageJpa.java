@@ -6,12 +6,11 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public interface VnfPackageJpa extends CrudRepository<VnfPackage, UUID> {
 
 	Optional<VnfPackage> findByDescriptorId(String descriptorId);
 
-	Set<VnfPackage> findByNsdPackages(NsdPackage nsdPackage);
+	Set<VnfPackage> findByNsdPackages_NsdPackage_Id(UUID nsdInfo);
 }

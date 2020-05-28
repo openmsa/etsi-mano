@@ -122,8 +122,8 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
-	@ManyToMany(cascade = CascadeType.DETACH)
-	private Set<NsdPackage> nsdPackages;
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	private Set<NsdPackageVnfPackage> nsdPackages;
 
 	@Override
 	public UUID getId() {
@@ -328,18 +328,19 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 		vnfInstantiationLevels.add(il);
 	}
 
-	public Set<NsdPackage> getNsdPackages() {
+	public Set<NsdPackageVnfPackage> getNsdPackages() {
 		return nsdPackages;
 	}
 
-	public void setNsdPackages(final Set<NsdPackage> nsdPackages) {
+	public void setNsdPackages(final Set<NsdPackageVnfPackage> nsdPackages) {
 		this.nsdPackages = nsdPackages;
 	}
 
-	public void addNsdPackage(final NsdPackage nsdPackage) {
+	public void addNsdPackage(final NsdPackageVnfPackage nsdPackage) {
 		if (null == nsdPackages) {
 			nsdPackages = new HashSet<>();
 		}
 		nsdPackages.add(nsdPackage);
 	}
+
 }

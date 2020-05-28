@@ -26,6 +26,8 @@ import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
@@ -110,7 +112,7 @@ public class PackagingManager {
 		if (null != packageProvider) {
 			final ProviderData pd = packageProvider.getProviderPadata();
 			vnfPackageJpa.findByDescriptorId(pd.getDescriptorId()).ifPresent(x -> {
-				throw new GenericException("Package " + x.getDescriptorId() + " already onboarded.");
+				throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
 			});
 			mapper.map(pd, vnfPackage);
 			final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes(vnfPackage.getUserDefinedData());
@@ -276,17 +278,32 @@ public class PackagingManager {
 			sgAdapters.forEach(x -> nsPackage.getNsSaps().stream()
 					.filter(y -> x.getTargets().contains(y.getToscaName()))
 					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
-			final Set<VnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
+			final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
 					.map(x -> {
 						final VnfPackage vnfPackage = vnfPackageJpa.findByDescriptorId(x).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
-						vnfPackage.addNsdPackage(nsPackage);
+						final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
+						nsdPackageVnfPackage.setNsdPackage(nsPackage);
+						nsdPackageVnfPackage.setToscaName(x);
+						nsdPackageVnfPackage.setVnfPackage(vnfPackage);
+						vnfPackage.addNsdPackage(nsdPackageVnfPackage);
 						vnfPackageJpa.save(vnfPackage);
-						return vnfPackage;
+						final NsdPackageVnfPackage nsdvnf = new NsdPackageVnfPackage();
+						nsdvnf.setNsdPackage(nsPackage);
+						nsdvnf.setVnfPackage(vnfPackage);
+						nsdvnf.setToscaName(x);
+						return nsdvnf;
 					})
 					.collect(Collectors.toSet());
 			nsPackage.setVnfPkgIds(vnfds);
-			final Set<NsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
-					.map(x -> nsdPackageJpa.findByNsdInvariantId(x).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x)))
+			final Set<NsdPackageNsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
+					.map(x -> {
+						final NsdPackage nestedNsd = nsdPackageJpa.findByNsdInvariantId(x).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x));
+						final NsdPackageNsdPackage nsdnsd = new NsdPackageNsdPackage();
+						nsdnsd.setParent(nsPackage);
+						nsdnsd.setChild(nestedNsd);
+						nsdnsd.setToscaName(x);
+						return nsdnsd;
+					})
 					.collect(Collectors.toSet());
 			nsPackage.setNestedNsdInfoIds(nsds);
 		}

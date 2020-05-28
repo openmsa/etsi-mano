@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -270,9 +271,9 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstanceRepository.save(nsInstance);
 
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
-		final Set<VnfPackage> vnfs = nsd.getVnfPkgIds();
-		for (final VnfPackage id : vnfs) {
-			final VnfPackage vnf = vnfPackageRepository.get(id.getId());
+		final Set<NsdPackageVnfPackage> vnfs = nsd.getVnfPkgIds();
+		for (final NsdPackageVnfPackage id : vnfs) {
+			final VnfPackage vnf = vnfPackageRepository.get(id.getVnfPackage().getId());
 			ensureIsOnboarded(vnf);
 			ensureIsEnabled(vnf);
 			final VnfInstance vnfInstance = vnfm.createVnfInstance(vnf, "VNF instance hold by: " + nsInstance.getId(), id.getId().toString());

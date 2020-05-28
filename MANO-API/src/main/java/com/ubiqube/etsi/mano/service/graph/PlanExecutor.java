@@ -42,4 +42,23 @@ public class PlanExecutor {
 
 		return executor.execute(ExecutionConfig.TERMINATING);
 	}
+
+	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
+		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
+	}
+
+	public ExecutionResults<NsUnitOfWork, String> execDeleteNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
+		return createExecutorNs(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
+	}
+
+	private static ExecutionResults<NsUnitOfWork, String> createExecutorNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final TaskProvider<NsUnitOfWork, String> uowTaskProvider) {
+		final ExecutorService executorService = Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
+		final DexecutorConfig<NsUnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
+		// What about config setExecutionListener.
+		final DefaultDexecutor<NsUnitOfWork, String> executor = new DefaultDexecutor<>(config);
+		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
+
+		return executor.execute(ExecutionConfig.TERMINATING);
+	}
+
 }

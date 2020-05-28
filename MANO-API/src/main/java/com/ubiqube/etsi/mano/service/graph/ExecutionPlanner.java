@@ -36,6 +36,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -53,8 +55,12 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
+import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
+import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 
@@ -73,18 +79,37 @@ public class ExecutionPlanner {
 
 	private final NsInstanceService nsInstanceService;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService) {
+	private final IpamService ipamService;
+
+	private final NsdPackageJpa nsdPackageJpa;
+
+	private final NsdRepository nsdRepository;
+
+	private final NsdPackageService nsdPackageService;
+
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
 		vduNamingStrategy = _vduNamingStrategy;
 		nsInstanceService = _nsInstanceService;
+		ipamService = _ipamService;
+		nsdPackageJpa = _nsdPackageJpa;
+		nsdRepository = _nsdRepository;
+		nsdPackageService = _nsdPackageService;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
 		// Vertex everyThing
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
+		return g;
+	}
+
+	private static ListenableGraph<NsUnitOfWork, NsConnectivityEdge> nsCreateGraph() {
+		// Vertex everyThing
+		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
+		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
 		return g;
 	}
 
@@ -217,6 +242,15 @@ public class ExecutionPlanner {
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
 		vnfPackageRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
+	}
+
+	public void exportNsGraph(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, @Nonnull final UUID _id, final NsdInstance vnfInstance, final String subName) {
+		final DOTExporter<NsUnitOfWork, NsConnectivityEdge> exporter = new DOTExporter<>(NsUnitOfWork::getName);
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		exporter.exportGraph(g, out);
+		final byte[] res = out.toByteArray();
+		final InputStream _stream = new ByteArrayInputStream(res);
+		nsdRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
 	private static String makeUowMonitoringName(final VnfCompute x) {
@@ -402,6 +436,17 @@ public class ExecutionPlanner {
 		return inst;
 	}
 
+	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
+		if ((null == left) || (null == right)) {
+			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
+			return;
+		}
+		left.forEach(x -> right.forEach(y -> {
+			LOG.info("  - Adding {} <-> {}", x, y);
+			g.addEdge(x, y);
+		}));
+	}
+
 	public void makePrePlan(final NsdInstance nsInstance, final NsdPackage nsdInfo, final NsLcmOpOccs lcmOpOccs) {
 		final NsLcmOpOccsResourceChanges changes = lcmOpOccs.getResourceChanges();
 		final Set<NsSap> saps = nsInstanceService.findSapsByNsInstance(nsdInfo);
@@ -440,45 +485,70 @@ public class ExecutionPlanner {
 				final NsInstantiatedVnf sap = new NsInstantiatedVnf();
 				sap.setVnfd(x);
 				sap.setVnfName(x.getVnfProductName());
-				// XXX Not sure whet the profileId is.
+				final VnfInstance vnfi = vnfInstanceService.findBVnfInstanceyVnfPackageId(x.getId());
+				sap.setVnfInstance(vnfi);
+				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
 			}
 		});
 
 	}
 
-	public void plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
-		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, lcmOpOccs);
+	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
+		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = nsCreateGraph();
+		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs);
+		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
+		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
+		saps.forEach(x -> {
+			nsAddEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
+		});
+		final Set<NsdPackageVnfPackage> nsdvnf = nsdPackageService.findVnfPackageByNsPackage(nsdPackage);
+		nsdvnf.forEach(x -> {
+			// An VNF may have a dependency on a VL thru ExtCP
+			final VnfPackage vnfp = vnfPackageService.findById(x.getVnfPackage());
+			vnfp.getVnfExtCp().forEach(y -> {
+				nsAddEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName()));
+			});
+
+		});
+		final Set<NsdPackageNsdPackage> nsdnsd = nsdPackageService.findNestedNsdByNsdPackage(nsdPackage);
+		nsdnsd.forEach(x -> {
+			// A NSD may have a dependency on SAP
+			final NsdPackage nsdPack = nsdPackageJpa.findById(x.getChild().getId()).orElseThrow(() -> new NotFoundException("" + x.getChild().getId()));
+			nsdPack.getNsSaps().forEach(y -> {
+				nsAddEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
+			});
+		});
+		return g;
 	}
 
-	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, ConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs) {
+	private static MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs) {
 		final MultiValueMap<String, NsUnitOfWork> vertex = new LinkedMultiValueMap<>();
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
 			x.getNsdPackage();
-			final NsUnitOfWork uow = new NsUow(x);
+			final NsUnitOfWork uow = new NsUow(x, "");
 			vertex.add(x.getNsdPackage().getNsdName(), uow);
 			g.addVertex(uow);
 		});
 		resources.getAffectedPnfs().forEach(x -> {
-			final NsUnitOfWork uow = new PnfUow(x);
+			final NsUnitOfWork uow = new PnfUow(x, "");
 			g.addVertex(uow);
 		});
 		resources.getAffectedSaps().stream().forEach(x -> {
-			final NsUnitOfWork uow = new SapUow(x);
+			final NsUnitOfWork uow = new SapUow(x, "");
 			g.addVertex(uow);
 		});
 		resources.getAffectedVls().stream().forEach(x -> {
-			final NsUnitOfWork uow = new NsVlUow(x);
+			final NsUnitOfWork uow = new NsVlUow(x, "");
 			g.addVertex(uow);
 		});
 		resources.getAffectedVnffgs().forEach(x -> {
-			final NsUnitOfWork uow = new VnffgUow(x);
+			final NsUnitOfWork uow = new VnffgUow(x, "");
 			g.addVertex(uow);
 		});
 		resources.getAffectedVnfs().forEach(x -> {
-			final NsUnitOfWork uow = new VnfUow(x);
+			final NsUnitOfWork uow = new VnfUow(x, "");
 			g.addVertex(uow);
 		});
 		return vertex;

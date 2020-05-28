@@ -14,16 +14,19 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
+import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -37,7 +40,6 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.factory.VnfInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
@@ -50,6 +52,8 @@ import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
+import com.ubiqube.etsi.mano.service.graph.NsConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.NsUnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -103,11 +107,11 @@ public class NfvoActions {
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Delete VNF
-		final Set<VnfPackage> vnfs = nsdInfo.getVnfPkgIds();
+		final Set<NsdPackageVnfPackage> vnfs = nsdInfo.getVnfPkgIds();
 		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
 		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
-		for (final VnfPackage vnfId : vnfs) {
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId.getId());
+		for (final NsdPackageVnfPackage vnfId : vnfs) {
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId, vnfId.getVnfPackage().getId());
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		waitForCompletion(vnfLcmOpOccsIds);
@@ -155,35 +159,14 @@ public class NfvoActions {
 		// Create Ns.
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
-		executionPlanner.plan(lcmOpOccs, nsInstance);
-		// final String processId = vim.onNsInstantiate(nsdId, userData);
-		// Save Process Id with lcm, XXX/ Don't!!! Save in instance.
-		// nsdRepository.changeNsdUpdateState(nsdInfo, NsdUsageStateType.IN_USE);
-		// Instantiate each VNF.
-		final Set<VnfPackage> vnfPkgIds = nsdInfo.getVnfPkgIds();
-		final List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
-		for (final VnfPackage vnfId : vnfPkgIds) {
-			VnfInstance nsVnfInstance = nsInstance.getVnfInstance().stream().filter(x -> x.getVnfPkg().toString().equals(vnfId)).findFirst().orElse(null);
-			if (null == nsVnfInstance) {
-				final VnfPackage vnfPackage = vnfPackageRepository.get(vnfId.getId());
-				final VnfInstance vnfInstance = vnfm.createVnfInstance(vnfPackage, "", "Sub-instance " + nsInstanceId);
-				nsVnfInstance = VnfInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfInstance, "vimId?");
-				nsInstance.getVnfInstance().add(nsVnfInstance);
-				nsInstanceRepository.save(nsInstance);
-			}
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfInstatiate(nsVnfInstance.getId(), vnfId.getId());
-			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
-		}
-		// Link VNF lcm OP OCCS to this operation.
-		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		// wait for completion
-		waitForCompletion(vnfLcmOpOccsIds);
-		// update lcm op occs
-		refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
-		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		final LcmOperationStateType resultStatus = computeStatus(vnfLcmOpOccsIds);
-		updateOperationState(lcmOpOccs, resultStatus);
-		// event->create (we have lcm op occs.)
+		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
+		executionPlanner.exportNsGraph(plan, nsdId, nsInstance, "create");
+		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim);
+		lcmOpOccsRepository.save(lcmOpOccs);
+		// setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results,
+		// InstantiationStateEnum.INSTANTIATED);
+		// XXX Send COMPLETED event.
+		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, lcmOpOccs.getId());
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
 	}
 

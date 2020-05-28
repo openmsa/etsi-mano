@@ -11,5 +11,5 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 public interface NsdPackageJpa extends CrudRepository<NsdPackage, UUID> {
 	Optional<NsdPackage> findByNsdInvariantId(String nsdInvariantId);
 
-	Set<NsdPackage> findByNestedNsdInfoIds(NsdPackage nsdPackage);
+	Set<NsdPackage> findByNestedNsdInfoIds_Child(NsdPackage nsdPackage);
 }

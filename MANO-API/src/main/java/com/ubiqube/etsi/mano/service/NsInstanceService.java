@@ -61,11 +61,11 @@ public class NsInstanceService {
 	}
 
 	public Set<NsdPackage> findNestedNsdByNsInstance(final NsdPackage nsdInfo) {
-		return nsdPackageJpa.findByNestedNsdInfoIds(nsdInfo);
+		return nsdPackageJpa.findByNestedNsdInfoIds_Child(nsdInfo);
 	}
 
 	public Set<VnfPackage> findVnfPackageByNsInstance(final NsdPackage nsdInfo) {
-		return vnfPackageJpa.findByNsdPackages(nsdInfo);
+		return vnfPackageJpa.findByNsdPackages_NsdPackage_Id(nsdInfo.getId());
 	}
 
 }
