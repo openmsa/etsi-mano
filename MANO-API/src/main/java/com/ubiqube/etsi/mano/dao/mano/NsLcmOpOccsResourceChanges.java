@@ -5,27 +5,34 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Embeddable
 public class NsLcmOpOccsResourceChanges {
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<NsInstantiatedVnf> affectedVnfs = null;
+	@JoinColumn
+	private Set<NsInstantiatedVnf> affectedVnfs = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<NsInstantiatedPnf> affectedPnfs = null;
+	@JoinColumn
+	private Set<NsInstantiatedPnf> affectedPnfs = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<NsInstantiatedVl> affectedVls = null;
+	@JoinColumn
+	private Set<NsInstantiatedVl> affectedVls = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<NsInstantiatedVnffg> affectedVnffgs = null;
+	@JoinColumn
+	private Set<NsInstantiatedVnffg> affectedVnffgs = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<NsInstantiatedNs> affectedNss = null;
+	@JoinColumn
+	private Set<NsInstantiatedNs> affectedNss = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<NsInstantiatedSap> affectedSaps = null;
+	@JoinColumn
+	private Set<NsInstantiatedSap> affectedSaps = new HashSet<>();
 
 	public Set<NsInstantiatedVnf> getAffectedVnfs() {
 		return affectedVnfs;
