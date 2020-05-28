@@ -16,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
@@ -64,17 +63,15 @@ public class NsdPackage implements BaseEntity, Auditable {
 
 	private String flavorId;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	@JoinColumn
-	private Set<VnfPackage> vnfPkgIds;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsdPackage")
+	private Set<NsdPackageVnfPackage> vnfPkgIds;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<PnfDescriptor> pnfdInfoIds;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	@JoinColumn
-	private Set<NsdPackage> nestedNsdInfoIds;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parent")
+	private Set<NsdPackageNsdPackage> nestedNsdInfoIds;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -98,12 +95,15 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private Map<String, String> userDefinedData;
 
 	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	private Set<NsSap> nsSaps;
 
 	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	private Set<NsVirtualLink> nsVirtualLinks;
 
 	@OneToMany(cascade = CascadeType.DETACH)
+	@JoinColumn
 	private Set<NsdInstance> nsInstance;
 
 	@Override
@@ -165,11 +165,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.nsdInvariantId = nsdInvariantId;
 	}
 
-	public Set<VnfPackage> getVnfPkgIds() {
+	public Set<NsdPackageVnfPackage> getVnfPkgIds() {
 		return vnfPkgIds;
 	}
 
-	public void setVnfPkgIds(final Set<VnfPackage> vnfPkgIds) {
+	public void setVnfPkgIds(final Set<NsdPackageVnfPackage> vnfPkgIds) {
 		this.vnfPkgIds = vnfPkgIds;
 	}
 
@@ -181,11 +181,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.pnfdInfoIds = pnfdInfoIds;
 	}
 
-	public Set<NsdPackage> getNestedNsdInfoIds() {
+	public Set<NsdPackageNsdPackage> getNestedNsdInfoIds() {
 		return nestedNsdInfoIds;
 	}
 
-	public void setNestedNsdInfoIds(final Set<NsdPackage> nestedNsdInfoIds) {
+	public void setNestedNsdInfoIds(final Set<NsdPackageNsdPackage> nestedNsdInfoIds) {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 	}
 
