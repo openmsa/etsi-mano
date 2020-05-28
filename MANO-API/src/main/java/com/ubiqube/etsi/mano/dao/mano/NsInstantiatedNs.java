@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsInstantiatedNs {
+public class NsInstantiatedNs extends NsInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -26,10 +26,12 @@ public class NsInstantiatedNs {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private NsdPackage nsdPackage = null;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
