@@ -204,7 +204,6 @@ public class OpenStackVim implements Vim {
 		bNet.name(name);
 		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2)));
 		final Network network = os.networking().network().create(bNet.adminStateUp(true).build());
-		l2.getNetworkType();
 		l2.getVlanTransparent();
 		LOG.debug("Network created: {} = {}", network.getId(), network.getStatus());
 		return network.getId();
