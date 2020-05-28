@@ -33,6 +33,8 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	private String vnfName = null;
 
+	private String instanceDescription;
+
 	/** XXX TO do. */
 	@Transient
 	private AffectedVnfChangedInfo changedInfo = null;
@@ -85,6 +87,14 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	public void setVnfd(final VnfPackage vnfd) {
 		this.vnfd = vnfd;
+	}
+
+	public String getInstanceDescription() {
+		return instanceDescription;
+	}
+
+	public void setInstanceDescription(final String instanceDescription) {
+		this.instanceDescription = instanceDescription;
 	}
 
 }
