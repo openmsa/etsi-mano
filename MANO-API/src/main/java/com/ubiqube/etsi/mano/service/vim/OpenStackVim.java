@@ -202,7 +202,7 @@ public class OpenStackVim implements Vim {
 		final NetworkBuilder bNet = Builders.network().tenantId(vimConnectionInformation.getAccessInfo().get("projectId"));
 		Optional.ofNullable(l2.getMtu()).ifPresent(x2 -> bNet.toString());
 		bNet.name(name);
-		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2)));
+		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2.toUpperCase())));
 		final Network network = os.networking().network().create(bNet.adminStateUp(true).build());
 		l2.getVlanTransparent();
 		LOG.debug("Network created: {} = {}", network.getId(), network.getStatus());
@@ -218,11 +218,18 @@ public class OpenStackVim implements Vim {
 				.enableDHCP(l3ProtocolData.isDhcpEnabled())
 				.gateway(l3ProtocolData.getGatewayIp())
 				.tenantId(vimConnectionInformation.getAccessInfo().get("projectId"))
-				.ipVersion(IPVersionType.valueOf(l3ProtocolData.getIpVersion()))
+				.ipVersion(convertIpVersion(l3ProtocolData.getIpVersion()))
 				.networkId(networkId);
 		final Subnet res = os.networking().subnet().create(bSub.build());
 		LOG.debug("SubNetwork created: {}", res.getId());
 		return res.getId();
+	}
+
+	private IPVersionType convertIpVersion(final String ipVersion) {
+		if ("ipv6".equals(ipVersion)) {
+			return IPVersionType.valueOf("V6");
+		}
+		return IPVersionType.valueOf("V4");
 	}
 
 	@Override
