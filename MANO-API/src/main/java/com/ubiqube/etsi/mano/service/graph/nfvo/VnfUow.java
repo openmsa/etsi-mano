@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
@@ -12,6 +12,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfUow extends AbstractNsUnitOfWork {

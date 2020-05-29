@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 

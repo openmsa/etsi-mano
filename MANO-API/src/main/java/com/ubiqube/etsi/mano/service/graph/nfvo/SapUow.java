@@ -1,21 +1,16 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedSap;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class NsUow extends AbstractNsUnitOfWork {
-
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-	private final NsInstantiatedNs resourceHandle;
-
-	public NsUow(final NsInstantiatedNs _resourceHandleEntity, final String _name) {
+public class SapUow extends AbstractNsUnitOfWork {
+	public SapUow(final NsInstantiatedSap _resourceHandleEntity, final String _name) {
 		super(_resourceHandleEntity, _name);
-		resourceHandle = _resourceHandleEntity;
 	}
 
 	@Override
@@ -26,7 +21,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public NsUowType getType() {
-		return NsUowType.NSD;
+		return NsUowType.SAP;
 	}
 
 	@Override
@@ -37,6 +32,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	@Override
 	protected String getPrefix() {
-		return "nsd";
+		return "sap";
 	}
+
 }

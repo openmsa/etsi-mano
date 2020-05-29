@@ -1,37 +1,39 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedSap;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class SapUow extends AbstractNsUnitOfWork {
-	public SapUow(final NsInstantiatedSap _resourceHandleEntity, final String _name) {
-		super(_resourceHandleEntity, _name);
+public class NsStartUow extends AbstractNsUnitOfWork {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	public NsStartUow(final NsInstantiatedBase _resourceHandleEntity) {
+		super(_resourceHandleEntity, "");
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public NsUowType getType() {
-		return NsUowType.SAP;
+		return null;
 	}
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "sap";
+		return "ns_mano_start";
 	}
 
 }

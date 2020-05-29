@@ -67,6 +67,17 @@ import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsEdgeListener;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsEndUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsStartUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsVlUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.PnfUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
+import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
 
 @Service
 public class ExecutionPlanner {

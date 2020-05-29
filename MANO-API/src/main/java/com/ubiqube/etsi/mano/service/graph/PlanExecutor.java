@@ -18,6 +18,10 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedBaseJpa;
 import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.nfvo.UowNsTaskCreateProvider;
+import com.ubiqube.etsi.mano.service.graph.nfvo.UowNsTaskDeleteProvider;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 @Service
