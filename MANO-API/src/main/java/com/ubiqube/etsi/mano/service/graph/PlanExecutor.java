@@ -4,6 +4,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.jgrapht.ListenableGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.DefaultDexecutor;
@@ -14,15 +16,25 @@ import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedBaseJpa;
+import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
+import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 @Service
 public class PlanExecutor {
 
+	private static final Logger LOG = LoggerFactory.getLogger(PlanExecutor.class);
+
 	private final VnfInstantiedBaseJpa vnfInstantiedBaseJpa;
 
-	public PlanExecutor(final VnfInstantiedBaseJpa _vnfInstantiedBaseJpa) {
+	private final NsInstantiatedBaseJpa nsInstantiatedBaseJpa;
+
+	private final VnfmInterface vnfm;
+
+	public PlanExecutor(final VnfInstantiedBaseJpa _vnfInstantiedBaseJpa, final NsInstantiatedBaseJpa _nsInstantiatedBaseJpa, final VnfmInterface _vnfm) {
 		vnfInstantiedBaseJpa = _vnfInstantiedBaseJpa;
+		nsInstantiatedBaseJpa = _nsInstantiatedBaseJpa;
+		vnfm = _vnfm;
 	}
 
 	public ExecutionResults<UnitOfWork, String> execCreate(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
@@ -44,11 +56,11 @@ public class PlanExecutor {
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
+		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, nsInstantiatedBaseJpa, vnfm));
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execDeleteNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutorNs(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
+		return createExecutorNs(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, nsInstantiatedBaseJpa, vnfm));
 	}
 
 	private static ExecutionResults<NsUnitOfWork, String> createExecutorNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final TaskProvider<NsUnitOfWork, String> uowTaskProvider) {
@@ -56,7 +68,10 @@ public class PlanExecutor {
 		final DexecutorConfig<NsUnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
 		final DefaultDexecutor<NsUnitOfWork, String> executor = new DefaultDexecutor<>(config);
-		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
+		g.edgeSet().forEach(x -> {
+			LOG.info("Execution link: {} <-> {}", x.getSource(), x.getTarget());
+			executor.addDependency(x.getSource(), x.getTarget());
+		});
 
 		return executor.execute(ExecutionConfig.TERMINATING);
 	}

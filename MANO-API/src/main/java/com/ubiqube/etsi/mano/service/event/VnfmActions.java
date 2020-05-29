@@ -24,15 +24,14 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
@@ -40,17 +39,11 @@ import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
-import ma.glasnost.orika.MapperFacade;
-
 @Service
 public class VnfmActions {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfmActions.class);
 
-	private final VnfInstancesRepository vnfInstancesRepository;
-
 	private final VimManager vimManager;
-
-	private final VnfPackageJpa vnfPackageRepository;
 
 	private final EventManager eventManager;
 
@@ -58,38 +51,31 @@ public class VnfmActions {
 
 	private final PlanExecutor executor;
 
-	private final MapperFacade mapper;
-
 	private final VnfLcmService vnfLcmService;
 
 	private final GrantService grantService;
 
 	private final VnfInstanceService vnfInstancesService;
 
-	public VnfmActions(final VnfInstancesRepository _vnfInstancesRepository, final VimManager _vimManager, final VnfPackageJpa _vnfPackageRepository, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService) {
+	private final VnfPackageService vnfPackageService;
+
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService) {
 		super();
-		vnfInstancesRepository = _vnfInstancesRepository;
 		vimManager = _vimManager;
-		vnfPackageRepository = _vnfPackageRepository;
+		vnfPackageService = _vnfPackageService;
 		eventManager = _eventManager;
 		executionPlanner = _executionPlanner;
 		executor = _executor;
-		mapper = _mapper;
 		vnfLcmService = _vnfLcmService;
 		grantService = _grantService;
 		vnfInstancesService = _vnfInstancesService;
 	}
 
-	public void vnfInstantiate(@Nonnull final UUID vnfInstanceId) {
-		VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-
-		// Maybe we need additional parameters to say STARTING / PROCESSING ...
-		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
-		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
-		copyVnfPkgToInstance(vnfPkg, vnfInstance);
-		vnfInstance = vnfInstancesRepository.save(vnfInstance);
-
-		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfInstance);
+	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
+		// Parameters are in the lcmOpOccs.
+		VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		executionPlanner.makePrePlan(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 
@@ -109,20 +95,20 @@ public class VnfmActions {
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// Save LCM
 
-		vnfInstance = vnfInstancesRepository.save(vnfInstance);
+		vnfInstance = vnfInstancesService.save(vnfInstance);
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
-		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "create");
+		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "create");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim);
 		vnfLcmService.save(lcmOpOccs);
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
+		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), lcmOpOccs.getId());
 	}
 
 	private void copyGrantResourcesToInstantiated(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
@@ -219,7 +205,7 @@ public class VnfmActions {
 	}
 
 	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
 		if (results.getErrored().isEmpty()) {
 			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
 			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
@@ -228,11 +214,7 @@ public class VnfmActions {
 			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
-		vnfInstancesRepository.save(vnfInstance);
-	}
-
-	private void copyVnfPkgToInstance(final VnfPackage vnfPkg, final VnfInstance vnfInstance) {
-		mapper.map(vnfPkg, vnfInstance);
+		vnfInstancesService.save(vnfInstance);
 	}
 
 	private static String findImage(final GrantResponse grants, final UUID vduId) {
@@ -252,13 +234,15 @@ public class VnfmActions {
 
 	}
 
-	public void vnfTerminate(@Nonnull final UUID vnfInstanceId) {
-		LOG.info("Eecuting Terminate on instance {}", vnfInstanceId);
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
-		final VnfPackage vnfPkg = vnfPackageRepository.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("Vnf " + vnfPkgId + " not Found."));
+	public void vnfTerminate(@Nonnull final UUID lcmOpOccsId) {
+		LOG.info("Eecuting Terminate on lcmOpOccs {}", lcmOpOccsId);
+		// final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		// final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
+		// final VnfPackage vnfPkg = vnfPackageService.findById(vnfPkgId);
 
-		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfInstance);
+		VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getId());
 		executionPlanner.terminatePlan(lcmOpOccs);
 
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
@@ -273,12 +257,12 @@ public class VnfmActions {
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
 		plan = executionPlanner.revert(plan);
-		executionPlanner.exportGraph(plan, vnfPkgId, vnfInstance, "delete");
+		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
 		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
 
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstanceId, lcmOpOccs.getId());
+		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), lcmOpOccs.getId());
 	}
 
 	private GrantResponse getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {

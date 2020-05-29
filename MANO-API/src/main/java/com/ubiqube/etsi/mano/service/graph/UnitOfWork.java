@@ -10,6 +10,8 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public interface UnitOfWork extends Serializable {
 	public enum UowType {
+		START("START"),
+		END("END"),
 		VL("VL"),
 		CP("CP"),
 		EXTCP("EXTCP"),
@@ -19,7 +21,7 @@ public interface UnitOfWork extends Serializable {
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE");
 
-		private String value;
+		private final String value;
 
 		UowType(final String value) {
 			this.value = value;

@@ -5,6 +5,7 @@ import java.util.Map;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -15,14 +16,18 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	private final NsInstantiatedVnf resourceHandleEntity;
 
-	public VnfUow(final NsInstantiatedVnf _resourceHandleEntity, final String _name) {
+	private final InstantiateVnfRequest request;
+
+	public VnfUow(final NsInstantiatedVnf _resourceHandleEntity, final InstantiateVnfRequest _request, final String _name) {
 		super(_resourceHandleEntity, _name);
 		resourceHandleEntity = _resourceHandleEntity;
+		request = _request;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		final VnfLcmOpOccs res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance().getId(), null);
+		final VnfLcmOpOccs res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance().getId(), request, null);
+		// XXX poll the lcm or register for notifications.
 		return resourceHandleEntity.getVnfInstance().getId().toString();
 	}
 

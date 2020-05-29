@@ -11,7 +11,8 @@ import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.NsInstantiedBaseJpa;
+import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
+import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {
@@ -28,11 +29,11 @@ public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {
 
 	private final Map<String, String> context;
 
-	private final transient NsInstantiedBaseJpa resourceHandleEntityJpa;
+	private final transient NsInstantiatedBaseJpa resourceHandleEntityJpa;
 
 	private final transient Function<Parameters, String> function;
 
-	public AbstractNsTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final NsUnitOfWork uaow, final NsInstantiedBaseJpa _resourceHandleEntityJpa, final Map<String, String> _context, final boolean _create) {
+	public AbstractNsTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final NsUnitOfWork uaow, final NsInstantiatedBaseJpa _resourceHandleEntityJpa, final Map<String, String> _context, final boolean _create, final VnfmInterface vnfm) {
 		super();
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
@@ -41,7 +42,7 @@ public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {
 		resourceHandleEntityJpa = _resourceHandleEntityJpa;
 		if (_create) {
 			function = x -> {
-				final String res = uaow.exec(vimConnectionInformation, null, vim, context);
+				final String res = uaow.exec(vimConnectionInformation, vnfm, vim, context);
 				if (null != res) {
 					context.put(uaow.getToscaName(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);

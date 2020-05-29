@@ -75,4 +75,9 @@ public class VnfPackageService {
 	public VnfPackage findById(final VnfPackage vnfPackage) {
 		return vnfPackageJpa.findById(vnfPackage.getId()).orElseThrow(() -> new NotFoundException("VNF Package" + vnfPackage.getId() + " not found."));
 	}
+
+	public VnfPackage findById(final UUID vnfPkgId) {
+		return vnfPackageJpa.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("VNF Package" + vnfPkgId + " not found."));
+	}
+
 }

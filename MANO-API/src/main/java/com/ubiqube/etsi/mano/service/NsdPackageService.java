@@ -38,7 +38,7 @@ public class NsdPackageService {
 	}
 
 	public Set<NsdPackageVnfPackage> findVnfPackageByNsPackage(final NsdPackage nsdPackage) {
-		return nsdPackageVnfPackageJpa.findByNsdPackages_NsdPackage(nsdPackage);
+		return nsdPackageVnfPackageJpa.findByNsdPackage(nsdPackage);
 	}
 
 	public Set<NsdPackageNsdPackage> findNestedNsdByNsdPackage(final NsdPackage nsdPackage) {

@@ -9,5 +9,5 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 
 public interface NsdPackageVnfPackageJpa extends CrudRepository<NsdPackageVnfPackage, UUID> {
-	Set<NsdPackageVnfPackage> findByNsdPackages_NsdPackage(NsdPackage nsdPackage);
+	Set<NsdPackageVnfPackage> findByNsdPackage(NsdPackage nsdPackage);
 }

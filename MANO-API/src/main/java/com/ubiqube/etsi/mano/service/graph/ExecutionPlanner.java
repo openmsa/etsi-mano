@@ -26,6 +26,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedSap;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVl;
@@ -56,6 +57,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.IpamService;
@@ -507,6 +509,7 @@ public class ExecutionPlanner {
 			// An VNF may have a dependency on a VL thru ExtCP
 			final VnfPackage vnfp = vnfPackageService.findById(x.getVnfPackage());
 			vnfp.getVnfExtCp().forEach(y -> {
+				LOG.info("Adding edge: {} <-> {}", y.getExternalVirtualLink(), x.getToscaName());
 				nsAddEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName()));
 			});
 
@@ -516,9 +519,40 @@ public class ExecutionPlanner {
 			// A NSD may have a dependency on SAP
 			final NsdPackage nsdPack = nsdPackageJpa.findById(x.getChild().getId()).orElseThrow(() -> new NotFoundException("" + x.getChild().getId()));
 			nsdPack.getNsSaps().forEach(y -> {
+				LOG.info("Adding edge: {} <-> {}", x.getToscaName(), y.getToscaName());
 				nsAddEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
 			});
 		});
+		// Add start
+		final NsInstantiatedBase vnfInstantiedStart = new NsInstantiatedBase();
+		vnfInstantiedStart.setChangeType(ChangeType.ADDED);
+		// vnfInstantiedStart.setVnfLcmOpOccs(vnfLcmOpOccs);
+		vnfInstantiedStart.setChangeResult(InstantiationStatusType.NOT_STARTED);
+		final NsUnitOfWork root = new NsStartUow(vnfInstantiedStart);
+		g.addVertex(root);
+		g.vertexSet().stream()
+				.filter(key -> g.incomingEdgesOf(key).isEmpty())
+				.forEach(key -> {
+					if (key != root) {
+						LOG.debug("Connecting root to {}", key.getName());
+						g.addEdge(root, key);
+					}
+				});
+		// And end Node
+		final NsInstantiatedBase vnfInstantiedEnd = new NsInstantiatedBase();
+		vnfInstantiedEnd.setChangeType(ChangeType.ADDED);
+		// vnfInstantiedEnd.setVnfLcmOpOccs(vnfLcmOpOccs);
+		vnfInstantiedEnd.setChangeResult(InstantiationStatusType.NOT_STARTED);
+		final NsUnitOfWork end = new NsEndUow(vnfInstantiedEnd);
+		g.addVertex(end);
+		g.vertexSet().stream()
+				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
+				.forEach(key -> {
+					if (key != end) {
+						g.addEdge(key, end);
+					}
+				});
+
 		return g;
 	}
 
@@ -527,29 +561,43 @@ public class ExecutionPlanner {
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
 			x.getNsdPackage();
-			final NsUnitOfWork uow = new NsUow(x, "");
+			LOG.info("Adding NS vertex of {}", x.getId());
+			final NsUnitOfWork uow = new NsUow(x, x.getNsdPackage().getNsdName());
 			vertex.add(x.getNsdPackage().getNsdName(), uow);
 			g.addVertex(uow);
 		});
 		resources.getAffectedPnfs().forEach(x -> {
+			LOG.info("Adding PNF vertex of {}", x.getId());
 			final NsUnitOfWork uow = new PnfUow(x, "");
 			g.addVertex(uow);
+			vertex.add(x.getPnfName(), uow);
 		});
 		resources.getAffectedSaps().stream().forEach(x -> {
+			LOG.info("Adding SAP vertex of {}", x.getId());
 			final NsUnitOfWork uow = new SapUow(x, "");
 			g.addVertex(uow);
+			vertex.add(x.getSapName(), uow);
 		});
 		resources.getAffectedVls().stream().forEach(x -> {
+			LOG.info("Adding NSVL vertex of {}", x.getId());
 			final NsUnitOfWork uow = new NsVlUow(x, "");
 			g.addVertex(uow);
+			vertex.add(x.getId().toString(), uow);
 		});
 		resources.getAffectedVnffgs().forEach(x -> {
+			LOG.info("Adding VNFFG vertex of {}", x.getId());
 			final NsUnitOfWork uow = new VnffgUow(x, "");
 			g.addVertex(uow);
+			vertex.add(x.getVnffgdId(), uow);
 		});
 		resources.getAffectedVnfs().forEach(x -> {
-			final NsUnitOfWork uow = new VnfUow(x, "");
+			LOG.info("Adding VNF vertex of {}", x.getVnfName());
+			final InstantiateVnfRequest request = new InstantiateVnfRequest();
+			// XXX request.setFlavourId(lcmOpOccs.get);
+			// XXX request.setInstantiationLevelId(instantiationLevelId);
+			final NsUnitOfWork uow = new VnfUow(x, request, x.getVnfName());
 			g.addVertex(uow);
+			vertex.add(x.getVnfName(), uow);
 		});
 		return vertex;
 	}

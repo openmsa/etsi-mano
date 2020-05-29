@@ -120,4 +120,12 @@ public class VnfInstanceService {
 		return vnfInstanceJpa.findByVnfPkg_Id(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
 	}
 
+	public VnfInstance findById(final UUID id) {
+		return vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
+	}
+
+	public VnfInstance save(final VnfInstance vnfInstance) {
+		return vnfInstanceJpa.save(vnfInstance);
+	}
+
 }

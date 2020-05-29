@@ -27,7 +27,7 @@ public class StartUow extends AbstractUnitOfWork {
 
 	@Override
 	protected String getPrefix() {
-		return "mano_start";
+		return "vnf_mano_start";
 	}
 
 	@Override

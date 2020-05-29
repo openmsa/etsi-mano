@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.jpa;
+package com.ubiqube.etsi.mano.repository.jpa;
 
 import java.util.UUID;
 
@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 
-public interface NsInstantiedBaseJpa extends CrudRepository<NsInstantiatedBase, UUID> {
+public interface NsInstantiatedBaseJpa extends CrudRepository<NsInstantiatedBase, UUID> {
 	// Nothing.
 }

@@ -27,7 +27,7 @@ public class EndUow extends AbstractUnitOfWork {
 
 	@Override
 	protected String getPrefix() {
-		return "mano_end";
+		return "vnf_mano_end";
 	}
 
 	@Override
