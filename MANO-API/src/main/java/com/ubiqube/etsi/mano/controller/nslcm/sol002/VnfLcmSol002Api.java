@@ -18,11 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
 import ma.glasnost.orika.MapperFacade;
@@ -97,8 +99,9 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
-		vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest, links);
-		return ResponseEntity.accepted().build();
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest);
+		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
+		return ResponseEntity.accepted().header("Location", link.getSelf().getHref()).build();
 	}
 
 	@Override
@@ -124,7 +127,8 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), terminateVnfRequest);
-		return ResponseEntity.noContent().build();
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), terminateVnfRequest);
+		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
+		return ResponseEntity.noContent().header("Location", link.getSelf().getHref()).build();
 	}
 }

@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
-import com.ubiqube.etsi.mano.controller.nslcm.sol003.Sol003LcmLinkable;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -40,7 +39,7 @@ public class VnfmNfvo implements VnfmInterface {
 
 	@Override
 	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, final UUID vnfId) {
-		return lcm.instantiate(vnfInstanceId, instantiateVnfRequest, new Sol003LcmLinkable());
+		return lcm.instantiate(vnfInstanceId, instantiateVnfRequest);
 	}
 
 	@Override
