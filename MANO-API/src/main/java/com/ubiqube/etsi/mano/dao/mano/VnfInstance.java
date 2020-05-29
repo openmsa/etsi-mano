@@ -76,8 +76,8 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	private transient NsdInstance nsInstance;
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	private NsdInstance nsInstance;
 
 	private String processId;
 
@@ -94,7 +94,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@JoinColumn
 	private Set<VnfInstantiatedBase> extManagedVirtualLinks;
 
-	private Audit audit;
+	private Audit audit = new Audit();
 
 	@Override
 	public UUID getId() {

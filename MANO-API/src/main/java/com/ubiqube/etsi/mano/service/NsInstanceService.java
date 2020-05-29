@@ -12,6 +12,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.jpa.NsSapJpa;
 import com.ubiqube.etsi.mano.jpa.NsVirtualLinkJpa;
+import com.ubiqube.etsi.mano.jpa.NsdInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 
@@ -25,11 +26,14 @@ public class NsInstanceService {
 
 	private final VnfPackageJpa vnfPackageJpa;
 
-	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final VnfPackageJpa _vnfPackageJpa) {
+	private final NsdInstanceJpa nsdInstanceJpa;
+
+	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final VnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa) {
 		nsSapJpa = _nsSapJpa;
 		nsVirtualLinkJpa = _nsVirtualLinkJpa;
 		nsdPackageJpa = _nsdPackageJpa;
 		vnfPackageJpa = _vnfPackageJpa;
+		nsdInstanceJpa = _nsdInstanceJpa;
 	}
 
 	public int countLiveInstanceOfSap(final NsdInstance nsInstance, final UUID id) {
@@ -66,6 +70,10 @@ public class NsInstanceService {
 
 	public Set<VnfPackage> findVnfPackageByNsInstance(final NsdPackage nsdInfo) {
 		return vnfPackageJpa.findByNsdPackages_NsdPackage_Id(nsdInfo.getId());
+	}
+
+	public NsdInstance save(final NsdInstance nsInstance) {
+		return nsdInstanceJpa.save(nsInstance);
 	}
 
 }

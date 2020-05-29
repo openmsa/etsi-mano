@@ -144,6 +144,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 		orikaMapperFactory.classMap(VnfPackage.class, VnfInstance.class)
 				.exclude("audit")
 				.exclude("id")
+				.exclude("nsInstance")
 				// .field("id", "vnfPkg.id")
 				// .field("vnfCompute", "instantiatedVnfInfo.vnfcResourceInfo")
 				// .field("vnfVl", "instantiatedVnfInfo.virtualLinkResourceInfo")

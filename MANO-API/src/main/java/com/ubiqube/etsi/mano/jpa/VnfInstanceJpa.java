@@ -11,5 +11,5 @@ public interface VnfInstanceJpa extends CrudRepository<VnfInstance, UUID> {
 
 	int countByVnfPkgId(UUID fromString);
 
-	Optional<VnfInstance> findByVnfPkg_Id(UUID id);
+	Optional<VnfInstance> findByVnfPkg_IdAndNsInstance_Id(UUID vnfPackageId, UUID nsInstanceid);
 }

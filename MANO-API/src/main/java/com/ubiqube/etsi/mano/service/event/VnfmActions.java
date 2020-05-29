@@ -90,7 +90,6 @@ public class VnfmActions {
 		// XXX Send processing event.
 
 		copyGrantResourcesToInstantiated(lcmOpOccs, grantsResp);
-		// lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		vnfLcmService.setGrant(lcmOpOccs, grantsResp.getId());
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// Save LCM

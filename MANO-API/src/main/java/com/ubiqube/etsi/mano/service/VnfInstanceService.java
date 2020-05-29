@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -116,8 +117,8 @@ public class VnfInstanceService {
 		return vnfInstantiedVirtualLinkJpa.findAllByVnfLcmOpOccs_VnfInstance(vnfInstance);
 	}
 
-	public VnfInstance findBVnfInstanceyVnfPackageId(final UUID id) {
-		return vnfInstanceJpa.findByVnfPkg_Id(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
+	public VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId) {
+		return vnfInstanceJpa.findByVnfPkg_IdAndNsInstance_Id(vnfPackageId, nsdInstance.getId()).orElseThrow(() -> new NotFoundException("Could not find vnf=" + vnfPackageId + " nsInstance=" + nsdInstance.getId()));
 	}
 
 	public VnfInstance findById(final UUID id) {

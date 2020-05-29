@@ -56,6 +56,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -65,6 +66,7 @@ import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
+import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 @Service
 public class ExecutionPlanner {
@@ -89,7 +91,9 @@ public class ExecutionPlanner {
 
 	private final NsdPackageService nsdPackageService;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService) {
+	private final VnfmInterface vnfm;
+
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
@@ -99,6 +103,7 @@ public class ExecutionPlanner {
 		nsdPackageJpa = _nsdPackageJpa;
 		nsdRepository = _nsdRepository;
 		nsdPackageService = _nsdPackageService;
+		vnfm = _vnfm;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
@@ -487,8 +492,14 @@ public class ExecutionPlanner {
 				final NsInstantiatedVnf sap = new NsInstantiatedVnf();
 				sap.setVnfd(x);
 				sap.setVnfName(x.getVnfProductName());
-				final VnfInstance vnfi = vnfInstanceService.findBVnfInstanceyVnfPackageId(x.getId());
-				sap.setVnfInstance(vnfi);
+				final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + nsInstance.getId(), x.getId().toString());
+				final VnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
+				nsInstancesNsInstanceVnfInstance.setNsInstance(nsInstance);
+				// nsInstancesNsInstanceVnfInstance.setVimConnectionInfo(vimConnectionInfo);
+				// nsInstancesNsInstanceVnfInstance.setMetadata(metadata);
+				// nsInstancesNsInstanceVnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
+				vnfInstanceService.save(nsInstancesNsInstanceVnfInstance);
+				sap.setVnfInstance(nsInstancesNsInstanceVnfInstance);
 				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
 			}
