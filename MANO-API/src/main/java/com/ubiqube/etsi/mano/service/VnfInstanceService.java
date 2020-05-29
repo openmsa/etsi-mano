@@ -34,6 +34,7 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 
 @Service
@@ -61,7 +62,9 @@ public class VnfInstanceService {
 
 	private final GrantService grantService;
 
-	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfVlJpa _vnfVlJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService) {
+	private final VnfLiveInstanceJpa vnfLiveInstance;
+
+	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfVlJpa _vnfVlJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService, final VnfLiveInstanceJpa _vnfLiveInstance) {
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstantiedComputeJpa = _vnfInstantiedComputeJpa;
 		vnfVlJpa = _vnfVlJpa;
@@ -72,6 +75,7 @@ public class VnfInstanceService {
 		vnfInstanceJpa = _vnfInstanceJpa;
 		vnfLcmOpOccsJpa = _vnfLcmOpOccsJpa;
 		grantService = _grantService;
+		vnfLiveInstance = _vnfLiveInstance;
 	}
 
 	public List<ExtVirtualLinkDataEntity> getAllExtVirtualLinks(final VnfInstance vnfInstance) {
@@ -79,7 +83,7 @@ public class VnfInstanceService {
 	}
 
 	public int getNumberOfLiveInstance(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
-		return vnfInstantiedComputeJpa.countByVnfLcmOpOccsVnfInstanceAndVduId(vnfInstance, vnfCompute.getId());
+		return vnfLiveInstance.countByVnfInstanceAndVduId(vnfInstance, vnfCompute.getId());
 	}
 
 	public Deque<VnfInstantiatedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
@@ -88,13 +92,11 @@ public class VnfInstanceService {
 	}
 
 	public int getNumberOfLiveVl(final VnfInstance vnfInstance, final VnfVl x) {
-		// return vnfVlJpa.countByVnfInstanceAndVduId(vnfInstance, x.getId());
-		return 0;
+		return vnfLiveInstance.countByVnfInstanceAndVduId(vnfInstance, x.getId());
 	}
 
 	public int getNumberOfLiveExtCp(final VnfInstance vnfInstance, final VnfExtCp extCp) {
-		// return vnfExtCpJpa.countByVnfInstanceAndVduId(vnfInstance, extCp.getId());
-		return 0;
+		return vnfLiveInstance.countByVnfInstanceAndVduId(vnfInstance, extCp.getId());
 	}
 
 	public VnfInstantiatedCompute save(final VnfInstantiatedCompute vnfInstantiedCompute) {
