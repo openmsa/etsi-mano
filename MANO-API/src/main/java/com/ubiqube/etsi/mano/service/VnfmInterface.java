@@ -18,6 +18,6 @@ public interface VnfmInterface {
 
 	VnfLcmOpOccs getVnfLcmOpOccs(@NotNull UUID id);
 
-	VnfLcmOpOccs vnfTerminate(@Nonnull UUID nsInstanceId, @Nonnull UUID uuid);
+	VnfLcmOpOccs vnfTerminate(@Nonnull UUID nsInstanceId);
 
 }

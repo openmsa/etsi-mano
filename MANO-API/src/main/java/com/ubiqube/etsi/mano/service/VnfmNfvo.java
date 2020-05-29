@@ -49,7 +49,7 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId, final UUID vnfId) {
+	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId) {
 		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
 		terminateVnfRequest.setTerminationType(TerminationTypeEnum.FORCEFUL);
 		return lcm.terminate(nsInstanceId, terminateVnfRequest);

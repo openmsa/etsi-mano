@@ -2,14 +2,21 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfUow extends AbstractNsUnitOfWork {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfUow.class);
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -27,8 +34,11 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
 		final VnfLcmOpOccs res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance().getId(), request, null);
-		// XXX poll the lcm or register for notifications.
-		return resourceHandleEntity.getVnfInstance().getId().toString();
+		final VnfLcmOpOccs result = waitLcmCompletion(res, vnfm);
+		if (LcmOperationStateType.COMPLETED != result.getOperationState()) {
+			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
+		}
+		return res.getId().toString();
 	}
 
 	@Override
@@ -38,8 +48,12 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance().getId(), null);
-		return null;
+		final VnfLcmOpOccs lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance().getId());
+		final VnfLcmOpOccs result = waitLcmCompletion(lcm, vnfm);
+		if (LcmOperationStateType.COMPLETED != result.getOperationState()) {
+			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
+		}
+		return result.getId().toString();
 	}
 
 	@Override
@@ -47,4 +61,28 @@ public class VnfUow extends AbstractNsUnitOfWork {
 		return "vnf";
 	}
 
+	/**
+	 * XXX maybe wr should add a Max wait.
+	 *
+	 * @param vnfLcmOpOccs
+	 * @param vnfm
+	 * @return
+	 */
+	private static VnfLcmOpOccs waitLcmCompletion(final VnfLcmOpOccs vnfLcmOpOccs, final VnfmInterface vnfm) {
+		VnfLcmOpOccs tmp = vnfLcmOpOccs;
+		while (tmp.getOperationState() == LcmOperationStateType.PROCESSING) {
+			tmp = vnfm.getVnfLcmOpOccs(vnfLcmOpOccs.getId());
+			sleepSeconds(1);
+		}
+		return tmp;
+	}
+
+	private static void sleepSeconds(final long seconds) {
+		try {
+			Thread.sleep(seconds * 1000L);
+		} catch (final InterruptedException e) {
+			LOG.warn("Interrupted exception.", e);
+			Thread.currentThread().interrupt();
+		}
+	}
 }
