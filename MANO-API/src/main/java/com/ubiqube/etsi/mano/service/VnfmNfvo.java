@@ -44,8 +44,7 @@ public class VnfmNfvo implements VnfmInterface {
 
 	@Override
 	public VnfLcmOpOccs getVnfLcmOpOccs(@NotNull final UUID id) {
-		// TODO Auto-generated method stub
-		return null;
+		return lcm.get(id);
 	}
 
 	@Override

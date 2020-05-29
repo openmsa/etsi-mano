@@ -76,6 +76,10 @@ public class VnfInstanceLcm {
 				.collect(Collectors.toList());
 	}
 
+	public VnfLcmOpOccs get(final UUID id) {
+		return vnfLcmService.findById(id);
+	}
+
 	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(UUID.fromString(vnfId));
