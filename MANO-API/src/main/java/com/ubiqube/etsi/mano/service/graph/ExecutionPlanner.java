@@ -266,10 +266,6 @@ public class ExecutionPlanner {
 		nsdRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
-	private static String makeUowMonitoringName(final VnfCompute x) {
-		return x.getToscaName() + "MON";
-	}
-
 	public ListenableGraph<UnitOfWork, ConnectivityEdge> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> gNew = createGraph();
 		g.vertexSet().forEach(gNew::addVertex);
