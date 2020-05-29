@@ -314,6 +314,7 @@ public class ExecutionPlanner {
 					final int wantedNumInst = numInst.intValue();
 					final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
 					final VduInstantiationLevel vduInstantiationLevel = vnfPackageService.findByVnfComputeAndInstantiationLevel(x, instantiationLevel.getScaleInfoName());
+					LOG.info("{}: Actual currentInst={} numInst={}", instantiationLevel.getScaleInfoName(), currentInst, numInst);
 					if (currentInst < wantedNumInst) {
 						addVnfComputeInstance(lcmOpOccs, x, vnfPakage, vduInstantiationLevel, currentInst, wantedNumInst - currentInst);
 					} else if (currentInst > wantedNumInst) {
