@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.service.graph;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +81,6 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.MonitoringUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ObjectStorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
@@ -160,20 +158,6 @@ public class ExecutionPlanner {
 					LOG.debug("Storage link {} -> {}", y, x.getToscaName());
 					addEdge(g, vertex.get(y), vertex.get(x.getToscaName()));
 				});
-			}
-			// XXX do the same for swImages ?
-			if ((null != x.getMonitoringParameters()) && !x.getMonitoringParameters().isEmpty()) {
-				// XXX Move this.
-				final VnfInstantiatedCompute instanceMonotor = new VnfInstantiatedCompute();
-				instanceMonotor.setChangeType(ChangeType.ADDED);
-				instanceMonotor.setVnfLcmOpOccs(vnfLcmOpOccs);
-				instanceMonotor.setVnfCompute(x);
-				instanceMonotor.setStatus(InstantiationStatusType.NOT_STARTED);
-				final UnitOfWork uow = new MonitoringUow(instanceMonotor, x, makeUowMonitoringName(x));
-				vertex.add(makeUowMonitoringName(x), uow);
-				g.addVertex(uow);
-				LOG.debug("Monitoring: {} -> {}", x.getToscaName(), uow.getName());
-				addEdge(g, vertex.get(x.getToscaName()), Arrays.asList(uow));
 			}
 		});
 
