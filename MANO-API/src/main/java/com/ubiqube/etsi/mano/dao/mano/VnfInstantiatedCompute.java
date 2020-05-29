@@ -14,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -62,9 +61,6 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> removedStorageResourceIds = null;
-
-	@ManyToOne
-	private VduInstantiationLevel instantiationLevel;
 
 	@Override
 	public UUID getId() {
@@ -138,16 +134,6 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 
 	public void setAliasName(final String aliasName) {
 		this.aliasName = aliasName;
-	}
-
-	@Override
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	@Override
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
 	}
 
 }
