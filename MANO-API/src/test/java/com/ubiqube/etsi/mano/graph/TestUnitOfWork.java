@@ -2,9 +2,9 @@ package com.ubiqube.etsi.mano.graph;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class TestUnitOfWork implements UnitOfWork {
@@ -44,12 +44,6 @@ public class TestUnitOfWork implements UnitOfWork {
 	}
 
 	@Override
-	public ResourceHandleEntity getResourceHandleEntity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getToscaName() {
 		// TODO Auto-generated method stub
 		return null;
@@ -57,6 +51,12 @@ public class TestUnitOfWork implements UnitOfWork {
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public VnfInstantiatedBase getResourceHandleEntity() {
 		// TODO Auto-generated method stub
 		return null;
 	}

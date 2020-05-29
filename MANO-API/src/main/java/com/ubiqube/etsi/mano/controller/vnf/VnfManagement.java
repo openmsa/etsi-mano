@@ -63,7 +63,7 @@ public class VnfManagement implements VnfPackageManagement {
 	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Linkable links) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId.toString()));
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
 		return vnfPkgInfo;
 	}
 
@@ -102,7 +102,7 @@ public class VnfManagement implements VnfPackageManagement {
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath, final String rangeHeader) {
-		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId.toString(), "vnfd");
+		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 
 		final InputStream bis = new ByteArrayInputStream(content);
 		final ZipInputStream zis = new ZipInputStream(bis);
@@ -128,7 +128,7 @@ public class VnfManagement implements VnfPackageManagement {
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final String accept) {
 		vnfPackageRepository.get(vnfPkgId);
 
-		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId.toString(), "vnfd");
+		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 		final String mime = MimeType.findMatch(content);
 		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
 		final BodyBuilder bodyBuilder = ResponseEntity.ok();
@@ -138,7 +138,7 @@ public class VnfManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID _vnfPkgId, final String _range) {
-		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId.toString(), "vnfd");
+		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
 		return SpringUtil.handleBytes(bytes, _range);
 	}
 

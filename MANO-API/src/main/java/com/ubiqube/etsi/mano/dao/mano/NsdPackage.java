@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
@@ -54,17 +55,23 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Field
 	private String nsdInvariantId;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	@JoinColumn
-	private Set<VnfPackage> vnfPkgIds;
+	private String instantiationLevel;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	private int minNumberOfInstance;
+
+	private int maxNumberOfInstance;
+
+	private String flavorId;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsdPackage")
+	private Set<NsdPackageVnfPackage> vnfPkgIds;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<PnfDescriptor> pnfdInfoIds;
 
-	@ManyToMany
-	@JoinColumn
-	private Set<NsdPackage> nestedNsdInfoIds;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parent")
+	private Set<NsdPackageNsdPackage> nestedNsdInfoIds;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
@@ -85,7 +92,19 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private PackageUsageStateType nsdUsageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<NsdUserDefinedData> userDefinedData;
+	private Map<String, String> userDefinedData;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<NsSap> nsSaps;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<NsVirtualLink> nsVirtualLinks;
+
+	@OneToMany(cascade = CascadeType.DETACH)
+	@JoinColumn
+	private Set<NsdInstance> nsInstance;
 
 	@Override
 	public UUID getId() {
@@ -146,11 +165,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.nsdInvariantId = nsdInvariantId;
 	}
 
-	public Set<VnfPackage> getVnfPkgIds() {
+	public Set<NsdPackageVnfPackage> getVnfPkgIds() {
 		return vnfPkgIds;
 	}
 
-	public void setVnfPkgIds(final Set<VnfPackage> vnfPkgIds) {
+	public void setVnfPkgIds(final Set<NsdPackageVnfPackage> vnfPkgIds) {
 		this.vnfPkgIds = vnfPkgIds;
 	}
 
@@ -162,11 +181,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.pnfdInfoIds = pnfdInfoIds;
 	}
 
-	public Set<NsdPackage> getNestedNsdInfoIds() {
+	public Set<NsdPackageNsdPackage> getNestedNsdInfoIds() {
 		return nestedNsdInfoIds;
 	}
 
-	public void setNestedNsdInfoIds(final Set<NsdPackage> nestedNsdInfoIds) {
+	public void setNestedNsdInfoIds(final Set<NsdPackageNsdPackage> nestedNsdInfoIds) {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 	}
 
@@ -202,12 +221,68 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.nsdUsageState = nsdUsageState;
 	}
 
-	public Set<NsdUserDefinedData> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Set<NsdUserDefinedData> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
+	}
+
+	public String getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final String instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
+
+	public int getMinNumberOfInstance() {
+		return minNumberOfInstance;
+	}
+
+	public void setMinNumberOfInstance(final int minNumberOfInstance) {
+		this.minNumberOfInstance = minNumberOfInstance;
+	}
+
+	public int getMaxNumberOfInstance() {
+		return maxNumberOfInstance;
+	}
+
+	public void setMaxNumberOfInstance(final int maxNumberOfInstance) {
+		this.maxNumberOfInstance = maxNumberOfInstance;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
+	}
+
+	public Set<NsSap> getNsSaps() {
+		return nsSaps;
+	}
+
+	public void setNsSaps(final Set<NsSap> nsSaps) {
+		this.nsSaps = nsSaps;
+	}
+
+	public Set<NsVirtualLink> getNsVirtualLinks() {
+		return nsVirtualLinks;
+	}
+
+	public void setNsVirtualLinks(final Set<NsVirtualLink> nsVirtualLinks) {
+		this.nsVirtualLinks = nsVirtualLinks;
+	}
+
+	public Set<NsdInstance> getNsInstance() {
+		return nsInstance;
+	}
+
+	public void setNsInstance(final Set<NsdInstance> nsInstance) {
+		this.nsInstance = nsInstance;
 	}
 
 }

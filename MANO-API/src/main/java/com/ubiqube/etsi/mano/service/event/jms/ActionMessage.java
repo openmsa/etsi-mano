@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service.event.jms;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,7 +12,7 @@ public class ActionMessage {
 	@NotNull
 	private ActionType actionType;
 	@NotNull
-	private String objectId;
+	private UUID objectId;
 	@NotNull
 	private Map<String, Object> parameters = new HashMap<>();
 
@@ -19,7 +20,7 @@ public class ActionMessage {
 		// Nothing.
 	}
 
-	public ActionMessage(@NotNull final ActionType actionType, @NotNull final String objectId, @NotNull final Map<String, Object> parameters) {
+	public ActionMessage(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
 		super();
 		this.actionType = actionType;
 		this.objectId = objectId;
@@ -36,7 +37,7 @@ public class ActionMessage {
 	}
 
 	@NotNull
-	public String getObjectId() {
+	public UUID getObjectId() {
 		return objectId;
 	}
 
@@ -45,7 +46,7 @@ public class ActionMessage {
 		return parameters;
 	}
 
-	public void setObjectId(@NotNull final String objectId) {
+	public void setObjectId(@NotNull final UUID objectId) {
 		this.objectId = objectId;
 	}
 

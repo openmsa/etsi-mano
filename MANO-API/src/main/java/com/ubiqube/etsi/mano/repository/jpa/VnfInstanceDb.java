@@ -30,8 +30,8 @@ public class VnfInstanceDb extends AbstractDirectJpa<VnfInstance> implements Vnf
 	}
 
 	@Override
-	public boolean isInstantiate(@NotNull final String vnfPkgId) {
-		return 0 == repository.countByVnfPkgId(UUID.fromString(vnfPkgId));
+	public boolean isInstantiate(@NotNull final UUID vnfPkgId) {
+		return 0 == repository.countByVnfPkgId(vnfPkgId);
 	}
 
 }

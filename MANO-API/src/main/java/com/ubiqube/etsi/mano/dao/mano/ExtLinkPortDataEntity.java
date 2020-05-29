@@ -2,40 +2,29 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
-public class ExtLinkPortDataEntity {
+public class ExtLinkPortDataEntity extends VnfInstantiatedBase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private ResourceHandleEntity resourceHandle = null;
-
 	@OneToOne
 	private ExtVirtualLinkDataEntity extVirtualLinkDataEntity;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public ResourceHandleEntity getResourceHandle() {
-		return resourceHandle;
-	}
-
-	public void setResourceHandle(final ResourceHandleEntity resourceHandle) {
-		this.resourceHandle = resourceHandle;
 	}
 
 	public ExtVirtualLinkDataEntity getExtVirtualLinkDataEntity() {

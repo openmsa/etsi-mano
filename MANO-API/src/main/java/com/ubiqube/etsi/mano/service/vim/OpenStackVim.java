@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -33,6 +34,7 @@ import org.openstack4j.model.network.AttachInterfaceType;
 import org.openstack4j.model.network.IPVersionType;
 import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.NetworkType;
+import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
@@ -49,11 +51,11 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
@@ -61,10 +63,10 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.NoopUow;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.VirtualLinkUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -72,7 +74,7 @@ import ma.glasnost.orika.MapperFacade;
 public class OpenStackVim implements Vim {
 	private static final long GIGA = 1000000000L;
 
-	private static final long MEGA = 100000L;
+	private static final long MEGA = 1000000L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(OpenStackVim.class);
 
@@ -145,7 +147,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String onNsInstantiate(final String nsdId, final Map<String, Object> userData) {
+	public String onNsInstantiate(final UUID nsdId, final Map<String, Object> userData) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -200,9 +202,8 @@ public class OpenStackVim implements Vim {
 		final NetworkBuilder bNet = Builders.network().tenantId(vimConnectionInformation.getAccessInfo().get("projectId"));
 		Optional.ofNullable(l2.getMtu()).ifPresent(x2 -> bNet.toString());
 		bNet.name(name);
-		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2)));
+		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2.toUpperCase())));
 		final Network network = os.networking().network().create(bNet.adminStateUp(true).build());
-		l2.getNetworkType();
 		l2.getVlanTransparent();
 		LOG.debug("Network created: {} = {}", network.getId(), network.getStatus());
 		return network.getId();
@@ -217,11 +218,18 @@ public class OpenStackVim implements Vim {
 				.enableDHCP(l3ProtocolData.isDhcpEnabled())
 				.gateway(l3ProtocolData.getGatewayIp())
 				.tenantId(vimConnectionInformation.getAccessInfo().get("projectId"))
-				.ipVersion(IPVersionType.valueOf(l3ProtocolData.getIpVersion()))
+				.ipVersion(convertIpVersion(l3ProtocolData.getIpVersion()))
 				.networkId(networkId);
 		final Subnet res = os.networking().subnet().create(bSub.build());
 		LOG.debug("SubNetwork created: {}", res.getId());
 		return res.getId();
+	}
+
+	private IPVersionType convertIpVersion(final String ipVersion) {
+		if ("ipv6".equals(ipVersion)) {
+			return IPVersionType.valueOf("V6");
+		}
+		return IPVersionType.valueOf("V4");
 	}
 
 	@Override
@@ -233,14 +241,16 @@ public class OpenStackVim implements Vim {
 			if (x instanceof VirtualLinkUow) {
 				LOG.debug("Found VL: {}", x.getName());
 				final VirtualLinkUow vlu = (VirtualLinkUow) x;
-				final NoopUow noop = new NoopUow();
+				final VnfInstantiatedCompute vnfInstantiedCompute = new VnfInstantiatedCompute();
+				// XXX There is a big question here, we don"t have access to mano internal.
+				final NoopUow noop = new NoopUow(vnfInstantiedCompute);
 				g.addVertex(noop);
 
 				final ArrayList<ConnectivityEdge> out = new ArrayList<>(g.outgoingEdgesOf(x));
 				g.removeAllEdges(new ArrayList<>(out));
 				final VlProtocolData vnfVl = vlu.getVlProtocolData();
 				vnfVl.getIpAllocationPools().forEach(y -> {
-					final OsSubnetworkUow subUow = new OsSubnetworkUow(new ResourceHandleEntity(), vnfVl, y, x.getToscaName());
+					final OsSubnetworkUow subUow = new OsSubnetworkUow(new VnfInstantiatedVirtualLink(), vnfVl, y, x.getToscaName());
 					vertexPool.add(subUow);
 					g.addVertex(subUow);
 					g.addEdge(x, subUow);
@@ -255,12 +265,12 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final VnfCompute vnfc, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();
 		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
 		bs.image(imageId);
-		bs.name(vnfc.getName());
+		bs.name(instanceName);
 		bs.flavor(flavorId);
 		if (!networks.isEmpty()) {
 			bs.networks(networks);
@@ -277,7 +287,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage) {
+	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage, final String aliasName) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final Object imgName = vnfStorage.getSoftwareImage().getName();
 		final Image image = os.compute().images().list().stream()
@@ -286,7 +296,7 @@ public class OpenStackVim implements Vim {
 				.orElseThrow(() -> new NotFoundException("Image " + vnfStorage.getSoftwareImage().getName() + " not found"));
 		final VolumeBuilder bv = Builders.volume();
 		bv.size((int) (vnfStorage.getSize() / GIGA));
-		bv.name(vnfStorage.getToscaName());
+		bv.name(aliasName);
 		bv.imageRef(image.getId());
 		final Volume res = os.blockStorage().volumes().create(bv.build());
 		waitForVolumeCompletion(os.blockStorage().volumes(), res);
@@ -392,46 +402,72 @@ public class OpenStackVim implements Vim {
 				.collect(Collectors.toList());
 	}
 
-	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String networkId) {
+	@Override
+	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		final Network net = os.networking().network().get(networkId);
+		final Network net = os.networking().network().get(internalNetworkId);
 		// XXX get first one ?
 		final String psubnetId = net.getNeutronSubnets().get(0).getId();
 		final Router routerBuilder = Builders.router()
 				.name(name)
-				.externalGateway(networkId)
+				.externalGateway(externalNetworkId)
 				.build();
 		final Router router = os.networking().router().create(routerBuilder);
 		os.networking().router().attachInterface(router.getId(), AttachInterfaceType.SUBNET, psubnetId);
 		return router.getId();
 	}
 
+	private static void checkResult(final ActionResponse action) {
+		if (!action.isSuccess()) {
+			throw new VimException(action.getCode() + ' ' + action.getFault());
+		}
+	}
+
+	@Override
+	public void deleteRouter(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final List<? extends Port> routerList = os.networking().port().list();
+		routerList.stream()
+				.filter(x -> x.getDeviceId().equals(resourceId))
+				.map(x -> x.getId())
+				.forEach(x -> os.networking().router().detachInterface(resourceId, null, x));
+		checkResult(os.networking().router().delete(resourceId));
+	}
+
 	@Override
 	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.compute().servers().delete(resourceId);
+		checkResult(os.compute().servers().delete(resourceId));
 	}
 
 	@Override
 	public void deleteVirtualLink(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.networking().network().delete(resourceId);
+		checkResult(os.networking().network().delete(resourceId));
 	}
 
 	@Override
 	public void deleteStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.blockStorage().volumes().delete(resourceId);
+		checkResult(os.blockStorage().volumes().delete(resourceId));
 	}
 
 	@Override
 	public void deleteObjectStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.objectStorage().containers().delete(resourceId);
+		checkResult(os.objectStorage().containers().delete(resourceId));
 	}
 
 	public void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.networking().subnet().delete(resourceId);
+		checkResult(os.networking().subnet().delete(resourceId));
+	}
+
+	@Override
+	public List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		return os.compute().hostAggregates().list().stream().map(x -> new ServerGroup(x.getId(), x.getName(), x.getAvailabilityZone()))
+				.collect(Collectors.toList());
+
 	}
 }

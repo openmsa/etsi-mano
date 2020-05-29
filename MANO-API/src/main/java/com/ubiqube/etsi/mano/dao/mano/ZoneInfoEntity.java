@@ -8,7 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ZoneInfoEntity {
@@ -22,8 +22,8 @@ public class ZoneInfoEntity {
 
 	private String zoneId = null;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private Grants grants;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	private GrantResponse grants;
 
 	public UUID getId() {
 		return id;
@@ -57,11 +57,11 @@ public class ZoneInfoEntity {
 		this.zoneId = zoneId;
 	}
 
-	public Grants getGrants() {
+	public GrantResponse getGrants() {
 		return grants;
 	}
 
-	public void setGrants(final Grants grants) {
+	public void setGrants(final GrantResponse grants) {
 		this.grants = grants;
 	}
 

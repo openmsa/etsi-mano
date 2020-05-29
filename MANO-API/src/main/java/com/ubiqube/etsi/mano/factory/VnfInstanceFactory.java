@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.factory;
 
+import javax.annotation.Nonnull;
+
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 
@@ -15,6 +17,7 @@ public class VnfInstanceFactory {
 	 * @param vimId
 	 * @return
 	 */
+	@Nonnull
 	public static VnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance vnfInstance, final String vimId) {
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);

@@ -8,4 +8,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 
 public interface VnfVlJpa extends CrudRepository<VnfVl, UUID> {
 
+	// int countByVnfInstanceAndVduId(VnfInstance vnfInstance, UUID id);
+
 }

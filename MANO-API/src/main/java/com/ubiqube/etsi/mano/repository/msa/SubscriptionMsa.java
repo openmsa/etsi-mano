@@ -32,13 +32,13 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	}
 
 	@Override
-	String setId(final SubscriptionObject _entity) {
+	UUID setId(final SubscriptionObject _entity) {
 		final String id = _entity.getPkgmSubscription().getId();
 		if (null == id) {
 			_entity.getPkgmSubscription().setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getPkgmSubscription().getId();
+		return UUID.fromString(_entity.getPkgmSubscription().getId());
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class SubscriptionMsa extends AbstractGenericRepository<SubscriptionObjec
 	}
 
 	@Override
-	public List<SubscriptionObject> selectNotifications(final String vnfPkgId, final String event) {
+	public List<SubscriptionObject> selectNotifications(final UUID vnfPkgId, final String event) {
 		final StringBuilder sb = new StringBuilder("filter.vnfProductsFromProviders.vnfPkgId.eq=").append(vnfPkgId);
 		sb.append("&").append("filter.notificationTypes.eq=").append(event);
 

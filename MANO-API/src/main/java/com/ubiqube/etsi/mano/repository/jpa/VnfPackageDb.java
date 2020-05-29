@@ -13,12 +13,10 @@ import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
-import ma.glasnost.orika.MapperFacade;
-
 @Service
 public class VnfPackageDb extends AbstractDirectJpa<VnfPackage> implements VnfPackageRepository {
 
-	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final MapperFacade mapper, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(em, repository, contentManager, jsonMapper, namingStrategy);
 	}
 

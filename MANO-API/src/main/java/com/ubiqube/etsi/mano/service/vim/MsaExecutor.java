@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +27,6 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
@@ -34,8 +34,8 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -105,11 +105,11 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String onNsInstantiate(final String nsdId, final Map<String, Object> userData) {
+	public String onNsInstantiate(final UUID nsdId, final Map<String, Object> userData) {
 		final Map<String, String> varsMap = new HashMap<>();
 		final String customerId = (String) userData.get(CUSTOMER_ID);
 		varsMap.put("deviceid", getDefault((String) userData.get("vimId"), devaultfVim));
-		varsMap.put("nsPkgId", nsdId);
+		varsMap.put("nsPkgId", nsdId.toString());
 		varsMap.put("nfvoDevice", defaultfNfvo);
 		final String PROCESS_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/Process_Execute_Heat_Stack";
 		final String SERVICE_NAME = "Process/ETSI-MANO/NFV/NS_Mgmt_Based_On_Heat/NS_Mgmt_Based_On_Heat";
@@ -261,7 +261,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage) {
+	public String createStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage, final String aliasName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -273,7 +273,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final VnfCompute vnfCompute, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -306,6 +306,24 @@ public class MsaExecutor implements Vim {
 	public void deleteObjectStorage(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteRouter(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

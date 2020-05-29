@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractUnitOfWork;
 
 public class OsSubnetworkUow extends AbstractUnitOfWork {
 	/** Serial. */
@@ -22,7 +22,7 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 
 	private final String parentName;
 
-	public OsSubnetworkUow(final ResourceHandleEntity resourceHandleEntity, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
+	public OsSubnetworkUow(final VnfInstantiatedBase resourceHandleEntity, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
 		super(resourceHandleEntity, _ipAllocationPool.getStartIpAddress().replaceAll("\\.", "_"));
 		vlProtocolData = y;
 		ipAllocationPool = _ipAllocationPool;
@@ -50,7 +50,9 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		final OpenStackVim osVim = (OpenStackVim) vim;
-		osVim.deleteSubnet(vimConnectionInformation, resourceId);
+		LOG.debug("Deleting subnetwork: {}", resourceId);
+		// XXX Don't delete for the momment osVim.deleteSubnet(vimConnectionInformation,
+		// resourceId);
 		return null;
 	}
 

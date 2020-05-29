@@ -45,8 +45,8 @@ public class VnfLcmOpOccsDb extends AbstractDirectJpa<VnfLcmOpOccs> implements V
 	}
 
 	@Override
-	public void attachProcessIdToLcmOpOccs(final String id, final String processId) {
-		final Optional<VnfLcmOpOccs> optLcm = repository.findById(UUID.fromString(id));
+	public void attachProcessIdToLcmOpOccs(final UUID id, final String processId) {
+		final Optional<VnfLcmOpOccs> optLcm = repository.findById(id);
 		final VnfLcmOpOccs lcm = optLcm.orElseThrow(() -> new NotFoundException("VNF LcmOpOccs " + id + " could not be found."));
 		lcm.setExternalProcessId(processId);
 		repository.save(lcm);

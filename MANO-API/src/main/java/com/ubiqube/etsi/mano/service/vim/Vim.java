@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -13,11 +14,10 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 public interface Vim {
 
@@ -25,7 +25,7 @@ public interface Vim {
 
 	String onVnfInstantiate(GrantInformation grantInformation, VnfPackage vnfPackage);
 
-	String onNsInstantiate(String nsdId, Map<String, Object> userData);
+	String onNsInstantiate(UUID nsdId, Map<String, Object> userData);
 
 	String onNsInstanceTerminate(String processId, Map<String, Object> userData);
 
@@ -52,9 +52,9 @@ public interface Vim {
 	@Nonnull
 	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk);
 
-	String createStorage(VimConnectionInformation vimConnectionInformation, VnfStorage vnfStorage);
+	String createStorage(VimConnectionInformation vimConnectionInformation, VnfStorage vnfStorage, final String aliasName);
 
-	String createCompute(VimConnectionInformation vimConnectionInformation, VnfCompute vnfCompute, String flavorId, String imageId, List<String> networks, List<String> storages);
+	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages);
 
 	String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage);
 
@@ -67,4 +67,10 @@ public interface Vim {
 	void deleteStorage(VimConnectionInformation vimConnectionInformation, String resourceId);
 
 	void deleteObjectStorage(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation);
+
+	String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId);
+
+	void deleteRouter(VimConnectionInformation vimConnectionInformation, String resourceId);
 }

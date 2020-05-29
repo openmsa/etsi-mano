@@ -2,9 +2,10 @@ package com.ubiqube.etsi.mano.repository;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 
-public interface NsdRepository extends CrudRepository<NsdInfo>, BinaryRepository {
-	void changeNsdUpdateState(NsdInfo nsdInfo, @Nonnull NsdUsageStateType state);
+public interface NsdRepository extends CrudRepository<NsdPackage>, BinaryRepository {
+	// XXX To move -> NsdPackageService.
+	void changeNsdUpdateState(NsdPackage nsdPackage, @Nonnull PackageUsageStateType state);
 }

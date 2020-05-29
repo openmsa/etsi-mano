@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
+import tosca.policies.nfv.VduScalingAspectDeltas;
+
 public class ToscaPackageProviderTest {
 	private final ToscaPackageProvider tpp;
 
@@ -33,13 +37,13 @@ public class ToscaPackageProviderTest {
 
 	@Test
 	void testSoftwareImage01() throws Exception {
-		final Set<AdditionalArtifact> aa = tpp.getAdditionalArtefacts();
+		final Set<AdditionalArtifact> aa = tpp.getAdditionalArtefacts(new HashMap<String, String>());
 		System.out.println("" + aa);
 	}
 
 	@Test
 	void testComputeNode01() throws Exception {
-		final Set<VnfCompute> vnfCn = tpp.getVnfComputeNodes();
+		final Set<VnfCompute> vnfCn = tpp.getVnfComputeNodes(new HashMap<String, String>());
 		System.out.println("" + vnfCn);
 		assertEquals(2, vnfCn.size());
 		final VnfCompute cn = vnfCn.iterator().next();
@@ -48,7 +52,7 @@ public class ToscaPackageProviderTest {
 
 	@Test
 	void testStorage01() throws Exception {
-		final Set<VnfStorage> storages = tpp.getVnfStorages();
+		final Set<VnfStorage> storages = tpp.getVnfStorages(new HashMap<String, String>());
 		System.out.println("" + storages);
 		assertEquals(2, storages.size());
 		for (final VnfStorage vnfStorage : storages) {
@@ -75,7 +79,7 @@ public class ToscaPackageProviderTest {
 
 	@Test
 	void testVirtualLink01() throws Exception {
-		final Set<VnfVl> vnfVl = tpp.getVnfVirtualLinks();
+		final Set<VnfVl> vnfVl = tpp.getVnfVirtualLinks(new HashMap<String, String>());
 		assertEquals(3, vnfVl.size());
 		final VnfVl vl = vnfVl.iterator().next();
 		// assertEquals("middleVl01", vl.getToscaName());
@@ -85,7 +89,7 @@ public class ToscaPackageProviderTest {
 
 	@Test
 	void testVirtualCp01() throws Exception {
-		final Set<VnfLinkPort> vnfCp = tpp.getVnfVduCp();
+		final Set<VnfLinkPort> vnfCp = tpp.getVnfVduCp(new HashMap<String, String>());
 		assertEquals(4, vnfCp.size());
 		final VnfLinkPort cp = vnfCp.iterator().next();
 		// assertEquals("cpLc02", cp.getToscaName());
@@ -93,13 +97,20 @@ public class ToscaPackageProviderTest {
 
 	@Test
 	void testVnfExtCp() throws Exception {
-		final Set<VnfExtCp> extCp = tpp.getVnfExtCp();
+		final Set<VnfExtCp> extCp = tpp.getVnfExtCp(new HashMap<String, String>());
 		assertEquals(4, extCp.size());
 	}
 
 	@Test
 	void testScalingAspect() throws Exception {
-		final Set<ScalingAspect> list = tpp.getScalingAspects();
+		final Set<ScalingAspect> list = tpp.getScalingAspects(new HashMap<String, String>());
 		System.out.println("" + list);
 	}
+
+	@Test
+	void testVduScalingAspectDeltas() throws Exception {
+		final List<VduScalingAspectDeltas> list = tpp.getVduScalingAspectDeltas(new HashMap<String, String>());
+		System.out.println("" + list);
+	}
+
 }

@@ -18,13 +18,13 @@ public class PnfDescriptiorsMsa extends AbstractGenericRepository<PnfdInfo> impl
 	}
 
 	@Override
-	String setId(final PnfdInfo _entity) {
+	UUID setId(final PnfdInfo _entity) {
 		final String id = _entity.getId();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID().toString());
 		}
 
-		return _entity.getId();
+		return UUID.fromString(_entity.getId());
 	}
 
 	@Override

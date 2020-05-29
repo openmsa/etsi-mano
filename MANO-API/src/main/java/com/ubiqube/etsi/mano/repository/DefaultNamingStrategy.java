@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.repository;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -27,13 +28,13 @@ public class DefaultNamingStrategy implements NamingStrategy {
 	}
 
 	@Override
-	public Path getRoot(final Class<?> clazz, final String _id) {
-		return Paths.get(root, cpConverter.convert(clazz), sanitize(_id));
+	public Path getRoot(final Class<?> clazz, final UUID _id) {
+		return Paths.get(root, cpConverter.convert(clazz), _id.toString());
 	}
 
 	@Override
-	public Path getRoot(final Class<?> clazz, final String _id, final String _filename) {
-		return Paths.get(root, cpConverter.convert(clazz), sanitize(_id), sanitize(_filename));
+	public Path getRoot(final Class<?> clazz, final UUID _id, final String _filename) {
+		return Paths.get(root, cpConverter.convert(clazz), _id.toString(), sanitize(_filename));
 	}
 
 	@Override

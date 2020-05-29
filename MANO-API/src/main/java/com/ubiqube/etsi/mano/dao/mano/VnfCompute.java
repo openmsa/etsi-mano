@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,6 +37,8 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	private String description;
 
+	private String bootData;
+
 	private long virtualMemorySize;
 
 	private String cpuArchitecture;
@@ -54,11 +57,22 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MonitoringParams> monitoringParameters;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
+	private Set<VduInstantiationLevel> instantiationLevel;
+
+	/**
+	 * Initial delta.
+	 */
+	private Integer initialNumberOfInstance;
+
 	@Embedded
 	private Audit audit;
 
 	@Embedded
 	private VduProfile vduProfile;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
+	private Set<VnfComputeAspectDelta> scalingAspectDeltas;
 
 	@Override
 	public UUID getId() {
@@ -181,6 +195,46 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	public void setVduProfile(final VduProfile vduProfile) {
 		this.vduProfile = vduProfile;
+	}
+
+	public Set<VduInstantiationLevel> getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final Set<VduInstantiationLevel> instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
+
+	public Integer getInitialNumberOfInstance() {
+		return initialNumberOfInstance;
+	}
+
+	public void setInitialNumberOfInstance(final Integer initialNumberOfInstance) {
+		this.initialNumberOfInstance = initialNumberOfInstance;
+	}
+
+	public Set<VnfComputeAspectDelta> getScalingAspectDeltas() {
+		return scalingAspectDeltas;
+	}
+
+	public void setScalingAspectDeltas(final Set<VnfComputeAspectDelta> scalingAspectDeltas) {
+		this.scalingAspectDeltas = scalingAspectDeltas;
+	}
+
+	public void addScalingAspectDeltas(final VnfComputeAspectDelta scalingDelta) {
+		if (null == scalingAspectDeltas) {
+			scalingAspectDeltas = new HashSet<>();
+		}
+		scalingDelta.setVnfCompute(this);
+		scalingAspectDeltas.add(scalingDelta);
+	}
+
+	public String getBootData() {
+		return bootData;
+	}
+
+	public void setBootData(final String bootData) {
+		this.bootData = bootData;
 	}
 
 }

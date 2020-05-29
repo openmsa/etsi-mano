@@ -18,9 +18,9 @@ public class Networks {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String start;
+	private String startRange;
 
-	private String end;
+	private String endRange;
 
 	private String cidr;
 
@@ -37,23 +37,23 @@ public class Networks {
 		this.id = id;
 	}
 
-	public String getStart() {
-		return start;
-	}
+	public String getStartRange() {
+        return startRange;
+    }
 
-	public void setStart(final String start) {
-		this.start = start;
-	}
+    public void setStartRange(String startRange) {
+        this.startRange = startRange;
+    }
 
-	public String getEnd() {
-		return end;
-	}
+    public String getEndRange() {
+        return endRange;
+    }
 
-	public void setEnd(final String end) {
-		this.end = end;
-	}
+    public void setEndRange(String endRange) {
+        this.endRange = endRange;
+    }
 
-	public String getCidr() {
+    public String getCidr() {
 		return cidr;
 	}
 

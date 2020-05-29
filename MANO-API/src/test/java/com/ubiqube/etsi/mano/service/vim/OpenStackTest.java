@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.graph.DefaultListenableGraph;
@@ -23,11 +24,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
+import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.ServerCreate;
 import org.openstack4j.model.identity.v3.Endpoint;
 import org.openstack4j.model.identity.v3.Service;
+import org.openstack4j.model.network.Port;
+import org.openstack4j.model.network.Router;
+import org.openstack4j.model.network.RouterInterface;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +52,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.graph.TestUnitOfWork;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.EdgeListener;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.VirtualLinkUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -159,6 +164,8 @@ public class OpenStackTest {
 		os.compute().zones().list().forEach(System.out::println);
 		System.out.println("================= SERVER GROUPS");
 		os.compute().serverGroups().list().forEach(System.out::println);
+		System.out.println("================= Agregates");
+		os.compute().hostAggregates().list().forEach(System.out::println);
 	}
 
 	@Test
@@ -196,7 +203,7 @@ public class OpenStackTest {
 		vnfStorage.setToscaName("JUnit-test-volume");
 		when(vimJpa.findById(id)).thenReturn(Optional.of(vimConnectionInformation));
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
-		vim.createStorage(vimConnectionInformation, vnfStorage);
+		vim.createStorage(vimConnectionInformation, vnfStorage, "junit-test");
 	}
 
 	@Test
@@ -344,6 +351,71 @@ public class OpenStackTest {
 		vnfc.setName("vdu01");
 		final List<String> networks = new ArrayList<>();
 		final List<String> storages = new ArrayList<>();
-		vim.createCompute(vimConnectionInformation, vnfc, "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages);
+		vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages);
+	}
+
+	private static OSClientV3 getTrainConnection() {
+		final Identifier domainIdentifier = Identifier.byId("default");
+		final Identifier projectIdentifier = Identifier.byId("ede0540276a94b75ae3de044cd7cc235");
+		return OSFactory.builderV3()
+				.endpoint("http://10.31.1.15:5000/v3")
+				.credentials("admin", "5fd399078a8844de", domainIdentifier)
+				.scopeToProject(projectIdentifier)
+				.authenticate();
+	}
+
+	private static OSClientV3 getQueensConnection() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.endpoint("http://10.31.1.240:5000/v3")
+				.credentials("admin", "84612d9a2e404ac9", domainIdentifier)
+				.scopeToProject(Identifier.byId("df1f081bf2d345099e6bb53f6b9407ff"))
+				.authenticate();
+	}
+
+	@Test
+	void testTrain() throws Exception {
+		final OSClientV3 os = getTrainConnection();
+		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
+		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
+		System.out.println("l=" + l.get());
+		os.networking().agent().list().forEach(x -> {
+			System.out.println("" + x.getBinary());
+		});
+	}
+
+	@Test
+	void testQueens() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
+		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
+		System.out.println("l=" + l.get());
+		os.networking().agent().list().forEach(x -> {
+			System.out.println("" + x.getBinary());
+		});
+	}
+
+	@Test
+	void testDeleteNetwork() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final ActionResponse ret = os.networking().network().delete("ad9df306-8487-4695-9be1-f06feef779c7");
+		System.out.println("" + ret);
+	}
+
+	@Test
+	void testDeleteRouter() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final String device = "909f4c86-eb79-4cf2-bf5c-21769c2dbc92";
+		final Router router = os.networking().router().get(device);
+		final List<? extends Port> routerList = os.networking().port().list();
+		final List<RouterInterface> ret = routerList.stream()
+				.filter(x -> x.getDeviceId().equals(device))
+				.map(x -> x.getId())
+				.map(x -> os.networking().router().detachInterface(device, null, x))
+				.collect(Collectors.toList());
+		ret.forEach(x -> System.out.println("" + x));
+		System.out.println("" + router);
+		final ActionResponse ret2 = os.networking().router().delete("909f4c86-eb79-4cf2-bf5c-21769c2dbc92");
+		System.out.println("" + ret2);
 	}
 }

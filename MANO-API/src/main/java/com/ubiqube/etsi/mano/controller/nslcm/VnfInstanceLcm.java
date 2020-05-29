@@ -18,20 +18,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
@@ -52,18 +51,25 @@ public class VnfInstanceLcm {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceLcm.class);
 
 	private final VnfInstancesRepository vnfInstancesRepository;
+
 	private final VnfPackageRepository vnfPackageRepository;
-	private final NsLcmOpOccsRepository lcmOpOccsMsa;
+
 	private final EventManager eventManager;
+
 	private final MapperFacade mapper;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final NsLcmOpOccsRepository _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper) {
+	private final VnfLcmService vnfLcmService;
+
+	private final VnfInstanceService vnfInstanceService;
+
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
-		lcmOpOccsMsa = _lcmOpOccsRepository;
 		eventManager = _eventManager;
 		mapper = _mapper;
+		vnfLcmService = _vnfLcmService;
+		vnfInstanceService = _vnfInstanceService;
 	}
 
 	public List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
@@ -78,65 +84,62 @@ public class VnfInstanceLcm {
 				.collect(Collectors.toList());
 	}
 
+	public VnfLcmOpOccs get(final UUID id) {
+		return vnfLcmService.findById(id);
+	}
+
 	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(UUID.fromString(vnfId));
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		VnfInstance vnfInstance = LcmFactory.createVnfInstance(createVnfRequest, vnfPkgInfo);
-		vnfPkgInfo.getVnfCompute().forEach(x -> {
-			final VnfcResourceInfo vnfcResourceInfoItem = new VnfcResourceInfo();
-			vnfcResourceInfoItem.setVduId(x.getId().toString());
-		});
-		vnfPkgInfo.getVnfVl().forEach(x -> {
-			final VnfVirtualLinkResourceInfo virtualLinkResourceInfoItem = new VnfVirtualLinkResourceInfo();
-		});
+		mapper.map(vnfPkgInfo, vnfInstance);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
-		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CREATE, vnfInstance.getId().toString());
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CREATE, vnfInstance.getId());
 		return mapper.map(vnfInstance, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
 	}
 
-	public void delete(@Nonnull final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+	public void delete(@Nonnull final UUID vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
-		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId().toString())) {
+		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId())) {
 			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId());
 			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
-		vnfInstancesRepository.delete(UUID.fromString(vnfInstanceId));
+		vnfInstanceService.delete(vnfInstanceId);
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 
-	public void instantiate(@Nonnull final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, @Nonnull final LcmLinkable links) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+	public VnfLcmOpOccs instantiate(@Nonnull final UUID vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
-		eventManager.sendAction(ActionType.VNF_INSTANTIATE, vnfInstanceId, new HashMap<String, Object>());
-		LOG.info("Instantiation Event Sucessfully sent.");
+		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
+		vnfInstance.setInstantiatedVnfInfo(ivf);
+		vnfInstancesRepository.save(vnfInstance);
+		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfInstance);
+		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
+		eventManager.sendAction(ActionType.VNF_INSTANTIATE, lcmOpOccs.getId(), new HashMap<>());
+		LOG.info("VNF Instantiation Event Sucessfully sent.");
+		return lcmOpOccs;
 	}
 
-	public void terminate(@Nonnull final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		// TODO: A little bit wrong , move this to async.
+	public VnfLcmOpOccs terminate(@Nonnull final UUID vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		if (terminateVnfRequest.getTerminationType() != TerminationTypeEnum.FORCEFUL) {
 			LOG.warn("Terminaison should be set to FORCEFULL.");
 		}
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
-		eventManager.sendAction(ActionType.VNF_TERMINATE, vnfInstanceId, new HashMap<String, Object>());
-
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfInstance);
+		eventManager.sendAction(ActionType.VNF_TERMINATE, lcmOpOccs.getId(), new HashMap<String, Object>());
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
-	}
-
-	private NsLcmOpOcc addVnfOperation(final String _processId, final String _vnfInstanceId, final NsLcmOpType _lcmOperationType) {
-		final NsLcmOpOcc lcmOpOccs = LcmFactory.createNsLcmOpOcc(_vnfInstanceId, _lcmOperationType);
-		lcmOpOccsMsa.save(lcmOpOccs);
-		lcmOpOccsMsa.attachProcessIdToLcmOpOccs(lcmOpOccs.getId(), _processId);
 		return lcmOpOccs;
 	}
 

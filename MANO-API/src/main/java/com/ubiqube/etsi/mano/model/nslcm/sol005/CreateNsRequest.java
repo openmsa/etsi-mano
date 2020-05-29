@@ -33,12 +33,10 @@ public class CreateNsRequest {
 
 	/**
 	 * Identifier of the NSD that defines the NS instance to be created.
-	 * 
+	 *
 	 * @return nsdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the NSD that defines the NS instance to be created. ")
-	@NotNull
-
 	public String getNsdId() {
 		return nsdId;
 	}
@@ -54,7 +52,7 @@ public class CreateNsRequest {
 
 	/**
 	 * Human-readable name of the NS instance to be created.
-	 * 
+	 *
 	 * @return nsName
 	 **/
 	@ApiModelProperty(required = true, value = "Human-readable name of the NS instance to be created. ")
@@ -75,7 +73,7 @@ public class CreateNsRequest {
 
 	/**
 	 * Human-readable description of the NS instance to be created.
-	 * 
+	 *
 	 * @return nsDescription
 	 **/
 	@ApiModelProperty(required = true, value = "Human-readable description of the NS instance to be created. ")

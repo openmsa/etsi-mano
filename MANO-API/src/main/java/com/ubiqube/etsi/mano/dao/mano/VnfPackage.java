@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -16,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
@@ -33,10 +36,15 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfPackage implements BaseEntity, Auditable {
+public class VnfPackage implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
+	private String defaultInstantiationLevel;
 
 	@Field
 	private String vnfdId;
@@ -54,6 +62,8 @@ public class VnfPackage implements BaseEntity, Auditable {
 	private String vnfdVersion;
 
 	private String flavorId;
+
+	private String descriptorId;
 
 	private Checksum checksum;
 
@@ -103,8 +113,17 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ScalingAspect> scalingAspects;
 
+	@ManyToMany
+	private Set<NsdInstance> nsInstance;
+
 	@Embedded
 	private Audit audit;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
+
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	private Set<NsdPackageVnfPackage> nsdPackages;
 
 	@Override
 	public UUID getId() {
@@ -211,6 +230,14 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.flavorId = flavorId;
 	}
 
+	public String getDescriptorId() {
+		return descriptorId;
+	}
+
+	public void setDescriptorId(final String descriptorId) {
+		this.descriptorId = descriptorId;
+	}
+
 	public Set<VnfCompute> getVnfCompute() {
 		return vnfCompute;
 	}
@@ -267,6 +294,53 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	public void setVnfExtCp(final Set<VnfExtCp> vnfExtCp) {
 		this.vnfExtCp = vnfExtCp;
+	}
+
+	public String getDefaultInstantiationLevel() {
+		return defaultInstantiationLevel;
+	}
+
+	public void setDefaultInstantiationLevel(final String defaultInstantiationLevel) {
+		this.defaultInstantiationLevel = defaultInstantiationLevel;
+	}
+
+	public Set<VnfInstantiationLevels> getVnfInstantiationLevels() {
+		return vnfInstantiationLevels;
+	}
+
+	public void setVnfInstantiationLevels(final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
+		this.vnfInstantiationLevels = vnfInstantiationLevels;
+	}
+
+	public Set<NsdInstance> getNsInstance() {
+		return nsInstance;
+	}
+
+	public void setNsInstance(final Set<NsdInstance> nsInstance) {
+		this.nsInstance = nsInstance;
+	}
+
+	public void addInstantiationLevel(final VnfInstantiationLevels il) {
+		if (null == vnfInstantiationLevels) {
+			vnfInstantiationLevels = new HashSet<>();
+		}
+		il.setVnfPackage(this);
+		vnfInstantiationLevels.add(il);
+	}
+
+	public Set<NsdPackageVnfPackage> getNsdPackages() {
+		return nsdPackages;
+	}
+
+	public void setNsdPackages(final Set<NsdPackageVnfPackage> nsdPackages) {
+		this.nsdPackages = nsdPackages;
+	}
+
+	public void addNsdPackage(final NsdPackageVnfPackage nsdPackage) {
+		if (null == nsdPackages) {
+			nsdPackages = new HashSet<>();
+		}
+		nsdPackages.add(nsdPackage);
 	}
 
 }

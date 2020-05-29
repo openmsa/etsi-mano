@@ -1,21 +1,24 @@
 package com.ubiqube.etsi.mano.repository.phys;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.Low;
 
+@Service
 public class LowPhys implements Low {
 
 	@Override
@@ -41,7 +44,7 @@ public class LowPhys implements Low {
 	@Override
 	public void add(final String _path, final InputStream _stream) {
 		try {
-			Files.copy(_stream, Paths.get(_path));
+			Files.copy(_stream, Paths.get(_path), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -88,11 +91,12 @@ public class LowPhys implements Low {
 
 	@Override
 	public byte[] get(final String path, final int min, final Long max) {
-		try (InputStream fis = new FileInputStream(path)) {
-			final int delta = max.intValue() - min;
-			final byte[] res = new byte[delta];
-			fis.read(res, min, delta);
-			return res;
+		try {
+			final byte[] bytes = Files.readAllBytes(Paths.get(path));
+			if (null == max) {
+				return bytes;
+			}
+			return Arrays.copyOfRange(bytes, min, max.intValue());
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

@@ -3,9 +3,12 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.UUID;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 
@@ -27,6 +30,10 @@ public class GrantInformation implements BaseEntity {
 
 	private String resourceGroupId = null;
 
+	@ManyToOne
+	private VduInstantiationLevel instantiationLevel;
+
+	@Enumerated(EnumType.STRING)
 	private TypeEnum type;
 
 	private UUID vduId;
@@ -102,6 +109,14 @@ public class GrantInformation implements BaseEntity {
 
 	public void setVduId(final UUID vduId) {
 		this.vduId = vduId;
+	}
+
+	public VduInstantiationLevel getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
 	}
 
 }

@@ -4,28 +4,23 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import com.ubiqube.etsi.mano.dao.mano.AffectedCompute;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVl;
-import com.ubiqube.etsi.mano.dao.mano.AffectedVs;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.ResourceHandleEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
-import com.ubiqube.etsi.mano.dao.mano.VirtualStorageInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
-import com.ubiqube.etsi.mano.model.ResourceHandle;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
@@ -53,8 +48,6 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfPkgIds{}", "vnfPkgIds{id}")
 				.field("pnfdInfoIds{}", "pnfdInfoIds{id}")
 				.field("nestedNsdInfoIds{}", "nestedNsdInfoIds{id}")
-				.field("userDefinedData{key}", "userDefinedData{name}")
-				.field("userDefinedData{value}", "userDefinedData{value}")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class, VnfInstance.class)
@@ -147,52 +140,26 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("subscriptionAuthentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformation.class)
-				.field("id", "resourceDefinitionId")
-				.field("resource.vimConnectionId", "vimConnectionId")
-				.field("resource.resourceProviderId", "resourceProviderId")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(ResourceDefinition.class, ResourceHandleEntity.class)
-				.fieldBToA("id", "id")
-				.field("vduId", "vduId")
-				.field("resource.vimConnectionId", "vimConnectionInformation.id")
-				.field("resource.resourceProviderId", "resourceProviderId")
-				.field("resource.resourceId", "resourceId")
-				.field("resource.vimLevelResourceType", "vimLevelResourceType")
-				.register();
-		orikaMapperFactory.classMap(ResourceHandle.class, ResourceHandleEntity.class)
-				.field("vimConnectionId", "vimConnectionInformation.id")
-				.byDefault()
-				.register();
+
 		orikaMapperFactory.classMap(VnfPackage.class, VnfInstance.class)
 				.exclude("audit")
 				.exclude("id")
+				.exclude("nsInstance")
 				// .field("id", "vnfPkg.id")
-				.field("vnfCompute", "instantiatedVnfInfo.vnfcResourceInfo")
-				.field("vnfVl", "instantiatedVnfInfo.virtualLinkResourceInfo")
-				.field("vnfStorage", "instantiatedVnfInfo.virtualStorageResourceInfo")
+				// .field("vnfCompute", "instantiatedVnfInfo.vnfcResourceInfo")
+				// .field("vnfVl", "instantiatedVnfInfo.virtualLinkResourceInfo")
+				// .field("vnfStorage", "instantiatedVnfInfo.virtualStorageResourceInfo")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiedCompute.class)
+		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiatedCompute.class)
 				.field("id", "vduId")
-				.field("id", "compResource.vduId")
 				// Don't save this one.field("id", "computeResource.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
 				.field("storages", "storageResourceIds")
+				.exclude("instantiationLevel")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfVl.class, VirtualLinkInfo.class)
-				.field("id", "vnfVirtualLinkDescId")
-				.field("id", "networkResource.vduId")
-				// Don't map this one.field("id", "grantInformation.vduId")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(VnfStorage.class, VirtualStorageInfo.class)
-				.field("id", "storageResource.vduId")
-				.field("id", "virtualStorageDescId")
-				.byDefault()
-				.register();
+
 		orikaMapperFactory.classMap(VnfPackage.class, VnfLcmOpOccs.class)
 				.exclude("audit")
 				.exclude("id")
@@ -201,22 +168,30 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfStorage", "resourceChanges.affectedVirtualStorages")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfCompute.class, AffectedCompute.class)
-				.field("id", "vduId")
-				.field("id", "computeResource.vduId")
-				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
-				// XXX .field("storages", "storageResourceIds")
+
+		orikaMapperFactory.classMap(GrantInformation.class, GrantInformationExt.class)
+				.exclude("id")
+				.field("id", "resourceDefinitionId")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfVl.class, AffectedVl.class)
-				.field("id", "virtualLinkDescId")
-				.field("id", "networkResource.vduId")
-				// XXX .field("id", "grantInformation.vduId")
+		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformationExt.class)
+				.exclude("id")
+				.field("id", "resourceDefinitionId")
+				.field("type", "type")
+				.field("vduId", "vduId")
+				.register();
+		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformation.class)
+				.fieldBToA("id", "id")
+				.field("resource.vimConnectionId", "vimConnectionId")
+				.field("resource.resourceProviderId", "resourceProviderId")
+				.field("type", "type")
+				.field("vduId", "vduId")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfStorage.class, AffectedVs.class)
-				.field("id", "storageResource.vduId")
-				.field("id", "virtualStorageDescId")
+
+		orikaMapperFactory.classMap(GrantsRequest.class, GrantRequest.class)
+				.field("vnfLcmOpOccs.vnfInstance.id", "vnfInstanceId")
+				.field("vnfLcmOpOccs.id", "vnfLcmOpOccId")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

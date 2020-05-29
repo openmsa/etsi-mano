@@ -7,11 +7,13 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
-import com.ubiqube.etsi.mano.controller.nslcm.sol003.Sol003LcmLinkable;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -36,24 +38,20 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfInstatiate(final String vnfInstanceId, final String vnfId) {
-		lcm.instantiate(vnfInstanceId, null, new Sol003LcmLinkable());
-		// TODO It's a little more complex, we need to subscribe and wait for the URL to
-		// be called.
-		// Or we may need an other way.
-		return null;
+	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, final UUID vnfId) {
+		return lcm.instantiate(vnfInstanceId, instantiateVnfRequest);
 	}
 
 	@Override
 	public VnfLcmOpOccs getVnfLcmOpOccs(@NotNull final UUID id) {
-		// TODO Auto-generated method stub
-		return null;
+		return lcm.get(id);
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfTerminate(final String nsInstanceId, final String vnfId) {
-		// TODO Auto-generated method stub
-		return null;
+	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId) {
+		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
+		terminateVnfRequest.setTerminationType(TerminationTypeEnum.FORCEFUL);
+		return lcm.terminate(nsInstanceId, terminateVnfRequest);
 	}
 
 }

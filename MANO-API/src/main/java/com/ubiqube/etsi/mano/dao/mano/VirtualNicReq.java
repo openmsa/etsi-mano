@@ -1,13 +1,31 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import javax.persistence.Embeddable;
+import java.util.UUID;
 
-@Embeddable
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class VirtualNicReq {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
 	private String name;
+
 	private String description;
+
 	private boolean supportMandatory;
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(final UUID id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrants;
-import com.ubiqube.etsi.mano.dao.mano.Grants;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 
@@ -29,7 +29,7 @@ public class LcmGrantsSol005Api implements LcmGrants {
 
 	@Override
 	public ResponseEntity<Grant> grantsGrantIdGet(final String grantId, final String version) {
-		final Grants grants = grantManagement.get(UUID.fromString(grantId));
+		final GrantResponse grants = grantManagement.get(UUID.fromString(grantId));
 		if (!grants.getAvailable().equals(Boolean.TRUE)) {
 			return ResponseEntity.noContent().build();
 		}

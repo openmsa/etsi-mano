@@ -41,13 +41,13 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> imp
 	}
 
 	@Override
-	String setId(final VnfLcmOpOccs _entity) {
+	UUID setId(final VnfLcmOpOccs _entity) {
 		final String id = _entity.getId().toString();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId().toString();
+		return _entity.getId();
 	}
 
 	@Override
@@ -75,12 +75,12 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> imp
 		save(vnfLcmOpOcc);
 
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance instance = new VnfPkgInstance(vnfInstanceId.toString());
 		final VnfPkgOperation vnfPackageOperation = new VnfPkgOperation(vnfLcmOpOcc.getId().toString());
 		instance.addOperation(vnfPackageOperation);
 		vnfPkgIndex.addVnfPkgInstance(instance);
-		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
+		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, vnfPkgIndex);
 		return vnfLcmOpOcc;
 	}
 
@@ -92,26 +92,21 @@ public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> imp
 	}
 
 	@Override
-	public void attachProcessIdToLcmOpOccs(final String id, final String processId) {
+	public void attachProcessIdToLcmOpOccs(final UUID id, final String processId) {
 		final VnfLcmOpOccs lcmOpOccs = get(id);
 		@NotNull
-		final String vnfInstanceId = lcmOpOccs.getVnfInstance().getId().toString();
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, VnfPkgIndex.class);
+		final UUID vnfInstanceId = lcmOpOccs.getVnfInstance().getId();
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfPkgIndex vnfPkgIndex = vnfPackageMsa.loadObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, VnfPkgIndex.class);
 		final VnfPkgInstance indexInstance = vnfPkgIndex.getVnfPkgInstance(vnfInstanceId);
 		final VnfPkgOperation operation = indexInstance.getOperation(id);
 		operation.setProcessId(processId);
-		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId().toString(), INDEXES_JSON, vnfPkgIndex);
-	}
-
-	@Override
-	public VnfLcmOpOccs get(final UUID id) {
-		return get(id.toString());
+		vnfPackageMsa.storeObject(vnfInstance.getVnfPkg().getId(), INDEXES_JSON, vnfPkgIndex);
 	}
 
 	@Override
 	public void delete(final UUID id) {
-		delete(id.toString());
+		delete(id);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.mapper;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 import ma.glasnost.orika.MappingContext;
@@ -22,7 +23,7 @@ public class OffsetDateTimeToDateConverter extends BidirectionalConverter<Offset
 
 	@Override
 	public OffsetDateTime convertFrom(final Date source, final Type<OffsetDateTime> _destinationType, final MappingContext mappingContext) {
-		return OffsetDateTime.from(source.toInstant());
+		return OffsetDateTime.from(source.toInstant().atOffset(ZoneOffset.UTC));
 	}
 
 }

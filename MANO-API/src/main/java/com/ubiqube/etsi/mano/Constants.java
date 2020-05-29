@@ -1,13 +1,11 @@
 package com.ubiqube.etsi.mano;
 
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdOperationalStateType;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdUsageStateType;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
@@ -64,31 +62,31 @@ public final class Constants {
 		}
 	}
 
-	public static void ensureNotInUse(final NsdInfo nsd) {
-		if (NsdUsageStateType.NOT_IN_USE != nsd.getNsdUsageState()) {
+	public static void ensureNotInUse(final NsdPackage nsd) {
+		if (PackageUsageStateType.NOT_IN_USE != nsd.getNsdUsageState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in NOT_IN_USE state.");
 		}
 	}
 
-	public static void ensureDisabled(final NsdInfo nsd) {
-		if (NsdOperationalStateType.DISABLED != nsd.getNsdOperationalState()) {
+	public static void ensureDisabled(final NsdPackage nsd) {
+		if (PackageOperationalStateType.DISABLED != nsd.getNsdOperationalState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " Should be in disabled state.");
 		}
 	}
 
-	public static void ensureIsEnabled(final NsdInfo nsd) {
-		if (NsdOperationalStateType.ENABLED != nsd.getNsdOperationalState()) {
+	public static void ensureIsEnabled(final NsdPackage nsd) {
+		if (PackageOperationalStateType.ENABLED != nsd.getNsdOperationalState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ENABLED state.");
 		}
 	}
 
-	public static void ensureIsOnboarded(final NsdInfo nsd) {
+	public static void ensureIsOnboarded(final NsdPackage nsd) {
 		if (NsdOnboardingStateType.ONBOARDED != nsd.getNsdOnboardingState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
-	public static void ensureNotOnboarded(final NsdInfo nsd) {
+	public static void ensureNotOnboarded(final NsdPackage nsd) {
 		if (NsdOnboardingStateType.ONBOARDED == nsd.getNsdOnboardingState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
 		}

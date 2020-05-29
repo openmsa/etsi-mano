@@ -49,9 +49,9 @@ public class TemporaryDownloadService {
 		final TemporaryDownload doc = odoc.orElseThrow(() -> new NotFoundException("No temporary download available with id: " + id));
 		final String objectId = doc.getObjectId().toString();
 		if (doc.getObjectType() == ObjectType.NSD) {
-			return nsdRepository.getBinary(objectId, "nsd");
+			return nsdRepository.getBinary(UUID.fromString(objectId), "nsd");
 		} else if (doc.getObjectType() == ObjectType.VNFD) {
-			return vnfRepository.getBinary(objectId, "vnfd");
+			return vnfRepository.getBinary(UUID.fromString(objectId), "vnfd");
 		} else {
 			throw new GenericException("Unknown objectType: " + doc.getObjectType());
 		}

@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -13,5 +14,5 @@ public interface VnfLcmOpOccsRepository extends CrudRepositoryNg<VnfLcmOpOccs> {
 
 	void updateState(@Nonnull final VnfLcmOpOccs lcmOpOccs, final LcmOperationStateType operationState);
 
-	void attachProcessIdToLcmOpOccs(@Nonnull final String id, final String processId);
+	void attachProcessIdToLcmOpOccs(@Nonnull final UUID id, final String processId);
 }

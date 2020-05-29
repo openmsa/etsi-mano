@@ -25,13 +25,13 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsdInstance> implem
 	}
 
 	@Override
-	String setId(final NsdInstance _entity) {
+	public UUID setId(final NsdInstance _entity) {
 		final String id = _entity.getId().toString();
 		if (null == id) {
 			_entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId().toString();
+		return _entity.getId();
 	}
 
 	@Override
@@ -58,9 +58,9 @@ public class NsInstanceMsa extends AbstractGenericRepository<NsdInstance> implem
 	@Override
 	public NsdInstance save(final NsdInstance _entity) {
 		final NsdInstance nsInstance = save(_entity);
-		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(nsInstance.getNsdId(), "indexes.json", NsdPkgIndex.class);
+		final NsdPkgIndex nsdIndex = nsdRepository.loadObject(UUID.fromString(nsInstance.getNsdId()), "indexes.json", NsdPkgIndex.class);
 		nsdIndex.addNsdPkgInstance(new NsdPkgInstance(nsInstance.getId().toString()));
-		nsdRepository.storeObject(nsInstance.getNsdId(), "indexes.json", nsdIndex);
+		nsdRepository.storeObject(UUID.fromString(nsInstance.getNsdId()), "indexes.json", nsdIndex);
 		return nsInstance;
 	}
 

@@ -1,16 +1,18 @@
 package com.ubiqube.etsi.mano.service.event.jms;
 
+import java.util.UUID;
+
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 public class EventMessage {
 	private NotificationEvent notificationEvent;
-	private String objectId;
+	private UUID objectId;
 
 	public EventMessage() {
 		// Nothing.
 	}
 
-	public EventMessage(final NotificationEvent _notificationEvent, final String _objectId) {
+	public EventMessage(final NotificationEvent _notificationEvent, final UUID _objectId) {
 		notificationEvent = _notificationEvent;
 		objectId = _objectId;
 	}
@@ -23,11 +25,11 @@ public class EventMessage {
 		this.notificationEvent = notificationEvent;
 	}
 
-	public String getObjectId() {
+	public UUID getObjectId() {
 		return objectId;
 	}
 
-	public void setObjectId(final String objectId) {
+	public void setObjectId(final UUID objectId) {
 		this.objectId = objectId;
 	}
 

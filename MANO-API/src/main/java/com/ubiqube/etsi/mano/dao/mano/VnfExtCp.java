@@ -1,28 +1,39 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
-public class VnfExtCp {
+public class VnfExtCp implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	private String toscaId;
+
 	private String toscaName;
+
 	private String state;
 
 	private String externalVirtualLink;
+
 	private String internalVirtualLink;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
 
 	public UUID getId() {

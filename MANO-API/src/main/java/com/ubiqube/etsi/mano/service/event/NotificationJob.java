@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.util.UUID;
+
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -26,10 +28,10 @@ public class NotificationJob extends QuartzJobBean {
 		final NotificationEvent eventType = NotificationEvent.valueOf(jobDataMap.getString("eventType"));
 		final String objectId = jobDataMap.getString("objectId");
 
-		dispatch(eventType, objectId);
+		dispatch(eventType, UUID.fromString(objectId));
 	}
 
-	private void dispatch(final NotificationEvent eventType, final String objectIdId) {
+	private void dispatch(final NotificationEvent eventType, final UUID objectIdId) {
 		switch (eventType) {
 		case VNF_PKG_ONBOARDING:
 			vnfEvent.onEvent(objectIdId, NotificationTypesEnum.VnfPackageOnboardingNotification);

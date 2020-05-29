@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.ubiqube.api.entities.repository.RepositoryElement;
@@ -20,7 +19,6 @@ import com.ubiqube.etsi.mano.exception.NotAcceptableException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.Low;
 
-@Service
 public class LowMsa implements Low {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LowMsa.class);

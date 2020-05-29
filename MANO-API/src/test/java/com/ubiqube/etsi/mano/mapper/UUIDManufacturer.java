@@ -21,8 +21,11 @@ public class UUIDManufacturer extends StringTypeManufacturerImpl {
 		list.add("resourceId");
 		list.add("vduId");
 		list.add("vimConnectionId");
+		list.add("vimId");
 		list.add("virtualLinkDescId");
 		list.add("virtualStorageDescId");
+		list.add("cpdId");
+		list.add("extManagedVirtualLinkId");
 
 	}
 

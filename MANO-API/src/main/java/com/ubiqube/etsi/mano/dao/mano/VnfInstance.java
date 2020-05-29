@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -26,7 +28,10 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfInstance implements BaseEntity, Auditable {
+public class VnfInstance implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -71,7 +76,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance;
 
 	private String processId;
@@ -80,9 +85,16 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private Map<String, String> extensions = null;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private Set<VnfLcmOpOccs> lcmOpOccs;
+	private transient Set<VnfLcmOpOccs> lcmOpOccs;
 
-	private Audit audit;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
+	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<VnfInstantiatedBase> extManagedVirtualLinks;
+
+	private Audit audit = new Audit();
 
 	@Override
 	public UUID getId() {
@@ -227,6 +239,22 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public void setLcmOpOccs(final Set<VnfLcmOpOccs> lcmOpOccs) {
 		this.lcmOpOccs = lcmOpOccs;
+	}
+
+	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
+		return extVirtualLinks;
+	}
+
+	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+	}
+
+	public Set<VnfInstantiatedBase> getExtManagedVirtualLinks() {
+		return extManagedVirtualLinks;
+	}
+
+	public void setExtManagedVirtualLinks(final Set<VnfInstantiatedBase> extManagedVirtualLinks) {
+		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
 	@Override

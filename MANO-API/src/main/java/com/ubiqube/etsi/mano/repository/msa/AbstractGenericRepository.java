@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -49,9 +50,9 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 		jsonFilter = _jsonFilter;
 	}
 
-	abstract String setId(T _entity);
+	abstract UUID setId(T _entity);
 
-	protected String computePath(final String _id) {
+	protected String computePath(final UUID _id) {
 		final StringBuilder sb = new StringBuilder(getRoot());
 		sb.append('/').append(_id);
 		return sb.toString();
@@ -71,7 +72,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public final T get(final String _id) {
+	public final T get(final UUID _id) {
 		final String uri = computePath(_id) + '/' + getFilename();
 		LOG.debug("Loading ID: {}", _id);
 		verify(uri);
@@ -91,7 +92,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	abstract Class<?> getClazz();
 
 	@Override
-	public void delete(final String _id) {
+	public void delete(final UUID _id) {
 		final String uri = computePath(_id);
 		verify(uri);
 		final RepositoryElement repositoryElement = repositoryService.getElement(uri);
@@ -100,7 +101,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 
 	@Override
 	public T save(final T _entity) {
-		final String saveId = setId(_entity);
+		final UUID saveId = setId(_entity);
 		final String dir = computePath(saveId);
 		mkdir(dir);
 		final String uri = dir + '/' + getFilename();
@@ -116,7 +117,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public void storeObject(final String _id, final String _filename, final Object _object) {
+	public void storeObject(final UUID _id, final String _filename, final Object _object) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -128,7 +129,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public final <T, U extends Class> T loadObject(@NotNull final String _id, final String _filename, final U t) {
+	public final <T, U extends Class> T loadObject(@NotNull final UUID _id, final String _filename, final U t) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -147,7 +148,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public void storeBinary(final String _id, final String _filename, final InputStream _stream) {
+	public void storeBinary(final UUID _id, final String _filename, final InputStream _stream) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		verify(path.toString());
 		path.append('/').append(_filename);
@@ -173,7 +174,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 			final String path = entry.substring((getRoot() + '/').length());
 			final File file = new File(path);
 			LOG.info("Retreiving: {}", file.getParent());
-			final T repoObject = get(file.getParent());
+			final T repoObject = get(UUID.fromString(file.getParent()));
 			if (jsonFilter.apply(repoObject, astBuilder)) {
 				ret.add(repoObject);
 			}
@@ -182,7 +183,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public byte[] getBinary(final String _id, final String _filename) {
+	public byte[] getBinary(final UUID _id, final String _filename) {
 		final StringBuilder path = new StringBuilder(computePath(_id));
 		path.append('/').append(_filename);
 		final RepositoryElement repositoryElement = repositoryService.getElement(path.toString());
@@ -193,7 +194,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
+	public byte[] getBinary(final UUID _id, final String _filename, final int min, final Long max) {
 		// We should ask for an API.
 		final byte[] repositoryContent = getBinary(_id, _filename);
 		if (min >= repositoryContent.length) {
@@ -203,7 +204,7 @@ public abstract class AbstractGenericRepository<T> implements CrudRepository<T>,
 	}
 
 	@Override
-	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+	public void delete(@NotNull final UUID _id, @NotNull final String _filename) {
 		// XXX:repositoryService.de
 	}
 

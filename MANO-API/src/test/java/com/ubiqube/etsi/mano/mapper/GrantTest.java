@@ -1,15 +1,22 @@
 package com.ubiqube.etsi.mano.mapper;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
-import com.ubiqube.etsi.mano.dao.mano.Grants;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
@@ -38,7 +45,7 @@ public class GrantTest {
 		// final GrantRequest grantRequest = jsonMapper.readValue(bytes,
 		// GrantRequest.class);
 		final GrantRequest grantRequest = podam.manufacturePojo(GrantRequest.class);
-		final Grants grants = mapper.map(grantRequest, Grants.class);
+		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		System.out.println("" + grants);
 		assertEquals(grantRequest.getAdditionalParams().size(), grants.getAdditionalParams().size());
 		assertEquals(grantRequest.getAddResources().size(), grants.getAddResources().size());
@@ -52,5 +59,29 @@ public class GrantTest {
 		assertEquals(grantRequest.getVnfdId(), grants.getVnfdId());
 		assertEquals(grantRequest.getVnfInstanceId(), grants.getVnfInstanceId());
 		assertEquals(grantRequest.getVnfLcmOpOccId(), grants.getVnfLcmOpOccId());
+	}
+
+	@Test
+	void testRequestJson() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final GrantRequest gr = podam.manufacturePojo(GrantRequest.class);
+		final GrantResponse resp = mapper.map(gr, GrantResponse.class);
+		assertEquals(5, resp.getAddResources().size());
+		final GrantInformationExt res = resp.getAddResources().iterator().next();
+		assertNull(res.getId());
+		assertNotNull(res.getVduId());
+	}
+
+	@Test
+	void testGrantResponseToGrantResponse() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final GrantResponse gr = new GrantResponse();
+		gr.setVimAssets(podam.manufacturePojo(GrantVimAssetsEntity.class));
+		final Set<GrantInformationExt> addResources = new HashSet<>();
+		addResources.add(podam.manufacturePojo(GrantInformationExt.class));
+		gr.setAddResources(addResources);
+
+		final Grant resp = mapper.map(gr, Grant.class);
+		System.out.println("" + resp);
 	}
 }

@@ -1,6 +1,9 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
 
 /**
  * Manage Asynchronous Event in the application. Current implementation is using
@@ -16,7 +19,7 @@ public interface EventManager {
 	 * @param notificationEvent The notification event type.
 	 * @param objectId          The Id.
 	 */
-	void sendNotification(NotificationEvent notificationEvent, String objectId);
+	void sendNotification(@Nonnull NotificationEvent notificationEvent, @Nonnull UUID objectId);
 
 	/**
 	 * Create an asynchronous task.
@@ -25,5 +28,5 @@ public interface EventManager {
 	 * @param objectId   The object Id.
 	 * @param parameters Additional parameters if any.
 	 */
-	void sendAction(ActionType actionType, String objectId, Map<String, Object> parameters);
+	void sendAction(@Nonnull ActionType actionType, @Nonnull UUID objectId, @Nonnull Map<String, Object> parameters);
 }

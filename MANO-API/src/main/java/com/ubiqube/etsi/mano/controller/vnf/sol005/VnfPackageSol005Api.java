@@ -20,25 +20,19 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.api.exception.ServiceException;
-import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.sol005.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.UploadVnfPkgFromUriRequest;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.service.ManufacturerModel;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -71,17 +65,13 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Nonnull
 	private final Linkable links = new Sol005Linkable();
 	private final VnfPackageManagement vnfManagement;
-	private final ManufacturerModel manufacturerModel;
-	private final DeviceService deviceService;
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
 
-	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final ManufacturerModel _manufacturerModel, final DeviceService _deviceService, final EventManager _eventManager, final MapperFacade _mapper) {
+	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper) {
 		vnfManagement = _vnfManagement;
-		manufacturerModel = _manufacturerModel;
-		deviceService = _deviceService;
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
@@ -127,50 +117,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesPost(final String accept, final String contentType, final CreateVnfPkgInfoRequest vnfPackagePostQuery) {
 		final Map<String, String> userData = vnfPackagePostQuery.getUserDefinedData();
-
 		VnfPackage vnfPackage = VnfPackageFactory.createVnfPkgInfo(userData);
-
-		checkUserData(userData);
-		final Object heatDoc = userData.remove("heat");
 		vnfPackage = vnfPackageRepository.save(vnfPackage);
-		final String vnfPkgId = vnfPackage.getId().toString();
-		if (null != heatDoc) {
-			vnfPackageRepository.storeObject(vnfPkgId, "vnfd", heatDoc);
-			vnfPackage.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
-			vnfPackage.setOperationalState(PackageOperationalStateType.ENABLED);
-			vnfPackageRepository.save(vnfPackage);
-			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPkgId);
-		}
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
-
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPackage.getId().toString()));
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.CREATED);
-	}
-
-	private void checkUserData(final Map<String, String> userData) {
-		final String vimId = userData.get("vimId");
-		if (null == vimId) {
-			// Not MSA
-			return;
-		}
-		try {
-			deviceService.getDeviceId(vimId);
-		} catch (final ServiceException e) {
-			throw new BadRequestException("vimId is not found in MSA.", e);
-		}
-		Assert.notNull(userData.get("customerId"), "customerId could not be null.");
-		// Not in camel case ???
-		Assert.notNull(userData.get("device_login"), "device_login could not be null.");
-		Assert.notNull(userData.get("device_password"), "device_password could not be null.");
-		final String manufacturerId = userData.get("manufacturerId");
-		Assert.notNull(manufacturerId, "manufacturerId could not be null.");
-		final String modelId = userData.get("modelId");
-		Assert.notNull(modelId, "modelId could not be null.");
-		// Probably not the best place to do that.
-		final String manufacturer = manufacturerModel.getManufacturerById(manufacturerId);
-		final String model = manufacturerModel.getModelById(manufacturerId, modelId);
-		userData.put("manufacturer", manufacturer);
-		userData.put("model", model);
 	}
 
 	/**
@@ -181,10 +132,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(final String vnfPkgId) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureDisabled(vnfPackage);
 		ensureNotInUse(vnfPackage);
-		vnfPackageRepository.delete(vnfPkgId);
+		vnfPackageRepository.delete(vnfPkgUuid);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -199,14 +151,15 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		patcher.patch(body, vnfPackage);
 		vnfPackageRepository.save(vnfPackage);
 
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgUuid.toString()));
 		// On change Notification
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgId);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, vnfPkgUuid);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
@@ -220,7 +173,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> parameters = new HashMap<>();
 		try {
@@ -228,7 +182,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, vnfPkgId, parameters);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, vnfPkgUuid, parameters);
 		return ResponseEntity.accepted().build();
 	}
 
@@ -243,13 +197,14 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final UploadVnfPkgFromUriRequest contentUploadFromUriPostRequest) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
+		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
+		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureNotOnboarded(vnfPackage);
 
 		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("url", uddList.get("url"));
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgId, parameters);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgUuid, parameters);
 
 		return ResponseEntity.noContent().build();
 	}

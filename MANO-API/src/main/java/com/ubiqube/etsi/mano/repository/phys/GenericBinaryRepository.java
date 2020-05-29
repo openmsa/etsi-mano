@@ -2,11 +2,13 @@ package com.ubiqube.etsi.mano.repository.phys;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,12 +59,8 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 				.collect(Collectors.toList());
 	}
 
-	public final T get(final UUID _id) {
-		return get(_id.toString());
-	}
-
 	@Override
-	public final T get(final String _id) {
+	public final T get(final UUID _id) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), _id, getFilename());
@@ -74,12 +72,8 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 		}
 	}
 
-	public final void delete(final UUID _id) {
-		delete(_id.toString());
-	}
-
 	@Override
-	public final void delete(final String _id) {
+	public final void delete(final UUID _id) {
 		final Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
 		lowDriver.delete(path.toString());
@@ -87,7 +81,7 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 
 	@Override
 	public T save(final T entity) {
-		final String id = setId(entity);
+		final UUID id = setId(entity);
 		final Path path = namingStrategy.getRoot(getClazz(), id);
 		lowDriver.mkdir(path.toString());
 		storeObject(id, getFilename(), entity);
@@ -95,20 +89,20 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public final void storeObject(final String _id, final String _filename, final Object _object) {
+	public final void storeObject(final UUID _id, final String _filename, final Object _object) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
 		try {
 			final String content = objectMapper.writeValueAsString(_object);
 			path = namingStrategy.getRoot(getClazz(), _id, _filename);
-			lowDriver.add(path.toString(), content.getBytes());
+			lowDriver.add(path.toString(), content.getBytes(Charset.defaultCharset()));
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}
 
 	@Override
-	public final void storeBinary(final String _id, final String _filename, final InputStream _stream) {
+	public final void storeBinary(final UUID _id, final String _filename, final InputStream _stream) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), _id, _filename);
@@ -116,7 +110,7 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public final byte[] getBinary(final String _id, final String _filename) {
+	public final byte[] getBinary(final UUID _id, final String _filename) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), _id, _filename);
@@ -124,7 +118,7 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public final byte[] getBinary(final String _id, final String _filename, final int min, final Long max) {
+	public final byte[] getBinary(final UUID _id, final String _filename, final int min, final Long max) {
 		Path path = namingStrategy.getRoot(getClazz(), _id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), _id, _filename);
@@ -132,7 +126,7 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public <T, U extends Class> T loadObject(@NotNull final String _id, @NotNull final String _filename, final U t) {
+	public <T, U extends Class> T loadObject(@NotNull final UUID _id, @NotNull final String _filename, final U t) {
 		final byte[] bytes = getBinary(_id, _filename);
 		try {
 			return (T) objectMapper.readValue(bytes, t);
@@ -141,11 +135,11 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 		}
 	}
 
-	protected abstract String setId(T entity);
+	protected abstract @Nonnull UUID setId(T entity);
 
-	protected abstract Class<T> getClazz();
+	protected abstract @Nonnull Class<T> getClazz();
 
-	protected abstract String getFilename();
+	protected abstract @Nonnull String getFilename();
 
 	private void verifyPath(final Path path) {
 		if (!lowDriver.exist(path.toString())) {
@@ -163,7 +157,7 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 	}
 
 	@Override
-	public void delete(@NotNull final String _id, @NotNull final String _filename) {
+	public void delete(@NotNull final UUID _id, @NotNull final String _filename) {
 		final Path path = namingStrategy.getRoot(getClazz(), _id);
 		lowDriver.delete(path.toString());
 	}

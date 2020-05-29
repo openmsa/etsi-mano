@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -33,6 +34,9 @@ public class VnfStorage implements BaseEntity, Auditable, Serializable {
 	private SoftwareImage softwareImage;
 
 	private long size;
+
+	@ManyToOne
+	private VnfPackage vnfPackage;
 
 	@Embedded
 	private Audit audit;
@@ -92,6 +96,14 @@ public class VnfStorage implements BaseEntity, Auditable, Serializable {
 
 	public void setState(final String state) {
 		this.state = state;
+	}
+
+	public VnfPackage getVnfPackage() {
+		return vnfPackage;
+	}
+
+	public void setVnfPackage(final VnfPackage vnfPackage) {
+		this.vnfPackage = vnfPackage;
 	}
 
 	@Override

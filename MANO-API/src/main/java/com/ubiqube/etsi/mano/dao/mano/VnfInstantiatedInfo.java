@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Embeddable
-public class VnfInstantiatedInfo {
+public class VnfInstantiatedInfo implements Serializable {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	private String flavourId = null;
 
@@ -41,8 +45,7 @@ public class VnfInstantiatedInfo {
 	private String localizationLanguage = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
-	private Set<VnfInstantiedCompute> vnfcResourceInfo = null;
+	private Set<VnfInstantiatedCompute> vnfcResourceInfo = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
@@ -50,7 +53,9 @@ public class VnfInstantiatedInfo {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<VirtualStorageInfo> virtualStorageResourceInfo = null;
+	private Set<VnfInstantiatedStorage> virtualStorageResourceInfo = null;
+
+	private String instantiationLevelId = null;
 
 	public String getFlavourId() {
 		return flavourId;
@@ -116,11 +121,11 @@ public class VnfInstantiatedInfo {
 		this.localizationLanguage = localizationLanguage;
 	}
 
-	public Set<VnfInstantiedCompute> getVnfcResourceInfo() {
+	public Set<VnfInstantiatedCompute> getVnfcResourceInfo() {
 		return vnfcResourceInfo;
 	}
 
-	public void setVnfcResourceInfo(final Set<VnfInstantiedCompute> vnfcResourceInfo) {
+	public void setVnfcResourceInfo(final Set<VnfInstantiatedCompute> vnfcResourceInfo) {
 		this.vnfcResourceInfo = vnfcResourceInfo;
 	}
 
@@ -132,22 +137,22 @@ public class VnfInstantiatedInfo {
 		this.virtualLinkResourceInfo = virtualLinkResourceInfo;
 	}
 
-	public Set<VirtualStorageInfo> getVirtualStorageResourceInfo() {
+	public Set<VnfInstantiatedStorage> getVirtualStorageResourceInfo() {
 		return virtualStorageResourceInfo;
 	}
 
-	public void setVirtualStorageResourceInfo(final Set<VirtualStorageInfo> virtualStorageResourceInfo) {
+	public void setVirtualStorageResourceInfo(final Set<VnfInstantiatedStorage> virtualStorageResourceInfo) {
 		this.virtualStorageResourceInfo = virtualStorageResourceInfo;
 	}
 
-	public void addVirtualStorageResourceInfoItem(final VirtualStorageInfo vStorage) {
+	public void addVirtualStorageResourceInfoItem(final VnfInstantiatedStorage vStorage) {
 		if (null == virtualStorageResourceInfo) {
 			virtualStorageResourceInfo = new HashSet<>();
 		}
 		virtualStorageResourceInfo.add(vStorage);
 	}
 
-	public void addVnfcResourceInfoItem(final VnfInstantiedCompute compute) {
+	public void addVnfcResourceInfoItem(final VnfInstantiatedCompute compute) {
 		if (null == vnfcResourceInfo) {
 			vnfcResourceInfo = new HashSet<>();
 		}
@@ -159,6 +164,14 @@ public class VnfInstantiatedInfo {
 			virtualLinkResourceInfo = new HashSet<>();
 		}
 		virtualLinkResourceInfo.add(virtualLink);
+	}
+
+	public String getInstantiationLevelId() {
+		return instantiationLevelId;
+	}
+
+	public void setInstantiationLevelId(final String instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,9 @@ import com.ubiqube.etsi.mano.controller.vnf.sol003.Sol003Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.sol005.Sol005Linkable;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
+import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
@@ -39,7 +40,7 @@ public class VnfEvent {
 		this.notifications = notifications;
 	}
 
-	public void onEvent(final String vnfPkgId, final NotificationTypesEnum event) {
+	public void onEvent(final UUID vnfPkgId, final NotificationTypesEnum event) {
 		final List<SubscriptionObject> res = subscriptionRepository.selectNotifications(vnfPkgId, event.toString());
 
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
@@ -47,10 +48,10 @@ public class VnfEvent {
 		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
 	}
 
-	private void sendNotification(final String vnfPkgId, final SubscriptionObject subscriptionObject, final NotificationTypesEnum event) {
+	private void sendNotification(final UUID vnfPkgId, final SubscriptionObject subscriptionObject, final NotificationTypesEnum event) {
 		final Linkable links = getLinkable(subscriptionObject.getApi());
 		final PkgmSubscription req = subscriptionObject.getPkgmSubscription();
-		final String subscriptionId = req.getId();
+		final UUID subscriptionId = UUID.fromString(req.getId());
 		final String callbackUri = req.getCallbackUri();
 		final SubscriptionAuthentication auth = subscriptionObject.getSubscriptionAuthentication();
 

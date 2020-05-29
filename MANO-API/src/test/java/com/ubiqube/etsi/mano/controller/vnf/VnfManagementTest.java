@@ -103,7 +103,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetJson() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "VnfPkgInfo.json"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		assertThrows(NotFoundException.class, () -> {
@@ -114,7 +114,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZip404() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		assertThrows(NotFoundException.class, () -> {
@@ -125,7 +125,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZipOk() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "nsd.json", null);
@@ -140,7 +140,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZipOkRanged() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "nsd.json", "bytes=200-1000");
@@ -156,7 +156,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdArtifactsArtifactPathGetZipOkRangedStar() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "nsd.json", "bytes=200-");
@@ -172,7 +172,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdVnfdGetJson() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "VnfPkgInfo.json"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "");
@@ -183,7 +183,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdVnfdGetZip() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "");
@@ -194,7 +194,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdVnfdGetText() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "hello.txt"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<Resource> res = vnfPManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "");
@@ -205,7 +205,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdPackageContentGet() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), null);
@@ -216,7 +216,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdPackageContentGetRangeOk() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "bytes=200-1000");
@@ -232,7 +232,7 @@ public class VnfManagementTest {
 	@Test
 	void testvnfPackagesVnfPkgIdPackageContentGetRangePartial() throws Exception {
 		final byte[] value = Files.readAllBytes(Paths.get("src/test/resources", "pack.zip"));
-		when(vnfPackageRepository.getBinary("79afa4e8-3f76-4239-9175-309c12a06b6e", "vnfd")).thenReturn(value);
+		when(vnfPackageRepository.getBinary(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "vnfd")).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 		final ResponseEntity<List<ResourceRegion>> res = vnfPManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), "bytes=200-");

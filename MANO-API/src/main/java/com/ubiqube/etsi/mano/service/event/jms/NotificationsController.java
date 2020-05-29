@@ -21,7 +21,7 @@ public class NotificationsController {
 
 	@JmsListener(destination = "system.notifications")
 	public void onEvent(final EventMessage ev) {
-		LOG.info("Receiving event: {}", ev);
+		LOG.info("Notification Controller Received event: {}", ev);
 		switch (ev.getNotificationEvent()) {
 		case VNF_PKG_ONBOARDING:
 			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageOnboardingNotification);
