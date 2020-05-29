@@ -96,11 +96,24 @@ public class NfvoActions {
 		nsLcmOpOccsService = _nsLcmOpOccsService;
 	}
 
-	public void nsTerminate(final UUID nsInstanceId) {
-		// XXX This is not the correct way/
-		final VimConnectionInformation vimInfo = electVim(null, null);
+	public void nsTerminate(@Nonnull final UUID nsInstanceId) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.TERMINATE);
+		try {
+			nsTerminateInner(lcmOpOccs, nsInstance);
+		} catch (final RuntimeException e) {
+			LOG.error("NS Instantiate fail.", e);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
+			nsInstanceRepository.save(nsInstance);
+			nsLcmOpOccsService.save(lcmOpOccs);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
+		}
+	}
+
+	public void nsTerminateInner(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
+		// XXX This is not the correct way/
+		final VimConnectionInformation vimInfo = electVim(null, null);
 
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
@@ -109,7 +122,7 @@ public class NfvoActions {
 		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
 		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
 		for (final NsdPackageVnfPackage vnfId : vnfs) {
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstanceId);
+			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstance.getId());
 			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
 		}
 		waitForCompletion(vnfLcmOpOccsIds);
@@ -118,7 +131,7 @@ public class NfvoActions {
 		final LcmOperationStateType status = computeStatus(vnfLcmOpOccsIds);
 		if (LcmOperationStateType.COMPLETED != status) {
 			updateOperationState(lcmOpOccs, status);
-			eventManager.sendNotification(NotificationEvent.NS_TERMINATE, nsInstanceId);
+			eventManager.sendNotification(NotificationEvent.NS_TERMINATE, nsInstance.getId());
 			return;
 		}
 		// Release the NS.
@@ -146,37 +159,50 @@ public class NfvoActions {
 
 	public void nsInstantiate(@Nonnull final UUID nsInstanceId) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
+		try {
+			nsInstantiateInner(lcmOpOccs, nsInstance);
+		} catch (final RuntimeException e) {
+			LOG.error("NS Instantiate fail.", e);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
+			nsInstanceRepository.save(nsInstance);
+			nsLcmOpOccsService.save(lcmOpOccs);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
+		}
+	}
+
+	public void nsInstantiateInner(@Nonnull final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
 		final UUID nsdId = nsInstance.getNsdInfo().getId();
-		NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Make plan in lcmOpOccs
 		executionPlanner.makePrePlan(nsInstance, nsdInfo, lcmOpOccs);
-		lcmOpOccs = nsLcmOpOccsService.save(lcmOpOccs);
+		final NsLcmOpOccs localLcmOpOccs = nsLcmOpOccsService.save(lcmOpOccs);
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		// Create Ns.
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
+		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
 		executionPlanner.exportNsGraph(plan, nsdId, nsInstance, "create");
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim);
 		LOG.debug("Done, Saving ...");
-		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
+		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.
-		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, lcmOpOccs.getId());
-		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
+		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localLcmOpOccs.getId());
+		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 	}
 
 	private void setResultLcmInstance(final NsLcmOpOccs lcmOpOccs, @Nonnull final UUID nsInstanceId, final ExecutionResults<NsUnitOfWork, String> results, final InstantiationStateEnum eventType) {
-		final NsdInstance vnfInstance = nsInstanceRepository.get(nsInstanceId);
+		final NsdInstance nsdInstance = nsInstanceRepository.get(nsInstanceId);
 		if (results.getErrored().isEmpty()) {
 			lcmOpOccs.setOperationState(LcmOperationStateType.COMPLETED);
-			vnfInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
+			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
 		} else {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-			vnfInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
+			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
-		nsInstanceRepository.save(vnfInstance);
+		nsInstanceRepository.save(nsdInstance);
 		nsLcmOpOccsService.save(lcmOpOccs);
 	}
 
