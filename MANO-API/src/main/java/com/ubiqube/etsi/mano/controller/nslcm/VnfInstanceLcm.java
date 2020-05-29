@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationT
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -50,18 +51,25 @@ public class VnfInstanceLcm {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceLcm.class);
 
 	private final VnfInstancesRepository vnfInstancesRepository;
+
 	private final VnfPackageRepository vnfPackageRepository;
+
 	private final EventManager eventManager;
+
 	private final MapperFacade mapper;
+
 	private final VnfLcmService vnfLcmService;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService) {
+	private final VnfInstanceService vnfInstanceService;
+
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
 		mapper = _mapper;
 		vnfLcmService = _vnfLcmService;
+		vnfInstanceService = _vnfInstanceService;
 	}
 
 	public List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
@@ -102,7 +110,7 @@ public class VnfInstanceLcm {
 			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
-		vnfInstancesRepository.delete(vnfInstanceId);
+		vnfInstanceService.delete(vnfInstanceId);
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 

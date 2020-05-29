@@ -3,9 +3,14 @@ package com.ubiqube.etsi.mano.service;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
@@ -17,6 +22,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -27,10 +33,14 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
+import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 
 @Service
 public class VnfInstanceService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceService.class);
+
 	private final ExtVirtualLinkDataEntityJpa extVirtualLinkDataEntityJpa;
 
 	private final VnfInstantiedComputeJpa vnfInstantiedComputeJpa;
@@ -44,9 +54,14 @@ public class VnfInstanceService {
 	private final VnfExtCpJpa vnfExtCpJpa;
 
 	private final VnfInstantiedExtCpJpa vnfInstantiedExtCpJpa;
+
 	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfVlJpa _vnfVlJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa) {
+	private final VnfLcmOpOccsJpa vnfLcmOpOccsJpa;
+
+	private final GrantService grantService;
+
+	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfVlJpa _vnfVlJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService) {
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstantiedComputeJpa = _vnfInstantiedComputeJpa;
 		vnfVlJpa = _vnfVlJpa;
@@ -55,6 +70,8 @@ public class VnfInstanceService {
 		vnfInstantiedExtCpJpa = _vnfInstantiedExtCpJpa;
 		vnfInstantiedStorageJpa = _vnfInstantiedStorageJpa;
 		vnfInstanceJpa = _vnfInstanceJpa;
+		vnfLcmOpOccsJpa = _vnfLcmOpOccsJpa;
+		grantService = _grantService;
 	}
 
 	public List<ExtVirtualLinkDataEntity> getAllExtVirtualLinks(final VnfInstance vnfInstance) {
@@ -127,6 +144,17 @@ public class VnfInstanceService {
 
 	public VnfInstance save(final VnfInstance vnfInstance) {
 		return vnfInstanceJpa.save(vnfInstance);
+	}
+
+	@Transactional
+	public void delete(final UUID vnfInstanceId) {
+		final VnfInstance vnfInstance = vnfInstanceJpa.findById(vnfInstanceId).orElseThrow(() -> new NotFoundException("Vnf Instance " + vnfInstanceId + " not found."));
+		final Set<VnfLcmOpOccs> lcmOpOccs = vnfLcmOpOccsJpa.findByVnfInstance(vnfInstance);
+		lcmOpOccs.forEach(x -> {
+			LOG.info("Deleting LcmOpOccs {}", x.getId());
+			grantService.deleteByLcmOpOccs(x);
+			vnfLcmOpOccsJpa.delete(x);
+		});
 	}
 
 }

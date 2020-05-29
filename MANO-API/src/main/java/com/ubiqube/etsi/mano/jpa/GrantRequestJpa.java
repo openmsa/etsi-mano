@@ -5,7 +5,9 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 
 public interface GrantRequestJpa extends CrudRepository<GrantsRequest, UUID> {
-	// Nothing.
+
+	void deleteByVnfLcmOpOccs(VnfLcmOpOccs lcmOpOccs);
 }

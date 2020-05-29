@@ -187,4 +187,9 @@ public class GrantService {
 		return grantInformationJpa.findById(grantUuid);
 	}
 
+	public void deleteByLcmOpOccs(final VnfLcmOpOccs lcmOpOccs) {
+		grantRequestJpa.deleteByVnfLcmOpOccs(lcmOpOccs);
+
+	}
+
 }
