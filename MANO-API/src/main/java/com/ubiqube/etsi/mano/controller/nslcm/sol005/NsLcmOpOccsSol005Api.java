@@ -22,7 +22,7 @@ import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOccLinks;
-import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
+import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -30,11 +30,11 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
-	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
+	private final NsLcmOpOccsService nsLcmOpOccsService;
 	private final MapperFacade mapper;
 
-	public NsLcmOpOccsSol005Api(final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final MapperFacade _mapper) {
-		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
+	public NsLcmOpOccsSol005Api(final NsLcmOpOccsService _nsLcmOpOccsRepository, final MapperFacade _mapper) {
+		nsLcmOpOccsService = _nsLcmOpOccsRepository;
 		mapper = _mapper;
 	}
 
@@ -50,7 +50,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsLcmOpOccs> result = nsLcmOpOccsRepository.query(filter);
+		final List<NsLcmOpOccs> result = nsLcmOpOccsService.query(filter);
 		final List<NsLcmOpOcc> list = result.stream()
 				.map(x -> {
 					final NsLcmOpOcc res = mapper.map(x, NsLcmOpOcc.class);
@@ -95,7 +95,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
-		final NsLcmOpOccs nsLcmOpOccs = nsLcmOpOccsRepository.get(UUID.fromString(nsLcmOpOccId));
+		final NsLcmOpOccs nsLcmOpOccs = nsLcmOpOccsService.get(UUID.fromString(nsLcmOpOccId));
 		final NsLcmOpOcc res = mapper.map(nsLcmOpOccs, NsLcmOpOcc.class);
 		res.setLinks(makeLink(res));
 

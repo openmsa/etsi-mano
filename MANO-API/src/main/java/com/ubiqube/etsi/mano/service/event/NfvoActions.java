@@ -45,7 +45,6 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
-import com.ubiqube.etsi.mano.repository.NsLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
@@ -66,7 +65,6 @@ public class NfvoActions {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NfvoActions.class);
 
-	private final NsLcmOpOccsRepository lcmOpOccsRepository;
 	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsLcmOpOccsService nsLcmOpOccsService;
@@ -75,7 +73,6 @@ public class NfvoActions {
 	private final VimManager vimManager;
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
-	private final NsLcmOpOccsRepository nsLcmOpOccsRepository;
 	private final GrantsResponseJpa grantJpa;
 	private final VnfInstancesRepository vnfInstancesRepository;
 
@@ -83,9 +80,8 @@ public class NfvoActions {
 
 	private final ExecutionPlanner executionPlanner;
 
-	public NfvoActions(final NsLcmOpOccsRepository _lcmOpOccsRepository, final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final NsLcmOpOccsRepository _nsLcmOpOccsRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService) {
+	public NfvoActions(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService) {
 		super();
-		lcmOpOccsRepository = _lcmOpOccsRepository;
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
@@ -93,7 +89,6 @@ public class NfvoActions {
 		vimManager = _vimManager;
 		eventManager = _eventManager;
 		vnfPackageRepository = _vnfPackageRepository;
-		nsLcmOpOccsRepository = _nsLcmOpOccsRepository;
 		grantJpa = _grantJpa;
 		vnfInstancesRepository = _vnfInstancesRepository;
 		executionPlanner = _executionPlanner;
@@ -105,7 +100,7 @@ public class NfvoActions {
 		// XXX This is not the correct way/
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstance, NsLcmOpType.TERMINATE);
+		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.TERMINATE);
 
 		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
@@ -146,17 +141,17 @@ public class NfvoActions {
 	private void updateOperationState(final NsLcmOpOccs lcmOpOccs, final LcmOperationStateType status) {
 		lcmOpOccs.setStateEnteredTime(new Date());
 		lcmOpOccs.setOperationState(status);
-		lcmOpOccsRepository.save(lcmOpOccs);
+		nsLcmOpOccsService.save(lcmOpOccs);
 	}
 
 	public void nsInstantiate(@Nonnull final UUID nsInstanceId) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
 		final UUID nsdId = nsInstance.getNsdInfo().getId();
-		NsLcmOpOccs lcmOpOccs = nsLcmOpOccsRepository.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
+		NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Make plan in lcmOpOccs
 		executionPlanner.makePrePlan(nsInstance, nsdInfo, lcmOpOccs);
-		lcmOpOccs = nsLcmOpOccsRepository.save(lcmOpOccs);
+		lcmOpOccs = nsLcmOpOccsService.save(lcmOpOccs);
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		// Create Ns.
@@ -182,7 +177,7 @@ public class NfvoActions {
 			vnfInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
 		nsInstanceRepository.save(vnfInstance);
-		lcmOpOccsRepository.save(lcmOpOccs);
+		nsLcmOpOccsService.save(lcmOpOccs);
 	}
 
 	private List<VnfLcmOpOccs> refreshVnfLcmOpOccsIds(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
