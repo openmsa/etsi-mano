@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -72,7 +71,7 @@ public class VnfManagement implements VnfPackageManagement {
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPackage> vnfPackageInfos = vnfPackageRepository.query(filter);
-		final List<@NonNull VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
+		final List<VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
 				.map(x -> mapper.map(x, VnfPkgInfo.class))
 				.collect(Collectors.toList());
 

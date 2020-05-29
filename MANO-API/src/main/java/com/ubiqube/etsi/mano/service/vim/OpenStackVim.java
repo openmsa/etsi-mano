@@ -11,7 +11,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import org.jgrapht.ListenableGraph;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
@@ -187,7 +188,8 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public @NonNull VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
+	@Nonnull
+	public VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final List<? extends Image> images = os.compute().images().list();
 		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new NotFoundException("Image " + name + " Cannot be found on Vim."));

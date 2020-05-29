@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
@@ -38,7 +37,7 @@ public interface Vim {
 
 	String getType();
 
-	@NonNull
+	@Nonnull
 	VimImage getImagesInformations(VimConnectionInformation vimConnectionInformation, String name);
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name);

@@ -444,6 +444,7 @@ public class ExecutionPlanner {
 		inst.setVduId(source.getVduId());
 		inst.setRemovedInstantiated(source.getId());
 		inst.setResourceId(source.getResourceId());
+		inst.setInstantiationLevel(source.getInstantiationLevel());
 		inst.setVnfLcmOpOccs(lcmOpOccs);
 		return inst;
 	}

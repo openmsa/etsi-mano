@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.jgrapht.ListenableGraph;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.common.Identifier;
@@ -224,7 +223,8 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public @NonNull VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
+	@Nonnull
+	public VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
 		final OSClientV3 os = getOs();
 		final List<? extends Image> images = os.compute().images().list();
 		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new NotFoundException("Image " + name + " Cannot be found on Vim."));
