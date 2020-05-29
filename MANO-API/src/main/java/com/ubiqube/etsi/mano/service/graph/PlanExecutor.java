@@ -15,7 +15,7 @@ import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.VnfInstantiedBaseJpa;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
@@ -33,24 +33,24 @@ public class PlanExecutor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PlanExecutor.class);
 
-	private final VnfInstantiedBaseJpa vnfInstantiedBaseJpa;
-
 	private final NsInstantiatedBaseJpa nsInstantiatedBaseJpa;
 
 	private final VnfmInterface vnfm;
 
-	public PlanExecutor(final VnfInstantiedBaseJpa _vnfInstantiedBaseJpa, final NsInstantiatedBaseJpa _nsInstantiatedBaseJpa, final VnfmInterface _vnfm) {
-		vnfInstantiedBaseJpa = _vnfInstantiedBaseJpa;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public PlanExecutor(final NsInstantiatedBaseJpa _nsInstantiatedBaseJpa, final VnfmInterface _vnfm, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		nsInstantiatedBaseJpa = _nsInstantiatedBaseJpa;
 		vnfm = _vnfm;
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
 	public ExecutionResults<UnitOfWork, String> execCreate(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
+		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa));
 	}
 
 	public ExecutionResults<UnitOfWork, String> execDelete(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutor(g, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfInstantiedBaseJpa));
+		return createExecutor(g, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa));
 	}
 
 	private static ExecutionResults<UnitOfWork, String> createExecutor(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final TaskProvider<UnitOfWork, String> uowTaskProvider) {

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
@@ -21,9 +22,12 @@ import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -59,7 +63,9 @@ public class VnfmActions {
 
 	private final VnfPackageService vnfPackageService;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService) {
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
@@ -69,6 +75,7 @@ public class VnfmActions {
 		vnfLcmService = _vnfLcmService;
 		grantService = _grantService;
 		vnfInstancesService = _vnfInstancesService;
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
 	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
@@ -228,7 +235,28 @@ public class VnfmActions {
 		LOG.info("Saving VNF Instance.");
 		vnfInstancesService.save(vnfInstance);
 		LOG.info("Saving VNF LCM OP OCCS.");
-		vnfLcmService.save(lcmOpOccs);
+		final VnfLcmOpOccs localLcm = vnfLcmService.save(lcmOpOccs);
+		LOG.info("Creating / deleting live instances.");
+		//
+		results.getSuccess().forEach(x -> {
+			final VnfInstantiatedBase rhe = x.getId().getResourceHandleEntity();
+			final ChangeType ct = rhe.getChangeType();
+			if (ct == ChangeType.ADDED) {
+				String il = null;
+				if (rhe.getInstantiationLevel() != null) {
+					il = rhe.getInstantiationLevel().getLevelName();
+				}
+				if (null != rhe.getId()) {
+					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, localLcm, rhe.getVduId());
+					vnfLiveInstanceJpa.save(vli);
+				} else {
+					LOG.warn("Could not store: {}", x.getId().getName());
+				}
+
+			} else if (ct == ChangeType.REMOVED) {
+				// XXX Continue for DELETE and Modified
+			}
+		});
 	}
 
 	private static String findImage(final GrantResponse grants, final UUID vduId) {

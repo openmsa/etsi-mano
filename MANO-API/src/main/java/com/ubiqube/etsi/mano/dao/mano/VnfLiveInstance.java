@@ -26,16 +26,23 @@ public class VnfLiveInstance implements BaseEntity, Auditable, Serializable {
 
 	private String instantiationLevel;
 
+	@ManyToOne
 	private VnfInstantiatedBase vnfInstantiatedBase;
 
+	@ManyToOne
+	private VnfLcmOpOccs vnfLcmOpOccs;
+
+	private UUID resourceId;
 	@Embedded
 	private Audit audit;
 
-	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfInstantiatedBase vnfInstantiatedBase) {
+	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfInstantiatedBase vnfInstantiatedBase, final VnfLcmOpOccs vnfLcmOpOccs, final UUID _resourceId) {
 		super();
 		this.vnfInstance = vnfInstance;
 		this.instantiationLevel = instantiationLevel;
 		this.vnfInstantiatedBase = vnfInstantiatedBase;
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
+		resourceId = _resourceId;
 	}
 
 	@Override
@@ -69,6 +76,22 @@ public class VnfLiveInstance implements BaseEntity, Auditable, Serializable {
 
 	public void setVnfInstantiatedBase(final VnfInstantiatedBase vnfInstantiatedBase) {
 		this.vnfInstantiatedBase = vnfInstantiatedBase;
+	}
+
+	public VnfLcmOpOccs getVnfLcmOpOccs() {
+		return vnfLcmOpOccs;
+	}
+
+	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
+		this.vnfLcmOpOccs = vnfLcmOpOccs;
+	}
+
+	public UUID getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(final UUID resourceId) {
+		this.resourceId = resourceId;
 	}
 
 	@Override

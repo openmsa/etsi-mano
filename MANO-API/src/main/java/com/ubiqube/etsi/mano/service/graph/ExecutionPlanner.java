@@ -379,6 +379,7 @@ public class ExecutionPlanner {
 			vnfInstantiedCompute.setVduId(vnfCompute.getId());
 			vnfInstantiedCompute.setVnfCompute(vnfCompute);
 			vnfInstantiedCompute.setVnfLcmOpOccs(lcmOpOccs);
+			vnfInstantiedCompute.setInstantiationLevel(scaleLevel);
 			vnfInstantiedCompute.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName(), currentCount + i));
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
 			// vnfInstanceService.save(vnfInstantiedCompute);
@@ -388,6 +389,7 @@ public class ExecutionPlanner {
 				instanceMonotor.setChangeType(ChangeType.ADDED);
 				instanceMonotor.setVnfLcmOpOccs(lcmOpOccs);
 				instanceMonotor.setVnfCompute(vnfCompute);
+				instanceMonotor.setInstantiationLevel(scaleLevel);
 				instanceMonotor.setStatus(InstantiationStatusType.NOT_STARTED);
 				instanceMonotor.setVnfInstantiatedCompute(vnfInstantiedCompute);
 				lcmOpOccs.getResourceChanges().addAffectedMonitoring(instanceMonotor);
