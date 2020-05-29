@@ -27,6 +27,7 @@ public class NsLcmOpOccsService {
 		em = _em;
 	}
 
+	@Nonnull
 	public NsLcmOpOccs createLcmOpOccs(final NsdInstance nsInstance, @Nonnull final NsLcmOpType state) {
 		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstance, state);
 		return nsLcmOpOccsJpa.save(lcmOpOccs);
