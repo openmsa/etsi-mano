@@ -70,7 +70,8 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	 */
 	private static VnfLcmOpOccs waitLcmCompletion(final VnfLcmOpOccs vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfLcmOpOccs tmp = vnfLcmOpOccs;
-		while (tmp.getOperationState() == LcmOperationStateType.PROCESSING) {
+		final LcmOperationStateType state = tmp.getOperationState();
+		while ((state == LcmOperationStateType.PROCESSING) || (LcmOperationStateType.STARTING == state)) {
 			tmp = vnfm.getVnfLcmOpOccs(vnfLcmOpOccs.getId());
 			sleepSeconds(1);
 		}
