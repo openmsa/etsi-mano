@@ -13,7 +13,7 @@ import com.github.dexecutor.core.ExecutionConfig;
 import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.graph.TestUnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 public class WfTest {
 

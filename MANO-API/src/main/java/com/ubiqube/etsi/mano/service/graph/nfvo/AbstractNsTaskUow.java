@@ -13,7 +13,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.AbstractTaskUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractTaskUow;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {

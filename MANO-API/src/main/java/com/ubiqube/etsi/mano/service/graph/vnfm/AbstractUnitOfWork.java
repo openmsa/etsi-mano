@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 

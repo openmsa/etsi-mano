@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.List;
 import java.util.Map;
@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork.UowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class ComputeUow extends AbstractUnitOfWork {

@@ -32,10 +32,10 @@ import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 

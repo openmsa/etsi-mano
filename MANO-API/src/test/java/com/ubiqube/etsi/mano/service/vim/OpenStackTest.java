@@ -52,10 +52,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.graph.TestUnitOfWork;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.EdgeListener;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.VirtualLinkUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

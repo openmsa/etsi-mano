@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.event.GraphListener;

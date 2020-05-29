@@ -78,6 +78,17 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.PnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
+import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.MonitoringUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ObjectStorageUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
 
 @Service
 public class ExecutionPlanner {

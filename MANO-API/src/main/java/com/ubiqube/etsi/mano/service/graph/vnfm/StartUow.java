@@ -1,19 +1,17 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class NoopUow extends AbstractUnitOfWork {
+public class StartUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NoopUow(final VnfInstantiatedCompute vnfInstantiedCompute) {
-		super(vnfInstantiedCompute, RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyz0123456789"));
+	public StartUow(final VnfInstantiatedCompute vnfInstantiedCompute) {
+		super(vnfInstantiedCompute, "");
 	}
 
 	@Override
@@ -29,7 +27,7 @@ public class NoopUow extends AbstractUnitOfWork {
 
 	@Override
 	protected String getPrefix() {
-		return "noop";
+		return "vnf_mano_start";
 	}
 
 	@Override

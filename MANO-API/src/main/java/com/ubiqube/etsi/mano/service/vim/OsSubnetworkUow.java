@@ -9,7 +9,7 @@ import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
-import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractUnitOfWork;
 
 public class OsSubnetworkUow extends AbstractUnitOfWork {
 	/** Serial. */

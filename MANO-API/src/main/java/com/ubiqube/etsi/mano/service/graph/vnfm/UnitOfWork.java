@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.io.Serializable;
 import java.util.Map;

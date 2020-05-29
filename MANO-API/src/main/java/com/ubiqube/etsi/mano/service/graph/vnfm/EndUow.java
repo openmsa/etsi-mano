@@ -1,17 +1,18 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork.UowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class StartUow extends AbstractUnitOfWork {
+public class EndUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public StartUow(final VnfInstantiatedCompute vnfInstantiedCompute) {
-		super(vnfInstantiedCompute, "");
+	public EndUow(final VnfInstantiatedBase resourceHandleEntity) {
+		super(resourceHandleEntity, "");
 	}
 
 	@Override
@@ -27,7 +28,7 @@ public class StartUow extends AbstractUnitOfWork {
 
 	@Override
 	protected String getPrefix() {
-		return "vnf_mano_start";
+		return "vnf_mano_end";
 	}
 
 	@Override
