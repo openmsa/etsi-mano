@@ -76,6 +76,7 @@ public class VnfmActions {
 		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
 		try {
 			vnfInstantiateInner(lcmOpOccs, vnfInstance);
+			LOG.info("Instantiate {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
 			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
@@ -252,6 +253,7 @@ public class VnfmActions {
 		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
 		try {
 			vnfTerminateInner(lcmOpOccs, vnfInstance);
+			LOG.info("Terminate {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
 			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
