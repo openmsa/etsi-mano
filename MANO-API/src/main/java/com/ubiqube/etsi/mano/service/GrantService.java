@@ -87,8 +87,8 @@ public class GrantService {
 		return pollGrants(grants);
 	}
 
-	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> affectedStorage) {
-		final Set<GrantInformation> res = affectedStorage.stream().map(x -> {
+	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfInstantiatedStorages) {
+		final Set<GrantInformation> res = vnfInstantiatedStorages.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.STORAGE);
@@ -98,8 +98,8 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> instantiatedVirtualLink) {
-		final Set<GrantInformation> res = instantiatedVirtualLink.stream().map(x -> {
+	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfInstantiatedVirtualLinks) {
+		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.VL);
@@ -109,8 +109,8 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> affectedComputes) {
-		final Set<GrantInformation> res = affectedComputes.stream().map(x -> {
+	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfInstantiatedComputes) {
+		final Set<GrantInformation> res = vnfInstantiatedComputes.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.COMPUTE);
@@ -120,8 +120,8 @@ public class GrantService {
 		grants.getAddResources().addAll(res);
 	}
 
-	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfInstantiatedExtCp> vnfLinkPort) {
-		final Set<GrantInformation> res = vnfLinkPort.stream().map(x -> {
+	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfInstantiatedExtCp> vnfInstantiatedExtCps) {
+		final Set<GrantInformation> res = vnfInstantiatedExtCps.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.LINKPORT);
@@ -131,8 +131,8 @@ public class GrantService {
 		grants.getRemoveResources().addAll(res);
 	}
 
-	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfStorage) {
-		final Set<GrantInformation> res = vnfStorage.stream().map(x -> {
+	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfInstantiatedStorages) {
+		final Set<GrantInformation> res = vnfInstantiatedStorages.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.STORAGE);
@@ -142,8 +142,8 @@ public class GrantService {
 		grants.getRemoveResources().addAll(res);
 	}
 
-	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfVl) {
-		final Set<GrantInformation> res = vnfVl.stream().map(x -> {
+	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfInstantiatedVirtualLinks) {
+		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.VL);
@@ -153,8 +153,8 @@ public class GrantService {
 		grants.getRemoveResources().addAll(res);
 	}
 
-	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfCompute) {
-		final Set<GrantInformation> res = vnfCompute.stream().map(x -> {
+	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfInstantiatedComputes) {
+		final Set<GrantInformation> res = vnfInstantiatedComputes.stream().map(x -> {
 			final GrantInformation grantInformation = new GrantInformation();
 			grantInformation.setResourceDefinitionId(x.getId().toString());
 			grantInformation.setType(TypeEnum.COMPUTE);
