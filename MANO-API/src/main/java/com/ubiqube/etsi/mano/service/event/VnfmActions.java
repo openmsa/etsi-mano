@@ -72,42 +72,53 @@ public class VnfmActions {
 	}
 
 	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		try {
+			vnfInstantiateInner(lcmOpOccs, vnfInstance);
+		} catch (final RuntimeException e) {
+			LOG.error("VNF Instantiate Failed", e);
+			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			vnfLcmService.save(lcmOpOccs);
+			vnfInstancesService.save(vnfInstance);
+		}
+	}
+
+	public void vnfInstantiateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
 		// Parameters are in the lcmOpOccs.
-		VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
-		VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		executionPlanner.makePrePlan(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
-		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
+		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 
 		// XXX Do it for VnfInfoModifications
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 
 		// Send Grant.
-		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, lcmOpOccs);
+		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, localLcmOpOccs);
 		final GrantResponse grantsResp = grantService.sendAndWaitGrantRequest(req);
 		// Send processing notification.
-		vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.PROCESSING);
+		vnfLcmService.updateState(localLcmOpOccs, LcmOperationStateType.PROCESSING);
 		// XXX Send processing event.
 
-		copyGrantResourcesToInstantiated(lcmOpOccs, grantsResp);
-		vnfLcmService.setGrant(lcmOpOccs, grantsResp.getId());
+		copyGrantResourcesToInstantiated(localLcmOpOccs, grantsResp);
+		vnfLcmService.setGrant(localLcmOpOccs, grantsResp.getId());
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// Save LCM
 
-		vnfInstance = vnfInstancesService.save(vnfInstance);
-		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
+		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
+		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, vnfPkg);
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		vim.refineExecutionPlan(plan);
-		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "create");
+		executionPlanner.exportGraph(plan, vnfPkg.getId(), localVnfInstance, "create");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim);
-		vnfLcmService.save(lcmOpOccs);
-		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
+		setResultLcmInstance(localLcmOpOccs, localVnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), lcmOpOccs.getId());
+		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
 	}
 
 	private void copyGrantResourcesToInstantiated(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
@@ -213,7 +224,10 @@ public class VnfmActions {
 			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
+		LOG.info("Saving VNF Instance.");
 		vnfInstancesService.save(vnfInstance);
+		LOG.info("Saving VNF LCM OP OCCS.");
+		vnfLcmService.save(lcmOpOccs);
 	}
 
 	private static String findImage(final GrantResponse grants, final UUID vduId) {
@@ -234,23 +248,31 @@ public class VnfmActions {
 	}
 
 	public void vnfTerminate(@Nonnull final UUID lcmOpOccsId) {
-		LOG.info("Eecuting Terminate on lcmOpOccs {}", lcmOpOccsId);
-		// final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
-		// final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
-		// final VnfPackage vnfPkg = vnfPackageService.findById(vnfPkgId);
-
-		VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
 		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		try {
+			vnfTerminateInner(lcmOpOccs, vnfInstance);
+		} catch (final RuntimeException e) {
+			LOG.error("VNF Instantiate Failed", e);
+			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			vnfLcmService.save(lcmOpOccs);
+			vnfInstancesService.save(vnfInstance);
+		}
+	}
+
+	private void vnfTerminateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
+		LOG.info("Executing Terminate on lcmOpOccs {}", lcmOpOccs.getId());
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getId());
 		executionPlanner.terminatePlan(lcmOpOccs);
 
-		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
+		final VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
-		final GrantResponse grant = getTerminateGrants(vnfInstance, lcmOpOccs, vnfPkg);
-		vnfLcmService.setGrant(lcmOpOccs, grant.getId());
+		final GrantResponse grant = getTerminateGrants(vnfInstance, localLcmOpOccs, vnfPkg);
+		vnfLcmService.setGrant(localLcmOpOccs, grant.getId());
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		// Make plan
-		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, vnfPkg);
+		ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, vnfPkg);
 		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
 		// XXX Multiple Vim ?
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
@@ -259,9 +281,8 @@ public class VnfmActions {
 		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete");
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
-		setResultLcmInstance(lcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
-
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), lcmOpOccs.getId());
+		setResultLcmInstance(localLcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
+		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localLcmOpOccs.getId());
 	}
 
 	private GrantResponse getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
