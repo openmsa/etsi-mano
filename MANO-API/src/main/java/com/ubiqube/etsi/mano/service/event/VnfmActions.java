@@ -179,6 +179,7 @@ public class VnfmActions {
 					y.setInstantiationLevel(instantiationLevel);
 					y.setZoneId(x.getZoneId());
 					y.setResourceGroupId(x.getResourceGroupId());
+					y.setResourceProviderId(x.getResourceProviderId());
 					y.setReservationId(x.getReservationId());
 					vnfInstancesService.save(y);
 				});
@@ -249,12 +250,12 @@ public class VnfmActions {
 				if (null != rhe.getId()) {
 					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, localLcm, rhe.getVduId());
 					vnfLiveInstanceJpa.save(vli);
-				} else {
-					LOG.warn("Could not store: {}", x.getId().getName());
 				}
-
+				LOG.warn("Could not store: {}", x.getId().getName());
 			} else if (ct == ChangeType.REMOVED) {
-				// XXX Continue for DELETE and Modified
+				LOG.info("Removing {}", rhe.getId());
+				final VnfLiveInstance vli = vnfLiveInstanceJpa.findByVnfInstantiatedBaseId(rhe.getRemovedInstantiated());
+				vnfLiveInstanceJpa.deleteById(vli.getId());
 			}
 		});
 	}

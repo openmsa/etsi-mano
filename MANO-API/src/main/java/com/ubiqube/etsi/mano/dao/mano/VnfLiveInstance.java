@@ -33,8 +33,13 @@ public class VnfLiveInstance implements BaseEntity, Auditable, Serializable {
 	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	private UUID resourceId;
+
 	@Embedded
 	private Audit audit;
+
+	public VnfLiveInstance() {
+		// Nothing.
+	}
 
 	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfInstantiatedBase vnfInstantiatedBase, final VnfLcmOpOccs vnfLcmOpOccs, final UUID _resourceId) {
 		super();
