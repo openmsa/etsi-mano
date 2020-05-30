@@ -400,6 +400,7 @@ public class ExecutionPlanner {
 			instantiatedCompute.setStatus(InstantiationStatusType.NOT_STARTED);
 			instantiatedCompute.setVduId(x.getId());
 			final VnfInstantiatedCompute poped = instantiated.pop();
+			LOG.info("Removing VNF Compute instance {}", poped.getId());
 			instantiatedCompute.setRemovedInstantiated(poped.getId());
 			instantiatedCompute.setResourceId(poped.getResourceId());
 			instantiatedCompute.setInstantiationLevel(scaleLevel);
