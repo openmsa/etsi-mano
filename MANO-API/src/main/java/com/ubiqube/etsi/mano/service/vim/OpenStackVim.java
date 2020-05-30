@@ -420,8 +420,8 @@ public class OpenStackVim implements Vim {
 	}
 
 	private static void checkResult(final ActionResponse action) {
-		if (!action.isSuccess()) {
-			throw new VimException(action.getCode() + ' ' + action.getFault());
+		if (!action.isSuccess() && (action.getCode() != 404)) {
+			throw new VimException(action.getCode() + " " + action.getFault());
 		}
 	}
 
