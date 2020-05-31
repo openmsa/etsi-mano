@@ -288,7 +288,7 @@ public class VnfmActions {
 			LOG.info("Terminate {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
-			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 			vnfLcmService.save(lcmOpOccs);
 			vnfInstancesService.save(vnfInstance);
