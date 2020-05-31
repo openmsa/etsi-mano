@@ -216,8 +216,9 @@ public class NfvoActions {
 				if (null != rhe.getId()) {
 					final NsLiveInstance vli = new NsLiveInstance(rhe.getResourceId(), il, rhe, lcmOpOccs);
 					nsLiveInstanceJpa.save(vli);
+				} else {
+					LOG.warn("Could not store: {}", x.getId().getName());
 				}
-				LOG.warn("Could not store: {}", x.getId().getName());
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());
 				final VnfLiveInstance vli = nsLiveInstanceJpa.findByNsInstantiatedBaseResourceId(rhe.getResourceId());
