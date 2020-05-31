@@ -36,6 +36,8 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 	// Vim or VNFM resourceId.
 	private String resourceId;
 
+	private String instantiationLevel;
+
 	@Embedded
 	private Audit audit;
 
@@ -86,6 +88,14 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 
 	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
+	}
+
+	public String getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final String instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
 	}
 
 	@Override

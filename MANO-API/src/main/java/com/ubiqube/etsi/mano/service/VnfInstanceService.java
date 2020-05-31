@@ -149,6 +149,7 @@ public class VnfInstanceService {
 			grantService.deleteByLcmOpOccs(x);
 			vnfLcmOpOccsJpa.delete(x);
 		});
+		vnfInstanceJpa.deleteById(vnfInstanceId);
 	}
 
 }

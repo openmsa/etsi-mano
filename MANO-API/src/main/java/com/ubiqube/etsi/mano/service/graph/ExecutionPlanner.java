@@ -470,6 +470,7 @@ public class ExecutionPlanner {
 				final NsInstantiatedSap sap = new NsInstantiatedSap();
 				sap.setSapd(x);
 				sap.setSapName(x.getToscaName());
+				sap.setChangeType(ChangeType.ADDED);
 				changes.addInstantiatedSap(sap);
 			}
 		});
@@ -480,6 +481,7 @@ public class ExecutionPlanner {
 				final NsInstantiatedVl sap = new NsInstantiatedVl();
 				sap.setNsVirtualLinkDesc(x);
 				sap.setVlProfileId(x.getNsVlProfile().getId());
+				sap.setChangeType(ChangeType.ADDED);
 				changes.addInstantiatedVirtualLink(sap);
 			}
 		});
@@ -489,6 +491,7 @@ public class ExecutionPlanner {
 			if (c == 0) {
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
 				sap.setNsdPackage(x);
+				sap.setChangeType(ChangeType.ADDED);
 				changes.addInstantiatedNs(sap);
 			}
 		});
@@ -499,6 +502,8 @@ public class ExecutionPlanner {
 				final NsInstantiatedVnf sap = new NsInstantiatedVnf();
 				sap.setVnfd(x);
 				sap.setVnfName(x.getVnfProductName());
+				sap.setChangeType(ChangeType.ADDED);
+				// XXX No way, we cannot save in case of splitted VNFM/NFVO.
 				final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + nsInstance.getId(), x.getId().toString());
 				final VnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
 				nsInstancesNsInstanceVnfInstance.setNsInstance(nsInstance);

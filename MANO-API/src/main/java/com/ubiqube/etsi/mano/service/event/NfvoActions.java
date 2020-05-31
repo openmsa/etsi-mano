@@ -20,10 +20,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
@@ -34,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
@@ -41,6 +45,7 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
@@ -75,12 +80,12 @@ public class NfvoActions {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final GrantsResponseJpa grantJpa;
 	private final VnfInstancesRepository vnfInstancesRepository;
-
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final PlanExecutor executor;
 
 	private final ExecutionPlanner executionPlanner;
 
-	public NfvoActions(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService) {
+	public NfvoActions(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
 		super();
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		nsInstanceRepository = _nsInstanceRepository;
@@ -94,6 +99,7 @@ public class NfvoActions {
 		executionPlanner = _executionPlanner;
 		executor = _executor;
 		nsLcmOpOccsService = _nsLcmOpOccsService;
+		nsLiveInstanceJpa = _nsLiveInstanceJpa;
 	}
 
 	public void nsTerminate(@Nonnull final UUID nsInstanceId) {
@@ -202,7 +208,22 @@ public class NfvoActions {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
-		// XXX Add NC Live Instances.
+		results.getSuccess().forEach(x -> {
+			final NsInstantiatedBase rhe = x.getId().getResourceHandleEntity();
+			final ChangeType ct = rhe.getChangeType();
+			if (ct == ChangeType.ADDED) {
+				final String il = rhe.getInstantiationLevel();
+				if (null != rhe.getId()) {
+					final NsLiveInstance vli = new NsLiveInstance(rhe.getResourceId(), il, rhe, lcmOpOccs);
+					nsLiveInstanceJpa.save(vli);
+				}
+				LOG.warn("Could not store: {}", x.getId().getName());
+			} else if (ct == ChangeType.REMOVED) {
+				LOG.info("Removing {}", rhe.getId());
+				final VnfLiveInstance vli = nsLiveInstanceJpa.findByNsInstantiatedBaseResourceId(rhe.getResourceId());
+				nsLiveInstanceJpa.deleteById(vli.getId());
+			}
+		});
 		nsInstanceRepository.save(nsdInstance);
 		nsLcmOpOccsService.save(lcmOpOccs);
 	}

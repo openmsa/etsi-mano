@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -49,6 +50,7 @@ public class NsdInstance implements BaseEntity {
 	private String flavourId = null;
 
 	@OneToMany
+	@JoinColumn
 	private List<VnfInstance> vnfInstance = null;
 
 	@Transient
