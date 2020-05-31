@@ -521,7 +521,7 @@ public class ExecutionPlanner {
 
 	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
 		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = nsCreateGraph();
-		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs);
+		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs, nsInstance);
 		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
 		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
 		saps.forEach(x -> {
@@ -579,7 +579,7 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs) {
+	private static MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
 		final MultiValueMap<String, NsUnitOfWork> vertex = new LinkedMultiValueMap<>();
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
@@ -616,8 +616,8 @@ public class ExecutionPlanner {
 		resources.getAffectedVnfs().forEach(x -> {
 			LOG.info("Adding VNF vertex of {}", x.getVnfName());
 			final InstantiateVnfRequest request = new InstantiateVnfRequest();
-			// XXX request.setFlavourId(lcmOpOccs.get);
-			// XXX request.setInstantiationLevelId(instantiationLevelId);
+			request.setFlavourId(nsdInstance.getFlavourId());
+			request.setInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
 			final NsUnitOfWork uow = new VnfUow(x, request, x.getVnfName());
 			g.addVertex(uow);
 			vertex.add(x.getVnfName(), uow);
