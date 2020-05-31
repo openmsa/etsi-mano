@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -226,11 +227,13 @@ public class VnfmActions {
 	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final UUID vnfInstanceId, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
 		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
 		if (results.getErrored().isEmpty()) {
-			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.COMPLETED);
+			lcmOpOccs.setOperationState(LcmOperationStateType.COMPLETED);
+			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
 			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
 		} else {
-			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
 		LOG.info("Saving VNF Instance.");

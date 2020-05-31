@@ -202,6 +202,7 @@ public class NfvoActions {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
 		}
+		// XXX Add NC Live Instances.
 		nsInstanceRepository.save(nsdInstance);
 		nsLcmOpOccsService.save(lcmOpOccs);
 	}

@@ -60,9 +60,10 @@ public class VnfLcmService {
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 
+	@Deprecated
 	public void updateState(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final LcmOperationStateType newState) {
 		// XXX Use an update method in a Repository.
-		vnfLcmOpOccsRepository.updateState(vnfLcmOpOccs, LcmOperationStateType.PROCESSING);
+		vnfLcmOpOccsRepository.updateState(vnfLcmOpOccs, newState);
 	}
 
 	public void setGrant(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final UUID grantId) {
