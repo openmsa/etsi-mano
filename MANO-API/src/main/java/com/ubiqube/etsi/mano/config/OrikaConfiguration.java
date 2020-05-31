@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
@@ -192,6 +193,10 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 		orikaMapperFactory.classMap(GrantsRequest.class, GrantRequest.class)
 				.field("vnfLcmOpOccs.vnfInstance.id", "vnfInstanceId")
 				.field("vnfLcmOpOccs.id", "vnfLcmOpOccId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(InstantiateNsRequest.class, NsdInstance.class)
+				.field("nsFlavourId", "flavourId")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

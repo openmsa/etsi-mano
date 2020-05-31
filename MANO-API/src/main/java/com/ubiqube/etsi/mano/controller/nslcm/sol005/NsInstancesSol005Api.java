@@ -171,7 +171,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		ensureNotInstantiated(nsInstance);
-
+		mapper.map(body, nsInstanceDb);
+		nsInstanceRepository.save(nsInstanceDb);
 		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsInstanceUuid, new HashMap<String, Object>());
 
 		nsInstance.setLinks(makeLink(nsInstanceId));

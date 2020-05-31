@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -49,6 +50,8 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private String flavourId = null;
 
+	private String nsInstantiationLevelId;
+
 	@OneToMany
 	@JoinColumn
 	private List<VnfInstance> vnfInstance = null;
@@ -76,6 +79,10 @@ public class NsdInstance implements BaseEntity {
 
 	@Transient
 	private List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
+
+	private Set<NestedNsInstanceData> nestedNsInstanceData;
+
+	private Set<VnfInstanceData> vnfInstanceData;
 
 	@Override
 	public UUID getId() {
@@ -198,12 +205,36 @@ public class NsdInstance implements BaseEntity {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 	}
 
+	public String getNsInstantiationLevelId() {
+		return nsInstantiationLevelId;
+	}
+
+	public void setNsInstantiationLevelId(final String nsInstantiationLevelId) {
+		this.nsInstantiationLevelId = nsInstantiationLevelId;
+	}
+
 	public String getProcessId() {
 		return processId;
 	}
 
 	public void setProcessId(final String processId) {
 		this.processId = processId;
+	}
+
+	public Set<NestedNsInstanceData> getNestedNsInstanceData() {
+		return nestedNsInstanceData;
+	}
+
+	public void setNestedNsInstanceData(final Set<NestedNsInstanceData> nestedNsInstanceData) {
+		this.nestedNsInstanceData = nestedNsInstanceData;
+	}
+
+	public Set<VnfInstanceData> getVnfInstanceData() {
+		return vnfInstanceData;
+	}
+
+	public void setVnfInstanceData(final Set<VnfInstanceData> vnfInstanceData) {
+		this.vnfInstanceData = vnfInstanceData;
 	}
 
 }
