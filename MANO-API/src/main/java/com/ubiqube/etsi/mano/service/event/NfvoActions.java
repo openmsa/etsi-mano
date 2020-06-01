@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
@@ -312,6 +313,16 @@ public class NfvoActions {
 		grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
 		grants.setVimAssets(grantVimAssetsEntity);
 		grants.setAvailable(Boolean.TRUE);
+		// Add public networks.
+		vim.getPublicNetworks(vimInfo).entrySet().forEach(x -> {
+			final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
+			extVl.setResourceId(x.getValue());
+			extVl.setResourceProviderId(vim.getType());
+			extVl.setVimConnectionId(vimInfo.getId().toString());
+			extVl.setVnfVirtualLinkDescId(x.getKey());
+			extVl.setGrants(grants);
+			grants.addExtManagedVl(extVl);
+		});
 		grantJpa.save(grants);
 		LOG.info("Grant {} Available.", grants.getId());
 	}
