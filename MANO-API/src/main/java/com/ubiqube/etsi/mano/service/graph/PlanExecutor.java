@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service.graph;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,8 +64,8 @@ public class PlanExecutor {
 		return executor.execute(ExecutionConfig.TERMINATING);
 	}
 
-	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, nsInstantiatedBaseJpa, vnfm));
+	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
+		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, nsInstantiatedBaseJpa, vnfm, baseContext));
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execDeleteNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {

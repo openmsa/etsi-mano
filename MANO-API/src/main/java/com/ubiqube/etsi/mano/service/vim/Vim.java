@@ -72,4 +72,7 @@ public interface Vim {
 	String createRouter(final VimConnectionInformation vimConnectionInformation, final String name, final String internalNetworkId, final String externalNetworkId);
 
 	void deleteRouter(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	@Nonnull
+	Map<String, String> getPublicNetworks(VimConnectionInformation vimConnectionInformation);
 }

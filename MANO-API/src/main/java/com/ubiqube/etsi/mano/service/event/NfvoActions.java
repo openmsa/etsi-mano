@@ -189,9 +189,10 @@ public class NfvoActions {
 		// Create Ns.
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
+		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
 		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
 		executionPlanner.exportNsGraph(plan, nsdId, nsInstance, "create");
-		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim);
+		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim, pubNet);
 		LOG.debug("Done, Saving ...");
 		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.

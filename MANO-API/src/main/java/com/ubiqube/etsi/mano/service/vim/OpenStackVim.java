@@ -472,4 +472,12 @@ public class OpenStackVim implements Vim {
 				.collect(Collectors.toList());
 
 	}
+
+	@Override
+	public Map<String, String> getPublicNetworks(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		return os.networking().network().list().stream().filter(Network::isRouterExternal)
+				.collect(Collectors.toMap(Network::getName, Network::getId));
+
+	}
 }
