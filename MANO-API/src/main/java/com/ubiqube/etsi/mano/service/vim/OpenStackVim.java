@@ -431,7 +431,8 @@ public class OpenStackVim implements Vim {
 		final List<? extends Port> routerList = os.networking().port().list();
 		routerList.stream()
 				.filter(x -> x.getDeviceId().equals(resourceId))
-				.map(x -> x.getId())
+				.filter(x -> !x.getDeviceOwner().equals("network:router_gateway"))
+				.map(Port::getId)
 				.forEach(x -> os.networking().router().detachInterface(resourceId, null, x));
 		checkResult(os.networking().router().delete(resourceId));
 	}
