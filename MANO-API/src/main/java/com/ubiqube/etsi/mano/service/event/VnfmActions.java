@@ -1,7 +1,9 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
@@ -113,8 +116,9 @@ public class VnfmActions {
 		copyGrantResourcesToInstantiated(localLcmOpOccs, grantsResp);
 		vnfLcmService.setGrant(localLcmOpOccs, grantsResp.getId());
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
-		// Save LCM
-
+		// extract Ext VL
+		final Map<String, String> extVl = grantsResp.getExtManagedVirtualLinks().stream()
+				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, vnfPkg);
@@ -124,7 +128,7 @@ public class VnfmActions {
 		vim.refineExecutionPlan(plan);
 		executionPlanner.exportGraph(plan, vnfPkg.getId(), localVnfInstance, "create");
 
-		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim);
+		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim, extVl);
 		setResultLcmInstance(localLcmOpOccs, localVnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
