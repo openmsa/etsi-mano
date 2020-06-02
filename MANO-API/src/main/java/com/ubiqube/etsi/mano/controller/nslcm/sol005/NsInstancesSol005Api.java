@@ -249,14 +249,14 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 			throw new NotFoundException("NsdId field is empty.");
 		}
 
-		final NsdInstance nsInstance = nestedNsd(UUID.fromString(req.getNsdId()));
+		final NsdInstance nsInstance = nestedNsd(UUID.fromString(req.getNsdId()), req);
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
 
 		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
 		return new ResponseEntity<>(nsInstanceWeb, HttpStatus.OK);
 	}
 
-	private NsdInstance nestedNsd(final UUID nsdId) {
+	private NsdInstance nestedNsd(final UUID nsdId, final CreateNsRequest req) {
 		final NsdPackage nsd = nsdRepository.get(nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
@@ -264,7 +264,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsdRepository.save(nsd);
 
 		final NsdInstance nsInstance = new NsdInstance();
-		// XXX: Map request.
+		nsInstance.setNsInstanceName(req.getNsName());
+		nsInstance.setNsInstanceDescription(req.getNsDescription());
 		nsInstance.setNsdInfo(nsd);
 		nsInstanceRepository.save(nsInstance);
 
