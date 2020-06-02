@@ -1,7 +1,9 @@
-package com.ubiqube.etsi.mano.model.indicator.sol003;
+package com.ubiqube.etsi.mano.model;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * ApiVersionInformationApiVersions
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T15:58:19.438+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
 
 public class ApiVersionInformationApiVersions {
 	@JsonProperty("version")
@@ -24,7 +26,7 @@ public class ApiVersionInformationApiVersions {
 	private Boolean isDeprecated = null;
 
 	@JsonProperty("retirementDate")
-	private String retirementDate = null;
+	private OffsetDateTime retirementDate = null;
 
 	public ApiVersionInformationApiVersions version(final String version) {
 		this.version = version;
@@ -33,11 +35,11 @@ public class ApiVersionInformationApiVersions {
 
 	/**
 	 * Identifies a supported version. The value of the version attribute shall be a
-	 * version identifier as specified in clause 9.1 (SOL013).
-	 * 
+	 * version identifier as specified in clause 4.6.1.
+	 *
 	 * @return version
 	 **/
-	@ApiModelProperty(required = true, value = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 9.1 (SOL013). ")
+	@ApiModelProperty(required = true, value = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
 	@NotNull
 
 	public String getVersion() {
@@ -59,12 +61,12 @@ public class ApiVersionInformationApiVersions {
 	 * (false). A deprecated version is still supported by the API producer but is
 	 * recommended not to be used any longer. When a version is no longer supported,
 	 * it does not appear in the response body.
-	 * 
+	 *
 	 * @return isDeprecated
 	 **/
 	@ApiModelProperty(value = "If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body. ")
 
-	public Boolean isIsDeprecated() {
+	public Boolean getIsDeprecated() {
 		return isDeprecated;
 	}
 
@@ -72,7 +74,7 @@ public class ApiVersionInformationApiVersions {
 		this.isDeprecated = isDeprecated;
 	}
 
-	public ApiVersionInformationApiVersions retirementDate(final String retirementDate) {
+	public ApiVersionInformationApiVersions retirementDate(final OffsetDateTime retirementDate) {
 		this.retirementDate = retirementDate;
 		return this;
 	}
@@ -81,16 +83,18 @@ public class ApiVersionInformationApiVersions {
 	 * The date and time after which the API version will no longer be supported.
 	 * This attribute may be included if the value of the isDeprecated attribute is
 	 * set to true and shall be absent otherwise.
-	 * 
+	 *
 	 * @return retirementDate
 	 **/
 	@ApiModelProperty(value = "The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise. ")
 
-	public String getRetirementDate() {
+	@Valid
+
+	public OffsetDateTime getRetirementDate() {
 		return retirementDate;
 	}
 
-	public void setRetirementDate(final String retirementDate) {
+	public void setRetirementDate(final OffsetDateTime retirementDate) {
 		this.retirementDate = retirementDate;
 	}
 

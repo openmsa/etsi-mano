@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.model.vnf.sol005;
+package com.ubiqube.etsi.mano.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents API version information. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:03:26.781+02:00")
 
 public class ApiVersionInformation {
 	@JsonProperty("uriPrefix")
@@ -37,7 +37,7 @@ public class ApiVersionInformation {
 	/**
 	 * Specifies the URI prefix for the API, in the following form
 	 * {apiRoot}/{apiName}/{apiMajorVersion}/.
-	 * 
+	 *
 	 * @return uriPrefix
 	 **/
 	@ApiModelProperty(required = true, value = "Specifies the URI prefix for the API, in the following form {apiRoot}/{apiName}/{apiMajorVersion}/. ")
@@ -62,11 +62,11 @@ public class ApiVersionInformation {
 	}
 
 	/**
-	 * Version(s) supported for the API signalled by the uriPrefix attribute.
-	 * 
+	 * Version(s) supported for the API signaled by the uriPrefix attribute.
+	 *
 	 * @return apiVersions
 	 **/
-	@ApiModelProperty(required = true, value = "Version(s) supported for the API signalled by the uriPrefix attribute. ")
+	@ApiModelProperty(required = true, value = "Version(s) supported for the API signaled by the uriPrefix attribute. ")
 	@NotNull
 
 	@Valid
