@@ -2,7 +2,6 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
@@ -51,7 +49,6 @@ import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
-import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -69,7 +66,6 @@ public class NfvoActions {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NfvoActions.class);
 
-	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsLcmOpOccsService nsLcmOpOccsService;
 	private final NsdRepository nsdRepository;
@@ -84,9 +80,8 @@ public class NfvoActions {
 
 	private final ExecutionPlanner executionPlanner;
 
-	public NfvoActions(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
+	public NfvoActions(final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VnfmInterface _vnfm, final VimManager _vimManager, final EventManager _eventManager, final VnfPackageRepository _vnfPackageRepository, final GrantsResponseJpa _grantJpa, final VnfInstancesRepository _vnfInstancesRepository, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
 		super();
-		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
 		vnfm = _vnfm;
@@ -132,21 +127,6 @@ public class NfvoActions {
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execDeleteNs(plan, vimInfo, vim);
 		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
 		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), lcmOpOccs.getId());
-	}
-
-	private static LcmOperationStateType computeStatus(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
-		for (final VnfLcmOpOccs vnfLcmOpOcc : vnfLcmOpOccsIds) {
-			if (LcmOperationStateType.COMPLETED != vnfLcmOpOcc.getOperationState()) {
-				return vnfLcmOpOcc.getOperationState();
-			}
-		}
-		return LcmOperationStateType.COMPLETED;
-	}
-
-	private void updateOperationState(final NsLcmOpOccs lcmOpOccs, final LcmOperationStateType status) {
-		lcmOpOccs.setStateEnteredTime(new Date());
-		lcmOpOccs.setOperationState(status);
-		nsLcmOpOccsService.save(lcmOpOccs);
 	}
 
 	public void nsInstantiate(@Nonnull final UUID nsInstanceId) {
@@ -214,46 +194,6 @@ public class NfvoActions {
 		});
 		nsInstanceRepository.save(nsdInstance);
 		nsLcmOpOccsService.save(lcmOpOccs);
-	}
-
-	private List<VnfLcmOpOccs> refreshVnfLcmOpOccsIds(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
-		final List<VnfLcmOpOccs> res = new ArrayList<>();
-		for (final VnfLcmOpOccs vnfLcmOpOcc : vnfLcmOpOccsIds) {
-			final VnfLcmOpOccs newLcmOpOc = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
-			res.add(newLcmOpOc);
-		}
-		return res;
-	}
-
-	private void waitForCompletion(@Nonnull final List<VnfLcmOpOccs> vnfLcmOpOccss) {
-		List<VnfLcmOpOccs> ret = new ArrayList<>(vnfLcmOpOccss);
-		while (true) {
-			ret = vnfCycle(ret);
-			if (ret.isEmpty()) {
-				break;
-			}
-			sleepSeconds(1 * 60L);
-		}
-	}
-
-	private static void sleepSeconds(final long seconds) {
-		try {
-			Thread.sleep(seconds * 1000L);
-		} catch (final InterruptedException e) {
-			LOG.warn("Interrupted exception.", e);
-			Thread.currentThread().interrupt();
-		}
-	}
-
-	private List<VnfLcmOpOccs> vnfCycle(final List<VnfLcmOpOccs> vnfLcmOpOccss) {
-		final List<VnfLcmOpOccs> ret = new ArrayList<>(vnfLcmOpOccss);
-		for (final VnfLcmOpOccs vnfLcmOpOcc : vnfLcmOpOccss) {
-			final VnfLcmOpOccs res = vnfm.getVnfLcmOpOccs(vnfLcmOpOcc.getId());
-			if (res.getOperationState() == LcmOperationStateType.PROCESSING) {
-				ret.add(vnfLcmOpOcc);
-			}
-		}
-		return ret;
 	}
 
 	public void grantRequest(final UUID objectId) {
