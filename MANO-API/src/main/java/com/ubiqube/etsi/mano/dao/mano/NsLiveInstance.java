@@ -31,6 +31,9 @@ public class NsLiveInstance implements BaseEntity, Auditable, Serializable {
 
 	private String resourceId;
 
+	@ManyToOne
+	private NsdInstance nsInstance;
+
 	@Embedded
 	private Audit audit;
 
@@ -38,13 +41,13 @@ public class NsLiveInstance implements BaseEntity, Auditable, Serializable {
 		// Nothing.
 	}
 
-	public NsLiveInstance(final String vnfInstanceId, final String instantiationLevel, final NsInstantiatedBase nsInstantiatedBase, final NsLcmOpOccs nsLcmOpOccs) {
+	public NsLiveInstance(final String vnfInstanceId, final String instantiationLevel, final NsInstantiatedBase nsInstantiatedBase, final NsLcmOpOccs nsLcmOpOccs, final NsdInstance nsInstance) {
 		super();
 		this.resourceId = vnfInstanceId;
 		this.instantiationLevel = instantiationLevel;
 		this.nsInstantiatedBase = nsInstantiatedBase;
 		this.nsLcmOpOccs = nsLcmOpOccs;
-		this.resourceId = resourceId;
+		this.nsInstance = nsInstance;
 	}
 
 	@Override
@@ -86,6 +89,14 @@ public class NsLiveInstance implements BaseEntity, Auditable, Serializable {
 
 	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
+	}
+
+	public NsdInstance getNsInstance() {
+		return nsInstance;
+	}
+
+	public void setNsInstance(final NsdInstance nsInstance) {
+		this.nsInstance = nsInstance;
 	}
 
 	@Override

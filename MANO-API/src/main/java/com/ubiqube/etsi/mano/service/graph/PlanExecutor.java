@@ -17,7 +17,6 @@ import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
-import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
@@ -34,14 +33,11 @@ public class PlanExecutor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PlanExecutor.class);
 
-	private final NsInstantiatedBaseJpa nsInstantiatedBaseJpa;
-
 	private final VnfmInterface vnfm;
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public PlanExecutor(final NsInstantiatedBaseJpa _nsInstantiatedBaseJpa, final VnfmInterface _vnfm, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
-		nsInstantiatedBaseJpa = _nsInstantiatedBaseJpa;
+	public PlanExecutor(final VnfmInterface _vnfm, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		vnfm = _vnfm;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
@@ -65,11 +61,11 @@ public class PlanExecutor {
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
-		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, nsInstantiatedBaseJpa, vnfm, baseContext));
+		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, null, vnfm, baseContext));
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execDeleteNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutorNs(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, nsInstantiatedBaseJpa, vnfm));
+		return createExecutorNs(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, null, vnfm));
 	}
 
 	private static ExecutionResults<NsUnitOfWork, String> createExecutorNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final TaskProvider<NsUnitOfWork, String> uowTaskProvider) {

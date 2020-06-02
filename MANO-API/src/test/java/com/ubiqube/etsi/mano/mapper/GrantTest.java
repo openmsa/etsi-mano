@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -83,7 +84,7 @@ public class GrantTest {
 		final Set<GrantInformationExt> addResources = new HashSet<>();
 
 		final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
-		extVl.setId("id");
+		extVl.setId(UUID.randomUUID());
 		extVl.setResourceId("resId");
 		extVl.setResourceProviderId("provId");
 		extVl.setVimConnectionId("vimId");

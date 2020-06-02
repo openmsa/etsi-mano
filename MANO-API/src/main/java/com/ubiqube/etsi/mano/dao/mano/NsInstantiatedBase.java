@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -37,6 +38,9 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 	private String resourceId;
 
 	private String instantiationLevel;
+
+	@ManyToOne
+	private NsLcmOpOccs nsLcmOpOccs;
 
 	@Embedded
 	private Audit audit;
@@ -96,6 +100,14 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 
 	public void setInstantiationLevel(final String instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
+	}
+
+	public NsLcmOpOccs getNsLcmOpOccs() {
+		return nsLcmOpOccs;
+	}
+
+	public void setNsLcmOpOccs(final NsLcmOpOccs nsLcmOpOccs) {
+		this.nsLcmOpOccs = nsLcmOpOccs;
 	}
 
 	@Override

@@ -30,7 +30,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -111,7 +110,6 @@ public class NfvoActions {
 		} catch (final RuntimeException e) {
 			LOG.error("NS Instantiate fail.", e);
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-			nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
 			nsInstanceRepository.save(nsInstance);
 			nsLcmOpOccsService.save(lcmOpOccs);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
@@ -122,31 +120,19 @@ public class NfvoActions {
 		// XXX This is not the correct way/
 		final VimConnectionInformation vimInfo = electVim(null, null);
 
-		final UUID nsdId = UUID.fromString(nsInstance.getNsdId());
-		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
-		// Delete VNF
-		final Set<NsdPackageVnfPackage> vnfs = nsdInfo.getVnfPkgIds();
-		// Correct if talking with a Mano VNFM ( can we pass nsInstanceId ?)
-		List<VnfLcmOpOccs> vnfLcmOpOccsIds = new ArrayList<>();
-		for (final NsdPackageVnfPackage vnfId : vnfs) {
-			final VnfLcmOpOccs vnfLcmOpOccs = vnfm.vnfTerminate(nsInstance.getId());
-			vnfLcmOpOccsIds.add(vnfLcmOpOccs);
-		}
-		waitForCompletion(vnfLcmOpOccsIds);
-		vnfLcmOpOccsIds = refreshVnfLcmOpOccsIds(vnfLcmOpOccsIds);
-		vnfLcmOpOccsRepository.save(vnfLcmOpOccsIds);
-		final LcmOperationStateType status = computeStatus(vnfLcmOpOccsIds);
-		if (LcmOperationStateType.COMPLETED != status) {
-			updateOperationState(lcmOpOccs, status);
-			eventManager.sendNotification(NotificationEvent.NS_TERMINATE, nsInstance.getId());
-			return;
-		}
-		// Release the NS.
-		final Vim vim = vimManager.getVimById(vimInfo.getId());
-		// final String processId = vim.onNsInstanceTerminate(nsInstance.getProcessId(),
-		// nsdInfo.getUserDefinedData());
+		final NsdPackage nsdInfo = nsdRepository.get(nsInstance.getNsdInfo().getId());
+		executionPlanner.terminateNsPlan(lcmOpOccs, nsdInfo);
 
-		nsInstanceRepository.changeNsdUpdateState(nsInstance, InstantiationStateEnum.NOT_INSTANTIATED);
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
+
+		ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
+		plan = executionPlanner.revertNs(plan);
+
+		executionPlanner.exportNsGraph(plan, nsdInfo.getId(), nsInstance, "delete");
+
+		final ExecutionResults<NsUnitOfWork, String> results = executor.execDeleteNs(plan, vimInfo, vim);
+		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
+		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), lcmOpOccs.getId());
 	}
 
 	private static LcmOperationStateType computeStatus(final List<VnfLcmOpOccs> vnfLcmOpOccsIds) {
@@ -216,7 +202,7 @@ public class NfvoActions {
 			if (ct == ChangeType.ADDED) {
 				final String il = rhe.getInstantiationLevel();
 				if (null != rhe.getId()) {
-					final NsLiveInstance vli = new NsLiveInstance(rhe.getResourceId(), il, rhe, lcmOpOccs);
+					final NsLiveInstance vli = new NsLiveInstance(rhe.getResourceId(), il, rhe, lcmOpOccs, lcmOpOccs.getNsInstance());
 					nsLiveInstanceJpa.save(vli);
 				} else {
 					LOG.warn("Could not store: {}", x.getId().getName());

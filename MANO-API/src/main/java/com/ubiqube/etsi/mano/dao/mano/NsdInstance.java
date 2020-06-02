@@ -41,10 +41,6 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private String nsInstanceDescription = null;
 
-	@Field
-	private String nsdId = null;
-
-	// @OneToOne(fetch = FetchType.EAGER)
 	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackage nsdInfo = null;
 
@@ -112,14 +108,6 @@ public class NsdInstance implements BaseEntity {
 
 	public void setNsInstanceDescription(final String nsInstanceDescription) {
 		this.nsInstanceDescription = nsInstanceDescription;
-	}
-
-	public String getNsdId() {
-		return nsdId;
-	}
-
-	public void setNsdId(final String nsdId) {
-		this.nsdId = nsdId;
 	}
 
 	public NsdPackage getNsdInfo() {

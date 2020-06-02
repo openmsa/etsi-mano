@@ -374,7 +374,7 @@ public class OpenStackVim implements Vim {
 				.filter(x -> x.getDisk() == (disk / GIGA))
 				.map(x -> (Flavor) x)
 				.findFirst();
-
+		// XXX We can't use name maybe use an UUID.
 		return matchingFlavor.orElseGet(() -> os.compute()
 				.flavors()
 				.create(Builders.flavor()

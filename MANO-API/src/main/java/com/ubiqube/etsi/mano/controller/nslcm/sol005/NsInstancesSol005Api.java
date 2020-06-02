@@ -264,6 +264,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsdRepository.save(nsd);
 
 		final NsdInstance nsInstance = new NsdInstance();
+		// XXX: Map request.
 		nsInstance.setNsdInfo(nsd);
 		nsInstanceRepository.save(nsInstance);
 

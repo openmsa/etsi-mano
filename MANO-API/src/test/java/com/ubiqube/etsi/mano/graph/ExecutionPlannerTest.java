@@ -39,7 +39,7 @@ public class ExecutionPlannerTest {
 	@Test
 	void testName() throws Exception {
 
-		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null);
+		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null);
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
 		final VnfInstantiationLevels inst = new VnfInstantiationLevels();
@@ -73,7 +73,7 @@ public class ExecutionPlannerTest {
 
 	@Test
 	void testRemove() throws Exception {
-		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null);
+		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null);
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
 		final VnfInstantiationLevels inst = new VnfInstantiationLevels();

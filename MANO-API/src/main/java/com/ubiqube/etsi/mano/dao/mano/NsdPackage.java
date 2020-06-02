@@ -63,7 +63,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 
 	private String flavorId;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsdPackage")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "nsdPackage")
 	private Set<NsdPackageVnfPackage> vnfPkgIds;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)

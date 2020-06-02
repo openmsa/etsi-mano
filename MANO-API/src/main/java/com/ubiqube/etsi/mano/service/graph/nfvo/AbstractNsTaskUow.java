@@ -11,7 +11,7 @@ import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
+import com.ubiqube.etsi.mano.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractTaskUow;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -52,7 +52,7 @@ public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {
 				return res;
 			};
 		} else {
-			function = x -> uaow.rollback(x.vimConnectionInformationLocal, null, x.vimLocal, x.resourceId, x.contextLocal);
+			function = x -> uaow.rollback(x.vimConnectionInformationLocal, vnfm, x.vimLocal, x.resourceId, x.contextLocal);
 		}
 	}
 

@@ -258,7 +258,7 @@ public class ExecutionPlanner {
 	}
 
 	public void exportNsGraph(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, @Nonnull final UUID _id, final NsdInstance vnfInstance, final String subName) {
-		final DOTExporter<NsUnitOfWork, NsConnectivityEdge> exporter = new DOTExporter<>(NsUnitOfWork::getName);
+		final DOTExporter<NsUnitOfWork, NsConnectivityEdge> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
@@ -500,9 +500,9 @@ public class ExecutionPlanner {
 			final int c = nsInstanceService.countLiveInstanceOfVnf(nsInstance, x.getId());
 			if (c == 0) {
 				final NsInstantiatedVnf sap = new NsInstantiatedVnf();
-				sap.setVnfd(x);
-				sap.setVnfName(x.getVnfProductName());
 				sap.setChangeType(ChangeType.ADDED);
+				final NsdPackageVnfPackage nsPackageVnfPackage = find(x, nsdInfo.getVnfPkgIds());
+				sap.setNsdPackageVnfPackage(nsPackageVnfPackage);
 				// XXX No way, we cannot save in case of splitted VNFM/NFVO.
 				final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + nsInstance.getId(), x.getId().toString());
 				final VnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
@@ -517,6 +517,12 @@ public class ExecutionPlanner {
 			}
 		});
 
+	}
+
+	private NsdPackageVnfPackage find(final VnfPackage vnfPackage, final Set<NsdPackageVnfPackage> vnfPkgIds) {
+		return vnfPkgIds.stream()
+				.filter(x -> x.getVnfPackage().getId().compareTo(vnfPackage.getId()) == 0)
+				.findFirst().orElseThrow(() -> new NotFoundException("VNF Package not found: " + vnfPackage.getId()));
 	}
 
 	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
@@ -614,14 +620,71 @@ public class ExecutionPlanner {
 			vertex.add(x.getVnffgdId(), uow);
 		});
 		resources.getAffectedVnfs().forEach(x -> {
-			LOG.info("Adding VNF vertex of {}", x.getVnfName());
+			LOG.info("Adding VNF vertex of {}", x.getNsdPackageVnfPackage().getToscaName());
 			final InstantiateVnfRequest request = new InstantiateVnfRequest();
 			request.setFlavourId(nsdInstance.getFlavourId());
 			request.setInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
-			final NsUnitOfWork uow = new VnfUow(x, request, x.getVnfName());
+			final NsUnitOfWork uow = new VnfUow(x, request, x.getNsdPackageVnfPackage().getToscaName());
 			g.addVertex(uow);
-			vertex.add(x.getVnfName(), uow);
+			vertex.add(x.getNsdPackageVnfPackage().getToscaName(), uow);
 		});
 		return vertex;
+	}
+
+	public void terminateNsPlan(final NsLcmOpOccs lcmOpOccs, final NsdPackage nsdInfo) {
+		final List<NsInstantiatedNs> instantiatedCompute = nsInstanceService.getLiveNsInstanceOf(lcmOpOccs.getNsInstance());
+		instantiatedCompute.forEach(x -> {
+			final NsInstantiatedNs affectedCompute = copyInstantiedResource(x, new NsInstantiatedNs(), lcmOpOccs);
+			affectedCompute.setNsInstanceId(x.getNsInstanceId());
+			affectedCompute.setResourceId(x.getResourceId());
+			lcmOpOccs.getResourceChanges().addInstantiatedNs(affectedCompute);
+		});
+		final List<NsInstantiatedSap> instantiatedSap = nsInstanceService.getLiveSapInstanceOf(lcmOpOccs.getNsInstance());
+		instantiatedSap.forEach(x -> {
+			final NsInstantiatedSap affectedCompute = copyInstantiedResource(x, new NsInstantiatedSap(), lcmOpOccs);
+			affectedCompute.setSapInstanceId(x.getSapInstanceId());
+			affectedCompute.setResourceId(x.getResourceId());
+			lcmOpOccs.getResourceChanges().addInstantiatedSap(affectedCompute);
+		});
+		final List<NsInstantiatedVl> instantiatedVl = nsInstanceService.getLiveVlInstanceOf(lcmOpOccs.getNsInstance());
+		instantiatedVl.forEach(x -> {
+			final NsInstantiatedVl affectedCompute = copyInstantiedResource(x, new NsInstantiatedVl(), lcmOpOccs);
+			affectedCompute.setVlProfileId(x.getVlProfileId());
+			affectedCompute.setResourceId(x.getResourceId());
+			lcmOpOccs.getResourceChanges().addInstantiatedVirtualLink(affectedCompute);
+		});
+		final List<NsInstantiatedVnf> instantiatedVnf = nsInstanceService.getLiveVnfInstanceOf(lcmOpOccs.getNsInstance());
+		instantiatedVnf.forEach(x -> {
+			final NsInstantiatedVnf affectedCompute = copyInstantiedResource(x, new NsInstantiatedVnf(), lcmOpOccs);
+			affectedCompute.setVnfInstance(x.getVnfInstance());
+			affectedCompute.setResourceId(x.getResourceId());
+			affectedCompute.setNsdPackageVnfPackage(x.getNsdPackageVnfPackage());
+			lcmOpOccs.getResourceChanges().addInstantiatedVnf(affectedCompute);
+		});
+	}
+
+	private static <T extends NsInstantiatedBase> T copyInstantiedResource(final NsInstantiatedBase source, final T inst, final NsLcmOpOccs lcmOpOccs) {
+		inst.setChangeType(ChangeType.REMOVED);
+		inst.setChangeResult(InstantiationStatusType.STARTED);
+		// inst.setVduId(source.getResourceId());
+		// inst.setRemovedInstantiated(source.getId());
+		inst.setResourceId(source.getResourceId());
+		inst.setInstantiationLevel(source.getInstantiationLevel());
+		inst.setNsLcmOpOccs(lcmOpOccs);
+		return inst;
+	}
+
+	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> revertNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g) {
+		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> gNew = createNsGraph();
+		g.vertexSet().forEach(gNew::addVertex);
+		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
+		return gNew;
+	}
+
+	private static ListenableGraph<NsUnitOfWork, NsConnectivityEdge> createNsGraph() {
+		// Vertex everyThing
+		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
+		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
+		return g;
 	}
 }
