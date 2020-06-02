@@ -28,10 +28,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -45,12 +43,14 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private final VnfInstanceLcm vnfInstanceLcm;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
+	private final LcmLinkable lcmLinkable;
 
-	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final EventManager _eventManager, final MapperFacade _mapper) {
+	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final EventManager _eventManager, final MapperFacade _mapper, final LcmLinkable _lcmLinkable) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		eventManager = _eventManager;
 		mapper = _mapper;
+		lcmLinkable = _lcmLinkable;
 		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
 
@@ -128,8 +128,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
 		final VnfLcmOpOccs lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest);
-		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
-		return ResponseEntity.accepted().header("Location", link.getSelf().getHref()).build();
+		final String link = lcmLinkable.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.accepted().header("Location", link).build();
 	}
 
 	@Override
@@ -178,9 +178,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		final VnfLcmOpOccs lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), terminateVnfRequest);
-		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
-		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, UUID.fromString(vnfInstanceId));
-		return ResponseEntity.noContent().header("Location", link.getSelf().getHref()).build();
+		final String link = lcmLinkable.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header("Location", link).build();
 	}
 
 }
