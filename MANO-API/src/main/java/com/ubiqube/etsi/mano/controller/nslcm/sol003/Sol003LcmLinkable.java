@@ -24,4 +24,9 @@ public class Sol003LcmLinkable implements LcmLinkable {
 		return LcmFactory.createVnfInstancesLink(hrefSelf, hrefChangeExtConn, hrefChangeFlavor, hrefHeal, hrefIndicators, hrefInstanciate, hrefOperate, hrefScale, hrefScaleToLevel, hrefTerminate);
 	}
 
+	@Override
+	public String getSelfLink(final String id) {
+		return linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
+	}
+
 }
