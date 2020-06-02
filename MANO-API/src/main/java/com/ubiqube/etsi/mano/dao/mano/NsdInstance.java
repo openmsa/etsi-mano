@@ -69,8 +69,6 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private InstantiationStateEnum nsState = null;
 
-	private String processId;
-
 	@Transient
 	private List<NsScaleInfo> nsScaleStatus = null;
 
@@ -204,14 +202,6 @@ public class NsdInstance implements BaseEntity {
 
 	public void setNsInstantiationLevelId(final String nsInstantiationLevelId) {
 		this.nsInstantiationLevelId = nsInstantiationLevelId;
-	}
-
-	public String getProcessId() {
-		return processId;
-	}
-
-	public void setProcessId(final String processId) {
-		this.processId = processId;
 	}
 
 	public Set<NestedNsInstanceData> getNestedNsInstanceData() {
