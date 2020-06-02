@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -76,7 +77,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance;
 
 	private String processId;
