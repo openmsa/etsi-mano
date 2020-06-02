@@ -239,9 +239,10 @@ public class VnfmActions {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
+			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STOPPED);
 		}
 		LOG.info("Saving VNF Instance.");
-		vnfInstancesService.save(vnfInstance);
+		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		LOG.info("Saving VNF LCM OP OCCS.");
 		final VnfLcmOpOccs localLcm = vnfLcmService.save(lcmOpOccs);
 		LOG.info("Creating / deleting live instances.");
@@ -255,7 +256,7 @@ public class VnfmActions {
 					il = rhe.getInstantiationLevel().getLevelName();
 				}
 				if (null != rhe.getId()) {
-					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, localLcm, rhe.getVduId());
+					final VnfLiveInstance vli = new VnfLiveInstance(localVnfInstance, il, rhe, localLcm, rhe.getVduId());
 					vnfLiveInstanceJpa.save(vli);
 				}
 				LOG.warn("Could not store: {}", x.getId().getName());
