@@ -132,6 +132,8 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(NsInstance.class, NsdInstance.class)
 				.field("nestedNsInstanceId{}", "nestedNsInstance{id}")
+				.field("nsdId", "nsdInfo.nsdId")
+				.field("nsdInfoId", "nsdInfo.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(SubscriptionObject.class, Subscription.class)

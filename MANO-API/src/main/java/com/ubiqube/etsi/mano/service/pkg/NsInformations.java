@@ -2,6 +2,8 @@ package com.ubiqube.etsi.mano.service.pkg;
 
 public class NsInformations {
 
+	private String nsdId;
+
 	private String nsdName;
 
 	private String nsdVersion;
@@ -17,6 +19,14 @@ public class NsInformations {
 	private int maxNumberOfInstance;
 
 	private String flavorId;
+
+	public String getNsdId() {
+		return nsdId;
+	}
+
+	public void setNsdId(final String nsdId) {
+		this.nsdId = nsdId;
+	}
 
 	public String getNsdName() {
 		return nsdName;
