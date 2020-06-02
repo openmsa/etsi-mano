@@ -162,7 +162,7 @@ public class ToscaPackageProvider implements PackageProvider {
 				.byDefault()
 				.register();
 		mapperFactory.classMap(NS.class, NsInformations.class)
-				// .field("descriptorId", "")
+				.field("descriptorId", "nsdId")
 				.field("invariantId", "nsdInvariantId")
 				.field("nsProfile.minNumberOfInstances", "minNumberOfInstance")
 				.field("nsProfile.maxNumberOfInstances", "maxNumberOfInstance")
