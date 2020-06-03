@@ -440,7 +440,25 @@ public class OpenStackVim implements Vim {
 	@Override
 	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		checkResult(os.compute().servers().delete(resourceId));
+		final ActionResponse res = os.compute().servers().delete(resourceId);
+		if (409 == res.getCode()) {
+			return;
+		}
+		int cnt = 100;
+		while (cnt >= 0) {
+			final Server res2 = os.compute().servers().get(resourceId);
+			if (null == res2) {
+				LOG.info("Compute resource {} released.", resourceId);
+				return;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (final InterruptedException e) {
+				LOG.error("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+			cnt--;
+		}
 	}
 
 	@Override
