@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.github.dexecutor.core.DefaultDexecutor;
 import com.github.dexecutor.core.DexecutorConfig;
 import com.github.dexecutor.core.ExecutionConfig;
-import com.github.dexecutor.core.support.ThreadPoolUtil;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -51,7 +50,7 @@ public class PlanExecutor {
 	}
 
 	private static ExecutionResults<UnitOfWork, String> createExecutor(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final TaskProvider<UnitOfWork, String> uowTaskProvider) {
-		final ExecutorService executorService = Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
+		final ExecutorService executorService = Executors.newFixedThreadPool(20);
 		final DexecutorConfig<UnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
 		final DefaultDexecutor<UnitOfWork, String> executor = new DefaultDexecutor<>(config);
@@ -69,7 +68,7 @@ public class PlanExecutor {
 	}
 
 	private static ExecutionResults<NsUnitOfWork, String> createExecutorNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final TaskProvider<NsUnitOfWork, String> uowTaskProvider) {
-		final ExecutorService executorService = Executors.newFixedThreadPool(ThreadPoolUtil.ioIntesivePoolSize());
+		final ExecutorService executorService = Executors.newFixedThreadPool(20);
 		final DexecutorConfig<NsUnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
 		final DefaultDexecutor<NsUnitOfWork, String> executor = new DefaultDexecutor<>(config);
