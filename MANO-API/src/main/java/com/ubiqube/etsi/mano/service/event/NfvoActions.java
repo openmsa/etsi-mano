@@ -96,7 +96,7 @@ public class NfvoActions {
 	}
 
 	public void nsTerminate(@Nonnull final UUID lcmOpOccsId) {
-		Thread.currentThread().setName("NT-" + lcmOpOccsId);
+		Thread.currentThread().setName(lcmOpOccsId + "-NT");
 		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.findById(lcmOpOccsId);
 		final NsdInstance nsInstance = nsInstanceRepository.get(lcmOpOccs.getNsInstance().getId());
 		try {
@@ -130,7 +130,7 @@ public class NfvoActions {
 	}
 
 	public void nsInstantiate(@Nonnull final UUID lcmOpOccsId) {
-		Thread.currentThread().setName("NI-" + lcmOpOccsId);
+		Thread.currentThread().setName(lcmOpOccsId + "-NI");
 		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.findById(lcmOpOccsId);
 		final NsdInstance nsInstance = nsInstanceRepository.get(lcmOpOccs.getNsInstance().getId());
 
@@ -174,9 +174,11 @@ public class NfvoActions {
 		if (results.getErrored().isEmpty()) {
 			lcmOpOccs.setOperationState(LcmOperationStateType.COMPLETED);
 			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
+			LOG.info("NS result COMPLETED");
 		} else {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
+			LOG.info("NS result FAILED");
 		}
 		results.getSuccess().forEach(x -> {
 			final NsInstantiatedBase rhe = x.getId().getResourceHandleEntity();
@@ -195,11 +197,14 @@ public class NfvoActions {
 				nsLiveInstanceJpa.deleteById(vli.getId());
 			}
 		});
+		LOG.info("Saving NS Instance.");
 		nsInstanceRepository.save(nsdInstance);
+		LOG.info("Saving NS LCM.");
 		nsLcmOpOccsService.save(lcmOpOccs);
 	}
 
 	public void grantRequest(final UUID objectId) {
+		LOG.info("Evaluating grant {}", objectId);
 		final Optional<GrantResponse> grantsOpt = grantJpa.findById(objectId);
 		final GrantResponse grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
 
