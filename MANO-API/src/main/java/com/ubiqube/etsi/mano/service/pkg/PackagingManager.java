@@ -287,11 +287,7 @@ public class PackagingManager {
 						nsdPackageVnfPackage.setVnfPackage(vnfPackage);
 						vnfPackage.addNsdPackage(nsdPackageVnfPackage);
 						vnfPackageJpa.save(vnfPackage);
-						final NsdPackageVnfPackage nsdvnf = new NsdPackageVnfPackage();
-						nsdvnf.setNsdPackage(nsPackage);
-						nsdvnf.setVnfPackage(vnfPackage);
-						nsdvnf.setToscaName(x);
-						return nsdvnf;
+						return nsdPackageVnfPackage;
 					})
 					.collect(Collectors.toSet());
 			nsPackage.setVnfPkgIds(vnfds);
