@@ -59,6 +59,7 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -214,7 +215,7 @@ public class ExecutionPlanner {
 			return;
 		}
 		left.forEach(x -> right.forEach(y -> {
-			LOG.info("  - Adding {} <-> {}", x, y);
+			LOG.info("  - Adding {} <-> {}", x, y.getName());
 			g.addEdge(x, y);
 		}));
 	}
@@ -465,7 +466,7 @@ public class ExecutionPlanner {
 			return;
 		}
 		left.forEach(x -> right.forEach(y -> {
-			LOG.info("  - Adding {} <-> {}", x, y);
+			LOG.info("  - Adding {} <-> {}", x, y.getName());
 			g.addEdge(x, y);
 		}));
 	}
@@ -498,9 +499,15 @@ public class ExecutionPlanner {
 		nsds.forEach(x -> {
 			final int c = nsInstanceService.countLiveInstanceOfNsd(nsInstance, x.getId());
 			if (c == 0) {
+				// create an instance of x
+				final CreateNsRequest req = new CreateNsRequest();
+				req.setNsDescription("");
+				req.setNsdId(x.getId().toString());
+				req.setNsName("nested_of_" + nsInstance.getId());
+				NsdInstance inst = nsInstanceControllerService.createNsd(req);
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
 				sap.setNsdPackage(x);
-				sap.setNsInstanceId(nsInstance.getId().toString());
+				sap.setNsInstanceId(inst.getId().toString());
 				sap.setChangeType(ChangeType.ADDED);
 				changes.addInstantiatedNs(sap);
 			}
@@ -513,15 +520,14 @@ public class ExecutionPlanner {
 				sap.setChangeType(ChangeType.ADDED);
 				final NsdPackageVnfPackage nsPackageVnfPackage = find(x, nsdInfo.getVnfPkgIds());
 				sap.setNsdPackageVnfPackage(nsPackageVnfPackage);
-				// XXX No way, we cannot save in case of splitted VNFM/NFVO.
 				final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + nsInstance.getId(), x.getId().toString());
-				final VnfInstance nsInstancesNsInstanceVnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
-				nsInstancesNsInstanceVnfInstance.setNsInstance(nsInstance);
-				// nsInstancesNsInstanceVnfInstance.setVimConnectionInfo(vimConnectionInfo);
-				// nsInstancesNsInstanceVnfInstance.setMetadata(metadata);
-				// nsInstancesNsInstanceVnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
-				vnfInstanceService.save(nsInstancesNsInstanceVnfInstance);
-				sap.setVnfInstance(nsInstancesNsInstanceVnfInstance);
+				VnfInstance vnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
+				vnfInstance.setNsInstance(nsInstance);
+				// vnfInstance.setVimConnectionInfo(vimConnectionInfo);
+				// vnfInstance.setMetadata(metadata);
+				// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
+				vnfInstance = vnfInstanceService.save(vnfInstance);
+				sap.setVnfInstance(vnfInstance);
 				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
 			}
@@ -529,7 +535,7 @@ public class ExecutionPlanner {
 
 	}
 
-	private NsdPackageVnfPackage find(final VnfPackage vnfPackage, final Set<NsdPackageVnfPackage> vnfPkgIds) {
+	private static NsdPackageVnfPackage find(final VnfPackage vnfPackage, final Set<NsdPackageVnfPackage> vnfPkgIds) {
 		return vnfPkgIds.stream()
 				.filter(x -> x.getVnfPackage().getId().compareTo(vnfPackage.getId()) == 0)
 				.findFirst().orElseThrow(() -> new NotFoundException("VNF Package not found: " + vnfPackage.getId()));
@@ -600,7 +606,7 @@ public class ExecutionPlanner {
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
 			x.getNsdPackage();
-			LOG.info("Adding NS vertex of {}", x.getId());
+			LOG.info("Adding NS vertex of {}", x.getNsInstanceId());
 			final InstantiateNsRequest request = new InstantiateNsRequest();
 			request.setNsFlavourId(nsdInstance.getFlavourId());
 			request.setNsInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
