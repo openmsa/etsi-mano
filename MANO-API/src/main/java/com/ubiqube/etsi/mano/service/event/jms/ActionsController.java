@@ -24,7 +24,7 @@ public class ActionsController {
 		actionController = _actionController;
 	}
 
-	@JmsListener(destination = "system.actions", concurrency = "5-10")
+	@JmsListener(destination = "system.actions", concurrency = "10-25")
 	@Transactional(TxType.NEVER)
 	@org.springframework.transaction.annotation.Transactional(propagation = Propagation.NEVER)
 	public void onEvent(final ActionMessage ev) {
