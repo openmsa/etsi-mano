@@ -122,7 +122,7 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
 	@Override
