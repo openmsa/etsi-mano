@@ -43,14 +43,14 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private final VnfInstanceLcm vnfInstanceLcm;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
-	private final LcmLinkable lcmLinkable;
+	private final Sol003LcmLinkable lcmLinkable;
 
-	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final EventManager _eventManager, final MapperFacade _mapper, final LcmLinkable _lcmLinkable) {
+	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final EventManager _eventManager, final MapperFacade _mapper) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		eventManager = _eventManager;
 		mapper = _mapper;
-		lcmLinkable = _lcmLinkable;
+		lcmLinkable = new Sol003LcmLinkable();
 		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
 
