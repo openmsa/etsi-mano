@@ -259,8 +259,9 @@ public class VnfmActions {
 				if (null != rhe.getId()) {
 					final VnfLiveInstance vli = new VnfLiveInstance(localVnfInstance, il, rhe, localLcm, rhe.getVduId());
 					vnfLiveInstanceJpa.save(vli);
+				} else {
+					LOG.warn("Could not store: {}", x.getId().getName());
 				}
-				LOG.warn("Could not store: {}", x.getId().getName());
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());
 				final VnfLiveInstance vli = vnfLiveInstanceJpa.findByVnfInstantiatedBaseId(rhe.getRemovedInstantiated());
