@@ -504,7 +504,7 @@ public class ExecutionPlanner {
 				req.setNsDescription("");
 				req.setNsdId(x.getId().toString());
 				req.setNsName("nested_of_" + nsInstance.getId());
-				NsdInstance inst = nsInstanceControllerService.createNsd(req);
+				final NsdInstance inst = nsInstanceControllerService.createNsd(req);
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
 				sap.setNsdPackage(x);
 				sap.setNsInstanceId(inst.getId().toString());
@@ -656,6 +656,7 @@ public class ExecutionPlanner {
 			final NsInstantiatedNs affectedCompute = copyInstantiedResource(x, new NsInstantiatedNs(), lcmOpOccs);
 			affectedCompute.setNsInstanceId(x.getNsInstanceId());
 			affectedCompute.setResourceId(x.getResourceId());
+			affectedCompute.setNsdPackage(nsdInfo);
 			lcmOpOccs.getResourceChanges().addInstantiatedNs(affectedCompute);
 		});
 		final List<NsInstantiatedSap> instantiatedSap = nsInstanceService.getLiveSapInstanceOf(lcmOpOccs.getNsInstance());
