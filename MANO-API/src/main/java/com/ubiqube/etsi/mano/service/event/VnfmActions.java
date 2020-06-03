@@ -83,6 +83,7 @@ public class VnfmActions {
 	}
 
 	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName(lcmOpOccsId + "-VI");
 		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
 		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
 		try {
@@ -97,7 +98,7 @@ public class VnfmActions {
 		}
 	}
 
-	public void vnfInstantiateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
+	private void vnfInstantiateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
 		// Parameters are in the lcmOpOccs.
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		executionPlanner.makePrePlan(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
@@ -282,10 +283,10 @@ public class VnfmActions {
 				.map(VimComputeResourceFlavourEntity::getVimFlavourId)
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException("Could not find flavor: " + vduId));
-
 	}
 
 	public void vnfTerminate(@Nonnull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName(lcmOpOccsId + "-VT");
 		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
 		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
 		try {
@@ -321,6 +322,7 @@ public class VnfmActions {
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
 		setResultLcmInstance(localLcmOpOccs, vnfInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
+		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, localLcmOpOccs.getId());
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localLcmOpOccs.getId());
 	}
 

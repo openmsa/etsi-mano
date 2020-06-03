@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.ubiqube.etsi.mano.controller.nslcm.sol005.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
@@ -58,10 +59,12 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
+import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -113,7 +116,11 @@ public class ExecutionPlanner {
 
 	private final VnfmInterface vnfm;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm) {
+	private final NsInstanceControllerService nsInstanceControllerService;
+
+	private final NsLcmOpOccsService nsLcmOpOccsService;
+
+	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
 		vnfPackageRepository = _vnfPackageRepository;
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
@@ -124,6 +131,8 @@ public class ExecutionPlanner {
 		nsdRepository = _nsdRepository;
 		nsdPackageService = _nsdPackageService;
 		vnfm = _vnfm;
+		nsInstanceControllerService = _nsInstanceControllerService;
+		nsLcmOpOccsService = _nsLcmOpOccsService;
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
@@ -491,6 +500,7 @@ public class ExecutionPlanner {
 			if (c == 0) {
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
 				sap.setNsdPackage(x);
+				sap.setNsInstanceId(nsInstance.getId().toString());
 				sap.setChangeType(ChangeType.ADDED);
 				changes.addInstantiatedNs(sap);
 			}
@@ -546,8 +556,8 @@ public class ExecutionPlanner {
 		final Set<NsdPackageNsdPackage> nsdnsd = nsdPackageService.findNestedNsdByNsdPackage(nsdPackage);
 		nsdnsd.forEach(x -> {
 			// A NSD may have a dependency on SAP
-			final NsdPackage nsdPack = nsdPackageJpa.findById(x.getChild().getId()).orElseThrow(() -> new NotFoundException("" + x.getChild().getId()));
-			nsdPack.getNsSaps().forEach(y -> {
+			final Set<NsSap> nsdSaps = nsdPackageService.getSapByNsdPackageId(x.getChild().getId());
+			nsdSaps.forEach(y -> {
 				LOG.info("Adding edge: {} <-> {}", x.getToscaName(), y.getToscaName());
 				nsAddEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
 			});
@@ -585,13 +595,16 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
+	private MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
 		final MultiValueMap<String, NsUnitOfWork> vertex = new LinkedMultiValueMap<>();
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
 			x.getNsdPackage();
 			LOG.info("Adding NS vertex of {}", x.getId());
-			final NsUnitOfWork uow = new NsUow(x, x.getNsdPackage().getNsdName());
+			final InstantiateNsRequest request = new InstantiateNsRequest();
+			request.setNsFlavourId(nsdInstance.getFlavourId());
+			request.setNsInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
+			final NsUnitOfWork uow = new NsUow(x, request, null, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().getNsdName());
 			vertex.add(x.getNsdPackage().getNsdName(), uow);
 			g.addVertex(uow);
 		});

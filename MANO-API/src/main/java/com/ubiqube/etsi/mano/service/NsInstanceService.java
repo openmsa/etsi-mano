@@ -15,6 +15,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsInstantiatedNsJpa;
 import com.ubiqube.etsi.mano.jpa.NsInstantiatedSapJpa;
 import com.ubiqube.etsi.mano.jpa.NsInstantiatedVlJpa;
@@ -84,7 +85,7 @@ public class NsInstanceService {
 	}
 
 	public Set<NsdPackage> findNestedNsdByNsInstance(final NsdPackage nsdInfo) {
-		return nsdPackageJpa.findByNestedNsdInfoIds_Child(nsdInfo);
+		return nsdPackageJpa.findByNestedNsdInfoIds_Parent(nsdInfo);
 	}
 
 	public Set<VnfPackage> findVnfPackageByNsInstance(final NsdPackage nsdInfo) {
@@ -109,6 +110,14 @@ public class NsInstanceService {
 
 	public List<NsInstantiatedVnf> getLiveVnfInstanceOf(final NsdInstance nsInstance) {
 		return nsInstantiatedVnfJpa.findByLiveInstanceOfVnfInstance(nsInstance);
+	}
+
+	public void delete(final UUID nsInstanceUuid) {
+		nsdInstanceJpa.deleteById(nsInstanceUuid);
+	}
+
+	public NsdInstance findById(final UUID nsUuid) {
+		return nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("Not found " + nsUuid));
 	}
 
 }

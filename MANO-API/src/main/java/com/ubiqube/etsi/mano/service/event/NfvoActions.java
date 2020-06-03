@@ -45,7 +45,6 @@ import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
@@ -96,9 +95,10 @@ public class NfvoActions {
 		nsLiveInstanceJpa = _nsLiveInstanceJpa;
 	}
 
-	public void nsTerminate(@Nonnull final UUID nsInstanceId) {
-		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.TERMINATE);
+	public void nsTerminate(@Nonnull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName("NT-" + lcmOpOccsId);
+		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.findById(lcmOpOccsId);
+		final NsdInstance nsInstance = nsInstanceRepository.get(lcmOpOccs.getNsInstance().getId());
 		try {
 			nsTerminateInner(lcmOpOccs, nsInstance);
 		} catch (final RuntimeException e) {
@@ -106,7 +106,7 @@ public class NfvoActions {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			nsInstanceRepository.save(nsInstance);
 			nsLcmOpOccsService.save(lcmOpOccs);
-			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
 	}
 
@@ -129,18 +129,21 @@ public class NfvoActions {
 		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), lcmOpOccs.getId());
 	}
 
-	public void nsInstantiate(@Nonnull final UUID nsInstanceId) {
-		final NsdInstance nsInstance = nsInstanceRepository.get(nsInstanceId);
-		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.createLcmOpOccs(nsInstance, NsLcmOpType.INSTANTIATE);
+	public void nsInstantiate(@Nonnull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName("NI-" + lcmOpOccsId);
+		final NsLcmOpOccs lcmOpOccs = nsLcmOpOccsService.findById(lcmOpOccsId);
+		final NsdInstance nsInstance = nsInstanceRepository.get(lcmOpOccs.getNsInstance().getId());
+
 		try {
 			nsInstantiateInner(lcmOpOccs, nsInstance);
 		} catch (final RuntimeException e) {
 			LOG.error("NS Instantiate fail.", e);
+			// We can't save here, we must do an atomic update.
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
 			nsInstanceRepository.save(nsInstance);
 			nsLcmOpOccsService.save(lcmOpOccs);
-			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstanceId);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
 	}
 
