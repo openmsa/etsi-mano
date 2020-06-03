@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public class NsdInstance implements BaseEntity {
 
 	private String nsInstantiationLevelId;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	private List<VnfInstance> vnfInstance = null;
 
@@ -82,6 +83,9 @@ public class NsdInstance implements BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<VnfInstanceData> vnfInstanceData;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
+	private Set<NsLcmOpOccs> lcmOpOccs;
 
 	@Override
 	public UUID getId() {
@@ -218,6 +222,21 @@ public class NsdInstance implements BaseEntity {
 
 	public void setVnfInstanceData(final Set<VnfInstanceData> vnfInstanceData) {
 		this.vnfInstanceData = vnfInstanceData;
+	}
+
+	public Set<NsLcmOpOccs> getLcmOpOccs() {
+		return lcmOpOccs;
+	}
+
+	public void setLcmOpOccs(final Set<NsLcmOpOccs> lcmOpOccs) {
+		this.lcmOpOccs = lcmOpOccs;
+	}
+
+	public void addNestedNsInstance(final NsdInstance nsIn) {
+		if (null == nestedNsInstance) {
+			nestedNsInstance = new ArrayList<>();
+		}
+		nestedNsInstance.add(nsIn);
 	}
 
 }
