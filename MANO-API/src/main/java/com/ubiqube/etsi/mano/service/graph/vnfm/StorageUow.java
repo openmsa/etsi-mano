@@ -13,7 +13,7 @@ public class StorageUow extends AbstractUnitOfWork {
 
 	private final VnfStorage vnfStorage;
 
-	VnfInstantiatedStorage vnfInstantiedStorage;
+	private final VnfInstantiatedStorage vnfInstantiedStorage;
 
 	public StorageUow(final VnfInstantiatedStorage _vnfInstantiedStorage, final VnfStorage x) {
 		super(_vnfInstantiedStorage, x.getToscaName());
