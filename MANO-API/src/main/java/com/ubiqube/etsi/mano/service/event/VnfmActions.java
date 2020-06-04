@@ -101,7 +101,7 @@ public class VnfmActions {
 	private void vnfInstantiateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
 		// Parameters are in the lcmOpOccs.
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
-		executionPlanner.makePrePlan(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
+		executionPlanner.makePrePlan(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
 		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 
 		// XXX Do it for VnfInfoModifications

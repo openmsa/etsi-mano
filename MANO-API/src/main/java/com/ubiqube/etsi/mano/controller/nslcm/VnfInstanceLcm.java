@@ -121,10 +121,10 @@ public class VnfInstanceLcm {
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
-		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
-		vnfInstance.setInstantiatedVnfInfo(ivf);
-		vnfInstancesRepository.save(vnfInstance);
+
 		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfInstance);
+		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
+		lcmOpOccs.setVnfInstantiatedInfo(ivf);
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, lcmOpOccs.getId(), new HashMap<>());
 		LOG.info("VNF Instantiation Event Sucessfully sent.");

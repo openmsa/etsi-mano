@@ -74,6 +74,9 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	private String externalProcessId;
 
 	@Embedded
+	private VnfInstantiatedInfo vnfInstantiatedInfo;
+
+	@Embedded
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
 
 	// private VnfInfoModifications changedInfo = null;
@@ -197,6 +200,14 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 
 	public void setResourceHandleEntity(final Set<VnfInstantiatedBase> resourceHandleEntity) {
 		this.resourceHandleEntity = resourceHandleEntity;
+	}
+
+	public VnfInstantiatedInfo getVnfInstantiatedInfo() {
+		return vnfInstantiatedInfo;
+	}
+
+	public void setVnfInstantiatedInfo(final VnfInstantiatedInfo vnfInstantiatedInfo) {
+		this.vnfInstantiatedInfo = vnfInstantiatedInfo;
 	}
 
 	@Override
