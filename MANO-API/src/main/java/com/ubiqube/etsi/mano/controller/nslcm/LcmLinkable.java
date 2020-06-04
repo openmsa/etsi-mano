@@ -8,5 +8,4 @@ public interface LcmLinkable {
 
 	VnfInstanceLinks getLinks(@Nonnull String id);
 
-	String getSelfLink(String id);
 }
