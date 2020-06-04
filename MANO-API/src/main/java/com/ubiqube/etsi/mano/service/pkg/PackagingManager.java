@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -54,6 +55,7 @@ import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 
 import ma.glasnost.orika.MapperFacade;
+import tosca.datatypes.nfv.VduLevel;
 import tosca.policies.nfv.InstantiationLevels;
 import tosca.policies.nfv.VduInitialDelta;
 import tosca.policies.nfv.VduInstantiationLevels;
@@ -173,12 +175,12 @@ public class PackagingManager {
 		vduScalingAspectDeltas.forEach(x -> {
 			x.getTargets().forEach(y -> {
 				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
-				x.getDeltas().entrySet().forEach(z -> {
-					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), z.getKey(), z.getValue().getNumberOfInstances()));
-				});
+				int i = 0;
+				for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
+					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), i++));
+				}
 			});
 		});
-
 	}
 
 	@Nonnull

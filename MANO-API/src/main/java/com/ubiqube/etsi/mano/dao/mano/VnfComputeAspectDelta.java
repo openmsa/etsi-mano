@@ -16,21 +16,28 @@ public class VnfComputeAspectDelta implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	private String aspectName;
+
 	private String deltaName;
+
 	private Integer numberOfInstances;
+
 	@ManyToOne
 	private VnfCompute vnfCompute;
+
+	private int level;
 
 	public VnfComputeAspectDelta() {
 		// Nothing.
 	}
 
-	public VnfComputeAspectDelta(final String aspectName, final String deltaName, final Integer numberOfInstances) {
+	public VnfComputeAspectDelta(final String aspectName, final String deltaName, final Integer numberOfInstances, final int _level) {
 		super();
 		this.aspectName = aspectName;
 		this.deltaName = deltaName;
 		this.numberOfInstances = numberOfInstances;
+		level = _level;
 	}
 
 	public UUID getId() {
@@ -71,6 +78,14 @@ public class VnfComputeAspectDelta implements Serializable {
 
 	public void setVnfCompute(final VnfCompute vnfCompute) {
 		this.vnfCompute = vnfCompute;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(final int level) {
+		this.level = level;
 	}
 
 }
