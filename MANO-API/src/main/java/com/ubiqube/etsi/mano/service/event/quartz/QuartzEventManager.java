@@ -94,4 +94,10 @@ public class QuartzEventManager implements EventManager {
 		}
 	}
 
+	@Override
+	public void sendGrant(final UUID objectId, final Map<String, Object> parameters) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

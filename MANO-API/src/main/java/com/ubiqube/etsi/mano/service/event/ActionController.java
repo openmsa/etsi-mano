@@ -54,9 +54,6 @@ public class ActionController {
 		case NS_TERMINATE:
 			nfvoActions.nsTerminate(objectId);
 			break;
-		case GRANT_REQUEST:
-			nfvoActions.grantRequest(objectId);
-			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);
 			break;

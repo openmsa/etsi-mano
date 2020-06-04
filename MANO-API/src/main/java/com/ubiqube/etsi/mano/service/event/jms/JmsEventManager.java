@@ -31,4 +31,9 @@ public class JmsEventManager implements EventManager {
 		jmsTemplate.convertAndSend("system.actions", msg);
 	}
 
+	@Override
+	public void sendGrant(final UUID objectId, final Map<String, Object> parameters) {
+		final GrantMessage msg = new GrantMessage(objectId, parameters);
+		jmsTemplate.convertAndSend("system.actions.grants", msg);
+	}
 }

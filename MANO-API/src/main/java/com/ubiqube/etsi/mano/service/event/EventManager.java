@@ -29,4 +29,12 @@ public interface EventManager {
 	 * @param parameters Additional parameters if any.
 	 */
 	void sendAction(@Nonnull ActionType actionType, @Nonnull UUID objectId, @Nonnull Map<String, Object> parameters);
+
+	/**
+	 * Send an asynchronous grant message.
+	 * 
+	 * @param objectId   The grantResponse Id.
+	 * @param parameters Additional parameters if any.
+	 */
+	void sendGrant(final UUID objectId, final Map<String, Object> parameters);
 }
