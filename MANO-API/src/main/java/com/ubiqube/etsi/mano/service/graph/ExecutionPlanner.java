@@ -283,37 +283,39 @@ public class ExecutionPlanner {
 		return gNew;
 	}
 
+	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String level) {
+		if (null == level) {
+			return vnfCompute.getInitialNumberOfInstance().intValue();
+		}
+		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfCompute.getScalingAspectDeltas()) {
+			final List<VnfInstantiationLevels> instLev = vnfInstantiationLevels.stream()
+					.filter(y -> vnfComputeAspectDelta.getAspectName().equals(y.getScaleInfoName()))
+					.filter(y -> vnfComputeAspectDelta.getLevel() == y.getScaleInfoLevel())
+					.collect(Collectors.toList());
+			if (instLev.isEmpty()) {
+				continue;
+			}
+			if (instLev.size() != 1) {
+				LOG.warn("Found {} instantiation levels. Must be one => {}", instLev.size(), instLev);
+			}
+			return vnfComputeAspectDelta.getNumberOfInstances().intValue();
+		}
+		return vnfCompute.getInitialNumberOfInstance().intValue();
+	}
+
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		// instantiationLevelId is aspectId
-		final List<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels().stream()
-				.filter(x -> x.getLevelName().equals(instantiationLevelId))
-				.collect(Collectors.toList());
-		instantiationLevels.forEach(instantiationLevel -> {
-			LOG.info("Pre-Planning {}", instantiationLevel.getScaleInfoName());
-			vnfPakage.getVnfCompute().forEach(x -> {
-				final List<VnfComputeAspectDelta> res = vnfPackageService.findAspectDeltaByAspectId(x, instantiationLevel.getScaleInfoName());
-				Integer numInst = null;
-				if (!res.isEmpty()) {
-					if (res.size() <= instantiationLevel.getScaleInfoLevel()) {
-						numInst = res.get(instantiationLevel.getScaleInfoLevel() - 1).getNumberOfInstances();
-					} else if (res.isEmpty()) {
-						numInst = x.getInitialNumberOfInstance();
-					} else {
-						numInst = res.get(res.size() - 1).getNumberOfInstances();
-					}
-					final int wantedNumInst = numInst.intValue();
-					final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
-					final VduInstantiationLevel vduInstantiationLevel = vnfPackageService.findByVnfComputeAndInstantiationLevel(x, instantiationLevel.getScaleInfoName());
-					LOG.info("{}: Actual currentInst={} numInst={}", instantiationLevel.getScaleInfoName(), currentInst, numInst);
-					if (currentInst < wantedNumInst) {
-						addVnfComputeInstance(lcmOpOccs, x, vnfPakage, vduInstantiationLevel, currentInst, wantedNumInst - currentInst);
-					} else if (currentInst > wantedNumInst) {
-						removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, vduInstantiationLevel, currentInst - wantedNumInst);
-					}
-				} else {
-					LOG.debug("Unknown aspect {} for Vdu {} ", instantiationLevel.getScaleInfoName(), x.getToscaName());
-				}
-			});
+		vnfPakage.getVnfCompute().forEach(x -> {
+			final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
+			final int wantedNumInst = getNumberOfInstance(vnfPakage.getVnfInstantiationLevels(), x, instantiationLevelId);
+			LOG.info("{}: Actual currentInst={} wantedInst={}", x.getToscaName(), currentInst, wantedNumInst);
+
+			if (currentInst < wantedNumInst) {
+				addVnfComputeInstance(lcmOpOccs, x, vnfPakage, null, currentInst, wantedNumInst - currentInst);
+			} else if (currentInst > wantedNumInst) {
+				removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, null, currentInst - wantedNumInst);
+			}
+
 		});
 		vnfPakage.getVnfVl().forEach(x -> {
 			// XXX They should scale.
