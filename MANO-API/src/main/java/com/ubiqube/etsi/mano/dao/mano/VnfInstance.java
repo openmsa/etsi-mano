@@ -80,8 +80,6 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance;
 
-	private String processId;
-
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extensions = null;
 
@@ -224,14 +222,6 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 
 	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
-	}
-
-	public String getProcessId() {
-		return processId;
-	}
-
-	public void setProcessId(final String processId) {
-		this.processId = processId;
 	}
 
 	public Set<VnfLcmOpOccs> getLcmOpOccs() {
