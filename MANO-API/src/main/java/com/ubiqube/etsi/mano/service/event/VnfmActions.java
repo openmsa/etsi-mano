@@ -120,10 +120,10 @@ public class VnfmActions {
 		vnfLcmService.setGrant(localLcmOpOccs, grantsResp.getId());
 		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// extract Ext VL
-		final Map<String, String> extVl = grantsResp.getExtManagedVirtualLinks().stream()
+		final Map<String, String> context = grantsResp.getExtManagedVirtualLinks().stream()
 				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
 		// Add all present VL if any.
-		extVl.putAll(getLiveVl(vnfInstance));
+		context.putAll(getLiveVl(vnfInstance));
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, vnfPkg);
@@ -133,7 +133,7 @@ public class VnfmActions {
 		vim.refineExecutionPlan(plan);
 		executionPlanner.exportGraph(plan, vnfPkg.getId(), localVnfInstance, "create");
 
-		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim, extVl);
+		final ExecutionResults<UnitOfWork, String> results = executor.execCreate(plan, vimConnection, vim, context);
 		setResultLcmInstance(localLcmOpOccs, localVnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
