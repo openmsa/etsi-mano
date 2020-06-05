@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.service.graph;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -283,31 +286,52 @@ public class ExecutionPlanner {
 		return gNew;
 	}
 
-	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String level) {
-		if (null == level) {
-			return vnfCompute.getInitialNumberOfInstance().intValue();
+	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final int level) {
+		final int base = Optional.ofNullable(vnfCompute.getInitialNumberOfInstance()).orElse(Integer.valueOf(1)).intValue();
+		if (null == instantiationLevel) {
+			return base;
 		}
+		final List<VnfComputeAspectDelta> vnfComputeAspectDeltas = new ArrayList<>();
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfCompute.getScalingAspectDeltas()) {
 			final List<VnfInstantiationLevels> instLev = vnfInstantiationLevels.stream()
 					.filter(y -> vnfComputeAspectDelta.getAspectName().equals(y.getScaleInfoName()))
-					.filter(y -> vnfComputeAspectDelta.getLevel() == y.getScaleInfoLevel())
 					.collect(Collectors.toList());
 			if (instLev.isEmpty()) {
 				continue;
 			}
-			if (instLev.size() != 1) {
-				LOG.warn("Found {} instantiation levels. Must be one => {}", instLev.size(), instLev);
-			}
-			return vnfComputeAspectDelta.getNumberOfInstances().intValue();
+			vnfComputeAspectDeltas.add(vnfComputeAspectDelta);
 		}
-		return vnfCompute.getInitialNumberOfInstance().intValue();
+		int cnt = 0;
+		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfComputeAspectDeltas) {
+			if (vnfComputeAspectDelta.getLevel() <= level) {
+				cnt += vnfComputeAspectDelta.getNumberOfInstances().intValue();
+			}
+		}
+		return base + cnt;
+	}
+
+	public Set<VnfInstantiationLevels> resolvLevelName(final String instantiationLevel, final int level, final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
+		return vnfInstantiationLevels.stream()
+				.filter(x -> instantiationLevel.equals(x.getLevelName()))
+				.filter(x -> x.getScaleInfoLevel() <= level)
+				.sorted(Comparator.comparingInt(VnfInstantiationLevels::getScaleInfoLevel))
+				.collect(Collectors.toSet());
 	}
 
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		// instantiationLevelId is aspectId
 		vnfPakage.getVnfCompute().forEach(x -> {
 			final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
-			final int wantedNumInst = getNumberOfInstance(vnfPakage.getVnfInstantiationLevels(), x, instantiationLevelId);
+			Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
+			if (null != instantiationLevelId) {
+				instantiationLevels = resolvLevelName(instantiationLevelId, 0, vnfPakage.getVnfInstantiationLevels());
+			} else {
+				final Set<ScaleInfo> scaling = lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus();
+				if (null != scaling) {
+					scaling.stream().map(y -> new VnfInstantiationLevels(y.getAspectId(), y.getAspectId(), y.getScaleLevel()));
+				}
+			}
+			final int wantedNumInst = getNumberOfInstance(instantiationLevels, x, instantiationLevelId, 0);
 			LOG.info("{}: Actual currentInst={} wantedInst={}", x.getToscaName(), currentInst, wantedNumInst);
 
 			if (currentInst < wantedNumInst) {

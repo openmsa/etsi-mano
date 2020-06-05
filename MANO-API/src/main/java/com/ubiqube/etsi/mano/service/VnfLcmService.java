@@ -20,6 +20,7 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
 @Service
@@ -98,6 +99,14 @@ public class VnfLcmService {
 	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final String instantiationLevel) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE_TO_LEVEL, vnfInstance.getId());
 		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(instantiationLevel);
+		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+	}
+
+	public VnfLcmOpOccs createScaleOpOcc(final VnfInstance vnfInstance, final ScaleVnfRequest scaleVnfRequest) {
+		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE, vnfInstance.getId());
+		lcmOpOccs.getVnfScaleInfo().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
+		lcmOpOccs.getVnfScaleInfo().setScaleType(scaleVnfRequest.getType());
+		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(scaleVnfRequest.getAspectId());
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 }

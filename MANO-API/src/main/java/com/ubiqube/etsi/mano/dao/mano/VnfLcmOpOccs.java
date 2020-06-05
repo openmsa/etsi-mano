@@ -87,6 +87,10 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfLcmOpOccs")
 	private Set<VnfInstantiatedBase> resourceHandleEntity;
 
+	@Embedded
+	private VnfScaleInfo VnfScaleInfo;
+
+	@Embedded
 	private Audit audit;
 
 	@Override
@@ -208,6 +212,14 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 
 	public void setVnfInstantiatedInfo(final VnfInstantiatedInfo vnfInstantiatedInfo) {
 		this.vnfInstantiatedInfo = vnfInstantiatedInfo;
+	}
+
+	public VnfScaleInfo getVnfScaleInfo() {
+		return VnfScaleInfo;
+	}
+
+	public void setVnfScaleInfo(final VnfScaleInfo vnfScaleInfo) {
+		VnfScaleInfo = vnfScaleInfo;
 	}
 
 	@Override

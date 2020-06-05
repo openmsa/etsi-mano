@@ -28,16 +28,19 @@ public class VnfComputeAspectDelta implements Serializable {
 
 	private int level;
 
+	int maxScaleLevel;
+
 	public VnfComputeAspectDelta() {
 		// Nothing.
 	}
 
-	public VnfComputeAspectDelta(final String aspectName, final String deltaName, final Integer numberOfInstances, final int _level) {
+	public VnfComputeAspectDelta(final String aspectName, final String deltaName, final Integer numberOfInstances, final int _level, final int _maxScaleLevel) {
 		super();
 		this.aspectName = aspectName;
 		this.deltaName = deltaName;
 		this.numberOfInstances = numberOfInstances;
 		level = _level;
+		maxScaleLevel = _maxScaleLevel;
 	}
 
 	public UUID getId() {
@@ -86,6 +89,14 @@ public class VnfComputeAspectDelta implements Serializable {
 
 	public void setLevel(final int level) {
 		this.level = level;
+	}
+
+	public int getMaxScaleLevel() {
+		return maxScaleLevel;
+	}
+
+	public void setMaxScaleLevel(final int maxScaleLevel) {
+		this.maxScaleLevel = maxScaleLevel;
 	}
 
 }

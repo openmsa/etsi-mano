@@ -130,20 +130,20 @@ public class PackagingManager {
 			final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfExtCp(vnfExtCp);
 			final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects(vnfPackage.getUserDefinedData());
-			vnfPackage.setScalingAspects(scalingAspects);
-			// XXX Normally, Tosca object must not traverse this layer.
 			final List<InstantiationLevels> instantiationLevels = packageProvider.getInstatiationLevels(vnfPackage.getUserDefinedData());
 			final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels(vnfPackage.getUserDefinedData());
 			final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta(vnfPackage.getUserDefinedData());
 			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas(vnfPackage.getUserDefinedData());
 
-			rebuildScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas);
+			rebuildVduScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas, scalingAspects);
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 	}
 
-	private static void rebuildScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas) {
+	private static void rebuildVduScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final Set<ScalingAspect> scalingAspects) {
+		// flattern the instantiation levels. levels(demo,premium) -> ScaleInfo(name,
+		// scaleLevel)
 		instantiationLevels.stream()
 				.forEach(x -> {
 					vnfPackage.setDefaultInstantiationLevel(x.getDefaultLevel());
@@ -151,7 +151,6 @@ public class PackagingManager {
 						final String levelId = y.getKey();
 						y.getValue().getScaleInfo().entrySet().forEach(z -> {
 							final String aspectId = z.getKey();
-
 							final VnfInstantiationLevels il = new VnfInstantiationLevels(levelId, aspectId, z.getValue().getScaleLevel());
 							vnfPackage.addInstantiationLevel(il);
 						});
@@ -176,9 +175,17 @@ public class PackagingManager {
 			x.getTargets().forEach(y -> {
 				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
 				int i = 0;
+				final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
 				for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
-					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), i++));
+					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), i++, aspect.getMaxScaleLevel()));
 				}
+			});
+		});
+		// Minimal instance at instantiate time.
+		vduInitialDeltas.forEach(x -> {
+			x.getTargets().forEach(y -> {
+				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+				vnfc.setInitialNumberOfInstance(x.getInitialDelta().getNumberOfInstances());
 			});
 		});
 	}

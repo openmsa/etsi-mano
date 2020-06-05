@@ -354,4 +354,19 @@ public class VnfmActions {
 		eventManager.sendNotification(NotificationEvent.VNF_SCALE, lcmOpOccsId);
 	}
 
+	public void scale(@NotNull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName(lcmOpOccsId + "-SL");
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		try {
+			vnfInstantiateInner(lcmOpOccs, vnfInstance);
+			LOG.info("Scale to level {} Success...", lcmOpOccsId);
+		} catch (final RuntimeException e) {
+			LOG.error("VNF Scale to level Failed", e);
+			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			vnfLcmService.save(lcmOpOccs);
+		}
+		eventManager.sendNotification(NotificationEvent.VNF_SCALE, lcmOpOccsId);
+	}
+
 }
