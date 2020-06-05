@@ -94,4 +94,10 @@ public class VnfLcmService {
 	public Optional<VnfInstantiatedExtCp> getInstatiedExtCpById(final UUID id) {
 		return vnfInstantiedExtCpJpa.findById(id);
 	}
+
+	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final String instantiationLevel) {
+		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE_TO_LEVEL, vnfInstance.getId());
+		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(instantiationLevel);
+		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+	}
 }

@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -120,6 +122,8 @@ public class VnfmActions {
 		// extract Ext VL
 		final Map<String, String> extVl = grantsResp.getExtManagedVirtualLinks().stream()
 				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
+		// Add all present VL if any.
+		extVl.putAll(getLiveVl(vnfInstance));
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, vnfPkg);
@@ -133,6 +137,11 @@ public class VnfmActions {
 		setResultLcmInstance(localLcmOpOccs, localVnfInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
+	}
+
+	private Map<String, String> getLiveVl(final VnfInstance vnfInstance) {
+		final List<VnfInstantiatedVirtualLink> res = vnfInstancesService.getLiveVirtualLinkInstanceOf(vnfInstance);
+		return res.stream().collect(Collectors.toMap(y -> y.getVnfVirtualLink().getToscaName(), VnfInstantiatedBase::getResourceId));
 	}
 
 	private void copyGrantResourcesToInstantiated(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
@@ -239,8 +248,6 @@ public class VnfmActions {
 		} else {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			lcmOpOccs.setStateEnteredTime(new Date());
-			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
-			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STOPPED);
 		}
 		LOG.info("Saving VNF Instance.");
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
@@ -330,6 +337,21 @@ public class VnfmActions {
 	private GrantResponse getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
 		final GrantRequest req = grantService.createTerminateGrantRequest(vnfPkg, vnfInstance, lcmOpOccs);
 		return grantService.sendAndWaitGrantRequest(req);
+	}
+
+	public void scaleToLevel(@NotNull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName(lcmOpOccsId + "-SL");
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		try {
+			vnfInstantiateInner(lcmOpOccs, vnfInstance);
+			LOG.info("Scale to level {} Success...", lcmOpOccsId);
+		} catch (final RuntimeException e) {
+			LOG.error("VNF Scale to level Failed", e);
+			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			vnfLcmService.save(lcmOpOccs);
+		}
+		eventManager.sendNotification(NotificationEvent.VNF_SCALE, lcmOpOccsId);
 	}
 
 }

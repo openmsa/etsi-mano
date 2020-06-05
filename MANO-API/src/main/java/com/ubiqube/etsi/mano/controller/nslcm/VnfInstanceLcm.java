@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
@@ -140,6 +141,14 @@ public class VnfInstanceLcm {
 		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, lcmOpOccs.getId(), new HashMap<String, Object>());
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
+		return lcmOpOccs;
+	}
+
+	public VnfLcmOpOccs scaleToLevel(final UUID uuid, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest.getInstantiationLevelId());
+		ensureInstantiated(vnfInstance);
+		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
 		return lcmOpOccs;
 	}
 

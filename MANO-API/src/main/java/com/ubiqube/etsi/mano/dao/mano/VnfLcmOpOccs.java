@@ -74,7 +74,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	private String externalProcessId;
 
 	@Embedded
-	private VnfInstantiatedInfo vnfInstantiatedInfo;
+	private VnfInstantiatedInfo vnfInstantiatedInfo = new VnfInstantiatedInfo();
 
 	@Embedded
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();

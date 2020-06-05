@@ -27,6 +27,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 
@@ -151,7 +153,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId, final ScaleVnfRequest scaleVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
@@ -162,10 +164,10 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		ensureInstantiated(vnfInstance);
-		throw new GenericException("TODO");
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), scaleVnfToLevelRequest);
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header("Location", link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
 		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
