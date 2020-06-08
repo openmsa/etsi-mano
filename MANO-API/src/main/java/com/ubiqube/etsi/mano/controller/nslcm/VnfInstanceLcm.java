@@ -147,7 +147,7 @@ public class VnfInstanceLcm {
 
 	public VnfLcmOpOccs scaleToLevel(final UUID uuid, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
-		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest.getInstantiationLevelId());
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest);
 		ensureInstantiated(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
 		return lcmOpOccs;

@@ -174,10 +174,10 @@ public class PackagingManager {
 		vduScalingAspectDeltas.forEach(x -> {
 			x.getTargets().forEach(y -> {
 				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
-				int i = 0;
+				int level = 1;
 				final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
 				for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
-					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), i++, aspect.getMaxScaleLevel()));
+					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y));
 				}
 			});
 		});

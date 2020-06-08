@@ -1,12 +1,15 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
@@ -21,7 +24,10 @@ import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
+
+import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class VnfLcmService {
@@ -37,12 +43,15 @@ public class VnfLcmService {
 
 	private final VnfInstantiedExtCpJpa vnfInstantiedExtCpJpa;
 
-	public VnfLcmService(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final VnfInstantiedComputeJpa _vnfInstantiedCompute, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLink, final VnfInstantiedExtCpJpa _vnfInstantiedExtCp) {
+	private final MapperFacade mapper;
+
+	public VnfLcmService(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final VnfInstantiedComputeJpa _vnfInstantiedCompute, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLink, final VnfInstantiedExtCpJpa _vnfInstantiedExtCp, final MapperFacade _mapper) {
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		vnfLcmOpOccsJpa = _vnfLcmOpOccsJpa;
 		vnfInstantiedComputeJpa = _vnfInstantiedCompute;
 		vnfInstantiedVirtualLinkJpa = _vnfInstantiedVirtualLink;
 		vnfInstantiedExtCpJpa = _vnfInstantiedExtCp;
+		mapper = _mapper;
 	}
 
 	@Nonnull
@@ -96,9 +105,13 @@ public class VnfLcmService {
 		return vnfInstantiedExtCpJpa.findById(id);
 	}
 
-	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final String instantiationLevel) {
+	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE_TO_LEVEL, vnfInstance.getId());
-		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(instantiationLevel);
+		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(scaleVnfToLevelRequest.getInstantiationLevelId());
+		final Set<ScaleInfo> scaleStatus = scaleVnfToLevelRequest.getScaleInfo().stream()
+				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
+				.collect(Collectors.toSet());
+		lcmOpOccs.getVnfInstantiatedInfo().setScaleStatus(scaleStatus);
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 
@@ -106,7 +119,7 @@ public class VnfLcmService {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE, vnfInstance.getId());
 		lcmOpOccs.getVnfScaleInfo().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
 		lcmOpOccs.getVnfScaleInfo().setScaleType(scaleVnfRequest.getType());
-		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(scaleVnfRequest.getAspectId());
+		lcmOpOccs.getVnfScaleInfo().setAspectId(scaleVnfRequest.getAspectId());
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 }

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class ScaleInfo implements Serializable {
@@ -20,6 +21,15 @@ public class ScaleInfo implements Serializable {
 	private String aspectId = null;
 
 	private Integer scaleLevel = null;
+
+	public ScaleInfo() {
+		// Nothing.
+	}
+
+	public ScaleInfo(@NotNull final String aspectId2, @NotNull final Integer scaleLevel2) {
+		aspectId = aspectId2;
+		scaleLevel = scaleLevel2;
+	}
 
 	public UUID getId() {
 		return id;

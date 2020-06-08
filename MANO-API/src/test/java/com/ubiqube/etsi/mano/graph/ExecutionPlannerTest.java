@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -41,9 +42,7 @@ public class ExecutionPlannerTest {
 		return new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null, null, null);
 	}
 
-	@Test
 	void testName() throws Exception {
-
 		final ExecutionPlanner executionPlanner = createExecutionPlanner();
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
@@ -124,7 +123,7 @@ public class ExecutionPlannerTest {
 
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setInitialNumberOfInstance(12);
-		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, null);
+		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, null, 0);
 		assertEquals(12, i);
 	}
 
@@ -137,9 +136,11 @@ public class ExecutionPlannerTest {
 
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setInitialNumberOfInstance(12);
-		vnfCompute.setScalingAspectDeltas(new HashSet<VnfComputeAspectDelta>());
-		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "bad");
-		assertEquals(12, i);
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
+
+		vnfCompute.setScalingAspectDeltas(new ArrayList<VnfComputeAspectDelta>());
+		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "bad", 0);
+		assertEquals(1, i);
 	}
 
 	@Test
@@ -151,12 +152,15 @@ public class ExecutionPlannerTest {
 
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setInitialNumberOfInstance(12);
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
 
-		final Set<VnfComputeAspectDelta> scaleDelta = new HashSet<>();
-		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 1));
+		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 2, 1, 10, ""));
 		vnfCompute.setScalingAspectDeltas(scaleDelta);
-		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo");
+		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 0);
 		assertEquals(1, i);
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 1);
+		assertEquals(3, i);
 	}
 
 	@Test
@@ -172,13 +176,24 @@ public class ExecutionPlannerTest {
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setInitialNumberOfInstance(12);
 
-		final Set<VnfComputeAspectDelta> scaleDelta = new HashSet<>();
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
+
+		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
 		// scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 1));
-		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_1", 1, 0));
-		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_2", 4, 1));
+		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_1", 1, 1, 10, ""));
+		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_2", 4, 2, 10, ""));
 		vnfCompute.setScalingAspectDeltas(scaleDelta);
-		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo");
-		assertEquals(4, i);
+		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 0);
+		assertEquals(1, i);
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 1);
+		assertEquals(2, i);
+
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 5);
+		assertEquals(18, i);
+
+		// OverMas scale
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 15);
+		assertEquals(38, i);
 	}
 
 	@Test
@@ -193,14 +208,15 @@ public class ExecutionPlannerTest {
 
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setInitialNumberOfInstance(12);
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
 
-		final Set<VnfComputeAspectDelta> scaleDelta = new HashSet<>();
-		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 10, 0));
-		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 1));
-		// scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_1", 1, 0));
-		// scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_2", 4, 1));
+		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 10, 1, 10, ""));
+		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 2, 10, ""));
 		vnfCompute.setScalingAspectDeltas(scaleDelta);
-		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "premium");
-		assertEquals(0, i);
+		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "premium", 0);
+		assertEquals(1, i);
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "premium", 5);
+		assertEquals(11, i);
 	}
 }

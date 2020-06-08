@@ -11,4 +11,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 public interface VnfInstantiationLevelsJpa extends CrudRepository<VnfInstantiationLevels, UUID> {
 
 	List<VnfInstantiationLevels> findByVnfPackageAndLevelName(VnfPackage vnfPackage, String levelName);
+
+	List<VnfInstantiationLevels> findDistinctScaleInfoNameByVnfPackage(VnfPackage vnfPackage);
 }

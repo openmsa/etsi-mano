@@ -154,9 +154,9 @@ public class ExecutionPlanner {
 	}
 
 	@NotNull
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage) {
+	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
-		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs);
+		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, changeType);
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
 			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
@@ -223,41 +223,49 @@ public class ExecutionPlanner {
 		}));
 	}
 
-	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs) {
+	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs, final ChangeType changeType) {
 		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
 
-		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().forEach(x -> {
-			final VnfVl vlProtocol = vnfPackageService.findVirtualLnkById(x.getVnfVirtualLink().getId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
-			final UnitOfWork uow = new VirtualLinkUow(x, vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
-			vertex.add(vlProtocol.getToscaName(), uow);
-			g.addVertex(uow);
-		});
+		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
+				.filter(x -> x.getChangeType() == changeType)
+				.forEach(x -> {
+					final VnfVl vlProtocol = vnfPackageService.findVirtualLnkById(x.getVnfVirtualLink().getId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
+					final UnitOfWork uow = new VirtualLinkUow(x, vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
+					vertex.add(vlProtocol.getToscaName(), uow);
+					g.addVertex(uow);
+				});
 
-		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualStorages().forEach(x -> {
-			final VnfStorage vstorage = vnfPackageService.findVirtualStorageById(x.getVnfVirtualStorage().getId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getVnfVirtualStorage().getId()));
-			UnitOfWork uow;
-			if ("BLOCK".equals(vstorage.getType())) {
-				uow = new StorageUow(x, vstorage);
-			} else {
-				uow = new ObjectStorageUow(x, vstorage, vstorage.getToscaName());
-			}
-			vertex.add(vstorage.getToscaName(), uow);
-			g.addVertex(uow);
-		});
+		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
+				.filter(x -> x.getChangeType() == changeType)
+				.forEach(x -> {
+					final VnfStorage vstorage = vnfPackageService.findVirtualStorageById(x.getVnfVirtualStorage().getId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getVnfVirtualStorage().getId()));
+					UnitOfWork uow;
+					if ("BLOCK".equals(vstorage.getType())) {
+						uow = new StorageUow(x, vstorage);
+					} else {
+						uow = new ObjectStorageUow(x, vstorage, vstorage.getToscaName());
+					}
+					vertex.add(vstorage.getToscaName(), uow);
+					g.addVertex(uow);
+				});
 
-		vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().forEach(x -> {
-			final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-			final UnitOfWork uow = new ComputeUow(x, compute);
-			vertex.add(compute.getToscaName(), uow);
-			g.addVertex(uow);
-		});
+		vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().stream()
+				.filter(x -> x.getChangeType() == changeType)
+				.forEach(x -> {
+					final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
+					final UnitOfWork uow = new ComputeUow(x, compute);
+					vertex.add(compute.getToscaName(), uow);
+					g.addVertex(uow);
+				});
 		final Set<VnfInstantiatedExtCp> extCp = vnfLcmOpOccs.getResourceChanges().getAffectedExtCp();
-		extCp.forEach(x -> {
-			final VnfExtCp lextCp = vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVnfExtCp().getId()));
-			final UnitOfWork uow = new VnfExtCpUow(x, lextCp);
-			vertex.add(lextCp.getToscaName(), uow);
-			g.addVertex(uow);
-		});
+		extCp.stream()
+				.filter(x -> x.getChangeType() == changeType)
+				.forEach(x -> {
+					final VnfExtCp lextCp = vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getVnfExtCp().getId()));
+					final UnitOfWork uow = new VnfExtCpUow(x, lextCp);
+					vertex.add(lextCp.getToscaName(), uow);
+					g.addVertex(uow);
+				});
 		return vertex;
 	}
 
@@ -287,10 +295,14 @@ public class ExecutionPlanner {
 	}
 
 	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final int level) {
-		final int base = Optional.ofNullable(vnfCompute.getInitialNumberOfInstance()).orElse(Integer.valueOf(1)).intValue();
 		if (null == instantiationLevel) {
-			return base;
+			return Optional.ofNullable(vnfCompute.getInitialNumberOfInstance()).orElse(Integer.valueOf(1)).intValue();
 		}
+		final VduInstantiationLevel il = vnfCompute.getInstantiationLevel().stream()
+				.filter(x -> x.getLevelName().equals(instantiationLevel))
+				.findFirst()
+				.orElse(new VduInstantiationLevel(1));
+		final int base = il.getNumberOfInstances();
 		final List<VnfComputeAspectDelta> vnfComputeAspectDeltas = new ArrayList<>();
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfCompute.getScalingAspectDeltas()) {
 			final List<VnfInstantiationLevels> instLev = vnfInstantiationLevels.stream()
@@ -302,10 +314,18 @@ public class ExecutionPlanner {
 			vnfComputeAspectDeltas.add(vnfComputeAspectDelta);
 		}
 		int cnt = 0;
+		int apply = 0;
+		VnfComputeAspectDelta last = new VnfComputeAspectDelta("", "", 1, 1, 1, null);
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfComputeAspectDeltas) {
 			if (vnfComputeAspectDelta.getLevel() <= level) {
 				cnt += vnfComputeAspectDelta.getNumberOfInstances().intValue();
+				last = vnfComputeAspectDelta;
+				apply++;
 			}
+		}
+		final int maxLevel = Math.min(level, last.getMaxScaleLevel());
+		for (int i = apply; i < maxLevel; i++) {
+			cnt += last.getNumberOfInstances();
 		}
 		return base + cnt;
 	}
@@ -328,7 +348,9 @@ public class ExecutionPlanner {
 			} else {
 				final Set<ScaleInfo> scaling = lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus();
 				if (null != scaling) {
-					scaling.stream().map(y -> new VnfInstantiationLevels(y.getAspectId(), y.getAspectId(), y.getScaleLevel()));
+					instantiationLevels = scaling.stream()
+							.map(y -> new VnfInstantiationLevels(y.getAspectId(), y.getAspectId(), y.getScaleLevel()))
+							.collect(Collectors.toSet());
 				}
 			}
 			final int wantedNumInst = getNumberOfInstance(instantiationLevels, x, instantiationLevelId, 0);
@@ -441,6 +463,7 @@ public class ExecutionPlanner {
 			instantiatedCompute.setResourceId(poped.getResourceId());
 			instantiatedCompute.setInstantiationLevel(scaleLevel);
 			instantiatedCompute.setVnfLcmOpOccs(lcmOpOccs);
+			instantiatedCompute.setVnfCompute(x);
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(instantiatedCompute);
 			x.getStorages().forEach(y -> {
 				// XXX Delete Storage, but we need a vdu.
@@ -732,5 +755,14 @@ public class ExecutionPlanner {
 		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
 		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
 		return g;
+	}
+
+	public ListenableGraph<UnitOfWork, ConnectivityEdge> planForRemoval(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = plan(localLcmOpOccs, vnfPkg, ChangeType.REMOVED);
+		return revert(plan);
+	}
+
+	public ListenableGraph<UnitOfWork, ConnectivityEdge> planForCreation(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
+		return plan(localLcmOpOccs, vnfPkg, ChangeType.ADDED);
 	}
 }

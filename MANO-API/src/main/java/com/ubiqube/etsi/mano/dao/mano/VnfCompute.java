@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -236,6 +237,13 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	public void setBootData(final String bootData) {
 		this.bootData = bootData;
+	}
+
+	public void addVduInstantiationLevel(final VduInstantiationLevel _vduInstantiationLevel) {
+		if (null == instantiationLevel) {
+			instantiationLevel = new LinkedHashSet<>();
+		}
+		instantiationLevel.add(_vduInstantiationLevel);
 	}
 
 }

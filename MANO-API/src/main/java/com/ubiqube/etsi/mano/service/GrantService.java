@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
@@ -51,6 +52,10 @@ public class GrantService {
 		addGrantsCompute(grants, lcmOpOccs.getResourceChanges().getAffectedVnfcs());
 		addGrantsVl(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualLinks());
 		addGrantsStorage(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualStorages());
+		removeGrantsCompute(grants, lcmOpOccs.getResourceChanges().getAffectedVnfcs());
+		removeGrantsVl(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualLinks());
+		removeGrantsStorage(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualStorages());
+		removeGrantsLinkPorts(grants, lcmOpOccs.getResourceChanges().getAffectedExtCp());
 		// addGrantsLinkPorts(grants,
 		// lcmOpOccs.getResourceChanges().getAffectedExtCp());
 
@@ -75,10 +80,8 @@ public class GrantService {
 		grants.setFlavourId(vnfPackage.getFlavorId());
 		grants.setAutomaticInvocation(false);
 		grants.setOperation(state.toString());
-		/// XXX: Have a closer look on lcm_operations_configuration or vnf_profile.
-		grants.setInstantiationLevelId("0");
 		grants.setVnfLcmOpOccs(lcmOpOccs);
-		// grants.setInstantiationLevelId(vnfInstance.getI);
+		grants.setInstantiationLevelId(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId());
 		return grants;
 	}
 
@@ -88,79 +91,93 @@ public class GrantService {
 	}
 
 	private static void addGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfInstantiatedStorages) {
-		final Set<GrantInformation> res = vnfInstantiatedStorages.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.STORAGE);
-			grantInformation.setVduId(x.getVnfVirtualStorage().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedStorages.stream()
+				.filter(x -> x.getChangeType() == ChangeType.ADDED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.STORAGE);
+					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void addGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfInstantiatedVirtualLinks) {
-		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.VL);
-			grantInformation.setVduId(x.getVnfVirtualLink().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream()
+				.filter(x -> x.getChangeType() == ChangeType.ADDED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.VL);
+					grantInformation.setVduId(x.getVnfVirtualLink().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfInstantiatedComputes) {
-		final Set<GrantInformation> res = vnfInstantiatedComputes.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.COMPUTE);
-			grantInformation.setVduId(x.getVnfCompute().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedComputes.stream()
+				.filter(x -> x.getChangeType() == ChangeType.ADDED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.COMPUTE);
+					grantInformation.setVduId(x.getVnfCompute().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfInstantiatedExtCp> vnfInstantiatedExtCps) {
-		final Set<GrantInformation> res = vnfInstantiatedExtCps.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.LINKPORT);
-			grantInformation.setVduId(x.getVnfExtCp().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedExtCps.stream()
+				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.LINKPORT);
+					grantInformation.setVduId(x.getVnfExtCp().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfInstantiatedStorages) {
-		final Set<GrantInformation> res = vnfInstantiatedStorages.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.STORAGE);
-			grantInformation.setVduId(x.getVnfVirtualStorage().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedStorages.stream()
+				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.STORAGE);
+					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfInstantiatedVirtualLinks) {
-		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.VL);
-			grantInformation.setVduId(x.getVnfVirtualLink().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream()
+				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.VL);
+					grantInformation.setVduId(x.getVnfVirtualLink().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfInstantiatedComputes) {
-		final Set<GrantInformation> res = vnfInstantiatedComputes.stream().map(x -> {
-			final GrantInformation grantInformation = new GrantInformation();
-			grantInformation.setResourceDefinitionId(x.getId().toString());
-			grantInformation.setType(TypeEnum.COMPUTE);
-			grantInformation.setVduId(x.getVnfCompute().getId());
-			return grantInformation;
-		}).collect(Collectors.toSet());
+		final Set<GrantInformation> res = vnfInstantiatedComputes.stream()
+				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
+				.map(x -> {
+					final GrantInformation grantInformation = new GrantInformation();
+					grantInformation.setResourceDefinitionId(x.getId().toString());
+					grantInformation.setType(TypeEnum.COMPUTE);
+					grantInformation.setVduId(x.getVnfCompute().getId());
+					return grantInformation;
+				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 

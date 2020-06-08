@@ -89,4 +89,8 @@ public class VnfPackageService {
 		return vnfInstantiationLevelsJpa.findByVnfPackageAndLevelName(vnfPackage, level);
 	}
 
+	public List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfPacckage(final VnfPackage vnfPackage) {
+		return vnfInstantiationLevelsJpa.findDistinctScaleInfoNameByVnfPackage(vnfPackage);
+	}
+
 }

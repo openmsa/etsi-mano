@@ -15,6 +15,8 @@ public class VnfScaleInfo implements Serializable {
 
 	private Integer numberOfSteps = null;
 
+	private String aspectId;
+
 	public TypeEnum getScaleType() {
 		return scaleType;
 	}
@@ -29,6 +31,14 @@ public class VnfScaleInfo implements Serializable {
 
 	public void setNumberOfSteps(final Integer numberOfSteps) {
 		this.numberOfSteps = numberOfSteps;
+	}
+
+	public String getAspectId() {
+		return aspectId;
+	}
+
+	public void setAspectId(final String aspectId) {
+		this.aspectId = aspectId;
 	}
 
 }
