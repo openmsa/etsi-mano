@@ -9,7 +9,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -41,7 +41,7 @@ public final class LcmFactory {
 		vnfInstance.setVnfdId(vnfPkgInfo.getVnfdId());
 		vnfInstance.setVnfdVersion(vnfPkgInfo.getVnfdVersion());
 
-		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
+		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
 		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);

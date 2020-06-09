@@ -108,10 +108,12 @@ public class VnfLcmService {
 	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE_TO_LEVEL, vnfInstance.getId());
 		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(scaleVnfToLevelRequest.getInstantiationLevelId());
-		final Set<ScaleInfo> scaleStatus = scaleVnfToLevelRequest.getScaleInfo().stream()
-				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
-				.collect(Collectors.toSet());
-		lcmOpOccs.getVnfInstantiatedInfo().setScaleStatus(scaleStatus);
+		if (scaleVnfToLevelRequest.getScaleInfo() != null) {
+			final Set<ScaleInfo> scaleStatus = scaleVnfToLevelRequest.getScaleInfo().stream()
+					.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
+					.collect(Collectors.toSet());
+			lcmOpOccs.getVnfInstantiatedInfo().setScaleStatus(scaleStatus);
+		}
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 

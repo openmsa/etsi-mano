@@ -88,7 +88,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	private Set<VnfInstantiatedBase> resourceHandleEntity;
 
 	@Embedded
-	private VnfScaleInfo VnfScaleInfo;
+	private VnfScaleInfo vnfScaleInfo = new VnfScaleInfo();
 
 	@Embedded
 	private Audit audit;
@@ -215,11 +215,11 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	}
 
 	public VnfScaleInfo getVnfScaleInfo() {
-		return VnfScaleInfo;
+		return vnfScaleInfo;
 	}
 
-	public void setVnfScaleInfo(final VnfScaleInfo vnfScaleInfo) {
-		VnfScaleInfo = vnfScaleInfo;
+	public void setVnfScaleInfo(final VnfScaleInfo _vnfScaleInfo) {
+		vnfScaleInfo = _vnfScaleInfo;
 	}
 
 	@Override

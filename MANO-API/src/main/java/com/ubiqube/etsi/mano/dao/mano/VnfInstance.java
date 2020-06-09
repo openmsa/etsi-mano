@@ -38,7 +38,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	private UUID id = null;
 
 	@Embedded
-	private VnfInstantiatedInfo instantiatedVnfInfo = null;
+	private VnfInstanceStatus instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
 	@Field
@@ -100,7 +100,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		return id;
 	}
 
-	public VnfInstantiatedInfo getInstantiatedVnfInfo() {
+	public VnfInstanceStatus getInstantiatedVnfInfo() {
 		return instantiatedVnfInfo;
 	}
 
@@ -144,7 +144,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		this.id = id;
 	}
 
-	public void setInstantiatedVnfInfo(final VnfInstantiatedInfo instantiatedVnfInfo) {
+	public void setInstantiatedVnfInfo(final VnfInstanceStatus instantiatedVnfInfo) {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 

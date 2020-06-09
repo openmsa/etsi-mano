@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -75,20 +76,19 @@ public class VnfInstanceService {
 	}
 
 	public int getNumberOfLiveInstance(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
-		return vnfLiveInstanceJpa.countByVnfInstanceAndResourceId(vnfInstance, vnfCompute.getId());
+		return vnfLiveInstanceJpa.countByVnfInstanceAndVduId(vnfInstance, vnfCompute.getId());
 	}
 
-	public Deque<VnfInstantiatedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
-		// XXX maybe we have a sort problem. Sort is given by Tosca instantiation level.
-		return vnfInstantiedComputeJpa.findByLiveInstanceOfVnfInstance(vnfInstance).stream().collect(Collectors.toCollection(ArrayDeque::new));
+	public Deque<VnfLiveInstance> getLiveComputeInstanceOf(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
+		return vnfLiveInstanceJpa.findByVduIdAndVnfInstance(vnfCompute.getId(), vnfInstance).stream().collect(Collectors.toCollection(ArrayDeque::new));
 	}
 
 	public int getNumberOfLiveVl(final VnfInstance vnfInstance, final VnfVl x) {
-		return vnfLiveInstanceJpa.countByVnfInstanceAndResourceId(vnfInstance, x.getId());
+		return vnfLiveInstanceJpa.countByVnfInstanceAndVduId(vnfInstance, x.getId());
 	}
 
 	public int getNumberOfLiveExtCp(final VnfInstance vnfInstance, final VnfExtCp extCp) {
-		return vnfLiveInstanceJpa.countByVnfInstanceAndResourceId(vnfInstance, extCp.getId());
+		return vnfLiveInstanceJpa.countByVnfInstanceAndVduId(vnfInstance, extCp.getId());
 	}
 
 	public VnfInstantiatedCompute save(final VnfInstantiatedCompute vnfInstantiedCompute) {

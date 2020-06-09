@@ -23,12 +23,12 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
@@ -150,8 +150,8 @@ public class VnfmActions {
 		final ExecutionResults<UnitOfWork, String> createResults = executor.execCreate(createPlan, vimConnection, vim, context);
 		setResultLcmInstance(localLcmOpOccs, localVnfInstance, createResults, InstantiationStateEnum.INSTANTIATED);
 		if (localLcmOpOccs.getVnfInstantiatedInfo().getScaleStatus() != null) {
-			final Set<ScaleInfo> scaleInfos = localLcmOpOccs.getVnfInstantiatedInfo().getScaleStatus().stream()
-					.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
+			final Set<VnfInstanceScaleInfo> scaleInfos = localLcmOpOccs.getVnfInstantiatedInfo().getScaleStatus().stream()
+					.map(x -> new VnfInstanceScaleInfo(x.getAspectId(), x.getScaleLevel()))
 					.collect(Collectors.toSet());
 			localVnfInstance.getInstantiatedVnfInfo().setScaleStatus(scaleInfos);
 		}
@@ -285,14 +285,14 @@ public class VnfmActions {
 					il = rhe.getInstantiationLevel().getLevelName();
 				}
 				if (null != rhe.getId()) {
-					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, localLcm, rhe.getVduId());
+					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, localLcm, rhe.getResourceId(), rhe.getVduId());
 					vnfLiveInstanceJpa.save(vli);
 				} else {
 					LOG.warn("Could not store: {}", x.getId().getName());
 				}
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());
-				final VnfLiveInstance vli = vnfLiveInstanceJpa.findByVnfInstantiatedBaseId(rhe.getRemovedInstantiated());
+				final VnfLiveInstance vli = vnfLiveInstanceJpa.findById(rhe.getRemovedInstantiated()).orElseThrow(() -> new NotFoundException("" + rhe.getId()));
 				vnfLiveInstanceJpa.deleteById(vli.getId());
 			}
 		});

@@ -55,6 +55,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -451,16 +452,16 @@ public class ExecutionPlanner {
 	}
 
 	private void removeVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance, final VnfCompute x, final VduInstantiationLevel scaleLevel, final int number) {
-		final Deque<VnfInstantiatedCompute> instantiated = vnfInstanceService.getLiveComputeInstanceOf(vnfInstance, x);
+		final Deque<VnfLiveInstance> instantiated = vnfInstanceService.getLiveComputeInstanceOf(vnfInstance, x);
 		for (int i = 0; i < number; i++) {
 			final VnfInstantiatedCompute instantiatedCompute = new VnfInstantiatedCompute();
 			instantiatedCompute.setChangeType(ChangeType.REMOVED);
 			instantiatedCompute.setStatus(InstantiationStatusType.NOT_STARTED);
 			instantiatedCompute.setVduId(x.getId());
-			final VnfInstantiatedCompute poped = instantiated.pop();
+			final VnfLiveInstance poped = instantiated.pop();
 			LOG.info("Removing VNF Compute instance {}", poped.getId());
 			instantiatedCompute.setRemovedInstantiated(poped.getId());
-			instantiatedCompute.setResourceId(poped.getResourceId());
+			instantiatedCompute.setResourceId(poped.getResourceId().toString());
 			instantiatedCompute.setInstantiationLevel(scaleLevel);
 			instantiatedCompute.setVnfLcmOpOccs(lcmOpOccs);
 			instantiatedCompute.setVnfCompute(x);
