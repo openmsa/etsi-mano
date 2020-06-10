@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
@@ -122,6 +124,23 @@ public class VnfLcmService {
 		lcmOpOccs.getVnfScaleInfo().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
 		lcmOpOccs.getVnfScaleInfo().setScaleType(scaleVnfRequest.getType());
 		lcmOpOccs.getVnfScaleInfo().setAspectId(scaleVnfRequest.getAspectId());
+		final Set<ScaleInfo> scaleStatus = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+				.filter(x -> x.getAspectId().equals(scaleVnfRequest.getAspectId()))
+				.map(x -> new ScaleInfo(x.getAspectId(), addDec(scaleVnfRequest.getType(), scaleVnfRequest.getNumberOfSteps(), x.getScaleLevel())))
+				.collect(Collectors.toSet());
+		lcmOpOccs.getVnfInstantiatedInfo().setScaleStatus(scaleStatus);
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+	}
+
+	private @NotNull Integer addDec(@NotNull final TypeEnum type, final Integer numberOfSteps, final Integer scaleLevel) {
+		switch (type) {
+		case IN:
+			return Math.max(0, scaleLevel - numberOfSteps);
+		case OUT:
+			return scaleLevel - numberOfSteps;
+		default:
+			break;
+		}
+		return null;
 	}
 }
