@@ -17,6 +17,17 @@ public class VnfScaleInfo implements Serializable {
 
 	private String aspectId;
 
+	public VnfScaleInfo() {
+		// Nothing.
+	}
+
+	public VnfScaleInfo(final TypeEnum scaleType, final String aspectId, final Integer numberOfSteps) {
+		super();
+		this.scaleType = scaleType;
+		this.numberOfSteps = numberOfSteps;
+		this.aspectId = aspectId;
+	}
+
 	public TypeEnum getScaleType() {
 		return scaleType;
 	}
