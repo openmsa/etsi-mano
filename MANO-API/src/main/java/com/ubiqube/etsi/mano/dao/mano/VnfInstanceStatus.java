@@ -18,6 +18,8 @@ public class VnfInstanceStatus {
 
 	private String instantiationLevelId = null;
 
+	private String flavourId;
+
 	// Not sure it's needed here.
 	@Enumerated(EnumType.STRING)
 	private OperationalStateType vnfState = null;
@@ -36,6 +38,14 @@ public class VnfInstanceStatus {
 
 	public void setInstantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
+	}
+
+	public String getFlavourId() {
+		return flavourId;
+	}
+
+	public void setFlavourId(final String flavourId) {
+		this.flavourId = flavourId;
 	}
 
 	public OperationalStateType getVnfState() {
