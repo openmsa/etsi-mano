@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -29,7 +28,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
-import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -168,23 +166,19 @@ public class PackagingManager {
 				vnfCompute.setInstantiationLevel(ils);
 			});
 		});
-		vduScalingAspectDeltas.forEach(x -> {
-			x.getTargets().forEach(y -> {
-				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
-				int level = 1;
-				final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
-				for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
-					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y));
-				}
-			});
-		});
+		vduScalingAspectDeltas.forEach(x -> x.getTargets().forEach(y -> {
+			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+			int level = 1;
+			final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
+			for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
+				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y));
+			}
+		}));
 		// Minimal instance at instantiate time.
-		vduInitialDeltas.forEach(x -> {
-			x.getTargets().forEach(y -> {
-				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
-				vnfc.setInitialNumberOfInstance(x.getInitialDelta().getNumberOfInstances());
-			});
-		});
+		vduInitialDeltas.forEach(x -> x.getTargets().forEach(y -> {
+			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+			vnfc.setInitialNumberOfInstance(x.getInitialDelta().getNumberOfInstances());
+		}));
 	}
 
 	@Nonnull
@@ -205,19 +199,8 @@ public class PackagingManager {
 	private static Set<String> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
 		return vcNodes.stream()
 				.filter(x -> x.getVirtualBinding().equals(toscaName))
-				.map(x -> x.getVirtualLink())
+				.map(VnfLinkPort::getVirtualLink)
 				.collect(Collectors.toSet());
-	}
-
-	private static void verifyImagePath(final Set<SoftwareImage> softwareImages) {
-		softwareImages.forEach(x -> {
-			if (null != x.getImagePath()) {
-				final File file = new File(x.getImagePath());
-				if (!file.exists()) {
-					throw new NotFoundException("File " + x.getImagePath() + " Could not be found");
-				}
-			}
-		});
 	}
 
 	private static byte[] getUrlContent(final String uri) {
