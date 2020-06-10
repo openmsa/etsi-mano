@@ -59,6 +59,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
@@ -295,15 +296,17 @@ public class ExecutionPlanner {
 		return gNew;
 	}
 
-	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final int level) {
+	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
 		if (null == instantiationLevel) {
 			return Optional.ofNullable(vnfCompute.getInitialNumberOfInstance()).orElse(Integer.valueOf(1)).intValue();
 		}
+		// Get base level or 1 instance.
 		final VduInstantiationLevel il = vnfCompute.getInstantiationLevel().stream()
 				.filter(x -> x.getLevelName().equals(instantiationLevel))
 				.findFirst()
 				.orElse(new VduInstantiationLevel(1));
 		final int base = il.getNumberOfInstances();
+		// Get Delta per levels.
 		final List<VnfComputeAspectDelta> vnfComputeAspectDeltas = new ArrayList<>();
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfCompute.getScalingAspectDeltas()) {
 			final List<VnfInstantiationLevels> instLev = vnfInstantiationLevels.stream()
@@ -316,15 +319,16 @@ public class ExecutionPlanner {
 		}
 		int cnt = 0;
 		int apply = 0;
+		// Apply delta.
 		VnfComputeAspectDelta last = new VnfComputeAspectDelta("", "", 1, 1, 1, null);
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfComputeAspectDeltas) {
-			if (vnfComputeAspectDelta.getLevel() <= level) {
+			if (vnfComputeAspectDelta.getLevel() <= myscaling.getScaleLevel()) {
 				cnt += vnfComputeAspectDelta.getNumberOfInstances().intValue();
 				last = vnfComputeAspectDelta;
 				apply++;
 			}
 		}
-		final int maxLevel = Math.min(level, last.getMaxScaleLevel());
+		final int maxLevel = Math.min(myscaling.getScaleLevel(), last.getMaxScaleLevel());
 		for (int i = apply; i < maxLevel; i++) {
 			cnt += last.getNumberOfInstances();
 		}
@@ -342,27 +346,42 @@ public class ExecutionPlanner {
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		// instantiationLevelId is aspectId
 		vnfPakage.getVnfCompute().forEach(x -> {
-			final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
 			Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
+			final Set<ScaleInfo> scaling = lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus();
 			if (null != instantiationLevelId) {
+				// Get Instantiation levels or baseLine levels..
 				instantiationLevels = resolvLevelName(instantiationLevelId, 0, vnfPakage.getVnfInstantiationLevels());
-			} else {
-				final Set<ScaleInfo> scaling = lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus();
-				if (null != scaling) {
-					instantiationLevels = scaling.stream()
-							.map(y -> new VnfInstantiationLevels(y.getAspectId(), y.getAspectId(), y.getScaleLevel()))
-							.collect(Collectors.toSet());
+				// filter using tis vnfc.
+				instantiationLevels = instantiationLevels.stream()
+						.filter(y -> match(x, y))
+						.collect(Collectors.toSet());
+
+			}
+			// Filter myScaling.
+			ScaleInfo myscaling = new ScaleInfo("whatEver", 0);
+			if (null != scaling) {
+				final Set<ScaleInfo> myscalings = scaling.stream()
+						.filter(y -> match(x, y))
+						.collect(Collectors.toSet());
+				if (myscalings.size() > 1) {
+					throw new GenericException("VDU " + x.getToscaName() + " have multiple scalings.");
+				} else if (!myscalings.isEmpty()) {
+					myscaling = myscalings.iterator().next();
 				}
 			}
-			final int wantedNumInst = getNumberOfInstance(instantiationLevels, x, instantiationLevelId, 0);
-			LOG.info("{}: Actual currentInst={} wantedInst={}", x.getToscaName(), currentInst, wantedNumInst);
+			if (!instantiationLevels.isEmpty()) {
+				final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
+				final int wantedNumInst = getNumberOfInstance(instantiationLevels, x, instantiationLevelId, myscaling);
+				LOG.info("{}: Actual currentInst={} wantedInst={}", x.getToscaName(), currentInst, wantedNumInst);
 
-			if (currentInst < wantedNumInst) {
-				addVnfComputeInstance(lcmOpOccs, x, vnfPakage, null, currentInst, wantedNumInst - currentInst);
-			} else if (currentInst > wantedNumInst) {
-				removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, null, currentInst - wantedNumInst);
+				if (currentInst < wantedNumInst) {
+					addVnfComputeInstance(lcmOpOccs, x, vnfPakage, null, currentInst, wantedNumInst - currentInst);
+				} else if (currentInst > wantedNumInst) {
+					removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, null, currentInst - wantedNumInst);
+				}
+			} else {
+				LOG.info("Ignoring compute: {}", x.getId());
 			}
-
 		});
 		vnfPakage.getVnfVl().forEach(x -> {
 			// XXX They should scale.
@@ -409,6 +428,18 @@ public class ExecutionPlanner {
 				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
 			}
 		});
+	}
+
+	private static boolean match(final VnfCompute vnfCompute, final VnfInstantiationLevels vil) {
+		return !vnfCompute.getScalingAspectDeltas().stream()
+				.filter(x -> x.getAspectName().equals(vil.getScaleInfoName()))
+				.collect(Collectors.toList()).isEmpty();
+	}
+
+	private static boolean match(final VnfCompute vnfCompute, final ScaleInfo scaleInfo) {
+		return !vnfCompute.getScalingAspectDeltas().stream()
+				.filter(x -> x.getAspectName().equals(scaleInfo.getAspectId()))
+				.collect(Collectors.toList()).isEmpty();
 	}
 
 	private void addVnfComputeInstance(final VnfLcmOpOccs lcmOpOccs, final VnfCompute vnfCompute, final VnfPackage vnfPackage, final VduInstantiationLevel scaleLevel, final int currentCount, final int number) {
@@ -477,24 +508,32 @@ public class ExecutionPlanner {
 		instantiatedCompute.forEach(x -> {
 			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
 			affectedCompute.setVnfCompute(x.getVnfCompute());
+			final VnfLiveInstance vnfLiveInstance = vnfInstanceService.findLiveInstanceByInstantiated(x.getId());
+			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
 		});
 		final List<VnfInstantiatedExtCp> instantiatedExtCps = vnfInstanceService.getLiveExtCpInstanceOf(lcmOpOccs.getVnfInstance());
 		instantiatedExtCps.forEach(x -> {
 			final VnfInstantiatedExtCp affectedCompute = copyInstantiedResource(x, new VnfInstantiatedExtCp(), lcmOpOccs);
 			affectedCompute.setVnfExtCp(x.getVnfExtCp());
+			final VnfLiveInstance vnfLiveInstance = vnfInstanceService.findLiveInstanceByInstantiated(x.getId());
+			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedExtCp(affectedCompute);
 		});
 		final List<VnfInstantiatedStorage> instantiatedStorages = vnfInstanceService.getLiveStorageInstanceOf(lcmOpOccs.getVnfInstance());
 		instantiatedStorages.forEach(x -> {
 			final VnfInstantiatedStorage affectedStorage = copyInstantiedResource(x, new VnfInstantiatedStorage(), lcmOpOccs);
 			affectedStorage.setVnfVirtualStorage(x.getVnfVirtualStorage());
+			final VnfLiveInstance vnfLiveInstance = vnfInstanceService.findLiveInstanceByInstantiated(x.getId());
+			affectedStorage.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(affectedStorage);
 		});
 		final List<VnfInstantiatedVirtualLink> instantiatedVirtualLinks = vnfInstanceService.getLiveVirtualLinkInstanceOf(lcmOpOccs.getVnfInstance());
 		instantiatedVirtualLinks.forEach(x -> {
 			final VnfInstantiatedVirtualLink affectedVirtualLink = copyInstantiedResource(x, new VnfInstantiatedVirtualLink(), lcmOpOccs);
 			affectedVirtualLink.setVnfVirtualLink(x.getVnfVirtualLink());
+			final VnfLiveInstance vnfLiveInstance = vnfInstanceService.findLiveInstanceByInstantiated(x.getId());
+			affectedVirtualLink.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedVirtualLink(affectedVirtualLink);
 		});
 	}

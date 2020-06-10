@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -108,6 +109,7 @@ public class VnfmActions {
 		}
 		// Parameters are in the lcmOpOccs.
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
+		final Set<ScaleInfo> newScale = merge(lcmOpOccs, vnfInstance);
 		executionPlanner.makePrePlan(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
 		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 
@@ -131,7 +133,7 @@ public class VnfmActions {
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> removePlan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
-		// XXXWe can't refine a removal plan, because it has already been reverted.
+		// XXX We can't refine a removal plan, because it has already been reverted.
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
@@ -156,10 +158,26 @@ public class VnfmActions {
 			localVnfInstance.getInstantiatedVnfInfo().setScaleStatus(scaleInfos);
 		}
 		LOG.info("Saving VNF Instance.");
+		localVnfInstance.getInstantiatedVnfInfo().setInstantiationLevelId(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId());
+		localVnfInstance.getInstantiatedVnfInfo().setFlavourId(lcmOpOccs.getVnfInstantiatedInfo().getFlavourId());
 		vnfInstancesService.save(localVnfInstance);
-
+		// XXX Copy new ScaleInfo.
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
+	}
+
+	private static Set<ScaleInfo> merge(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
+		final Set<ScaleInfo> tmp = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+				.filter(x -> notIn(x.getAspectId(), lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus()))
+				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
+				.collect(Collectors.toSet());
+		tmp.addAll(lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus());
+		return tmp;
+	}
+
+	private static boolean notIn(final String aspectId, final Set<ScaleInfo> scaleInfos) {
+		return scaleInfos.stream()
+				.noneMatch(x -> x.getAspectId().equals(aspectId));
 	}
 
 	private Map<String, String> getLiveVl(final VnfInstance vnfInstance) {
@@ -324,7 +342,6 @@ public class VnfmActions {
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 			vnfLcmService.save(lcmOpOccs);
 			vnfInstancesService.save(vnfInstance);
 		}
