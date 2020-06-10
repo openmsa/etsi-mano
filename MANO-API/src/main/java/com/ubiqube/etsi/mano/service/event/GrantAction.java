@@ -198,14 +198,14 @@ public class GrantAction {
 			final SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
 				// Get Vim or create vim resource via Or-Vi
-				cache.computeIfAbsent(img.getName(), y -> {
+				final SoftwareImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
 					final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
 					return newImg.orElseGet(() -> {
 						// Use or-vi, Vim is not on the same server. and where is the path ?
 						return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
 					});
 				});
-				listVsie.add(mapSoftwareImage(img, x.getId(), vimInfo, vim));
+				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
 		});
 		final Set<VnfStorage> storage = vnfPackage.getVnfStorage();
