@@ -343,11 +343,10 @@ public class ExecutionPlanner {
 				.collect(Collectors.toSet());
 	}
 
-	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
+	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final Set<ScaleInfo> scaling) {
 		// instantiationLevelId is aspectId
 		vnfPakage.getVnfCompute().forEach(x -> {
 			Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
-			final Set<ScaleInfo> scaling = lcmOpOccs.getVnfInstantiatedInfo().getScaleStatus();
 			if (null != instantiationLevelId) {
 				// Get Instantiation levels or baseLine levels..
 				instantiationLevels = resolvLevelName(instantiationLevelId, 0, vnfPakage.getVnfInstantiationLevels());
@@ -380,7 +379,12 @@ public class ExecutionPlanner {
 					removeVnfComputeInstance(lcmOpOccs, vnfInstance, x, null, currentInst - wantedNumInst);
 				}
 			} else {
-				LOG.info("Ignoring compute: {}", x.getId());
+				LOG.warn("Node {} Doesn't have scale information.", x.getToscaName());
+				final int currentInst = vnfInstanceService.getNumberOfLiveInstance(vnfInstance, x);
+				if (currentInst == 0) {
+					addVnfComputeInstance(lcmOpOccs, x, vnfPakage, null, currentInst, 1);
+				}
+
 			}
 		});
 		vnfPakage.getVnfVl().forEach(x -> {

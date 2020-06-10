@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service.event;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -110,7 +111,7 @@ public class VnfmActions {
 		// Parameters are in the lcmOpOccs.
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		final Set<ScaleInfo> newScale = merge(lcmOpOccs, vnfInstance);
-		executionPlanner.makePrePlan(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs);
+		executionPlanner.makePrePlan(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId(), vnfPkg, vnfInstance, lcmOpOccs, newScale);
 		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 
 		// XXX Do it for VnfInfoModifications
@@ -159,11 +160,31 @@ public class VnfmActions {
 		}
 		LOG.info("Saving VNF Instance.");
 		localVnfInstance.getInstantiatedVnfInfo().setInstantiationLevelId(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId());
-		localVnfInstance.getInstantiatedVnfInfo().setFlavourId(lcmOpOccs.getVnfInstantiatedInfo().getFlavourId());
-		vnfInstancesService.save(localVnfInstance);
+		if (null != lcmOpOccs.getVnfInstantiatedInfo().getFlavourId()) {
+			localVnfInstance.getInstantiatedVnfInfo().setFlavourId(lcmOpOccs.getVnfInstantiatedInfo().getFlavourId());
+		}
 		// XXX Copy new ScaleInfo.
+		removeScaleScatus(localVnfInstance, newScale);
+		vnfInstancesService.save(localVnfInstance);
+
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
+	}
+
+	private static void removeScaleScatus(final VnfInstance localVnfInstance, final Set<ScaleInfo> newScale) {
+		final Set<VnfInstanceScaleInfo> scales = localVnfInstance.getInstantiatedVnfInfo().getScaleStatus();
+		newScale.stream()
+				.forEach(x -> find(scales, x.getAspectId()).ifPresent(scales::remove));
+		final Set<VnfInstanceScaleInfo> newScalings = newScale.stream()
+				.map(x -> new VnfInstanceScaleInfo(x.getAspectId(), x.getScaleLevel()))
+				.collect(Collectors.toSet());
+		scales.addAll(newScalings);
+	}
+
+	private static Optional<VnfInstanceScaleInfo> find(final Set<VnfInstanceScaleInfo> scales, final String aspectId) {
+		return scales.stream()
+				.filter(x -> x.getAspectId().equals(aspectId))
+				.findFirst();
 	}
 
 	private static Set<ScaleInfo> merge(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
@@ -369,6 +390,8 @@ public class VnfmActions {
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
 		setResultLcmInstance(localLcmOpOccs, vnfInstance, results, InstantiationStateEnum.NOT_INSTANTIATED);
 		LOG.info("Saving VNF Instance.");
+		vnfInstance.getInstantiatedVnfInfo().getScaleStatus().clear();
+		vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STOPPED);
 		vnfInstancesService.save(vnfInstance);
 
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, localLcmOpOccs.getId());
