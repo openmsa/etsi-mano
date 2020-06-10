@@ -80,7 +80,8 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
 
 	@Embedded
-	private OperateChanges operateChanges;
+	private OperateChanges operateChanges = new OperateChanges();
+
 	// private VnfInfoModifications changedInfo = null;
 
 	// @Transient
