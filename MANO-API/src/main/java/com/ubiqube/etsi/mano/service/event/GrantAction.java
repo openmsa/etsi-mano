@@ -44,7 +44,6 @@ import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
-import com.ubiqube.etsi.mano.service.vim.VimImage;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 @Service
@@ -173,14 +172,20 @@ public class GrantAction {
 
 	private static List<VimComputeResourceFlavourEntity> getFlavors(final VnfPackage vnfPackage, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
 		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
+		final Map<String, VimComputeResourceFlavourEntity> cache = new HashMap<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
-			final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), 10);
-			final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
-			vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
-			vcrfe.setResourceProviderId(vim.getType());
-			vcrfe.setVimFlavourId(flavorId);
-			vcrfe.setVnfdVirtualComputeDescId(x.getId().toString());
-			listVcrfe.add(vcrfe);
+			final String key = x.getNumVcpu() + "-" + x.getVirtualMemorySize();
+			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
+				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), 10);
+				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
+				vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
+				vcrfe.setResourceProviderId(vim.getType());
+				vcrfe.setVimFlavourId(flavorId);
+				return vcrfe;
+			});
+			final VimComputeResourceFlavourEntity vcre = new VimComputeResourceFlavourEntity(vcretmp);
+			vcre.setVnfdVirtualComputeDescId(x.getId().toString());
+			listVcrfe.add(vcre);
 		});
 		return listVcrfe;
 	}
