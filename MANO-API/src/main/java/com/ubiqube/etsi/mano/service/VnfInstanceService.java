@@ -152,4 +152,8 @@ public class VnfInstanceService {
 		vnfInstanceJpa.deleteById(vnfInstanceId);
 	}
 
+	public VnfLiveInstance findLiveInstanceByInstantiated(final UUID id) {
+		return vnfLiveInstanceJpa.findByVnfInstantiatedBaseId(id);
+	}
+
 }
