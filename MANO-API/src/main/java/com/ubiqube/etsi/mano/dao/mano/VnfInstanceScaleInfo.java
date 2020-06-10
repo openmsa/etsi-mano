@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.io.Serializable;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +40,7 @@ public class VnfInstanceScaleInfo implements Serializable {
 		this.id = id;
 	}
 
+	@Nonnull
 	public String getAspectId() {
 		return aspectId;
 	}
@@ -47,6 +49,7 @@ public class VnfInstanceScaleInfo implements Serializable {
 		this.aspectId = aspectId;
 	}
 
+	@Nonnull
 	public Integer getScaleLevel() {
 		return scaleLevel;
 	}
