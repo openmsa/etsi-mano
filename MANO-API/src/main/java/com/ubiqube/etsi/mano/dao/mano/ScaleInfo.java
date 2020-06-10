@@ -26,9 +26,9 @@ public class ScaleInfo implements Serializable {
 		// Nothing.
 	}
 
-	public ScaleInfo(@NotNull final String aspectId2, @NotNull final Integer scaleLevel2) {
-		aspectId = aspectId2;
-		scaleLevel = scaleLevel2;
+	public ScaleInfo(@NotNull final String _aspectId, @NotNull final Integer _scaleLevel) {
+		aspectId = _aspectId;
+		scaleLevel = _scaleLevel;
 	}
 
 	public UUID getId() {
