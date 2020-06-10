@@ -137,7 +137,7 @@ public class VnfLcmService {
 		case IN:
 			return Math.max(0, scaleLevel - numberOfSteps);
 		case OUT:
-			return scaleLevel - numberOfSteps;
+			return scaleLevel + numberOfSteps;
 		default:
 			break;
 		}
