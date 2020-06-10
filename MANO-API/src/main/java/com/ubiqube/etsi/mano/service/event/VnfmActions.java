@@ -455,10 +455,13 @@ public class VnfmActions {
 		instantiatedCompute.forEach(x -> {
 			if (lcmOpOccs.getOperateChanges().getTerminationType() == VnfOperationalStateType.STARTED) {
 				vim.startServer(vimConnection, x.getResourceId());
+				vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
 			} else {
 				vim.stopServer(vimConnection, x.getResourceId());
+				vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STOPPED);
 			}
 		});
+		vnfInstancesService.save(vnfInstance);
 	}
 
 	private static <T extends VnfInstantiatedBase> T copyInstantiedResource(final VnfInstantiatedBase source, final T inst, final VnfLcmOpOccs lcmOpOccs) {
