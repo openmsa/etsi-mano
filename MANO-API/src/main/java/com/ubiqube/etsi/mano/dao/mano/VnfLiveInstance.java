@@ -32,6 +32,9 @@ public class VnfLiveInstance implements BaseEntity, Auditable, Serializable {
 	@ManyToOne
 	private VnfLcmOpOccs vnfLcmOpOccs;
 
+	/**
+	 * VIM resourceId.
+	 */
 	private String resourceId;
 
 	private UUID vduId;
