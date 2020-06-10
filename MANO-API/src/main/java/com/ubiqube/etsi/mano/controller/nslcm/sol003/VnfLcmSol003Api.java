@@ -132,9 +132,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		ensureInstantiated(vnfInstance);
-		throw new GenericException("TODO");
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), operateVnfRequest);
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.accepted().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
 		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO

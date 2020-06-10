@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
@@ -142,5 +143,13 @@ public class VnfLcmService {
 			break;
 		}
 		return null;
+	}
+
+	public VnfLcmOpOccs createOperateOpOcc(final VnfInstance vnfInstance, final OperateVnfRequest operateVnfRequest) {
+		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.OPERATE, vnfInstance.getId());
+		operateVnfRequest.getChangeStateTo();
+		operateVnfRequest.getGracefulStopTimeout();
+		operateVnfRequest.getStopType();
+		return lcmOpOccs;
 	}
 }

@@ -79,6 +79,8 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	@Embedded
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
 
+	@Embedded
+	private OperateChanges operateChanges;
 	// private VnfInfoModifications changedInfo = null;
 
 	// @Transient
@@ -220,6 +222,14 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 
 	public void setVnfScaleInfo(final VnfScaleInfo _vnfScaleInfo) {
 		vnfScaleInfo = _vnfScaleInfo;
+	}
+
+	public OperateChanges getOperateChanges() {
+		return operateChanges;
+	}
+
+	public void setOperateChanges(final OperateChanges operateChanges) {
+		this.operateChanges = operateChanges;
 	}
 
 	@Override
