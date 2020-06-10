@@ -93,4 +93,17 @@ public class VnfPackageService {
 		return vnfInstantiationLevelsJpa.findDistinctScaleInfoNameByVnfPackage(vnfPackage);
 	}
 
+	public VnfPackage save(final VnfPackage vnfPackage) {
+		return vnfPackageJpa.save(vnfPackage);
+	}
+
+	public VnfPackage findVnfPackageByUniqName(final String uniqName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Optional<VnfPackage> findByDescriptorId(final String descriptorId) {
+		return vnfPackageJpa.findByDescriptorId(descriptorId);
+	}
+
 }
