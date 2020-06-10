@@ -94,8 +94,8 @@ public class GrantAction {
 		// Zones.
 		final Callable<String> getZone = () -> {
 			final String zoneId = chooseZone(vimInfo);
-			final Set<ZoneInfoEntity> zones = Collections.singleton(mapZone(zoneId, vimInfo));
-			grants.setZones(zones);
+			final ZoneInfoEntity zones = mapZone(zoneId, vimInfo);
+			grants.addZones(zones);
 			return zoneId;
 		};
 		final Future<String> futureZone = executorService.submit(getZone);

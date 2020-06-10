@@ -302,4 +302,13 @@ public class GrantResponse implements BaseEntity, Auditable {
 		extManagedVirtualLinks.add(extVl);
 	}
 
+	public void addZones(final ZoneInfoEntity zone) {
+		if (null == zones) {
+			zones = new HashSet<>();
+		}
+		zone.setGrants(this);
+		zones.add(zone);
+
+	}
+
 }
