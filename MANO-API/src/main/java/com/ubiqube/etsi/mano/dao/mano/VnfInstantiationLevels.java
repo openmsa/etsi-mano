@@ -76,7 +76,7 @@ public class VnfInstantiationLevels {
 
 	@Override
 	public String toString() {
-		return "VnfInstantiationLevels [id=" + id + ", levelName=" + levelName + ", scaleInfoName=" + scaleInfoName + ", scaleInfoLevel=" + scaleInfoLevel + ", vnfPackage=" + vnfPackage + "]";
+		return "VnfInstantiationLevels [id=" + id + ", levelName=" + levelName + ", scaleInfoName=" + scaleInfoName + ", scaleInfoLevel=" + scaleInfoLevel + ", vnfPackage=" + vnfPackage + "]\n";
 	}
 
 }
