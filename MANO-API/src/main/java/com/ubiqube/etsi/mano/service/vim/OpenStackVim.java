@@ -22,6 +22,7 @@ import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
+import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.BlockDeviceMappingCreate;
 import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Image;
@@ -41,7 +42,6 @@ import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
 import org.openstack4j.model.network.builder.SubnetBuilder;
 import org.openstack4j.model.storage.block.Volume;
-import org.openstack4j.model.storage.block.Volume.Status;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
@@ -307,7 +307,7 @@ public class OpenStackVim implements Vim {
 
 	private static void waitForVolumeCompletion(final BlockVolumeService volumes, final Volume volume) {
 		Volume localVolume = volume;
-		while ((localVolume.getStatus() == Status.CREATING) || (localVolume.getStatus() == Status.DOWNLOADING)) {
+		while ((localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.CREATING) || (localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.DOWNLOADING)) {
 			LOG.info("Waiting for volume: {}", volume.getId());
 			try {
 				Thread.sleep(500);
@@ -498,5 +498,17 @@ public class OpenStackVim implements Vim {
 		return os.networking().network().list().stream().filter(Network::isRouterExternal)
 				.collect(Collectors.toMap(Network::getName, Network::getId));
 
+	}
+
+	@Override
+	public void startServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().servers().action(resourceId, Action.START);
+	}
+
+	@Override
+	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().servers().action(resourceId, Action.STOP);
 	}
 }

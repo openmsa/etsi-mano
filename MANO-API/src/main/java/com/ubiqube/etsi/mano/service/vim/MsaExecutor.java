@@ -332,4 +332,16 @@ public class MsaExecutor implements Vim {
 		return null;
 	}
 
+	@Override
+	public void startServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

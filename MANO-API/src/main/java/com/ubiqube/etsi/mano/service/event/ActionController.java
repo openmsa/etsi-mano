@@ -48,6 +48,9 @@ public class ActionController {
 		case VNF_TERMINATE:
 			vnfmActions.vnfTerminate(objectId);
 			break;
+		case VNF_OPERATE:
+			vnfmActions.vnfOperate(objectId);
+			break;
 		case NSD_PKG_ONBOARD_FROM_BYTES:
 			packagingManager.nsOnboarding(objectId);
 			break;

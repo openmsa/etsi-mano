@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service.event;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
@@ -42,6 +44,7 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
@@ -138,6 +141,7 @@ public class VnfmActions {
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
+		localVnfInstance.setVimConnectionInfo(Collections.singleton(vimConnection));
 		//
 		executionPlanner.exportGraph(removePlan, vnfPkg.getId(), localVnfInstance, "remove");
 
@@ -419,7 +423,7 @@ public class VnfmActions {
 	}
 
 	public void scale(@NotNull final UUID lcmOpOccsId) {
-		Thread.currentThread().setName(lcmOpOccsId + "-SL");
+		Thread.currentThread().setName(lcmOpOccsId + "-SS");
 		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
 		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
 		try {
@@ -431,6 +435,41 @@ public class VnfmActions {
 			vnfLcmService.save(lcmOpOccs);
 		}
 		eventManager.sendNotification(NotificationEvent.VNF_SCALE, lcmOpOccsId);
+	}
+
+	public void vnfOperate(@NotNull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName(lcmOpOccsId + "-SS");
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+		// XXX duplicate of planner
+		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
+		instantiatedCompute.forEach(x -> {
+			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
+			affectedCompute.setVnfCompute(x.getVnfCompute());
+			final VnfLiveInstance vnfLiveInstance = vnfInstancesService.findLiveInstanceByInstantiated(x.getId());
+			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
+			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
+		});
+		final VimConnectionInformation vimConnection = vnfInstance.getVimConnectionInfo().iterator().next();
+		final Vim vim = vimManager.getVimById(vimConnection.getId());
+		instantiatedCompute.forEach(x -> {
+			if (lcmOpOccs.getOperateChanges().getTerminationType() == VnfOperationalStateType.STARTED) {
+				vim.startServer(vimConnection, x.getResourceId());
+			} else {
+				vim.stopServer(vimConnection, x.getResourceId());
+			}
+		});
+	}
+
+	private static <T extends VnfInstantiatedBase> T copyInstantiedResource(final VnfInstantiatedBase source, final T inst, final VnfLcmOpOccs lcmOpOccs) {
+		inst.setChangeType(ChangeType.REMOVED);
+		inst.setStatus(InstantiationStatusType.STARTED);
+		inst.setVduId(source.getVduId());
+		inst.setRemovedInstantiated(source.getId());
+		inst.setResourceId(source.getResourceId());
+		inst.setInstantiationLevel(source.getInstantiationLevel());
+		inst.setVnfLcmOpOccs(lcmOpOccs);
+		return inst;
 	}
 
 }

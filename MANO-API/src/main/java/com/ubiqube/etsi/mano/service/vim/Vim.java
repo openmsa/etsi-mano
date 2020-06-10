@@ -75,4 +75,8 @@ public interface Vim {
 
 	@Nonnull
 	Map<String, String> getPublicNetworks(VimConnectionInformation vimConnectionInformation);
+
+	void startServer(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	void stopServer(VimConnectionInformation vimConnectionInformation, String resourceId);
 }
