@@ -2,8 +2,10 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -191,14 +193,17 @@ public class GrantAction {
 	private static Set<VimSoftwareImageEntity> getSoftwareImage(final VnfPackage vnfPackage, final VimConnectionInformation vimInfo, final Vim vim) {
 		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
 		final Set<VnfCompute> vnfc = vnfPackage.getVnfCompute();
+		final Map<String, SoftwareImage> cache = new HashMap<>();
 		vnfc.forEach(x -> {
-			SoftwareImage img = x.getSoftwareImage();
+			final SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
 				// Get Vim or create vim resource via Or-Vi
-				final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
-				img = newImg.orElseGet(() -> {
-					// Use or-vi, Vim is not on the same server. and where is the path ?
-					return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
+				cache.computeIfAbsent(img.getName(), y -> {
+					final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
+					return newImg.orElseGet(() -> {
+						// Use or-vi, Vim is not on the same server. and where is the path ?
+						return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
+					});
 				});
 				listVsie.add(mapSoftwareImage(img, x.getId(), vimInfo, vim));
 			}
