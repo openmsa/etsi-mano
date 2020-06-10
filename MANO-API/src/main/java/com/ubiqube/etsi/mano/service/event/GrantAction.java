@@ -220,16 +220,10 @@ public class GrantAction {
 
 	private static VimSoftwareImageEntity mapSoftwareImage(final SoftwareImage softwareImage, final UUID vduId, final VimConnectionInformation vimInfo, final Vim vim) {
 		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
-		vsie.setVimSoftwareImageId(softwareImage.getVimId());
+		vsie.setVimSoftwareImageId(softwareImage.getId().toString());
 		vsie.setVnfdSoftwareImageId(vduId.toString());
 		vsie.setVimConnectionId(vimInfo.getId().toString());
 		vsie.setResourceProviderId(vim.getType());
-		if (null != softwareImage.getVimId()) {
-			// XXX
-		} else {
-			final VimImage vimImage = vim.getImagesInformations(vimInfo, softwareImage.getName());
-			vsie.setVimSoftwareImageId(vimImage.getId());
-		}
 		return vsie;
 	}
 
