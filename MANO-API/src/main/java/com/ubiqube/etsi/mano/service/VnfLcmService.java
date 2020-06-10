@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -147,9 +148,10 @@ public class VnfLcmService {
 
 	public VnfLcmOpOccs createOperateOpOcc(final VnfInstance vnfInstance, final OperateVnfRequest operateVnfRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.OPERATE, vnfInstance.getId());
-		operateVnfRequest.getChangeStateTo();
-		operateVnfRequest.getGracefulStopTimeout();
+		final OperateChanges opChanges = lcmOpOccs.getOperateChanges();
+		opChanges.setTerminationType(operateVnfRequest.getChangeStateTo());
+		opChanges.setGracefulTerminationTimeout(operateVnfRequest.getGracefulStopTimeout());
 		operateVnfRequest.getStopType();
-		return lcmOpOccs;
+		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 }
