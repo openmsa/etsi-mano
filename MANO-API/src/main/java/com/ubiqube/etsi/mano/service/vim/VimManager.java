@@ -10,7 +10,6 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -18,7 +17,7 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 
 @Service
-@DependsOn("liquibase")
+//@DependsOn("liquibase")
 public class VimManager {
 
 	private final List<Vim> vims;
