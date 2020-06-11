@@ -101,7 +101,10 @@ public class GrantAction {
 		// Zone Group
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		final Callable<ZoneGroupInformation> getServerGroup = () -> {
-			final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
+			final List<ServerGroup> sg = new ArrayList<>();
+			final ServerGroup serverGroup = new ServerGroup("1", "az", "az");
+			sg.add(serverGroup);
+			// final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
 			final List<String> sgList = sg.stream().map(x -> x.getId()).collect(Collectors.toList());
 			final ZoneGroupInformation zgi = new ZoneGroupInformation();
 			zgi.setZoneId(sgList);
