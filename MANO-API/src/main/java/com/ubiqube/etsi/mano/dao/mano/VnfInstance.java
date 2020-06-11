@@ -47,7 +47,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private Set<VimConnectionInformation> vimConnectionInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
