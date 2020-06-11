@@ -97,13 +97,16 @@ public class VnfPackageService {
 		return vnfPackageJpa.save(vnfPackage);
 	}
 
-	public VnfPackage findVnfPackageByUniqName(final String uniqName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public Optional<VnfPackage> findByDescriptorId(final String descriptorId) {
 		return vnfPackageJpa.findByDescriptorId(descriptorId);
+	}
+
+	public Optional<VnfPackage> findByDescriptorIdAndSoftwareVersion(final String name, final String version) {
+		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersion(name, version);
+	}
+
+	public Optional<VnfPackage> findByDescriptorIdAndVnfSoftwareVersionAndFlavourId(final String flavour, final String name, final String version) {
+		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersionAndFlavorId(name, version, flavour);
 	}
 
 }

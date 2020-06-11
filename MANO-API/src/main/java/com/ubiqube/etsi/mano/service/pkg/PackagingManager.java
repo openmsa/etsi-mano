@@ -192,6 +192,9 @@ public class PackagingManager {
 	private static void remapNetworks(final Set<VnfCompute> cNodes, final Set<VnfLinkPort> vcNodes) {
 		cNodes.forEach(x -> {
 			final Set<String> nodes = filter(vcNodes, x.getToscaName());
+			if (nodes.isEmpty()) {
+				throw new GenericException("Node " + x.getToscaName() + " must have a network.");
+			}
 			x.setNetworks(nodes);
 		});
 	}
@@ -269,7 +272,18 @@ public class PackagingManager {
 					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
 			final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
 					.map(x -> {
-						final VnfPackage vnfPackage = vnfPackageService.findByDescriptorId(x).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						final PackageVersion pv = new PackageVersion(x);
+						nsInformations.getFlavorId();
+						final VnfPackage vnfPackage;
+						if (pv.countPart() == 1) {
+							vnfPackage = vnfPackageService.findByDescriptorId(pv.getName()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						} else if (pv.countPart() == 2) {
+							vnfPackage = vnfPackageService.findByDescriptorIdAndSoftwareVersion(pv.getName(), pv.getVersion()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						} else if (pv.countPart() == 3) {
+							vnfPackage = vnfPackageService.findByDescriptorIdAndVnfSoftwareVersionAndFlavourId(pv.getFlavorId(), pv.getName(), pv.getVersion()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						} else {
+							throw new GenericException("Unknown version " + pv);
+						}
 						final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
 						nsdPackageVnfPackage.setNsdPackage(nsPackage);
 						nsdPackageVnfPackage.setToscaName(x);

@@ -13,4 +13,8 @@ public interface VnfPackageJpa extends CrudRepository<VnfPackage, UUID> {
 	Optional<VnfPackage> findByDescriptorId(String descriptorId);
 
 	Set<VnfPackage> findByNsdPackages_NsdPackage_Id(UUID nsdInfo);
+
+	Optional<VnfPackage> findByDescriptorIdAndVnfSoftwareVersion(String name, String version);
+
+	Optional<VnfPackage> findByDescriptorIdAndVnfSoftwareVersionAndFlavorId(String name, String version, String flavour);
 }

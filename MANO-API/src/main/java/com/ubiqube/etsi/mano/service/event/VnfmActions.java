@@ -128,7 +128,7 @@ public class VnfmActions {
 
 		copyGrantResourcesToInstantiated(localLcmOpOccs, grantsResp);
 		vnfLcmService.setGrant(localLcmOpOccs, grantsResp.getId());
-		vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
+		// vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// extract Ext VL
 		final Map<String, String> context = grantsResp.getExtManagedVirtualLinks().stream()
 				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
@@ -147,7 +147,7 @@ public class VnfmActions {
 
 		final ExecutionResults<UnitOfWork, String> removeResults = executor.execDelete(removePlan, vimConnection, vim);
 		/// XXX split this function for adding / removing live instances.
-		setResultLcmInstance(localLcmOpOccs, localVnfInstance, removeResults, InstantiationStateEnum.INSTANTIATED);
+		setLiveSatus(localLcmOpOccs, vnfInstance, removeResults);
 
 		// Create plan
 		final ListenableGraph<UnitOfWork, ConnectivityEdge> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
@@ -162,6 +162,7 @@ public class VnfmActions {
 					.collect(Collectors.toSet());
 			localVnfInstance.getInstantiatedVnfInfo().setScaleStatus(scaleInfos);
 		}
+		setLiveSatus(localLcmOpOccs, localVnfInstance, createResults);
 		LOG.info("Saving VNF Instance.");
 		localVnfInstance.getInstantiatedVnfInfo().setInstantiationLevelId(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId());
 		if (null != lcmOpOccs.getVnfInstantiatedInfo().getFlavourId()) {
@@ -169,8 +170,11 @@ public class VnfmActions {
 		}
 		// XXX Copy new ScaleInfo.
 		removeScaleScatus(localVnfInstance, newScale);
+		// XXX ??? error duplicate key in NSD.
+		localVnfInstance.setVimConnectionInfo(null);
 		vnfInstancesService.save(localVnfInstance);
-
+		LOG.info("Saving VNF LCM OP OCCS.");
+		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", localVnfInstance.getId(), localLcmOpOccs.getId());
 	}
@@ -314,9 +318,9 @@ public class VnfmActions {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			lcmOpOccs.setStateEnteredTime(new Date());
 		}
+	}
 
-		LOG.info("Saving VNF LCM OP OCCS.");
-		final VnfLcmOpOccs localLcm = vnfLcmService.save(lcmOpOccs);
+	private void setLiveSatus(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results) {
 		LOG.info("Creating / deleting live instances.");
 		//
 		results.getSuccess().forEach(x -> {
@@ -328,7 +332,7 @@ public class VnfmActions {
 					il = rhe.getInstantiationLevel().getLevelName();
 				}
 				if (null != rhe.getId()) {
-					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, localLcm, rhe.getResourceId(), rhe.getVduId());
+					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, lcmOpOccs, rhe.getResourceId(), rhe.getVduId());
 					vnfLiveInstanceJpa.save(vli);
 				} else {
 					LOG.warn("Could not store: {}", x.getId().getName());
@@ -377,7 +381,7 @@ public class VnfmActions {
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
 		executionPlanner.terminatePlan(lcmOpOccs);
 
-		final VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
+		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
 		final GrantResponse grant = getTerminateGrants(vnfInstance, localLcmOpOccs, vnfPkg);
 		vnfLcmService.setGrant(localLcmOpOccs, grant.getId());
@@ -393,9 +397,12 @@ public class VnfmActions {
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
 		setResultLcmInstance(localLcmOpOccs, vnfInstance, results, InstantiationStateEnum.NOT_INSTANTIATED);
+		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
+		setLiveSatus(localLcmOpOccs, vnfInstance, results);
 		LOG.info("Saving VNF Instance.");
 		vnfInstance.getInstantiatedVnfInfo().getScaleStatus().clear();
 		vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STOPPED);
+
 		vnfInstancesService.save(vnfInstance);
 
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, localLcmOpOccs.getId());
