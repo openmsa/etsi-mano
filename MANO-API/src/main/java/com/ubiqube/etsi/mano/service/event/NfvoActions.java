@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
-import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -149,8 +149,8 @@ public class NfvoActions {
 		}
 		results.getSuccess().forEach(x -> {
 			final NsInstantiatedBase rhe = x.getId().getResourceHandleEntity();
-			final ChangeType ct = rhe.getChangeType();
-			if (ct == ChangeType.ADDED) {
+			final NsdChangeType ct = rhe.getChangeType();
+			if (ct == NsdChangeType.ADD) {
 				final String il = rhe.getInstantiationLevel();
 				if (null != rhe.getId()) {
 					final NsLiveInstance vli = new NsLiveInstance(rhe.getResourceId(), il, rhe, lcmOpOccs, lcmOpOccs.getNsInstance());
@@ -158,7 +158,7 @@ public class NfvoActions {
 				} else {
 					LOG.warn("Could not store: {}", x.getId().getName());
 				}
-			} else if (ct == ChangeType.REMOVED) {
+			} else if (ct == NsdChangeType.REMOVE) {
 				LOG.info("Removing {}", rhe.getId());
 				final NsLiveInstance vli = nsLiveInstanceJpa.findByNsInstantiatedBaseResourceId(rhe.getResourceId());
 				nsLiveInstanceJpa.deleteById(vli.getId());

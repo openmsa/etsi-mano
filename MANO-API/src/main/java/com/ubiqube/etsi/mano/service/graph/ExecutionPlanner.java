@@ -37,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccsResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
@@ -573,7 +574,7 @@ public class ExecutionPlanner {
 				final NsInstantiatedSap sap = new NsInstantiatedSap();
 				sap.setSapd(x);
 				sap.setSapName(x.getToscaName());
-				sap.setChangeType(ChangeType.ADDED);
+				sap.setChangeType(NsdChangeType.ADD);
 				changes.addInstantiatedSap(sap);
 			}
 		});
@@ -584,7 +585,7 @@ public class ExecutionPlanner {
 				final NsInstantiatedVl sap = new NsInstantiatedVl();
 				sap.setNsVirtualLinkDesc(x);
 				sap.setVlProfileId(x.getNsVlProfile().getId());
-				sap.setChangeType(ChangeType.ADDED);
+				sap.setChangeType(NsdChangeType.ADD);
 				changes.addInstantiatedVirtualLink(sap);
 			}
 		});
@@ -601,7 +602,7 @@ public class ExecutionPlanner {
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
 				sap.setNsdPackage(x);
 				sap.setNsInstanceId(inst.getId().toString());
-				sap.setChangeType(ChangeType.ADDED);
+				sap.setChangeType(NsdChangeType.ADD);
 				changes.addInstantiatedNs(sap);
 			}
 		});
@@ -610,16 +611,16 @@ public class ExecutionPlanner {
 			final int c = nsInstanceService.countLiveInstanceOfVnf(nsInstance, x.getId());
 			if (c == 0) {
 				final NsInstantiatedVnf sap = new NsInstantiatedVnf();
-				sap.setChangeType(ChangeType.ADDED);
+				sap.setChangeType(NsdChangeType.ADD);
 				final NsdPackageVnfPackage nsPackageVnfPackage = find(x, nsdInfo.getVnfPkgIds());
 				sap.setNsdPackageVnfPackage(nsPackageVnfPackage);
 				final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + nsInstance.getId(), x.getId().toString());
-				VnfInstance vnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
+				final VnfInstance vnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
 				vnfInstance.setNsInstance(nsInstance);
 				// vnfInstance.setVimConnectionInfo(vimConnectionInfo);
 				// vnfInstance.setMetadata(metadata);
 				// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
-				vnfInstance = vnfInstanceService.save(vnfInstance);
+				// XXX vnfInstance = vnfInstanceService.save(vnfInstance);
 				sap.setVnfInstance(vnfInstance);
 				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
@@ -663,7 +664,7 @@ public class ExecutionPlanner {
 		});
 		// Add start
 		final NsInstantiatedBase vnfInstantiedStart = new NsInstantiatedBase();
-		vnfInstantiedStart.setChangeType(ChangeType.ADDED);
+		vnfInstantiedStart.setChangeType(NsdChangeType.ADD);
 		// vnfInstantiedStart.setVnfLcmOpOccs(vnfLcmOpOccs);
 		vnfInstantiedStart.setChangeResult(InstantiationStatusType.NOT_STARTED);
 		final NsUnitOfWork root = new NsStartUow(vnfInstantiedStart);
@@ -678,7 +679,7 @@ public class ExecutionPlanner {
 				});
 		// And end Node
 		final NsInstantiatedBase vnfInstantiedEnd = new NsInstantiatedBase();
-		vnfInstantiedEnd.setChangeType(ChangeType.ADDED);
+		vnfInstantiedEnd.setChangeType(NsdChangeType.ADD);
 		// vnfInstantiedEnd.setVnfLcmOpOccs(vnfLcmOpOccs);
 		vnfInstantiedEnd.setChangeResult(InstantiationStatusType.NOT_STARTED);
 		final NsUnitOfWork end = new NsEndUow(vnfInstantiedEnd);
@@ -777,7 +778,7 @@ public class ExecutionPlanner {
 	}
 
 	private static <T extends NsInstantiatedBase> T copyInstantiedResource(final NsInstantiatedBase source, final T inst, final NsLcmOpOccs lcmOpOccs) {
-		inst.setChangeType(ChangeType.REMOVED);
+		inst.setChangeType(NsdChangeType.REMOVE);
 		inst.setChangeResult(InstantiationStatusType.STARTED);
 		// inst.setVduId(source.getResourceId());
 		// inst.setRemovedInstantiated(source.getId());

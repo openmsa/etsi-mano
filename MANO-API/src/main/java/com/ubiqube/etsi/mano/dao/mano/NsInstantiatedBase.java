@@ -29,7 +29,7 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 	private Date endTime;
 
 	@Enumerated(EnumType.STRING)
-	private ChangeType changeType;
+	private NsdChangeType changeType;
 
 	@Enumerated(EnumType.STRING)
 	private InstantiationStatusType changeResult = InstantiationStatusType.NOT_STARTED;
@@ -70,11 +70,11 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 		this.endTime = endTime;
 	}
 
-	public ChangeType getChangeType() {
+	public NsdChangeType getChangeType() {
 		return changeType;
 	}
 
-	public void setChangeType(final ChangeType changeType) {
+	public void setChangeType(final NsdChangeType changeType) {
 		this.changeType = changeType;
 	}
 
