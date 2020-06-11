@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.bean.TestFactory;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf.ChangeResultEnum;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf.ChangeTypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
 
 import ma.glasnost.orika.MapperFacade;
@@ -31,11 +34,20 @@ public class NsLcmOpOccsTest {
 		nsLcmOpOcc.setError(TestFactory.createProblemDetails());
 		nsLcmOpOcc.setStartTime(OffsetDateTime.now());
 		nsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
+		final AffectedVnf affectedVnf = new AffectedVnf();
+		affectedVnf.setChangeResult(ChangeResultEnum.COMPLETED);
+		affectedVnf.setChangeType(ChangeTypeEnum.CHANGE_EXTERNAL_VNF_CONNECTIVITY);
+		affectedVnf.setVnfdId("idid");
+		affectedVnf.setVnfInstanceId("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf");
+		affectedVnf.setVnfName("name");
+		affectedVnf.setVnfProfileId("profile_id");
+		nsLcmOpOcc.getResourceChanges().getAffectedVnfs().add(affectedVnf);
 
 		final NsLcmOpOccs nloo = mapper.map(nsLcmOpOcc, NsLcmOpOccs.class);
 		assertNotNull(nloo.getError());
 		assertEquals("detail", nloo.getError().getDetail());
 		assertNotNull(nloo.getStartTime());
 		assertNotNull(nloo.getStateEnteredTime());
+		assertEquals("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf", nloo.getResourceChanges().getAffectedVnfs().iterator().next().getVnfInstance().getId().toString());
 	}
 }
