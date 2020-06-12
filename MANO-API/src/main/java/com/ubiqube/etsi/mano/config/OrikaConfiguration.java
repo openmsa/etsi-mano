@@ -16,6 +16,7 @@ import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -26,6 +27,7 @@ import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
@@ -218,11 +220,19 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(AffectedVnfc.class, VnfInstantiatedCompute.class)
 				.exclude("audit")
-				.exclude("id")
 				.field("computeResource.resourceId", "resourceId")
 				.field("computeResource.resourceProviderId", "resourceProviderId")
 				.field("computeResource.vimLevelResourceType", "vimLevelResourceType")
 				.field("computeResource.vimConnectionId", "vimConnectionInformation.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(AffectedVirtualLink.class, VnfInstantiatedVirtualLink.class)
+				.exclude("audit")
+				.field("virtualLinkDescId", "vnfVirtualLink.id")
+				.field("networkResource.resourceId", "resourceId")
+				.field("networkResource.resourceProviderId", "resourceProviderId")
+				.field("networkResource.vimLevelResourceType", "vimLevelResourceType")
+				.field("networkResource.vimConnectionId", "vimConnectionInformation.id")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
