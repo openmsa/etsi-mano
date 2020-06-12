@@ -272,7 +272,7 @@ topology_template:
             node: webserver
 
 
-    cpLc01:
+    cpLc02:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
