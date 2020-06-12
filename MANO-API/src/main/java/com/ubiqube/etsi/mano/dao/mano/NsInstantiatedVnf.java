@@ -23,7 +23,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	private VnfInstance vnfInstance = null;
 
 	@ManyToOne(cascade = CascadeType.DETACH)
