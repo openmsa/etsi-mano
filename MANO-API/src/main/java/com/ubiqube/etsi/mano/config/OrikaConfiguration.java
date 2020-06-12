@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
@@ -213,6 +214,15 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 		orikaMapperFactory.classMap(AffectedVnf.class, NsInstantiatedVnf.class)
 				.field("vnfdId", "")
 				.field("vnfInstanceId", "vnfInstance.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(AffectedVnfc.class, VnfInstantiatedCompute.class)
+				.exclude("audit")
+				.exclude("id")
+				.field("computeResource.resourceId", "resourceId")
+				.field("computeResource.resourceProviderId", "resourceProviderId")
+				.field("computeResource.vimLevelResourceType", "vimLevelResourceType")
+				.field("computeResource.vimConnectionId", "vimConnectionInformation.id")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
