@@ -98,6 +98,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.STORAGE);
 					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
@@ -111,6 +112,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.VL);
 					grantInformation.setVduId(x.getVnfVirtualLink().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
@@ -124,6 +126,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.COMPUTE);
 					grantInformation.setVduId(x.getVnfCompute().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
@@ -137,6 +140,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.LINKPORT);
 					grantInformation.setVduId(x.getVnfExtCp().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
@@ -150,6 +154,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.STORAGE);
 					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
@@ -163,6 +168,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.VL);
 					grantInformation.setVduId(x.getVnfVirtualLink().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
@@ -176,6 +182,7 @@ public class GrantService {
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(TypeEnum.COMPUTE);
 					grantInformation.setVduId(x.getVnfCompute().getId());
+					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);

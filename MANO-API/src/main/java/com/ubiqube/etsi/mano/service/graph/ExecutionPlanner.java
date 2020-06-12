@@ -400,6 +400,7 @@ public class ExecutionPlanner {
 				aVl.setVnfLcmOpOccs(lcmOpOccs);
 				aVl.setVduId(x.getId());
 				aVl.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
+				aVl.setToscaName(x.getToscaName());
 				// aVl = vnfInstanceService.save(aVl);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
@@ -415,6 +416,7 @@ public class ExecutionPlanner {
 				aVs.setVnfLcmOpOccs(lcmOpOccs);
 				aVs.setVduId(x.getId());
 				aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
+				aVs.setToscaName(x.getToscaName());
 				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(aVs);
 			}
 		});
@@ -430,6 +432,7 @@ public class ExecutionPlanner {
 				aVs.setVduId(x.getId());
 				aVs.setVnfLcmOpOccs(lcmOpOccs);
 				aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
+				aVs.setToscaName(x.getToscaName());
 				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
 			}
 		});
@@ -456,6 +459,7 @@ public class ExecutionPlanner {
 			vnfInstantiedCompute.setVnfLcmOpOccs(lcmOpOccs);
 			vnfInstantiedCompute.setInstantiationLevel(scaleLevel);
 			vnfInstantiedCompute.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName(), currentCount + i));
+			vnfInstantiedCompute.setToscaName(vnfCompute.getToscaName());
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
 			// vnfInstanceService.save(vnfInstantiedCompute);
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
@@ -501,6 +505,7 @@ public class ExecutionPlanner {
 			instantiatedCompute.setInstantiationLevel(scaleLevel);
 			instantiatedCompute.setVnfLcmOpOccs(lcmOpOccs);
 			instantiatedCompute.setVnfCompute(x);
+			instantiatedCompute.setToscaName(x.getToscaName());
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(instantiatedCompute);
 			x.getStorages().forEach(y -> {
 				// XXX Delete Storage, but we need a vdu.

@@ -30,6 +30,8 @@ public class GrantInformation implements BaseEntity {
 
 	private String resourceGroupId = null;
 
+	private String resourceTemplateId;
+
 	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
 
@@ -117,6 +119,14 @@ public class GrantInformation implements BaseEntity {
 
 	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
+	}
+
+	public String getResourceTemplateId() {
+		return resourceTemplateId;
+	}
+
+	public void setResourceTemplateId(final String resourceTemplateId) {
+		this.resourceTemplateId = resourceTemplateId;
 	}
 
 }
