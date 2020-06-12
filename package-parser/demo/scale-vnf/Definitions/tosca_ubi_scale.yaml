@@ -382,7 +382,6 @@ topology_template:
                 ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
                   - start_ip_address: 192.168.0.100
                     end_ip_address: 192.168.0.254
-              associated_layer_protocol: ipv4
           qos: # tosca.datatypes.nfv.Qos
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -473,7 +472,7 @@ topology_template:
 groups:
   server_group_1:
     type: tosca.groups.nfv.PlacementGroup
-    members: [ webserver, database ]
+    members: [ webserver, database,lbass, memcache ]
     properties:
       description: My placement group.
 
