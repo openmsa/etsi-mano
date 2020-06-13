@@ -24,12 +24,12 @@ public class UowTaskCreateProvider implements TaskProvider<UnitOfWork, String> {
 
 	private final Map<String, String> context;
 
-	public UowTaskCreateProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> extVl) {
+	public UowTaskCreateProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> baseContext) {
 		super();
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
-		context = new ConcurrentHashMap<>(extVl);
+		context = new ConcurrentHashMap<>(baseContext);
 	}
 
 	@Override
