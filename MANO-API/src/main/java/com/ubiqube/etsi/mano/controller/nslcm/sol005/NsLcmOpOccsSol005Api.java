@@ -58,9 +58,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 					return res;
 				})
 				.collect(Collectors.toList());
-		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		final ObjectMapper localMapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(list), HttpStatus.OK);
+			return new ResponseEntity<>(localMapper.writeValueAsString(list), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
