@@ -20,7 +20,6 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.nfvo.UowNsTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.nfvo.UowNsTaskDeleteProvider;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;

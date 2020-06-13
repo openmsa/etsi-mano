@@ -86,7 +86,6 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ObjectStorageUow;

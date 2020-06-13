@@ -4,6 +4,8 @@ import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.event.GraphListener;
 import org.jgrapht.event.GraphVertexChangeEvent;
 
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
+
 public class EdgeListener<V> implements GraphListener<V, ConnectivityEdge<V>> {
 
 	@Override

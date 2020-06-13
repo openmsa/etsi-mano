@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.service.graph;
 
 public class ConnectivityEdge<U> {
 	private U source;
