@@ -89,7 +89,7 @@ public class NfvoActions {
 		ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
 		plan = executionPlanner.revert(plan);
 
-		executionPlanner.exportNsGraph(plan, nsdInfo.getId(), nsInstance, "delete");
+		executionPlanner.exportGraph(plan, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
 
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execDeleteNs(plan, vimInfo, vim);
 		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
@@ -127,7 +127,7 @@ public class NfvoActions {
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
 		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
-		executionPlanner.exportNsGraph(plan, nsdId, nsInstance, "create");
+		executionPlanner.exportGraph(plan, nsdId, nsInstance, "create", nsdRepository);
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim, pubNet);
 		LOG.debug("Done, Saving ...");
 		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);

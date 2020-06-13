@@ -6,9 +6,11 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork.UowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public interface UnitOfWork extends Serializable {
+public interface UnitOfWork extends UnitOfWorkBase<UowType>, Serializable {
 	public enum UowType {
 		START("START"),
 		END("END"),
@@ -21,7 +23,7 @@ public interface UnitOfWork extends Serializable {
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE");
 
-		private final String value;
+		private String value;
 
 		UowType(final String value) {
 			this.value = value;
@@ -43,15 +45,9 @@ public interface UnitOfWork extends Serializable {
 		}
 	}
 
-	String getName();
-
 	String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, Map<String, String> context);
 
-	UowType getType();
-
 	VnfInstantiatedBase getResourceHandleEntity();
-
-	String getToscaName();
 
 	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, String resourceId, Map<String, String> context);
 }

@@ -26,6 +26,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.nslcm.sol005.NsInstanceControllerService;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
@@ -67,8 +68,7 @@ import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
@@ -101,8 +101,6 @@ public class ExecutionPlanner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutionPlanner.class);
 
-	private final VnfPackageRepository vnfPackageRepository;
-
 	private final VnfPackageService vnfPackageService;
 
 	private final VnfInstanceService vnfInstanceService;
@@ -115,8 +113,6 @@ public class ExecutionPlanner {
 
 	private final NsdPackageJpa nsdPackageJpa;
 
-	private final NsdRepository nsdRepository;
-
 	private final NsdPackageService nsdPackageService;
 
 	private final VnfmInterface vnfm;
@@ -125,15 +121,13 @@ public class ExecutionPlanner {
 
 	private final NsLcmOpOccsService nsLcmOpOccsService;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
-		vnfPackageRepository = _vnfPackageRepository;
+	public ExecutionPlanner(final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
 		vduNamingStrategy = _vduNamingStrategy;
 		nsInstanceService = _nsInstanceService;
 		ipamService = _ipamService;
 		nsdPackageJpa = _nsdPackageJpa;
-		nsdRepository = _nsdRepository;
 		nsdPackageService = _nsdPackageService;
 		vnfm = _vnfm;
 		nsInstanceControllerService = _nsInstanceControllerService;
@@ -263,22 +257,13 @@ public class ExecutionPlanner {
 		return vertex;
 	}
 
-	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, @Nonnull final UUID _id, final VnfInstance vnfInstance, final String subName) {
-		final DOTExporter<UnitOfWork, ConnectivityEdge<UnitOfWork>> exporter = new DOTExporter<>(UnitOfWork::getName);
+	public <U extends UnitOfWorkBase<?>> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, @Nonnull final UUID _id, final BaseEntity vnfInstance, final String subName, final BinaryRepository repo) {
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(U::getName);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
-		vnfPackageRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
-	}
-
-	public void exportNsGraph(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, @Nonnull final UUID _id, final NsdInstance vnfInstance, final String subName) {
-		final DOTExporter<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.exportGraph(g, out);
-		final byte[] res = out.toByteArray();
-		final InputStream _stream = new ByteArrayInputStream(res);
-		nsdRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
+		repo.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
 	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
