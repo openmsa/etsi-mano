@@ -87,7 +87,7 @@ public class NfvoActions {
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 
 		ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
-		plan = executionPlanner.revertNs(plan);
+		plan = executionPlanner.revert(plan);
 
 		executionPlanner.exportNsGraph(plan, nsdInfo.getId(), nsInstance, "delete");
 

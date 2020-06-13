@@ -140,10 +140,10 @@ public class ExecutionPlanner {
 		nsLcmOpOccsService = _nsLcmOpOccsService;
 	}
 
-	private static ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createGraph() {
+	private static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
 		// Vertex everyThing
-		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
-		g.addGraphListener(new EdgeListener<UnitOfWork>());
+		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		g.addGraphListener(new EdgeListener<U>());
 		return g;
 	}
 
@@ -286,13 +286,6 @@ public class ExecutionPlanner {
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
 		nsdRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
-	}
-
-	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> gNew = createGraph();
-		g.vertexSet().forEach(gNew::addVertex);
-		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
-		return gNew;
 	}
 
 	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
@@ -788,18 +781,11 @@ public class ExecutionPlanner {
 		return inst;
 	}
 
-	public ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> revertNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g) {
-		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> gNew = createNsGraph();
+	public <U> ListenableGraph<U, ConnectivityEdge<U>> revert(final ListenableGraph<U, ConnectivityEdge<U>> g) {
+		final ListenableGraph<U, ConnectivityEdge<U>> gNew = createGraph();
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
-	}
-
-	private static ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> createNsGraph() {
-		// Vertex everyThing
-		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
-		g.addGraphListener(new EdgeListener<NsUnitOfWork>());
-		return g;
 	}
 
 	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> planForRemoval(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
