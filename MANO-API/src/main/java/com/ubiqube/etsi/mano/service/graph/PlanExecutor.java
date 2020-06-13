@@ -39,43 +39,30 @@ public class PlanExecutor {
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
-	public ExecutionResults<UnitOfWork, String> execCreate(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> extVl) {
-		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa, extVl));
+	public ExecutionResults<UnitOfWork, String> execCreate(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
+		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa, baseContext));
 	}
 
 	public ExecutionResults<UnitOfWork, String> execDelete(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
 		return createExecutor(g, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa));
 	}
 
-	private static ExecutionResults<UnitOfWork, String> createExecutor(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final TaskProvider<UnitOfWork, String> uowTaskProvider) {
+	private static <U> ExecutionResults<U, String> createExecutor(final ListenableGraph<U, ConnectivityEdge<U>> g, final TaskProvider<U, String> uowTaskProvider) {
 		final ExecutorService executorService = Executors.newFixedThreadPool(20);
-		final DexecutorConfig<UnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
+		final DexecutorConfig<U, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
-		final DefaultDexecutor<UnitOfWork, String> executor = new DefaultDexecutor<>(config);
+		final DefaultDexecutor<U, String> executor = new DefaultDexecutor<>(config);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
 		return executor.execute(ExecutionConfig.TERMINATING);
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
-		return createExecutorNs(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, null, vnfm, baseContext));
+		return createExecutor(g, new UowNsTaskCreateProvider(vimConnectionInformation, vim, null, vnfm, baseContext));
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execDeleteNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutorNs(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, null, vnfm));
-	}
-
-	private static ExecutionResults<NsUnitOfWork, String> createExecutorNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final TaskProvider<NsUnitOfWork, String> uowTaskProvider) {
-		final ExecutorService executorService = Executors.newFixedThreadPool(20);
-		final DexecutorConfig<NsUnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
-		// What about config setExecutionListener.
-		final DefaultDexecutor<NsUnitOfWork, String> executor = new DefaultDexecutor<>(config);
-		g.edgeSet().forEach(x -> {
-			LOG.info("Execution link: {} <-> {}", x.getSource(), x.getTarget());
-			executor.addDependency(x.getSource(), x.getTarget());
-		});
-
-		return executor.execute(ExecutionConfig.TERMINATING);
+		return createExecutor(g, new UowNsTaskDeleteProvider(vimConnectionInformation, vim, null, vnfm));
 	}
 
 }
