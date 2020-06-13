@@ -1,16 +1,16 @@
 package com.ubiqube.etsi.mano.mapper;
 
-import java.util.LinkedList;
+import java.util.Deque;
 
 public class AttrHolder {
-	private LinkedList<AttrNode> stack;
+	private Deque<AttrNode> stack;
 	private Object value;
 
-	public LinkedList<AttrNode> getStack() {
+	public Deque<AttrNode> getStack() {
 		return stack;
 	}
 
-	public void setStack(final LinkedList<AttrNode> stack) {
+	public void setStack(final Deque<AttrNode> stack) {
 		this.stack = stack;
 	}
 
