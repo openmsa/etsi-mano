@@ -20,13 +20,13 @@ public class ScaleInfo implements Serializable {
 
 	private String aspectId = null;
 
-	private Integer scaleLevel = null;
+	private int scaleLevel;
 
 	public ScaleInfo() {
 		// Nothing.
 	}
 
-	public ScaleInfo(@NotNull final String _aspectId, @NotNull final Integer _scaleLevel) {
+	public ScaleInfo(@NotNull final String _aspectId, final int _scaleLevel) {
 		aspectId = _aspectId;
 		scaleLevel = _scaleLevel;
 	}
@@ -47,11 +47,11 @@ public class ScaleInfo implements Serializable {
 		this.aspectId = aspectId;
 	}
 
-	public Integer getScaleLevel() {
+	public int getScaleLevel() {
 		return scaleLevel;
 	}
 
-	public void setScaleLevel(final Integer scaleLevel) {
+	public void setScaleLevel(final int scaleLevel) {
 		this.scaleLevel = scaleLevel;
 	}
 

@@ -23,7 +23,7 @@ public class VnfComputeAspectDelta implements Serializable {
 
 	private String targetName;
 
-	private Integer numberOfInstances;
+	private int numberOfInstances;
 
 	@ManyToOne
 	private VnfCompute vnfCompute;
@@ -36,7 +36,7 @@ public class VnfComputeAspectDelta implements Serializable {
 		// Nothing.
 	}
 
-	public VnfComputeAspectDelta(final String aspectName, final String deltaName, final Integer numberOfInstances, final int _level, final int _maxScaleLevel, final String _target) {
+	public VnfComputeAspectDelta(final String aspectName, final String deltaName, final int numberOfInstances, final int _level, final int _maxScaleLevel, final String _target) {
 		super();
 		this.aspectName = aspectName;
 		this.deltaName = deltaName;
@@ -70,11 +70,11 @@ public class VnfComputeAspectDelta implements Serializable {
 		this.deltaName = deltaName;
 	}
 
-	public Integer getNumberOfInstances() {
+	public int getNumberOfInstances() {
 		return numberOfInstances;
 	}
 
-	public void setNumberOfInstances(final Integer numberOfInstances) {
+	public void setNumberOfInstances(final int numberOfInstances) {
 		this.numberOfInstances = numberOfInstances;
 	}
 

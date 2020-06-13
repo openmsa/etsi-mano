@@ -199,7 +199,18 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
+	private static <U extends UnitOfWorkBase<U>> void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
+		if ((null == left) || (null == right)) {
+			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
+			return;
+		}
+		left.forEach(x -> right.forEach(y -> {
+			LOG.info("  - Adding {} <-> {}", x, y.getName());
+			g.addEdge(x, y);
+		}));
+	}
+
+	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;
@@ -292,7 +303,7 @@ public class ExecutionPlanner {
 		VnfComputeAspectDelta last = new VnfComputeAspectDelta("", "", 1, 1, 1, null);
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfComputeAspectDeltas) {
 			if (vnfComputeAspectDelta.getLevel() <= myscaling.getScaleLevel()) {
-				cnt += vnfComputeAspectDelta.getNumberOfInstances().intValue();
+				cnt += vnfComputeAspectDelta.getNumberOfInstances();
 				last = vnfComputeAspectDelta;
 				apply++;
 			}
@@ -523,17 +534,6 @@ public class ExecutionPlanner {
 		inst.setInstantiationLevel(source.getInstantiationLevel());
 		inst.setVnfLcmOpOccs(lcmOpOccs);
 		return inst;
-	}
-
-	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
-		if ((null == left) || (null == right)) {
-			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
-			return;
-		}
-		left.forEach(x -> right.forEach(y -> {
-			LOG.info("  - Adding {} <-> {}", x, y.getName());
-			g.addEdge(x, y);
-		}));
 	}
 
 	public void makePrePlan(final NsdInstance nsInstance, final NsdPackage nsdInfo, final NsLcmOpOccs lcmOpOccs) {
