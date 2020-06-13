@@ -81,4 +81,14 @@ public class MonitoringParams extends VnfInstantiatedBase {
 		this.collectionPeriod = collectionPeriod;
 	}
 
+	@Override
+	public Audit getAudit() {
+		return audit;
+	}
+
+	@Override
+	public void setAudit(final Audit audit) {
+		this.audit = audit;
+	}
+
 }

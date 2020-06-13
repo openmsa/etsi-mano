@@ -1,9 +1,14 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class IpOverEthernetAddressDataAddressRangeEntity {
+public class IpOverEthernetAddressDataAddressRangeEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String minAddress = null;
 
 	private String maxAddress = null;

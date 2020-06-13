@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,10 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.VnffgInfo;
 
 @Entity
 @Indexed
-public class NsdInstance implements BaseEntity {
+public class NsdInstance implements BaseEntity, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -55,13 +59,13 @@ public class NsdInstance implements BaseEntity {
 	private List<VnfInstance> vnfInstance = null;
 
 	@Transient
-	private List<PnfInfo> pnfInfo = null;
+	private transient List<PnfInfo> pnfInfo = null;
 	@Transient
-	private List<NsVirtualLinkInfo> virtualLinkInfo = null;
+	private transient List<NsVirtualLinkInfo> virtualLinkInfo = null;
 	@Transient
-	private List<VnffgInfo> vnffgInfo = null;
+	private transient List<VnffgInfo> vnffgInfo = null;
 	@Transient
-	private List<SapInfo> sapInfo = null;
+	private transient List<SapInfo> sapInfo = null;
 
 	@OneToMany
 	private List<NsdInstance> nestedNsInstance = null;
@@ -71,10 +75,10 @@ public class NsdInstance implements BaseEntity {
 	private InstantiationStateEnum nsState = null;
 
 	@Transient
-	private List<NsScaleInfo> nsScaleStatus = null;
+	private transient List<NsScaleInfo> nsScaleStatus = null;
 
 	@Transient
-	private List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
+	private transient List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn

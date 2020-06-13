@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -32,7 +33,10 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class NsdPackage implements BaseEntity, Auditable {
+public class NsdPackage implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

@@ -10,6 +10,9 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class ExtLinkPortDataEntity extends VnfInstantiatedBase {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;

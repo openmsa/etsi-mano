@@ -35,7 +35,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	/** XXX TO do. */
 	@Transient
-	private AffectedVnfChangedInfo changedInfo = null;
+	private transient AffectedVnfChangedInfo changedInfo = null;
 
 	@Override
 	public UUID getId() {

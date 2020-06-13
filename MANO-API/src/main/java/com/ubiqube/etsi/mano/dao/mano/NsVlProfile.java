@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Embedded;
@@ -14,7 +15,9 @@ import org.hibernate.search.annotations.Indexed;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class NsVlProfile implements BaseEntity, Auditable {
+public class NsVlProfile implements BaseEntity, Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -8,7 +8,9 @@ import javax.persistence.Embeddable;
 public class Checksum implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
 	private String algorithm;
+
 	private String hash;
 
 	public String getAlgorithm() {
