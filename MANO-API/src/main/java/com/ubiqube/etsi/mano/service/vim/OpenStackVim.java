@@ -235,7 +235,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
+	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
 		final List<UnitOfWork> vertexPool = new ArrayList<>();
 		LOG.info("Openstack, modification of execution plan.");
 		final ArrayList<UnitOfWork> vertexSet = new ArrayList<>(g.vertexSet());
@@ -248,7 +248,7 @@ public class OpenStackVim implements Vim {
 				final NoopUow noop = new NoopUow(vnfInstantiedCompute);
 				g.addVertex(noop);
 
-				final ArrayList<ConnectivityEdge> out = new ArrayList<>(g.outgoingEdgesOf(x));
+				final ArrayList<ConnectivityEdge<UnitOfWork>> out = new ArrayList<>(g.outgoingEdgesOf(x));
 				g.removeAllEdges(new ArrayList<>(out));
 				final VlProtocolData vnfVl = vlu.getVlProtocolData();
 				vnfVl.getIpAllocationPools().forEach(y -> {

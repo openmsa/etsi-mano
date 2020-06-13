@@ -238,7 +238,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
+	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
 		// MSA don't have an execution plan.
 	}
 

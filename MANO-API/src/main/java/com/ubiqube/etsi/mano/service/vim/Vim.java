@@ -42,7 +42,7 @@ public interface Vim {
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name);
 
-	void refineExecutionPlan(@Nonnull final ListenableGraph<UnitOfWork, ConnectivityEdge> g);
+	void refineExecutionPlan(@Nonnull final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g);
 
 	Optional<SoftwareImage> getSwImageMatching(VimConnectionInformation vimConnectionInformation, SoftwareImage img);
 

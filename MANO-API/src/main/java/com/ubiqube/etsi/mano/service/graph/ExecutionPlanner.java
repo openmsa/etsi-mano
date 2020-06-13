@@ -76,8 +76,6 @@ import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsEdgeListener;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsEndUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsStartUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
@@ -142,23 +140,23 @@ public class ExecutionPlanner {
 		nsLcmOpOccsService = _nsLcmOpOccsService;
 	}
 
-	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
+	private static ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createGraph() {
 		// Vertex everyThing
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
 		return g;
 	}
 
-	private static ListenableGraph<NsUnitOfWork, NsConnectivityEdge> nsCreateGraph() {
+	private static ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> nsCreateGraph() {
 		// Vertex everyThing
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
-		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		g.addGraphListener(new EdgeListener<NsUnitOfWork>());
 		return g;
 	}
 
 	@NotNull
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
 		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, changeType);
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
@@ -215,7 +213,7 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
+	private static void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;
@@ -226,7 +224,7 @@ public class ExecutionPlanner {
 		}));
 	}
 
-	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs, final ChangeType changeType) {
+	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VnfLcmOpOccs vnfLcmOpOccs, final ChangeType changeType) {
 		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
@@ -272,8 +270,8 @@ public class ExecutionPlanner {
 		return vertex;
 	}
 
-	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @Nonnull final UUID _id, final VnfInstance vnfInstance, final String subName) {
-		final DOTExporter<UnitOfWork, ConnectivityEdge> exporter = new DOTExporter<>(UnitOfWork::getName);
+	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, @Nonnull final UUID _id, final VnfInstance vnfInstance, final String subName) {
+		final DOTExporter<UnitOfWork, ConnectivityEdge<UnitOfWork>> exporter = new DOTExporter<>(UnitOfWork::getName);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
@@ -281,8 +279,8 @@ public class ExecutionPlanner {
 		vnfPackageRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
-	public void exportNsGraph(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, @Nonnull final UUID _id, final NsdInstance vnfInstance, final String subName) {
-		final DOTExporter<NsUnitOfWork, NsConnectivityEdge> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
+	public void exportNsGraph(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, @Nonnull final UUID _id, final NsdInstance vnfInstance, final String subName) {
+		final DOTExporter<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
@@ -290,8 +288,8 @@ public class ExecutionPlanner {
 		nsdRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> gNew = createGraph();
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> gNew = createGraph();
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
@@ -557,7 +555,7 @@ public class ExecutionPlanner {
 		return inst;
 	}
 
-	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
+	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;
@@ -637,8 +635,8 @@ public class ExecutionPlanner {
 				.findFirst().orElseThrow(() -> new NotFoundException("VNF Package not found: " + vnfPackage.getId()));
 	}
 
-	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = nsCreateGraph();
+	public ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = nsCreateGraph();
 		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs, nsInstance);
 		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
 		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
@@ -697,7 +695,7 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
+	private MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
 		final MultiValueMap<String, NsUnitOfWork> vertex = new LinkedMultiValueMap<>();
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
@@ -790,26 +788,26 @@ public class ExecutionPlanner {
 		return inst;
 	}
 
-	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> revertNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g) {
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> gNew = createNsGraph();
+	public ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> revertNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g) {
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> gNew = createNsGraph();
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
 	}
 
-	private static ListenableGraph<NsUnitOfWork, NsConnectivityEdge> createNsGraph() {
+	private static ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> createNsGraph() {
 		// Vertex everyThing
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
-		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		g.addGraphListener(new EdgeListener<NsUnitOfWork>());
 		return g;
 	}
 
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> planForRemoval(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = plan(localLcmOpOccs, vnfPkg, ChangeType.REMOVED);
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> planForRemoval(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan = plan(localLcmOpOccs, vnfPkg, ChangeType.REMOVED);
 		return revert(plan);
 	}
 
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> planForCreation(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> planForCreation(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
 		return plan(localLcmOpOccs, vnfPkg, ChangeType.ADDED);
 	}
 }

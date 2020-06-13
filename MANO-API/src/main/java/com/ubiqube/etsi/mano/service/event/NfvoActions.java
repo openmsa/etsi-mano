@@ -29,8 +29,8 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -86,7 +86,7 @@ public class NfvoActions {
 
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 
-		ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
+		ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
 		plan = executionPlanner.revertNs(plan);
 
 		executionPlanner.exportNsGraph(plan, nsdInfo.getId(), nsInstance, "delete");
@@ -126,7 +126,7 @@ public class NfvoActions {
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
 		executionPlanner.exportNsGraph(plan, nsdId, nsInstance, "create");
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim, pubNet);
 		LOG.debug("Done, Saving ...");

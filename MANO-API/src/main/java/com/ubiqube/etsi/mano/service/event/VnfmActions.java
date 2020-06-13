@@ -136,7 +136,7 @@ public class VnfmActions {
 		context.putAll(getLiveVl(vnfInstance));
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> removePlan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> removePlan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
 		// XXX We can't refine a removal plan, because it has already been reverted.
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
@@ -150,7 +150,7 @@ public class VnfmActions {
 		setLiveSatus(localLcmOpOccs, vnfInstance, removeResults);
 
 		// Create plan
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
 		vim.refineExecutionPlan(createPlan);
 		executionPlanner.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create");
 
@@ -387,7 +387,7 @@ public class VnfmActions {
 		vnfLcmService.setGrant(localLcmOpOccs, grant.getId());
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		// Make plan
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
 		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
 		// XXX Multiple Vim ?
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
