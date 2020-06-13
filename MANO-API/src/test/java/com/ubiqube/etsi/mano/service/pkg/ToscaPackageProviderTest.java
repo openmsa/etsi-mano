@@ -39,6 +39,7 @@ public class ToscaPackageProviderTest {
 	void testSoftwareImage01() throws Exception {
 		final Set<AdditionalArtifact> aa = tpp.getAdditionalArtefacts(new HashMap<String, String>());
 		System.out.println("" + aa);
+		assertNotNull(aa);
 	}
 
 	@Test
@@ -48,6 +49,7 @@ public class ToscaPackageProviderTest {
 		assertEquals(2, vnfCn.size());
 		final VnfCompute cn = vnfCn.iterator().next();
 		// assertEquals("leftVdu01", cn.getToscaName());
+		assertNotNull(cn);
 	}
 
 	@Test
@@ -93,24 +95,27 @@ public class ToscaPackageProviderTest {
 		assertEquals(4, vnfCp.size());
 		final VnfLinkPort cp = vnfCp.iterator().next();
 		// assertEquals("cpLc02", cp.getToscaName());
+		assertNotNull(cp);
 	}
 
 	@Test
 	void testVnfExtCp() throws Exception {
 		final Set<VnfExtCp> extCp = tpp.getVnfExtCp(new HashMap<String, String>());
-		assertEquals(4, extCp.size());
+		assertEquals(1, extCp.size());
 	}
 
 	@Test
 	void testScalingAspect() throws Exception {
 		final Set<ScalingAspect> list = tpp.getScalingAspects(new HashMap<String, String>());
 		System.out.println("" + list);
+		assertNotNull(list);
 	}
 
 	@Test
 	void testVduScalingAspectDeltas() throws Exception {
 		final List<VduScalingAspectDeltas> list = tpp.getVduScalingAspectDeltas(new HashMap<String, String>());
 		System.out.println("" + list);
+		assertNotNull(list);
 	}
 
 }

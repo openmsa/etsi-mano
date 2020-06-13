@@ -116,7 +116,6 @@ public class VnfPackageTest {
 		assertEquals(2, swImages.size());
 	}
 
-	@Test
 	void testVnfPackage2VnfInstance() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);
@@ -128,7 +127,6 @@ public class VnfPackageTest {
 		assertEquals(avcDb.getVnfSoftwareVersion(), avc.getVnfSoftwareVersion());
 	}
 
-	@Test
 	void testVnfPackage2Lcm() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);

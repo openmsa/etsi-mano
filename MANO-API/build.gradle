@@ -97,8 +97,8 @@ dependencies {
 
 	compile group: 'io.swagger.core.v3', name: 'swagger-jaxrs2', version: '2.0.10'
 	compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
-	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0-SNAPSHOT'
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0-SNAPSHOT'
 	compile group: 'com.github.joschi.jackson', name: 'jackson-datatype-threetenbp', version: '2.10.0'
 	compile group: 'org.webjars', name: 'swagger-ui', version: '3.23.8'
 
@@ -109,6 +109,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.liquibase:liquibase-core'
 	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql:42.2.13'
 
 	compile("org.springframework.boot:spring-boot-starter-security")
 	compile("org.springframework.boot:spring-boot-starter-web")

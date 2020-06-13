@@ -398,24 +398,46 @@ public class OpenStackTest {
 	@Test
 	void testDeleteNetwork() throws Exception {
 		final OSClientV3 os = getQueensConnection();
-		final ActionResponse ret = os.networking().network().delete("ad9df306-8487-4695-9be1-f06feef779c7");
+		final List<? extends Port> ret = os.networking().port().list();
+		ret.forEach(System.out::println);
 		System.out.println("" + ret);
 	}
 
 	@Test
 	void testDeleteRouter() throws Exception {
 		final OSClientV3 os = getQueensConnection();
-		final String device = "909f4c86-eb79-4cf2-bf5c-21769c2dbc92";
+		final String device = "9f07f44f-3f06-48c8-ad75-5c7afcc46d2e";
 		final Router router = os.networking().router().get(device);
 		final List<? extends Port> routerList = os.networking().port().list();
+		routerList.stream()
+				.filter(x -> x.getDeviceId().equals(device))
+				.forEach(System.out::println);
 		final List<RouterInterface> ret = routerList.stream()
 				.filter(x -> x.getDeviceId().equals(device))
+				.filter(x -> !x.getDeviceOwner().equals("network:router_gateway"))
 				.map(x -> x.getId())
 				.map(x -> os.networking().router().detachInterface(device, null, x))
 				.collect(Collectors.toList());
 		ret.forEach(x -> System.out.println("" + x));
 		System.out.println("" + router);
-		final ActionResponse ret2 = os.networking().router().delete("909f4c86-eb79-4cf2-bf5c-21769c2dbc92");
+		final ActionResponse ret2 = os.networking().router().delete(device);
 		System.out.println("" + ret2);
+	}
+
+	@Test
+	void testGetPublic() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		os.networking().network().list().forEach(x -> {
+			System.out.println(x.getName() + " -- " + x.isRouterExternal() + " ==> " + x.getId());
+		});
+	}
+
+	@Test
+	void testNetworkExtension() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		os.networking().agent().list().forEach(x -> {
+			System.out.println("" + x.getTopic() + " " + x.getAgentType() + " " + x.getBinary());
+		});
+
 	}
 }
