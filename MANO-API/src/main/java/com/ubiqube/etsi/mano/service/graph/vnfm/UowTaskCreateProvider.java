@@ -15,9 +15,13 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 public class UowTaskCreateProvider implements TaskProvider<UnitOfWork, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowTaskCreateProvider.class);
+
 	private final VimConnectionInformation vimConnectionInformation;
+
 	private final Vim vim;
+
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
 	private final Map<String, String> context;
 
 	public UowTaskCreateProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> extVl) {
