@@ -38,10 +38,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.ScaleNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.TerminateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.UpdateNsRequest;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
-import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -50,22 +48,18 @@ import ma.glasnost.orika.MapperFacade;
 public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);
 
-	private final NsdRepository nsdRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 
 	private final NsLcmOpOccsService lcmOpOccsService;
 
-	private final EventManager eventManager;
 	private final MapperFacade mapper;
 	private final NsInstanceService nsInstanceService;
 
 	private final NsInstanceControllerService nsInstanceControllerService;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final NsLcmOpOccsService _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper, final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService) {
-		nsdRepository = _nsdRepository;
+	public NsInstancesSol005Api(final NsInstanceRepository _nsInstanceRepository, final NsLcmOpOccsService _lcmOpOccsRepository, final MapperFacade _mapper, final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService) {
 		nsInstanceRepository = _nsInstanceRepository;
 		lcmOpOccsService = _lcmOpOccsRepository;
-		eventManager = _eventManager;
 		mapper = _mapper;
 		nsInstanceService = _nsInstanceService;
 		nsInstanceControllerService = _nsInstanceControllerService;

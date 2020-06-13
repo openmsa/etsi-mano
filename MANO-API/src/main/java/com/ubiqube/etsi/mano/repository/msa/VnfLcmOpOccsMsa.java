@@ -23,21 +23,17 @@ import com.ubiqube.etsi.mano.model.vnf.VnfPkgOperation;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
 
-import ma.glasnost.orika.MapperFacade;
-
 @Profile("!RDBMS")
 public class VnfLcmOpOccsMsa extends AbstractGenericRepository<VnfLcmOpOccs> implements VnfLcmOpOccsRepository {
 	private static final String INDEXES_JSON = "indexes.json";
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfPackageMsa vnfPackageMsa;
-	private final MapperFacade mapper;
 	private static final String REPOSITORY_VNF_LCM_OP_OCCS_DATAFILE_BASE_PATH = "Datafiles/NFVO/vnf-lcm-op-occs";
 
-	public VnfLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfInstancesRepository _vnfInstancesRepository, final VnfPackageMsa _vnfPackageMsa, final MapperFacade _orikamapper) {
+	public VnfLcmOpOccsMsa(final ObjectMapper _mapper, final RepositoryService _repositoryService, final JsonFilter _jsonFilter, final VnfInstancesRepository _vnfInstancesRepository, final VnfPackageMsa _vnfPackageMsa) {
 		super(_mapper, _repositoryService, _jsonFilter);
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfPackageMsa = _vnfPackageMsa;
-		mapper = _orikamapper;
 	}
 
 	@Override
