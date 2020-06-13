@@ -147,13 +147,6 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> nsCreateGraph() {
-		// Vertex everyThing
-		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
-		g.addGraphListener(new EdgeListener<NsUnitOfWork>());
-		return g;
-	}
-
 	@NotNull
 	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
@@ -629,7 +622,7 @@ public class ExecutionPlanner {
 	}
 
 	public ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
-		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = nsCreateGraph();
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = createGraph();
 		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs, nsInstance);
 		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
 		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
