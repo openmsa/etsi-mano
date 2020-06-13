@@ -105,7 +105,7 @@ public class GrantAction {
 			final ServerGroup serverGroup = new ServerGroup("1", "az", "az");
 			sg.add(serverGroup);
 			// final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
-			final List<String> sgList = sg.stream().map(x -> x.getId()).collect(Collectors.toList());
+			final List<String> sgList = sg.stream().map(ServerGroup::getId).collect(Collectors.toList());
 			final ZoneGroupInformation zgi = new ZoneGroupInformation();
 			zgi.setZoneId(sgList);
 			grants.setZoneGroups(Collections.singleton(zgi));
@@ -208,10 +208,8 @@ public class GrantAction {
 				// Get Vim or create vim resource via Or-Vi
 				final SoftwareImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
 					final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
-					return newImg.orElseGet(() -> {
-						// Use or-vi, Vim is not on the same server. and where is the path ?
-						return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
-					});
+					// Use or-vi, Vim is not on the same server. Path is given in tosca file.
+					return newImg.orElseGet(() -> vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage()));
 				});
 				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}

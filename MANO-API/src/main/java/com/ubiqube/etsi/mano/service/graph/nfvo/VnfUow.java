@@ -23,7 +23,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	private final NsInstantiatedVnf resourceHandleEntity;
 
-	private final InstantiateVnfRequest request;
+	private final transient InstantiateVnfRequest request;
 
 	public VnfUow(final NsInstantiatedVnf _resourceHandleEntity, final InstantiateVnfRequest _request, final String _name) {
 		super(_resourceHandleEntity, _name);
@@ -62,7 +62,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	}
 
 	/**
-	 * XXX maybe wr should add a Max wait.
+	 * XXX We should add a Max wait.
 	 *
 	 * @param vnfLcmOpOccs
 	 * @param vnfm

@@ -8,10 +8,11 @@ import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVl;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class NsVlUow extends AbstractNsUnitOfWork {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	public NsVlUow(final NsInstantiatedVl _resourceHandleEntity, final String _name) {
 		super(_resourceHandleEntity, _name);

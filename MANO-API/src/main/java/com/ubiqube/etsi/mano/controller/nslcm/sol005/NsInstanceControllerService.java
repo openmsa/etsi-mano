@@ -98,7 +98,7 @@ public class NsInstanceControllerService {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
 		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsLcmOpType.TERMINATE);
-		// Map request into instance.
+		// XXX we can use quartz cron job for terminationTime.
 		eventManager.sendAction(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<String, Object>());
 		return nsLcm;
 	}

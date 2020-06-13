@@ -69,7 +69,7 @@ public class JsonFilter {
 			if (List.class.isAssignableFrom(temp.getClass())) {
 				final List<?> list = (List<?>) temp;
 				final DocumentStatus status = exploreList(list, realProperty, i, _node);
-				if (!status.getStatus().equals(DocumentStatus.Status.NOSTATE)) {
+				if (status.getStatus() != DocumentStatus.Status.NOSTATE) {
 					return status;
 				}
 			} else {

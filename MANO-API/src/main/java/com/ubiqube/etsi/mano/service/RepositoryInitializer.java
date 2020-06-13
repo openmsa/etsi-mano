@@ -17,7 +17,7 @@ import com.ubiqube.etsi.mano.repository.NamingStrategy;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  */
 @Service
-@ConditionalOnBean(Low.class)
+@ConditionalOnBean(RepositoryService.class)
 public class RepositoryInitializer {
 
 	protected static final String PROCESS_BASE_PATH = "Process";

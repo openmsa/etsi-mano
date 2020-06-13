@@ -100,38 +100,32 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public NsInformations getNsInformations(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new NsInformations();
 	}
 
 	@Override
 	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<NsSap> getNsSap(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<String> getNestedNsd(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<String> getVnfd(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 }

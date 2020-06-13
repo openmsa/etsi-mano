@@ -21,7 +21,6 @@ public class StartUow extends AbstractUnitOfWork {
 
 	@Override
 	public UowType getType() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

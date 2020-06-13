@@ -25,6 +25,11 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 		this.repository = repository;
 	}
 
+	/**
+	 * @deprecated Use findById.
+	 * @param id
+	 * @return
+	 */
 	@Deprecated
 	public final U get(final String id) {
 		return get(UUID.fromString(id));

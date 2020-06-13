@@ -401,7 +401,6 @@ public class ExecutionPlanner {
 				aVl.setVduId(x.getId());
 				aVl.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
 				aVl.setToscaName(x.getToscaName());
-				// aVl = vnfInstanceService.save(aVl);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
 		});
@@ -461,7 +460,6 @@ public class ExecutionPlanner {
 			vnfInstantiedCompute.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName(), currentCount + i));
 			vnfInstantiedCompute.setToscaName(vnfCompute.getToscaName());
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
-			// vnfInstanceService.save(vnfInstantiedCompute);
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
 			if ((null != vnfCompute.getMonitoringParameters()) && !vnfCompute.getMonitoringParameters().isEmpty()) {
 				final VnfInstantiatedMonitoring instanceMonotor = new VnfInstantiatedMonitoring();
@@ -501,7 +499,7 @@ public class ExecutionPlanner {
 			final VnfLiveInstance poped = instantiated.pop();
 			LOG.info("Removing VNF Compute instance {}", poped.getId());
 			instantiatedCompute.setRemovedInstantiated(poped.getId());
-			instantiatedCompute.setResourceId(poped.getResourceId().toString());
+			instantiatedCompute.setResourceId(poped.getResourceId());
 			instantiatedCompute.setInstantiationLevel(scaleLevel);
 			instantiatedCompute.setVnfLcmOpOccs(lcmOpOccs);
 			instantiatedCompute.setVnfCompute(x);
@@ -625,7 +623,6 @@ public class ExecutionPlanner {
 				// vnfInstance.setVimConnectionInfo(vimConnectionInfo);
 				// vnfInstance.setMetadata(metadata);
 				// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
-				// XXX vnfInstance = vnfInstanceService.save(vnfInstance);
 				sap.setVnfInstance(vnfInstance);
 				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
