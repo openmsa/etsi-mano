@@ -200,18 +200,7 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static <U extends UnitOfWorkBase<U>> void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
-		if ((null == left) || (null == right)) {
-			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
-			return;
-		}
-		left.forEach(x -> right.forEach(y -> {
-			LOG.info("  - Adding {} <-> {}", x, y.getName());
-			g.addEdge(x, y);
-		}));
-	}
-
-	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
+	private static <V, U extends UnitOfWorkBase<V>> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final List<U> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;
@@ -601,7 +590,7 @@ public class ExecutionPlanner {
 		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
 		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
 		saps.forEach(x -> {
-			nsAddEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
+			addEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
 		});
 		final Set<NsdPackageVnfPackage> nsdvnf = nsdPackageService.findVnfPackageByNsPackage(nsdPackage);
 		nsdvnf.forEach(x -> {
@@ -609,7 +598,7 @@ public class ExecutionPlanner {
 			final VnfPackage vnfp = vnfPackageService.findById(x.getVnfPackage());
 			vnfp.getVnfExtCp().forEach(y -> {
 				LOG.info("Adding edge: {} <-> {}", y.getExternalVirtualLink(), x.getToscaName());
-				nsAddEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName()));
+				addEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName()));
 			});
 
 		});
@@ -619,7 +608,7 @@ public class ExecutionPlanner {
 			final Set<NsSap> nsdSaps = nsdPackageService.getSapByNsdPackageId(x.getChild().getId());
 			nsdSaps.forEach(y -> {
 				LOG.info("Adding edge: {} <-> {}", x.getToscaName(), y.getToscaName());
-				nsAddEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
+				addEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
 			});
 		});
 		// Add start
