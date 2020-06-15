@@ -589,27 +589,18 @@ public class ExecutionPlanner {
 		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs, nsInstance);
 		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
 		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
-		saps.forEach(x -> {
-			addEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
-		});
+		saps.forEach(x -> addEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName())));
 		final Set<NsdPackageVnfPackage> nsdvnf = nsdPackageService.findVnfPackageByNsPackage(nsdPackage);
 		nsdvnf.forEach(x -> {
 			// An VNF may have a dependency on a VL thru ExtCP
 			final VnfPackage vnfp = vnfPackageService.findById(x.getVnfPackage());
-			vnfp.getVnfExtCp().forEach(y -> {
-				LOG.info("Adding edge: {} <-> {}", y.getExternalVirtualLink(), x.getToscaName());
-				addEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName()));
-			});
-
+			vnfp.getVnfExtCp().forEach(y -> addEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName())));
 		});
 		final Set<NsdPackageNsdPackage> nsdnsd = nsdPackageService.findNestedNsdByNsdPackage(nsdPackage);
 		nsdnsd.forEach(x -> {
 			// A NSD may have a dependency on SAP
 			final Set<NsSap> nsdSaps = nsdPackageService.getSapByNsdPackageId(x.getChild().getId());
-			nsdSaps.forEach(y -> {
-				LOG.info("Adding edge: {} <-> {}", x.getToscaName(), y.getToscaName());
-				addEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
-			});
+			nsdSaps.forEach(y -> addEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName())));
 		});
 		// Add start
 		final NsInstantiatedBase vnfInstantiedStart = new NsInstantiatedBase();
@@ -640,7 +631,6 @@ public class ExecutionPlanner {
 						g.addEdge(key, end);
 					}
 				});
-
 		return g;
 	}
 
