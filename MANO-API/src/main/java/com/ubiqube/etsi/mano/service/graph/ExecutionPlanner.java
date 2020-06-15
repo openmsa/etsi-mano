@@ -135,8 +135,9 @@ public class ExecutionPlanner {
 	}
 
 	private static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
+		final Class<ConnectivityEdge<U>> t = (Class<ConnectivityEdge<U>>) (Object) ConnectivityEdge.class;
 		// Vertex everyThing
-		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(t));
 		g.addGraphListener(new EdgeListener<U>());
 		return g;
 	}
