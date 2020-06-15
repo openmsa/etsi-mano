@@ -73,7 +73,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class OpenStackVim implements Vim {
-	private static final long GIGA = 1000000000L;
+	private static final long GIGA = 1024 * 1024 * 1024L;
 
 	private static final long MEGA = 1048576L;
 
