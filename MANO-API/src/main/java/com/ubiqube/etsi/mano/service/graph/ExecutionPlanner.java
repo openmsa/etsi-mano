@@ -259,7 +259,7 @@ public class ExecutionPlanner {
 	}
 
 	public <U extends UnitOfWorkBase<?>> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, @Nonnull final UUID _id, final BaseEntity vnfInstance, final String subName, final BinaryRepository repo) {
-		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(U::getName);
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
