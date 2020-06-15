@@ -21,7 +21,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfCompute implements BaseEntity, Auditable, Serializable {
+public class VnfCompute implements ToscaEntity, Auditable, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -109,26 +109,32 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 		softwareImage = _softwareImage;
 	}
 
+	@Override
 	public String getToscaId() {
 		return toscaId;
 	}
 
+	@Override
 	public void setToscaId(final String toscaId) {
 		this.toscaId = toscaId;
 	}
 
+	@Override
 	public String getToscaName() {
 		return toscaName;
 	}
 
+	@Override
 	public void setToscaName(final String toscaName) {
 		this.toscaName = toscaName;
 	}
 
+	@Override
 	public String getState() {
 		return state;
 	}
 
+	@Override
 	public void setState(final String state) {
 		this.state = state;
 	}

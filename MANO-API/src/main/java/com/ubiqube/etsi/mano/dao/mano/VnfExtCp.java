@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
-public class VnfExtCp implements Serializable {
+public class VnfExtCp implements Serializable, ToscaEntity {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +36,7 @@ public class VnfExtCp implements Serializable {
 	@JoinColumn
 	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
 
+	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -44,26 +45,32 @@ public class VnfExtCp implements Serializable {
 		this.id = id;
 	}
 
+	@Override
 	public String getToscaId() {
 		return toscaId;
 	}
 
+	@Override
 	public void setToscaId(final String toscaId) {
 		this.toscaId = toscaId;
 	}
 
+	@Override
 	public String getToscaName() {
 		return toscaName;
 	}
 
+	@Override
 	public void setToscaName(final String toscaName) {
 		this.toscaName = toscaName;
 	}
 
+	@Override
 	public String getState() {
 		return state;
 	}
 
+	@Override
 	public void setState(final String state) {
 		this.state = state;
 	}
