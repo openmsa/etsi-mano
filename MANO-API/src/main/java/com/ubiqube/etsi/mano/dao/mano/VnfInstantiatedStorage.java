@@ -22,13 +22,6 @@ public class VnfInstantiatedStorage extends VnfInstantiatedBase {
 	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
 
-	/**
-	 * Vim name.
-	 */
-	private String aliasName;
-
-	private String toscaName;
-
 	@Override
 	public UUID getId() {
 		return id;
@@ -55,22 +48,6 @@ public class VnfInstantiatedStorage extends VnfInstantiatedBase {
 	@Override
 	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
-	}
-
-	public String getAliasName() {
-		return aliasName;
-	}
-
-	public void setAliasName(final String aliasName) {
-		this.aliasName = aliasName;
-	}
-
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
 	}
 
 }
