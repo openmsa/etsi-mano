@@ -111,6 +111,7 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("virtualCompute.virtualCpu.numVirtualCpu", "numVcpu")
 				.field("virtualCompute.virtualCpu.cpuArchitecture", "cpuArchitecture")
 				.field("virtualCompute.virtualMemory.virtualMemSize", "virtualMemorySize")
+				.field("virtualCompute.virtualLocalStorage[0].sizeOfStorage", "diskSize")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(VduCp.class, VnfLinkPort.class)

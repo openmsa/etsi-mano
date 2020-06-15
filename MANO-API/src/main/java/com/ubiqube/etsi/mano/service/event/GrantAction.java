@@ -124,7 +124,11 @@ public class GrantAction {
 		executorService.submit(getSoftwareImages);
 
 		final Callable<Void> getComputeResourceFlavours = () -> {
-			grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
+			try {
+				grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
+			} catch (final RuntimeException e) {
+				LOG.error("", e);
+			}
 			return null;
 		};
 		executorService.submit(getComputeResourceFlavours);
@@ -177,9 +181,9 @@ public class GrantAction {
 		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
 		final Map<String, VimComputeResourceFlavourEntity> cache = new HashMap<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
-			final String key = x.getNumVcpu() + "-" + x.getVirtualMemorySize();
+			final String key = x.getNumVcpu() + "-" + x.getVirtualMemorySize() + "-" + x.getDiskSize();
 			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
-				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), 10);
+				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), x.getDiskSize());
 				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
 				vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
 				vcrfe.setResourceProviderId(vim.getType());

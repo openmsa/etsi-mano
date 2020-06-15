@@ -47,6 +47,8 @@ public class VnfCompute implements ToscaEntity, Auditable, Serializable {
 
 	private long numVcpu;
 
+	private long diskSize;
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private SoftwareImage softwareImage;
 
@@ -250,6 +252,14 @@ public class VnfCompute implements ToscaEntity, Auditable, Serializable {
 			instantiationLevel = new LinkedHashSet<>();
 		}
 		instantiationLevel.add(_vduInstantiationLevel);
+	}
+
+	public long getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(final long diskSize) {
+		this.diskSize = diskSize;
 	}
 
 }
