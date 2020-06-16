@@ -18,6 +18,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
@@ -67,6 +68,7 @@ public class NsInstanceControllerService {
 		nsInstance.setNsInstanceName(req.getNsName());
 		nsInstance.setNsInstanceDescription(req.getNsDescription());
 		nsInstance.setNsdInfo(nsd);
+		nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
