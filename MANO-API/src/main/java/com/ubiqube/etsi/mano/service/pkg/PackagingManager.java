@@ -119,6 +119,7 @@ public class PackagingManager {
 			final Set<VnfVl> vvlNodes = packageProvider.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfVl(vvlNodes);
 			final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp(vnfPackage.getUserDefinedData());
+			vcNodes.stream().forEach(x -> x.setVnfPackage(vnfPackage));
 			vnfPackage.setVnfLinkPort(vcNodes);
 			remapNetworks(cNodes, vcNodes);
 			vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));

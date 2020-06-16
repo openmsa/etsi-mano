@@ -117,6 +117,7 @@ public class ToscaPackageProvider implements PackageProvider {
 		mapperFactory.classMap(VduCp.class, VnfLinkPort.class)
 				.field("virtualBindingReq", "virtualBinding")
 				.field("virtualLinkReq", "virtualLink")
+				.field("order", "interfaceOrder")
 				.field("internalName", "toscaName")
 				.byDefault()
 				.register();

@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -29,6 +30,11 @@ public class VnfLinkPort implements BaseEntity, Auditable, Serializable {
 	private String virtualLink;
 
 	private String virtualBinding;
+
+	private int interfaceOrder;
+
+	@ManyToOne
+	private VnfPackage vnfPackage;
 
 	@Embedded
 	private Audit audit;
@@ -80,6 +86,22 @@ public class VnfLinkPort implements BaseEntity, Auditable, Serializable {
 
 	public void setVirtualBinding(final String virtualBinding) {
 		this.virtualBinding = virtualBinding;
+	}
+
+	public int getInterfaceOrder() {
+		return interfaceOrder;
+	}
+
+	public void setInterfaceOrder(final int interfaceOrder) {
+		this.interfaceOrder = interfaceOrder;
+	}
+
+	public VnfPackage getVnfPackage() {
+		return vnfPackage;
+	}
+
+	public void setVnfPackage(final VnfPackage vnfPackage) {
+		this.vnfPackage = vnfPackage;
 	}
 
 	@Override

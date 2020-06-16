@@ -145,7 +145,7 @@ public class ExecutionPlanner {
 	@NotNull
 	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
-		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, changeType);
+		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, vnfPackage, changeType);
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
 			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
@@ -212,7 +212,7 @@ public class ExecutionPlanner {
 		}));
 	}
 
-	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VnfLcmOpOccs vnfLcmOpOccs, final ChangeType changeType) {
+	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VnfLcmOpOccs vnfLcmOpOccs, final VnfPackage vnfPackage, final ChangeType changeType) {
 		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
@@ -242,7 +242,7 @@ public class ExecutionPlanner {
 				.filter(x -> x.getChangeType() == changeType)
 				.forEach(x -> {
 					final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-					final UnitOfWork uow = new ComputeUow(x, compute);
+					final UnitOfWork uow = new ComputeUow(x, compute, vnfPackageService.findVnfVirtualLinks(vnfPackage));
 					vertex.add(compute.getToscaName(), uow);
 					g.addVertex(uow);
 				});

@@ -356,7 +356,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 0
         vnic_type: virtio
       requirements:
         - virtual_link:
@@ -375,7 +375,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 1
         vnic_type: virtio
       requirements:
         - virtual_link:
@@ -394,7 +394,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 3
         vnic_type: virtio
       requirements:
         - virtual_link:
@@ -414,7 +414,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 0
         vnic_type: virtio
       requirements:
         - virtual_link:
@@ -433,7 +433,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 2
         vnic_type: virtio
       requirements:
         - virtual_link:
@@ -452,7 +452,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 1
         vnic_type: virtio
       requirements:
         - virtual_link:

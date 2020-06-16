@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -19,6 +21,7 @@ import com.ubiqube.etsi.mano.jpa.VnfComputeAspectDeltaJpa;
 import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiationLevelsJpa;
+import com.ubiqube.etsi.mano.jpa.VnfLinkPortJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
@@ -39,7 +42,9 @@ public class VnfPackageService {
 
 	private final VnfInstantiationLevelsJpa vnfInstantiationLevelsJpa;
 
-	public VnfPackageService(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa, final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa) {
+	private final VnfLinkPortJpa vnfLinkPortJpa;
+
+	public VnfPackageService(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa, final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa) {
 		vnfComputeAspectDeltaJpa = _vnfComputeAspectDeltaJpa;
 		vnfStorageJpa = _vnfStorageJpa;
 		vnfVl = _vnfVl;
@@ -47,6 +52,7 @@ public class VnfPackageService {
 		vnfExtCpJpa = _vnfExtCpJpa;
 		vnfPackageJpa = _vnfPackageJpa;
 		vnfInstantiationLevelsJpa = _vnfInstantiationLevelsJpa;
+		vnfLinkPortJpa = _vnfLinkPortJpa;
 	}
 
 	public List<VnfComputeAspectDelta> findAspectDeltaByAspectId(final VnfCompute vnfCompute, final String aspectName) {
@@ -107,6 +113,10 @@ public class VnfPackageService {
 
 	public Optional<VnfPackage> findByDescriptorIdAndVnfSoftwareVersionAndFlavourId(final String flavour, final String name, final String version) {
 		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersionAndFlavorId(name, version, flavour);
+	}
+
+	public Set<VnfLinkPort> findVnfVirtualLinks(final VnfPackage vnfPackage) {
+		return vnfLinkPortJpa.findByVnfPackage(vnfPackage);
 	}
 
 }
