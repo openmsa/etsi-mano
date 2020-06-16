@@ -226,7 +226,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
 
 		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
-		return new ResponseEntity<>(nsInstanceWeb, HttpStatus.OK);
+		return ResponseEntity.accepted().header("Location", nsInstanceWeb.getLinks().getSelf().getHref()).body(nsInstanceWeb);
 	}
 
 	private static NsInstanceLinks makeLink(@Nonnull final String id) {
