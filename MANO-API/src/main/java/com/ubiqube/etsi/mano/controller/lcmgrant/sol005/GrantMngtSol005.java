@@ -21,7 +21,6 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
-import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
@@ -65,7 +64,7 @@ public class GrantMngtSol005 implements GrantManagement {
 		grants.setAvailable(Boolean.FALSE);
 		grants = grantsJpa.save(grants);
 		LOG.debug("Sending grants {}", grants.getId());
-		eventManager.sendAction(ActionType.GRANT_REQUEST, grants.getId(), new HashMap<String, Object>());
+		eventManager.sendGrant(grants.getId(), new HashMap<String, Object>());
 		LOG.info("Grant request {} sent.", grants.getId());
 		return grants;
 	}

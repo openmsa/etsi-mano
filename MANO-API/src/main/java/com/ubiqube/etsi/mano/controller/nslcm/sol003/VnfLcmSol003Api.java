@@ -27,29 +27,27 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
-import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 import ma.glasnost.orika.MapperFacade;
 
 @Profile({ "!NFVO" })
 @RestController
 public class VnfLcmSol003Api implements VnfLcmSol003 {
+	private static final String LOCATION = "Location";
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol003Api.class);
 	@Nonnull
 	private final LcmLinkable links = new Sol003LcmLinkable();
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
-	private final EventManager eventManager;
 	private final MapperFacade mapper;
 
-	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final EventManager _eventManager, final MapperFacade _mapper) {
+	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
-		eventManager = _eventManager;
 		mapper = _mapper;
 		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
@@ -73,7 +71,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest);
 		vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
-		return ResponseEntity.accepted().header("Location", vnfInstance.getLinks().getSelf().getHref()).build();
+		return ResponseEntity.accepted().body(vnfInstance);
 	}
 
 	@Override
@@ -128,15 +126,15 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
 		final VnfLcmOpOccs lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest);
-		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
-		return ResponseEntity.accepted().header("Location", link.getSelf().getHref()).build();
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		ensureInstantiated(vnfInstance);
-		throw new GenericException("TODO");
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), operateVnfRequest);
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.accepted().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
 		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
@@ -154,10 +152,10 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		ensureInstantiated(vnfInstance);
-		throw new GenericException("TODO");
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId, final ScaleVnfRequest scaleVnfRequest) {
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.scale(UUID.fromString(vnfInstanceId), scaleVnfRequest);
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
 		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
@@ -165,10 +163,10 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		ensureInstantiated(vnfInstance);
-		throw new GenericException("TODO");
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), scaleVnfToLevelRequest);
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
 		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
@@ -178,9 +176,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		final VnfLcmOpOccs lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), terminateVnfRequest);
-		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
-		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, UUID.fromString(vnfInstanceId));
-		return ResponseEntity.noContent().header("Location", link.getSelf().getHref()).build();
+		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header(LOCATION, link).build();
 	}
 
 }

@@ -26,6 +26,19 @@ public class VduInstantiationLevel implements Serializable {
 
 	private int numberOfInstances;
 
+	public VduInstantiationLevel() {
+		// Nothing.
+	}
+
+	public VduInstantiationLevel(final int _numberOfInstance) {
+		numberOfInstances = _numberOfInstance;
+	}
+
+	public VduInstantiationLevel(final String _levelName, final int _numberOfInstance) {
+		levelName = _levelName;
+		numberOfInstances = _numberOfInstance;
+	}
+
 	public UUID getId() {
 		return id;
 	}

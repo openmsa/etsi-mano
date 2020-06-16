@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -292,6 +293,22 @@ public class GrantResponse implements BaseEntity, Auditable {
 
 	public void setAvailable(final Boolean available) {
 		this.available = available;
+	}
+
+	public void addExtManagedVl(final ExtManagedVirtualLinkDataEntity extVl) {
+		if (null == extManagedVirtualLinks) {
+			extManagedVirtualLinks = new HashSet<>();
+		}
+		extManagedVirtualLinks.add(extVl);
+	}
+
+	public void addZones(final ZoneInfoEntity zone) {
+		if (null == zones) {
+			zones = new HashSet<>();
+		}
+		zone.setGrants(this);
+		zones.add(zone);
+
 	}
 
 }

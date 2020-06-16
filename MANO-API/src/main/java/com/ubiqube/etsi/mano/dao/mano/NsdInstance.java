@@ -1,15 +1,19 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -38,17 +42,16 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private String nsInstanceDescription = null;
 
-	@Field
-	private String nsdId = null;
-
-	// @OneToOne(fetch = FetchType.EAGER)
 	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackage nsdInfo = null;
 
 	@Field
 	private String flavourId = null;
 
-	@OneToMany
+	private String nsInstantiationLevelId;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	private List<VnfInstance> vnfInstance = null;
 
 	@Transient
@@ -67,13 +70,22 @@ public class NsdInstance implements BaseEntity {
 	@Field
 	private InstantiationStateEnum nsState = null;
 
-	private String processId;
-
 	@Transient
 	private List<NsScaleInfo> nsScaleStatus = null;
 
 	@Transient
 	private List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<NestedNsInstanceData> nestedNsInstanceData;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfInstanceData> vnfInstanceData;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
+	private Set<NsLcmOpOccs> lcmOpOccs;
 
 	@Override
 	public UUID getId() {
@@ -98,14 +110,6 @@ public class NsdInstance implements BaseEntity {
 
 	public void setNsInstanceDescription(final String nsInstanceDescription) {
 		this.nsInstanceDescription = nsInstanceDescription;
-	}
-
-	public String getNsdId() {
-		return nsdId;
-	}
-
-	public void setNsdId(final String nsdId) {
-		this.nsdId = nsdId;
 	}
 
 	public NsdPackage getNsdInfo() {
@@ -196,12 +200,43 @@ public class NsdInstance implements BaseEntity {
 		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 	}
 
-	public String getProcessId() {
-		return processId;
+	public String getNsInstantiationLevelId() {
+		return nsInstantiationLevelId;
 	}
 
-	public void setProcessId(final String processId) {
-		this.processId = processId;
+	public void setNsInstantiationLevelId(final String nsInstantiationLevelId) {
+		this.nsInstantiationLevelId = nsInstantiationLevelId;
+	}
+
+	public Set<NestedNsInstanceData> getNestedNsInstanceData() {
+		return nestedNsInstanceData;
+	}
+
+	public void setNestedNsInstanceData(final Set<NestedNsInstanceData> nestedNsInstanceData) {
+		this.nestedNsInstanceData = nestedNsInstanceData;
+	}
+
+	public Set<VnfInstanceData> getVnfInstanceData() {
+		return vnfInstanceData;
+	}
+
+	public void setVnfInstanceData(final Set<VnfInstanceData> vnfInstanceData) {
+		this.vnfInstanceData = vnfInstanceData;
+	}
+
+	public Set<NsLcmOpOccs> getLcmOpOccs() {
+		return lcmOpOccs;
+	}
+
+	public void setLcmOpOccs(final Set<NsLcmOpOccs> lcmOpOccs) {
+		this.lcmOpOccs = lcmOpOccs;
+	}
+
+	public void addNestedNsInstance(final NsdInstance nsIn) {
+		if (null == nestedNsInstance) {
+			nestedNsInstance = new ArrayList<>();
+		}
+		nestedNsInstance.add(nsIn);
 	}
 
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
@@ -55,7 +56,7 @@ public class OrikaTest {
 		nsd.addVnfPkgIdsItem("d5bbe3c1-23a2-4e72-8e00-66cc6ba2061f");
 		nsd.addVnfPkgIdsItem("17372129-0590-4532-ace3-7c35eaf0c7c4");
 		final NsdPackage nsdDao = mapperFactory.getMapperFacade().map(nsd, NsdPackage.class);
-		final Set<VnfPackage> vnfPkgIds = nsdDao.getVnfPkgIds();
+		final Set<NsdPackageVnfPackage> vnfPkgIds = nsdDao.getVnfPkgIds();
 		assertEquals(2, vnfPkgIds.size());
 		final VnfPackage[] vnf = vnfPkgIds.toArray(new VnfPackage[0]);
 		assertEquals("d5bbe3c1-23a2-4e72-8e00-66cc6ba2061f", vnf[0].getId().toString());

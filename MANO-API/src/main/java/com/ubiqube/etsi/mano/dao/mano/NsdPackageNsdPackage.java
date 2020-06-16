@@ -25,6 +25,17 @@ public class NsdPackageNsdPackage {
 
 	private String toscaId;
 
+	public NsdPackageNsdPackage() {
+		// Nothing.
+	}
+
+	public NsdPackageNsdPackage(final NsdPackage parent, final NsdPackage child, final String toscaName) {
+		super();
+		this.parent = parent;
+		this.child = child;
+		this.toscaName = toscaName;
+	}
+
 	public UUID getId() {
 		return id;
 	}

@@ -23,7 +23,8 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
 		final String networkId = context.get(extCp.getInternalVirtualLink());
-		return vim.createRouter(vimConnectionInformation, vnfInstantiedExtCp.getAliasName(), networkId, vnfInstantiedExtCp.getResourceId());
+		final String extNetwork = context.get(extCp.getExternalVirtualLink());
+		return vim.createRouter(vimConnectionInformation, vnfInstantiedExtCp.getAliasName(), networkId, extNetwork);
 	}
 
 	@Override

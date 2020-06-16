@@ -17,7 +17,6 @@ public class NsInstanceFactory {
 	@Nonnull
 	public static NsdInstance createNsInstancesNsInstance(final CreateNsRequest nsInstancesCreateNsRequest) {
 		final NsdInstance nsInstance = new NsdInstance();
-		nsInstance.setNsdId(nsInstancesCreateNsRequest.getNsdId());
 		nsInstance.setNsInstanceDescription(nsInstancesCreateNsRequest.getNsDescription());
 		nsInstance.setNsInstanceName(nsInstancesCreateNsRequest.getNsName());
 		nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);

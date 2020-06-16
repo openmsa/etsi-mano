@@ -3,7 +3,7 @@ package com.ubiqube.etsi.mano.controller.lcmgrant.sol005;
 import org.springframework.http.ResponseEntity;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsVersions;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ApiVersionInformation;
+import com.ubiqube.etsi.mano.model.ApiVersionInformation;
 
 public class LcmGrantsVersionsSol005Api implements LcmGrantsVersions {
 

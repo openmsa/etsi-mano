@@ -130,4 +130,8 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		return link;
 	}
 
+	public static String getSelfLink(final String id) {
+		return linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, null, null)).withSelfRel().getHref();
+	}
+
 }

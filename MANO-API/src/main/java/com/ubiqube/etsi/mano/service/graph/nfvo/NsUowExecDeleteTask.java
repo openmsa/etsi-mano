@@ -3,7 +3,7 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
+import com.ubiqube.etsi.mano.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 

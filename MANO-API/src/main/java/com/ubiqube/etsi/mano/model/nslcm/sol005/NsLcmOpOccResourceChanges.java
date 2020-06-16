@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class NsLcmOpOccResourceChanges {
 	@JsonProperty("affectedVnfs")
 	@Valid
-	private List<AffectedVnf> affectedVnfs = null;
+	private List<AffectedVnf> affectedVnfs = new ArrayList<>();
 
 	@JsonProperty("affectedPnfs")
 	@Valid
@@ -64,7 +64,7 @@ public class NsLcmOpOccResourceChanges {
 	 * Information about the VNF instances that were affected during the lifecycle
 	 * operation, if this notification represents the result of a lifecycle
 	 * operation.
-	 * 
+	 *
 	 * @return affectedVnfs
 	 **/
 	@ApiModelProperty(value = "Information about the VNF instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
@@ -96,7 +96,7 @@ public class NsLcmOpOccResourceChanges {
 	 * Information about the PNF instances that were affected during the lifecycle
 	 * operation, if this notification represents the result of a lifecycle
 	 * operation.
-	 * 
+	 *
 	 * @return affectedPnfs
 	 **/
 	@ApiModelProperty(value = "Information about the PNF instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
@@ -128,7 +128,7 @@ public class NsLcmOpOccResourceChanges {
 	 * Information about the VL instances that were affected during the lifecycle
 	 * operation, if this notification represents the result of a lifecycle
 	 * operation.
-	 * 
+	 *
 	 * @return affectedVls
 	 **/
 	@ApiModelProperty(value = "Information about the VL instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
@@ -160,7 +160,7 @@ public class NsLcmOpOccResourceChanges {
 	 * Information about the VNFFG instances that were affected during the lifecycle
 	 * operation, if this notification represents the result of a lifecycle
 	 * operation. See note
-	 * 
+	 *
 	 * @return affectedVnffgs
 	 **/
 	@ApiModelProperty(value = "Information about the VNFFG instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note ")
@@ -192,7 +192,7 @@ public class NsLcmOpOccResourceChanges {
 	 * Information about the nested NS instances that were affected during the
 	 * lifecycle operation, if this notification represents the result of a
 	 * lifecycle operation. See note.
-	 * 
+	 *
 	 * @return affectedNss
 	 **/
 	@ApiModelProperty(value = "Information about the nested NS instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note. ")
@@ -224,7 +224,7 @@ public class NsLcmOpOccResourceChanges {
 	 * Information about the nested NS instances that were affected during the
 	 * lifecycle operation, if this notification represents the result of a
 	 * lifecycle operation. See note.
-	 * 
+	 *
 	 * @return affectedSaps
 	 **/
 	@ApiModelProperty(value = "Information about the nested NS instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note. ")

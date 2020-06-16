@@ -24,6 +24,8 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 
 	private String aliasName;
 
+	private String toscaName;
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -58,6 +60,14 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 
 	public void setAliasName(final String aliasName) {
 		this.aliasName = aliasName;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
 	}
 
 }

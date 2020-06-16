@@ -23,15 +23,13 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private VnfInstance vnfInstance = null;
 
 	@ManyToOne(cascade = CascadeType.DETACH)
-	private VnfPackage vnfd = null;
+	private NsdPackageVnfPackage nsdPackageVnfPackage;
 
 	private String vnfProfileId = null;
-
-	private String vnfName = null;
 
 	private String instanceDescription;
 
@@ -53,24 +51,12 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 		return vnfInstance;
 	}
 
-	public VnfPackage getVnfd() {
-		return vnfd;
-	}
-
 	public String getVnfProfileId() {
 		return vnfProfileId;
 	}
 
 	public void setVnfProfileId(final String vnfProfileId) {
 		this.vnfProfileId = vnfProfileId;
-	}
-
-	public String getVnfName() {
-		return vnfName;
-	}
-
-	public void setVnfName(final String vnfName) {
-		this.vnfName = vnfName;
 	}
 
 	public AffectedVnfChangedInfo getChangedInfo() {
@@ -85,16 +71,20 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 		this.vnfInstance = vnfInstance;
 	}
 
-	public void setVnfd(final VnfPackage vnfd) {
-		this.vnfd = vnfd;
-	}
-
 	public String getInstanceDescription() {
 		return instanceDescription;
 	}
 
 	public void setInstanceDescription(final String instanceDescription) {
 		this.instanceDescription = instanceDescription;
+	}
+
+	public NsdPackageVnfPackage getNsdPackageVnfPackage() {
+		return nsdPackageVnfPackage;
+	}
+
+	public void setNsdPackageVnfPackage(final NsdPackageVnfPackage nsdPackageVnfPackage) {
+		this.nsdPackageVnfPackage = nsdPackageVnfPackage;
 	}
 
 }

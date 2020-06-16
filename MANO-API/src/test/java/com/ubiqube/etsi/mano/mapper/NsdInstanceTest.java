@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 
 import ma.glasnost.orika.MapperFacade;
@@ -40,5 +41,17 @@ public class NsdInstanceTest {
 		assertNotNull(l.get(0).getId());
 		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", l.get(0).getId().toString());
 
+	}
+
+	@Test
+	void testInstantiateNsRequest() throws Exception {
+		final InstantiateNsRequest req = new InstantiateNsRequest();
+		req.setNsFlavourId("flav");
+		req.setNsInstantiationLevelId("instlvl");
+		final NsdInstance nsdi = new NsdInstance();
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		mapper.map(req, nsdi);
+		assertEquals("flav", nsdi.getFlavourId());
+		assertEquals("instlvl", nsdi.getNsInstantiationLevelId());
 	}
 }

@@ -74,7 +74,13 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	private String externalProcessId;
 
 	@Embedded
+	private VnfInstantiatedInfo vnfInstantiatedInfo = new VnfInstantiatedInfo();
+
+	@Embedded
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
+
+	@Embedded
+	private OperateChanges operateChanges = new OperateChanges();
 
 	// private VnfInfoModifications changedInfo = null;
 
@@ -84,6 +90,10 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfLcmOpOccs")
 	private Set<VnfInstantiatedBase> resourceHandleEntity;
 
+	@Embedded
+	private VnfScaleInfo vnfScaleInfo = new VnfScaleInfo();
+
+	@Embedded
 	private Audit audit;
 
 	@Override
@@ -197,6 +207,30 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
 
 	public void setResourceHandleEntity(final Set<VnfInstantiatedBase> resourceHandleEntity) {
 		this.resourceHandleEntity = resourceHandleEntity;
+	}
+
+	public VnfInstantiatedInfo getVnfInstantiatedInfo() {
+		return vnfInstantiatedInfo;
+	}
+
+	public void setVnfInstantiatedInfo(final VnfInstantiatedInfo vnfInstantiatedInfo) {
+		this.vnfInstantiatedInfo = vnfInstantiatedInfo;
+	}
+
+	public VnfScaleInfo getVnfScaleInfo() {
+		return vnfScaleInfo;
+	}
+
+	public void setVnfScaleInfo(final VnfScaleInfo _vnfScaleInfo) {
+		vnfScaleInfo = _vnfScaleInfo;
+	}
+
+	public OperateChanges getOperateChanges() {
+		return operateChanges;
+	}
+
+	public void setOperateChanges(final OperateChanges operateChanges) {
+		this.operateChanges = operateChanges;
 	}
 
 	@Override

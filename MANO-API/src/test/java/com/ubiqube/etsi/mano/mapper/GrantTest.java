@@ -7,15 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 
@@ -78,10 +82,23 @@ public class GrantTest {
 		final GrantResponse gr = new GrantResponse();
 		gr.setVimAssets(podam.manufacturePojo(GrantVimAssetsEntity.class));
 		final Set<GrantInformationExt> addResources = new HashSet<>();
-		addResources.add(podam.manufacturePojo(GrantInformationExt.class));
-		gr.setAddResources(addResources);
 
+		final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
+		extVl.setId(UUID.randomUUID());
+		extVl.setResourceId("resId");
+		extVl.setResourceProviderId("provId");
+		extVl.setVimConnectionId("vimId");
+		extVl.setVnfVirtualLinkDescId("name");
+		gr.addExtManagedVl(extVl);
 		final Grant resp = mapper.map(gr, Grant.class);
 		System.out.println("" + resp);
+		final List<ExtManagedVirtualLinkData> respExtVls = resp.getExtManagedVirtualLinks();
+		assertNotNull(respExtVls);
+		assertEquals(1, respExtVls.size());
+		final ExtManagedVirtualLinkData respExtVl = respExtVls.get(0);
+		assertEquals("resId", respExtVl.getResourceId());
+		assertEquals("provId", respExtVl.getResourceProviderId());
+		assertEquals("vimId", respExtVl.getVimId());
+		assertEquals("name", respExtVl.getVmfVirtualLinkDescId());
 	}
 }

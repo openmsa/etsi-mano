@@ -11,7 +11,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.eclipse.jdt.annotation.NonNull;
+import javax.annotation.Nonnull;
+
 import org.jgrapht.ListenableGraph;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
@@ -21,6 +22,7 @@ import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
+import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.BlockDeviceMappingCreate;
 import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Image;
@@ -40,7 +42,6 @@ import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
 import org.openstack4j.model.network.builder.SubnetBuilder;
 import org.openstack4j.model.storage.block.Volume;
-import org.openstack4j.model.storage.block.Volume.Status;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ import ma.glasnost.orika.MapperFacade;
 public class OpenStackVim implements Vim {
 	private static final long GIGA = 1000000000L;
 
-	private static final long MEGA = 1000000L;
+	private static final long MEGA = 1048576L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(OpenStackVim.class);
 
@@ -187,7 +188,8 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public @NonNull VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
+	@Nonnull
+	public VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final List<? extends Image> images = os.compute().images().list();
 		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new NotFoundException("Image " + name + " Cannot be found on Vim."));
@@ -305,7 +307,7 @@ public class OpenStackVim implements Vim {
 
 	private static void waitForVolumeCompletion(final BlockVolumeService volumes, final Volume volume) {
 		Volume localVolume = volume;
-		while ((localVolume.getStatus() == Status.CREATING) || (localVolume.getStatus() == Status.DOWNLOADING)) {
+		while ((localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.CREATING) || (localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.DOWNLOADING)) {
 			LOG.info("Waiting for volume: {}", volume.getId());
 			try {
 				Thread.sleep(500);
@@ -372,7 +374,7 @@ public class OpenStackVim implements Vim {
 				.filter(x -> x.getDisk() == (disk / GIGA))
 				.map(x -> (Flavor) x)
 				.findFirst();
-
+		// XXX We can't use name maybe use an UUID.
 		return matchingFlavor.orElseGet(() -> os.compute()
 				.flavors()
 				.create(Builders.flavor()
@@ -418,8 +420,8 @@ public class OpenStackVim implements Vim {
 	}
 
 	private static void checkResult(final ActionResponse action) {
-		if (!action.isSuccess()) {
-			throw new VimException(action.getCode() + ' ' + action.getFault());
+		if (!action.isSuccess() && (action.getCode() != 404)) {
+			throw new VimException(action.getCode() + " " + action.getFault());
 		}
 	}
 
@@ -429,7 +431,8 @@ public class OpenStackVim implements Vim {
 		final List<? extends Port> routerList = os.networking().port().list();
 		routerList.stream()
 				.filter(x -> x.getDeviceId().equals(resourceId))
-				.map(x -> x.getId())
+				.filter(x -> !x.getDeviceOwner().equals("network:router_gateway"))
+				.map(Port::getId)
 				.forEach(x -> os.networking().router().detachInterface(resourceId, null, x));
 		checkResult(os.networking().router().delete(resourceId));
 	}
@@ -437,7 +440,25 @@ public class OpenStackVim implements Vim {
 	@Override
 	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		checkResult(os.compute().servers().delete(resourceId));
+		final ActionResponse res = os.compute().servers().delete(resourceId);
+		if (409 == res.getCode()) {
+			return;
+		}
+		int cnt = 100;
+		while (cnt >= 0) {
+			final Server res2 = os.compute().servers().get(resourceId);
+			if (null == res2) {
+				LOG.info("Compute resource {} released.", resourceId);
+				return;
+			}
+			try {
+				Thread.sleep(100);
+			} catch (final InterruptedException e) {
+				LOG.error("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+			cnt--;
+		}
 	}
 
 	@Override
@@ -469,5 +490,25 @@ public class OpenStackVim implements Vim {
 		return os.compute().hostAggregates().list().stream().map(x -> new ServerGroup(x.getId(), x.getName(), x.getAvailabilityZone()))
 				.collect(Collectors.toList());
 
+	}
+
+	@Override
+	public Map<String, String> getPublicNetworks(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		return os.networking().network().list().stream().filter(Network::isRouterExternal)
+				.collect(Collectors.toMap(Network::getName, Network::getId));
+
+	}
+
+	@Override
+	public void startServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().servers().action(resourceId, Action.START);
+	}
+
+	@Override
+	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().servers().action(resourceId, Action.STOP);
 	}
 }

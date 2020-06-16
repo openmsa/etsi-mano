@@ -43,6 +43,8 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	 */
 	private String aliasName;
 
+	private String toscaName;
+
 	/**
 	 * XXX Should be computed.
 	 */
@@ -134,6 +136,14 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 
 	public void setAliasName(final String aliasName) {
 		this.aliasName = aliasName;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
 	}
 
 }

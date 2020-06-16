@@ -1,14 +1,19 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
-public class ScaleInfo {
+public class ScaleInfo implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -16,6 +21,15 @@ public class ScaleInfo {
 	private String aspectId = null;
 
 	private Integer scaleLevel = null;
+
+	public ScaleInfo() {
+		// Nothing.
+	}
+
+	public ScaleInfo(@NotNull final String _aspectId, @NotNull final Integer _scaleLevel) {
+		aspectId = _aspectId;
+		scaleLevel = _scaleLevel;
+	}
 
 	public UUID getId() {
 		return id;

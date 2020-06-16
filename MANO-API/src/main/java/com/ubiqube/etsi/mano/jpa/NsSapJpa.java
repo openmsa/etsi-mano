@@ -11,4 +11,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 public interface NsSapJpa extends CrudRepository<NsSap, UUID> {
 
 	Set<NsSap> findByNsdPackage(NsdPackage nsdInfo);
+
+	Set<NsSap> findByNsdPackageId(UUID id);
 }

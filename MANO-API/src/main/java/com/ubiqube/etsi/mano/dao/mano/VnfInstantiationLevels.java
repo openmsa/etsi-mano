@@ -74,4 +74,9 @@ public class VnfInstantiationLevels {
 		this.vnfPackage = vnfPackage;
 	}
 
+	@Override
+	public String toString() {
+		return "VnfInstantiationLevels [id=" + id + ", levelName=" + levelName + ", scaleInfoName=" + scaleInfoName + ", scaleInfoLevel=" + scaleInfoLevel + ", vnfPackage=" + vnfPackage + "]\n";
+	}
+
 }

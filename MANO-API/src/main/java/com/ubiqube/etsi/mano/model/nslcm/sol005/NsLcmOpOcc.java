@@ -61,7 +61,7 @@ public class NsLcmOpOcc {
 	private ProblemDetails error = null;
 
 	@JsonProperty("resourceChanges")
-	private NsLcmOpOccResourceChanges resourceChanges = null;
+	private NsLcmOpOccResourceChanges resourceChanges = new NsLcmOpOccResourceChanges();
 
 	@JsonProperty("_links")
 	private NsLcmOpOccLinks links = null;

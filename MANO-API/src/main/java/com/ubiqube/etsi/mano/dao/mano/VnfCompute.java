@@ -1,7 +1,9 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,7 +74,7 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	private VduProfile vduProfile;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
-	private Set<VnfComputeAspectDelta> scalingAspectDeltas;
+	private List<VnfComputeAspectDelta> scalingAspectDeltas;
 
 	@Override
 	public UUID getId() {
@@ -213,17 +215,17 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 		this.initialNumberOfInstance = initialNumberOfInstance;
 	}
 
-	public Set<VnfComputeAspectDelta> getScalingAspectDeltas() {
+	public List<VnfComputeAspectDelta> getScalingAspectDeltas() {
 		return scalingAspectDeltas;
 	}
 
-	public void setScalingAspectDeltas(final Set<VnfComputeAspectDelta> scalingAspectDeltas) {
+	public void setScalingAspectDeltas(final List<VnfComputeAspectDelta> scalingAspectDeltas) {
 		this.scalingAspectDeltas = scalingAspectDeltas;
 	}
 
 	public void addScalingAspectDeltas(final VnfComputeAspectDelta scalingDelta) {
 		if (null == scalingAspectDeltas) {
-			scalingAspectDeltas = new HashSet<>();
+			scalingAspectDeltas = new ArrayList<>();
 		}
 		scalingDelta.setVnfCompute(this);
 		scalingAspectDeltas.add(scalingDelta);
@@ -235,6 +237,13 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	public void setBootData(final String bootData) {
 		this.bootData = bootData;
+	}
+
+	public void addVduInstantiationLevel(final VduInstantiationLevel _vduInstantiationLevel) {
+		if (null == instantiationLevel) {
+			instantiationLevel = new LinkedHashSet<>();
+		}
+		instantiationLevel.add(_vduInstantiationLevel);
 	}
 
 }

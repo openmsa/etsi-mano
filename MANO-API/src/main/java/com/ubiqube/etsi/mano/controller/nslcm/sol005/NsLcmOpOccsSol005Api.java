@@ -136,7 +136,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	private NsLcmOpOccLinks makeLink(@NotNull final NsLcmOpOcc nsLcmOpOccs) {
+	public static NsLcmOpOccLinks makeLink(@NotNull final NsLcmOpOcc nsLcmOpOccs) {
 		@NotNull
 		final String id = nsLcmOpOccs.getId();
 		final NsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccLinks();
@@ -161,6 +161,11 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null, null)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setSelf(self);
 		return nsLcmOpOccLinks;
+	}
+
+	public static String makeSelfLink(final NsLcmOpOccs nsLcmOpOccs) {
+		final String id = nsLcmOpOccs.getId().toString();
+		return linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null, null)).withSelfRel().getHref();
 	}
 
 }

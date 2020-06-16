@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.repository.jpa.NsInstantiatedBaseJpa;
+import com.ubiqube.etsi.mano.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -23,16 +23,17 @@ public class UowNsTaskCreateProvider implements TaskProvider<NsUnitOfWork, Strin
 
 	private final NsInstantiatedBaseJpa vnfInstantiedBaseJpa;
 
-	private final Map<String, String> context = new ConcurrentHashMap<>();
+	private final Map<String, String> context;
 
 	private final VnfmInterface vnfm;
 
-	public UowNsTaskCreateProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final NsInstantiatedBaseJpa _vnfInstantiedBaseJpa, final VnfmInterface _vnfm) {
+	public UowNsTaskCreateProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final NsInstantiatedBaseJpa _vnfInstantiedBaseJpa, final VnfmInterface _vnfm, final Map<String, String> baseContext) {
 		super();
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
 		vnfInstantiedBaseJpa = _vnfInstantiedBaseJpa;
 		vnfm = _vnfm;
+		context = new ConcurrentHashMap<>(baseContext);
 	}
 
 	@Override

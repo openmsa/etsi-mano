@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -36,10 +38,12 @@ public class ExecutionPlannerTest {
 	@Mock
 	private VnfPackageService vnfPackageService;
 
-	@Test
-	void testName() throws Exception {
+	private ExecutionPlanner createExecutionPlanner() {
+		return new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null, null, null);
+	}
 
-		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null);
+	void testName() throws Exception {
+		final ExecutionPlanner executionPlanner = createExecutionPlanner();
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
 		final VnfInstantiationLevels inst = new VnfInstantiationLevels();
@@ -73,7 +77,7 @@ public class ExecutionPlannerTest {
 
 	@Test
 	void testRemove() throws Exception {
-		final ExecutionPlanner executionPlanner = new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null);
+		final ExecutionPlanner executionPlanner = createExecutionPlanner();
 		final VnfPackage vnfPakage = new VnfPackage();
 		final Set<VnfInstantiationLevels> is = new HashSet<>();
 		final VnfInstantiationLevels inst = new VnfInstantiationLevels();
@@ -108,5 +112,111 @@ public class ExecutionPlannerTest {
 		final VnfInstantiatedCompute affec = lcmOpOccs.getResourceChanges().getAffectedVnfcs().iterator().next();
 		assertEquals(ChangeType.REMOVED, affec.getChangeType());
 		assertEquals(id, affec.getVduId());
+	}
+
+	@Test
+	void testWhenNoDefaultLevel() throws Exception {
+		final ExecutionPlanner exec = createExecutionPlanner();
+		final Set<VnfInstantiationLevels> vnfInstantiationLevels = new LinkedHashSet<>();
+
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "left_aspect", 0));
+
+		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setInitialNumberOfInstance(12);
+		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, null, 0);
+		assertEquals(12, i);
+	}
+
+	@Test
+	void testWhenWrongLevel() throws Exception {
+		final ExecutionPlanner exec = createExecutionPlanner();
+		final Set<VnfInstantiationLevels> vnfInstantiationLevels = new LinkedHashSet<>();
+
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "left_aspect", 0));
+
+		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setInitialNumberOfInstance(12);
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
+
+		vnfCompute.setScalingAspectDeltas(new ArrayList<VnfComputeAspectDelta>());
+		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "bad", 0);
+		assertEquals(1, i);
+	}
+
+	@Test
+	void testLevel01() throws Exception {
+		final ExecutionPlanner exec = createExecutionPlanner();
+		final Set<VnfInstantiationLevels> vnfInstantiationLevels = new LinkedHashSet<>();
+
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "left_aspect", 0));
+
+		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setInitialNumberOfInstance(12);
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
+
+		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 2, 1, 10, ""));
+		vnfCompute.setScalingAspectDeltas(scaleDelta);
+		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 0);
+		assertEquals(1, i);
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 1);
+		assertEquals(3, i);
+	}
+
+	@Test
+	void testLevel02() throws Exception {
+		final ExecutionPlanner exec = createExecutionPlanner();
+		final Set<VnfInstantiationLevels> vnfInstantiationLevels = new LinkedHashSet<>();
+
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "left_aspect", 0));
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "right_aspect", 1));
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("premium", "left_aspect", 1));
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("premium", "right_aspect", 0));
+
+		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setInitialNumberOfInstance(12);
+
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
+
+		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		// scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 1));
+		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_1", 1, 1, 10, ""));
+		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_2", 4, 2, 10, ""));
+		vnfCompute.setScalingAspectDeltas(scaleDelta);
+		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 0);
+		assertEquals(1, i);
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 1);
+		assertEquals(2, i);
+
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 5);
+		assertEquals(18, i);
+
+		// OverMas scale
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", 15);
+		assertEquals(38, i);
+	}
+
+	@Test
+	void testLevel03() throws Exception {
+		final ExecutionPlanner exec = createExecutionPlanner();
+		final Set<VnfInstantiationLevels> vnfInstantiationLevels = new LinkedHashSet<>();
+
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "left_aspect", 0));
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("demo", "right_aspect", 1));
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("premium", "left_aspect", 1));
+		vnfInstantiationLevels.add(new VnfInstantiationLevels("premium", "right_aspect", 0));
+
+		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setInitialNumberOfInstance(12);
+		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
+
+		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 10, 1, 10, ""));
+		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 2, 10, ""));
+		vnfCompute.setScalingAspectDeltas(scaleDelta);
+		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "premium", 0);
+		assertEquals(1, i);
+		i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "premium", 5);
+		assertEquals(11, i);
 	}
 }

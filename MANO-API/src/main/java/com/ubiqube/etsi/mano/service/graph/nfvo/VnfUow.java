@@ -12,7 +12,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfUow extends AbstractNsUnitOfWork {
@@ -71,11 +70,13 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	 */
 	private static VnfLcmOpOccs waitLcmCompletion(final VnfLcmOpOccs vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfLcmOpOccs tmp = vnfLcmOpOccs;
-		final LcmOperationStateType state = tmp.getOperationState();
+		LcmOperationStateType state = tmp.getOperationState();
 		while ((state == LcmOperationStateType.PROCESSING) || (LcmOperationStateType.STARTING == state)) {
 			tmp = vnfm.getVnfLcmOpOccs(vnfLcmOpOccs.getId());
+			state = tmp.getOperationState();
 			sleepSeconds(1);
 		}
+		LOG.info("VNF Lcm complete with state: {}", state);
 		return tmp;
 	}
 

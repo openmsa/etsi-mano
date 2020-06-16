@@ -110,9 +110,6 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@JoinColumn
 	private Set<VnfExtCp> vnfExtCp;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<ScalingAspect> scalingAspects;
-
 	@ManyToMany
 	private Set<NsdInstance> nsInstance;
 
@@ -122,7 +119,7 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "vnfPackage")
+	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
 	@Override
@@ -268,14 +265,6 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 
 	public void setVnfLinkPort(final Set<VnfLinkPort> vnfLinkPort) {
 		this.vnfLinkPort = vnfLinkPort;
-	}
-
-	public Set<ScalingAspect> getScalingAspects() {
-		return scalingAspects;
-	}
-
-	public void setScalingAspects(final Set<ScalingAspect> scalingAspects) {
-		this.scalingAspects = scalingAspects;
 	}
 
 	@Override

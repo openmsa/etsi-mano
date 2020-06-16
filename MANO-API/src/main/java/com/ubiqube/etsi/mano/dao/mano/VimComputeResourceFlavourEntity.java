@@ -12,6 +12,17 @@ public class VimComputeResourceFlavourEntity {
 
 	private String vimFlavourId = null;
 
+	public VimComputeResourceFlavourEntity() {
+		// Nothing
+	}
+
+	public VimComputeResourceFlavourEntity(final VimComputeResourceFlavourEntity parent) {
+		vimConnectionId = parent.getVimConnectionId();
+		resourceProviderId = parent.getResourceProviderId();
+		vnfdVirtualComputeDescId = parent.getVnfdVirtualComputeDescId();
+		vimFlavourId = parent.getVimFlavourId();
+	}
+
 	public String getVimConnectionId() {
 		return vimConnectionId;
 	}

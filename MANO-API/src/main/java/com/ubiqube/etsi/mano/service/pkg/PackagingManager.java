@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -9,7 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,7 +28,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
-import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -43,17 +41,18 @@ import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.ProviderData;
 
 import ma.glasnost.orika.MapperFacade;
+import tosca.datatypes.nfv.VduLevel;
 import tosca.policies.nfv.InstantiationLevels;
 import tosca.policies.nfv.VduInitialDelta;
 import tosca.policies.nfv.VduInstantiationLevels;
@@ -72,33 +71,31 @@ public class PackagingManager {
 
 	private final MapperFacade mapper;
 
-	private final VnfPackageJpa vnfPackageJpa;
+	private final VnfPackageService vnfPackageService;
 
 	private final NsdRepository nsdRepository;
 
 	private final NsdPackageJpa nsdPackageJpa;
 
-	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper, final VnfPackageJpa _vnfPackageJpa, final NsdRepository _nsdRepository, final NsdPackageJpa _nsdPackageJpa) {
+	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper, final NsdRepository _nsdRepository, final NsdPackageJpa _nsdPackageJpa, final VnfPackageService _vnfPackageService) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
 		mapper = _mapper;
-		vnfPackageJpa = _vnfPackageJpa;
 		nsdRepository = _nsdRepository;
 		nsdPackageJpa = _nsdPackageJpa;
+		vnfPackageService = _vnfPackageService;
 	}
 
 	public void vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
-		final Optional<VnfPackage> vnfPackageOpt = vnfPackageJpa.findById(UUID.fromString(vnfPkgId));
-		final VnfPackage vnfPpackage = vnfPackageOpt.orElseThrow(() -> new NotFoundException("VNF Package " + vnfPkgId + " Not found."));
+		final VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		startOnboarding(vnfPpackage);
 		uploadAndFinishOnboarding(vnfPpackage, data);
 	}
 
 	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nonnull final String vnfPkgId, final String url) {
-		final Optional<VnfPackage> vnfPackageOpt = vnfPackageJpa.findById(UUID.fromString(vnfPkgId));
-		final VnfPackage vnfPackage = vnfPackageOpt.orElseThrow(() -> new NotFoundException("VNF Package " + vnfPkgId + " Not found."));
+		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		startOnboarding(vnfPackage);
 		LOG.info("Async. Download of {}", url);
 		final byte[] data = getUrlContent(url);
@@ -111,7 +108,7 @@ public class PackagingManager {
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			final ProviderData pd = packageProvider.getProviderPadata();
-			vnfPackageJpa.findByDescriptorId(pd.getDescriptorId()).ifPresent(x -> {
+			vnfPackageService.findByDescriptorId(pd.getDescriptorId()).ifPresent(x -> {
 				throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
 			});
 			mapper.map(pd, vnfPackage);
@@ -128,20 +125,20 @@ public class PackagingManager {
 			final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp(vnfPackage.getUserDefinedData());
 			vnfPackage.setVnfExtCp(vnfExtCp);
 			final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects(vnfPackage.getUserDefinedData());
-			vnfPackage.setScalingAspects(scalingAspects);
-			// XXX Normally, Tosca object must not traverse this layer.
 			final List<InstantiationLevels> instantiationLevels = packageProvider.getInstatiationLevels(vnfPackage.getUserDefinedData());
 			final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels(vnfPackage.getUserDefinedData());
 			final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta(vnfPackage.getUserDefinedData());
 			final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas(vnfPackage.getUserDefinedData());
 
-			rebuildScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas);
+			rebuildVduScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas, scalingAspects);
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 	}
 
-	private static void rebuildScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas) {
+	private static void rebuildVduScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final Set<ScalingAspect> scalingAspects) {
+		// flattern the instantiation levels. levels(demo,premium) -> ScaleInfo(name,
+		// scaleLevel)
 		instantiationLevels.stream()
 				.forEach(x -> {
 					vnfPackage.setDefaultInstantiationLevel(x.getDefaultLevel());
@@ -149,7 +146,6 @@ public class PackagingManager {
 						final String levelId = y.getKey();
 						y.getValue().getScaleInfo().entrySet().forEach(z -> {
 							final String aspectId = z.getKey();
-
 							final VnfInstantiationLevels il = new VnfInstantiationLevels(levelId, aspectId, z.getValue().getScaleLevel());
 							vnfPackage.addInstantiationLevel(il);
 						});
@@ -170,15 +166,19 @@ public class PackagingManager {
 				vnfCompute.setInstantiationLevel(ils);
 			});
 		});
-		vduScalingAspectDeltas.forEach(x -> {
-			x.getTargets().forEach(y -> {
-				final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
-				x.getDeltas().entrySet().forEach(z -> {
-					vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), z.getKey(), z.getValue().getNumberOfInstances()));
-				});
-			});
-		});
-
+		vduScalingAspectDeltas.forEach(x -> x.getTargets().forEach(y -> {
+			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+			int level = 1;
+			final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
+			for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
+				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y));
+			}
+		}));
+		// Minimal instance at instantiate time.
+		vduInitialDeltas.forEach(x -> x.getTargets().forEach(y -> {
+			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+			vnfc.setInitialNumberOfInstance(x.getInitialDelta().getNumberOfInstances());
+		}));
 	}
 
 	@Nonnull
@@ -192,6 +192,9 @@ public class PackagingManager {
 	private static void remapNetworks(final Set<VnfCompute> cNodes, final Set<VnfLinkPort> vcNodes) {
 		cNodes.forEach(x -> {
 			final Set<String> nodes = filter(vcNodes, x.getToscaName());
+			if (nodes.isEmpty()) {
+				throw new GenericException("Node " + x.getToscaName() + " must have a network.");
+			}
 			x.setNetworks(nodes);
 		});
 	}
@@ -199,19 +202,8 @@ public class PackagingManager {
 	private static Set<String> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
 		return vcNodes.stream()
 				.filter(x -> x.getVirtualBinding().equals(toscaName))
-				.map(x -> x.getVirtualLink())
+				.map(VnfLinkPort::getVirtualLink)
 				.collect(Collectors.toSet());
-	}
-
-	private static void verifyImagePath(final Set<SoftwareImage> softwareImages) {
-		softwareImages.forEach(x -> {
-			if (null != x.getImagePath()) {
-				final File file = new File(x.getImagePath());
-				if (!file.exists()) {
-					throw new NotFoundException("File " + x.getImagePath() + " Could not be found");
-				}
-			}
-		});
 	}
 
 	private static byte[] getUrlContent(final String uri) {
@@ -254,12 +246,12 @@ public class PackagingManager {
 	private void finishOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
 		vnfPackage.setOperationalState(PackageOperationalStateType.ENABLED);
-		vnfPackageJpa.save(vnfPackage);
+		vnfPackageService.save(vnfPackage);
 	}
 
 	private void startOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(PackageOnboardingStateType.PROCESSING);
-		vnfPackageJpa.save(vnfPackage);
+		vnfPackageService.save(vnfPackage);
 	}
 
 	public void nsOnboarding(@NotNull final UUID objectId) {
@@ -280,18 +272,25 @@ public class PackagingManager {
 					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
 			final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
 					.map(x -> {
-						final VnfPackage vnfPackage = vnfPackageJpa.findByDescriptorId(x).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						final PackageVersion pv = new PackageVersion(x);
+						nsInformations.getFlavorId();
+						final VnfPackage vnfPackage;
+						if (pv.countPart() == 1) {
+							vnfPackage = vnfPackageService.findByDescriptorId(pv.getName()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						} else if (pv.countPart() == 2) {
+							vnfPackage = vnfPackageService.findByDescriptorIdAndSoftwareVersion(pv.getName(), pv.getVersion()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						} else if (pv.countPart() == 3) {
+							vnfPackage = vnfPackageService.findByDescriptorIdAndVnfSoftwareVersionAndFlavourId(pv.getFlavorId(), pv.getName(), pv.getVersion()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+						} else {
+							throw new GenericException("Unknown version " + pv);
+						}
 						final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
 						nsdPackageVnfPackage.setNsdPackage(nsPackage);
 						nsdPackageVnfPackage.setToscaName(x);
 						nsdPackageVnfPackage.setVnfPackage(vnfPackage);
 						vnfPackage.addNsdPackage(nsdPackageVnfPackage);
-						vnfPackageJpa.save(vnfPackage);
-						final NsdPackageVnfPackage nsdvnf = new NsdPackageVnfPackage();
-						nsdvnf.setNsdPackage(nsPackage);
-						nsdvnf.setVnfPackage(vnfPackage);
-						nsdvnf.setToscaName(x);
-						return nsdvnf;
+						vnfPackageService.save(vnfPackage);
+						return nsdPackageVnfPackage;
 					})
 					.collect(Collectors.toSet());
 			nsPackage.setVnfPkgIds(vnfds);

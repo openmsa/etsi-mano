@@ -17,6 +17,7 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 
 @Service
+//@DependsOn("liquibase")
 public class VimManager {
 
 	private final List<Vim> vims;

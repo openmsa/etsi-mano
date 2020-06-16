@@ -24,6 +24,10 @@ public class VnfVl implements BaseEntity, Auditable {
 
 	private String description;
 
+	private int initialBrRoot;
+
+	private int initialBrLeaf;
+
 	@Embedded
 	private Audit audit;
 
@@ -77,6 +81,22 @@ public class VnfVl implements BaseEntity, Auditable {
 
 	public void setVlProfileEntity(final VlProfileEntity vlProfileEntity) {
 		this.vlProfileEntity = vlProfileEntity;
+	}
+
+	public int getInitialBrRoot() {
+		return initialBrRoot;
+	}
+
+	public void setInitialBrRoot(final int initialBrRoot) {
+		this.initialBrRoot = initialBrRoot;
+	}
+
+	public int getInitialBrLeaf() {
+		return initialBrLeaf;
+	}
+
+	public void setInitialBrLeaf(final int initialBrLeaf) {
+		this.initialBrLeaf = initialBrLeaf;
 	}
 
 	@Override

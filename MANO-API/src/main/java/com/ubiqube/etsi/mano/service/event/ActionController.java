@@ -39,11 +39,17 @@ public class ActionController {
 			final byte[] bytes = Base64.getDecoder().decode((String) parameters.get("data"));
 			packagingManager.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString(), bytes);
 			break;
+		case VNF_SCALE_TO_LEVEL:
+			vnfmActions.scaleToLevel(objectId);
+			break;
 		case VNF_INSTANTIATE:
 			vnfmActions.vnfInstantiate(objectId);
 			break;
 		case VNF_TERMINATE:
 			vnfmActions.vnfTerminate(objectId);
+			break;
+		case VNF_OPERATE:
+			vnfmActions.vnfOperate(objectId);
 			break;
 		case NSD_PKG_ONBOARD_FROM_BYTES:
 			packagingManager.nsOnboarding(objectId);
@@ -53,9 +59,6 @@ public class ActionController {
 			break;
 		case NS_TERMINATE:
 			nfvoActions.nsTerminate(objectId);
-			break;
-		case GRANT_REQUEST:
-			nfvoActions.grantRequest(objectId);
 			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);

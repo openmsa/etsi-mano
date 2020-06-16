@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -37,7 +38,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	private UUID id = null;
 
 	@Embedded
-	private VnfInstantiatedInfo instantiatedVnfInfo = null;
+	private VnfInstanceStatus instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
 	@Field
@@ -46,7 +47,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private Set<VimConnectionInformation> vimConnectionInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -76,10 +77,8 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@Field
 	private String vnfSoftwareVersion = null;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance;
-
-	private String processId;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extensions = null;
@@ -101,7 +100,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		return id;
 	}
 
-	public VnfInstantiatedInfo getInstantiatedVnfInfo() {
+	public VnfInstanceStatus getInstantiatedVnfInfo() {
 		return instantiatedVnfInfo;
 	}
 
@@ -145,7 +144,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		this.id = id;
 	}
 
-	public void setInstantiatedVnfInfo(final VnfInstantiatedInfo instantiatedVnfInfo) {
+	public void setInstantiatedVnfInfo(final VnfInstanceStatus instantiatedVnfInfo) {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 
@@ -223,14 +222,6 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 
 	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
-	}
-
-	public String getProcessId() {
-		return processId;
-	}
-
-	public void setProcessId(final String processId) {
-		this.processId = processId;
 	}
 
 	public Set<VnfLcmOpOccs> getLcmOpOccs() {

@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -28,13 +29,18 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 	private Date endTime;
 
 	@Enumerated(EnumType.STRING)
-	private ChangeType changeType;
+	private NsdChangeType changeType;
 
 	@Enumerated(EnumType.STRING)
 	private InstantiationStatusType changeResult = InstantiationStatusType.NOT_STARTED;
 
 	// Vim or VNFM resourceId.
 	private String resourceId;
+
+	private String instantiationLevel;
+
+	@ManyToOne
+	private NsLcmOpOccs nsLcmOpOccs;
 
 	@Embedded
 	private Audit audit;
@@ -64,11 +70,11 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 		this.endTime = endTime;
 	}
 
-	public ChangeType getChangeType() {
+	public NsdChangeType getChangeType() {
 		return changeType;
 	}
 
-	public void setChangeType(final ChangeType changeType) {
+	public void setChangeType(final NsdChangeType changeType) {
 		this.changeType = changeType;
 	}
 
@@ -86,6 +92,22 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 
 	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
+	}
+
+	public String getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	public void setInstantiationLevel(final String instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
+
+	public NsLcmOpOccs getNsLcmOpOccs() {
+		return nsLcmOpOccs;
+	}
+
+	public void setNsLcmOpOccs(final NsLcmOpOccs nsLcmOpOccs) {
+		this.nsLcmOpOccs = nsLcmOpOccs;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,7 @@ import javax.persistence.OneToOne;
 public class ExtManagedVirtualLinkDataEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String id = null;
+	private UUID id = null;
 
 	private String vnfVirtualLinkDescId = null;
 
@@ -25,11 +27,11 @@ public class ExtManagedVirtualLinkDataEntity {
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private GrantResponse grants;
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(final String id) {
+	public void setId(final UUID id) {
 		this.id = id;
 	}
 

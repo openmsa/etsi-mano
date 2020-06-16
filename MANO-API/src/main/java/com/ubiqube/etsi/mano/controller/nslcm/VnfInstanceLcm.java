@@ -24,6 +24,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
@@ -121,10 +124,10 @@ public class VnfInstanceLcm {
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
-		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
-		vnfInstance.setInstantiatedVnfInfo(ivf);
-		vnfInstancesRepository.save(vnfInstance);
+
 		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfInstance);
+		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
+		lcmOpOccs.setVnfInstantiatedInfo(ivf);
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, lcmOpOccs.getId(), new HashMap<>());
 		LOG.info("VNF Instantiation Event Sucessfully sent.");
@@ -140,6 +143,30 @@ public class VnfInstanceLcm {
 		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createTerminateOpOcc(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, lcmOpOccs.getId(), new HashMap<String, Object>());
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
+		return lcmOpOccs;
+	}
+
+	public VnfLcmOpOccs scaleToLevel(final UUID uuid, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		ensureInstantiated(vnfInstance);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest);
+		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
+		return lcmOpOccs;
+	}
+
+	public VnfLcmOpOccs scale(final UUID uuid, final ScaleVnfRequest scaleVnfRequest) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		ensureInstantiated(vnfInstance);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, scaleVnfRequest);
+		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
+		return lcmOpOccs;
+	}
+
+	public VnfLcmOpOccs operate(final UUID uuid, final OperateVnfRequest operateVnfRequest) {
+		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		ensureInstantiated(vnfInstance);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
+		eventManager.sendAction(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<String, Object>());
 		return lcmOpOccs;
 	}
 

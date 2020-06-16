@@ -93,7 +93,7 @@ public class AffectedVnf {
 	 */
 	public enum ChangeResultEnum {
 		COMPLETED("COMPLETED"),
-
+		SUCCESS("SUCCESS"),
 		ROLLED_BACK("ROLLED_BACK"),
 
 		FAILED("FAILED");
@@ -134,7 +134,7 @@ public class AffectedVnf {
 
 	/**
 	 * Identifier of the VNF instance.
-	 * 
+	 *
 	 * @return vnfInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF instance.  ")
@@ -155,7 +155,7 @@ public class AffectedVnf {
 
 	/**
 	 * Identifier of the VNFD of the VNF Instance.
-	 * 
+	 *
 	 * @return vnfdId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNFD of the VNF Instance. ")
@@ -176,7 +176,7 @@ public class AffectedVnf {
 
 	/**
 	 * Identifier of the VNF profile of the NSD.
-	 * 
+	 *
 	 * @return vnfProfileId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VNF profile of the NSD. ")
@@ -197,7 +197,7 @@ public class AffectedVnf {
 
 	/**
 	 * Name of the VNF Instance.
-	 * 
+	 *
 	 * @return vnfName
 	 **/
 	@ApiModelProperty(value = "Name of the VNF Instance. ")
@@ -219,7 +219,7 @@ public class AffectedVnf {
 	 * Signals the type of change Permitted values: - ADD - REMOVE - INSTANTIATE -
 	 * TERMINATE - SCALE - CHANGE_FLAVOUR - HEAL - OPERATE - MODIFY_INFORMATION -
 	 * CHANGE_EXTERNAL_VNF_CONNECTIVITY
-	 * 
+	 *
 	 * @return changeType
 	 **/
 	@ApiModelProperty(value = "Signals the type of change Permitted values: - ADD - REMOVE - INSTANTIATE - TERMINATE - SCALE - CHANGE_FLAVOUR - HEAL - OPERATE - MODIFY_INFORMATION - CHANGE_EXTERNAL_VNF_CONNECTIVITY ")
@@ -240,7 +240,7 @@ public class AffectedVnf {
 	/**
 	 * Signals the result of change identified by the \"changeType\" attribute.
 	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
-	 * 
+	 *
 	 * @return changeResult
 	 **/
 	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
@@ -260,7 +260,7 @@ public class AffectedVnf {
 
 	/**
 	 * Get changedInfo
-	 * 
+	 *
 	 * @return changedInfo
 	 **/
 	@ApiModelProperty(value = "")

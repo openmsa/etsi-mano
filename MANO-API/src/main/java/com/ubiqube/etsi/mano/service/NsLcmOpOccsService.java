@@ -47,4 +47,8 @@ public class NsLcmOpOccsService {
 				.getResultStream().collect(Collectors.toList());
 	}
 
+	public NsLcmOpOccs findById(final UUID nsLcmId) {
+		return nsLcmOpOccsJpa.findById(nsLcmId).orElseThrow(() -> new NotFoundException("NsLcmOpOccs Not found " + nsLcmId));
+	}
+
 }
