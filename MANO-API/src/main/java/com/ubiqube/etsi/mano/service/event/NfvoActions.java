@@ -107,8 +107,6 @@ public class NfvoActions {
 			LOG.error("NS Instantiate fail.", e);
 			// We can't save here, we must do an atomic update.
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-			nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
-			nsInstanceRepository.save(nsInstance);
 			nsLcmOpOccsService.save(lcmOpOccs);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
