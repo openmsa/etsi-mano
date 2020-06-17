@@ -73,7 +73,7 @@ public class VnfCompute implements ToscaEntity, Auditable, Serializable {
 	private Audit audit;
 
 	@Embedded
-	private VduProfile vduProfile;
+	private VduProfile vduProfile = new VduProfile();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
 	private List<VnfComputeAspectDelta> scalingAspectDeltas;
