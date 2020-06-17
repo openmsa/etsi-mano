@@ -43,11 +43,21 @@ public class ToscaContext {
 		relationship = root.getRelationshipTypes();
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
-		dataTypes = root.getData_types();
-		groupType = root.getGroup_types();
-		groupDefinition = root.getGroups();
-		policiesType = root.getPolicy_types();
-		policies = root.getPolicies();
+		if (null != root.getData_types()) {
+			dataTypes = root.getData_types();
+		}
+		if (null != root.getGroup_types()) {
+			groupType = root.getGroup_types();
+		}
+		if (null != root.getGroups()) {
+			groupDefinition = root.getGroups();
+		}
+		if (null != root.getPolicy_types()) {
+			policiesType = root.getPolicy_types();
+		}
+		if (null != root.getPolicies()) {
+			policies = root.getPolicies();
+		}
 		resolver = _resolver;
 	}
 
