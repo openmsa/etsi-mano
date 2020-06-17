@@ -35,11 +35,11 @@ public class AdminController {
 	}
 
 	@PostMapping(value = "/vim/register")
-	public ResponseEntity<VimConnectionInfo> registerVim(@RequestBody final VimConnectionInfo body) {
+	public ResponseEntity<VimConnectionInformation> registerVim(@RequestBody final VimConnectionInfo body) {
 		VimConnectionInformation vci = mapper.map(body, VimConnectionInformation.class);
 		vci = vciJpa.save(vci);
 		vimManager.rebuildCache();
-		return ResponseEntity.ok(mapper.map(vci, VimConnectionInfo.class));
+		return ResponseEntity.ok(mapper.map(vci, VimConnectionInformation.class));
 	}
 
 	@DeleteMapping(value = "/vim/{id}")
