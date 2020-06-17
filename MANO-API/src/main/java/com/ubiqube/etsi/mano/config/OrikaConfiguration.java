@@ -13,6 +13,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -24,6 +25,7 @@ import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
@@ -233,6 +235,10 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("networkResource.resourceProviderId", "resourceProviderId")
 				.field("networkResource.vimLevelResourceType", "vimLevelResourceType")
 				.field("networkResource.vimConnectionId", "vimConnectionInformation.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VimConnectionInfo.class, VimConnectionInformation.class)
+				.fieldAToB("id", "vimId")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
