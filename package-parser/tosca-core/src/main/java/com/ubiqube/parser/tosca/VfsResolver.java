@@ -40,7 +40,7 @@ public class VfsResolver implements IResolver {
 			// Handle absolute content
 		} else {
 			try {
-				final FileObject child = parent.getChild(url);
+				final FileObject child = parent.resolveFile(url);
 				return child.getContent().getString(Charset.defaultCharset());
 			} catch (final IOException e) {
 				throw new ParseException(e);
