@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -108,7 +109,8 @@ public class PackagingManager {
 		final PackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			final ProviderData pd = packageProvider.getProviderPadata();
-			vnfPackageService.findByDescriptorId(pd.getDescriptorId()).ifPresent(x -> {
+			final Optional<VnfPackage> optPackage = getVnfPackage(pd);
+			optPackage.ifPresent(x -> {
 				throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
 			});
 			mapper.map(pd, vnfPackage);
@@ -273,18 +275,9 @@ public class PackagingManager {
 					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
 			final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
 					.map(x -> {
-						final PackageVersion pv = new PackageVersion(x);
 						nsInformations.getFlavorId();
-						final VnfPackage vnfPackage;
-						if (pv.countPart() == 1) {
-							vnfPackage = vnfPackageService.findByDescriptorId(pv.getName()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
-						} else if (pv.countPart() == 2) {
-							vnfPackage = vnfPackageService.findByDescriptorIdAndSoftwareVersion(pv.getName(), pv.getVersion()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
-						} else if (pv.countPart() == 3) {
-							vnfPackage = vnfPackageService.findByDescriptorIdAndVnfSoftwareVersionAndFlavourId(pv.getFlavorId(), pv.getName(), pv.getVersion()).orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
-						} else {
-							throw new GenericException("Unknown version " + pv);
-						}
+						final Optional<VnfPackage> optPackage = getVnfPackage(x);
+						final VnfPackage vnfPackage = optPackage.orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
 						final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
 						nsdPackageVnfPackage.setNsdPackage(nsPackage);
 						nsdPackageVnfPackage.setToscaName(x);
@@ -311,6 +304,39 @@ public class PackagingManager {
 		nsPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
 		nsdPackageJpa.save(nsPackage);
 		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());
+	}
+
+	private Optional<VnfPackage> getVnfPackage(final String x) {
+		final PackageVersion pv = new PackageVersion(x);
+		return getVnfPackage(pv.getFlavorId(), pv.getName(), pv.getVersion());
+	}
+
+	private Optional<VnfPackage> getVnfPackage(final String flavor, final String descriptorId, final String version) {
+		int part = 0;
+		if (flavor != null) {
+			part++;
+		}
+		if (descriptorId != null) {
+			part++;
+		}
+		if (version != null) {
+			part++;
+		}
+		if (part == 0) {
+			return Optional.empty();
+		}
+		if (part == 1) {
+			return vnfPackageService.findByDescriptorId(descriptorId);
+		} else if (part == 2) {
+			return vnfPackageService.findByDescriptorIdAndSoftwareVersion(descriptorId, version);
+		} else if (part == 3) {
+			return vnfPackageService.findByDescriptorIdFlavorIdVnfdVersion(descriptorId, flavor, version);
+		}
+		throw new GenericException("Unknown version " + part);
+	}
+
+	private Optional<VnfPackage> getVnfPackage(final ProviderData pd) {
+		return getVnfPackage(pd.getFlavorId(), pd.getDescriptorId(), pd.getVnfdVersion());
 	}
 
 }
