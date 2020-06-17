@@ -49,6 +49,7 @@ public class DefaultPackageProvider implements PackageProvider {
 		final HashSet<VnfCompute> set = new HashSet<>();
 		// Create One VDU. for one call on OS createStack.
 		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setToscaName("nonet");
 		set.add(vnfCompute);
 		return set;
 	}
@@ -65,7 +66,11 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public Set<VnfLinkPort> getVnfVduCp(final Map<String, String> parameters) {
-		return new HashSet<>();
+		final Set<VnfLinkPort> ret = new HashSet<>();
+		final VnfLinkPort linkPort = new VnfLinkPort();
+		linkPort.setVirtualBinding("nonet");
+		ret.add(linkPort);
+		return ret;
 	}
 
 	@Override
