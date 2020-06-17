@@ -107,12 +107,12 @@ public class VnfPackageService {
 		return vnfPackageJpa.findByDescriptorId(descriptorId);
 	}
 
-	public Optional<VnfPackage> findByDescriptorIdAndSoftwareVersion(final String name, final String version) {
-		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersion(name, version);
+	public Optional<VnfPackage> findByDescriptorIdFlavorIdVnfdVersion(final String descriptorId, final String flavorId, final String versionId) {
+		return vnfPackageJpa.findByDescriptorIdAndFlavorIdAndVnfdVersion(descriptorId, flavorId, versionId);
 	}
 
-	public Optional<VnfPackage> findByDescriptorIdAndVnfSoftwareVersionAndFlavourId(final String flavour, final String name, final String version) {
-		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersionAndFlavorId(name, version, flavour);
+	public Optional<VnfPackage> findByDescriptorIdAndSoftwareVersion(final String name, final String version) {
+		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersion(name, version);
 	}
 
 	public Set<VnfLinkPort> findVnfVirtualLinks(final VnfPackage vnfPackage) {
