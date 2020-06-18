@@ -99,12 +99,13 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
+	public ResponseEntity<Void> nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureNotInstantiated(nsInstanceDb);
 
 		nsInstanceService.delete(nsInstanceUuid);
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
