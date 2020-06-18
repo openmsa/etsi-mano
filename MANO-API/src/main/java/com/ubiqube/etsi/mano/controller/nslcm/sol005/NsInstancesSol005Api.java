@@ -5,6 +5,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -226,7 +227,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
 
 		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
-		return ResponseEntity.accepted().header("Location", nsInstanceWeb.getLinks().getSelf().getHref()).body(nsInstanceWeb);
+		return ResponseEntity.created(URI.create(nsInstanceWeb.getLinks().getSelf().getHref())).body(nsInstanceWeb);
 	}
 
 	private static NsInstanceLinks makeLink(@Nonnull final String id) {
