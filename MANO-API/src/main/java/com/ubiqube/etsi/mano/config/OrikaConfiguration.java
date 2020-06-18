@@ -18,6 +18,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -31,12 +32,15 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
 import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
@@ -249,6 +253,23 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(ConstraintResourceRef.class, VimConnectionInformation.class)
 				.field("vimConnectionId", "vimId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfcResourceInfo.class, VnfInstantiatedCompute.class)
+				.field("computeResource.resourceId", "resourceId")
+				.field("computeResource.resourceProviderId", "resourceProviderId")
+				.field("computeResource.vimConnectionId", "vimConnectionInformation.vimId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfExtCpInfo.class, VnfInstantiatedExtCp.class)
+				.field("cpdId", "toscaName")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfVirtualLinkResourceInfo.class, VnfInstantiatedVirtualLink.class)
+				.field("networkResource.resourceId", "resourceId")
+				.field("networkResource.resourceProviderId", "resourceProviderId")
+				.field("networkResource.vimConnectionId", "vimConnectionInformation.vimId")
+				.field("vnfVirtualLinkDescId", "toscaName")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

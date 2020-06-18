@@ -20,9 +20,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.nslcm.VirtualStorageResourceInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
@@ -30,7 +38,9 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.model.nslcm.sol005.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -44,11 +54,13 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private final VnfInstancesRepository vnfInstancesRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;
 	private final MapperFacade mapper;
+	private final VnfInstanceService vnfInstanceService;
 
-	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
+	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService) {
 		vnfInstancesRepository = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
+		vnfInstanceService = _vnfInstanceService;
 		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
 
@@ -106,6 +118,24 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
 		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
 		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
+
+		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
+
+		final List<VnfInstantiatedCompute> liveCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstanceDb);
+		final List<VnfcResourceInfo> vnfcResourceInfo = mapper.mapAsList(liveCompute, VnfcResourceInfo.class);
+		instantiatedVnfInfo.setVnfcResourceInfo(vnfcResourceInfo);
+
+		final List<VnfInstantiatedExtCp> liveExtCp = vnfInstanceService.getLiveExtCpInstanceOf(vnfInstanceDb);
+		final List<VnfExtCpInfo> extCpInfo = mapper.mapAsList(liveExtCp, VnfExtCpInfo.class);
+		instantiatedVnfInfo.setExtCpInfo(extCpInfo);
+
+		final List<VnfInstantiatedStorage> liveStorage = vnfInstanceService.getLiveStorageInstanceOf(vnfInstanceDb);
+		final List<VirtualStorageResourceInfo> virtualStorageResourceInfo = mapper.mapAsList(liveStorage, VirtualStorageResourceInfo.class);
+		instantiatedVnfInfo.setVirtualStorageResourceInfo(virtualStorageResourceInfo);
+
+		final List<VnfInstantiatedVirtualLink> liveVirtualLink = vnfInstanceService.getLiveVirtualLinkInstanceOf(vnfInstanceDb);
+		final List<VnfVirtualLinkResourceInfo> virtualLinkResourceInfo = mapper.mapAsList(liveVirtualLink, VnfVirtualLinkResourceInfo.class);
+		instantiatedVnfInfo.setVirtualLinkResourceInfo(virtualLinkResourceInfo);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}
