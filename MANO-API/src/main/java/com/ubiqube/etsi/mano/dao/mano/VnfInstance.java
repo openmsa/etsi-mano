@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -48,7 +48,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	private Map<String, String> metadata = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	private Set<VimConnectionInformation> vimConnectionInfo = null;
+	private Set<VimConnectionInformation> vimConnectionInfo = new LinkedHashSet<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> vnfConfigurableProperties = null;
@@ -65,7 +65,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 	@Field
 	private String vnfInstanceName = null;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private VnfPackage vnfPkg = null;
 
 	@Field

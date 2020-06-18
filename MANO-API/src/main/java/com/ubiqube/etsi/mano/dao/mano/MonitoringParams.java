@@ -11,7 +11,7 @@ import javax.persistence.Id;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class MonitoringParams extends VnfInstantiatedBase {
+public class MonitoringParams {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -31,12 +31,10 @@ public class MonitoringParams extends VnfInstantiatedBase {
 
 	private Audit audit;
 
-	@Override
 	public UUID getId() {
 		return id;
 	}
 
-	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -81,12 +79,10 @@ public class MonitoringParams extends VnfInstantiatedBase {
 		this.collectionPeriod = collectionPeriod;
 	}
 
-	@Override
 	public Audit getAudit() {
 		return audit;
 	}
 
-	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
 	}

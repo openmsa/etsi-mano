@@ -109,7 +109,7 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@JoinColumn
 	private Set<VnfExtCp> vnfExtCp;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<NsdInstance> nsInstance;
 
 	@Embedded

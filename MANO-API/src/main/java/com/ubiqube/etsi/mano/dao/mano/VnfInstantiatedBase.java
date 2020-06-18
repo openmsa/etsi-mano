@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -81,10 +82,10 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity, Serializable 
 
 	private Date endTime;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private VnfCompute vnfCompute;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	private String aliasName;
