@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.model.nslcm;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -8,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
 
 import io.swagger.annotations.ApiModel;
@@ -50,7 +50,7 @@ public class VnfInstance {
 	private String vnfPkgId = null;
 
 	@JsonProperty("vnfConfigurableProperties")
-	private KeyValuePairs vnfConfigurableProperties = null;
+	private Map<String, String> vnfConfigurableProperties = null;
 
 	@JsonProperty("vimId")
 	private String vimId = null;
@@ -62,10 +62,10 @@ public class VnfInstance {
 	private VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	@JsonProperty("extensions")
-	private KeyValuePairs extensions = null;
+	private Map<String, String> extensions = null;
 
 	@JsonProperty("_links")
 	private VnfInstanceLinks links = null;
@@ -261,7 +261,7 @@ public class VnfInstance {
 		this.vnfPkgId = vnfPkgId;
 	}
 
-	public VnfInstance vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public VnfInstance vnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -299,11 +299,11 @@ public class VnfInstance {
 
 	@Valid
 
-	public KeyValuePairs getVnfConfigurableProperties() {
+	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
@@ -370,7 +370,7 @@ public class VnfInstance {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 
-	public VnfInstance metadata(final KeyValuePairs metadata) {
+	public VnfInstance metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -393,15 +393,15 @@ public class VnfInstance {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInstance extensions(final KeyValuePairs extensions) {
+	public VnfInstance extensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -426,11 +426,11 @@ public class VnfInstance {
 
 	@Valid
 
-	public KeyValuePairs getExtensions() {
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(final KeyValuePairs extensions) {
+	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 	}
 
@@ -441,7 +441,7 @@ public class VnfInstance {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@ApiModelProperty(value = "")
