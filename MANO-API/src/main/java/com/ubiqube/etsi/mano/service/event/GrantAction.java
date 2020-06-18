@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
@@ -89,7 +88,7 @@ public class GrantAction {
 			}
 		});
 		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
-		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
+		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants);
 		// Zones.
 		final Callable<String> getZone = () -> {
 			final String zoneId = chooseZone(vimInfo);
@@ -237,10 +236,17 @@ public class GrantAction {
 		return vsie;
 	}
 
-	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformationExt> set) {
+	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse) {
+		final Set<VimConnectionInformation> vimConns = grantResponse.getVimConnections();
+		String vimId;
+		if ((null != vimConns) && !vimConns.isEmpty()) {
+			LOG.info("Selecting vim via Given one.");
+			vimId = vimConns.iterator().next().getVimId();
+			return vimManager.findVimByVimId(vimId);
+		}
 		// XXX: Do some real elections.
 		final Set<VimConnectionInformation> vims;
-		if (null != vimId) {
+		if (null != vnfPackageVimId) {
 			LOG.debug("Getting MSA 2.x VIM");
 			vims = vimManager.getVimByType("MSA_20");
 		} else {

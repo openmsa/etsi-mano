@@ -55,8 +55,20 @@ public class VimManager {
 		return vimConnectionInformationJpa.findById(id).orElseThrow(() -> new NotFoundException("No connection Id " + id));
 	}
 
+	public VimConnectionInformation findVimByVimId(final String id) {
+		return vimConnectionInformationJpa.findByVimId(id).orElseThrow(() -> new NotFoundException("No connection vimId " + id));
+	}
+
 	@Nonnull
 	public Set<VimConnectionInformation> getVimByType(final String type) {
 		return vimConnectionInformationJpa.findByVimType(type);
+	}
+
+	public VimConnectionInformation save(final VimConnectionInformation x) {
+		return vimConnectionInformationJpa.save(x);
+	}
+
+	public Optional<VimConnectionInformation> findOptionalVimByVimId(final String vimId) {
+		return vimConnectionInformationJpa.findByVimId(vimId);
 	}
 }

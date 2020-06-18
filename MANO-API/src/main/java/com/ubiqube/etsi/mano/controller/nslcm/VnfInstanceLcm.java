@@ -8,6 +8,8 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
@@ -37,6 +40,7 @@ import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -65,7 +69,9 @@ public class VnfInstanceLcm {
 
 	private final VnfInstanceService vnfInstanceService;
 
-	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService) {
+	private final VimManager vimManager;
+
+	public VnfInstanceLcm(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService, final VimManager _vimManager) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
@@ -73,6 +79,7 @@ public class VnfInstanceLcm {
 		mapper = _mapper;
 		vnfLcmService = _vnfLcmService;
 		vnfInstanceService = _vnfInstanceService;
+		vimManager = _vimManager;
 	}
 
 	public List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
@@ -125,8 +132,24 @@ public class VnfInstanceLcm {
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
 
-		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfInstance);
+		if (null != instantiateVnfRequest.getVimConnectionInfo()) {
+			final List<VimConnectionInformation> vimconnections = mapper.mapAsList(instantiateVnfRequest.getVimConnectionInfo(), VimConnectionInformation.class);
+			final Set<VimConnectionInformation> vimSet = vimconnections.stream()
+					.map(x -> {
+						if (null != x.getId()) {
+							return vimManager.findVimById(x.getId());
+						}
+						final Optional<VimConnectionInformation> optVim = vimManager.findOptionalVimByVimId(x.getVimId());
+						if (optVim.isPresent()) {
+							return optVim.get();
+						}
+						return vimManager.save(x);
+					}).collect(Collectors.toSet());
+			vnfInstance.setVimConnectionInfo(vimSet);
+			vnfInstanceService.save(vnfInstance);
+		}
 		final VnfInstantiatedInfo ivf = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
+		VnfLcmOpOccs lcmOpOccs = vnfLcmService.createIntatiateOpOcc(vnfInstance);
 		lcmOpOccs.setVnfInstantiatedInfo(ivf);
 		lcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		eventManager.sendAction(ActionType.VNF_INSTANTIATE, lcmOpOccs.getId(), new HashMap<>());

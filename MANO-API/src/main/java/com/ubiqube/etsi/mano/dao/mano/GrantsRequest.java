@@ -45,7 +45,7 @@ public class GrantsRequest implements BaseEntity, Auditable {
 	private VnfLcmOpOccs vnfLcmOpOccs = null;
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<VimConnectionInformation> vimConnections = null;
 

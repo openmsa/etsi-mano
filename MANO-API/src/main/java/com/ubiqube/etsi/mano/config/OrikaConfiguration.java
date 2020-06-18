@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -26,6 +27,7 @@ import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
@@ -239,6 +241,14 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VimConnectionInfo.class, VimConnectionInformation.class)
 				.fieldAToB("id", "vimId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantRequest.class, GrantResponse.class)
+				.field("vimConstraints[0].resource", "vimConnections")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ConstraintResourceRef.class, VimConnectionInformation.class)
+				.field("vimConnectionId", "vimId")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
