@@ -1,14 +1,17 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class VimConstraints {
@@ -18,8 +21,12 @@ public class VimConstraints {
 
 	private boolean sameResourceGroup;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<ConstraintRef> resource;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ConstraintRef> resources;
+
+	@ManyToOne
+	private GrantsRequest grants;
 
 	public UUID getId() {
 		return id;
@@ -37,12 +44,20 @@ public class VimConstraints {
 		this.sameResourceGroup = sameResourceGroup;
 	}
 
-	public List<ConstraintRef> getResource() {
-		return resource;
+	public Set<ConstraintRef> getResources() {
+		return resources;
 	}
 
-	public void setResource(final List<ConstraintRef> resource) {
-		this.resource = resource;
+	public void setResources(final Set<ConstraintRef> resources) {
+		this.resources = resources;
+	}
+
+	public GrantsRequest getGrants() {
+		return grants;
+	}
+
+	public void setGrants(final GrantsRequest grants) {
+		this.grants = grants;
 	}
 
 }

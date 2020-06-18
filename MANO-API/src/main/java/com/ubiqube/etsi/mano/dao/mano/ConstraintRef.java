@@ -1,8 +1,20 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ConstraintResourceRef.IdTypeEnum;
 
+@Entity
 public class ConstraintRef {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id = null;
+
 	private IdTypeEnum idType = null;
 
 	private String resourceId = null;
@@ -10,6 +22,14 @@ public class ConstraintRef {
 	private String vimConnectionId = null;
 
 	private String resourceProviderId = null;
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(final UUID id) {
+		this.id = id;
+	}
 
 	public IdTypeEnum getIdType() {
 		return idType;
