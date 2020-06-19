@@ -45,7 +45,6 @@ public class SwaggerDocumentationConfig {
 	}
 
 	public class CustomPathProvider extends DefaultPathProvider {
-
 		@Override
 		public String getOperationPath(final String op) {
 			String operationPath = op;
@@ -54,6 +53,5 @@ public class SwaggerDocumentationConfig {
 			}
 			return Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.newInstance().replacePath(operationPath).build().toString());
 		}
-
 	}
 }
