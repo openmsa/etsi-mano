@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccsResourceChanges;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
@@ -96,6 +97,13 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	@Override
 	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String contentType) {
 		final NsLcmOpOccs nsLcmOpOccs = nsLcmOpOccsService.get(UUID.fromString(nsLcmOpOccId));
+		final NsLcmOpOccsResourceChanges resources = nsLcmOpOccs.getResourceChanges();
+		resources.setAffectedNss(resources.getAffectedNss().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedPnfs(resources.getAffectedPnfs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedSaps(resources.getAffectedSaps().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedVls(resources.getAffectedVls().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedVnffgs(resources.getAffectedVnffgs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedVnfs(resources.getAffectedVnfs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
 		final NsLcmOpOcc res = mapper.map(nsLcmOpOccs, NsLcmOpOcc.class);
 		res.setLinks(makeLink(res));
 

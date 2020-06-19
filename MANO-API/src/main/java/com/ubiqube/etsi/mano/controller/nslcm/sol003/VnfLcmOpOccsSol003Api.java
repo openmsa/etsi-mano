@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrants;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -36,10 +37,12 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
 	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 	private final MapperFacade mapper;
+	private final VnfInstanceLcm vnfInstanceLcm;
 
-	public VnfLcmOpOccsSol003Api(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final MapperFacade _mapper) {
+	public VnfLcmOpOccsSol003Api(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final MapperFacade _mapper, final VnfInstanceLcm _vnfInstanceLcm) {
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		mapper = _mapper;
+		vnfInstanceLcm = _vnfInstanceLcm;
 		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");
 	}
 
@@ -71,7 +74,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
-		final VnfLcmOpOccs resultDb = vnfLcmOpOccsRepository.get(UUID.fromString(vnfLcmOpOccId));
+		final VnfLcmOpOccs resultDb = vnfInstanceLcm.get(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		entity.setLinks(makeLink(entity));
 		return new ResponseEntity<>(entity, HttpStatus.OK);

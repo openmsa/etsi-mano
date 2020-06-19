@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
@@ -95,7 +96,13 @@ public class VnfInstanceLcm {
 	}
 
 	public VnfLcmOpOccs get(final UUID id) {
-		return vnfLcmService.findById(id);
+		final VnfLcmOpOccs lcm = vnfLcmService.findById(id);
+		final VnfLcmResourceChanges instInfo = lcm.getResourceChanges();
+		instInfo.setAffectedExtCp(instInfo.getAffectedExtCp().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		instInfo.setAffectedVirtualLinks(instInfo.getAffectedVirtualLinks().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		instInfo.setAffectedVirtualStorages(instInfo.getAffectedVirtualStorages().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		instInfo.setAffectedVnfcs(instInfo.getAffectedVnfcs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		return lcm;
 	}
 
 	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
