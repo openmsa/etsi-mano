@@ -35,6 +35,7 @@ public class SwaggerDocumentationConfig {
 	public Docket customImplementation() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.pathProvider(new CustomPathProvider())
+				.groupName("etsi-mano-2.6.1")
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mano"))
 				.build()
