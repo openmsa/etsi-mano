@@ -19,7 +19,7 @@ public class Sol003Linkable implements Linkable {
 		final VnfPkgInfoLinks links = new VnfPkgInfoLinks();
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdGet(vnfPkgId)).withSelfRel().getHref());
 		links.self(self);
 
 		final Link vnfd = new Link();
@@ -27,7 +27,7 @@ public class Sol003Linkable implements Linkable {
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();
-		packageContent.setHref(linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
+		packageContent.setHref(linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "")).withSelfRel().getHref());
 		links.setPackageContent(packageContent);
 		return links;
 	}
@@ -40,7 +40,7 @@ public class Sol003Linkable implements Linkable {
 		ret.setSubscription(subscription);
 
 		final Link vnfPackage = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString(), "")).withSelfRel().getHref());
+				linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString())).withSelfRel().getHref());
 		ret.setVnfPackage(vnfPackage);
 		return ret;
 	}
@@ -53,7 +53,7 @@ public class Sol003Linkable implements Linkable {
 		vnfPackageOnboardingNotificationLinks.setSubscription(subscription);
 
 		final Link vnfPackage = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString(), "")).withSelfRel().getHref());
+				linkTo(methodOn(VnfPackageSol003.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString())).withSelfRel().getHref());
 		vnfPackageOnboardingNotificationLinks.setVnfPackage(vnfPackage);
 
 		return null;
