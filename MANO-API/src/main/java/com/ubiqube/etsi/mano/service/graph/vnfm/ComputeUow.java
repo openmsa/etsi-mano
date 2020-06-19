@@ -39,7 +39,7 @@ public class ComputeUow extends AbstractUnitOfWork {
 				.map(VnfLinkPort::getVirtualLink)
 				.map(context::get)
 				.collect(Collectors.toList());
-		return vim.createCompute(vimConnectionInformation, vnfInstantiedCompute.getAliasName(), vnfInstantiedCompute.getFlavorId(), vnfInstantiedCompute.getImageId(), networks, storages);
+		return vim.createCompute(vimConnectionInformation, vnfInstantiedCompute.getAliasName(), vnfInstantiedCompute.getFlavorId(), vnfInstantiedCompute.getImageId(), networks, storages, vnfCompute.getBootData());
 	}
 
 	@Override
