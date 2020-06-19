@@ -31,7 +31,6 @@ import com.ubiqube.etsi.mano.model.Link;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.HealNsRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstanceLinks;
@@ -116,14 +115,12 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final InlineResponse200 resp = new InlineResponse200();
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		nsInstance.setLinks(makeLink(nsInstanceId));
-		resp.setNsInstance(nsInstance);
-		return new ResponseEntity<>(resp, HttpStatus.OK);
+		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
 	}
 
 	/**
