@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -39,6 +40,7 @@ public class VnfCompute implements ToscaEntity, Auditable, Serializable {
 
 	private String description;
 
+	@Column(length = 9000)
 	private String bootData;
 
 	private long virtualMemorySize;
