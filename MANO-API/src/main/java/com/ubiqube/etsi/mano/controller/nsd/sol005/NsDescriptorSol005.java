@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -84,9 +83,9 @@ public interface NsDescriptorSol005 {
 	@DeleteMapping(value = "/{nsdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(@Nonnull @ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") String nsdInfoId);
 
-	@ApiOperation(value = "Read information about an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdGet", notes = "\"The GET method reads information about an individual NS descriptor. This method shall follow the provisions specified in GS NFV-SOL 005 Tables 5.4.3.3.2-1 and 5.4.3.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.\" ", response = InlineResponse200.class, tags = {})
+	@ApiOperation(value = "Read information about an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdGet", notes = "\"The GET method reads information about an individual NS descriptor. This method shall follow the provisions specified in GS NFV-SOL 005 Tables 5.4.3.3.2-1 and 5.4.3.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.\" ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "200 OK Information about the individual NS descriptor. The response body shall contain a representation of the individual NS descriptor.             ", response = InlineResponse200.class),
+			@ApiResponse(code = 200, message = "200 OK Information about the individual NS descriptor. The response body shall contain a representation of the individual NS descriptor.             ", response = NsdInfo.class),
 			@ApiResponse(code = 400, message = "Error: Invalid attribute selector. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
@@ -157,9 +156,9 @@ public interface NsDescriptorSol005 {
 			@Nonnull @ApiParam(value = "The body", required = true) @Valid @RequestBody String body,
 			@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType);
 
-	@ApiOperation(value = "Create a new NS descriptor resource.", nickname = "nsDescriptorsPost", notes = "The POST method is used to create a new NS descriptor resource or a new version of an on-boarded NS descriptor. ", response = InlineResponse200.class, tags = {})
+	@ApiOperation(value = "Create a new NS descriptor resource.", nickname = "nsDescriptorsPost", notes = "The POST method is used to create a new NS descriptor resource or a new version of an on-boarded NS descriptor. ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {
-			@ApiResponse(code = 201, message = "Status 201 An NS descriptor resource was created successfully, as a new NS descriptor resource.  The response body shall contain a representation of the new NS descriptor resource, as defined in clause 5.5.2.3 of GS NFV-SOL 005. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the new NS descriptor resource.             ", response = InlineResponse200.class),
+			@ApiResponse(code = 201, message = "Status 201 An NS descriptor resource was created successfully, as a new NS descriptor resource.  The response body shall contain a representation of the new NS descriptor resource, as defined in clause 5.5.2.3 of GS NFV-SOL 005. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the new NS descriptor resource.             ", response = NsdInfo.class),
 			@ApiResponse(code = 400, message = "Bad Request Error: Invalid attribute-based filtering parameters. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute should convey more information about the error. ", response = ProblemDetails.class),
 			@ApiResponse(code = 401, message = "Unauthorized If the request contains no access token even though one is required, or if the request contains an authorization token that is invalid (e.g. expired or revoked), the API producer should respond with this response. The details of the error shall be returned in the WWW-Authenticate HTTP header, as defined in IETF RFC 6750 and IETF RFC 7235. The ProblemDetails structure may be provided. ", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden If the API consumer is not allowed to perform a particular request to a particular resource, the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided.  It should include in the \"detail\" attribute information about the source of the problem, and may indicate how to solve it. ", response = ProblemDetails.class),
