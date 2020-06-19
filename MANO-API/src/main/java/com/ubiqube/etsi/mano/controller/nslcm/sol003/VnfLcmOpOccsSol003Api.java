@@ -44,7 +44,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfLcmOpOccsGet(final String accept, final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
+	public ResponseEntity<String> vnfLcmOpOccsGet(final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
 		final List<VnfLcmOpOccs> resultsDb = vnfLcmOpOccsRepository.query(filter);
 		final List<VnfLcmOpOcc> results = resultsDb.stream()
 				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
@@ -64,13 +64,13 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	}
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String accept, final String version) {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String version) {
 		// VnfLcmOperationOccurenceNotification(result, FAILED, changes) NFVO
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String accept, final String version) {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
 		final VnfLcmOpOccs resultDb = vnfLcmOpOccsRepository.get(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		entity.setLinks(makeLink(entity));
@@ -104,7 +104,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		link.setCancel(cancel);
 
 		final Link fail = new Link();
-		fail.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id, "", "")).withSelfRel().getHref());
+		fail.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id, "")).withSelfRel().getHref());
 		link.setFail(fail);
 
 		final Link grant = new Link();
@@ -120,7 +120,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		link.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, "", "")).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, "")).withSelfRel().getHref());
 		link.setSelf(self);
 
 		final Link vnfInstance = new Link();
@@ -131,7 +131,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	}
 
 	public static String getSelfLink(final String id) {
-		return linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, null, null)).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, null)).withSelfRel().getHref();
 	}
 
 }
