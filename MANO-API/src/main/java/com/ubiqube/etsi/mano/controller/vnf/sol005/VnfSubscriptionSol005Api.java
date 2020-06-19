@@ -48,7 +48,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	}
 
 	@Override
-	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
+	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
 		return new ResponseEntity<>(vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links), HttpStatus.OK);
 
 	}

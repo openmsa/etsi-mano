@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -97,6 +96,6 @@ public interface VnfSubscriptionSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(@PathVariable("subscriptionId") String subscriptionId, @RequestHeader("Accept") String accept);
+	ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(@PathVariable("subscriptionId") String subscriptionId);
 
 }
