@@ -88,8 +88,7 @@ public interface PnfDescriptorsSol005 {
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(
-			@Nonnull @ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId,
-			@ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) String accept);
+			@Nonnull @ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId);
 
 	@ApiOperation(value = "Modify the user defined data of an individual PNF descriptor resource.", nickname = "pnfDescriptorsPnfdInfoIdPatch", notes = "The PATCH method modifies the user defined data of an individual PNF descriptor resource. ", response = PnfdInfoModifications.class, tags = {})
 	@ApiResponses(value = {
@@ -109,7 +108,6 @@ public interface PnfDescriptorsSol005 {
 	@PatchMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(
 			@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") String pnfdInfoId,
-			@ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "The MIME type of the body of the request. This header field shall be present if the request has a non-empty message body. ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType,
 			@ApiParam(value = "", required = true) @Valid @RequestBody PnfdInfoModifications body);
 
@@ -168,7 +166,6 @@ public interface PnfDescriptorsSol005 {
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<PnfdInfo> pnfDescriptorsPost(
-			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType,
 			@ApiParam(value = "", required = true) @Valid @RequestBody CreatePnfdInfoRequest body);
 

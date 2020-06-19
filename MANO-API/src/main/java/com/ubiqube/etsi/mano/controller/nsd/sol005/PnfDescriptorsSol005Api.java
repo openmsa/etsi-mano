@@ -85,7 +85,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId, final String accept) {
+	public ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId) {
 		final PnfdInfo pnfdInfo = pnfdInfoRepository.get(UUID.fromString(pnfdInfoId));
 		pnfdInfo.setLinks(makeLinks(pnfdInfo));
 		return new ResponseEntity<>(pnfdInfo, HttpStatus.OK);
@@ -99,7 +99,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(final String pnfdInfoId, final String accept, final String contentType, final PnfdInfoModifications body) {
+	public ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(final String pnfdInfoId, final String contentType, final PnfdInfoModifications body) {
 		// : Implement...
 
 		return null;
@@ -141,7 +141,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String accept, final String contentType, final CreatePnfdInfoRequest body) {
+	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String contentType, final CreatePnfdInfoRequest body) {
 		final PnfdInfo pnfd = PnfFactory.createPnfDescriptorsPnfdInfo(body);
 		pnfdInfoRepository.save(pnfd);
 		pnfd.setLinks(makeLinks(pnfd));
@@ -154,7 +154,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 		pnfdContent.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdPnfdContentGet(x.getId(), "")).withSelfRel().getHref());
 		links.setPnfdContent(pnfdContent);
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdGet(x.getId(), "")).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdGet(x.getId())).withSelfRel().getHref());
 		links.setSelf(self);
 
 		return null;
