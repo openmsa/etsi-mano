@@ -14,10 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import org.hibernate.search.annotations.Indexed;
-
 @Entity
-@Indexed
 @EntityListeners(AuditListener.class)
 public class NsVirtualLink implements BaseEntity, Auditable, Serializable {
 	/** Serial. */

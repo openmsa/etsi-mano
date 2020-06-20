@@ -13,10 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.search.annotations.Indexed;
-
 @Entity
-@Indexed
 @EntityListeners(AuditListener.class)
 public class NsVlConnectivityType implements BaseEntity, Auditable, Serializable {
 	/** Serial. */
