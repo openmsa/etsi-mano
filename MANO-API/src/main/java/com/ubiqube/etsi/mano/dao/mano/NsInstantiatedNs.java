@@ -2,14 +2,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -23,8 +20,7 @@ public class NsInstantiatedNs extends NsInstantiatedBase {
 
 	private String nsInstanceId = null;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private NsdPackage nsdPackage = null;
+	private UUID nsdPackage = null;
 
 	@Override
 	public UUID getId() {
@@ -44,11 +40,11 @@ public class NsInstantiatedNs extends NsInstantiatedBase {
 		this.nsInstanceId = nsInstanceId;
 	}
 
-	public NsdPackage getNsdPackage() {
+	public UUID getNsdPackage() {
 		return nsdPackage;
 	}
 
-	public void setNsdPackage(final NsdPackage nsdPackage) {
+	public void setNsdPackage(final UUID nsdPackage) {
 		this.nsdPackage = nsdPackage;
 	}
 

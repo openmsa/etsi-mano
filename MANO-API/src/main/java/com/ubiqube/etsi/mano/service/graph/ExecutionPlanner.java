@@ -551,7 +551,7 @@ public class ExecutionPlanner {
 				req.setNsName("nested_of_" + nsInstance.getId());
 				final NsdInstance inst = nsInstanceControllerService.createNsd(req);
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
-				sap.setNsdPackage(x);
+				sap.setNsdPackage(x.getId());
 				sap.setNsInstanceId(inst.getId().toString());
 				sap.setChangeType(NsdChangeType.ADD);
 				changes.addInstantiatedNs(sap);
@@ -571,7 +571,7 @@ public class ExecutionPlanner {
 				// vnfInstance.setVimConnectionInfo(vimConnectionInfo);
 				// vnfInstance.setMetadata(metadata);
 				// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
-				sap.setVnfInstance(vnfInstance);
+				sap.setVnfInstance(vnfInstance.getId());
 				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
 			}
@@ -644,8 +644,8 @@ public class ExecutionPlanner {
 			final InstantiateNsRequest request = new InstantiateNsRequest();
 			request.setNsFlavourId(nsdInstance.getFlavourId());
 			request.setNsInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
-			final NsUnitOfWork uow = new NsUow(x, request, null, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().getNsdName());
-			vertex.add(x.getNsdPackage().getNsdName(), uow);
+			final NsUnitOfWork uow = new NsUow(x, request, null, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().toString());
+			vertex.add(x.getNsdPackage().toString(), uow);
 			g.addVertex(uow);
 		});
 		resources.getAffectedPnfs().forEach(x -> {
@@ -689,7 +689,7 @@ public class ExecutionPlanner {
 		instantiatedCompute.forEach(x -> {
 			final NsInstantiatedNs affectedCompute = copyInstantiedResource(x, new NsInstantiatedNs(), lcmOpOccs);
 			affectedCompute.setNsInstanceId(x.getNsInstanceId());
-			affectedCompute.setNsdPackage(nsdInfo);
+			affectedCompute.setNsdPackage(nsdInfo.getId());
 			lcmOpOccs.getResourceChanges().addInstantiatedNs(affectedCompute);
 		});
 		final List<NsInstantiatedSap> instantiatedSap = nsInstanceService.getLiveSapInstanceOf(lcmOpOccs.getNsInstance());

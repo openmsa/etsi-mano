@@ -33,7 +33,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		final VnfLcmOpOccs res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance().getId(), request, null);
+		final VnfLcmOpOccs res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance(), request, null);
 		final VnfLcmOpOccs result = waitLcmCompletion(res, vnfm);
 		if (LcmOperationStateType.COMPLETED != result.getOperationState()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
@@ -48,7 +48,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		final VnfLcmOpOccs lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance().getId());
+		final VnfLcmOpOccs lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance());
 		final VnfLcmOpOccs result = waitLcmCompletion(lcm, vnfm);
 		if (LcmOperationStateType.COMPLETED != result.getOperationState()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
