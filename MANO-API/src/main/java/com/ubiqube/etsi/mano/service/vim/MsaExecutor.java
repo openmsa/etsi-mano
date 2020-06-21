@@ -135,7 +135,7 @@ public class MsaExecutor implements Vim {
 
 	private String executeProcess(final String customerId, final long serviceId, final String serviceName, final String processName, final Map<String, String> varsMap) {
 		try {
-			LOG.info("Calling MSA remote FW: custormerId={}, serviceId={}, servic/home/ncuser/etsi-mano/WORKFLOWS/ETSI-MANO/Reference/Common/mano.phpeName={}, processName={}, params={}", customerId, serviceId, serviceName, processName, varsMap);
+			LOG.info("Calling MSA remote FW: custormerId={}, serviceId={}, service: /home/ncuser/etsi-mano/WORKFLOWS/ETSI-MANO/Reference/Common/mano.phpeName={}, processName={}, params={}", customerId, serviceId, serviceName, processName, varsMap);
 			final ProcessInstance resp = orchestrationService.scheduleServiceImmediateMode(customerId, serviceId, serviceName, processName, varsMap);
 			return String.valueOf(resp.getProcessId().getId());
 		} catch (final ServiceException e) {
@@ -342,6 +342,12 @@ public class MsaExecutor implements Vim {
 	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

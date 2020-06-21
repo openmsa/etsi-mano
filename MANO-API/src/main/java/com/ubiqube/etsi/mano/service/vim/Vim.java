@@ -79,4 +79,6 @@ public interface Vim {
 	void startServer(VimConnectionInformation vimConnectionInformation, String resourceId);
 
 	void stopServer(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation);
 }

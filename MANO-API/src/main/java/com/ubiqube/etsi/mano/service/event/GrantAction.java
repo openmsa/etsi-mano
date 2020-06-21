@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
@@ -39,8 +41,10 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
+import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -88,7 +92,7 @@ public class GrantAction {
 			}
 		});
 		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
-		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants);
+		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants, vnfPackage);
 		// Zones.
 		final Callable<String> getZone = () -> {
 			final String zoneId = chooseZone(vimInfo);
@@ -236,7 +240,7 @@ public class GrantAction {
 		return vsie;
 	}
 
-	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse) {
+	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse, final VnfPackage vnfPackage) {
 		final Set<VimConnectionInformation> vimConns = grantResponse.getVimConnections();
 		String vimId;
 		if ((null != vimConns) && !vimConns.isEmpty()) {
@@ -249,14 +253,98 @@ public class GrantAction {
 		if (null != vnfPackageVimId) {
 			LOG.debug("Getting MSA 2.x VIM");
 			vims = vimManager.getVimByType("MSA_20");
-		} else {
-			LOG.debug("Getting OS v3 VIM");
-			vims = vimManager.getVimByType("OPENSTACK_V3");
+			return vims.iterator().next();
 		}
+		LOG.debug("Getting OS v3 VIM");
+		vims = vimManager.getVimByType("OPENSTACK_V3");
 		if (vims.isEmpty()) {
 			throw new GenericException("Couldn't find a VIM.");
 		}
-		return vims.iterator().next();
+		return doNormalElection(vnfPackage, grantResponse, vims);
 	}
 
+	private VimConnectionInformation doNormalElection(final VnfPackage vnfPackage, final GrantResponse grantResponse, final Set<VimConnectionInformation> vims) {
+		final QuotaNeeded needed = summarizeResources(grantResponse, vnfPackage);
+		final List<VimConnectionInformation> vimsSelected = new ArrayList<>();
+		vims.parallelStream().forEach(x -> {
+			final Vim vim = vimManager.getVimById(x.getId());
+			final ResourceQuota quota = vim.getQuota(x);
+			if (needed.getRam() > quota.getRamFree()) {
+				LOG.debug("Removing vim {}: RAM needed: {} free: {}", x.getVimId(), needed.getRam(), quota.getRamFree());
+				return;
+			}
+			if (needed.getVcpu() > quota.getVcpuFree()) {
+				LOG.debug("Removing vim {}: Vcpu needed: {} free: {}", x.getVimId(), needed.getVcpu(), quota.getVcpuFree());
+				return;
+			}
+			vimsSelected.add(x);
+		});
+		if (vimsSelected.isEmpty()) {
+			throw new GenericException("No Vim found, after quota filtering.");
+		}
+		return vimsSelected.get(new Random().nextInt(vimsSelected.size()));
+	}
+
+	private QuotaNeeded summarizeResources(final GrantResponse grantResponse, final VnfPackage vnfPackage) {
+		final Set<GrantInformationExt> adds = grantResponse.getAddResources();
+		int disk = 0;
+		int vcpu = 0;
+		int ram = 0;
+		for (final GrantInformationExt grantInformationExt : adds) {
+			if (grantInformationExt.getType() == TypeEnum.COMPUTE) {
+				final VnfCompute compute = findCompute(vnfPackage, grantInformationExt.getVduId());
+				disk += compute.getDiskSize();
+				vcpu += compute.getNumVcpu();
+				ram += compute.getVirtualMemorySize();
+			} else if (grantInformationExt.getType() == TypeEnum.STORAGE) {
+				// Cinder.
+			}
+		}
+		return new QuotaNeeded(disk, vcpu, ram);
+	}
+
+	private static VnfCompute findCompute(final VnfPackage vnfPackage, final UUID vduId) {
+		return vnfPackage.getVnfCompute().stream()
+				.filter(x -> x.getId().compareTo(vduId) == 0)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("VduId not found " + vduId));
+	}
+
+	class QuotaNeeded {
+		private int disk = 0;
+		private int vcpu = 0;
+		private int ram = 0;
+
+		public int getDisk() {
+			return disk;
+		}
+
+		public void setDisk(final int disk) {
+			this.disk = disk;
+		}
+
+		public int getVcpu() {
+			return vcpu;
+		}
+
+		public void setVcpu(final int vcpu) {
+			this.vcpu = vcpu;
+		}
+
+		public int getRam() {
+			return ram;
+		}
+
+		public void setRam(final int ram) {
+			this.ram = ram;
+		}
+
+		public QuotaNeeded(final int disk, final int vcpu, final int ram) {
+			super();
+			this.disk = disk;
+			this.vcpu = vcpu;
+			this.ram = ram;
+		}
+
+	}
 }

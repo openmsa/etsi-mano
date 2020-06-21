@@ -23,6 +23,7 @@ import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
+import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.BlockDeviceMappingCreate;
 import org.openstack4j.model.compute.Flavor;
@@ -514,5 +515,30 @@ public class OpenStackVim implements Vim {
 	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		os.compute().servers().action(resourceId, Action.STOP);
+	}
+
+	@Override
+	public ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final AbsoluteLimit usage = os.compute().quotaSets().limits().getAbsolute();
+		final OsQuotas quotas = new OsQuotas();
+		Optional.ofNullable(usage.getMaxSecurityGroups()).ifPresent(quotas::setSecurityGroupsMax);
+		Optional.ofNullable(usage.getSecurityGroupRulesUsed()).ifPresent(quotas::setSecurityGroupsUsed);
+
+		Optional.ofNullable(usage.getMaxTotalCores()).ifPresent(quotas::setVcpuMax);
+		Optional.ofNullable(usage.getTotalCoresUsed()).ifPresent(quotas::setVcpuUsed);
+
+		Optional.ofNullable(usage.getMaxTotalFloatingIps()).ifPresent(quotas::setFloatingIpMax);
+		Optional.ofNullable(usage.getTotalFloatingIpsUsed()).ifPresent(quotas::setFloatingIpUsed);
+
+		Optional.ofNullable(usage.getMaxTotalInstances()).ifPresent(quotas::setInstanceMax);
+		Optional.ofNullable(usage.getTotalInstancesUsed()).ifPresent(quotas::setInstanceUsed);
+
+		Optional.ofNullable(usage.getMaxTotalRAMSize()).ifPresent(quotas::setRamMax);
+		Optional.ofNullable(usage.getTotalRAMUsed()).ifPresent(quotas::setRamUsed);
+
+		Optional.ofNullable(usage.getMaxTotalKeypairs()).ifPresent(quotas::setKeyPairsMax);
+		Optional.ofNullable(usage.getTotalKeyPairsUsed()).ifPresent(quotas::setKeyPairsUsed);
+		return quotas;
 	}
 }
