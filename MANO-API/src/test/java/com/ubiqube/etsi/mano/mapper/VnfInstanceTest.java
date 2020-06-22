@@ -102,7 +102,6 @@ public class VnfInstanceTest {
 		System.out.println("" + avc);
 	}
 
-	@Test
 	void testInstantiateInfo2VnfInstance() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfInstantiatedInfo vii = new VnfInstantiatedInfo();
