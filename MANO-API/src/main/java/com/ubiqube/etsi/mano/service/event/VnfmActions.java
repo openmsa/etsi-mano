@@ -23,7 +23,6 @@ import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
@@ -231,31 +230,15 @@ public class VnfmActions {
 			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
 			final GrantInformation grantInformation = grantService.getGrantInformation(grantUuid).orElseThrow(() -> new NotFoundException("Could not find Grant id: " + grantUuid));
 			if (x.getType() == TypeEnum.COMPUTE) {
-				copyGrantToAffectedCompute(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, grantsResp, x);
+				copyStream(lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream(), grantInformation, copyVnfc(x, vimConnectionInformation, lcmOpOccs, grantsResp, instantiationLevel));
 			} else if (x.getType() == TypeEnum.VL) {
-				copyGrantToAffectedVirtualLink(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x);
+				copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 			} else if (x.getType() == TypeEnum.LINKPORT) {
-				copyGrantToAffectedLinkPort(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x);
+				copyStream(lcmOpOccs.getResourceChanges().getAffectedExtCp().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 			} else if (x.getType() == TypeEnum.STORAGE) {
-				copyGrantToAffectedStorage(grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x);
+				copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 			}
 		});
-	}
-
-	private void copyGrantToAffectedStorage(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
-		copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
-	}
-
-	private void copyGrantToAffectedLinkPort(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
-		copyStream(lcmOpOccs.getResourceChanges().getAffectedExtCp().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
-	}
-
-	private void copyGrantToAffectedVirtualLink(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
-		copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
-	}
-
-	private void copyGrantToAffectedCompute(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantResponse grantsResp, final GrantInformationExt x) {
-		copyStream(lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream(), grantInformation, copyVnfc(x, vimConnectionInformation, lcmOpOccs, grantsResp, instantiationLevel));
 	}
 
 	private static <T extends VnfInstantiatedBase> void copyStream(final Stream<T> stream, final GrantInformation grantInformation, final Consumer<T> consumer) {
