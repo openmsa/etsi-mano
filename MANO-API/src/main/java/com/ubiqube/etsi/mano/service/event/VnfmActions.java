@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -242,38 +243,36 @@ public class VnfmActions {
 	}
 
 	private void copyGrantToAffectedStorage(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
-		lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
-				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-				.findFirst()
-				.ifPresent(defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
+		copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream(), grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 	}
 
 	private void copyGrantToAffectedLinkPort(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
-		lcmOpOccs.getResourceChanges().getAffectedExtCp().stream()
-				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-				.findFirst()
-				.ifPresent(defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
+		copyStream(lcmOpOccs.getResourceChanges().getAffectedExtCp().stream(), grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 	}
 
 	private void copyGrantToAffectedVirtualLink(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x) {
-		lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
-				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
-				.findFirst()
-				.ifPresent(defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
+		copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream(), grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 	}
 
 	private void copyGrantToAffectedCompute(final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantResponse grantsResp, final GrantInformationExt x) {
-		lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream()
-				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
+		copyStream(lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream(), grantInformation, lcmOpOccs, vimConnectionInformation, instantiationLevel, x, copyVnfc(x, vimConnectionInformation, lcmOpOccs, grantsResp, instantiationLevel));
+	}
+
+	private static <T extends VnfInstantiatedBase> void copyStream(final Stream<T> stream, final GrantInformation grantInformation, final VnfLcmOpOccs lcmOpOccs, final VimConnectionInformation vimConnectionInformation, final VduInstantiationLevel instantiationLevel, final GrantInformationExt x, final Consumer<T> consumer) {
+		stream.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
 				.findFirst()
-				.ifPresent(y -> {
-					copyResource(y, x, vimConnectionInformation, lcmOpOccs, instantiationLevel);
-					final String flavorId = findFlavor(grantsResp, x.getVduId());
-					y.setFlavorId(flavorId);
-					final String imageId = findImage(grantsResp, x.getVduId());
-					y.setImageId(imageId);
-					vnfInstancesService.save(y);
-				});
+				.ifPresent(consumer);
+	}
+
+	private Consumer<VnfInstantiatedCompute> copyVnfc(final GrantInformation x, final VimConnectionInformation vimConnectionInformation, final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp, final VduInstantiationLevel vduInstantiationLevel) {
+		return y -> {
+			copyResource(y, x, vimConnectionInformation, lcmOpOccs, vduInstantiationLevel);
+			final String flavorId = findFlavor(grantsResp, x.getVduId());
+			y.setFlavorId(flavorId);
+			final String imageId = findImage(grantsResp, x.getVduId());
+			y.setImageId(imageId);
+			vnfInstancesService.save(y);
+		};
 	}
 
 	private <T extends VnfInstantiatedBase> Consumer<T> defaultCopy(final GrantInformation x, final VimConnectionInformation vimConnectionInformation, final VnfLcmOpOccs lcmOpOccs, final VduInstantiationLevel vduInstantiationLevel) {
