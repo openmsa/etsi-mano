@@ -92,6 +92,16 @@ public class OpenStackVim implements Vim {
 		mapper = _mapper;
 	}
 
+	/**
+	 * @deprecated Will be removed since java 9.
+	 */
+	@Override
+	@Deprecated
+	protected void finalize() throws Throwable {
+		sessions.remove();
+		super.finalize();
+	}
+
 	private static OSClientV3 authenticate(final VimConnectionInformation vci) {
 		vci.getInterfaceInfo().get("endpoint");
 		final V3 base = OSFactory.builderV3()
