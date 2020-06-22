@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 @Entity
 public class GrantInformationExt extends GrantInformation {
 
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private String externalId;
 
 	public String getExternalId() {

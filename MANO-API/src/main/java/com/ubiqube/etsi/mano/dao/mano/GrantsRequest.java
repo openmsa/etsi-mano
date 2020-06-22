@@ -24,6 +24,9 @@ import javax.validation.Valid;
 @Entity
 @EntityListeners(AuditListener.class)
 public class GrantsRequest implements BaseEntity, Auditable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
