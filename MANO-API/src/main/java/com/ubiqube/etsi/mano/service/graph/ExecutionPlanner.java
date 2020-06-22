@@ -397,6 +397,9 @@ public class ExecutionPlanner {
 	}
 
 	private static boolean match(final VnfCompute vnfCompute, final VnfInstantiationLevels vil) {
+		if (null == vnfCompute.getScalingAspectDeltas()) {
+			return false;
+		}
 		return !vnfCompute.getScalingAspectDeltas().stream()
 				.filter(x -> x.getAspectName().equals(vil.getScaleInfoName()))
 				.collect(Collectors.toList()).isEmpty();
