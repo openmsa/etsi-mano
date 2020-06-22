@@ -80,6 +80,7 @@ public class ToscaPackageProvider implements PackageProvider {
 				.field("vnfProductName", "productName")
 				.field("vnfSoftwareVersion", "softwareVersion")
 				.field("vnfdVersion", "descriptorVersion")
+				.field("descriptorVersion", "descriptorVersion")
 				.field("vnfdId", "descriptorId")
 				.field("descriptorId", "descriptorId")
 				.field("flavorId", "flavourId")

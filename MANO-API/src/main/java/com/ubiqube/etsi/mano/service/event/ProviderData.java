@@ -18,6 +18,8 @@ public class ProviderData {
 
 	private String descriptorId;
 
+	private String descriptorVersion;
+
 	public String getVnfProvider() {
 		return vnfProvider;
 	}
@@ -80,6 +82,14 @@ public class ProviderData {
 
 	public void setDescriptorId(final String descriptorId) {
 		this.descriptorId = descriptorId;
+	}
+
+	public String getDescriptorVersion() {
+		return descriptorVersion;
+	}
+
+	public void setDescriptorVersion(final String descriptorVersion) {
+		this.descriptorVersion = descriptorVersion;
 	}
 
 }

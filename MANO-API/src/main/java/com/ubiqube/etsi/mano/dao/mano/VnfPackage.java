@@ -64,6 +64,8 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	private String descriptorId;
 
+	private String descriptorVersion;
+
 	private Checksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -231,6 +233,14 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	public void setDescriptorId(final String descriptorId) {
 		this.descriptorId = descriptorId;
+	}
+
+	public String getDescriptorVersion() {
+		return descriptorVersion;
+	}
+
+	public void setDescriptorVersion(final String descriptorVersion) {
+		this.descriptorVersion = descriptorVersion;
 	}
 
 	public Set<VnfCompute> getVnfCompute() {
