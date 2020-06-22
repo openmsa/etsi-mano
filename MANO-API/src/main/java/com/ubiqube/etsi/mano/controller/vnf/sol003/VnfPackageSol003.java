@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +62,7 @@ public interface VnfPackageSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip", "*/*" }, consumes = { "application/json" })
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader(value = "Range", required = false) String range) throws ServiceException;
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nonnull HttpServletRequest request, @Nullable @RequestHeader(value = "Range", required = false) String range);
 
 	/**
 	 * Read information about an individual VNF package.
@@ -96,7 +95,6 @@ public interface VnfPackageSol003 {
 	 * parameters, request and response data structures, and response codes.
 	 *
 	 * @throws IOException
-	 * @throws ServiceException
 	 *
 	 */
 	@ApiOperation(value = "", nickname = "vnfPackagesVnfPkgIdPackageContentGet", notes = "Fetch VNF Package. The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. This method shall follow the provisions specified in the tables 10.4.5.3.2-1 and 10.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -97,7 +96,6 @@ public class VnfManagement implements VnfPackageManagement {
 	 * @param _accept
 	 * @param rangeHeader
 	 * @return
-	 * @throws ServiceException
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath, final String rangeHeader) {

@@ -8,7 +8,6 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -76,7 +75,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, @RequestHeader(value = "Range", required = false) final String range) throws ServiceException {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, @RequestHeader(value = "Range", required = false) final String range) {
 		final String artifactPath = SpringUtils.extractParams(request);
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
 	}
@@ -102,7 +101,6 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 * parameters, request and response data structures, and response codes.
 	 *
 	 * @throws IOException
-	 * @throws ServiceException
 	 *
 	 */
 	@Override
