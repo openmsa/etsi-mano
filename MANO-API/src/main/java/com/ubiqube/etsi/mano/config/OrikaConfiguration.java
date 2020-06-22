@@ -223,7 +223,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(AffectedVnf.class, NsInstantiatedVnf.class)
 				.field("vnfdId", "")
-				.field("vnfInstanceId", "vnfInstance.id")
+				.field("vnfInstanceId", "vnfInstance")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(AffectedVnfc.class, VnfInstantiatedCompute.class)
@@ -272,6 +272,11 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfVirtualLinkDescId", "toscaName")
 				.byDefault()
 				.register();
+		/*
+		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.
+		 * class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}")
+		 * .byDefault() .register();
+		 */
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());
 		converterFactory.registerConverter(new OffsetDateTimeToDateConverter());
