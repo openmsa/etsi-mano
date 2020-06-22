@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
@@ -104,8 +105,10 @@ public class VnfmActions {
 			LOG.info("Instantiate {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
-			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
 			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
+			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
 			vnfInstancesService.save(vnfInstance);
 		}

@@ -1,12 +1,20 @@
 package com.ubiqube.etsi.mano.dao.mano.common;
 
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Embeddable
 public class FailureDetails implements Serializable {
+
+	private static final Logger LOG = LoggerFactory.getLogger(FailureDetails.class);
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -20,6 +28,20 @@ public class FailureDetails implements Serializable {
 	private String detail;
 
 	private String instance;
+
+	public FailureDetails() {
+		// Nothing.
+	}
+
+	public FailureDetails(final Long _status, final String _detail) {
+		try {
+			instance = InetAddress.getLocalHost().getCanonicalHostName();
+		} catch (final UnknownHostException e) {
+			LOG.warn("", e);
+		}
+		status = _status;
+		detail = _detail;
+	}
 
 	public String getType() {
 		return type;
