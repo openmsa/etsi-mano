@@ -26,7 +26,7 @@ import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOccLinks;
-import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
+import com.ubiqube.etsi.mano.service.VnfLcmService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -35,11 +35,11 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
-	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
+	private final VnfLcmService vnfLcmOpOccsRepository;
 	private final MapperFacade mapper;
 	private final VnfInstanceLcm vnfInstanceLcm;
 
-	public VnfLcmOpOccsSol003Api(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final MapperFacade _mapper, final VnfInstanceLcm _vnfInstanceLcm) {
+	public VnfLcmOpOccsSol003Api(final VnfLcmService _vnfLcmOpOccsRepository, final MapperFacade _mapper, final VnfInstanceLcm _vnfInstanceLcm) {
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
 		mapper = _mapper;
 		vnfInstanceLcm = _vnfInstanceLcm;

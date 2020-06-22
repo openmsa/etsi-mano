@@ -1,11 +1,14 @@
 package com.ubiqube.etsi.mano.service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
@@ -30,15 +33,11 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
-import com.ubiqube.etsi.mano.repository.VnfLcmOpOccsRepository;
-
-import ma.glasnost.orika.MapperFacade;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
 public class VnfLcmService {
 	private static final String COULD_NOT_FIND_COMPUTE_RESOURCE = "Could not find compute resource: ";
-
-	private final VnfLcmOpOccsRepository vnfLcmOpOccsRepository;
 
 	private final VnfLcmOpOccsJpa vnfLcmOpOccsJpa;
 
@@ -48,15 +47,14 @@ public class VnfLcmService {
 
 	private final VnfInstantiedExtCpJpa vnfInstantiedExtCpJpa;
 
-	private final MapperFacade mapper;
+	private final EntityManager em;
 
-	public VnfLcmService(final VnfLcmOpOccsRepository _vnfLcmOpOccsRepository, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final VnfInstantiedComputeJpa _vnfInstantiedCompute, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLink, final VnfInstantiedExtCpJpa _vnfInstantiedExtCp, final MapperFacade _mapper) {
-		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
+	public VnfLcmService(final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final VnfInstantiedComputeJpa _vnfInstantiedCompute, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLink, final VnfInstantiedExtCpJpa _vnfInstantiedExtCp, final EntityManager _em) {
 		vnfLcmOpOccsJpa = _vnfLcmOpOccsJpa;
 		vnfInstantiedComputeJpa = _vnfInstantiedCompute;
 		vnfInstantiedVirtualLinkJpa = _vnfInstantiedVirtualLink;
 		vnfInstantiedExtCpJpa = _vnfInstantiedExtCp;
-		mapper = _mapper;
+		em = _em;
 	}
 
 	@Nonnull
@@ -72,18 +70,20 @@ public class VnfLcmService {
 	@Nonnull
 	private VnfLcmOpOccs createIntatiateTerminateOpOcc(final VnfInstance vnfInstance, final LcmOperationType state) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(state, vnfInstance.getId());
-		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+		return vnfLcmOpOccsJpa.save(lcmOpOccs);
+	}
+
+	public VnfLcmOpOccs updateState(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final LcmOperationStateType newState) {
+		// XXX Use an update method in a Repository.
+		vnfLcmOpOccs.setOperationState(newState);
+		vnfLcmOpOccs.setStateEnteredTime(new Date());
+		return vnfLcmOpOccsJpa.save(vnfLcmOpOccs);
 	}
 
 	@Deprecated
-	public void updateState(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final LcmOperationStateType newState) {
-		// XXX Use an update method in a Repository.
-		vnfLcmOpOccsRepository.updateState(vnfLcmOpOccs, newState);
-	}
-
 	public void setGrant(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final UUID grantId) {
 		vnfLcmOpOccs.setGrantId(grantId.toString());
-		vnfLcmOpOccsRepository.save(vnfLcmOpOccs);
+		vnfLcmOpOccsJpa.save(vnfLcmOpOccs);
 	}
 
 	@SuppressWarnings("null")
@@ -119,7 +119,7 @@ public class VnfLcmService {
 					.collect(Collectors.toSet());
 			lcmOpOccs.getVnfInstantiatedInfo().setScaleStatus(scaleStatus);
 		}
-		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
 	public VnfLcmOpOccs createScaleOpOcc(final VnfInstance vnfInstance, final ScaleVnfRequest scaleVnfRequest) {
@@ -132,7 +132,7 @@ public class VnfLcmService {
 				.map(x -> new ScaleInfo(x.getAspectId(), addDec(scaleVnfRequest.getType(), scaleVnfRequest.getNumberOfSteps(), x.getScaleLevel())))
 				.collect(Collectors.toSet());
 		lcmOpOccs.getVnfInstantiatedInfo().setScaleStatus(scaleStatus);
-		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
 	private @NotNull static Integer addDec(@NotNull final TypeEnum type, final Integer numberOfSteps, final Integer scaleLevel) {
@@ -152,6 +152,12 @@ public class VnfLcmService {
 		opChanges.setTerminationType(operateVnfRequest.getChangeStateTo());
 		opChanges.setGracefulTerminationTimeout(operateVnfRequest.getGracefulStopTimeout());
 		operateVnfRequest.getStopType();
-		return vnfLcmOpOccsRepository.save(lcmOpOccs);
+		return vnfLcmOpOccsJpa.save(lcmOpOccs);
+	}
+
+	public List<VnfLcmOpOccs> query(final String filter) {
+		final SearchQueryer sq = new SearchQueryer(em);
+		return (List<VnfLcmOpOccs>) sq.getCriteria(filter, VnfLcmOpOccs.class)
+				.getResultStream().collect(Collectors.toList());
 	}
 }
