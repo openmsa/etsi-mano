@@ -58,4 +58,9 @@ public class VnfInstanceScaleInfo implements Serializable {
 		this.scaleLevel = scaleLevel;
 	}
 
+	@Override
+	public String toString() {
+		return "VnfInstanceScaleInfo [id=" + id + ", aspectId=" + aspectId + ", scaleLevel=" + scaleLevel + "]";
+	}
+
 }

@@ -1,14 +1,19 @@
 package com.ubiqube.etsi.mano.factory;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -45,6 +50,16 @@ public final class LcmFactory {
 		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
+		final Set<VnfInstanceScaleInfo> scaleInfo = vnfPkgInfo.getVnfCompute().stream()
+				.map(x -> x.getScalingAspectDeltas().stream()
+						.map(VnfComputeAspectDelta::getAspectName)
+						.distinct()
+						.collect(Collectors.toList()))
+				.flatMap(List::stream)
+				.distinct()
+				.map(x -> new VnfInstanceScaleInfo(x, Integer.valueOf(0)))
+				.collect(Collectors.toSet());
+		instantiatedVnfInfo.setScaleStatus(scaleInfo);
 		return vnfInstance;
 	}
 
