@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -31,7 +30,7 @@ import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfLcmOpOccs implements BaseEntity, Auditable, Serializable {
+public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

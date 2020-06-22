@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -20,7 +19,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsSap implements BaseEntity, Auditable, Serializable {
+public class NsSap implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

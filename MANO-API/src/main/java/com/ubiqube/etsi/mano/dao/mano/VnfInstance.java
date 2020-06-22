@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +28,7 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfInstance implements BaseEntity, Auditable, Serializable {
+public class VnfInstance implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

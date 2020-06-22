@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -22,7 +21,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfCompute implements ToscaEntity, Auditable, Serializable {
+public class VnfCompute implements ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

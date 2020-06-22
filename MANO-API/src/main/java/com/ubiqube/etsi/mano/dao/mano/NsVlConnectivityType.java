@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,7 +14,7 @@ import javax.persistence.Id;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsVlConnectivityType implements BaseEntity, Auditable, Serializable {
+public class NsVlConnectivityType implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

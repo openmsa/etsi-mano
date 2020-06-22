@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-public interface Auditable {
+import java.io.Serializable;
+
+public interface Auditable extends Serializable {
 
 	Audit getAudit();
 
