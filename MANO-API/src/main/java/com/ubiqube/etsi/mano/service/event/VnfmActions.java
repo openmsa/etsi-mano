@@ -245,14 +245,7 @@ public class VnfmActions {
 				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
 				.findFirst()
 				.ifPresent(y -> {
-					y.setResourceProviderId(x.getResourceProviderId());
-					y.setStatus(InstantiationStatusType.NOT_STARTED);
-					y.setVimConnectionInformation(vimConnectionInformation);
-					y.setVnfLcmOpOccs(lcmOpOccs);
-					y.setInstantiationLevel(instantiationLevel);
-					y.setZoneId(x.getZoneId());
-					y.setResourceGroupId(x.getResourceGroupId());
-					y.setReservationId(x.getReservationId());
+					copyResource(y, x, vimConnectionInformation, lcmOpOccs, instantiationLevel);
 					vnfInstancesService.save(y);
 				});
 	}
@@ -262,15 +255,7 @@ public class VnfmActions {
 				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
 				.findFirst()
 				.ifPresent(y -> {
-					y.setResourceProviderId(x.getResourceProviderId());
-					y.setStatus(InstantiationStatusType.NOT_STARTED);
-					y.setVimConnectionInformation(vimConnectionInformation);
-					y.setVnfLcmOpOccs(lcmOpOccs);
-					y.setInstantiationLevel(instantiationLevel);
-					y.setZoneId(x.getZoneId());
-					y.setResourceGroupId(x.getResourceGroupId());
-					y.setResourceProviderId(x.getResourceProviderId());
-					y.setReservationId(x.getReservationId());
+					copyResource(y, x, vimConnectionInformation, lcmOpOccs, instantiationLevel);
 					vnfInstancesService.save(y);
 				});
 	}
@@ -280,14 +265,7 @@ public class VnfmActions {
 				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
 				.findFirst()
 				.ifPresent(y -> {
-					y.setResourceProviderId(x.getResourceProviderId());
-					y.setStatus(InstantiationStatusType.NOT_STARTED);
-					y.setVimConnectionInformation(vimConnectionInformation);
-					y.setVnfLcmOpOccs(lcmOpOccs);
-					y.setInstantiationLevel(instantiationLevel);
-					y.setZoneId(x.getZoneId());
-					y.setResourceGroupId(x.getResourceGroupId());
-					y.setReservationId(x.getReservationId());
+					copyResource(y, x, vimConnectionInformation, lcmOpOccs, instantiationLevel);
 					vnfInstancesService.save(y);
 				});
 	}
@@ -297,20 +275,24 @@ public class VnfmActions {
 				.filter(o -> o.getId().toString().equals(grantInformation.getResourceDefinitionId()))
 				.findFirst()
 				.ifPresent(y -> {
-					y.setResourceProviderId(x.getResourceProviderId());
-					y.setStatus(InstantiationStatusType.NOT_STARTED);
-					y.setVimConnectionInformation(vimConnectionInformation);
-					y.setVnfLcmOpOccs(lcmOpOccs);
-					y.setInstantiationLevel(instantiationLevel);
-					y.setZoneId(x.getZoneId());
-					y.setResourceGroupId(x.getResourceGroupId());
-					y.setReservationId(x.getReservationId());
+					copyResource(y, x, vimConnectionInformation, lcmOpOccs, instantiationLevel);
 					final String flavorId = findFlavor(grantsResp, x.getVduId());
 					y.setFlavorId(flavorId);
 					final String imageId = findImage(grantsResp, x.getVduId());
 					y.setImageId(imageId);
 					vnfInstancesService.save(y);
 				});
+	}
+
+	private void copyResource(final VnfInstantiatedBase y, final GrantInformation x, final VimConnectionInformation vimConnectionInformation, final VnfLcmOpOccs lcmOpOccs, final VduInstantiationLevel vduInstantiationLevel) {
+		y.setResourceProviderId(x.getResourceProviderId());
+		y.setStatus(InstantiationStatusType.NOT_STARTED);
+		y.setVimConnectionInformation(vimConnectionInformation);
+		y.setVnfLcmOpOccs(lcmOpOccs);
+		y.setInstantiationLevel(vduInstantiationLevel);
+		y.setZoneId(x.getZoneId());
+		y.setResourceGroupId(x.getResourceGroupId());
+		y.setReservationId(x.getReservationId());
 	}
 
 	private static void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
