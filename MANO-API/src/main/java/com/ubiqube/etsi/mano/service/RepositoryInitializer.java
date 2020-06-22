@@ -3,10 +3,8 @@ package com.ubiqube.etsi.mano.service;
 import java.nio.file.Path;
 import java.util.Set;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.api.interfaces.repository.RepositoryService;
 import com.ubiqube.etsi.mano.repository.ClassPathConverter;
 import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
@@ -17,7 +15,6 @@ import com.ubiqube.etsi.mano.repository.NamingStrategy;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  */
 @Service
-@ConditionalOnBean(RepositoryService.class)
 public class RepositoryInitializer {
 
 	protected static final String PROCESS_BASE_PATH = "Process";

@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.interfaces.device.DeviceService;
 import com.ubiqube.etsi.mano.config.Http403EntryPoint;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
@@ -52,8 +51,6 @@ public class VnfPkgTest {
 	private Patcher patcher;
 	@MockBean
 	private VnfPackageRepository vnfPackageRepository;
-	@MockBean
-	private DeviceService deviseService;
 	@MockBean
 	private EventManager eventManager;
 

@@ -136,11 +136,12 @@ dependencies {
 springBoot {
 	mainClassName = 'com.ubiqube.etsi.mano.Application'
 }
-
+/*
 java {
 	withJavadocJar()
 	withSourcesJar()
 }
+*/
 test {
 	useJUnitPlatform() {
 		excludeTags 'Remote'

@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -23,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -80,7 +80,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) throws ServiceException {
+	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) {
 		final String resp = vnfManagement.vnfPackagesGet(requestParams, links);
 		return ResponseEntity.ok(resp);
 	}
