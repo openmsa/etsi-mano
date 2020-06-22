@@ -26,9 +26,13 @@ import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.Flavor;
+import org.openstack4j.model.compute.QuotaSet;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.ServerCreate;
+import org.openstack4j.model.dns.v2.Zone;
+import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.identity.v3.Endpoint;
 import org.openstack4j.model.identity.v3.Service;
 import org.openstack4j.model.network.Port;
@@ -352,7 +356,7 @@ public class OpenStackTest {
 		vnfc.setName("vdu01");
 		final List<String> networks = new ArrayList<>();
 		final List<String> storages = new ArrayList<>();
-		vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages);
+		vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null);
 	}
 
 	private static OSClientV3 getTrainConnection() {
@@ -439,11 +443,18 @@ public class OpenStackTest {
 		os.networking().agent().list().forEach(x -> {
 			System.out.println("" + x.getTopic() + " " + x.getAgentType() + " " + x.getBinary());
 		});
-
 	}
 
 	@Test
-	void testflavor() throws Exception {
+	void testDns01() throws Exception {
+		final OSClientV3 os = getTrainConnection();
+		os.dns().recordsets().list().forEach(x -> {
+			System.out.println("" + x);
+		});
+	}
+
+	@Test
+	public void testflavor() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final int disk = 20;
 		final int ram = 4096;
@@ -459,5 +470,40 @@ public class OpenStackTest {
 				.flavors()
 				.create(build);
 		System.out.println("" + res);
+	}
+
+	@Test
+	public void testCreateZone() throws Exception {
+		final OSClientV3 os = getTrainConnection();
+		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23")
+				.ttl(36)
+				.type(ZoneType.PRIMARY)
+				.email("mano@ubqube.com")
+				.build();
+		final Zone res = os.dns().zones().create(zone);
+		System.out.println("" + res);
+	}
+
+	@Test
+	public void testQuotas() {
+		final OSClientV3 os = getQueensConnection();
+		os.compute().quotaSets().listTenantUsages().stream()
+				.forEach(x -> {
+					System.out.println("" + x.getTenantId());
+					final QuotaSet quota = os.compute().quotaSets().get(x.getTenantId());
+					final AbsoluteLimit usage = os.compute().quotaSets().limits().getAbsolute();
+					System.out.println("" + quota);
+					System.out.println("" + usage);
+				});
+		System.out.println("==========================");
+		os.networking().quotas().get().stream()
+				.forEach(x -> {
+					x.getNetwork();
+					System.out.println("netw " + x);
+				});
+		os.identity().policies().list().stream()
+				.forEach(x -> {
+					System.out.println("" + x);
+				});
 	}
 }

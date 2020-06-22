@@ -39,7 +39,7 @@ public class ExecutionPlannerTest {
 	private VnfPackageService vnfPackageService;
 
 	private ExecutionPlanner createExecutionPlanner() {
-		return new ExecutionPlanner(null, vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null, null, null);
+		return new ExecutionPlanner(vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null, null);
 	}
 
 	void testName() throws Exception {
