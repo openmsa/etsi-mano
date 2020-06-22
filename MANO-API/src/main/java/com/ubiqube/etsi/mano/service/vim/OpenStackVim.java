@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -342,17 +342,22 @@ public class OpenStackVim implements Vim {
 	@Override
 	public SoftwareImage uploadSoftwareImage(final VimConnectionInformation vimConnectionInformation, final SoftwareImage img) {
 		final String imagePath = img.getImagePath();
-		Payload<?> payload;
 		// XXX A little bit simple.
 		if (imagePath.startsWith("http")) {
-			try {
-				payload = Payloads.create(new URL(imagePath));
-			} catch (final MalformedURLException e) {
+			try (Payload<URL> payload = Payloads.create(new URL(imagePath))) {
+				return doUpload(vimConnectionInformation, img, payload);
+			} catch (final IOException e) {
 				throw new GenericException(e);
 			}
-		} else {
-			payload = Payloads.create(new File(imagePath));
 		}
+		try (Payload<File> payload = Payloads.create(new File(imagePath))) {
+			return doUpload(vimConnectionInformation, img, payload);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
+	private SoftwareImage doUpload(final VimConnectionInformation vimConnectionInformation, final SoftwareImage img, final Payload<?> payload) {
 		final ImageBuilder bImg = Builders.image()
 				.containerFormat(ContainerFormat.valueOf(img.getContainerFormat())).diskFormat(DiskFormat.valueOf(img.getDiskFormat()))
 				.minDisk(img.getMinDisk())
