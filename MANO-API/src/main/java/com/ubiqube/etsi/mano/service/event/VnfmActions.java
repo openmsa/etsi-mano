@@ -312,7 +312,7 @@ public class VnfmActions {
 				});
 	}
 
-	private void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
+	private static void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
 		if (results.getErrored().isEmpty()) {
 			lcmOpOccs.setOperationState(LcmOperationStateType.COMPLETED);
 			lcmOpOccs.setStateEnteredTime(new Date());
