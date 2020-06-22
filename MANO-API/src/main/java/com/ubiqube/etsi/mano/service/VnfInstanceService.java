@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.service;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -154,6 +155,18 @@ public class VnfInstanceService {
 
 	public VnfLiveInstance findLiveInstanceByInstantiated(final UUID id) {
 		return vnfLiveInstanceJpa.findByVnfInstantiatedBaseId(id);
+	}
+
+	public VnfLiveInstance save(final VnfLiveInstance vli) {
+		return vnfLiveInstanceJpa.save(vli);
+	}
+
+	public Optional<VnfLiveInstance> findLiveInstanceById(final UUID removedInstantiated) {
+		return vnfLiveInstanceJpa.findById(removedInstantiated);
+	}
+
+	public void deleteLiveInstanceById(final UUID id) {
+		vnfLiveInstanceJpa.deleteById(id);
 	}
 
 }

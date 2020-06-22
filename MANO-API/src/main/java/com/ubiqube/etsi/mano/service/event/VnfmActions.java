@@ -40,7 +40,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
 import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
@@ -79,11 +78,9 @@ public class VnfmActions {
 
 	private final VnfPackageService vnfPackageService;
 
-	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
-
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final VnfPackageRepository _vnfPackageRepository) {
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfPackageRepository _vnfPackageRepository) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
@@ -93,7 +90,6 @@ public class VnfmActions {
 		vnfLcmService = _vnfLcmService;
 		grantService = _grantService;
 		vnfInstancesService = _vnfInstancesService;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 		vnfPackageRepository = _vnfPackageRepository;
 	}
 
@@ -342,14 +338,14 @@ public class VnfmActions {
 				}
 				if (null != rhe.getId()) {
 					final VnfLiveInstance vli = new VnfLiveInstance(vnfInstance, il, rhe, lcmOpOccs, rhe.getResourceId(), rhe.getVduId());
-					vnfLiveInstanceJpa.save(vli);
+					vnfInstancesService.save(vli);
 				} else {
 					LOG.warn("Could not store: {}", x.getId().getName());
 				}
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());
-				final VnfLiveInstance vli = vnfLiveInstanceJpa.findById(rhe.getRemovedInstantiated()).orElseThrow(() -> new NotFoundException("" + rhe.getId()));
-				vnfLiveInstanceJpa.deleteById(vli.getId());
+				final VnfLiveInstance vli = vnfInstancesService.findLiveInstanceById(rhe.getRemovedInstantiated()).orElseThrow(() -> new NotFoundException("" + rhe.getId()));
+				vnfInstancesService.deleteLiveInstanceById(vli.getId());
 			}
 		});
 	}
