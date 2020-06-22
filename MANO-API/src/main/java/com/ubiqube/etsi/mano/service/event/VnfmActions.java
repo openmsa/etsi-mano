@@ -378,6 +378,8 @@ public class VnfmActions {
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
+			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
 			vnfInstancesService.save(vnfInstance);
 		}

@@ -81,7 +81,7 @@ public class NfvoActions {
 		}
 	}
 
-	public void nsTerminateInner(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
+	private void nsTerminateInner(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
 		// XXX This is not the correct way/
 		final VimConnectionInformation vimInfo = electVim(null, null);
 
@@ -111,6 +111,8 @@ public class NfvoActions {
 			LOG.error("NS Instantiate fail.", e);
 			// We can't save here, we must do an atomic update.
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
+			lcmOpOccs.setStateEnteredTime(new Date());
 			nsLcmOpOccsService.save(lcmOpOccs);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
