@@ -7,6 +7,8 @@ public enum ChangeType {
 	ADDED("ADDED"),
 	REMOVED("REMOVED"),
 	MODIFIED("MODIFIED"),
+	LINK_PORT_ADDED("LINK_PORT_ADDED"),
+	LINK_PORT_REMOVED("LINK_PORT_REMOVED"),
 	TEMPORARY("TEMPORARY");
 
 	private final String value;
