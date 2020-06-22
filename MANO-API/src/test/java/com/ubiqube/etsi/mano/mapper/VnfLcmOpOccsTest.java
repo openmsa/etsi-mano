@@ -48,7 +48,7 @@ public class VnfLcmOpOccsTest {
 
 	/**
 	 * Infinite loop in extCp
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	void testDaoToJson() throws Exception {

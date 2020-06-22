@@ -12,7 +12,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
@@ -41,7 +40,7 @@ public class NsdPackageTest {
 
 		final Set<NsdPackageNsdPackage> infoId = nsdDao.getNestedNsdInfoIds();
 		assertEquals(2, infoId.size());
-		final NsdPackage nsdP[] = infoId.toArray(new NsdPackage[0]);
+		final NsdPackageNsdPackage nsdP[] = infoId.toArray(new NsdPackageNsdPackage[0]);
 		assertEquals("25dca365-ff1b-4204-a9ca-c3745e6d3244", nsdP[0].getId().toString());
 		assertEquals("52d993dc-7a50-46da-b30c-e8fb344ef140", nsdP[1].getId().toString());
 
@@ -56,7 +55,7 @@ public class NsdPackageTest {
 
 		final Set<NsdPackageVnfPackage> vnf = nsdDao.getVnfPkgIds();
 		assertEquals(2, vnf.size());
-		final VnfPackage vnfP[] = vnf.toArray(new VnfPackage[0]);
+		final NsdPackageVnfPackage vnfP[] = vnf.toArray(new NsdPackageVnfPackage[0]);
 		assertEquals("25dca365-ff1b-4204-a9ca-c3745e6d3244", vnfP[0].getId().toString());
 		assertEquals("52d993dc-7a50-46da-b30c-e8fb344ef140", vnfP[1].getId().toString());
 

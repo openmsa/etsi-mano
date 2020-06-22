@@ -48,6 +48,6 @@ public class NsLcmOpOccsTest {
 		assertEquals("detail", nloo.getError().getDetail());
 		assertNotNull(nloo.getStartTime());
 		assertNotNull(nloo.getStateEnteredTime());
-		assertEquals("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf", nloo.getResourceChanges().getAffectedVnfs().iterator().next().getVnfInstance());
+		assertEquals("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf", nloo.getResourceChanges().getAffectedVnfs().iterator().next().getVnfInstance().toString());
 	}
 }
