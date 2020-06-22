@@ -30,7 +30,8 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
+import com.ubiqube.etsi.mano.service.graph.GraphTools;
+import com.ubiqube.etsi.mano.service.graph.NsExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -50,9 +51,9 @@ public class NfvoActions {
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final PlanExecutor executor;
 
-	private final ExecutionPlanner executionPlanner;
+	private final NsExecutionPlanner executionPlanner;
 
-	public NfvoActions(final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
+	public NfvoActions(final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
 		super();
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
@@ -91,9 +92,9 @@ public class NfvoActions {
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 
 		ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
-		plan = executionPlanner.revert(plan);
+		plan = GraphTools.revert(plan);
 
-		executionPlanner.exportGraph(plan, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
+		GraphTools.exportGraph(plan, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
 
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execDeleteNs(plan, vimInfo, vim);
 		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
@@ -131,7 +132,7 @@ public class NfvoActions {
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
 		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
-		executionPlanner.exportGraph(plan, nsdId, nsInstance, "create", nsdRepository);
+		GraphTools.exportGraph(plan, nsdId, nsInstance, "create", nsdRepository);
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim, pubNet);
 		LOG.debug("Done, Saving ...");
 		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);

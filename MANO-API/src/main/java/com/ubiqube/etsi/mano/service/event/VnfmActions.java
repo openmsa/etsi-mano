@@ -53,6 +53,7 @@ import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
+import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -151,7 +152,7 @@ public class VnfmActions {
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		localVnfInstance.setVimConnectionInfo(Collections.singleton(vimConnection));
 		//
-		executionPlanner.exportGraph(removePlan, vnfPkg.getId(), localVnfInstance, "remove", vnfPackageRepository);
+		GraphTools.exportGraph(removePlan, vnfPkg.getId(), localVnfInstance, "remove", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> removeResults = executor.execDelete(removePlan, vimConnection, vim);
 		/// XXX split this function for adding / removing live instances.
@@ -160,7 +161,7 @@ public class VnfmActions {
 		// Create plan
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
 		vim.refineExecutionPlan(createPlan);
-		executionPlanner.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create", vnfPackageRepository);
+		GraphTools.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> createResults = executor.execCreate(createPlan, vimConnection, vim, context);
 		setResultLcmInstance(localLcmOpOccs, localVnfInstance, createResults, InstantiationStateEnum.INSTANTIATED);
@@ -404,7 +405,7 @@ public class VnfmActions {
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		// vim.refineExecutionPlan(plan);
 		// plan = executionPlanner.revert(plan);
-		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete", vnfPackageRepository);
+		GraphTools.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
 		setResultLcmInstance(localLcmOpOccs, vnfInstance, results, InstantiationStateEnum.NOT_INSTANTIATED);
