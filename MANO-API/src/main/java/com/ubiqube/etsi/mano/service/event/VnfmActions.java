@@ -134,7 +134,8 @@ public class VnfmActions {
 		vnfLcmService.updateState(localLcmOpOccs, LcmOperationStateType.PROCESSING);
 
 		copyGrantResourcesToInstantiated(localLcmOpOccs, grantsResp);
-		vnfLcmService.setGrant(localLcmOpOccs, grantsResp.getId());
+		lcmOpOccs.setGrantId(grantsResp.getId().toString());
+		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		// vnfInstance.setVimConnectionInfo(grantsResp.getVimConnections());
 		// extract Ext VL
 		final Map<String, String> context = grantsResp.getExtManagedVirtualLinks().stream()
@@ -393,7 +394,8 @@ public class VnfmActions {
 		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
 		final GrantResponse grant = getTerminateGrants(vnfInstance, localLcmOpOccs, vnfPkg);
-		vnfLcmService.setGrant(localLcmOpOccs, grant.getId());
+		lcmOpOccs.setGrantId(grant.getId().toString());
+		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		// Make plan
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);

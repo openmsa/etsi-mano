@@ -80,12 +80,6 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.save(vnfLcmOpOccs);
 	}
 
-	@Deprecated
-	public void setGrant(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final UUID grantId) {
-		vnfLcmOpOccs.setGrantId(grantId.toString());
-		vnfLcmOpOccsJpa.save(vnfLcmOpOccs);
-	}
-
 	@SuppressWarnings("null")
 	@Nonnull
 	public VnfLcmOpOccs findById(final UUID id) {
