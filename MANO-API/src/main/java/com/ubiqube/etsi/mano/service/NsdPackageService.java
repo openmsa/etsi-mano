@@ -14,22 +14,20 @@ import com.ubiqube.etsi.mano.jpa.NsSapJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageNsdPackageJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageVnfPackageJpa;
-import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 
 @Service
 public class NsdPackageService {
 
 	private final NsSapJpa nsSapJpa;
 
-	private final VnfPackageJpa vnfPackageJpa;
-
 	private final NsdPackageJpa nsdPackageJpa;
+
 	private final NsdPackageNsdPackageJpa nsdPackageNsdPackageJpa;
+
 	private final NsdPackageVnfPackageJpa nsdPackageVnfPackageJpa;
 
-	public NsdPackageService(final NsSapJpa _nsSapJpa, final VnfPackageJpa _vnfPackageJpa, final NsdPackageJpa _nsdPackageJpa, final NsdPackageNsdPackageJpa _nsdPackageNsdPackageJpa, final NsdPackageVnfPackageJpa _nsdPackageVnfPackageJpa) {
+	public NsdPackageService(final NsSapJpa _nsSapJpa, final NsdPackageJpa _nsdPackageJpa, final NsdPackageNsdPackageJpa _nsdPackageNsdPackageJpa, final NsdPackageVnfPackageJpa _nsdPackageVnfPackageJpa) {
 		nsSapJpa = _nsSapJpa;
-		vnfPackageJpa = _vnfPackageJpa;
 		nsdPackageJpa = _nsdPackageJpa;
 		nsdPackageNsdPackageJpa = _nsdPackageNsdPackageJpa;
 		nsdPackageVnfPackageJpa = _nsdPackageVnfPackageJpa;
