@@ -129,8 +129,8 @@ public class VnfmActions {
 		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, localLcmOpOccs);
 		final GrantResponse grantsResp = grantService.sendAndWaitGrantRequest(req);
 		// Send processing notification.
-		vnfLcmService.updateState(localLcmOpOccs, LcmOperationStateType.PROCESSING);
-
+		lcmOpOccs.setOperationState(LcmOperationStateType.PROCESSING);
+		lcmOpOccs.setStateEnteredTime(new Date());
 		copyGrantResourcesToInstantiated(localLcmOpOccs, grantsResp);
 		lcmOpOccs.setGrantId(grantsResp.getId().toString());
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
@@ -286,11 +286,11 @@ public class VnfmActions {
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
 			lcmOpOccs.setStateEnteredTime(new Date());
 		}
+		lcmOpOccs.setStateEnteredTime(new Date());
 	}
 
 	private void setLiveSatus(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results) {
 		LOG.info("Creating / deleting live instances.");
-		//
 		results.getSuccess().forEach(x -> {
 			final VnfInstantiatedBase rhe = x.getId().getResourceHandleEntity();
 			final ChangeType ct = rhe.getChangeType();
@@ -394,7 +394,9 @@ public class VnfmActions {
 			LOG.info("Scale to level {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Scale to level Failed", e);
-			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
+			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
 		}
 		eventManager.sendNotification(NotificationEvent.VNF_SCALE, lcmOpOccsId);
@@ -409,7 +411,9 @@ public class VnfmActions {
 			LOG.info("Scale to level {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Scale to level Failed", e);
-			vnfLcmService.updateState(lcmOpOccs, LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
+			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
 		}
 		eventManager.sendNotification(NotificationEvent.VNF_SCALE, lcmOpOccsId);

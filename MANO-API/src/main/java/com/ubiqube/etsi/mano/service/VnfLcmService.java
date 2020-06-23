@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +26,6 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
@@ -73,20 +71,11 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
-	public VnfLcmOpOccs updateState(final @Nonnull VnfLcmOpOccs vnfLcmOpOccs, final LcmOperationStateType newState) {
-		// XXX Use an update method in a Repository.
-		vnfLcmOpOccs.setOperationState(newState);
-		vnfLcmOpOccs.setStateEnteredTime(new Date());
-		return vnfLcmOpOccsJpa.save(vnfLcmOpOccs);
-	}
-
-	@SuppressWarnings("null")
 	@Nonnull
 	public VnfLcmOpOccs findById(final UUID id) {
 		return vnfLcmOpOccsJpa.findById(id).orElseThrow(() -> new NotFoundException(COULD_NOT_FIND_COMPUTE_RESOURCE + id));
 	}
 
-	@SuppressWarnings("null")
 	@Nonnull
 	public VnfLcmOpOccs save(final VnfLcmOpOccs lcmOpOccs) {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
