@@ -129,7 +129,8 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
-	private @NotNull static Integer addDec(@NotNull final TypeEnum type, final Integer numberOfSteps, final Integer scaleLevel) {
+	@NotNull
+	private static int addDec(@NotNull final TypeEnum type, final int numberOfSteps, final int scaleLevel) {
 		switch (type) {
 		case IN:
 			return Math.max(0, scaleLevel - numberOfSteps);
