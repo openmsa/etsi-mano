@@ -19,14 +19,17 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedMonitoring;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
@@ -167,6 +170,22 @@ public class VnfInstanceService {
 
 	public void deleteLiveInstanceById(final UUID id) {
 		vnfLiveInstanceJpa.deleteById(id);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends VnfInstantiatedBase> T save(final T y) {
+		if (y instanceof VnfInstantiatedCompute) {
+			return (T) vnfInstantiedComputeJpa.save((VnfInstantiatedCompute) y);
+		} else if (y instanceof VnfInstantiatedExtCp) {
+			return (T) vnfInstantiedExtCpJpa.save((VnfInstantiatedExtCp) y);
+		} else if (y instanceof VnfInstantiatedStorage) {
+			return (T) vnfInstantiedStorageJpa.save((VnfInstantiatedStorage) y);
+		} else if (y instanceof VnfInstantiatedVirtualLink) {
+			return (T) vnfInstantiedVirtualLinkJpa.save((VnfInstantiatedVirtualLink) y);
+		} else if (y instanceof VnfInstantiatedMonitoring) {
+			return y;
+		}
+		throw new GenericException("Unknown class type: " + y.getClass());
 	}
 
 }
