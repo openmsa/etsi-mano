@@ -46,7 +46,7 @@ public class ExecutionPlannerTest {
 	}
 
 	private ExecutionPlanner createExecutionPlanner() {
-		return new ExecutionPlanner(vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy(), null, null, null, null, null, null, null);
+		return new ExecutionPlanner(vnfInstanceService, vnfPackageService, new DefaultVduNamingStrategy());
 	}
 
 	void testName() throws Exception {
