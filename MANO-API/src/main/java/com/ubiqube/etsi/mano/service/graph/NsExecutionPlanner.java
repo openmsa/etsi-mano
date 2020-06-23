@@ -6,6 +6,7 @@ import java.util.Set;
 import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -49,6 +50,7 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
 
+@Service
 public class NsExecutionPlanner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsExecutionPlanner.class);
