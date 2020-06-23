@@ -23,11 +23,15 @@ public class GraphTools {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GraphTools.class);
 
+	private GraphTools() {
+		// Nothing.
+	}
+
 	public static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
 		final Class<ConnectivityEdge<U>> t = (Class<ConnectivityEdge<U>>) (Object) ConnectivityEdge.class;
 		// Vertex everyThing
 		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(t));
-		g.addGraphListener(new EdgeListener<U>());
+		g.addGraphListener(new EdgeListener<>());
 		return g;
 	}
 
@@ -47,8 +51,8 @@ public class GraphTools {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
-		final InputStream _stream = new ByteArrayInputStream(res);
-		repo.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
+		final InputStream stream = new ByteArrayInputStream(res);
+		repo.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", stream);
 	}
 
 	public static <U> ListenableGraph<U, ConnectivityEdge<U>> revert(final ListenableGraph<U, ConnectivityEdge<U>> g) {
