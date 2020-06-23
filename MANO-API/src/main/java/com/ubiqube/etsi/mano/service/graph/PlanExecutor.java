@@ -5,8 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.jgrapht.ListenableGraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.DefaultDexecutor;
@@ -27,8 +25,6 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 
 @Service
 public class PlanExecutor {
-
-	private static final Logger LOG = LoggerFactory.getLogger(PlanExecutor.class);
 
 	private final VnfmInterface vnfm;
 
