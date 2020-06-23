@@ -174,7 +174,7 @@ public class ExecutionPlanner {
 		return vertex;
 	}
 
-	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
+	public static int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
 		if (null == instantiationLevel) {
 			return Optional.ofNullable(vnfCompute.getInitialNumberOfInstance()).orElse(Integer.valueOf(1)).intValue();
 		}
@@ -213,7 +213,7 @@ public class ExecutionPlanner {
 		return base + cnt;
 	}
 
-	public Set<VnfInstantiationLevels> resolvLevelName(final String instantiationLevel, final int level, final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
+	public static Set<VnfInstantiationLevels> resolvLevelName(final String instantiationLevel, final int level, final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
 		return vnfInstantiationLevels.stream()
 				.filter(x -> instantiationLevel.equals(x.getLevelName()))
 				.filter(x -> x.getScaleInfoLevel() <= level)
