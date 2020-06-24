@@ -63,7 +63,7 @@ public interface ApiVersionsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. "),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ") })
 	@RequestMapping(value = "/api_versions", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<ApiVersionInformation> apiVersionsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version) {
+	default ResponseEntity<ApiVersionInformation> apiVersionsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = false) @RequestHeader(value = "Version", required = false) final String version) {
 		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
 		} else {
 			log.warn("ObjectMapper or HttpServletRequest not configured in default ApiVersionsApi interface so no example is generated");

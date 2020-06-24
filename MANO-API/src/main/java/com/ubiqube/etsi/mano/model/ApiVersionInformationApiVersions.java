@@ -70,7 +70,7 @@ public class ApiVersionInformationApiVersions {
 		return isDeprecated;
 	}
 
-	public void setIsDeprecated(final Boolean isDeprecated) {
+	public void setDeprecated(final Boolean isDeprecated) {
 		this.isDeprecated = isDeprecated;
 	}
 
