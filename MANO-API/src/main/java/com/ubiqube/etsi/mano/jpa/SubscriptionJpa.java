@@ -8,11 +8,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 
 @Repository
 public interface SubscriptionJpa extends CrudRepository<Subscription, UUID> {
 
 	@Query("select s from Subscription s")
-	List<Subscription> findEventAndVnfPkg(NotificationTypesEnum notificationTypesEnum, String vnfPkgId);
+	List<Subscription> findEventAndVnfPkg(String notificationTypesEnum, String vnfPkgId);
 }
