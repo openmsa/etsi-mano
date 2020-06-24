@@ -15,8 +15,8 @@ import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.vnfm.v261.controller.vnf.Sol003Linkable;
 
@@ -40,7 +40,7 @@ public class VnfEvent {
 		this.notifications = notifications;
 	}
 
-	public void onEvent(final UUID vnfPkgId, final NotificationTypesEnum event) {
+	public void onEvent(final UUID vnfPkgId, final String event) {
 		final List<SubscriptionObject> res = subscriptionRepository.selectNotifications(vnfPkgId, event.toString());
 
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
@@ -48,7 +48,7 @@ public class VnfEvent {
 		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
 	}
 
-	private void sendNotification(final UUID vnfPkgId, final SubscriptionObject subscriptionObject, final NotificationTypesEnum event) {
+	private void sendNotification(final UUID vnfPkgId, final SubscriptionObject subscriptionObject, final String event) {
 		final Linkable links = getLinkable(subscriptionObject.getApi());
 		final PkgmSubscription req = subscriptionObject.getPkgmSubscription();
 		final UUID subscriptionId = UUID.fromString(req.getId());
@@ -56,7 +56,7 @@ public class VnfEvent {
 		final SubscriptionAuthentication auth = subscriptionObject.getSubscriptionAuthentication();
 
 		Object object;
-		if (event == NotificationTypesEnum.VnfPackageOnboardingNotification) {
+		if (event == NotificationTypesEnum.VnfPackageOnboardingNotification.toString()) {
 			object = VnfPackageFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, "", links);
 		} else {
 			object = VnfPackageFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, "", links);

@@ -38,7 +38,7 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	private String flavourId;
 
-	private String operation;
+	private NsdChangeType operation;
 
 	private boolean isAutomaticInvocation;
 
@@ -251,11 +251,11 @@ public class GrantsRequest implements BaseEntity, Auditable {
 		this.flavourId = flavourId;
 	}
 
-	public String getOperation() {
+	public NsdChangeType getOperation() {
 		return operation;
 	}
 
-	public void setOperation(final String operation) {
+	public void setOperation(final NsdChangeType operation) {
 		this.operation = operation;
 	}
 

@@ -14,6 +14,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -26,7 +27,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.GrantInformationJpa;
 import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantedLcmOperationType;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -48,7 +48,7 @@ public class GrantService {
 	}
 
 	public GrantRequest createInstantiateGrantRequest(final VnfPackage vnfPkg, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
-		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, GrantedLcmOperationType.INSTANTIATE);
+		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, NsdChangeType.INSTANTIATE);
 		addGrantsCompute(grants, lcmOpOccs.getResourceChanges().getAffectedVnfcs());
 		addGrantsVl(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualLinks());
 		addGrantsStorage(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualStorages());
@@ -64,7 +64,7 @@ public class GrantService {
 	}
 
 	public GrantRequest createTerminateGrantRequest(final VnfPackage vnfPkg, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
-		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, GrantedLcmOperationType.TERMINATE);
+		GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, NsdChangeType.TERMINATE);
 		removeGrantsCompute(grants, lcmOpOccs.getResourceChanges().getAffectedVnfcs());
 		removeGrantsVl(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualLinks());
 		removeGrantsStorage(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualStorages());
@@ -73,13 +73,13 @@ public class GrantService {
 		return mapper.map(grants, GrantRequest.class);
 	}
 
-	private static GrantsRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage, final GrantedLcmOperationType state) {
+	private static GrantsRequest createGrant(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPackage, final NsdChangeType state) {
 		final GrantsRequest grants = new GrantsRequest();
 		grants.setVnfLcmOpOccs(lcmOpOccs);
 		grants.setVnfdId(vnfInstance.getVnfdId());
 		grants.setFlavourId(vnfPackage.getFlavorId());
 		grants.setAutomaticInvocation(false);
-		grants.setOperation(state.toString());
+		grants.setOperation(state);
 		grants.setVnfLcmOpOccs(lcmOpOccs);
 		grants.setInstantiationLevelId(lcmOpOccs.getVnfInstantiatedInfo().getInstantiationLevelId());
 		return grants;
