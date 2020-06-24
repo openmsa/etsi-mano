@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -21,8 +21,8 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

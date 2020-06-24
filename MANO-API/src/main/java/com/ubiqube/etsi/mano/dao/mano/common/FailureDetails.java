@@ -22,7 +22,7 @@ public class FailureDetails implements Serializable {
 
 	private String title;
 
-	private Long status;
+	private long status;
 
 	@Column(length = 500)
 	private String detail;
@@ -33,7 +33,7 @@ public class FailureDetails implements Serializable {
 		// Nothing.
 	}
 
-	public FailureDetails(final Long _status, final String _detail) {
+	public FailureDetails(final long _status, final String _detail) {
 		try {
 			instance = InetAddress.getLocalHost().getCanonicalHostName();
 		} catch (final UnknownHostException e) {

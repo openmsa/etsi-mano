@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition.TypeEnum;
 
 @Entity
 public class GrantInformation implements BaseEntity, Serializable {

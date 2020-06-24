@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsBasic;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionAuthenticationParamsBasic;
 
 /**
  * This class handle the notification callback.
@@ -138,7 +138,7 @@ public class Notifications {
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createOAuth2Context(final com.ubiqube.etsi.mano.model.vnf.sol005.@Valid SubscriptionAuthenticationParamsOauth2ClientCredentials subscriptionAuthenticationParamsOauth2ClientCredentials, final HttpHost _targetHost) {
+	private HttpClientContext createOAuth2Context(final com.ubiqube.etsi.mano.nfvo.v261.model.vnf.@Valid SubscriptionAuthenticationParamsOauth2ClientCredentials subscriptionAuthenticationParamsOauth2ClientCredentials, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

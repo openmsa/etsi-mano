@@ -6,7 +6,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 
 public class NsInstanceFactory {
 

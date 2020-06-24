@@ -24,8 +24,8 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceLinks;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfInstanceLinks;
 
 public final class LcmFactory {
 	private LcmFactory() {

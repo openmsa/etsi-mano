@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest.TypeEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest.TypeEnum;
 
 @Embeddable
 public class VnfScaleInfo implements Serializable {

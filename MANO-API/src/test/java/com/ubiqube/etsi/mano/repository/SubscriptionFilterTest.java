@@ -14,9 +14,9 @@ import java.util.StringJoiner;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LccnSubscriptionRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.LifecycleChangeNotificationsFilter;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfInstanceSubscriptionFilter;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LifecycleChangeNotificationsFilter;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfInstanceSubscriptionFilter;
 
 public class SubscriptionFilterTest {
 

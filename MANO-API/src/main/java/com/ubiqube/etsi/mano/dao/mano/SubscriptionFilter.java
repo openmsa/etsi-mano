@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 
 // TODO: Probably need to change NotificationTypesEnum.
 @Embeddable

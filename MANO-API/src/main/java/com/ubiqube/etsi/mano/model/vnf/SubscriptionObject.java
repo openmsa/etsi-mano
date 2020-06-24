@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

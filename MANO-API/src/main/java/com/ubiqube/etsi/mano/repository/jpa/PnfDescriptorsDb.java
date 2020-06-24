@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;

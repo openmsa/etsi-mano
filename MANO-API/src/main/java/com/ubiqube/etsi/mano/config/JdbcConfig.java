@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 public class JdbcConfig {
 
 	@Bean
-	public DataSource sqlDataSource(final com.ubiqube.etsi.mano.service.Configuration _conf) {
+	public static DataSource sqlDataSource(final com.ubiqube.etsi.mano.service.Configuration _conf) {
 		final DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setUrl(_conf.build("jdbc.url").notNull().build());
 		dataSource.setUsername(_conf.get("jdbc.username"));

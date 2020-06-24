@@ -1,9 +1,9 @@
 package com.ubiqube.etsi.mano.factory;
 
-import com.ubiqube.etsi.mano.model.nsd.sol005.CreatePnfdInfoRequest;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdOnboardingStateType;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdUsageStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreatePnfdInfoRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdOnboardingStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdUsageStateType;
 
 public class PnfFactory {
 	private PnfFactory() {

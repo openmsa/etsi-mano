@@ -23,12 +23,12 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffinityOrAntiAffinityRule;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsScaleInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsVirtualLinkInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.PnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SapInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.VnffgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffinityOrAntiAffinityRule;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsScaleInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsVirtualLinkInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.PnfInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.SapInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnffgInfo;
 
 @Entity
 @Indexed

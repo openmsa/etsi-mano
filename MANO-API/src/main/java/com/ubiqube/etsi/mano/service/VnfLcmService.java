@@ -27,11 +27,11 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest.TypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest.TypeEnum;
 
 @Service
 public class VnfLcmService {

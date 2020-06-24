@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.controller.nslcm.sol005.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
@@ -31,9 +30,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm.NsInstanceControllerService;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
@@ -49,6 +48,7 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.PnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 @Service
 public class NsExecutionPlanner {

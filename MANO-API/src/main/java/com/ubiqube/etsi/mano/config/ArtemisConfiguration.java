@@ -21,7 +21,7 @@ public class ArtemisConfiguration {
 	private static final Logger LOG = LoggerFactory.getLogger(ArtemisConfiguration.class);
 
 	@Bean
-	public ConnectionFactory activeMQJMSConnectionFactory(final Configuration configuration) {
+	public static ConnectionFactory activeMQJMSConnectionFactory(final Configuration configuration) {
 		final ActiveMQJMSConnectionFactory activeMQJMSConnectionFactory = new ActiveMQJMSConnectionFactory((String) configuration.build("jms.artemis.url").withDefault("localhost").build());
 		activeMQJMSConnectionFactory.setUser(configuration.get("jms.artemis.user"));
 		activeMQJMSConnectionFactory.setPassword(configuration.get("jms.artemis.password"));
@@ -30,7 +30,7 @@ public class ArtemisConfiguration {
 	}
 
 	@Bean
-	public MessageConverter jacksonJmsMessageConverter() {
+	public static MessageConverter jacksonJmsMessageConverter() {
 		final MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
 		converter.setTargetType(MessageType.TEXT);
 		converter.setTypeIdPropertyName("_type");
@@ -38,7 +38,7 @@ public class ArtemisConfiguration {
 	}
 
 	@Bean
-	public JmsListenerContainerFactory jmsListenerContainerFactory(final ConnectionFactory connectionFactory, final MessageConverter messageConverter) {
+	public static JmsListenerContainerFactory<DefaultMessageListenerContainer> jmsListenerContainerFactory(final ConnectionFactory connectionFactory, final MessageConverter messageConverter) {
 		final DefaultJmsListenerContainerFactory jmsListenerContainerFactory = new DefaultJmsListenerContainerFactory();
 		jmsListenerContainerFactory.setConcurrency("5-10");
 		jmsListenerContainerFactory.setSessionTransacted(Boolean.FALSE);
@@ -48,7 +48,7 @@ public class ArtemisConfiguration {
 	}
 
 	@Bean
-	public DefaultMessageListenerContainer defaultMessageListenerContainer(final ConnectionFactory connectionFactory) {
+	public static DefaultMessageListenerContainer defaultMessageListenerContainer(final ConnectionFactory connectionFactory) {
 		LOG.warn("Using our instance of defaultMessageListenerContainer");
 		final DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
 		defaultMessageListenerContainer.setConnectionFactory(connectionFactory);

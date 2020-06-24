@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 
 public class NsInstanceIndex {
 	private Map<UUID, NsLcmOpOccsIndex> lcmOpOccsIndex = new HashMap<>();

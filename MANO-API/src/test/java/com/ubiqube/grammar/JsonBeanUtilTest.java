@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.etsi.mano.grammar.JsonBeanProperty;
 import com.ubiqube.etsi.mano.grammar.JsonBeanUtil;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 
 public class JsonBeanUtilTest {
 

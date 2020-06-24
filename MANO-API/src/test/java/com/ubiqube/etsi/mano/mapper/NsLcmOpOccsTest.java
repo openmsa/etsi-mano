@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.bean.TestFactory;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf.ChangeResultEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf.ChangeTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeResultEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

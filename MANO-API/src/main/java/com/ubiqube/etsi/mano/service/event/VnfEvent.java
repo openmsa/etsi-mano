@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.controller.vnf.sol003.Sol003Linkable;
-import com.ubiqube.etsi.mano.controller.vnf.sol005.Sol005Linkable;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnf.Sol003Linkable;
 
 /**
  *

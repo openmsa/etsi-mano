@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnfChangedInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnfChangedInfo;
 
 @Entity
 @EntityListeners(AuditListener.class)

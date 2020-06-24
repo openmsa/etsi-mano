@@ -24,9 +24,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.GrantInformationJpa;
 import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantedLcmOperationType;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantedLcmOperationType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition.TypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 
