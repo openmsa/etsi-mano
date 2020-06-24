@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -44,7 +45,6 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -300,7 +300,7 @@ public class PackagingManager {
 					.collect(Collectors.toSet());
 			nsPackage.setNestedNsdInfoIds(nsds);
 		}
-		nsPackage.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
+		nsPackage.setNsdOnboardingState(OnboardingStateType.ONBOARDED);
 		nsPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
 		nsdPackageJpa.save(nsPackage);
 		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());

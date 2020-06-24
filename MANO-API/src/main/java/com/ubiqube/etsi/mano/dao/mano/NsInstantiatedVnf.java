@@ -9,9 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
-
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnfChangedInfo;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -32,9 +29,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	private String instanceDescription;
 
-	/** XXX TO do. */
-	@Transient
-	private transient AffectedVnfChangedInfo changedInfo = null;
+	// XXX TO do Add AffectedVnfChangedInfo changedInfo
 
 	@Override
 	public UUID getId() {
@@ -56,14 +51,6 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	public void setVnfProfileId(final String vnfProfileId) {
 		this.vnfProfileId = vnfProfileId;
-	}
-
-	public AffectedVnfChangedInfo getChangedInfo() {
-		return changedInfo;
-	}
-
-	public void setChangedInfo(final AffectedVnfChangedInfo changedInfo) {
-		this.changedInfo = changedInfo;
 	}
 
 	public void setVnfInstance(final UUID vnfInstance) {

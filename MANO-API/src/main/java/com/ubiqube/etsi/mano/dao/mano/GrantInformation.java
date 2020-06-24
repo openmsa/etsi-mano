@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition.TypeEnum;
-
 @Entity
 public class GrantInformation implements BaseEntity, Serializable {
 	/** Serial. */
@@ -40,7 +38,7 @@ public class GrantInformation implements BaseEntity, Serializable {
 	private VduInstantiationLevel instantiationLevel;
 
 	@Enumerated(EnumType.STRING)
-	private TypeEnum type;
+	private ResourceTypeEnum type;
 
 	private UUID vduId;
 
@@ -101,11 +99,11 @@ public class GrantInformation implements BaseEntity, Serializable {
 		this.resourceGroupId = resourceGroupId;
 	}
 
-	public TypeEnum getType() {
+	public ResourceTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(final TypeEnum type) {
+	public void setType(final ResourceTypeEnum type) {
 		this.type = type;
 	}
 

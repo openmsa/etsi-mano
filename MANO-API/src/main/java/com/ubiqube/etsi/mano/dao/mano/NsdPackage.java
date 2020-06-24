@@ -26,7 +26,6 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -79,7 +78,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private NsdOnboardingStateType nsdOnboardingState;
+	private OnboardingStateType nsdOnboardingState;
 
 	@IndexedEmbedded
 	private FailureDetails onboardingFailureDetails;
@@ -192,11 +191,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 	}
 
-	public NsdOnboardingStateType getNsdOnboardingState() {
+	public OnboardingStateType getNsdOnboardingState() {
 		return nsdOnboardingState;
 	}
 
-	public void setNsdOnboardingState(final NsdOnboardingStateType nsdOnboardingState) {
+	public void setNsdOnboardingState(final OnboardingStateType nsdOnboardingState) {
 		this.nsdOnboardingState = nsdOnboardingState;
 	}
 

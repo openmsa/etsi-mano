@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef.IdTypeEnum;
-
 @Entity
 public class ConstraintRef implements Serializable {
 	/** Serial. */

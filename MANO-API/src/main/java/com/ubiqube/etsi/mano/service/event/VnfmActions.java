@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
@@ -45,7 +46,6 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -229,13 +229,13 @@ public class VnfmActions {
 			// Get VNFM Grant Resource information ID.
 			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
 			final GrantInformation grantInformation = grantService.getGrantInformation(grantUuid).orElseThrow(() -> new NotFoundException("Could not find Grant id: " + grantUuid));
-			if (x.getType() == TypeEnum.COMPUTE) {
+			if (x.getType() == ResourceTypeEnum.COMPUTE) {
 				copyStream(lcmOpOccs.getResourceChanges().getAffectedVnfcs().stream(), grantInformation, copyVnfc(x, vimConnectionInformation, lcmOpOccs, grantsResp, instantiationLevel));
-			} else if (x.getType() == TypeEnum.VL) {
+			} else if (x.getType() == ResourceTypeEnum.VL) {
 				copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
-			} else if (x.getType() == TypeEnum.LINKPORT) {
+			} else if (x.getType() == ResourceTypeEnum.LINKPORT) {
 				copyStream(lcmOpOccs.getResourceChanges().getAffectedExtCp().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
-			} else if (x.getType() == TypeEnum.STORAGE) {
+			} else if (x.getType() == ResourceTypeEnum.STORAGE) {
 				copyStream(lcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream(), grantInformation, defaultCopy(x, vimConnectionInformation, lcmOpOccs, instantiationLevel));
 			}
 		});

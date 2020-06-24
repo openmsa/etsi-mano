@@ -14,6 +14,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
@@ -26,7 +27,6 @@ import com.ubiqube.etsi.mano.jpa.GrantInformationJpa;
 import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantedLcmOperationType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition.TypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -96,7 +96,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.STORAGE);
+					grantInformation.setType(ResourceTypeEnum.STORAGE);
 					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
@@ -110,7 +110,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.VL);
+					grantInformation.setType(ResourceTypeEnum.VL);
 					grantInformation.setVduId(x.getVnfVirtualLink().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
@@ -124,7 +124,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.COMPUTE);
+					grantInformation.setType(ResourceTypeEnum.COMPUTE);
 					grantInformation.setVduId(x.getVnfCompute().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
@@ -138,7 +138,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.LINKPORT);
+					grantInformation.setType(ResourceTypeEnum.LINKPORT);
 					grantInformation.setVduId(x.getVnfExtCp().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
@@ -152,7 +152,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.STORAGE);
+					grantInformation.setType(ResourceTypeEnum.STORAGE);
 					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
@@ -166,7 +166,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.VL);
+					grantInformation.setType(ResourceTypeEnum.VL);
 					grantInformation.setVduId(x.getVnfVirtualLink().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
@@ -180,7 +180,7 @@ public class GrantService {
 				.map(x -> {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
-					grantInformation.setType(TypeEnum.COMPUTE);
+					grantInformation.setType(ResourceTypeEnum.COMPUTE);
 					grantInformation.setVduId(x.getVnfCompute().getId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;

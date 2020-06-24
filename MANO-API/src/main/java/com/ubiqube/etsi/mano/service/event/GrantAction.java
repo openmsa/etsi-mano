@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -41,7 +42,6 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
@@ -291,12 +291,12 @@ public class GrantAction {
 		int vcpu = 0;
 		int ram = 0;
 		for (final GrantInformationExt grantInformationExt : adds) {
-			if (grantInformationExt.getType() == TypeEnum.COMPUTE) {
+			if (grantInformationExt.getType() == ResourceTypeEnum.COMPUTE) {
 				final VnfCompute compute = findCompute(vnfPackage, grantInformationExt.getVduId());
 				disk += compute.getDiskSize();
 				vcpu += compute.getNumVcpu();
 				ram += compute.getVirtualMemorySize();
-			} else if (grantInformationExt.getType() == TypeEnum.STORAGE) {
+			} else if (grantInformationExt.getType() == ResourceTypeEnum.STORAGE) {
 				// Cinder.
 			}
 		}

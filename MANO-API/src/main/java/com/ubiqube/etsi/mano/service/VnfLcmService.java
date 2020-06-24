@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
@@ -30,8 +31,8 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest.TypeEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 
 @Service
 public class VnfLcmService {
@@ -108,7 +109,7 @@ public class VnfLcmService {
 	public VnfLcmOpOccs createScaleOpOcc(final VnfInstance vnfInstance, final ScaleVnfRequest scaleVnfRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(LcmOperationType.SCALE, vnfInstance.getId());
 		lcmOpOccs.getVnfScaleInfo().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
-		lcmOpOccs.getVnfScaleInfo().setScaleType(scaleVnfRequest.getType());
+		lcmOpOccs.getVnfScaleInfo().setScaleType(ScaleTypeEnum.fromValue(scaleVnfRequest.getType().toString()));
 		lcmOpOccs.getVnfScaleInfo().setAspectId(scaleVnfRequest.getAspectId());
 		final Set<ScaleInfo> scaleStatus = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
 				.filter(x -> x.getAspectId().equals(scaleVnfRequest.getAspectId()))

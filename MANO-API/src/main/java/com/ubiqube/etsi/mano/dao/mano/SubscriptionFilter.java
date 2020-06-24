@@ -2,21 +2,19 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
-
 // TODO: Probably need to change NotificationTypesEnum.
 @Embeddable
 public class SubscriptionFilter {
-	private NotificationTypesEnum notificationTypes = null;
+	private String notificationTypes = null;
 
 	// We will store some RAW Json or what ever for the momment.
 	private String data;
 
-	public NotificationTypesEnum getNotificationTypes() {
+	public String getNotificationTypes() {
 		return notificationTypes;
 	}
 
-	public void setNotificationTypes(final NotificationTypesEnum notificationTypes) {
+	public void setNotificationTypes(final String notificationTypes) {
 		this.notificationTypes = notificationTypes;
 	}
 

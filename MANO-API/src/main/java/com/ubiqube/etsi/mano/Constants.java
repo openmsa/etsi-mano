@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.ConflictException;
@@ -10,7 +11,6 @@ import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 
 public final class Constants {
 
@@ -81,13 +81,13 @@ public final class Constants {
 	}
 
 	public static void ensureIsOnboarded(final NsdPackage nsd) {
-		if (NsdOnboardingStateType.ONBOARDED != nsd.getNsdOnboardingState()) {
+		if (OnboardingStateType.ONBOARDED != nsd.getNsdOnboardingState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
 	public static void ensureNotOnboarded(final NsdPackage nsd) {
-		if (NsdOnboardingStateType.ONBOARDED == nsd.getNsdOnboardingState()) {
+		if (OnboardingStateType.ONBOARDED == nsd.getNsdOnboardingState()) {
 			throw new ConflictException("The NSD package " + nsd.getId() + "is already ONBOARDED state.");
 		}
 	}

@@ -32,9 +32,6 @@ public class NsInstanceDb extends AbstractDirectJpa<NsdInstance> implements NsIn
 	}
 
 	protected void mapChild(final NsdInstance vnf) {
-		if (null != vnf.getAdditionalAffinityOrAntiAffinityRule()) {
-			// TODO
-		}
 		if (null != vnf.getVnfInstance()) {
 			vnf.getVnfInstance().forEach(x -> x.setNsInstance(vnf));
 		}
