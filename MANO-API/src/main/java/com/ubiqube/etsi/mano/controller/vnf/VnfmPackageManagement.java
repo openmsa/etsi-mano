@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 /**
@@ -38,18 +37,18 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Linkable links) {
+	public <U> U vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Class<U> u) {
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("vnfPkgId", vnfPkgId);
 		final URI uri = nfvoRest.uriBuilder()
 				.pathSegment("vnfpkgm/v1/vnf_packages/{vnfPkgId}")
 				.buildAndExpand(uriVariables)
 				.toUri();
-		return nfvoRest.get(uri, VnfPkgInfo.class);
+		return nfvoRest.get(uri, u);
 	}
 
 	@Override
-	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
+	public String vnfPackagesGet(final Map<String, String> queryParameters) {
 		final UriComponentsBuilder builder = nfvoRest.uriBuilder()
 				.pathSegment("vnfpkgm/v1/vnf_packages");
 		for (final Entry<String, String> entry : queryParameters.entrySet()) {

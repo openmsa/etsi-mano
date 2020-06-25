@@ -80,7 +80,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	@Override
 	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) {
-		final String resp = vnfManagement.vnfPackagesGet(requestParams, links);
+		final String resp = vnfManagement.vnfPackagesGet(requestParams);
 		return ResponseEntity.ok(resp);
 	}
 
@@ -93,7 +93,8 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	// TODO: Same as SOL003 ?
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), links);
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 

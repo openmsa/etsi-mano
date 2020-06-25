@@ -58,15 +58,13 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Linkable links) {
+	public <U> U vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Class<U> u) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
-		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
-		return vnfPkgInfo;
+		return mapper.map(vnfPackage, u);
 	}
 
 	@Override
-	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
+	public String vnfPackagesGet(final Map<String, String> queryParameters) {
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPackage> vnfPackageInfos = vnfPackageRepository.query(filter);
@@ -74,7 +72,7 @@ public class VnfManagement implements VnfPackageManagement {
 				.map(x -> mapper.map(x, VnfPkgInfo.class))
 				.collect(Collectors.toList());
 
-		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
+		// vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
