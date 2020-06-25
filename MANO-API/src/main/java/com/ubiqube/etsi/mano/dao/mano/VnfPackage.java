@@ -63,6 +63,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	private String descriptorVersion;
 
+	@Embedded
 	private PkgChecksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
