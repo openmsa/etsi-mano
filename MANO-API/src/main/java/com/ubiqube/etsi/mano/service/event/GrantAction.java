@@ -75,6 +75,9 @@ public class GrantAction {
 		} catch (InterruptedException | ExecutionException e) {
 			Thread.currentThread().interrupt();
 			throw new GenericException(e);
+		} catch (final RuntimeException e) {
+			LOG.error("Removing Grand id: {}", objectId, e);
+			grantJpa.deleteById(objectId);
 		}
 	}
 
