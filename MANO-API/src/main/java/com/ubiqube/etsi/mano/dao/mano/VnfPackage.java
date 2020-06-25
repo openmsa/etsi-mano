@@ -27,10 +27,6 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -67,7 +63,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	private String descriptorVersion;
 
-	private Checksum checksum;
+	private PkgChecksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
@@ -76,17 +72,17 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private PackageOnboardingStateType onboardingState;
+	private OnboardingStateType onboardingState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private PackageOperationalStateType operationalState;
+	private PackageOperationalState operationalState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private PackageUsageStateType usageState;
+	private PackageUsageState usageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
@@ -172,11 +168,11 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.vnfdVersion = vnfdVersion;
 	}
 
-	public Checksum getChecksum() {
+	public PkgChecksum getChecksum() {
 		return checksum;
 	}
 
-	public void setChecksum(final Checksum checksum) {
+	public void setChecksum(final PkgChecksum checksum) {
 		this.checksum = checksum;
 	}
 
@@ -188,27 +184,27 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
-	public PackageOnboardingStateType getOnboardingState() {
+	public OnboardingStateType getOnboardingState() {
 		return onboardingState;
 	}
 
-	public void setOnboardingState(final PackageOnboardingStateType onboardingState) {
+	public void setOnboardingState(final OnboardingStateType onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public PackageOperationalStateType getOperationalState() {
+	public PackageOperationalState getOperationalState() {
 		return operationalState;
 	}
 
-	public void setOperationalState(final PackageOperationalStateType operationalState) {
+	public void setOperationalState(final PackageOperationalState operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public PackageUsageStateType getUsageState() {
+	public PackageUsageState getUsageState() {
 		return usageState;
 	}
 
-	public void setUsageState(final PackageUsageStateType usageState) {
+	public void setUsageState(final PackageUsageState usageState) {
 		this.usageState = usageState;
 	}
 

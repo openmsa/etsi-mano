@@ -7,7 +7,6 @@ import javax.persistence.Enumerated;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Embeddable
@@ -15,16 +14,16 @@ public class AuthentificationInformations {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private AuthTypeEnum authType;
+	private AuthType authType;
 
 	private AuthParamBasic authParamBasic;
 	private AuthParamOath2 authParamOath2;
 
-	public AuthTypeEnum getAuthType() {
+	public AuthType getAuthType() {
 		return authType;
 	}
 
-	public void setAuthType(final AuthTypeEnum authType) {
+	public void setAuthType(final AuthType authType) {
 		this.authType = authType;
 	}
 

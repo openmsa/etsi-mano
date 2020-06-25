@@ -4,23 +4,21 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
-
 @Embeddable
 public class OperateChanges implements Serializable {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private VnfOperationalStateType terminationType;
+	private OperationalStateType terminationType;
 
 	private int gracefulTerminationTimeout;
 
-	public VnfOperationalStateType getTerminationType() {
+	public OperationalStateType getTerminationType() {
 		return terminationType;
 	}
 
-	public void setTerminationType(final VnfOperationalStateType terminationType) {
+	public void setTerminationType(final OperationalStateType terminationType) {
 		this.terminationType = terminationType;
 	}
 

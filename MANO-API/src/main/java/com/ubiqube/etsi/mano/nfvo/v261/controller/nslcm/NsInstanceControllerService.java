@@ -14,13 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
@@ -61,14 +61,14 @@ public class NsInstanceControllerService {
 		final NsdPackage nsd = nsdPackageService.findById(nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
-		nsd.setNsdUsageState(PackageUsageStateType.IN_USE);
+		nsd.setNsdUsageState(PackageUsageState.IN_USE);
 		nsdPackageService.save(nsd);
 
 		final NsdInstance nsInstance = new NsdInstance();
 		nsInstance.setNsInstanceName(req.getNsName());
 		nsInstance.setNsInstanceDescription(req.getNsDescription());
 		nsInstance.setNsdInfo(nsd);
-		nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
+		nsInstance.setNsState(InstantiationState.NOT_INSTANTIATED);
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
 		final List<VnfInstance> vnfInstances = new ArrayList<>();
@@ -88,7 +88,7 @@ public class NsInstanceControllerService {
 	public NsLcmOpOccs instantiate(final UUID nsUuid, final InstantiateNsRequest req) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
 		ensureNotInstantiated(nsInstanceDb);
-		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsLcmOpType.INSTANTIATE);
+		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.INSTANTIATE);
 
 		mapper.map(req, nsInstanceDb);
 		nsInstanceService.save(nsInstanceDb);
@@ -99,7 +99,7 @@ public class NsInstanceControllerService {
 	public NsLcmOpOccs terminate(final UUID nsInstanceUuid, final TerminateNsRequest request) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsLcmOpType.TERMINATE);
+		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.TERMINATE);
 		// XXX we can use quartz cron job for terminationTime.
 		eventManager.sendAction(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<String, Object>());
 		return nsLcm;

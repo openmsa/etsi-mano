@@ -6,11 +6,11 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
@@ -47,7 +47,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
 		final NsLcmOpOccs lcm = nsInstanceControllerService.instantiate(UUID.fromString(resourceHandle.getNsInstanceId()), instantiateRequest);
 		final NsLcmOpOccs result = waitLcmCompletion(lcm);
-		if (LcmOperationStateType.COMPLETED != result.getOperationState()) {
+		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
@@ -62,7 +62,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
 		final NsLcmOpOccs lcm = nsInstanceControllerService.terminate(UUID.fromString(resourceHandle.getNsInstanceId()), terminateRequest);
 		final NsLcmOpOccs result = waitLcmCompletion(lcm);
-		if (LcmOperationStateType.COMPLETED != result.getOperationState()) {
+		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
@@ -75,8 +75,8 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	private NsLcmOpOccs waitLcmCompletion(final NsLcmOpOccs lcm) {
 		NsLcmOpOccs tmp = lcm;
-		LcmOperationStateType state = tmp.getOperationState();
-		while ((state == LcmOperationStateType.PROCESSING) || (LcmOperationStateType.STARTING == state)) {
+		InstantiationStatusType state = tmp.getOperationState();
+		while ((state == InstantiationStatusType.PROCESSING) || (InstantiationStatusType.STARTING == state)) {
 			tmp = nsLcmOpOccsService.findById(lcm.getId());
 			state = tmp.getOperationState();
 			sleepSeconds(1);

@@ -24,8 +24,6 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -86,12 +84,12 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private PackageOperationalStateType nsdOperationalState;
+	private PackageOperationalState nsdOperationalState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private PackageUsageStateType nsdUsageState;
+	private PackageUsageState nsdUsageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> userDefinedData;
@@ -207,19 +205,19 @@ public class NsdPackage implements BaseEntity, Auditable {
 		this.onboardingFailureDetails = onboardingFailureDetails;
 	}
 
-	public PackageOperationalStateType getNsdOperationalState() {
+	public PackageOperationalState getNsdOperationalState() {
 		return nsdOperationalState;
 	}
 
-	public void setNsdOperationalState(final PackageOperationalStateType nsdOperationalState) {
+	public void setNsdOperationalState(final PackageOperationalState nsdOperationalState) {
 		this.nsdOperationalState = nsdOperationalState;
 	}
 
-	public PackageUsageStateType getNsdUsageState() {
+	public PackageUsageState getNsdUsageState() {
 		return nsdUsageState;
 	}
 
-	public void setNsdUsageState(final PackageUsageStateType nsdUsageState) {
+	public void setNsdUsageState(final PackageUsageState nsdUsageState) {
 		this.nsdUsageState = nsdUsageState;
 	}
 

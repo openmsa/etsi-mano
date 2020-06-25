@@ -29,6 +29,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.PkgChecksum;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -39,12 +41,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -218,7 +217,7 @@ public class PackagingManager {
 		}
 	}
 
-	private static Checksum getChecksum(final byte[] bytes) {
+	private static PkgChecksum getChecksum(final byte[] bytes) {
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
@@ -227,7 +226,7 @@ public class PackagingManager {
 		}
 		final byte[] hashbytes = digest.digest(bytes);
 		final String sha3_256hex = bytesToHex(hashbytes);
-		final Checksum checksum = new Checksum();
+		final PkgChecksum checksum = new PkgChecksum();
 
 		checksum.setAlgorithm(Constants.HASH_ALGORITHM);
 		checksum.setHash(sha3_256hex);
@@ -247,13 +246,13 @@ public class PackagingManager {
 	}
 
 	private void finishOnboarding(final VnfPackage vnfPackage) {
-		vnfPackage.setOnboardingState(PackageOnboardingStateType.ONBOARDED);
-		vnfPackage.setOperationalState(PackageOperationalStateType.ENABLED);
+		vnfPackage.setOnboardingState(OnboardingStateType.ONBOARDED);
+		vnfPackage.setOperationalState(PackageOperationalState.ENABLED);
 		vnfPackageService.save(vnfPackage);
 	}
 
 	private void startOnboarding(final VnfPackage vnfPackage) {
-		vnfPackage.setOnboardingState(PackageOnboardingStateType.PROCESSING);
+		vnfPackage.setOnboardingState(OnboardingStateType.PROCESSING);
 		vnfPackageService.save(vnfPackage);
 	}
 
@@ -301,7 +300,7 @@ public class PackagingManager {
 			nsPackage.setNestedNsdInfoIds(nsds);
 		}
 		nsPackage.setNsdOnboardingState(OnboardingStateType.ONBOARDED);
-		nsPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
+		nsPackage.setNsdOperationalState(PackageOperationalState.ENABLED);
 		nsdPackageJpa.save(nsPackage);
 		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());
 	}

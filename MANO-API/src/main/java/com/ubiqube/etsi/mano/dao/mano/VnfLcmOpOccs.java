@@ -22,9 +22,6 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -40,7 +37,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private LcmOperationStateType operationState = null;
+	private InstantiationStatusType operationState = null;
 
 	@Field
 	private Date stateEnteredTime = null;
@@ -56,7 +53,7 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private LcmOperationType operation = null;
+	private NsdChangeType operation = null;
 
 	@Field
 	private Boolean isAutomaticInvocation = null;
@@ -66,9 +63,10 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private CancelModeType cancelMode = null;
+	private CancelModeTypeEnum cancelMode = null;
 
-	private FailureDetails error = null;
+	@Embedded
+	private FailureDetails error = new FailureDetails();
 
 	private String externalProcessId;
 
@@ -104,11 +102,11 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 		this.id = id;
 	}
 
-	public LcmOperationStateType getOperationState() {
+	public InstantiationStatusType getOperationState() {
 		return operationState;
 	}
 
-	public void setOperationState(final LcmOperationStateType operationState) {
+	public void setOperationState(final InstantiationStatusType operationState) {
 		this.operationState = operationState;
 	}
 
@@ -144,11 +142,11 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 		this.grantId = grantId;
 	}
 
-	public LcmOperationType getOperation() {
+	public NsdChangeType getOperation() {
 		return operation;
 	}
 
-	public void setOperation(final LcmOperationType operation) {
+	public void setOperation(final NsdChangeType operation) {
 		this.operation = operation;
 	}
 
@@ -168,11 +166,11 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 		this.isCancelPending = isCancelPending;
 	}
 
-	public CancelModeType getCancelMode() {
+	public CancelModeTypeEnum getCancelMode() {
 		return cancelMode;
 	}
 
-	public void setCancelMode(final CancelModeType cancelMode) {
+	public void setCancelMode(final CancelModeTypeEnum cancelMode) {
 		this.cancelMode = cancelMode;
 	}
 

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
@@ -24,8 +26,6 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
@@ -73,7 +73,7 @@ public class NfvoActions {
 			nsTerminateInner(lcmOpOccs, nsInstance);
 		} catch (final RuntimeException e) {
 			LOG.error("NS Instantiate fail.", e);
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			nsInstanceRepository.save(nsInstance);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
 			lcmOpOccs.setStateEnteredTime(new Date());
@@ -97,7 +97,7 @@ public class NfvoActions {
 		GraphTools.exportGraph(plan, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
 
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execDeleteNs(plan, vimInfo, vim);
-		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
+		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationState.NOT_INSTANTIATED);
 		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), lcmOpOccs.getId());
 	}
 
@@ -111,7 +111,7 @@ public class NfvoActions {
 		} catch (final RuntimeException e) {
 			LOG.error("NS Instantiate fail.", e);
 			// We can't save here, we must do an atomic update.
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
 			lcmOpOccs.setStateEnteredTime(new Date());
 			nsLcmOpOccsService.save(lcmOpOccs);
@@ -135,21 +135,21 @@ public class NfvoActions {
 		GraphTools.exportGraph(plan, nsdId, nsInstance, "create", nsdRepository);
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim, pubNet);
 		LOG.debug("Done, Saving ...");
-		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);
+		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationState.INSTANTIATED);
 		// XXX Send COMPLETED event.
 		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localLcmOpOccs.getId());
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 	}
 
-	private void setResultLcmInstance(final NsLcmOpOccs lcmOpOccs, @Nonnull final UUID nsInstanceId, final ExecutionResults<NsUnitOfWork, String> results, final InstantiationStateEnum eventType) {
+	private void setResultLcmInstance(final NsLcmOpOccs lcmOpOccs, @Nonnull final UUID nsInstanceId, final ExecutionResults<NsUnitOfWork, String> results, final InstantiationState eventType) {
 		final NsdInstance nsdInstance = nsInstanceRepository.get(nsInstanceId);
 		if (results.getErrored().isEmpty()) {
-			lcmOpOccs.setOperationState(LcmOperationStateType.COMPLETED);
-			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.COMPLETED);
+			nsdInstance.setNsState((InstantiationState.INSTANTIATED == eventType) ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
 			LOG.info("NS result COMPLETED");
 		} else {
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-			nsdInstance.setNsState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.NOT_INSTANTIATED : InstantiationStateEnum.INSTANTIATED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
+			nsdInstance.setNsState((InstantiationState.INSTANTIATED == eventType) ? InstantiationState.NOT_INSTANTIATED : InstantiationState.INSTANTIATED);
 			LOG.info("NS result FAILED");
 		}
 		results.getSuccess().forEach(x -> {

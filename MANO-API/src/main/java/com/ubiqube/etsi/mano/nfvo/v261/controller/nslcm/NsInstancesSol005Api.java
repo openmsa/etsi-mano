@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
@@ -137,7 +137,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsLcmOpType.HEAL);
+		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsdChangeType.HEAL);
 		lcmOpOccsService.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -168,7 +168,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsLcmOpType.SCALE);
+		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsdChangeType.SCALE);
 		lcmOpOccsService.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
@@ -204,7 +204,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsLcmOpType.UPDATE);
+		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsdChangeType.UPDATE);
 		lcmOpOccsService.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}

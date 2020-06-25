@@ -21,8 +21,6 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-
 @Entity
 @Indexed
 public class NsdInstance implements BaseEntity, Serializable {
@@ -61,7 +59,7 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	@Enumerated(EnumType.STRING)
 	@Field
-	private InstantiationStateEnum nsState = null;
+	private InstantiationState nsState = null;
 
 	// XXX Add nsScaleStatus
 
@@ -135,11 +133,11 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.nestedNsInstance = nestedNsInstanceId;
 	}
 
-	public InstantiationStateEnum getNsState() {
+	public InstantiationState getNsState() {
 		return nsState;
 	}
 
-	public void setNsState(final InstantiationStateEnum nsState) {
+	public void setNsState(final InstantiationState nsState) {
 		this.nsState = nsState;
 	}
 

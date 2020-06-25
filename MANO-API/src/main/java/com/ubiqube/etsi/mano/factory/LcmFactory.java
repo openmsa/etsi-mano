@@ -8,7 +8,10 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -19,11 +22,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.Link;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfInstanceLinks;
 
@@ -48,7 +46,7 @@ public final class LcmFactory {
 
 		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
 		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
-		vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
+		vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		final Set<VnfInstanceScaleInfo> scaleInfo = vnfPkgInfo.getVnfCompute().stream()
 				.map(x -> x.getScalingAspectDeltas().stream()
@@ -109,21 +107,21 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static NsLcmOpOccs createNsLcmOpOcc(final NsdInstance nsInstance, final NsLcmOpType lcmOperationType) {
+	public static NsLcmOpOccs createNsLcmOpOcc(final NsdInstance nsInstance, final NsdChangeType lcmOperationType) {
 		final NsLcmOpOccs nsLcmOpOccsNsLcmOpOcc = new NsLcmOpOccs();
 		nsLcmOpOccsNsLcmOpOcc.setIsAutomaticInvocation(Boolean.TRUE);
 		nsLcmOpOccsNsLcmOpOcc.setIsCancelPending(Boolean.FALSE);
 		nsLcmOpOccsNsLcmOpOcc.setLcmOperationType(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setNsInstance(nsInstance);
 		nsLcmOpOccsNsLcmOpOcc.setOperationParams(lcmOperationTypeToParameter(lcmOperationType));
-		nsLcmOpOccsNsLcmOpOcc.setOperationState(LcmOperationStateType.PROCESSING);
+		nsLcmOpOccsNsLcmOpOcc.setOperationState(InstantiationStatusType.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
 		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
 
 	@Nonnull
-	public static VnfLcmOpOccs createVnfLcmOpOccs(final LcmOperationType operation, final UUID vnfInstanceId) {
+	public static VnfLcmOpOccs createVnfLcmOpOccs(final NsdChangeType operation, final UUID vnfInstanceId) {
 		final VnfLcmOpOccs vnfLcmOpOcc = new VnfLcmOpOccs();
 		vnfLcmOpOcc.setOperation(operation);
 		final VnfInstance vnfInstance = new VnfInstance();
@@ -131,24 +129,24 @@ public final class LcmFactory {
 		vnfLcmOpOcc.setVnfInstance(vnfInstance);
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
-		vnfLcmOpOcc.setOperationState(LcmOperationStateType.STARTING);
+		vnfLcmOpOcc.setOperationState(InstantiationStatusType.STARTING);
 		vnfLcmOpOcc.setIsAutomaticInvocation(Boolean.FALSE);
 		vnfLcmOpOcc.setIsCancelPending(Boolean.FALSE);
 		return vnfLcmOpOcc;
 	}
 
-	public static OperationParamsEnum lcmOperationTypeToParameter(final NsLcmOpType lcmOperationType) {
+	public static NsdChangeType lcmOperationTypeToParameter(final NsdChangeType lcmOperationType) {
 		switch (lcmOperationType) {
 		case HEAL:
-			return OperationParamsEnum.HEAL;
+			return NsdChangeType.HEAL;
 		case INSTANTIATE:
-			return OperationParamsEnum.INSTANTIATE;
+			return NsdChangeType.INSTANTIATE;
 		case SCALE:
-			return OperationParamsEnum.SCALE;
+			return NsdChangeType.SCALE;
 		case TERMINATE:
-			return OperationParamsEnum.TERMINATE;
+			return NsdChangeType.TERMINATE;
 		case UPDATE:
-			return OperationParamsEnum.UPDATE;
+			return NsdChangeType.UPDATE;
 
 		default:
 			throw new NotFoundException("Unknwon LVM Operation: " + lcmOperationType);

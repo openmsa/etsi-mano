@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -42,9 +43,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.GrantService;
@@ -103,8 +101,8 @@ public class VnfmActions {
 			LOG.info("Instantiate {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
-			vnfInstance.setInstantiationState(InstantiationStateEnum.NOT_INSTANTIATED);
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
 			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
@@ -129,7 +127,7 @@ public class VnfmActions {
 		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, localLcmOpOccs);
 		final GrantResponse grantsResp = grantService.sendAndWaitGrantRequest(req);
 		// Send processing notification.
-		lcmOpOccs.setOperationState(LcmOperationStateType.PROCESSING);
+		lcmOpOccs.setOperationState(InstantiationStatusType.PROCESSING);
 		lcmOpOccs.setStateEnteredTime(new Date());
 		copyGrantResourcesToInstantiated(localLcmOpOccs, grantsResp);
 		lcmOpOccs.setGrantId(grantsResp.getId().toString());
@@ -161,7 +159,7 @@ public class VnfmActions {
 		GraphTools.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> createResults = executor.execCreate(createPlan, vimConnection, vim, context);
-		setResultLcmInstance(localLcmOpOccs, localVnfInstance, createResults, InstantiationStateEnum.INSTANTIATED);
+		setResultLcmInstance(localLcmOpOccs, localVnfInstance, createResults, InstantiationState.INSTANTIATED);
 		if (localLcmOpOccs.getVnfInstantiatedInfo().getScaleStatus() != null) {
 			final Set<VnfInstanceScaleInfo> scaleInfos = localLcmOpOccs.getVnfInstantiatedInfo().getScaleStatus().stream()
 					.map(x -> new VnfInstanceScaleInfo(x.getAspectId(), x.getScaleLevel()))
@@ -276,14 +274,14 @@ public class VnfmActions {
 		y.setReservationId(x.getReservationId());
 	}
 
-	private static void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationStateEnum eventType) {
+	private static void setResultLcmInstance(@NotNull final VnfLcmOpOccs lcmOpOccs, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork, String> results, @Nonnull final InstantiationState eventType) {
 		if (results.getErrored().isEmpty()) {
-			lcmOpOccs.setOperationState(LcmOperationStateType.COMPLETED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.COMPLETED);
 			lcmOpOccs.setStateEnteredTime(new Date());
-			vnfInstance.setInstantiationState((InstantiationStateEnum.INSTANTIATED == eventType) ? InstantiationStateEnum.INSTANTIATED : InstantiationStateEnum.NOT_INSTANTIATED);
+			vnfInstance.setInstantiationState((InstantiationState.INSTANTIATED == eventType) ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
 			vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
 		} else {
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			lcmOpOccs.setStateEnteredTime(new Date());
 		}
 		lcmOpOccs.setStateEnteredTime(new Date());
@@ -338,7 +336,7 @@ public class VnfmActions {
 			LOG.info("Terminate {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
 			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
@@ -367,7 +365,7 @@ public class VnfmActions {
 		GraphTools.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
-		setResultLcmInstance(localLcmOpOccs, vnfInstance, results, InstantiationStateEnum.NOT_INSTANTIATED);
+		setResultLcmInstance(localLcmOpOccs, vnfInstance, results, InstantiationState.NOT_INSTANTIATED);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
 		setLiveSatus(localLcmOpOccs, vnfInstance, results);
 		LOG.info("Saving VNF Instance.");
@@ -394,7 +392,7 @@ public class VnfmActions {
 			LOG.info("Scale to level {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Scale to level Failed", e);
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
 			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
@@ -411,7 +409,7 @@ public class VnfmActions {
 			LOG.info("Scale to level {} Success...", lcmOpOccsId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Scale to level Failed", e);
-			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
+			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
 			lcmOpOccs.setStateEnteredTime(new Date());
 			vnfLcmService.save(lcmOpOccs);
@@ -435,7 +433,7 @@ public class VnfmActions {
 		final VimConnectionInformation vimConnection = vnfInstance.getVimConnectionInfo().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		instantiatedCompute.forEach(x -> {
-			if (lcmOpOccs.getOperateChanges().getTerminationType() == VnfOperationalStateType.STARTED) {
+			if (lcmOpOccs.getOperateChanges().getTerminationType() == OperationalStateType.STARTED) {
 				vim.startServer(vimConnection, x.getResourceId());
 				vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
 			} else {

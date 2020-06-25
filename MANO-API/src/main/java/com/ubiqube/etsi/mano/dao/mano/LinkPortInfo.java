@@ -8,9 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.ubiqube.etsi.mano.model.ResourceHandle;
-import com.ubiqube.etsi.mano.model.nslcm.VnfLinkPortInfo.CpInstanceTypeEnum;
-
 @Entity
 public class LinkPortInfo implements Serializable {
 	/** Serial. */
@@ -21,11 +18,11 @@ public class LinkPortInfo implements Serializable {
 	private String id = null;
 
 	@Embedded
-	private transient ResourceHandle resourceHandle = null;
+	private transient VimResource resourceHandle = null;
 
 	private String cpInstanceId = null;
 
-	private CpInstanceTypeEnum cpInstanceType = null;
+	private LinkPortType cpInstanceType = null;
 
 	public String getId() {
 		return id;
@@ -35,11 +32,11 @@ public class LinkPortInfo implements Serializable {
 		this.id = id;
 	}
 
-	public ResourceHandle getResourceHandle() {
+	public VimResource getResourceHandle() {
 		return resourceHandle;
 	}
 
-	public void setResourceHandle(final ResourceHandle resourceHandle) {
+	public void setResourceHandle(final VimResource resourceHandle) {
 		this.resourceHandle = resourceHandle;
 	}
 
@@ -51,11 +48,11 @@ public class LinkPortInfo implements Serializable {
 		this.cpInstanceId = cpInstanceId;
 	}
 
-	public CpInstanceTypeEnum getCpInstanceType() {
+	public LinkPortType getCpInstanceType() {
 		return cpInstanceType;
 	}
 
-	public void setCpInstanceType(final CpInstanceTypeEnum cpInstanceType) {
+	public void setCpInstanceType(final LinkPortType cpInstanceType) {
 		this.cpInstanceType = cpInstanceType;
 	}
 
