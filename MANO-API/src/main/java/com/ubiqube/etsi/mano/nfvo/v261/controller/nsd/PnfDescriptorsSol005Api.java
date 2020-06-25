@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.PnfFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -25,15 +27,19 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoModifications;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
 
+import ma.glasnost.orika.MapperFacade;
+
 @Profile({ "!VNFM" })
 @RestController
 public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptorsSol005Api.class);
 	private final PnfdInfoRepository pnfdInfoRepository;
+	private final MapperFacade mapper;
 
-	public PnfDescriptorsSol005Api(final PnfdInfoRepository _pnfdInfoRepository) {
+	public PnfDescriptorsSol005Api(final PnfdInfoRepository _pnfdInfoRepository, final MapperFacade _mapper) {
 		pnfdInfoRepository = _pnfdInfoRepository;
+		mapper = _mapper;
 		LOG.info("Starting PNF Management SOL005 Controller.");
 	}
 
@@ -46,11 +52,14 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<PnfdInfo> pnfs = pnfdInfoRepository.query(filter);
-		pnfs.forEach(x -> x.setLinks(makeLinks(x)));
-		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		final List<PnfDescriptor> pnfs = pnfdInfoRepository.query(filter);
+		final List<PnfdInfo> pnfds = pnfs.stream()
+				.map(x -> mapper.map(x, PnfdInfo.class))
+				.collect(Collectors.toList());
+		pnfds.forEach(x -> x.setLinks(makeLinks(x)));
+		final ObjectMapper mapperFv = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(pnfs), HttpStatus.OK);
+			return new ResponseEntity<>(mapperFv.writeValueAsString(pnfds), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -86,7 +95,8 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId) {
-		final PnfdInfo pnfdInfo = pnfdInfoRepository.get(UUID.fromString(pnfdInfoId));
+		final PnfDescriptor pnfdInfoDb = pnfdInfoRepository.get(UUID.fromString(pnfdInfoId));
+		final PnfdInfo pnfdInfo = mapper.map(pnfdInfoDb, PnfdInfo.class);
 		pnfdInfo.setLinks(makeLinks(pnfdInfo));
 		return new ResponseEntity<>(pnfdInfo, HttpStatus.OK);
 	}
@@ -142,8 +152,9 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String contentType, final CreatePnfdInfoRequest body) {
-		final PnfdInfo pnfd = PnfFactory.createPnfDescriptorsPnfdInfo(body);
-		pnfdInfoRepository.save(pnfd);
+		PnfDescriptor pnfdDb = PnfFactory.createPnfDescriptorsPnfdInfo(body);
+		pnfdDb = pnfdInfoRepository.save(pnfdDb);
+		final PnfdInfo pnfd = mapper.map(pnfdDb, PnfdInfo.class);
 		pnfd.setLinks(makeLinks(pnfd));
 		return new ResponseEntity<>(pnfd, HttpStatus.OK);
 	}

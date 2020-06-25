@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.repository;
 
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 
-public interface PnfdInfoRepository extends CrudRepository<PnfdInfo>, BinaryRepository {
+public interface PnfdInfoRepository extends CrudRepository<PnfDescriptor>, BinaryRepository {
 
 }
