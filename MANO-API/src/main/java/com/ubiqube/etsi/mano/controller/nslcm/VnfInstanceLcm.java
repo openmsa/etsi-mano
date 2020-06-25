@@ -83,7 +83,7 @@ public class VnfInstanceLcm {
 		vimManager = _vimManager;
 	}
 
-	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
+	public List<VnfInstance> get(final Map<String, String> queryParameters) {
 		final String filter = queryParameters.get("filter");
 		return vnfInstancesRepository.query(filter);
 	}

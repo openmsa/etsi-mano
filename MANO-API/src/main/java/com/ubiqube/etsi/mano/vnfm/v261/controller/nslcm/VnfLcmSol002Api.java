@@ -49,7 +49,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters, links).stream()
+		final List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
 				.map(x -> {
 					final com.ubiqube.etsi.mano.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
 					v.setLinks(links.getLinks(x.getId().toString()));

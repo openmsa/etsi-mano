@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ubiqube.etsi.mano.controller.vnf.ApiTypesEnum;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;

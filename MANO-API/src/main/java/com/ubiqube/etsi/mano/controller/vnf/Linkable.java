@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.PkgmLinks;

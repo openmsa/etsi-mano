@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.controller.vnf;
+package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.xml.bind.annotation.XmlEnumValue;
 
