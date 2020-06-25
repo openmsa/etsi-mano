@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -54,10 +53,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
 	private Set<ZoneInfoEntity> zones = null;
-
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ZoneGroupInformation> zoneGroups = null;
 
 	private String computeReservationId = null;
 
@@ -137,14 +132,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	public void setZones(final Set<ZoneInfoEntity> zones) {
 		this.zones = zones;
-	}
-
-	public List<ZoneGroupInformation> getZoneGroups() {
-		return zoneGroups;
-	}
-
-	public void setZoneGroups(final List<ZoneGroupInformation> zoneGroups) {
-		this.zoneGroups = zoneGroups;
 	}
 
 	public String getComputeReservationId() {

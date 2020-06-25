@@ -108,7 +108,7 @@ public class GrantAction {
 			final ServerGroup serverGroup = new ServerGroup("1", "az", "az");
 			sg.add(serverGroup);
 			// final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
-			final List<String> sgList = sg.stream().map(ServerGroup::getId).collect(Collectors.toList());
+			final Set<String> sgList = sg.stream().map(ServerGroup::getId).collect(Collectors.toSet());
 			final ZoneGroupInformation zgi = new ZoneGroupInformation();
 			zgi.setZoneId(sgList);
 			grants.setZoneGroups(Collections.singleton(zgi));
@@ -154,7 +154,7 @@ public class GrantAction {
 			x.setResourceProviderId(vim.getType());
 			x.setVimConnectionId(vimInfo.getId().toString());
 			x.setZoneId(zoneId);
-			x.setResourceGroupId(zgi.getZoneId().get(0));
+			x.setResourceGroupId(zgi.getZoneId().iterator().next());
 		});
 		grants.setVimAssets(grantVimAssetsEntity);
 		grants.setAvailable(Boolean.TRUE);

@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
@@ -23,7 +23,7 @@ public class ZoneGroupInformation implements Serializable {
 	private UUID id;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> zoneId = new ArrayList<>();
+	private Set<String> zoneId = new LinkedHashSet<>();
 
 	public UUID getId() {
 		return id;
@@ -33,11 +33,11 @@ public class ZoneGroupInformation implements Serializable {
 		this.id = id;
 	}
 
-	public List<String> getZoneId() {
+	public Set<String> getZoneId() {
 		return zoneId;
 	}
 
-	public void setZoneId(final List<String> zoneId) {
+	public void setZoneId(final Set<String> zoneId) {
 		this.zoneId = zoneId;
 	}
 
