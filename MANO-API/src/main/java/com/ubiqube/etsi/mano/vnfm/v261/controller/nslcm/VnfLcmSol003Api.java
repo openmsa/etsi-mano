@@ -5,6 +5,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -70,7 +71,13 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters, links);
+		final List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters, links).stream()
+				.map(x -> {
+					final com.ubiqube.etsi.mano.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
+					v.setLinks(links.getLinks(x.getId().toString()));
+					return v;
+				})
+				.collect(Collectors.toList());
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");

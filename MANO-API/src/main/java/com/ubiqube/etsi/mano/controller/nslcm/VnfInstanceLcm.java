@@ -83,16 +83,9 @@ public class VnfInstanceLcm {
 		vimManager = _vimManager;
 	}
 
-	public List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
+	public List<VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
 		final String filter = queryParameters.get("filter");
-		final List<VnfInstance> result = vnfInstancesRepository.query(filter);
-		return result.stream()
-				.map(x -> {
-					final com.ubiqube.etsi.mano.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
-					v.setLinks(links.getLinks(x.getId().toString()));
-					return v;
-				})
-				.collect(Collectors.toList());
+		return vnfInstancesRepository.query(filter);
 	}
 
 	public VnfLcmOpOccs get(final UUID id) {
