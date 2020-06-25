@@ -122,7 +122,7 @@ dependencies {
 	compile 'net.rakugakibox.spring.boot:orika-spring-boot-starter:1.8.0'
 	
 	compile group: 'org.hibernate', name: 'hibernate-search', version: '5.11.5.Final'
-
+	compile 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.400'
 	// Demo stuff
 	compile 'com.ubiqube.mano:tosca-vnfd-class:0.1.0-SNAPSHOT'
 	compile 'com.ubiqube.mano:tosca-nsd-class:0.1.0-SNAPSHOT'
