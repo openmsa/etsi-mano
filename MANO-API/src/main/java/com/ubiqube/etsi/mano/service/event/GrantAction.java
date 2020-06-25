@@ -274,11 +274,11 @@ public class GrantAction {
 			final ResourceQuota quota = vim.getQuota(x);
 			if (needed.getRam() > quota.getRamFree()) {
 				LOG.debug("Removing vim {}: RAM needed: {} free: {}", x.getVimId(), needed.getRam(), quota.getRamFree());
-				return;
+				// return;
 			}
 			if (needed.getVcpu() > quota.getVcpuFree()) {
 				LOG.debug("Removing vim {}: Vcpu needed: {} free: {}", x.getVimId(), needed.getVcpu(), quota.getVcpuFree());
-				return;
+				// return;
 			}
 			vimsSelected.add(x);
 		});
