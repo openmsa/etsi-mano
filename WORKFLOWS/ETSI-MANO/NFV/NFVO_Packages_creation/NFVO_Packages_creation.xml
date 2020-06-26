@@ -6,24 +6,26 @@
     <displayField>device_id</displayField>
     <executionDetailsVisibility>5</executionDetailsVisibility>
     <executionMode>TRANSACTION</executionMode>
-    <group>NFV|NFVO|VNF/NSD Packages creation</group>
-    <icon>/images/eclipseIcons/page_obj.gif</icon>
-    <name>NFVO Packages creation</name>
+    <group>NFV|NFVO</group>
+    <icon>/images/repository/CommandDefinition/icons/page icon.jpg</icon>
+    <name>VNF / NS Packages Management</name>
     <order>10000</order>
     <poolId>0</poolId>
     <readVariableVisibility>5</readVariableVisibility>
     <showDetailedServiceInstances>true</showDetailedServiceInstances>
     <showProcessExecConsole>true</showProcessExecConsole>
+    <showProcessResult>false</showProcessResult>
     <showVariables>false</showVariables>
     <visibility>5</visibility>
   </information>
 	<variables frozen="0">
-    <variable displayName="Device Id" displayOrder="0" maxLength="100" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+    <variable displayName="Device Id" displayOrder="0" keepOnImport="true" maxLength="165" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
       <sections>
         <section>Sync to NFVO</section>
       </sections>
       <sdTypes>
         <sdType manId="17010303" modId="17010305"/>
+        <sdType manId="17010304" modId="17010306"/>
       </sdTypes>
     </variable>
     <variable displayName="NSD Package IDs" displayOrder="2" maxLength="100" name="params.nsdPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
@@ -95,14 +97,25 @@
         <section>Create VNF Package</section>
       </sections>
     </variable>
-    <variable cols="100" displayName="Vnf Pkg Content" displayOrder="14" editable="false" maxLength="100" name="params.vnf_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+    <variable cols="100" displayName="Vnf Pkg Content" displayOrder="14" editable="false" maxLength="100" name="params.vnf_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="File">
       <sections>
         <section>Create VNF Package</section>
       </sections>
+      <repositories>
+        <repository>Datafiles</repository>
+      </repositories>
     </variable>
-    <variable cols="100" displayName="Nsd Pkg Content" displayOrder="15" editable="false" maxLength="100" name="params.nsd_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="String">
+    <variable cols="100" displayName="Nsd Pkg Content" displayOrder="15" editable="false" maxLength="100" name="params.nsd_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="File">
       <sections>
         <section>Create NS Package</section>
+      </sections>
+      <repositories>
+        <repository>Datafiles</repository>
+      </repositories>
+    </variable>
+    <variable displayName="Vnf Package Name" displayOrder="17" maxLength="100" name="params.vnf_package_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create VNF Package</section>
       </sections>
     </variable>
   </variables>
