@@ -35,6 +35,25 @@ class BaseApi
 		return $response;
 	}
 
+	protected function doPostReturnLocation($_url, $_body)
+        {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
+                $this->setParameters($ch);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $_body);
+                curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$response = curl_exec($ch);
+                $this->checkError($ch, $_url, $response);
+		if (preg_match('~Location: (.*)~i', $response, $match)) {
+   			$location = trim($match[1]);
+		}
+                curl_close($ch);
+                return json_encode(array("location" => $location));
+        }
+
 	protected function doPatch($_url, $_body)
 	{
 		$ch = curl_init();
@@ -115,6 +134,7 @@ class BaseApi
 		curl_setopt($_ch, CURLOPT_USERPWD, 'ncroot:ubiqube');
 		curl_setopt($_ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($_ch, CURLOPT_HTTPHEADER, array(
+			'Version: 1.0',
 			'Content-Type: application/json'
 		));
 	}
