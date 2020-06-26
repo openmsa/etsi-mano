@@ -48,6 +48,21 @@ class NsdSol005 extends BaseApi
 	}
 
 	/**
+         * Onboard NSD content (CSAR file).
+	 *
+         * @param string $_nsdInfoId
+         *              The NSD Id.
+	 * @param string $_filename
+	 * 		The CSAR filename.
+         * @return mixed Zip if NSD have multi file, plain file otherwise.
+         */
+	public function nsDescriptorsNsdInfoIdNsdFilePut($_nsdInfoId, $_filename)
+        {
+                $base = "/home/ncuser/etsi-mano/WORKFLOWS/ETSI-MANO/src/EtsiMano";
+                return shell_exec("$base/onboard_nsd.sh $_nsdInfoId $_filename 2>&1");;
+        }
+
+	/**
 	 *
 	 * @param string $_body
 	 * @return void

@@ -1,7 +1,7 @@
 <?php
 
-require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
-include "/opt/fmc_repository/Process/ETSI-MANO/vendor/autoload.php";
+require_once '/opt/fmc_repository/Process/ETSI-MANO/Reference/Common/mano.php';
+
 
 use Ubiqube\EtsiMano\NsdSol005;
 use Symfony\Component\Yaml\Yaml;
