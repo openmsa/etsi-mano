@@ -31,7 +31,6 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm.NsInstanceControllerService;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
@@ -112,11 +111,7 @@ public class NsExecutionPlanner {
 			final int c = nsInstanceService.countLiveInstanceOfNsd(nsInstance, x.getId());
 			if (c == 0) {
 				// create an instance of x
-				final CreateNsRequest req = new CreateNsRequest();
-				req.setNsDescription("");
-				req.setNsdId(x.getId().toString());
-				req.setNsName("nested_of_" + nsInstance.getId());
-				final NsdInstance inst = nsInstanceControllerService.createNsd(req);
+				final NsdInstance inst = nsInstanceControllerService.createNsd(x.getId().toString(), "nested_of_" + nsInstance.getId(), "");
 				final NsInstantiatedNs sap = new NsInstantiatedNs();
 				sap.setNsdPackage(x.getId());
 				sap.setNsInstanceId(inst.getId().toString());

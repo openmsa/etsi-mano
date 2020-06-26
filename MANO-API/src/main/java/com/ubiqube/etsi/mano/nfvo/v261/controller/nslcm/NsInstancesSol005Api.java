@@ -187,7 +187,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String contentType, final TerminateNsRequest request) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsLcmOpOccs lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request);
+		final NsLcmOpOccs lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request.getTerminationTime());
 
 		final String link = NsLcmOpOccsSol005Api.makeSelfLink(lcm);
 		return ResponseEntity.accepted().header("Location", link).build();
@@ -221,7 +221,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 			throw new NotFoundException("NsdId field is empty.");
 		}
 
-		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req);
+		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req.getNsdId(), req.getNsName(), req.getNsDescription());
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
 
 		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));

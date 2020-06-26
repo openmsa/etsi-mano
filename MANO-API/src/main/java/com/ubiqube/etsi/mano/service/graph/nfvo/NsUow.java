@@ -28,6 +28,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 	private final NsInstantiatedNs resourceHandle;
 
 	private final InstantiateNsRequest instantiateRequest;
+
 	private final TerminateNsRequest terminateRequest;
 
 	private final NsInstanceControllerService nsInstanceControllerService;
@@ -60,7 +61,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		final NsLcmOpOccs lcm = nsInstanceControllerService.terminate(UUID.fromString(resourceHandle.getNsInstanceId()), terminateRequest);
+		final NsLcmOpOccs lcm = nsInstanceControllerService.terminate(UUID.fromString(resourceHandle.getNsInstanceId()), null);
 		final NsLcmOpOccs result = waitLcmCompletion(lcm);
 		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
