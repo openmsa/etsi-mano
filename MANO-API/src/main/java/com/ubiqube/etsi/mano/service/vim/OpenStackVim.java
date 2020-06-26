@@ -543,8 +543,8 @@ public class OpenStackVim implements Vim {
 		Optional.ofNullable(usage.getMaxTotalInstances()).ifPresent(quotas::setInstanceMax);
 		Optional.ofNullable(usage.getTotalInstancesUsed()).ifPresent(quotas::setInstanceUsed);
 
-		Optional.ofNullable(usage.getMaxTotalRAMSize()).ifPresent(quotas::setRamMax);
-		Optional.ofNullable(usage.getTotalRAMUsed()).ifPresent(quotas::setRamUsed);
+		Optional.ofNullable(usage.getMaxTotalRAMSize()).ifPresent(x -> quotas.setRamMax(x * MEGA));
+		Optional.ofNullable(usage.getTotalRAMUsed()).ifPresent(x -> quotas.setRamUsed(x * MEGA));
 
 		Optional.ofNullable(usage.getMaxTotalKeypairs()).ifPresent(quotas::setKeyPairsMax);
 		Optional.ofNullable(usage.getTotalKeyPairsUsed()).ifPresent(quotas::setKeyPairsUsed);
