@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.search.util.impl.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,6 +47,7 @@ import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
+import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 @Service
 public class GrantAction {
@@ -85,7 +85,7 @@ public class GrantAction {
 		LOG.info("Evaluating grant {}", objectId);
 		final Optional<GrantResponse> grantsOpt = grantJpa.findById(objectId);
 		final GrantResponse grants = grantsOpt.orElseThrow(() -> new NotFoundException("Grant ID " + objectId + " Not found."));
-		final ExecutorService executorService = Executors.newFixedThreadPool(10, "grant-" + objectId);
+		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "grant");
 		// Free Lease if any.
 		grants.getRemoveResources().forEach(x -> {
 			if (x.getReservationId() != null) {
@@ -274,11 +274,11 @@ public class GrantAction {
 			final ResourceQuota quota = vim.getQuota(x);
 			if (needed.getRam() > quota.getRamFree()) {
 				LOG.debug("Removing vim {}: RAM needed: {} free: {}", x.getVimId(), needed.getRam(), quota.getRamFree());
-				// return;
+				return;
 			}
 			if (needed.getVcpu() > quota.getVcpuFree()) {
 				LOG.debug("Removing vim {}: Vcpu needed: {} free: {}", x.getVimId(), needed.getVcpu(), quota.getVcpuFree());
-				// return;
+				return;
 			}
 			vimsSelected.add(x);
 		});
