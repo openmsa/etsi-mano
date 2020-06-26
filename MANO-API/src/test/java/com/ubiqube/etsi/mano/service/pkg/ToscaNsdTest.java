@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVirtualLink;
+import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
+import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
 
 public class ToscaNsdTest {
 	private final ToscaPackageProvider tpp;

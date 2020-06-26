@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.tosca;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +30,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.service.event.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.PackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
+import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
@@ -292,23 +295,27 @@ public class ToscaPackageProvider implements PackageProvider {
 	}
 
 	@Override
-	public List<InstantiationLevels> getInstatiationLevels(final Map<String, String> parameters) {
-		return toscaApi.getObjects(root, parameters, InstantiationLevels.class);
+	public List<com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels> getInstatiationLevels(final Map<String, String> parameters) {
+		final List<InstantiationLevels> obj = toscaApi.getObjects(root, parameters, InstantiationLevels.class);
+		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels.class);
 	}
 
 	@Override
-	public List<VduInstantiationLevels> getVduInstantiationLevels(final Map<String, String> parameters) {
-		return toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
+	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels> getVduInstantiationLevels(final Map<String, String> parameters) {
+		final List<VduInstantiationLevels> obj = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
+		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels.class);
 	}
 
 	@Override
-	public List<VduInitialDelta> getVduInitialDelta(final Map<String, String> parameters) {
-		return toscaApi.getObjects(root, parameters, VduInitialDelta.class);
+	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta> getVduInitialDelta(final Map<String, String> parameters) {
+		final List<VduInitialDelta> obj = toscaApi.getObjects(root, parameters, VduInitialDelta.class);
+		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta.class);
 	}
 
 	@Override
-	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
-		return toscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
+	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
+		final List<VduScalingAspectDeltas> obj = toscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
+		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas.class);
 	}
 
 	@Override

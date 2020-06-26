@@ -49,14 +49,16 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
-import com.ubiqube.etsi.mano.service.event.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
+import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
+import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
+import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
+import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
+import com.ubiqube.etsi.mano.service.pkg.bean.VduLevel;
+import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
 
 import ma.glasnost.orika.MapperFacade;
-import tosca.datatypes.nfv.VduLevel;
-import tosca.policies.nfv.InstantiationLevels;
-import tosca.policies.nfv.VduInitialDelta;
-import tosca.policies.nfv.VduInstantiationLevels;
-import tosca.policies.nfv.VduScalingAspectDeltas;
 
 @Service
 public class PackagingManager {

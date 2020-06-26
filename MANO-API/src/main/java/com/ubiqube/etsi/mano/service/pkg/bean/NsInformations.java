@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.bean;
 
 public class NsInformations {
 

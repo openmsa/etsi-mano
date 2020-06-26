@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
+import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
 
 import tosca.policies.nfv.VduScalingAspectDeltas;
 
