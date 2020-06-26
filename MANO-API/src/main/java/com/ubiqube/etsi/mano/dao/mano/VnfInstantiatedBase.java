@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -81,11 +82,15 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity, Serializable 
 
 	private Date endTime;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private VnfCompute vnfCompute;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private VnfLcmOpOccs vnfLcmOpOccs;
+
+	private String aliasName;
+
+	private String toscaName;
 
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
@@ -236,6 +241,22 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity, Serializable 
 
 	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public String getAliasName() {
+		return aliasName;
+	}
+
+	public void setAliasName(final String aliasName) {
+		this.aliasName = aliasName;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
 	}
 
 	@Override

@@ -13,12 +13,12 @@ import com.ubiqube.etsi.mano.model.nslcm.sol003.LccnSubscriptionRequest;
 public class VnfLcmSubscriptionsSol003Api implements VnfLcmSubscriptionsSol003 {
 
 	@Override
-	public ResponseEntity<Void> subscriptionsGet(final String accept) {
+	public ResponseEntity<Void> subscriptionsGet() {
 		throw new GenericException("TODO");
 	}
 
 	@Override
-	public ResponseEntity<Void> subscriptionsPost(final LccnSubscriptionRequest lccnSubscriptionRequest, final String accept, final String contentType) {
+	public ResponseEntity<Void> subscriptionsPost(final LccnSubscriptionRequest lccnSubscriptionRequest, final String contentType) {
 		throw new GenericException("TODO");
 	}
 

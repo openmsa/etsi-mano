@@ -23,7 +23,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.DETACH)
 	private VnfInstance vnfInstance = null;
 
 	@ManyToOne(cascade = CascadeType.DETACH)
@@ -35,7 +35,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	/** XXX TO do. */
 	@Transient
-	private AffectedVnfChangedInfo changedInfo = null;
+	private transient AffectedVnfChangedInfo changedInfo = null;
 
 	@Override
 	public UUID getId() {

@@ -13,14 +13,13 @@ import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.jpa.NsInstantiatedBaseJpa;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractTaskUow;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractTaskUow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractNsTaskUow.class);
 
 	private final VimConnectionInformation vimConnectionInformation;
 

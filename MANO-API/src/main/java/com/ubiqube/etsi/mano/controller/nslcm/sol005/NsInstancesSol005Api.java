@@ -5,6 +5,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,7 +31,6 @@ import com.ubiqube.etsi.mano.model.Link;
 import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.HealNsRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InlineResponse200;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstanceLinks;
@@ -38,10 +38,8 @@ import com.ubiqube.etsi.mano.model.nslcm.sol005.ScaleNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.TerminateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.UpdateNsRequest;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
-import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -50,22 +48,18 @@ import ma.glasnost.orika.MapperFacade;
 public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);
 
-	private final NsdRepository nsdRepository;
 	private final NsInstanceRepository nsInstanceRepository;
 
 	private final NsLcmOpOccsService lcmOpOccsService;
 
-	private final EventManager eventManager;
 	private final MapperFacade mapper;
 	private final NsInstanceService nsInstanceService;
 
 	private final NsInstanceControllerService nsInstanceControllerService;
 
-	public NsInstancesSol005Api(final NsdRepository _nsdRepository, final NsInstanceRepository _nsInstanceRepository, final NsLcmOpOccsService _lcmOpOccsRepository, final EventManager _eventManager, final MapperFacade _mapper, final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService) {
-		nsdRepository = _nsdRepository;
+	public NsInstancesSol005Api(final NsInstanceRepository _nsInstanceRepository, final NsLcmOpOccsService _lcmOpOccsRepository, final MapperFacade _mapper, final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService) {
 		nsInstanceRepository = _nsInstanceRepository;
 		lcmOpOccsService = _lcmOpOccsRepository;
-		eventManager = _eventManager;
 		mapper = _mapper;
 		nsInstanceService = _nsInstanceService;
 		nsInstanceControllerService = _nsInstanceControllerService;
@@ -82,7 +76,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsInstancesGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
+	public ResponseEntity<String> nsInstancesGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsdInstance> result = nsInstanceRepository.query(filter);
 		final List<NsInstance> list = result.stream().map(x -> {
 			final NsInstance nsi = mapper.map(x, NsInstance.class);
@@ -104,12 +98,13 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public void nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
+	public ResponseEntity<Void> nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureNotInstantiated(nsInstanceDb);
 
 		nsInstanceService.delete(nsInstanceUuid);
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
@@ -120,14 +115,12 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<InlineResponse200> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final InlineResponse200 resp = new InlineResponse200();
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
 		nsInstance.setLinks(makeLink(nsInstanceId));
-		resp.setNsInstance(nsInstance);
-		return new ResponseEntity<>(resp, HttpStatus.OK);
+		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
 	}
 
 	/**
@@ -171,7 +164,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String accept, final String contentType, final ScaleNsRequest body) {
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String contentType, final ScaleNsRequest body) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
@@ -192,7 +185,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String accept, final String contentType, final TerminateNsRequest request) {
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String contentType, final TerminateNsRequest request) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsLcmOpOccs lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request);
 
@@ -207,7 +200,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String accept, final String contentType, final UpdateNsRequest body) {
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String contentType, final UpdateNsRequest body) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
@@ -232,7 +225,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
 
 		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
-		return new ResponseEntity<>(nsInstanceWeb, HttpStatus.OK);
+		return ResponseEntity.created(URI.create(nsInstanceWeb.getLinks().getSelf().getHref())).body(nsInstanceWeb);
 	}
 
 	private static NsInstanceLinks makeLink(@Nonnull final String id) {
@@ -246,7 +239,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstanceLinks.setInstantiate(instantiate);
 		// nsInstanceLinks.setNestedNsInstances(nestedNsInstances);
 		final Link scale = new Link();
-		scale.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdScalePost(id, null, null, null)).withSelfRel().getHref());
+		scale.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdScalePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setScale(scale);
 
 		final Link self = new Link();
@@ -254,11 +247,11 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		nsInstanceLinks.setSelf(self);
 
 		final Link terminate = new Link();
-		terminate.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdTerminatePost(id, null, null, null)).withSelfRel().getHref());
+		terminate.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdTerminatePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setTerminate(terminate);
 
 		final Link update = new Link();
-		update.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdUpdatePost(id, null, null, null)).withSelfRel().getHref());
+		update.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdUpdatePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
 		return nsInstanceLinks;
 	}

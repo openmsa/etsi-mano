@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,7 +17,10 @@ import javax.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VlProfileEntity implements Auditable {
+public class VlProfileEntity implements Auditable, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

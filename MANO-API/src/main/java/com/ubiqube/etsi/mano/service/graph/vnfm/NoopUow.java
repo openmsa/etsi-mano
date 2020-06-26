@@ -23,7 +23,6 @@ public class NoopUow extends AbstractUnitOfWork {
 
 	@Override
 	public UowType getType() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

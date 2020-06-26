@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Embeddable
-public class NsLcmOpOccsResourceChanges {
+public class NsLcmOpOccsResourceChanges implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<NsInstantiatedVnf> affectedVnfs = new HashSet<>();

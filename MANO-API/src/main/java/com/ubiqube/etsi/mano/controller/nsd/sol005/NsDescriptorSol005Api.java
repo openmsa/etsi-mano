@@ -139,7 +139,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId, final String accept) {
+	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId) {
 		final NsdPackage nsdPackage = nsdRepository.get(UUID.fromString(nsdInfoId));
 		final NsdInfo nsdInfo = mapper.map(nsdPackage, NsdInfo.class);
 		nsdInfo.setLinks(makeLinks(nsdInfoId));
@@ -245,7 +245,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String accept, final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) {
+	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) {
 		NsdInfo nsdDescriptor = NsdFactories.createNsdInfo();
 		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
 		nsdDescriptor.setUserDefinedData(userDefinedData);
@@ -268,7 +268,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	private static NsdInfoLinks makeLinks(@Nonnull final String id) {
 		final NsdInfoLinks ret = new NsdInfoLinks();
 		final Link nsdSelf = new Link();
-		final String _self = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(id, "")).withSelfRel().getHref();
+		final String _self = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(id)).withSelfRel().getHref();
 		nsdSelf.setHref(_self);
 		ret.setSelf(nsdSelf);
 

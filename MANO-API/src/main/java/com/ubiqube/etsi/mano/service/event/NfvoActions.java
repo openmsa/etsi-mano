@@ -27,9 +27,9 @@ import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -86,10 +86,10 @@ public class NfvoActions {
 
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 
-		ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
-		plan = executionPlanner.revertNs(plan);
+		ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(lcmOpOccs, nsInstance);
+		plan = executionPlanner.revert(plan);
 
-		executionPlanner.exportNsGraph(plan, nsdInfo.getId(), nsInstance, "delete");
+		executionPlanner.exportGraph(plan, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
 
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execDeleteNs(plan, vimInfo, vim);
 		setResultLcmInstance(lcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.NOT_INSTANTIATED);
@@ -107,8 +107,6 @@ public class NfvoActions {
 			LOG.error("NS Instantiate fail.", e);
 			// We can't save here, we must do an atomic update.
 			lcmOpOccs.setOperationState(LcmOperationStateType.FAILED);
-			nsInstance.setNsState(InstantiationStateEnum.NOT_INSTANTIATED);
-			nsInstanceRepository.save(nsInstance);
 			nsLcmOpOccsService.save(lcmOpOccs);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
@@ -126,8 +124,8 @@ public class NfvoActions {
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
-		executionPlanner.exportNsGraph(plan, nsdId, nsInstance, "create");
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan = executionPlanner.plan(localLcmOpOccs, nsInstance);
+		executionPlanner.exportGraph(plan, nsdId, nsInstance, "create", nsdRepository);
 		final ExecutionResults<NsUnitOfWork, String> results = executor.execCreateNs(plan, vimInfo, vim, pubNet);
 		LOG.debug("Done, Saving ...");
 		setResultLcmInstance(localLcmOpOccs, nsInstance.getId(), results, InstantiationStateEnum.INSTANTIATED);

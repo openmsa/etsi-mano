@@ -76,7 +76,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, final String accept, @RequestHeader(value = "Range", required = false) final String range) throws ServiceException {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, @RequestHeader(value = "Range", required = false) final String range) throws ServiceException {
 		final String artifactPath = SpringUtils.extractParams(request);
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
 	}
@@ -88,7 +88,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), links);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
@@ -106,7 +106,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept, final String range) {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String range) {
 		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
 	}
 

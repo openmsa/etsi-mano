@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +17,10 @@ import javax.validation.Valid;
 import com.ubiqube.etsi.mano.model.IpOverEthernetAddressDataIpAddresses.TypeEnum;
 
 @Entity
-public class IpOverEthernetAddressDataIpAddressesEntity {
+public class IpOverEthernetAddressDataIpAddressesEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

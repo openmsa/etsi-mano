@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,7 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Embeddable
-public class VnfInstanceStatus {
+public class VnfInstanceStatus implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<VnfInstanceScaleInfo> scaleStatus = null;

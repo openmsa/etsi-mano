@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccsResourceChanges;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.Link;
@@ -49,7 +50,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsLcmOpOccsGet(final String accept, final String filter, final String fields, final String excludeFields, final String excludeDefault) {
+	public ResponseEntity<String> nsLcmOpOccsGet(final String filter, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsLcmOpOccs> result = nsLcmOpOccsService.query(filter);
 		final List<NsLcmOpOcc> list = result.stream()
 				.map(x -> {
@@ -58,9 +59,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 					return res;
 				})
 				.collect(Collectors.toList());
-		final ObjectMapper mapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		final ObjectMapper localMapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
 		try {
-			return new ResponseEntity<>(mapper.writeValueAsString(list), HttpStatus.OK);
+			return new ResponseEntity<>(localMapper.writeValueAsString(list), HttpStatus.OK);
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
@@ -94,8 +95,15 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String accept, final String contentType) {
+	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String contentType) {
 		final NsLcmOpOccs nsLcmOpOccs = nsLcmOpOccsService.get(UUID.fromString(nsLcmOpOccId));
+		final NsLcmOpOccsResourceChanges resources = nsLcmOpOccs.getResourceChanges();
+		resources.setAffectedNss(resources.getAffectedNss().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedPnfs(resources.getAffectedPnfs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedSaps(resources.getAffectedSaps().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedVls(resources.getAffectedVls().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedVnffgs(resources.getAffectedVnffgs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		resources.setAffectedVnfs(resources.getAffectedVnfs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
 		final NsLcmOpOcc res = mapper.map(nsLcmOpOccs, NsLcmOpOcc.class);
 		res.setLinks(makeLink(res));
 
@@ -146,7 +154,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		nsLcmOpOccLinks.setContinue(_continue);
 
 		final Link nsInstance = new Link();
-		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesGet(nsLcmOpOccs.getNsInstanceId(), null, null, null, null, null)).withSelfRel().getHref());
+		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesGet(nsLcmOpOccs.getNsInstanceId(), null, null, null, null)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setNsInstance(nsInstance);
 
 		final Link retry = new Link();
@@ -158,14 +166,14 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		nsLcmOpOccLinks.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setSelf(self);
 		return nsLcmOpOccLinks;
 	}
 
 	public static String makeSelfLink(final NsLcmOpOccs nsLcmOpOccs) {
 		final String id = nsLcmOpOccs.getId().toString();
-		return linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null, null)).withSelfRel().getHref();
+		return linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref();
 	}
 
 }

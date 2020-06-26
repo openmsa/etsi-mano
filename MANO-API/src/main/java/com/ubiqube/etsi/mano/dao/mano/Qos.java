@@ -1,6 +1,10 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-public class Qos {
+import java.io.Serializable;
+
+public class Qos implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	private long latency;
 

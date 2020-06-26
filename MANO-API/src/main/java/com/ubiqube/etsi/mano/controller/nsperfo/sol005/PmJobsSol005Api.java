@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.ubiqube.etsi.mano.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.CreatePmJobRequest;
-import com.ubiqube.etsi.mano.model.nsperfo.sol005.PmJobsPmJobIdReportsReportIdGetResponse;
 import com.ubiqube.etsi.mano.model.nsperfo.sol005.PmJobsPostResponse;
 
 @Profile({ "!VNFM" })
@@ -56,7 +56,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPmJobIdReportsReportIdGetResponse> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId, final String accept) {
+	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId, final String accept) {
 		// TODO: Implement...
 
 		return null;

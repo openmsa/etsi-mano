@@ -86,7 +86,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public PkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
+	public PkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId) {
 		return vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links);
 	}
 
@@ -100,7 +100,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionVnfPackageChangeNotificationGet(final String accept) {
+	public void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionVnfPackageChangeNotificationGet() {
 		// Nothing.
 	}
 

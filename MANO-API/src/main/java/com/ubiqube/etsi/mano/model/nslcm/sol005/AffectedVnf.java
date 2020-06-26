@@ -94,6 +94,7 @@ public class AffectedVnf {
 	public enum ChangeResultEnum {
 		COMPLETED("COMPLETED"),
 		SUCCESS("SUCCESS"),
+		NOT_STARTED("NOT_STARTED"),
 		ROLLED_BACK("ROLLED_BACK"),
 
 		FAILED("FAILED");

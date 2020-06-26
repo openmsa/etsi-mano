@@ -38,12 +38,6 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	private String flavorId;
 
 	private String imageId;
-	/**
-	 * Vim name.
-	 */
-	private String aliasName;
-
-	private String toscaName;
 
 	/**
 	 * XXX Should be computed.
@@ -128,22 +122,6 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 
 	public void setRemovedStorageResourceIds(final Set<String> removedStorageResourceIds) {
 		this.removedStorageResourceIds = removedStorageResourceIds;
-	}
-
-	public String getAliasName() {
-		return aliasName;
-	}
-
-	public void setAliasName(final String aliasName) {
-		this.aliasName = aliasName;
-	}
-
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
 	}
 
 }

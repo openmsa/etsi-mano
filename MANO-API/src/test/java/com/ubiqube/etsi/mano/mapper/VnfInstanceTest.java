@@ -20,6 +20,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
@@ -62,9 +63,8 @@ public class VnfInstanceTest {
 		nsInstancesNsInstanceVnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance o = mapper.map(nsInstancesNsInstanceVnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class);
-		final VnfInstantiatedInfo ivi = o.getInstantiatedVnfInfo();
+		final VnfInstanceStatus ivi = o.getInstantiatedVnfInfo();
 		assertNotNull(ivi);
-		assertEquals("flavour", ivi.getFlavourId());
 		assertEquals("STARTED", ivi.getVnfState().toString());
 		assertNotNull(o.getVnfPkg());
 		assertNotNull(o.getVnfPkg().getId());
@@ -75,7 +75,7 @@ public class VnfInstanceTest {
 	void testDaoToJson() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = new com.ubiqube.etsi.mano.dao.mano.VnfInstance();
-		final VnfInstantiatedInfo instantiatedVnfInfo = new VnfInstantiatedInfo();
+		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
 		final NsdInstance nsInstance = new NsdInstance();

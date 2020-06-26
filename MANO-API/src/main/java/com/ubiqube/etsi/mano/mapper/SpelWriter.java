@@ -1,8 +1,8 @@
 package com.ubiqube.etsi.mano.mapper;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ public class SpelWriter {
 
 	private FilterAttributes handle(final AttrHolder attrHolder) {
 		final StringBuilder sb = new StringBuilder();
-		final LinkedList<AttrNode> stack = attrHolder.getStack();
+		final Deque<AttrNode> stack = attrHolder.getStack();
 		AttrNode prev = null;
 		final Iterator<AttrNode> ite = stack.descendingIterator();
 		while (ite.hasNext()) {

@@ -16,6 +16,9 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class VirtualLinkInfo extends VnfInstantiatedBase {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -27,7 +30,7 @@ public class VirtualLinkInfo extends VnfInstantiatedBase {
 	private Set<LinkPortInfo> vnfLinkPorts = null;
 
 	@ElementCollection
-	private final Map<String, String> metadata = null;
+	private Map<String, String> metadata = null;
 
 	@Override
 	public UUID getId() {
@@ -53,6 +56,16 @@ public class VirtualLinkInfo extends VnfInstantiatedBase {
 
 	public void setVnfLinkPorts(final Set<LinkPortInfo> vnfLinkPorts) {
 		this.vnfLinkPorts = vnfLinkPorts;
+	}
+
+	@Override
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	@Override
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 
 }

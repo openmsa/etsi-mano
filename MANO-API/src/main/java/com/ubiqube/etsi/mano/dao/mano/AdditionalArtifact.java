@@ -1,12 +1,16 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 @Embeddable
-public class AdditionalArtifact {
+public class AdditionalArtifact implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	private String artifactPath;
 

@@ -26,6 +26,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.nslcm.sol005.NsInstanceControllerService;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
@@ -43,6 +44,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -67,8 +69,7 @@ import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.CreateNsRequest;
 import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
@@ -76,8 +77,6 @@ import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsEdgeListener;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsEndUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsStartUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
@@ -88,7 +87,6 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ObjectStorageUow;
@@ -103,8 +101,6 @@ public class ExecutionPlanner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutionPlanner.class);
 
-	private final VnfPackageRepository vnfPackageRepository;
-
 	private final VnfPackageService vnfPackageService;
 
 	private final VnfInstanceService vnfInstanceService;
@@ -117,8 +113,6 @@ public class ExecutionPlanner {
 
 	private final NsdPackageJpa nsdPackageJpa;
 
-	private final NsdRepository nsdRepository;
-
 	private final NsdPackageService nsdPackageService;
 
 	private final VnfmInterface vnfm;
@@ -127,39 +121,31 @@ public class ExecutionPlanner {
 
 	private final NsLcmOpOccsService nsLcmOpOccsService;
 
-	public ExecutionPlanner(final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdRepository _nsdRepository, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
-		vnfPackageRepository = _vnfPackageRepository;
+	public ExecutionPlanner(final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VduNamingStrategy _vduNamingStrategy, final NsInstanceService _nsInstanceService, final IpamService _ipamService, final NsdPackageJpa _nsdPackageJpa, final NsdPackageService _nsdPackageService, final VnfmInterface _vnfm, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
 		vduNamingStrategy = _vduNamingStrategy;
 		nsInstanceService = _nsInstanceService;
 		ipamService = _ipamService;
 		nsdPackageJpa = _nsdPackageJpa;
-		nsdRepository = _nsdRepository;
 		nsdPackageService = _nsdPackageService;
 		vnfm = _vnfm;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmOpOccsService = _nsLcmOpOccsService;
 	}
 
-	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createGraph() {
+	private static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
+		final Class<ConnectivityEdge<U>> t = (Class<ConnectivityEdge<U>>) (Object) ConnectivityEdge.class;
 		// Vertex everyThing
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
-		g.addGraphListener(new EdgeListener<UnitOfWork>());
-		return g;
-	}
-
-	private static ListenableGraph<NsUnitOfWork, NsConnectivityEdge> nsCreateGraph() {
-		// Vertex everyThing
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
-		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
+		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(t));
+		g.addGraphListener(new EdgeListener<U>());
 		return g;
 	}
 
 	@NotNull
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createGraph();
-		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, changeType);
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
+		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, vnfPackage, changeType);
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
 			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
@@ -215,7 +201,7 @@ public class ExecutionPlanner {
 		return g;
 	}
 
-	private static void addEdge(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final List<UnitOfWork> left, final List<UnitOfWork> right) {
+	private static <V, U extends UnitOfWorkBase<V>> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final List<U> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;
@@ -226,7 +212,7 @@ public class ExecutionPlanner {
 		}));
 	}
 
-	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, final VnfLcmOpOccs vnfLcmOpOccs, final ChangeType changeType) {
+	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VnfLcmOpOccs vnfLcmOpOccs, final VnfPackage vnfPackage, final ChangeType changeType) {
 		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
@@ -256,7 +242,7 @@ public class ExecutionPlanner {
 				.filter(x -> x.getChangeType() == changeType)
 				.forEach(x -> {
 					final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-					final UnitOfWork uow = new ComputeUow(x, compute);
+					final UnitOfWork uow = new ComputeUow(x, compute, vnfPackageService.findVnfVirtualLinks(vnfPackage));
 					vertex.add(compute.getToscaName(), uow);
 					g.addVertex(uow);
 				});
@@ -272,29 +258,13 @@ public class ExecutionPlanner {
 		return vertex;
 	}
 
-	public void exportGraph(final ListenableGraph<UnitOfWork, ConnectivityEdge> g, @Nonnull final UUID _id, final VnfInstance vnfInstance, final String subName) {
-		final DOTExporter<UnitOfWork, ConnectivityEdge> exporter = new DOTExporter<>(UnitOfWork::getName);
+	public <U extends UnitOfWorkBase<?>> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, @Nonnull final UUID _id, final BaseEntity vnfInstance, final String subName, final BinaryRepository repo) {
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		final InputStream _stream = new ByteArrayInputStream(res);
-		vnfPackageRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
-	}
-
-	public void exportNsGraph(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, @Nonnull final UUID _id, final NsdInstance vnfInstance, final String subName) {
-		final DOTExporter<NsUnitOfWork, NsConnectivityEdge> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.exportGraph(g, out);
-		final byte[] res = out.toByteArray();
-		final InputStream _stream = new ByteArrayInputStream(res);
-		nsdRepository.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
-	}
-
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> revert(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> gNew = createGraph();
-		g.vertexSet().forEach(gNew::addVertex);
-		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
-		return gNew;
+		repo.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", _stream);
 	}
 
 	public int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
@@ -324,7 +294,7 @@ public class ExecutionPlanner {
 		VnfComputeAspectDelta last = new VnfComputeAspectDelta("", "", 1, 1, 1, null);
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfComputeAspectDeltas) {
 			if (vnfComputeAspectDelta.getLevel() <= myscaling.getScaleLevel()) {
-				cnt += vnfComputeAspectDelta.getNumberOfInstances().intValue();
+				cnt += vnfComputeAspectDelta.getNumberOfInstances();
 				last = vnfComputeAspectDelta;
 				apply++;
 			}
@@ -355,7 +325,6 @@ public class ExecutionPlanner {
 				instantiationLevels = instantiationLevels.stream()
 						.filter(y -> match(x, y))
 						.collect(Collectors.toSet());
-
 			}
 			// Filter myScaling.
 			ScaleInfo myscaling = new ScaleInfo("whatEver", 0);
@@ -392,31 +361,16 @@ public class ExecutionPlanner {
 			// XXX They should scale.
 			final int num = vnfInstanceService.getNumberOfLiveVl(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiatedVirtualLink aVl = new VnfInstantiatedVirtualLink();
-				aVl.setChangeType(ChangeType.ADDED);
+				final VnfInstantiatedVirtualLink aVl = createInstantiated(new VnfInstantiatedVirtualLink(), x, lcmOpOccs);
 				aVl.setVnfVirtualLink(x);
-				// XXX it's not a Vdu il.
-				aVl.setInstantiationLevel(null);
-				aVl.setVnfLcmOpOccs(lcmOpOccs);
-				aVl.setVduId(x.getId());
-				aVl.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
-				aVl.setToscaName(x.getToscaName());
-				// aVl = vnfInstanceService.save(aVl);
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
 		});
 		vnfPakage.getVnfStorage().stream().forEach(x -> {
 			final int num = vnfInstanceService.getNumberOfLiveStorage(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiatedStorage aVs = new VnfInstantiatedStorage();
-				aVs.setChangeType(ChangeType.ADDED);
+				final VnfInstantiatedStorage aVs = createInstantiated(new VnfInstantiatedStorage(), x, lcmOpOccs);
 				aVs.setVnfVirtualStorage(x);
-				// XXX it's not a Vdu il.
-				aVs.setInstantiationLevel(null);
-				aVs.setVnfLcmOpOccs(lcmOpOccs);
-				aVs.setVduId(x.getId());
-				aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
-				aVs.setToscaName(x.getToscaName());
 				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(aVs);
 			}
 		});
@@ -424,18 +378,22 @@ public class ExecutionPlanner {
 		vnfPakage.getVnfExtCp().stream().forEach(x -> {
 			final int num = vnfInstanceService.getNumberOfLiveExtCp(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiatedExtCp aVs = new VnfInstantiatedExtCp();
-				aVs.setChangeType(ChangeType.ADDED);
+				final VnfInstantiatedExtCp aVs = createInstantiated(new VnfInstantiatedExtCp(), x, lcmOpOccs);
 				aVs.setVnfExtCp(x);
-				// XXX it's not a Vdu il.
-				aVs.setInstantiationLevel(null);
-				aVs.setVduId(x.getId());
-				aVs.setVnfLcmOpOccs(lcmOpOccs);
-				aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
-				aVs.setToscaName(x.getToscaName());
 				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
 			}
 		});
+	}
+
+	private <U extends VnfInstantiatedBase> U createInstantiated(final U aVs, final ToscaEntity x, final VnfLcmOpOccs lcmOpOccs) {
+		aVs.setChangeType(ChangeType.ADDED);
+		// XXX it's not a Vdu il.
+		aVs.setInstantiationLevel(null);
+		aVs.setVduId(x.getId());
+		aVs.setVnfLcmOpOccs(lcmOpOccs);
+		aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
+		aVs.setToscaName(x.getToscaName());
+		return aVs;
 	}
 
 	private static boolean match(final VnfCompute vnfCompute, final VnfInstantiationLevels vil) {
@@ -461,7 +419,6 @@ public class ExecutionPlanner {
 			vnfInstantiedCompute.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, vnfCompute.getToscaName(), currentCount + i));
 			vnfInstantiedCompute.setToscaName(vnfCompute.getToscaName());
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
-			// vnfInstanceService.save(vnfInstantiedCompute);
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
 			if ((null != vnfCompute.getMonitoringParameters()) && !vnfCompute.getMonitoringParameters().isEmpty()) {
 				final VnfInstantiatedMonitoring instanceMonotor = new VnfInstantiatedMonitoring();
@@ -501,7 +458,7 @@ public class ExecutionPlanner {
 			final VnfLiveInstance poped = instantiated.pop();
 			LOG.info("Removing VNF Compute instance {}", poped.getId());
 			instantiatedCompute.setRemovedInstantiated(poped.getId());
-			instantiatedCompute.setResourceId(poped.getResourceId().toString());
+			instantiatedCompute.setResourceId(poped.getResourceId());
 			instantiatedCompute.setInstantiationLevel(scaleLevel);
 			instantiatedCompute.setVnfLcmOpOccs(lcmOpOccs);
 			instantiatedCompute.setVnfCompute(x);
@@ -559,17 +516,6 @@ public class ExecutionPlanner {
 		return inst;
 	}
 
-	private static void nsAddEdge(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final List<NsUnitOfWork> left, final List<NsUnitOfWork> right) {
-		if ((null == left) || (null == right)) {
-			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
-			return;
-		}
-		left.forEach(x -> right.forEach(y -> {
-			LOG.info("  - Adding {} <-> {}", x, y.getName());
-			g.addEdge(x, y);
-		}));
-	}
-
 	public void makePrePlan(final NsdInstance nsInstance, final NsdPackage nsdInfo, final NsLcmOpOccs lcmOpOccs) {
 		final NsLcmOpOccsResourceChanges changes = lcmOpOccs.getResourceChanges();
 		final Set<NsSap> saps = nsInstanceService.findSapsByNsInstance(nsdInfo);
@@ -625,7 +571,6 @@ public class ExecutionPlanner {
 				// vnfInstance.setVimConnectionInfo(vimConnectionInfo);
 				// vnfInstance.setMetadata(metadata);
 				// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
-				// XXX vnfInstance = vnfInstanceService.save(vnfInstance);
 				sap.setVnfInstance(vnfInstance);
 				// XXX Not sure about the profileId is.
 				changes.addInstantiatedVnf(sap);
@@ -640,32 +585,23 @@ public class ExecutionPlanner {
 				.findFirst().orElseThrow(() -> new NotFoundException("VNF Package not found: " + vnfPackage.getId()));
 	}
 
-	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = nsCreateGraph();
+	public ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> plan(final NsLcmOpOccs lcmOpOccs, final NsdInstance nsInstance) {
+		final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g = createGraph();
 		final MultiValueMap<String, NsUnitOfWork> vertex = buildVertex(g, lcmOpOccs, nsInstance);
 		final NsdPackage nsdPackage = nsdPackageJpa.findById(nsInstance.getNsdInfo().getId()).orElseThrow(() -> new NotFoundException("" + nsInstance.getNsdInfo().getId()));
 		final Set<NsSap> saps = nsdPackageService.getSapByNsdPackage(nsdPackage);
-		saps.forEach(x -> {
-			nsAddEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName()));
-		});
+		saps.forEach(x -> addEdge(g, vertex.get(x.getInternalVirtualLink()), vertex.get(x.getToscaName())));
 		final Set<NsdPackageVnfPackage> nsdvnf = nsdPackageService.findVnfPackageByNsPackage(nsdPackage);
 		nsdvnf.forEach(x -> {
 			// An VNF may have a dependency on a VL thru ExtCP
 			final VnfPackage vnfp = vnfPackageService.findById(x.getVnfPackage());
-			vnfp.getVnfExtCp().forEach(y -> {
-				LOG.info("Adding edge: {} <-> {}", y.getExternalVirtualLink(), x.getToscaName());
-				nsAddEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName()));
-			});
-
+			vnfp.getVnfExtCp().forEach(y -> addEdge(g, vertex.get(y.getExternalVirtualLink()), vertex.get(x.getToscaName())));
 		});
 		final Set<NsdPackageNsdPackage> nsdnsd = nsdPackageService.findNestedNsdByNsdPackage(nsdPackage);
 		nsdnsd.forEach(x -> {
 			// A NSD may have a dependency on SAP
 			final Set<NsSap> nsdSaps = nsdPackageService.getSapByNsdPackageId(x.getChild().getId());
-			nsdSaps.forEach(y -> {
-				LOG.info("Adding edge: {} <-> {}", x.getToscaName(), y.getToscaName());
-				nsAddEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName()));
-			});
+			nsdSaps.forEach(y -> addEdge(g, vertex.get(x.getToscaName()), vertex.get(y.getToscaName())));
 		});
 		// Add start
 		final NsInstantiatedBase vnfInstantiedStart = new NsInstantiatedBase();
@@ -696,11 +632,10 @@ public class ExecutionPlanner {
 						g.addEdge(key, end);
 					}
 				});
-
 		return g;
 	}
 
-	private MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
+	private MultiValueMap<String, NsUnitOfWork> buildVertex(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final NsLcmOpOccs lcmOpOccs, final NsdInstance nsdInstance) {
 		final MultiValueMap<String, NsUnitOfWork> vertex = new LinkedMultiValueMap<>();
 		final NsLcmOpOccsResourceChanges resources = lcmOpOccs.getResourceChanges();
 		resources.getAffectedNss().forEach(x -> {
@@ -754,7 +689,6 @@ public class ExecutionPlanner {
 		instantiatedCompute.forEach(x -> {
 			final NsInstantiatedNs affectedCompute = copyInstantiedResource(x, new NsInstantiatedNs(), lcmOpOccs);
 			affectedCompute.setNsInstanceId(x.getNsInstanceId());
-			affectedCompute.setResourceId(x.getResourceId());
 			affectedCompute.setNsdPackage(nsdInfo);
 			lcmOpOccs.getResourceChanges().addInstantiatedNs(affectedCompute);
 		});
@@ -762,21 +696,18 @@ public class ExecutionPlanner {
 		instantiatedSap.forEach(x -> {
 			final NsInstantiatedSap affectedCompute = copyInstantiedResource(x, new NsInstantiatedSap(), lcmOpOccs);
 			affectedCompute.setSapInstanceId(x.getSapInstanceId());
-			affectedCompute.setResourceId(x.getResourceId());
 			lcmOpOccs.getResourceChanges().addInstantiatedSap(affectedCompute);
 		});
 		final List<NsInstantiatedVl> instantiatedVl = nsInstanceService.getLiveVlInstanceOf(lcmOpOccs.getNsInstance());
 		instantiatedVl.forEach(x -> {
 			final NsInstantiatedVl affectedCompute = copyInstantiedResource(x, new NsInstantiatedVl(), lcmOpOccs);
 			affectedCompute.setVlProfileId(x.getVlProfileId());
-			affectedCompute.setResourceId(x.getResourceId());
 			lcmOpOccs.getResourceChanges().addInstantiatedVirtualLink(affectedCompute);
 		});
 		final List<NsInstantiatedVnf> instantiatedVnf = nsInstanceService.getLiveVnfInstanceOf(lcmOpOccs.getNsInstance());
 		instantiatedVnf.forEach(x -> {
 			final NsInstantiatedVnf affectedCompute = copyInstantiedResource(x, new NsInstantiatedVnf(), lcmOpOccs);
 			affectedCompute.setVnfInstance(x.getVnfInstance());
-			affectedCompute.setResourceId(x.getResourceId());
 			affectedCompute.setNsdPackageVnfPackage(x.getNsdPackageVnfPackage());
 			lcmOpOccs.getResourceChanges().addInstantiatedVnf(affectedCompute);
 		});
@@ -789,30 +720,24 @@ public class ExecutionPlanner {
 		// inst.setRemovedInstantiated(source.getId());
 		inst.setResourceId(source.getResourceId());
 		inst.setInstantiationLevel(source.getInstantiationLevel());
+		inst.setResourceId(source.getResourceId());
 		inst.setNsLcmOpOccs(lcmOpOccs);
 		return inst;
 	}
 
-	public ListenableGraph<NsUnitOfWork, NsConnectivityEdge> revertNs(final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g) {
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> gNew = createNsGraph();
+	public <U> ListenableGraph<U, ConnectivityEdge<U>> revert(final ListenableGraph<U, ConnectivityEdge<U>> g) {
+		final ListenableGraph<U, ConnectivityEdge<U>> gNew = createGraph();
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
 	}
 
-	private static ListenableGraph<NsUnitOfWork, NsConnectivityEdge> createNsGraph() {
-		// Vertex everyThing
-		final ListenableGraph<NsUnitOfWork, NsConnectivityEdge> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NsConnectivityEdge.class));
-		g.addGraphListener(new NsEdgeListener<NsUnitOfWork>());
-		return g;
-	}
-
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> planForRemoval(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = plan(localLcmOpOccs, vnfPkg, ChangeType.REMOVED);
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> planForRemoval(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan = plan(localLcmOpOccs, vnfPkg, ChangeType.REMOVED);
 		return revert(plan);
 	}
 
-	public ListenableGraph<UnitOfWork, ConnectivityEdge> planForCreation(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> planForCreation(@Nonnull final VnfLcmOpOccs localLcmOpOccs, @Nonnull final VnfPackage vnfPkg) {
 		return plan(localLcmOpOccs, vnfPkg, ChangeType.ADDED);
 	}
 }

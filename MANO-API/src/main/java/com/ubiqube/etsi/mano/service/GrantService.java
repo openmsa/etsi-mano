@@ -58,7 +58,7 @@ public class GrantService {
 		removeGrantsLinkPorts(grants, lcmOpOccs.getResourceChanges().getAffectedExtCp());
 		// addGrantsLinkPorts(grants,
 		// lcmOpOccs.getResourceChanges().getAffectedExtCp());
-
+		grants.setVimConnections(vnfInstance.getVimConnectionInfo());
 		grants = grantRequestJpa.save(grants);
 		return mapper.map(grants, GrantRequest.class);
 	}

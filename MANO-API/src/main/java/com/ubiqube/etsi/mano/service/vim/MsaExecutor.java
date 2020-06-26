@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 import ma.glasnost.orika.MapperFacade;
@@ -238,7 +238,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
+	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
 		// MSA don't have an execution plan.
 	}
 
@@ -273,7 +273,7 @@ public class MsaExecutor implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData) {
 		// TODO Auto-generated method stub
 		return null;
 	}

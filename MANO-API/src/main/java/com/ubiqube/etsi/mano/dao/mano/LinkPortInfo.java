@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,13 +12,16 @@ import com.ubiqube.etsi.mano.model.ResourceHandle;
 import com.ubiqube.etsi.mano.model.nslcm.VnfLinkPortInfo.CpInstanceTypeEnum;
 
 @Entity
-public class LinkPortInfo {
+public class LinkPortInfo implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id = null;
 
 	@Embedded
-	private ResourceHandle resourceHandle = null;
+	private transient ResourceHandle resourceHandle = null;
 
 	private String cpInstanceId = null;
 

@@ -26,6 +26,7 @@ import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.ServerCreate;
 import org.openstack4j.model.identity.v3.Endpoint;
@@ -52,7 +53,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.graph.TestUnitOfWork;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
@@ -262,18 +263,18 @@ public class OpenStackTest {
 	void testRefinePlan() throws Exception {
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = createNetwork();
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createNetwork();
 		vim.refineExecutionPlan(g);
 
-		final DOTExporter<UnitOfWork, ConnectivityEdge> exporter = new DOTExporter<>(UnitOfWork::getName);
+		final DOTExporter<UnitOfWork, ConnectivityEdge<UnitOfWork>> exporter = new DOTExporter<>(UnitOfWork::getName);
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		Files.write(res, new File("plan.dot"));
 	}
 
-	private static ListenableGraph<UnitOfWork, ConnectivityEdge> createNetwork() {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph(new DirectedAcyclicGraph(ConnectivityEdge.class));
+	private static ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createNetwork() {
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = new DefaultListenableGraph(new DirectedAcyclicGraph(ConnectivityEdge.class));
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
 
 		final VlProtocolData vlProtocolData = new VlProtocolData();
@@ -398,24 +399,65 @@ public class OpenStackTest {
 	@Test
 	void testDeleteNetwork() throws Exception {
 		final OSClientV3 os = getQueensConnection();
-		final ActionResponse ret = os.networking().network().delete("ad9df306-8487-4695-9be1-f06feef779c7");
+		final List<? extends Port> ret = os.networking().port().list();
+		ret.forEach(System.out::println);
 		System.out.println("" + ret);
 	}
 
 	@Test
 	void testDeleteRouter() throws Exception {
 		final OSClientV3 os = getQueensConnection();
-		final String device = "909f4c86-eb79-4cf2-bf5c-21769c2dbc92";
+		final String device = "9f07f44f-3f06-48c8-ad75-5c7afcc46d2e";
 		final Router router = os.networking().router().get(device);
 		final List<? extends Port> routerList = os.networking().port().list();
+		routerList.stream()
+				.filter(x -> x.getDeviceId().equals(device))
+				.forEach(System.out::println);
 		final List<RouterInterface> ret = routerList.stream()
 				.filter(x -> x.getDeviceId().equals(device))
+				.filter(x -> !x.getDeviceOwner().equals("network:router_gateway"))
 				.map(x -> x.getId())
 				.map(x -> os.networking().router().detachInterface(device, null, x))
 				.collect(Collectors.toList());
 		ret.forEach(x -> System.out.println("" + x));
 		System.out.println("" + router);
-		final ActionResponse ret2 = os.networking().router().delete("909f4c86-eb79-4cf2-bf5c-21769c2dbc92");
+		final ActionResponse ret2 = os.networking().router().delete(device);
 		System.out.println("" + ret2);
+	}
+
+	@Test
+	void testGetPublic() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		os.networking().network().list().forEach(x -> {
+			System.out.println(x.getName() + " -- " + x.isRouterExternal() + " ==> " + x.getId());
+		});
+	}
+
+	@Test
+	void testNetworkExtension() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		os.networking().agent().list().forEach(x -> {
+			System.out.println("" + x.getTopic() + " " + x.getAgentType() + " " + x.getBinary());
+		});
+
+	}
+
+	@Test
+	void testflavor() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final int disk = 20;
+		final int ram = 4096;
+		final int numVcpu = 2;
+		final Flavor build = Builders.flavor()
+				.disk(disk)
+				.ram(ram)
+				.vcpus(numVcpu)
+				.isPublic(true)
+				.name("junittest")
+				.build();
+		final Flavor res = os.compute()
+				.flavors()
+				.create(build);
+		System.out.println("" + res);
 	}
 }

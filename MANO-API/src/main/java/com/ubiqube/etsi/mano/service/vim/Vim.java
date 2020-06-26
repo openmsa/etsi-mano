@@ -15,7 +15,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 public interface Vim {
@@ -42,7 +42,7 @@ public interface Vim {
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name);
 
-	void refineExecutionPlan(@Nonnull final ListenableGraph<UnitOfWork, ConnectivityEdge> g);
+	void refineExecutionPlan(@Nonnull final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g);
 
 	Optional<SoftwareImage> getSwImageMatching(VimConnectionInformation vimConnectionInformation, SoftwareImage img);
 
@@ -53,7 +53,7 @@ public interface Vim {
 
 	String createStorage(VimConnectionInformation vimConnectionInformation, VnfStorage vnfStorage, final String aliasName);
 
-	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages);
+	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData);
 
 	String createObjectStorage(final VimConnectionInformation vimConnectionInformation, final VnfStorage vnfStorage);
 

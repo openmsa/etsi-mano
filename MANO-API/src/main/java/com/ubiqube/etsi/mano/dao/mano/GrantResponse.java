@@ -46,7 +46,7 @@ public class GrantResponse implements BaseEntity, Auditable {
 	private String vnfLcmOpOccId = null;
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<VimConnectionInformation> vimConnections = null;
 

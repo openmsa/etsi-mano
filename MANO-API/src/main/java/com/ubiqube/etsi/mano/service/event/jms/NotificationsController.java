@@ -19,7 +19,7 @@ public class NotificationsController {
 		this.vnfEvent = vnfEvent;
 	}
 
-	@JmsListener(destination = "system.notifications")
+	@JmsListener(destination = "system.notifications", concurrency = "2-4")
 	public void onEvent(final EventMessage ev) {
 		LOG.info("Notification Controller Received event: {}", ev);
 		switch (ev.getNotificationEvent()) {

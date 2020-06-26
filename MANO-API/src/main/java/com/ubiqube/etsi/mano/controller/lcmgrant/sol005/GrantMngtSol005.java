@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.controller.lcmgrant.sol005;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,7 +56,7 @@ public class GrantMngtSol005 implements GrantManagement {
 	public GrantResponse post(final GrantRequest grantRequest) {
 		try {
 			final String content = objectMapper.writeValueAsString(grantRequest);
-			Files.write(content.getBytes(), new File("grant-request.json"));
+			Files.write(content.getBytes(Charset.defaultCharset()), new File("grant-request.json"));
 			LOG.error("HellO {}", content);
 		} catch (final IOException e) {
 			LOG.warn("", e);

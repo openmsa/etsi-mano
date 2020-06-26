@@ -8,6 +8,11 @@ import javax.annotation.Nonnull;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @deprecated Use Java services.
+ */
 @Deprecated
 public interface VnfLcmOpOccsRepository extends CrudRepositoryNg<VnfLcmOpOccs> {
 

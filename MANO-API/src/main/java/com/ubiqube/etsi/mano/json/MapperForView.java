@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.json;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class MapperForView {
 	private MapperForView() {
@@ -21,7 +23,8 @@ public class MapperForView {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		mapper.setSerializationInclusion(Include.NON_NULL);
-
+		mapper.registerModule(new JavaTimeModule());
+		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
 		if ((null != exclude) && !exclude.isEmpty()) {
 			final List<ViewHolder> excludeList = buildViewList(exclude);
 			mapper.registerModule(new SimpleModule() {

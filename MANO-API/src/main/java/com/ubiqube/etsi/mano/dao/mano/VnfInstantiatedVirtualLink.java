@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -21,10 +24,6 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 
 	@ManyToOne
 	private VnfVl vnfVirtualLink;
-
-	private String aliasName;
-
-	private String toscaName;
 
 	@Override
 	public UUID getId() {
@@ -53,21 +52,4 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
 		this.instantiationLevel = instantiationLevel;
 	}
-
-	public String getAliasName() {
-		return aliasName;
-	}
-
-	public void setAliasName(final String aliasName) {
-		this.aliasName = aliasName;
-	}
-
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
 }

@@ -5,10 +5,12 @@ import java.util.Map;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedSap;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class SapUow extends AbstractNsUnitOfWork {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	public SapUow(final NsInstantiatedSap _resourceHandleEntity, final String _name) {
 		super(_resourceHandleEntity, _name);
 	}

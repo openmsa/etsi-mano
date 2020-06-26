@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
@@ -73,7 +74,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class OpenStackVim implements Vim {
-	private static final long GIGA = 1000000000L;
+	private static final long GIGA = 1024 * 1024 * 1024L;
 
 	private static final long MEGA = 1048576L;
 
@@ -235,7 +236,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge> g) {
+	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
 		final List<UnitOfWork> vertexPool = new ArrayList<>();
 		LOG.info("Openstack, modification of execution plan.");
 		final ArrayList<UnitOfWork> vertexSet = new ArrayList<>(g.vertexSet());
@@ -248,7 +249,7 @@ public class OpenStackVim implements Vim {
 				final NoopUow noop = new NoopUow(vnfInstantiedCompute);
 				g.addVertex(noop);
 
-				final ArrayList<ConnectivityEdge> out = new ArrayList<>(g.outgoingEdgesOf(x));
+				final ArrayList<ConnectivityEdge<UnitOfWork>> out = new ArrayList<>(g.outgoingEdgesOf(x));
 				g.removeAllEdges(new ArrayList<>(out));
 				final VlProtocolData vnfVl = vlu.getVlProtocolData();
 				vnfVl.getIpAllocationPools().forEach(y -> {
@@ -267,13 +268,16 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();
 		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
 		bs.image(imageId);
 		bs.name(instanceName);
 		bs.flavor(flavorId);
+		if ((null != cloudInitData) && !cloudInitData.isEmpty()) {
+			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes()));
+		}
 		if (!networks.isEmpty()) {
 			bs.networks(networks);
 		}

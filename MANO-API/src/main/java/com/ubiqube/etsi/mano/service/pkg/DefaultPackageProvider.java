@@ -49,6 +49,7 @@ public class DefaultPackageProvider implements PackageProvider {
 		final HashSet<VnfCompute> set = new HashSet<>();
 		// Create One VDU. for one call on OS createStack.
 		final VnfCompute vnfCompute = new VnfCompute();
+		vnfCompute.setToscaName("nonet");
 		set.add(vnfCompute);
 		return set;
 	}
@@ -65,7 +66,11 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public Set<VnfLinkPort> getVnfVduCp(final Map<String, String> parameters) {
-		return new HashSet<>();
+		final Set<VnfLinkPort> ret = new HashSet<>();
+		final VnfLinkPort linkPort = new VnfLinkPort();
+		linkPort.setVirtualBinding("nonet");
+		ret.add(linkPort);
+		return ret;
 	}
 
 	@Override
@@ -100,38 +105,32 @@ public class DefaultPackageProvider implements PackageProvider {
 
 	@Override
 	public NsInformations getNsInformations(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new NsInformations();
 	}
 
 	@Override
 	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<NsSap> getNsSap(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<String> getNestedNsd(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<String> getVnfd(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 }

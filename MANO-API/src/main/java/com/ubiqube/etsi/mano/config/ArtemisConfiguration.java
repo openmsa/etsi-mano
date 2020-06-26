@@ -53,7 +53,7 @@ public class ArtemisConfiguration {
 		final DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
 		defaultMessageListenerContainer.setConnectionFactory(connectionFactory);
 		defaultMessageListenerContainer.setDestinationName("etsi-mano-default");
-		defaultMessageListenerContainer.setConcurrency("2-5");
+		defaultMessageListenerContainer.setConcurrency("1-5");
 		defaultMessageListenerContainer.setSessionTransacted(false);
 		return defaultMessageListenerContainer;
 	}

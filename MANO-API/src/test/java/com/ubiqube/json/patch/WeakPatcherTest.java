@@ -40,7 +40,7 @@ public class WeakPatcherTest {
 		assertEquals("id", "8a5878be-21c8-4123-a6a1-a9cea03123a0", vnfPkgInfo.getId());
 	}
 
-	private String readFile(final String fileName) throws IOException {
+	private static String readFile(final String fileName) throws IOException {
 		final InputStream is = new FileInputStream(fileName);
 		final BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 
@@ -75,6 +75,7 @@ public class WeakPatcherTest {
 		final VnfPkgInfo vnfPkgInfo = mapper.readValue(vnfPkgInfoStr, VnfPkgInfo.class);
 		patcher.patch(patchStr, vnfPkgInfo);
 		System.out.println("" + vnfPkgInfo);
+		assertNotNull(vnfPkgInfo);
 	}
 
 	@Test
@@ -84,5 +85,6 @@ public class WeakPatcherTest {
 		final String nsdPkgInfoStr = readFile("src/test/resources/NsdPkgInfo.json");
 		final NsdInfo nsdPkgInfo = mapper.readValue(nsdPkgInfoStr, NsdInfo.class);
 		patcher.patch(patchStr, nsdPkgInfo);
+		assertNotNull(nsdPkgInfo);
 	}
 }

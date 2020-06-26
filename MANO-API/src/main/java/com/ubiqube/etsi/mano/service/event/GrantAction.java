@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
@@ -89,7 +88,7 @@ public class GrantAction {
 			}
 		});
 		final VnfPackage vnfPackage = getPackageFromVnfInstanceId(UUID.fromString(grants.getVnfInstanceId()));
-		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants.getAddResources());
+		final VimConnectionInformation vimInfo = electVim(vnfPackage.getUserDefinedData().get("vimId"), grants);
 		// Zones.
 		final Callable<String> getZone = () -> {
 			final String zoneId = chooseZone(vimInfo);
@@ -105,7 +104,7 @@ public class GrantAction {
 			final ServerGroup serverGroup = new ServerGroup("1", "az", "az");
 			sg.add(serverGroup);
 			// final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
-			final List<String> sgList = sg.stream().map(x -> x.getId()).collect(Collectors.toList());
+			final List<String> sgList = sg.stream().map(ServerGroup::getId).collect(Collectors.toList());
 			final ZoneGroupInformation zgi = new ZoneGroupInformation();
 			zgi.setZoneId(sgList);
 			grants.setZoneGroups(Collections.singleton(zgi));
@@ -124,7 +123,11 @@ public class GrantAction {
 		executorService.submit(getSoftwareImages);
 
 		final Callable<Void> getComputeResourceFlavours = () -> {
-			grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
+			try {
+				grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vnfPackage, vimInfo, vim));
+			} catch (final RuntimeException e) {
+				LOG.error("", e);
+			}
 			return null;
 		};
 		executorService.submit(getComputeResourceFlavours);
@@ -177,9 +180,9 @@ public class GrantAction {
 		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
 		final Map<String, VimComputeResourceFlavourEntity> cache = new HashMap<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
-			final String key = x.getNumVcpu() + "-" + x.getVirtualMemorySize();
+			final String key = x.getNumVcpu() + "-" + x.getVirtualMemorySize() + "-" + x.getDiskSize();
 			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
-				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), 10);
+				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), x.getDiskSize());
 				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
 				vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
 				vcrfe.setResourceProviderId(vim.getType());
@@ -208,10 +211,8 @@ public class GrantAction {
 				// Get Vim or create vim resource via Or-Vi
 				final SoftwareImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
 					final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
-					return newImg.orElseGet(() -> {
-						// Use or-vi, Vim is not on the same server. and where is the path ?
-						return vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage());
-					});
+					// Use or-vi, Vim is not on the same server. Path is given in tosca file.
+					return newImg.orElseGet(() -> vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage()));
 				});
 				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
@@ -235,10 +236,17 @@ public class GrantAction {
 		return vsie;
 	}
 
-	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformationExt> set) {
+	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse) {
+		final Set<VimConnectionInformation> vimConns = grantResponse.getVimConnections();
+		String vimId;
+		if ((null != vimConns) && !vimConns.isEmpty()) {
+			LOG.info("Selecting vim via Given one.");
+			vimId = vimConns.iterator().next().getVimId();
+			return vimManager.findVimByVimId(vimId);
+		}
 		// XXX: Do some real elections.
 		final Set<VimConnectionInformation> vims;
-		if (null != vimId) {
+		if (null != vnfPackageVimId) {
 			LOG.debug("Getting MSA 2.x VIM");
 			vims = vimManager.getVimByType("MSA_20");
 		} else {

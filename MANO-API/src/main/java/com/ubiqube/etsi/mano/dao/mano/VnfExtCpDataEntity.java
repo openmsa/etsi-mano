@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,10 @@ import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
 @Entity
-public class VnfExtCpDataEntity {
+public class VnfExtCpDataEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID cpdId = null;

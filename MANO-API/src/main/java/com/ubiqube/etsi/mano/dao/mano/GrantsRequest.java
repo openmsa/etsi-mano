@@ -45,7 +45,7 @@ public class GrantsRequest implements BaseEntity, Auditable {
 	private VnfLcmOpOccs vnfLcmOpOccs = null;
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<VimConnectionInformation> vimConnections = null;
 
@@ -93,6 +93,9 @@ public class GrantsRequest implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> additionalParams = null;
 
+	@Valid
+	@OneToMany(mappedBy = "grants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<VimConstraints> vimConstraints;
 	/**
 	 * Flag to say if grants have been, inspected.
 	 */
@@ -287,6 +290,14 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	public String getInstantiationLevelId() {
 		return instantiationLevelId;
+	}
+
+	public Set<VimConstraints> getVimConstraints() {
+		return vimConstraints;
+	}
+
+	public void setVimConstraints(final Set<VimConstraints> vimConstraints) {
+		this.vimConstraints = vimConstraints;
 	}
 
 }

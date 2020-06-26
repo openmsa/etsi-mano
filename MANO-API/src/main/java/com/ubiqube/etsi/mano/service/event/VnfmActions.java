@@ -45,13 +45,14 @@ import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
 import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
+import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -78,7 +79,9 @@ public class VnfmActions {
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+	private final VnfPackageRepository vnfPackageRepository;
+
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final VnfPackageRepository _vnfPackageRepository) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
@@ -89,6 +92,7 @@ public class VnfmActions {
 		grantService = _grantService;
 		vnfInstancesService = _vnfInstancesService;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+		vnfPackageRepository = _vnfPackageRepository;
 	}
 
 	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
@@ -136,23 +140,23 @@ public class VnfmActions {
 		context.putAll(getLiveVl(vnfInstance));
 		final VnfInstance localVnfInstance = vnfInstancesService.save(vnfInstance);
 		localLcmOpOccs = vnfLcmService.save(localLcmOpOccs);
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> removePlan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> removePlan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
 		// XXX We can't refine a removal plan, because it has already been reverted.
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = grantsResp.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		localVnfInstance.setVimConnectionInfo(Collections.singleton(vimConnection));
 		//
-		executionPlanner.exportGraph(removePlan, vnfPkg.getId(), localVnfInstance, "remove");
+		executionPlanner.exportGraph(removePlan, vnfPkg.getId(), localVnfInstance, "remove", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> removeResults = executor.execDelete(removePlan, vimConnection, vim);
 		/// XXX split this function for adding / removing live instances.
 		setLiveSatus(localLcmOpOccs, vnfInstance, removeResults);
 
 		// Create plan
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
 		vim.refineExecutionPlan(createPlan);
-		executionPlanner.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create");
+		executionPlanner.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> createResults = executor.execCreate(createPlan, vimConnection, vim, context);
 		setResultLcmInstance(localLcmOpOccs, localVnfInstance, createResults, InstantiationStateEnum.INSTANTIATED);
@@ -387,13 +391,13 @@ public class VnfmActions {
 		vnfLcmService.setGrant(localLcmOpOccs, grant.getId());
 		eventManager.sendNotification(NotificationEvent.VNF_TERMINATE, vnfInstance.getId());
 		// Make plan
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> plan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan = executionPlanner.planForRemoval(localLcmOpOccs, vnfPkg);
 		final VimConnectionInformation vimConnection = grant.getVimConnections().iterator().next();
 		// XXX Multiple Vim ?
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		// vim.refineExecutionPlan(plan);
 		// plan = executionPlanner.revert(plan);
-		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete");
+		executionPlanner.exportGraph(plan, vnfPkg.getId(), vnfInstance, "delete", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> results = executor.execDelete(plan, vimConnection, vim);
 		setResultLcmInstance(localLcmOpOccs, vnfInstance, results, InstantiationStateEnum.NOT_INSTANTIATED);

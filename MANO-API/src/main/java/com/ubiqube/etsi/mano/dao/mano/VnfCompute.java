@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfCompute implements BaseEntity, Auditable, Serializable {
+public class VnfCompute implements ToscaEntity, Auditable, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -39,6 +40,7 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 
 	private String description;
 
+	@Column(length = 9000)
 	private String bootData;
 
 	private long virtualMemorySize;
@@ -46,6 +48,8 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	private String cpuArchitecture;
 
 	private long numVcpu;
+
+	private long diskSize;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private SoftwareImage softwareImage;
@@ -71,7 +75,7 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 	private Audit audit;
 
 	@Embedded
-	private VduProfile vduProfile;
+	private VduProfile vduProfile = new VduProfile();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
 	private List<VnfComputeAspectDelta> scalingAspectDeltas;
@@ -109,26 +113,32 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 		softwareImage = _softwareImage;
 	}
 
+	@Override
 	public String getToscaId() {
 		return toscaId;
 	}
 
+	@Override
 	public void setToscaId(final String toscaId) {
 		this.toscaId = toscaId;
 	}
 
+	@Override
 	public String getToscaName() {
 		return toscaName;
 	}
 
+	@Override
 	public void setToscaName(final String toscaName) {
 		this.toscaName = toscaName;
 	}
 
+	@Override
 	public String getState() {
 		return state;
 	}
 
+	@Override
 	public void setState(final String state) {
 		this.state = state;
 	}
@@ -244,6 +254,14 @@ public class VnfCompute implements BaseEntity, Auditable, Serializable {
 			instantiationLevel = new LinkedHashSet<>();
 		}
 		instantiationLevel.add(_vduInstantiationLevel);
+	}
+
+	public long getDiskSize() {
+		return diskSize;
+	}
+
+	public void setDiskSize(final long diskSize) {
+		this.diskSize = diskSize;
 	}
 
 }

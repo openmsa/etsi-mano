@@ -17,6 +17,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedComputeJpa;
@@ -134,16 +135,15 @@ public class VnfLcmService {
 		return vnfLcmOpOccsRepository.save(lcmOpOccs);
 	}
 
-	private @NotNull Integer addDec(@NotNull final TypeEnum type, final Integer numberOfSteps, final Integer scaleLevel) {
+	private @NotNull static Integer addDec(@NotNull final TypeEnum type, final Integer numberOfSteps, final Integer scaleLevel) {
 		switch (type) {
 		case IN:
 			return Math.max(0, scaleLevel - numberOfSteps);
 		case OUT:
 			return scaleLevel + numberOfSteps;
 		default:
-			break;
+			throw new GenericException("Scaling value is incorrect: " + type);
 		}
-		return null;
 	}
 
 	public VnfLcmOpOccs createOperateOpOcc(final VnfInstance vnfInstance, final OperateVnfRequest operateVnfRequest) {
