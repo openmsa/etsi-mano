@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
+package com.ubiqube.etsi.mano.controller.nslcm;
 
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
