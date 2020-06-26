@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
@@ -43,9 +44,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.GrantService;
+import com.ubiqube.etsi.mano.service.Nfvo;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -79,7 +80,9 @@ public class VnfmActions {
 
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfPackageRepository _vnfPackageRepository) {
+	private final Nfvo nfvo;
+
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfPackageRepository _vnfPackageRepository, final Nfvo _nfvo) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
@@ -90,6 +93,7 @@ public class VnfmActions {
 		grantService = _grantService;
 		vnfInstancesService = _vnfInstancesService;
 		vnfPackageRepository = _vnfPackageRepository;
+		nfvo = _nfvo;
 	}
 
 	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
@@ -124,8 +128,9 @@ public class VnfmActions {
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 
 		// Send Grant.
-		final GrantRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, localLcmOpOccs);
-		final GrantResponse grantsResp = grantService.sendAndWaitGrantRequest(req);
+		final GrantsRequest req = grantService.createInstantiateGrantRequest(vnfPkg, vnfInstance, localLcmOpOccs);
+		final GrantResponse grantsResp = nfvo.sendSyncGrantRequest(req);
+
 		// Send processing notification.
 		lcmOpOccs.setOperationState(InstantiationStatusType.PROCESSING);
 		lcmOpOccs.setStateEnteredTime(new Date());
@@ -379,8 +384,8 @@ public class VnfmActions {
 	}
 
 	private GrantResponse getTerminateGrants(final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final VnfPackage vnfPkg) {
-		final GrantRequest req = grantService.createTerminateGrantRequest(vnfPkg, vnfInstance, lcmOpOccs);
-		return grantService.sendAndWaitGrantRequest(req);
+		final GrantsRequest req = grantService.createTerminateGrantRequest(vnfPkg, vnfInstance, lcmOpOccs);
+		return nfvo.sendSyncGrantRequest(req);
 	}
 
 	public void scaleToLevel(@NotNull final UUID lcmOpOccsId) {
