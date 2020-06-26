@@ -50,7 +50,9 @@ public class PlanExecutor {
 		final DefaultDexecutor<U, String> executor = new DefaultDexecutor<>(config);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
-		return executor.execute(ExecutionConfig.TERMINATING);
+		final ExecutionResults<U, String> res = executor.execute(ExecutionConfig.TERMINATING);
+		executorService.shutdown();
+		return res;
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
