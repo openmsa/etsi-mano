@@ -41,6 +41,12 @@ class VnfPkgSol005 extends BaseApi
 		return $this->doPutMp($url_frag, $_content);
 	}
 
+	public function vnfPackagesVnfPkgIdPackageFilePut($_vnfPkgId, $_filename)
+        {
+		$base = "/home/ncuser/etsi-mano/WORKFLOWS/ETSI-MANO/src/EtsiMano";
+                return shell_exec("$base/onboard_vnf.sh $_vnfPkgId $_filename 2>&1");;
+        }
+
 	public function setOperationalState($_vnfPkgId, $_state)
 	{
 		$content = '{ "operationalState": "DISABLED" }';
