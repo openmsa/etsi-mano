@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -48,7 +48,7 @@ public class VnfLcmOpOccsTest {
 
 	/**
 	 * Infinite loop in extCp
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	void testDaoToJson() throws Exception {

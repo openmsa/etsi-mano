@@ -12,10 +12,17 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 public class GraphTest {
+	private static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
+		final Class<ConnectivityEdge<U>> t = (Class<ConnectivityEdge<U>>) (Object) ConnectivityEdge.class;
+		// Vertex everyThing
+		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(t));
+		g.addGraphListener(new EdgeListener<U>());
+		return g;
+	}
 
 	@Test
 	void testName() throws Exception {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge> g = new DefaultListenableGraph(new DirectedAcyclicGraph(ConnectivityEdge.class));
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
 		final UnitOfWork vduA = new TestUnitOfWork("A");
 		final UnitOfWork vduB = new TestUnitOfWork("B");
@@ -58,7 +65,7 @@ public class GraphTest {
 					}
 				});
 		System.out.println("==========================");
-		final Set<ConnectivityEdge> edg = g.edgesOf(vduB);
+		final Set<ConnectivityEdge<UnitOfWork>> edg = g.edgesOf(vduB);
 		edg.forEach(x -> {
 			System.out.println("Edge: " + x.getSource().getName() + " -> " + x.getTarget().getName());
 		});

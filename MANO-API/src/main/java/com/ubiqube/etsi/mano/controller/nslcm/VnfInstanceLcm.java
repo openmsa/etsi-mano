@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
@@ -26,14 +27,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.OperateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfToLevelRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -42,6 +35,13 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -83,16 +83,9 @@ public class VnfInstanceLcm {
 		vimManager = _vimManager;
 	}
 
-	public List<com.ubiqube.etsi.mano.model.nslcm.VnfInstance> get(final Map<String, String> queryParameters, final LcmLinkable links) {
+	public List<VnfInstance> get(final Map<String, String> queryParameters) {
 		final String filter = queryParameters.get("filter");
-		final List<VnfInstance> result = vnfInstancesRepository.query(filter);
-		return result.stream()
-				.map(x -> {
-					final com.ubiqube.etsi.mano.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
-					v.setLinks(links.getLinks(x.getId().toString()));
-					return v;
-				})
-				.collect(Collectors.toList());
+		return vnfInstancesRepository.query(filter);
 	}
 
 	public VnfLcmOpOccs get(final UUID id) {
@@ -124,7 +117,7 @@ public class VnfInstanceLcm {
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId())) {
 			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId());
-			vnfPkg.setUsageState(PackageUsageStateType.NOT_IN_USE);
+			vnfPkg.setUsageState(PackageUsageState.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
 		vnfInstanceService.delete(vnfInstanceId);

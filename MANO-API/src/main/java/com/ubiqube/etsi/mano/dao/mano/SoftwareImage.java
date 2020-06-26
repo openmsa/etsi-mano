@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Embedded;
@@ -14,7 +13,7 @@ import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class SoftwareImage implements Auditable, Serializable {
+public class SoftwareImage implements Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

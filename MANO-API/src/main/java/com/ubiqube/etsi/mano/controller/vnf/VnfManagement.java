@@ -24,12 +24,11 @@ import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.api.exception.ServiceException;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
@@ -59,15 +58,13 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public VnfPkgInfo vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Linkable links) {
+	public <U> U vnfPackagesVnfPkgIdGet(final UUID vnfPkgId, final Class<U> u) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgId);
-		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
-		return vnfPkgInfo;
+		return mapper.map(vnfPackage, u);
 	}
 
 	@Override
-	public String vnfPackagesGet(final Map<String, String> queryParameters, final Linkable links) {
+	public String vnfPackagesGet(final Map<String, String> queryParameters) {
 		final String filter = queryParameters.get("filter");
 
 		final List<VnfPackage> vnfPackageInfos = vnfPackageRepository.query(filter);
@@ -75,7 +72,7 @@ public class VnfManagement implements VnfPackageManagement {
 				.map(x -> mapper.map(x, VnfPkgInfo.class))
 				.collect(Collectors.toList());
 
-		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
+		// vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
 
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
@@ -97,7 +94,6 @@ public class VnfManagement implements VnfPackageManagement {
 	 * @param _accept
 	 * @param rangeHeader
 	 * @return
-	 * @throws ServiceException
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath, final String rangeHeader) {

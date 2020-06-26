@@ -9,8 +9,8 @@ import org.quartz.JobListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 /**
@@ -56,7 +56,7 @@ public class UriUploadListener implements JobListener {
 		final String vnfPkgId = (String) datamap.get("objectId");
 		LOG.info("Rollbacking vnf package {}", vnfPkgId);
 		final VnfPackage vnfPackage = vnfPackageRepository.get(UUID.fromString(vnfPkgId));
-		vnfPackage.setOnboardingState(PackageOnboardingStateType.CREATED);
+		vnfPackage.setOnboardingState(OnboardingStateType.CREATED);
 		vnfPackageRepository.save(vnfPackage);
 		LOG.info("Rollback successfull.");
 	}

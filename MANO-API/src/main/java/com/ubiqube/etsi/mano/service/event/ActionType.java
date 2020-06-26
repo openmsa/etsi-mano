@@ -19,6 +19,7 @@ public enum ActionType {
 	VNF_OPERATE("VNF_OPERATE"),
 	VNF_SCALE_TO_LEVEL("VNF_SCALE_TO_LEVEL"),
 	GRANT_REQUEST("GRANT_REQUEST"),
+	UNKNOW("UNKNOWN"),
 	;
 
 	private String value;

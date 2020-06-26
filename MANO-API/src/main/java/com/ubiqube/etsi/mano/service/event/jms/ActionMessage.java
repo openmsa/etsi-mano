@@ -10,14 +10,14 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 
 public class ActionMessage {
 	@NotNull
-	private ActionType actionType;
+	private ActionType actionType = ActionType.UNKNOW;
 	@NotNull
 	private UUID objectId;
 	@NotNull
 	private Map<String, Object> parameters = new HashMap<>();
 
 	public ActionMessage() {
-		// Nothing.
+		objectId = UUID.randomUUID();
 	}
 
 	public ActionMessage(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {

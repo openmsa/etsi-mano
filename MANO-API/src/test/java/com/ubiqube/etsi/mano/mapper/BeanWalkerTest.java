@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilterVnfProductsFromProviders;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionLinks;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 

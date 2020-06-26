@@ -1,7 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
@@ -12,13 +13,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class ZoneGroupInformation {
+public class ZoneGroupInformation implements Serializable {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> zoneId = new ArrayList<>();
+	private Set<String> zoneId = new LinkedHashSet<>();
 
 	public UUID getId() {
 		return id;
@@ -28,11 +33,11 @@ public class ZoneGroupInformation {
 		this.id = id;
 	}
 
-	public List<String> getZoneId() {
+	public Set<String> getZoneId() {
 		return zoneId;
 	}
 
-	public void setZoneId(final List<String> zoneId) {
+	public void setZoneId(final Set<String> zoneId) {
 		this.zoneId = zoneId;
 	}
 

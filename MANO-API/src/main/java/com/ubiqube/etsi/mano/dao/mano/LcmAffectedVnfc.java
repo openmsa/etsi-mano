@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -9,8 +10,6 @@ import javax.persistence.Id;
 import org.hibernate.search.annotations.FieldBridge;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.nslcm.ChangeTypeEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 public class LcmAffectedVnfc {
@@ -20,12 +19,12 @@ public class LcmAffectedVnfc {
 	private String vduId = null;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private ChangeTypeEnum changeType = null;
+	private ChangeType changeType = null;
 
 	private VimResource computeResource = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 // Those are also instances.
 	private List<String> affectedVnfcCpIds = null;
 
@@ -49,11 +48,11 @@ public class LcmAffectedVnfc {
 		this.vduId = vduId;
 	}
 
-	public ChangeTypeEnum getChangeType() {
+	public ChangeType getChangeType() {
 		return changeType;
 	}
 
-	public void setChangeType(final ChangeTypeEnum changeType) {
+	public void setChangeType(final ChangeType changeType) {
 		this.changeType = changeType;
 	}
 
@@ -65,11 +64,11 @@ public class LcmAffectedVnfc {
 		this.computeResource = computeResource;
 	}
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

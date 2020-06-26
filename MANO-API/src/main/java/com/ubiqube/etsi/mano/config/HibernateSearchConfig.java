@@ -29,7 +29,7 @@ public class HibernateSearchConfig implements ApplicationListener<ContextRefresh
 			fullTextEntityManager.createIndexer().startAndWait();
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
-			LOG.warn("Hibernate Search have been interrupted.");
+			LOG.warn("Hibernate Search have been interrupted.", e);
 		}
 	}
 }

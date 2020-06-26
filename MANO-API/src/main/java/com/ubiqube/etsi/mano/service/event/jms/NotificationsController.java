@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.service.event.VnfEvent;
 
 @Service
@@ -24,10 +23,10 @@ public class NotificationsController {
 		LOG.info("Notification Controller Received event: {}", ev);
 		switch (ev.getNotificationEvent()) {
 		case VNF_PKG_ONBOARDING:
-			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageOnboardingNotification);
+			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageOnboardingNotification");
 			break;
 		case VNF_PKG_ONCHANGE:
-			vnfEvent.onEvent(ev.getObjectId(), NotificationTypesEnum.VnfPackageChangeNotification);
+			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
 			break;
 		default:
 			LOG.error("Unable to handle event type {}", ev.getNotificationEvent());

@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import javax.persistence.Embeddable;
 
-// @see com.ubiqube.etsi.mano.model.ResourceHandle
+// @see ResourceHandle
 @Embeddable
 public class VimResource {
 

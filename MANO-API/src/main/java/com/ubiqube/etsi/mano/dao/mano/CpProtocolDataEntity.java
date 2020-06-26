@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.ubiqube.etsi.mano.model.CpProtocolData.LayerProtocolEnum;
-
 /**
  * Same as CpProtocolInfo.
  *
@@ -29,7 +27,7 @@ public class CpProtocolDataEntity implements Serializable {
 	private UUID id;
 
 	@Enumerated(EnumType.STRING)
-	private LayerProtocolEnum layerProtocol = null;
+	private LayerProtocolType layerProtocol = null;
 
 	@OneToOne
 	private IpOverEthernetAddressDataEntity ipOverEthernet = null;
@@ -45,11 +43,11 @@ public class CpProtocolDataEntity implements Serializable {
 		this.id = id;
 	}
 
-	public LayerProtocolEnum getLayerProtocol() {
+	public LayerProtocolType getLayerProtocol() {
 		return layerProtocol;
 	}
 
-	public void setLayerProtocol(final LayerProtocolEnum layerProtocol) {
+	public void setLayerProtocol(final LayerProtocolType layerProtocol) {
 		this.layerProtocol = layerProtocol;
 	}
 

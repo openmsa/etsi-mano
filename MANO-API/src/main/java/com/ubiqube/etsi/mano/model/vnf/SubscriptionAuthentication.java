@@ -12,8 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsBasic;
-import com.ubiqube.etsi.mano.model.vnf.sol005.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionAuthenticationParamsBasic;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 
 import io.swagger.annotations.ApiModelProperty;
 

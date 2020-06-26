@@ -10,10 +10,10 @@ import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.CreateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.TerminateVnfRequest.TerminationTypeEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 

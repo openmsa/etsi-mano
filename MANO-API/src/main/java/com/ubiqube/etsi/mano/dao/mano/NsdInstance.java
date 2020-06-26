@@ -17,18 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
-
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffinityOrAntiAffinityRule;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsScaleInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsVirtualLinkInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.PnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.SapInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.VnffgInfo;
 
 @Entity
 @Indexed
@@ -58,27 +49,21 @@ public class NsdInstance implements BaseEntity, Serializable {
 	@JoinColumn
 	private List<VnfInstance> vnfInstance = null;
 
-	@Transient
-	private transient List<PnfInfo> pnfInfo = null;
-	@Transient
-	private transient List<NsVirtualLinkInfo> virtualLinkInfo = null;
-	@Transient
-	private transient List<VnffgInfo> vnffgInfo = null;
-	@Transient
-	private transient List<SapInfo> sapInfo = null;
+	// XXX Add pnfInfo
+	// XXX Add virtualLinkInfo
+	// XXX Add vnffgInfo
+	// XXX Add sapInfo
 
 	@OneToMany
 	private List<NsdInstance> nestedNsInstance = null;
 
 	@Enumerated(EnumType.STRING)
 	@Field
-	private InstantiationStateEnum nsState = null;
+	private InstantiationState nsState = null;
 
-	@Transient
-	private transient List<NsScaleInfo> nsScaleStatus = null;
+	// XXX Add nsScaleStatus
 
-	@Transient
-	private transient List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule = null;
+	// XXX Add additionalAffinityOrAntiAffinityRule
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
@@ -140,38 +125,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.vnfInstance = vnfInstance;
 	}
 
-	public List<PnfInfo> getPnfInfo() {
-		return pnfInfo;
-	}
-
-	public void setPnfInfo(final List<PnfInfo> pnfInfo) {
-		this.pnfInfo = pnfInfo;
-	}
-
-	public List<NsVirtualLinkInfo> getVirtualLinkInfo() {
-		return virtualLinkInfo;
-	}
-
-	public void setVirtualLinkInfo(final List<NsVirtualLinkInfo> virtualLinkInfo) {
-		this.virtualLinkInfo = virtualLinkInfo;
-	}
-
-	public List<VnffgInfo> getVnffgInfo() {
-		return vnffgInfo;
-	}
-
-	public void setVnffgInfo(final List<VnffgInfo> vnffgInfo) {
-		this.vnffgInfo = vnffgInfo;
-	}
-
-	public List<SapInfo> getSapInfo() {
-		return sapInfo;
-	}
-
-	public void setSapInfo(final List<SapInfo> sapInfo) {
-		this.sapInfo = sapInfo;
-	}
-
 	public List<NsdInstance> getNestedNsInstance() {
 		return nestedNsInstance;
 	}
@@ -180,28 +133,12 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.nestedNsInstance = nestedNsInstanceId;
 	}
 
-	public InstantiationStateEnum getNsState() {
+	public InstantiationState getNsState() {
 		return nsState;
 	}
 
-	public void setNsState(final InstantiationStateEnum nsState) {
+	public void setNsState(final InstantiationState nsState) {
 		this.nsState = nsState;
-	}
-
-	public List<NsScaleInfo> getNsScaleStatus() {
-		return nsScaleStatus;
-	}
-
-	public void setNsScaleStatus(final List<NsScaleInfo> nsScaleStatus) {
-		this.nsScaleStatus = nsScaleStatus;
-	}
-
-	public List<AffinityOrAntiAffinityRule> getAdditionalAffinityOrAntiAffinityRule() {
-		return additionalAffinityOrAntiAffinityRule;
-	}
-
-	public void setAdditionalAffinityOrAntiAffinityRule(final List<AffinityOrAntiAffinityRule> additionalAffinityOrAntiAffinityRule) {
-		this.additionalAffinityOrAntiAffinityRule = additionalAffinityOrAntiAffinityRule;
 	}
 
 	public String getNsInstantiationLevelId() {

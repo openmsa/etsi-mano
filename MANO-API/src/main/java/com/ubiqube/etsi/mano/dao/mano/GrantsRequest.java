@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -24,6 +23,9 @@ import javax.validation.Valid;
 @Entity
 @EntityListeners(AuditListener.class)
 public class GrantsRequest implements BaseEntity, Auditable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -35,7 +37,7 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	private String flavourId;
 
-	private String operation;
+	private NsdChangeType operation;
 
 	private boolean isAutomaticInvocation;
 
@@ -51,10 +53,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
 	private Set<ZoneInfoEntity> zones = null;
-
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ZoneGroupInformation> zoneGroups = null;
 
 	private String computeReservationId = null;
 
@@ -134,14 +132,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	public void setZones(final Set<ZoneInfoEntity> zones) {
 		this.zones = zones;
-	}
-
-	public List<ZoneGroupInformation> getZoneGroups() {
-		return zoneGroups;
-	}
-
-	public void setZoneGroups(final List<ZoneGroupInformation> zoneGroups) {
-		this.zoneGroups = zoneGroups;
 	}
 
 	public String getComputeReservationId() {
@@ -248,11 +238,11 @@ public class GrantsRequest implements BaseEntity, Auditable {
 		this.flavourId = flavourId;
 	}
 
-	public String getOperation() {
+	public NsdChangeType getOperation() {
 		return operation;
 	}
 
-	public void setOperation(final String operation) {
+	public void setOperation(final NsdChangeType operation) {
 		this.operation = operation;
 	}
 

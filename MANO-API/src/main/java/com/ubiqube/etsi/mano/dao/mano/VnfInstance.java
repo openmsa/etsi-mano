@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -24,12 +23,10 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfInstance implements BaseEntity, Auditable, Serializable {
+public class VnfInstance implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +39,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 
 	@Enumerated(EnumType.STRING)
 	@Field
-	private InstantiationStateEnum instantiationState = null;
+	private InstantiationState instantiationState = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
@@ -104,7 +101,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		return instantiatedVnfInfo;
 	}
 
-	public InstantiationStateEnum getInstantiationState() {
+	public InstantiationState getInstantiationState() {
 		return instantiationState;
 	}
 
@@ -148,7 +145,7 @@ public class VnfInstance implements BaseEntity, Auditable, Serializable {
 		this.instantiatedVnfInfo = instantiatedVnfInfo;
 	}
 
-	public void setInstantiationState(final InstantiationStateEnum instantiationState) {
+	public void setInstantiationState(final InstantiationState instantiationState) {
 		this.instantiationState = instantiationState;
 	}
 

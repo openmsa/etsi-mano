@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,10 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Embeddable
-public class GrantVimAssetsEntity {
+public class GrantVimAssetsEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private Set<VimComputeResourceFlavourEntity> computeResourceFlavours = new HashSet<>();

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
@@ -25,7 +25,7 @@ public class NsdPackageDb extends AbstractDirectJpa<NsdPackage> implements NsdRe
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsdPackage nsdPackage, final PackageUsageStateType state) {
+	public void changeNsdUpdateState(final NsdPackage nsdPackage, final PackageUsageState state) {
 		nsdPackage.setNsdUsageState(state);
 		save(nsdPackage);
 	}

@@ -8,13 +8,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ubiqube.etsi.mano.service.Configuration;
 
-@Service
 public class UbiRest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UbiRest.class);

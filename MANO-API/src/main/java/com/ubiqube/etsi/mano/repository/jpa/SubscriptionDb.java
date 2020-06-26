@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
@@ -51,7 +50,7 @@ public class SubscriptionDb extends AbstractJpa<SubscriptionObject, Subscription
 
 	@Override
 	public List<SubscriptionObject> selectNotifications(final UUID vnfPkgId, final String event) {
-		final List<Subscription> lst = repository.findEventAndVnfPkg(NotificationTypesEnum.fromValue(event), vnfPkgId.toString());
+		final List<Subscription> lst = repository.findEventAndVnfPkg(event, vnfPkgId.toString());
 		return lst.stream()
 				.map(x -> mapper.map(x, SubscriptionObject.class))
 				.collect(Collectors.toList());

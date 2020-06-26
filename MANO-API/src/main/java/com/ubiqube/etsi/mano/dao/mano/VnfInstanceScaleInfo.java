@@ -21,13 +21,13 @@ public class VnfInstanceScaleInfo implements Serializable {
 
 	private String aspectId = null;
 
-	private Integer scaleLevel = null;
+	private int scaleLevel;
 
 	public VnfInstanceScaleInfo() {
 		// Nothing.
 	}
 
-	public VnfInstanceScaleInfo(@NotNull final String aspectId2, @NotNull final Integer scaleLevel2) {
+	public VnfInstanceScaleInfo(@NotNull final String aspectId2, @NotNull final int scaleLevel2) {
 		aspectId = aspectId2;
 		scaleLevel = scaleLevel2;
 	}
@@ -49,13 +49,17 @@ public class VnfInstanceScaleInfo implements Serializable {
 		this.aspectId = aspectId;
 	}
 
-	@Nonnull
-	public Integer getScaleLevel() {
+	public int getScaleLevel() {
 		return scaleLevel;
 	}
 
-	public void setScaleLevel(final Integer scaleLevel) {
+	public void setScaleLevel(final int scaleLevel) {
 		this.scaleLevel = scaleLevel;
+	}
+
+	@Override
+	public String toString() {
+		return "VnfInstanceScaleInfo [id=" + id + ", aspectId=" + aspectId + ", scaleLevel=" + scaleLevel + "]";
 	}
 
 }

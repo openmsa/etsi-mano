@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 

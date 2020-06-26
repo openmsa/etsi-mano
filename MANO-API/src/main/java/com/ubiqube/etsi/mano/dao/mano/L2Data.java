@@ -6,9 +6,12 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class L2Data implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 
-	private Boolean vlanTransparent = false;
+	private Boolean vlanTransparent = Boolean.FALSE;
 
 	private String networkType;
 

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
-import com.ubiqube.etsi.mano.model.nsd.sol005.PnfdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -10,10 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition.TypeEnum;
-
 @Entity
-public class GrantInformation implements BaseEntity {
+public class GrantInformation implements BaseEntity, Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -36,7 +38,7 @@ public class GrantInformation implements BaseEntity {
 	private VduInstantiationLevel instantiationLevel;
 
 	@Enumerated(EnumType.STRING)
-	private TypeEnum type;
+	private ResourceTypeEnum type;
 
 	private UUID vduId;
 
@@ -97,11 +99,11 @@ public class GrantInformation implements BaseEntity {
 		this.resourceGroupId = resourceGroupId;
 	}
 
-	public TypeEnum getType() {
+	public ResourceTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(final TypeEnum type) {
+	public void setType(final ResourceTypeEnum type) {
 		this.type = type;
 	}
 

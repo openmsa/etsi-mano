@@ -2,11 +2,8 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.jgrapht.ListenableGraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.DefaultDexecutor;
@@ -24,11 +21,10 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 @Service
 public class PlanExecutor {
-
-	private static final Logger LOG = LoggerFactory.getLogger(PlanExecutor.class);
 
 	private final VnfmInterface vnfm;
 
@@ -48,13 +44,15 @@ public class PlanExecutor {
 	}
 
 	private static <U> ExecutionResults<U, String> createExecutor(final ListenableGraph<U, ConnectivityEdge<U>> g, final TaskProvider<U, String> uowTaskProvider) {
-		final ExecutorService executorService = Executors.newFixedThreadPool(20);
+		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "executor");
 		final DexecutorConfig<U, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
 		final DefaultDexecutor<U, String> executor = new DefaultDexecutor<>(config);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
-		return executor.execute(ExecutionConfig.TERMINATING);
+		final ExecutionResults<U, String> res = executor.execute(ExecutionConfig.TERMINATING);
+		executorService.shutdown();
+		return res;
 	}
 
 	public ExecutionResults<NsUnitOfWork, String> execCreateNs(final ListenableGraph<NsUnitOfWork, ConnectivityEdge<NsUnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {

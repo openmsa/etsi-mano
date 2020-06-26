@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
-import com.ubiqube.etsi.mano.model.IpOverEthernetAddressDataIpAddresses.TypeEnum;
-
 @Entity
 public class IpOverEthernetAddressDataIpAddressesEntity implements Serializable {
 	/** Serial. */
@@ -26,7 +24,7 @@ public class IpOverEthernetAddressDataIpAddressesEntity implements Serializable 
 	private UUID id;
 
 	@Enumerated(EnumType.STRING)
-	private TypeEnum type = null;
+	private IpType type = null;
 
 	@Valid
 	@ElementCollection
@@ -49,11 +47,11 @@ public class IpOverEthernetAddressDataIpAddressesEntity implements Serializable 
 		this.id = id;
 	}
 
-	public TypeEnum getType() {
+	public IpType getType() {
 		return type;
 	}
 
-	public void setType(final TypeEnum type) {
+	public void setType(final IpType type) {
 		this.type = type;
 	}
 

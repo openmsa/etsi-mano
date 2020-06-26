@@ -16,8 +16,6 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -40,12 +38,12 @@ public class PnfDescriptor implements BaseEntity, Serializable {
 	private String pnfdInvariantId;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private PackageOnboardingStateType pnfdOnboardingState;
+	private OnboardingStateType pnfdOnboardingState;
 	@Embedded
 	private FailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private PackageUsageStateType pnfdUsageState;
+	private PackageUsageState pnfdUsageState;
 	private String userDefinedData;
 
 	@Override
@@ -97,11 +95,11 @@ public class PnfDescriptor implements BaseEntity, Serializable {
 		this.pnfdInvariantId = pnfdInvariantId;
 	}
 
-	public PackageOnboardingStateType getPnfdOnboardingState() {
+	public OnboardingStateType getPnfdOnboardingState() {
 		return pnfdOnboardingState;
 	}
 
-	public void setPnfdOnboardingState(final PackageOnboardingStateType pnfdOnboardingState) {
+	public void setPnfdOnboardingState(final OnboardingStateType pnfdOnboardingState) {
 		this.pnfdOnboardingState = pnfdOnboardingState;
 	}
 
@@ -113,11 +111,11 @@ public class PnfDescriptor implements BaseEntity, Serializable {
 		this.onboardingFailureDetails = onboardingFailureDetails;
 	}
 
-	public PackageUsageStateType getPnfdUsageState() {
+	public PackageUsageState getPnfdUsageState() {
 		return pnfdUsageState;
 	}
 
-	public void setPnfdUsageState(final PackageUsageStateType pnfdUsageState) {
+	public void setPnfdUsageState(final PackageUsageState pnfdUsageState) {
 		this.pnfdUsageState = pnfdUsageState;
 	}
 

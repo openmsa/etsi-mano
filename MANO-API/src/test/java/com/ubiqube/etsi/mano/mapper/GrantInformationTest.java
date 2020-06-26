@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

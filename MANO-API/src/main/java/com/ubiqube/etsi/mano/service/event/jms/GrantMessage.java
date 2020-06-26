@@ -13,7 +13,7 @@ public class GrantMessage {
 	private Map<String, Object> parameters = new HashMap<>();
 
 	public GrantMessage() {
-		// Nothing.
+		objectId = UUID.randomUUID();
 	}
 
 	public GrantMessage(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {

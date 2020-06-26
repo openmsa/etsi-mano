@@ -1,11 +1,13 @@
-vendor
-.buildpath
+.classpath
+.gradle/
 .project
 .settings
-.classpath
+.sts4-cache/
+.cache/
+.buildpath
 composer.lock
 build/
-.gradle/
 target/
 com.ubiqube.etsi.mano.dao.mano*/
 *.csar
+vendor/

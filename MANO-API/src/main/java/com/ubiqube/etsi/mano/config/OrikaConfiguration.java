@@ -28,25 +28,25 @@ import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ConstraintResourceRef;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.ResourceDefinition;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVirtualLink;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.AffectedVnfc;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsInstance;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageSoftwareImageInfo.DiskFormatEnum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
@@ -223,7 +223,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(AffectedVnf.class, NsInstantiatedVnf.class)
 				.field("vnfdId", "")
-				.field("vnfInstanceId", "vnfInstance.id")
+				.field("vnfInstanceId", "vnfInstance")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(AffectedVnfc.class, VnfInstantiatedCompute.class)
@@ -272,6 +272,11 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfVirtualLinkDescId", "toscaName")
 				.byDefault()
 				.register();
+		/*
+		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.
+		 * class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}")
+		 * .byDefault() .register();
+		 */
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());
 		converterFactory.registerConverter(new OffsetDateTimeToDateConverter());

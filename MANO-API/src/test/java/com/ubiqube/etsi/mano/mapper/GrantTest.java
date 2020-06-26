@@ -19,9 +19,10 @@ import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.Grant;
-import com.ubiqube.etsi.mano.model.lcmgrant.sol003.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -74,6 +75,8 @@ public class GrantTest {
 		final GrantInformationExt res = resp.getAddResources().iterator().next();
 		assertNull(res.getId());
 		assertNotNull(res.getVduId());
+		assertEquals(5, resp.getVimConnections().size());
+		assertNotNull(resp.getVimConnections().iterator().next().getVimId());
 	}
 
 	@Test
@@ -100,5 +103,13 @@ public class GrantTest {
 		assertEquals("provId", respExtVl.getResourceProviderId());
 		assertEquals("vimId", respExtVl.getVimId());
 		assertEquals("name", respExtVl.getVmfVirtualLinkDescId());
+	}
+
+	@Test
+	void testGratRequest() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final GrantRequest reqJson = podam.manufacturePojo(GrantRequest.class);
+		final GrantsRequest req = mapper.map(reqJson, GrantsRequest.class);
+		System.out.println("" + req);
 	}
 }

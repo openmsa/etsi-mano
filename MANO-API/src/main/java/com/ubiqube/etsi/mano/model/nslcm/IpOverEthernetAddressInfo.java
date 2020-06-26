@@ -12,8 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.nslcm.sol003.IpOverEthernetAddressInfoIpAddresses;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.IpOverEthernetAddressInfoAddressRange1;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.IpOverEthernetAddressInfoAddressRange1;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.IpOverEthernetAddressInfoIpAddresses;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

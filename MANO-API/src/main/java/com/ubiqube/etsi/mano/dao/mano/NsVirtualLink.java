@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -14,12 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import org.hibernate.search.annotations.Indexed;
-
 @Entity
-@Indexed
 @EntityListeners(AuditListener.class)
-public class NsVirtualLink implements BaseEntity, Auditable, Serializable {
+public class NsVirtualLink implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

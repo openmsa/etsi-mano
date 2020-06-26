@@ -11,9 +11,9 @@ import javax.validation.constraints.Size;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.VnfMonitoringParameter;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.VnfScaleInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfMonitoringParameter;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfScaleInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

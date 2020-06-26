@@ -11,13 +11,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPkgInfo;
-
 public interface VnfPackageManagement {
 
-	VnfPkgInfo vnfPackagesVnfPkgIdGet(@Nonnull UUID vnfPkgId, @Nonnull Linkable links);
+	<U> U vnfPackagesVnfPkgIdGet(@Nonnull UUID vnfPkgId, Class<U> u);
 
-	String vnfPackagesGet(@Nonnull Map<String, String> queryParameters, @Nonnull Linkable links);
+	String vnfPackagesGet(@Nonnull Map<String, String> queryParameters);
 
 	/**
 	 *

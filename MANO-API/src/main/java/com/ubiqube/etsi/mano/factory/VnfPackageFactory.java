@@ -8,18 +8,19 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.model.vnf.sol005.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.model.vnf.sol005.PkgmSubscription;
-import com.ubiqube.etsi.mano.model.vnf.sol005.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.model.vnf.sol005.notification.PackageChangeType;
-import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.sol005.notification.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageArtifactInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.PackageChangeType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageOnboardingNotification;
 
 public class VnfPackageFactory {
 	private VnfPackageFactory() {
@@ -29,10 +30,10 @@ public class VnfPackageFactory {
 	@Nonnull
 	public static VnfPackage createVnfPkgInfo(final Map<String, String> userData) {
 		final VnfPackage vnfPkgInfo = new VnfPackage();
-		vnfPkgInfo.setOnboardingState(PackageOnboardingStateType.CREATED);
+		vnfPkgInfo.setOnboardingState(OnboardingStateType.CREATED);
 		vnfPkgInfo.setUserDefinedData(userData);
-		vnfPkgInfo.setOperationalState(PackageOperationalStateType.DISABLED);
-		vnfPkgInfo.setUsageState(PackageUsageStateType.NOT_IN_USE);
+		vnfPkgInfo.setOperationalState(PackageOperationalState.DISABLED);
+		vnfPkgInfo.setUsageState(PackageUsageState.NOT_IN_USE);
 
 		return vnfPkgInfo;
 	}

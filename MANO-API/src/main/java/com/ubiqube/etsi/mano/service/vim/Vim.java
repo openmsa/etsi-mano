@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -13,23 +12,11 @@ import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 public interface Vim {
-
-	String onVnfInstanceTerminate(Map<String, String> userData);
-
-	String onVnfInstantiate(GrantInformation grantInformation, VnfPackage vnfPackage);
-
-	String onNsInstantiate(UUID nsdId, Map<String, Object> userData);
-
-	String onNsInstanceTerminate(String processId, Map<String, Object> userData);
-
-	@Nonnull
-	VimStatus waitForCompletion(String processId, int seconds);
 
 	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformation grantInformation);
 
@@ -79,4 +66,6 @@ public interface Vim {
 	void startServer(VimConnectionInformation vimConnectionInformation, String resourceId);
 
 	void stopServer(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation);
 }

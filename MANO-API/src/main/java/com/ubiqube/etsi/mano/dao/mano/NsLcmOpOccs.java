@@ -19,10 +19,6 @@ import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
-import com.ubiqube.etsi.mano.model.nslcm.OperationParamsEnum;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
@@ -38,7 +34,7 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private LcmOperationStateType operationState = null;
+	private InstantiationStatusType operationState = null;
 
 	@Field
 	private Date stateEnteredTime = null;
@@ -49,7 +45,7 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private NsLcmOpType lcmOperationType = null;
+	private NsdChangeType lcmOperationType = null;
 
 	@Field
 	private Date startTime = null;
@@ -60,7 +56,7 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private OperationParamsEnum operationParams = null;
+	private NsdChangeType operationParams = null;
 
 	@Field
 	private Boolean isCancelPending = null;
@@ -68,7 +64,7 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private CancelModeType cancelMode = null;
+	private CancelModeTypeEnum cancelMode = null;
 
 	private FailureDetails error = null;
 
@@ -86,11 +82,11 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 		this.id = id;
 	}
 
-	public LcmOperationStateType getOperationState() {
+	public InstantiationStatusType getOperationState() {
 		return operationState;
 	}
 
-	public void setOperationState(final LcmOperationStateType operationState) {
+	public void setOperationState(final InstantiationStatusType operationState) {
 		this.operationState = operationState;
 	}
 
@@ -110,11 +106,11 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 		this.nsInstance = nsInstanceId;
 	}
 
-	public NsLcmOpType getLcmOperationType() {
+	public NsdChangeType getLcmOperationType() {
 		return lcmOperationType;
 	}
 
-	public void setLcmOperationType(final NsLcmOpType lcmOperationType) {
+	public void setLcmOperationType(final NsdChangeType lcmOperationType) {
 		this.lcmOperationType = lcmOperationType;
 	}
 
@@ -134,11 +130,11 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
-	public OperationParamsEnum getOperationParams() {
+	public NsdChangeType getOperationParams() {
 		return operationParams;
 	}
 
-	public void setOperationParams(final OperationParamsEnum operationParams) {
+	public void setOperationParams(final NsdChangeType operationParams) {
 		this.operationParams = operationParams;
 	}
 
@@ -150,11 +146,11 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 		this.isCancelPending = isCancelPending;
 	}
 
-	public CancelModeType getCancelMode() {
+	public CancelModeTypeEnum getCancelMode() {
 		return cancelMode;
 	}
 
-	public void setCancelMode(final CancelModeType cancelMode) {
+	public void setCancelMode(final CancelModeTypeEnum cancelMode) {
 		this.cancelMode = cancelMode;
 	}
 

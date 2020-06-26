@@ -16,7 +16,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -58,7 +58,7 @@ public class OrikaTest {
 		final NsdPackage nsdDao = mapperFactory.getMapperFacade().map(nsd, NsdPackage.class);
 		final Set<NsdPackageVnfPackage> vnfPkgIds = nsdDao.getVnfPkgIds();
 		assertEquals(2, vnfPkgIds.size());
-		final VnfPackage[] vnf = vnfPkgIds.toArray(new VnfPackage[0]);
+		final NsdPackageVnfPackage[] vnf = vnfPkgIds.toArray(new NsdPackageVnfPackage[0]);
 		assertEquals("d5bbe3c1-23a2-4e72-8e00-66cc6ba2061f", vnf[0].getId().toString());
 		assertEquals("17372129-0590-4532-ace3-7c35eaf0c7c4", vnf[1].getId().toString());
 	}

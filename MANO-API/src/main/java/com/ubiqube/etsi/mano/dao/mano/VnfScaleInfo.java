@@ -4,14 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.model.nslcm.sol003.ScaleVnfRequest.TypeEnum;
-
 @Embeddable
 public class VnfScaleInfo implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private TypeEnum scaleType = null;
+	private ScaleTypeEnum scaleType = null;
 
 	private Integer numberOfSteps = null;
 
@@ -21,18 +19,18 @@ public class VnfScaleInfo implements Serializable {
 		// Nothing.
 	}
 
-	public VnfScaleInfo(final TypeEnum scaleType, final String aspectId, final Integer numberOfSteps) {
+	public VnfScaleInfo(final ScaleTypeEnum scaleType, final String aspectId, final Integer numberOfSteps) {
 		super();
 		this.scaleType = scaleType;
 		this.numberOfSteps = numberOfSteps;
 		this.aspectId = aspectId;
 	}
 
-	public TypeEnum getScaleType() {
+	public ScaleTypeEnum getScaleType() {
 		return scaleType;
 	}
 
-	public void setScaleType(final TypeEnum scaleType) {
+	public void setScaleType(final ScaleTypeEnum scaleType) {
 		this.scaleType = scaleType;
 	}
 

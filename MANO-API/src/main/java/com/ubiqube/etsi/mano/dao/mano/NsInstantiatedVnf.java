@@ -9,9 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
-
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnfChangedInfo;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -23,8 +20,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ManyToOne(cascade = CascadeType.DETACH)
-	private VnfInstance vnfInstance = null;
+	private UUID vnfInstance = null;
 
 	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackageVnfPackage nsdPackageVnfPackage;
@@ -33,9 +29,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 
 	private String instanceDescription;
 
-	/** XXX TO do. */
-	@Transient
-	private transient AffectedVnfChangedInfo changedInfo = null;
+	// XXX TO do Add AffectedVnfChangedInfo changedInfo
 
 	@Override
 	public UUID getId() {
@@ -47,7 +41,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 		this.id = id;
 	}
 
-	public VnfInstance getVnfInstance() {
+	public UUID getVnfInstance() {
 		return vnfInstance;
 	}
 
@@ -59,15 +53,7 @@ public class NsInstantiatedVnf extends NsInstantiatedBase {
 		this.vnfProfileId = vnfProfileId;
 	}
 
-	public AffectedVnfChangedInfo getChangedInfo() {
-		return changedInfo;
-	}
-
-	public void setChangedInfo(final AffectedVnfChangedInfo changedInfo) {
-		this.changedInfo = changedInfo;
-	}
-
-	public void setVnfInstance(final VnfInstance vnfInstance) {
+	public void setVnfInstance(final UUID vnfInstance) {
 		this.vnfInstance = vnfInstance;
 	}
 

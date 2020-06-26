@@ -10,11 +10,11 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.jpa.NsLcmOpOccsJpa;
-import com.ubiqube.etsi.mano.model.nslcm.NsLcmOpType;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
@@ -28,7 +28,7 @@ public class NsLcmOpOccsService {
 	}
 
 	@Nonnull
-	public NsLcmOpOccs createLcmOpOccs(final NsdInstance nsInstance, @Nonnull final NsLcmOpType state) {
+	public NsLcmOpOccs createLcmOpOccs(final NsdInstance nsInstance, @Nonnull final NsdChangeType state) {
 		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstance, state);
 		return nsLcmOpOccsJpa.save(lcmOpOccs);
 	}

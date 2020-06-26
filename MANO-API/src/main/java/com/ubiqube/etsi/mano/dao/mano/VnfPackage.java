@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -27,16 +27,12 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfPackage implements BaseEntity, Auditable, Serializable {
+public class VnfPackage implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -65,7 +61,10 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 
 	private String descriptorId;
 
-	private Checksum checksum;
+	private String descriptorVersion;
+
+	@Embedded
+	private PkgChecksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
@@ -74,17 +73,17 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 	@Enumerated(EnumType.STRING)
 	@Field
 	@FieldBridge(impl = EnumFieldBridge.class)
-	private PackageOnboardingStateType onboardingState;
+	private OnboardingStateType onboardingState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private PackageOperationalStateType operationalState;
+	private PackageOperationalState operationalState;
 
 	@Enumerated(EnumType.STRING)
 	@FieldBridge(impl = EnumFieldBridge.class)
 	@Field
-	private PackageUsageStateType usageState;
+	private PackageUsageState usageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
@@ -92,22 +91,22 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<VnfCompute> vnfCompute;
+	private Set<VnfCompute> vnfCompute = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<VnfVl> vnfVl;
+	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<VnfStorage> vnfStorage;
+	private Set<VnfStorage> vnfStorage = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
-	private Set<VnfLinkPort> vnfLinkPort;
+	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<VnfExtCp> vnfExtCp;
+	private Set<VnfExtCp> vnfExtCp = new LinkedHashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<NsdInstance> nsInstance;
@@ -170,11 +169,11 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 		this.vnfdVersion = vnfdVersion;
 	}
 
-	public Checksum getChecksum() {
+	public PkgChecksum getChecksum() {
 		return checksum;
 	}
 
-	public void setChecksum(final Checksum checksum) {
+	public void setChecksum(final PkgChecksum checksum) {
 		this.checksum = checksum;
 	}
 
@@ -186,27 +185,27 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
-	public PackageOnboardingStateType getOnboardingState() {
+	public OnboardingStateType getOnboardingState() {
 		return onboardingState;
 	}
 
-	public void setOnboardingState(final PackageOnboardingStateType onboardingState) {
+	public void setOnboardingState(final OnboardingStateType onboardingState) {
 		this.onboardingState = onboardingState;
 	}
 
-	public PackageOperationalStateType getOperationalState() {
+	public PackageOperationalState getOperationalState() {
 		return operationalState;
 	}
 
-	public void setOperationalState(final PackageOperationalStateType operationalState) {
+	public void setOperationalState(final PackageOperationalState operationalState) {
 		this.operationalState = operationalState;
 	}
 
-	public PackageUsageStateType getUsageState() {
+	public PackageUsageState getUsageState() {
 		return usageState;
 	}
 
-	public void setUsageState(final PackageUsageStateType usageState) {
+	public void setUsageState(final PackageUsageState usageState) {
 		this.usageState = usageState;
 	}
 
@@ -232,6 +231,14 @@ public class VnfPackage implements BaseEntity, Auditable, Serializable {
 
 	public void setDescriptorId(final String descriptorId) {
 		this.descriptorId = descriptorId;
+	}
+
+	public String getDescriptorVersion() {
+		return descriptorVersion;
+	}
+
+	public void setDescriptorVersion(final String descriptorVersion) {
+		this.descriptorVersion = descriptorVersion;
 	}
 
 	public Set<VnfCompute> getVnfCompute() {

@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.bean.TestFactory;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf.ChangeResultEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.AffectedVnf.ChangeTypeEnum;
-import com.ubiqube.etsi.mano.model.nslcm.sol005.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeResultEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -48,6 +48,6 @@ public class NsLcmOpOccsTest {
 		assertEquals("detail", nloo.getError().getDetail());
 		assertNotNull(nloo.getStartTime());
 		assertNotNull(nloo.getStateEnteredTime());
-		assertEquals("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf", nloo.getResourceChanges().getAffectedVnfs().iterator().next().getVnfInstance().getId().toString());
+		assertEquals("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf", nloo.getResourceChanges().getAffectedVnfs().iterator().next().getVnfInstance().toString());
 	}
 }

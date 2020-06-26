@@ -18,7 +18,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
-import com.ubiqube.etsi.mano.service.pkg.ToscaPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
 
 @ExtendWith(MockitoExtension.class)
 public class PlannerTest {

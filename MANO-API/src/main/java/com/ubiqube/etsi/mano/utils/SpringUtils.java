@@ -1,5 +1,9 @@
 package com.ubiqube.etsi.mano.utils;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Nonnull;
 import javax.servlet.ServletRequest;
 
@@ -25,5 +29,10 @@ public final class SpringUtils {
 		final String bestMatchPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
 
 		return new AntPathMatcher().extractPathWithinPattern(bestMatchPattern, path);
+	}
+
+	public static ThreadPoolExecutor getFixedThreadPool(final int corePoolSize, final String groupname) {
+		return new ThreadPoolExecutor(corePoolSize, corePoolSize, 0L,
+				TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1000), new ManoThreadFactory(groupname));
 	}
 }

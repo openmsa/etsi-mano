@@ -231,7 +231,7 @@ topology_template:
               l2_protocol_data: # tosca.datatypes.nfv.L2ProtocolData
                 name: vl01L2
                 vlan_transparent: true
-                network_type: VXLAN
+                #network_type: VXLAN
                 mtu: 1500
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
                 dhcp_enabled: true

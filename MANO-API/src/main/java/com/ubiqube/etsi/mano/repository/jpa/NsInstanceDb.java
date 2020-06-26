@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
@@ -22,22 +21,8 @@ public class NsInstanceDb extends AbstractDirectJpa<NsdInstance> implements NsIn
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsdInstance nsInstance, final InstantiationStateEnum notInstantiated) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	protected Class<NsdInstance> getFrontClass() {
 		return NsdInstance.class;
-	}
-
-	protected void mapChild(final NsdInstance vnf) {
-		if (null != vnf.getAdditionalAffinityOrAntiAffinityRule()) {
-			// TODO
-		}
-		if (null != vnf.getVnfInstance()) {
-			vnf.getVnfInstance().forEach(x -> x.setNsInstance(vnf));
-		}
 	}
 
 }

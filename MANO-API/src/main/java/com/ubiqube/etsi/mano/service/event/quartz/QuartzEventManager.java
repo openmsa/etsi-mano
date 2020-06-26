@@ -19,7 +19,6 @@ import com.ubiqube.etsi.mano.service.event.ActionJob;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
-import com.ubiqube.etsi.mano.service.event.NotificationJob;
 
 /**
  * Simple implementation using Quartz.

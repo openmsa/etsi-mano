@@ -1,7 +1,7 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -23,6 +22,7 @@ import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
+import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.BlockDeviceMappingCreate;
 import org.openstack4j.model.compute.Flavor;
@@ -47,7 +47,6 @@ import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
@@ -58,13 +57,10 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -72,7 +68,6 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Service
 public class OpenStackVim implements Vim {
 	private static final long GIGA = 1024 * 1024 * 1024L;
 
@@ -91,9 +86,14 @@ public class OpenStackVim implements Vim {
 		mapper = _mapper;
 	}
 
+	/**
+	 * @deprecated Will be removed since java 9.
+	 */
 	@Override
+	@Deprecated
 	protected void finalize() throws Throwable {
 		sessions.remove();
+		LOG.error("Finalize called.");
 		super.finalize();
 	}
 
@@ -134,41 +134,6 @@ public class OpenStackVim implements Vim {
 			final Optional<VimConnectionInformation> vim = vciJpa.findById(vimConnectionInformation.getId());
 			return authenticate(vim.orElseThrow(() -> new GenericException("Unable to find Vim " + x)));
 		});
-	}
-
-	@Override
-	public String onVnfInstanceTerminate(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String onVnfInstantiate(final GrantInformation grantInformation, final VnfPackage vnfPackage) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String onNsInstantiate(final UUID nsdId, final Map<String, Object> userData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String onNsInstanceTerminate(final String processId, final Map<String, Object> userData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public VimStatus waitForCompletion(final String processId, final int seconds) {
-		final VimStatus status = new VimStatus();
-		status.setLcmOperationStateType(LcmOperationStateType.FAILED);
-		final FailureDetails problemDetails = new FailureDetails();
-		problemDetails.setDetail("Not Supported.");
-		problemDetails.setStatus(500L);
-		status.setProblemDetails(problemDetails);
-		return status;
 	}
 
 	@Override
@@ -341,17 +306,22 @@ public class OpenStackVim implements Vim {
 	@Override
 	public SoftwareImage uploadSoftwareImage(final VimConnectionInformation vimConnectionInformation, final SoftwareImage img) {
 		final String imagePath = img.getImagePath();
-		Payload<?> payload;
 		// XXX A little bit simple.
 		if (imagePath.startsWith("http")) {
-			try {
-				payload = Payloads.create(new URL(imagePath));
-			} catch (final MalformedURLException e) {
+			try (Payload<URL> payload = Payloads.create(new URL(imagePath))) {
+				return doUpload(vimConnectionInformation, img, payload);
+			} catch (final IOException e) {
 				throw new GenericException(e);
 			}
-		} else {
-			payload = Payloads.create(new File(imagePath));
 		}
+		try (Payload<File> payload = Payloads.create(new File(imagePath))) {
+			return doUpload(vimConnectionInformation, img, payload);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
+	private SoftwareImage doUpload(final VimConnectionInformation vimConnectionInformation, final SoftwareImage img, final Payload<?> payload) {
 		final ImageBuilder bImg = Builders.image()
 				.containerFormat(ContainerFormat.valueOf(img.getContainerFormat())).diskFormat(DiskFormat.valueOf(img.getDiskFormat()))
 				.minDisk(img.getMinDisk())
@@ -514,5 +484,30 @@ public class OpenStackVim implements Vim {
 	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		os.compute().servers().action(resourceId, Action.STOP);
+	}
+
+	@Override
+	public ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final AbsoluteLimit usage = os.compute().quotaSets().limits().getAbsolute();
+		final OsQuotas quotas = new OsQuotas();
+		Optional.ofNullable(usage.getMaxSecurityGroups()).ifPresent(quotas::setSecurityGroupsMax);
+		Optional.ofNullable(usage.getSecurityGroupRulesUsed()).ifPresent(quotas::setSecurityGroupsUsed);
+
+		Optional.ofNullable(usage.getMaxTotalCores()).ifPresent(quotas::setVcpuMax);
+		Optional.ofNullable(usage.getTotalCoresUsed()).ifPresent(quotas::setVcpuUsed);
+
+		Optional.ofNullable(usage.getMaxTotalFloatingIps()).ifPresent(quotas::setFloatingIpMax);
+		Optional.ofNullable(usage.getTotalFloatingIpsUsed()).ifPresent(quotas::setFloatingIpUsed);
+
+		Optional.ofNullable(usage.getMaxTotalInstances()).ifPresent(quotas::setInstanceMax);
+		Optional.ofNullable(usage.getTotalInstancesUsed()).ifPresent(quotas::setInstanceUsed);
+
+		Optional.ofNullable(usage.getMaxTotalRAMSize()).ifPresent(x -> quotas.setRamMax(x * MEGA));
+		Optional.ofNullable(usage.getTotalRAMUsed()).ifPresent(x -> quotas.setRamUsed(x * MEGA));
+
+		Optional.ofNullable(usage.getMaxTotalKeypairs()).ifPresent(quotas::setKeyPairsMax);
+		Optional.ofNullable(usage.getTotalKeyPairsUsed()).ifPresent(quotas::setKeyPairsUsed);
+		return quotas;
 	}
 }
