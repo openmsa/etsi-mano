@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -58,13 +57,10 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -138,41 +134,6 @@ public class OpenStackVim implements Vim {
 			final Optional<VimConnectionInformation> vim = vciJpa.findById(vimConnectionInformation.getId());
 			return authenticate(vim.orElseThrow(() -> new GenericException("Unable to find Vim " + x)));
 		});
-	}
-
-	@Override
-	public String onVnfInstanceTerminate(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String onVnfInstantiate(final GrantInformation grantInformation, final VnfPackage vnfPackage) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String onNsInstantiate(final UUID nsdId, final Map<String, Object> userData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String onNsInstanceTerminate(final String processId, final Map<String, Object> userData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public VimStatus waitForCompletion(final String processId, final int seconds) {
-		final VimStatus status = new VimStatus();
-		status.setLcmOperationStateType(LcmOperationStateType.FAILED);
-		final FailureDetails problemDetails = new FailureDetails();
-		problemDetails.setDetail("Not Supported.");
-		problemDetails.setStatus(500L);
-		status.setProblemDetails(problemDetails);
-		return status;
 	}
 
 	@Override
