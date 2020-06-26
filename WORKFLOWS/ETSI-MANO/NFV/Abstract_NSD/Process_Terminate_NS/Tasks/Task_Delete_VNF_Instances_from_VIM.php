@@ -1,5 +1,5 @@
 <?php
-require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
+require_once '/opt/fmc_repository/Process/ETSI-MANO/Reference/Common/mano.php';
 
 use Ubiqube\EtsiMano\VnfPkgSol005;
 use Symfony\Component\Yaml\Yaml;
