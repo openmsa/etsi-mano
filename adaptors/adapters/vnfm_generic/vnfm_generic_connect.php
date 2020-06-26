@@ -66,7 +66,7 @@ class Nfvo_connection extends GenericConnection
 		// }
 
 		// TODO TEST validité champ ACTION[]
-		$curl_cmd = "curl --tlsv1.2 -i -sw '\nHTTP_CODE=%{http_code}' -u {$this->sd_login_entry}:{$this->sd_passwd_entry} --connect-timeout {$delay} --max-time {$delay} -X {$action[0]} -H \"Content-Type: application/json\" -k '{$action[2]}'";
+		$curl_cmd = "curl --tlsv1.2 -i -sw '\nHTTP_CODE=%{http_code}' -u {$this->sd_login_entry}:{$this->sd_passwd_entry} --connect-timeout {$delay} --max-time {$delay} -X {$action[0]} -H \"Version: 1.0\" -H \"Content-Type: application/json\" -k '{$action[2]}'";
 		if (isset($action[3])) {
 			$curl_cmd .= " -d '{$action[3]}'";
 		}
