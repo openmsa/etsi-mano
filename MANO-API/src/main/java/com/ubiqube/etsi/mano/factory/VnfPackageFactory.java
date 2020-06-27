@@ -13,10 +13,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.PackageChangeType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
@@ -82,22 +79,4 @@ public class VnfPackageFactory {
 		ret.setLinks(links.createVnfPackageOnboardingNotificationLinks(_vnfPkgId, _subscriptionId));
 		return ret;
 	}
-
-	@Nonnull
-	public static PkgmSubscription createSubscriptionsPkgmSubscription(final String _callbackUri, final PkgmNotificationsFilter _filter) {
-		final PkgmSubscription subscriptionsPkgmSubscription = new PkgmSubscription();
-		subscriptionsPkgmSubscription.setCallbackUri(_callbackUri);
-		subscriptionsPkgmSubscription.setFilter(_filter);
-		return subscriptionsPkgmSubscription;
-	}
-
-	@Nonnull
-	public static PkgmSubscription createSubscriptionsPkgmSubscription(final SubscriptionObject subscriptionObject) {
-		final PkgmSubscription ret = new PkgmSubscription();
-		ret.setCallbackUri(subscriptionObject.getPkgmSubscription().getCallbackUri());
-		ret.setId(subscriptionObject.getPkgmSubscription().getId());
-		ret.setFilter(subscriptionObject.getPkgmSubscription().getFilter());
-		return ret;
-	}
-
 }

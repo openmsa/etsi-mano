@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnf;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.model.vnf.VnfPkgChangeNotification;
+import com.ubiqube.etsi.mano.model.vnf.VnfPkgOnboardingNotification;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageOnboardingNotification;
+
+import ma.glasnost.orika.MapperFacade;
 
 @Profile({ "!NFVO" })
 @RestController
@@ -21,10 +27,14 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscriptionSol003Api.class);
 
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
+
 	private final Linkable links = new Sol003Linkable();
 
-	public VnfSubscriptionSol003Api(final VnfSubscriptionManagement _vnfSubscriptionManagement) {
+	private final MapperFacade mapper;
+
+	public VnfSubscriptionSol003Api(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
+		mapper = _mapper;
 		LOG.info("Starting VNF Subscription Package SOL003 Controller.");
 	}
 
@@ -39,7 +49,11 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public List<PkgmSubscription> subscriptionsGet(final String filter) {
-		return vnfSubscriptionManagement.subscriptionsGet(filter, links);
+		final List<Subscription> subs = vnfSubscriptionManagement.subscriptionsGet(filter);
+		final List<PkgmSubscription> pkgms = mapper.mapAsList(subs, PkgmSubscription.class);
+		pkgms.stream()
+				.forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
+		return pkgms;
 	}
 
 	/**
@@ -62,9 +76,12 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public List<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
-		// Job
-		return vnfSubscriptionManagement.subscriptionsPost(subscriptionsPostQuery, links);
+	public PkgmSubscription subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
+		final Subscription subs = mapper.map(subscriptionsPostQuery, Subscription.class);
+		final Subscription res = vnfSubscriptionManagement.subscriptionsPost(subs);
+		final PkgmSubscription pkgm = mapper.map(res, PkgmSubscription.class);
+		pkgm.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgm.getId()));
+		return pkgm;
 	}
 
 	/**
@@ -87,7 +104,10 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public PkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		return vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(subscriptionId, links);
+		final Subscription res = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId));
+		final PkgmSubscription pkgm = mapper.map(res, PkgmSubscription.class);
+		pkgm.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgm.getId()));
+		return pkgm;
 	}
 
 	/**
@@ -115,7 +135,8 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(notificationsMessage);
+		final VnfPkgChangeNotification msg = mapper.map(notificationsMessage, VnfPkgChangeNotification.class);
+		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(msg);
 	}
 
 	/**
@@ -129,7 +150,8 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(notificationsMessage);
+		final VnfPkgOnboardingNotification msg = mapper.map(notificationsMessage, VnfPkgOnboardingNotification.class);
+		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(msg);
 	}
 
 }
