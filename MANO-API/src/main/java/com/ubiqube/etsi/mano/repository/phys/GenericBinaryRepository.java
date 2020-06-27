@@ -125,16 +125,6 @@ public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, B
 		return lowDriver.get(path.toString(), min, max);
 	}
 
-	@Override
-	public <T, U extends Class> T loadObject(@NotNull final UUID _id, @NotNull final String _filename, final U t) {
-		final byte[] bytes = getBinary(_id, _filename);
-		try {
-			return (T) objectMapper.readValue(bytes, t);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
 	protected abstract @Nonnull UUID setId(T entity);
 
 	protected abstract @Nonnull Class<T> getClazz();

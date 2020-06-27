@@ -67,16 +67,6 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final <T, U extends Class> T loadObject(@NotNull final UUID _id, final String _filename, final U t) {
-		final byte[] content = getBinary(_id, _filename, 0, null);
-		try {
-			return (T) jsonMapper.readValue(content, t);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	@Override
 	public void delete(@NotNull final UUID _id, @NotNull final String _filename) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
 		contentManager.delete(path);
