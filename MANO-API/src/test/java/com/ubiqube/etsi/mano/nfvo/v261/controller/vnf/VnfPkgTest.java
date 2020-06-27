@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.config.Http403EntryPoint;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.VnfPackageSol005Api;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;

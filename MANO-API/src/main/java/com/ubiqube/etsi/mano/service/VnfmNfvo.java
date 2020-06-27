@@ -7,34 +7,23 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
-
-import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class VnfmNfvo implements VnfmInterface {
 	private final VnfInstanceLcm lcm;
-	private final MapperFacade mapper;
 
-	public VnfmNfvo(final VnfInstanceLcm _lcm, final MapperFacade _mapper) {
+	public VnfmNfvo(final VnfInstanceLcm _lcm) {
 		lcm = _lcm;
-		mapper = _mapper;
 	}
 
 	@Override
 	public VnfInstance createVnfInstance(final VnfPackage vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
-		final CreateVnfRequest createVnfRequest = new CreateVnfRequest();
-		createVnfRequest.setVnfdId(vnf.getId().toString());
-		createVnfRequest.setVnfInstanceDescription(vnfInstanceDescription);
-		createVnfRequest.setVnfInstanceName(vnfInstanceName);
-		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance inst = lcm.post(createVnfRequest);
-		return mapper.map(inst, VnfInstance.class);
+		return lcm.post(vnf.getId().toString(), vnfInstanceName, vnfInstanceDescription);
 	}
 
 	@Override
@@ -49,9 +38,7 @@ public class VnfmNfvo implements VnfmInterface {
 
 	@Override
 	public VnfLcmOpOccs vnfTerminate(final UUID nsInstanceId) {
-		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
-		terminateVnfRequest.setTerminationType(TerminationTypeEnum.FORCEFUL);
-		return lcm.terminate(nsInstanceId, terminateVnfRequest);
+		return lcm.terminate(nsInstanceId, CancelModeTypeEnum.FORCEFUL, null);
 	}
 
 }

@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;

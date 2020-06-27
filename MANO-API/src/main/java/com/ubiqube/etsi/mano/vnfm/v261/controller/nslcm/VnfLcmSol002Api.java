@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -69,10 +70,10 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
-		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest);
-		vnfInstance.setLinks(links.getLinks(vnfInstance.getId()));
-
-		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
+		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest.getVnfdId(), createVnfRequest.getVnfInstanceName(), createVnfRequest.getVnfInstanceDescription());
+		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance inst = mapper.map(vnfInstance, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+		inst.setLinks(links.getLinks(vnfInstance.getId().toString()));
+		return ResponseEntity.accepted().body(inst);
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		final VnfLcmOpOccs lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), terminateVnfRequest);
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), CancelModeTypeEnum.fromValue(terminateVnfRequest.toString()), terminateVnfRequest.getGracefulTerminationTimeout());
 		final VnfInstanceLinks link = links.getLinks(lcm.getId().toString());
 		return ResponseEntity.noContent().header("Location", link.getSelf().getHref()).build();
 	}

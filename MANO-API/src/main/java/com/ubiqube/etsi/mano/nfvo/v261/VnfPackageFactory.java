@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.factory;
+package com.ubiqube.etsi.mano.nfvo.v261;
 
 import java.time.OffsetDateTime;
 import java.util.Map;

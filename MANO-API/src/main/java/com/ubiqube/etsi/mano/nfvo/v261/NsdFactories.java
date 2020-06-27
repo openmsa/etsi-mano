@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.factory;
+package com.ubiqube.etsi.mano.nfvo.v261;
 
 import java.util.ArrayList;
 
@@ -32,12 +32,12 @@ public final class NsdFactories {
 
 	public static NsdInfo createNsdInfo() {
 		final NsdInfo nsdInfo = new NsdInfo();
-		nsdInfo.setNestedNsdInfoIds(new ArrayList<String>());
+		nsdInfo.setNestedNsdInfoIds(new ArrayList<>());
 		nsdInfo.setNsdOnboardingState(NsdOnboardingStateType.CREATED);
 		nsdInfo.setNsdOperationalState(NsdOperationalStateType.DISABLED);
 		nsdInfo.setNsdUsageState(NsdUsageStateType.NOT_IN_USE);
-		nsdInfo.setPnfdInfoIds(new ArrayList<String>());
-		nsdInfo.setVnfPkgIds(new ArrayList<String>());
+		nsdInfo.setPnfdInfoIds(new ArrayList<>());
+		nsdInfo.setVnfPkgIds(new ArrayList<>());
 		return nsdInfo;
 	}
 

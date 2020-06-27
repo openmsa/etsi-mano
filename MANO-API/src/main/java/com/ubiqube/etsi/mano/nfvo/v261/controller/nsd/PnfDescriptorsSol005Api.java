@@ -152,7 +152,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String contentType, final CreatePnfdInfoRequest body) {
-		PnfDescriptor pnfdDb = PnfFactory.createPnfDescriptorsPnfdInfo(body);
+		PnfDescriptor pnfdDb = PnfFactory.createPnfDescriptorsPnfdInfo(body.getUserDefinedData());
 		pnfdDb = pnfdInfoRepository.save(pnfdDb);
 		final PnfdInfo pnfd = mapper.map(pnfdDb, PnfdInfo.class);
 		pnfd.setLinks(makeLinks(pnfd));
