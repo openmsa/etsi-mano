@@ -3,7 +3,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.controller.lcmgrant;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
 
 import javax.validation.Valid;
 

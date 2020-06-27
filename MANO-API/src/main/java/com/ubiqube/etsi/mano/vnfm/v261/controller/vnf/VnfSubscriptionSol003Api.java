@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgChangeNotification;
 import com.ubiqube.etsi.mano.model.vnf.VnfPkgOnboardingNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;

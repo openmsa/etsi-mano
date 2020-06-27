@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.UUID;
 
