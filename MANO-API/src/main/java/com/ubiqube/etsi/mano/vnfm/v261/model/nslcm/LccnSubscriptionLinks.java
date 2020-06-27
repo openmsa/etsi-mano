@@ -15,7 +15,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.nfvo.v261.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

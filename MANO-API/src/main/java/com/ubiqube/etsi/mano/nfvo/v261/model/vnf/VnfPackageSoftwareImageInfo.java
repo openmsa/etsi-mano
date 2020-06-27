@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.vnf;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -12,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -160,7 +160,7 @@ public class VnfPackageSoftwareImageInfo {
 	private Long size = null;
 
 	@JsonProperty("userMetadata")
-	private KeyValuePairs userMetadata = null;
+	private Map<String, String> userMetadata = null;
 
 	@JsonProperty("imagePath")
 	private String imagePath = null;
@@ -416,7 +416,7 @@ public class VnfPackageSoftwareImageInfo {
 		this.size = size;
 	}
 
-	public VnfPackageSoftwareImageInfo userMetadata(final KeyValuePairs userMetadata) {
+	public VnfPackageSoftwareImageInfo userMetadata(final Map<String, String> userMetadata) {
 		this.userMetadata = userMetadata;
 		return this;
 	}
@@ -430,11 +430,11 @@ public class VnfPackageSoftwareImageInfo {
 
 	@Valid
 
-	public KeyValuePairs getUserMetadata() {
+	public Map<String, String> getUserMetadata() {
 		return userMetadata;
 	}
 
-	public void setUserMetadata(final KeyValuePairs userMetadata) {
+	public void setUserMetadata(final Map<String, String> userMetadata) {
 		this.userMetadata = userMetadata;
 	}
 

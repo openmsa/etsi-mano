@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.ubiqube.etsi.mano.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
 
 @Profile({ "!VNFM" })

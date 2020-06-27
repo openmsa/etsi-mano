@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -10,8 +11,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.nslcm.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -39,7 +38,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	private String vnfLinkPortId = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public VnfcResourceInfoVnfcCpInfo id(final String id) {
 		this.id = id;
@@ -156,7 +155,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 		this.vnfLinkPortId = vnfLinkPortId;
 	}
 
-	public VnfcResourceInfoVnfcCpInfo metadata(final KeyValuePairs metadata) {
+	public VnfcResourceInfoVnfcCpInfo metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -170,11 +169,11 @@ public class VnfcResourceInfoVnfcCpInfo {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

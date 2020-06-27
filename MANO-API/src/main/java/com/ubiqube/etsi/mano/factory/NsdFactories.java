@@ -2,7 +2,7 @@ package com.ubiqube.etsi.mano.factory;
 
 import java.util.ArrayList;
 
-import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.nfvo.v261.model.Link;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;

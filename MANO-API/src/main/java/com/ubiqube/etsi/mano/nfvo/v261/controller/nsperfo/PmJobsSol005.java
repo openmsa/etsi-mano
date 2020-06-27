@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
 
 import io.swagger.annotations.ApiOperation;

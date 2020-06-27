@@ -20,9 +20,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtVirtualLinkData;
 
 import io.swagger.annotations.ApiModelProperty;
 

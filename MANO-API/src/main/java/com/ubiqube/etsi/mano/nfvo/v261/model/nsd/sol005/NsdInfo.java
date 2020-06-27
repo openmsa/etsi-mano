@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 
@@ -69,7 +68,7 @@ public class NsdInfo {
 	private NsdUsageStateType nsdUsageState = null;
 
 	@JsonProperty("userDefinedData")
-	private Map<String, Object> userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	@JsonProperty("_links")
 	private NsdInfoLinks links = null;
@@ -385,7 +384,7 @@ public class NsdInfo {
 		this.nsdUsageState = nsdUsageState;
 	}
 
-	public NsdInfo userDefinedData(final KeyValuePairs userDefinedData) {
+	public NsdInfo userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -400,11 +399,11 @@ public class NsdInfo {
 
 	@Valid
 
-	public Map<String, Object> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

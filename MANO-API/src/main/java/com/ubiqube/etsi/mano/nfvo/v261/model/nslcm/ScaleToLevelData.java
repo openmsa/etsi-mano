@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -9,7 +10,6 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,7 +35,7 @@ public class ScaleToLevelData {
 	private List<VnfScaleInfo> vnfScaleInfo = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ScaleToLevelData vnfInstantiationLevelId(final String vnfInstantiationLevelId) {
 		this.vnfInstantiationLevelId = vnfInstantiationLevelId;
@@ -89,7 +89,7 @@ public class ScaleToLevelData {
 		this.vnfScaleInfo = vnfScaleInfo;
 	}
 
-	public ScaleToLevelData additionalParams(final KeyValuePairs additionalParams) {
+	public ScaleToLevelData additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -104,11 +104,11 @@ public class ScaleToLevelData {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

@@ -14,13 +14,13 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtVirtualLinkData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,7 +40,7 @@ public class ChangeExtVnfConnectivityRequest {
 	private List<VimConnectionInfo> vimConnectionInfo = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ChangeExtVnfConnectivityRequest extVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
@@ -75,7 +75,7 @@ public class ChangeExtVnfConnectivityRequest {
 
 	public ChangeExtVnfConnectivityRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
-			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
+			this.vimConnectionInfo = new ArrayList<>();
 		}
 		this.vimConnectionInfo.add(vimConnectionInfoItem);
 		return this;
@@ -99,7 +99,7 @@ public class ChangeExtVnfConnectivityRequest {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public ChangeExtVnfConnectivityRequest additionalParams(final KeyValuePairs additionalParams) {
+	public ChangeExtVnfConnectivityRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -113,11 +113,11 @@ public class ChangeExtVnfConnectivityRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"ChangeExtVnfConnectivityOpConfig\".\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

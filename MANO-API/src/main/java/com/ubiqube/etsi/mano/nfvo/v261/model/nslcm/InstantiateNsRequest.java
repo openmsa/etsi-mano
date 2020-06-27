@@ -3,6 +3,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -11,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -46,7 +46,7 @@ public class InstantiateNsRequest {
 	private List<VnfLocationConstraint> locationConstraints = null;
 
 	@JsonProperty("additionalParamsForNs")
-	private KeyValuePairs additionalParamsForNs = null;
+	private Map<String, String> additionalParamsForNs = null;
 
 	@JsonProperty("additionalParamForNestedNs")
 	@Valid
@@ -247,7 +247,7 @@ public class InstantiateNsRequest {
 		this.locationConstraints = locationConstraints;
 	}
 
-	public InstantiateNsRequest additionalParamsForNs(final KeyValuePairs additionalParamsForNs) {
+	public InstantiateNsRequest additionalParamsForNs(final Map<String, String> additionalParamsForNs) {
 		this.additionalParamsForNs = additionalParamsForNs;
 		return this;
 	}
@@ -264,11 +264,11 @@ public class InstantiateNsRequest {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParamsForNs() {
+	public Map<String, String> getAdditionalParamsForNs() {
 		return additionalParamsForNs;
 	}
 
-	public void setAdditionalParamsForNs(final KeyValuePairs additionalParamsForNs) {
+	public void setAdditionalParamsForNs(final Map<String, String> additionalParamsForNs) {
 		this.additionalParamsForNs = additionalParamsForNs;
 	}
 

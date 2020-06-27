@@ -21,10 +21,10 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.ExtVirtualLinkInfo;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CancelModeType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ExtVirtualLinkInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LcmOperationType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

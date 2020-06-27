@@ -14,9 +14,9 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
@@ -40,13 +40,13 @@ public class VnfInfoModificationRequest {
 	private String vnfPkgId = null;
 
 	@JsonProperty("vnfConfigurableProperties")
-	private KeyValuePairs vnfConfigurableProperties = null;
+	private Map<String, String> vnfConfigurableProperties = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	@JsonProperty("extensions")
-	private KeyValuePairs extensions = null;
+	private Map<String, String> extensions = null;
 
 	@JsonProperty("vimConnectionInfo")
 	private List<VimConnectionInfo> vimConnectionInfo = null;
@@ -114,7 +114,7 @@ public class VnfInfoModificationRequest {
 		this.vnfPkgId = vnfPkgId;
 	}
 
-	public VnfInfoModificationRequest vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public VnfInfoModificationRequest vnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -128,15 +128,15 @@ public class VnfInfoModificationRequest {
 	 **/
 	@JsonProperty("vnfConfigurableProperties")
 	@ApiModelProperty(value = "Modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
-	public KeyValuePairs getVnfConfigurableProperties() {
+	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public VnfInfoModificationRequest metadata(final KeyValuePairs metadata) {
+	public VnfInfoModificationRequest metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -150,15 +150,15 @@ public class VnfInfoModificationRequest {
 	 **/
 	@JsonProperty("metadata")
 	@ApiModelProperty(value = "Modifications of the \"metadata\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInfoModificationRequest extensions(final KeyValuePairs extensions) {
+	public VnfInfoModificationRequest extensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -172,11 +172,11 @@ public class VnfInfoModificationRequest {
 	 **/
 	@JsonProperty("extensions")
 	@ApiModelProperty(value = "Modifications of the \"extensions\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
-	public KeyValuePairs getExtensions() {
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(final KeyValuePairs extensions) {
+	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 	}
 
@@ -187,7 +187,7 @@ public class VnfInfoModificationRequest {
 
 	public VnfInfoModificationRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
-			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
+			this.vimConnectionInfo = new ArrayList<>();
 		}
 		this.vimConnectionInfo.add(vimConnectionInfoItem);
 		return this;

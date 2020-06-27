@@ -23,12 +23,12 @@ import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 import ma.glasnost.orika.MapperFacade;

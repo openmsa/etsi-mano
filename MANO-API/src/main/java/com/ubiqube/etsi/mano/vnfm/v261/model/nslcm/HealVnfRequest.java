@@ -12,8 +12,9 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -26,7 +27,7 @@ public class HealVnfRequest {
 	private String cause = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public HealVnfRequest cause(final String cause) {
 		this.cause = cause;
@@ -48,7 +49,7 @@ public class HealVnfRequest {
 		this.cause = cause;
 	}
 
-	public HealVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public HealVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -62,11 +63,11 @@ public class HealVnfRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

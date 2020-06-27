@@ -33,7 +33,7 @@ public class VnfmNfvo implements VnfmInterface {
 		createVnfRequest.setVnfdId(vnf.getId().toString());
 		createVnfRequest.setVnfInstanceDescription(vnfInstanceDescription);
 		createVnfRequest.setVnfInstanceName(vnfInstanceName);
-		final com.ubiqube.etsi.mano.model.nslcm.VnfInstance inst = lcm.post(createVnfRequest);
+		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance inst = lcm.post(createVnfRequest);
 		return mapper.map(inst, VnfInstance.class);
 	}
 

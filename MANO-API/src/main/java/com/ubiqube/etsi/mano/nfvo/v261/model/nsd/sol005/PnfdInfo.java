@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 
 import io.swagger.annotations.ApiModel;
@@ -51,7 +50,7 @@ public class PnfdInfo {
 	private PnfdUsageStateType pnfdUsageState = null;
 
 	@JsonProperty("userDefinedData")
-	private Map<String, Object> userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	@JsonProperty("_links")
 	private PnfdInfoLinks links = null;
@@ -254,7 +253,7 @@ public class PnfdInfo {
 		this.pnfdUsageState = pnfdUsageState;
 	}
 
-	public PnfdInfo userDefinedData(final KeyValuePairs userDefinedData) {
+	public PnfdInfo userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -269,11 +268,11 @@ public class PnfdInfo {
 
 	@Valid
 
-	public Map<String, Object> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

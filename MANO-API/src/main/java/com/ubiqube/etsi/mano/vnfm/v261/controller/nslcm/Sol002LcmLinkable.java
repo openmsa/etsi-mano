@@ -3,8 +3,8 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.ubiqube.etsi.mano.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfInstanceLinks;
 
 public class Sol002LcmLinkable implements LcmLinkable {

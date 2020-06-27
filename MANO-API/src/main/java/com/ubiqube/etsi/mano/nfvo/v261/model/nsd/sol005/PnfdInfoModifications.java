@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -8,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,16 +25,16 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class PnfdInfoModifications {
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
-	public PnfdInfoModifications userDefinedData(final KeyValuePairs userDefinedData) {
+	public PnfdInfoModifications userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
 
 	/**
 	 * Get userDefinedData
-	 * 
+	 *
 	 * @return userDefinedData
 	 **/
 	@ApiModelProperty(required = true, value = "")
@@ -42,11 +42,11 @@ public class PnfdInfoModifications {
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

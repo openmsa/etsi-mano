@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.nsperfo.PerformanceReportPerformanceValues;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PerformanceReportPerformanceValues;
 
 import io.swagger.annotations.ApiModelProperty;
 

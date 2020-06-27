@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -8,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,7 +29,7 @@ public class ScaleByStepData {
 	private Integer numberOfSteps = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ScaleByStepData aspectId(final String aspectId) {
 		this.aspectId = aspectId;
@@ -76,7 +76,7 @@ public class ScaleByStepData {
 		this.numberOfSteps = numberOfSteps;
 	}
 
-	public ScaleByStepData additionalParams(final KeyValuePairs additionalParams) {
+	public ScaleByStepData additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -91,11 +91,11 @@ public class ScaleByStepData {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

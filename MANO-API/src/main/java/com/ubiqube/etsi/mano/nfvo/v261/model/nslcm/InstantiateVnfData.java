@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -10,9 +11,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtVirtualLinkData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -58,13 +58,13 @@ public class InstantiateVnfData {
 	private String localizationLanguage = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	@JsonProperty("extensions")
-	private KeyValuePairs extensions = null;
+	private Map<String, String> extensions = null;
 
 	public InstantiateVnfData vnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
@@ -253,7 +253,7 @@ public class InstantiateVnfData {
 		this.localizationLanguage = localizationLanguage;
 	}
 
-	public InstantiateVnfData additionalParams(final KeyValuePairs additionalParams) {
+	public InstantiateVnfData additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -268,15 +268,15 @@ public class InstantiateVnfData {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 
-	public InstantiateVnfData metadata(final KeyValuePairs metadata) {
+	public InstantiateVnfData metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -291,15 +291,15 @@ public class InstantiateVnfData {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
-	public InstantiateVnfData extensions(final KeyValuePairs extensions) {
+	public InstantiateVnfData extensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -314,11 +314,11 @@ public class InstantiateVnfData {
 
 	@Valid
 
-	public KeyValuePairs getExtensions() {
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(final KeyValuePairs extensions) {
+	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 	}
 

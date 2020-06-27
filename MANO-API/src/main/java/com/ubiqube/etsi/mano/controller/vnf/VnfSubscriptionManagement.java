@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.model.vnf.VnfPkgChangeNotification;
-import com.ubiqube.etsi.mano.model.vnf.VnfPkgOnboardingNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgChangeNotification;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgOnboardingNotification;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 

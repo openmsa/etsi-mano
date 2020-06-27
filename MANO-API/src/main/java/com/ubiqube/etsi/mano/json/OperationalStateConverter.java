@@ -3,12 +3,12 @@ package com.ubiqube.etsi.mano.json;
 import org.apache.commons.beanutils.Converter;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdUsageStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageUsageStateType;
 
 public class OperationalStateConverter implements Converter {
 

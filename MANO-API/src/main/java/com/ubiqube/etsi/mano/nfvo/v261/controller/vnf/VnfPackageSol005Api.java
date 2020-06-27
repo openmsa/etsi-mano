@@ -200,7 +200,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureNotOnboarded(vnfPackage);
 
-		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
+		final Map<String, String> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("url", uddList.get("url"));
 		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgUuid, parameters);

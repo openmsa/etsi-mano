@@ -98,7 +98,7 @@ public class VnfInstanceLcm {
 		return lcm;
 	}
 
-	public com.ubiqube.etsi.mano.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
+	public com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance post(final CreateVnfRequest createVnfRequest) {
 		final String vnfId = createVnfRequest.getVnfdId();
 		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(UUID.fromString(vnfId));
 		ensureIsOnboarded(vnfPkgInfo);
@@ -108,7 +108,7 @@ public class VnfInstanceLcm {
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstance = vnfInstancesRepository.save(vnfInstance);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CREATE, vnfInstance.getId());
-		return mapper.map(vnfInstance, com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class);
+		return mapper.map(vnfInstance, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
 	}
 
 	public void delete(@Nonnull final UUID vnfInstanceId) {

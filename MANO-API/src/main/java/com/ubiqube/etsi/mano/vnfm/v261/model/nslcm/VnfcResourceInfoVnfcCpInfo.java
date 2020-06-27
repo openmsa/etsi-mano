@@ -18,7 +18,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.nslcm.CpProtocolInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 

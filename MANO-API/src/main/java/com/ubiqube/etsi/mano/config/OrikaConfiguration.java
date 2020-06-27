@@ -26,11 +26,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.VimConnectionInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfcResourceInfo;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
+import com.ubiqube.etsi.mano.nfvo.v261.model.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
@@ -39,7 +36,10 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionObject;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
@@ -66,7 +66,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("nestedNsdInfoIds{}", "nestedNsdInfoIds{id}")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.class, VnfInstance.class)
+		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class, VnfInstance.class)
 				.field("vnfPkgId", "vnfPkg.id")
 				.field("vnfConfigurableProperties{key}", "vnfConfigurableProperties{key}")
 				.field("vnfConfigurableProperties{value}", "vnfConfigurableProperties{value}")

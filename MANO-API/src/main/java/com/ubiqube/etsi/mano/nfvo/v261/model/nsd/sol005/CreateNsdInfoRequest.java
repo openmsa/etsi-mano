@@ -21,9 +21,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class CreateNsdInfoRequest {
 	@JsonProperty("userDefinedData")
-	private Map<String, Object> userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
-	public CreateNsdInfoRequest userDefinedData(final Map<String, Object> userDefinedData) {
+	public CreateNsdInfoRequest userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -37,11 +37,11 @@ public class CreateNsdInfoRequest {
 
 	@Valid
 
-	public Map<String, Object> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
