@@ -79,6 +79,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private OnboardingStateType nsdOnboardingState;
 
 	@IndexedEmbedded
+	@Embedded
 	private FailureDetails onboardingFailureDetails;
 
 	@Enumerated(EnumType.STRING)

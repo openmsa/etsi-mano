@@ -22,6 +22,7 @@ public class FailureDetails implements Serializable {
 
 	private String title;
 
+	@Column(nullable = true)
 	private long status;
 
 	@Column(length = 500)
