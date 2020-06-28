@@ -1,5 +1,9 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.net.URI;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
@@ -38,8 +43,10 @@ public class LcmGrantsSol005Api implements LcmGrants {
 
 	@Override
 	public ResponseEntity<Grant> grantsPost(@Valid final GrantRequest grantRequest, final String contentType, final String version) {
-		grantManagement.post(grantRequest);
-		return ResponseEntity.accepted().build();
+		final GrantResponse resp = grantManagement.post(mapper.map(grantRequest, GrantsRequest.class));
+		final Grant grant = mapper.map(resp, Grant.class);
+		final URI location = linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(grant.getId(), "2.6.1")).withSelfRel().toUri();
+		return ResponseEntity.created(location).build();
 	}
 
 }

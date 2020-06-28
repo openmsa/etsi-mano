@@ -19,9 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
@@ -33,14 +33,14 @@ public class GrantMngtSol005 implements GrantManagement {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GrantMngtSol005.class);
 
-	private final GrantsResponseJpa grantsJpa;
+	private final GrantsResponseJpa grantsResponseJpa;
 	private final MapperFacade mapper;
 	private final EventManager eventManager;
 
 	private final ObjectMapper objectMapper;
 
 	public GrantMngtSol005(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final EventManager _eventManager, final ObjectMapper _objectMapper) {
-		grantsJpa = _grantsJpa;
+		grantsResponseJpa = _grantsJpa;
 		mapper = _mapper;
 		eventManager = _eventManager;
 		objectMapper = _objectMapper;
@@ -48,12 +48,12 @@ public class GrantMngtSol005 implements GrantManagement {
 
 	@Override
 	public GrantResponse get(final UUID grantId) {
-		final Optional<GrantResponse> grantOpt = grantsJpa.findById(grantId);
+		final Optional<GrantResponse> grantOpt = grantsResponseJpa.findById(grantId);
 		return grantOpt.orElseThrow(() -> new NotFoundException("Unable to find grant " + grantId));
 	}
 
 	@Override
-	public GrantResponse post(final GrantRequest grantRequest) {
+	public GrantResponse post(final GrantsRequest grantRequest) {
 		try {
 			final String content = objectMapper.writeValueAsString(grantRequest);
 			Files.write(content.getBytes(Charset.defaultCharset()), new File("grant-request.json"));
@@ -61,11 +61,11 @@ public class GrantMngtSol005 implements GrantManagement {
 		} catch (final IOException e) {
 			LOG.warn("", e);
 		}
-		GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
+		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		grants.setAvailable(Boolean.FALSE);
-		grants = grantsJpa.save(grants);
+		final GrantResponse grantsDb = grantsResponseJpa.save(grants);
 		LOG.debug("Sending grants {}", grants.getId());
-		eventManager.sendGrant(grants.getId(), new HashMap<String, Object>());
+		eventManager.sendGrant(grants.getId(), new HashMap<>());
 		LOG.info("Grant request {} sent.", grants.getId());
 		return grants;
 	}

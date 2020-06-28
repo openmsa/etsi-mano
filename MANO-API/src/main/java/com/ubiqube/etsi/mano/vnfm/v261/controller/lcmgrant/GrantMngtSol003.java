@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.lcmgrant;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 import ma.glasnost.orika.MapperFacade;
@@ -40,11 +40,12 @@ public class GrantMngtSol003 implements GrantManagement {
 	}
 
 	@Override
-	public GrantResponse post(final GrantRequest grant) {
+	public GrantResponse post(final GrantsRequest grant) {
 		final URI uri = nfvoRest.uriBuilder()
 				.pathSegment("grant/v1/grants")
 				.build()
 				.toUri();
+		// XXX Elect version, and map.
 		final Grant grantPost = nfvoRest.post(uri, grant, Grant.class);
 		return mapper.map(grantPost, GrantResponse.class);
 	}

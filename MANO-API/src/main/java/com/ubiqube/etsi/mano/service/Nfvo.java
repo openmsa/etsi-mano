@@ -8,7 +8,6 @@ import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -33,11 +32,11 @@ public class Nfvo {
 	}
 
 	public GrantResponse sendSyncGrantRequest(final GrantsRequest req) {
-		final GrantRequest finalReq = mapper.map(req, GrantRequest.class);
+		final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
 		return sendAndWaitGrantRequest(finalReq);
 	}
 
-	private GrantResponse sendAndWaitGrantRequest(final GrantRequest grantRequest) {
+	private GrantResponse sendAndWaitGrantRequest(final GrantsRequest grantRequest) {
 		final GrantResponse grants = grantManagement.post(grantRequest);
 		return pollGrants(grants);
 	}
