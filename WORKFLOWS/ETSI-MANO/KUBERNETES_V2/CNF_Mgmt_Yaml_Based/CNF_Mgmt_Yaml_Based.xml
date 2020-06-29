@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition>  <information>
+    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
+    <description/>
+    <displayField>deployment_name</displayField>
+    <executionDetailsVisibility>5</executionDetailsVisibility>
+    <executionMode>TRANSACTION</executionMode>
+    <group>NFV|CNF</group>
+    <icon>/images/repository/CommandDefinition/icons/3200 mobile access router.jpg</icon>
+    <name>CNF LCM v2 (Based-on Kubernetes Descriptor)</name>
+    <order>10000</order>
+    <poolId>0</poolId>
+    <readVariableVisibility>5</readVariableVisibility>
+    <showDetailedServiceInstances>true</showDetailedServiceInstances>
+    <showProcessExecConsole>false</showProcessExecConsole>
+    <showProcessResult>false</showProcessResult>
+    <showVariables>false</showVariables>
+    <visibility>5</visibility>
+  </information>  <variables frozen="0">
+    <variable displayName="Deviceid" displayOrder="0" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Sync VIM-K8s services inventories</section>
+      </sections>
+    </variable>
+    <variable default="KUBERNETES/nginx-deployment.yaml" displayName="File" displayOrder="1" maxLength="100" name="params.file" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="File">
+      <sections>
+        <section>Deploy</section>
+      </sections>
+      <repositories>
+        <repository>Datafiles</repository>
+      </repositories>
+    </variable>
+    <variable displayName="Authentication Method" displayOrder="2" editable="false" maxLength="100" name="params.auth_method" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false"/>
+    <variable displayName="Kube Token" displayOrder="3" editable="false" isUserLocked="true" maxLength="100" name="params.kube_token" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false">
+      <sections>
+        <section>Sync VIM-K8s services inventories</section>
+      </sections>
+    </variable>
+    <variable displayName="Kubernetes Endpoint" displayOrder="4" editable="false" maxLength="100" name="params.kubernetes_endpoint" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false">
+      <sections>
+        <section>Sync VIM-K8s services inventories</section>
+      </sections>
+    </variable>
+    <variable displayName="Keystone Public Endpoint" displayOrder="5" editable="false" maxLength="100" name="params.keystone_public_endpoint" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false">
+      <sections>
+        <section>Sync VIM-K8s services inventories</section>
+      </sections>
+    </variable>
+    <variable displayName="Deployment Name" displayOrder="6" isUserLocked="true" maxLength="100" name="params.deployment_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Deploy</section>
+      </sections>
+    </variable>
+    <variable displayName="Container Name" displayOrder="7" maxLength="100" name="params.container_name" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+      <sections>
+        <section>Deploy</section>
+      </sections>
+      <classes>
+        <class>kube_pods_list</class>
+      </classes>
+    </variable>
+    <variable displayName="Appication Name" displayOrder="8" isUserLocked="true" maxLength="100" name="params.app_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Deploy</section>
+      </sections>
+    </variable>
+    <variable default="default" displayName="Namespace" displayOrder="9" maxLength="100" name="params.namespace" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
+    <variable displayName="Secret Name in Kubernetes Cluster" displayOrder="10" maxLength="100" name="params.secret_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Docker Reg Url" displayOrder="11" isMandatory="true" maxLength="100" name="params.docker_reg_url" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Docker Reg Username" displayOrder="12" isMandatory="true" maxLength="100" name="params.docker_reg_username" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Docker Reg Password" displayOrder="13" maxLength="100" name="params.docker_reg_password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Password">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Docker Reg Email" displayOrder="14" maxLength="100" name="params.docker_reg_email" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Docker Reg Config" displayOrder="15" isUserLocked="true" maxLength="100" name="params.docker_reg_config" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Docker Reg Config Base64" displayOrder="16" isUserLocked="true" maxLength="100" name="params.docker_reg_config_base64" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Private Registry Secret</section>
+      </sections>
+    </variable>
+    <variable displayName="Load Balancer Template" displayOrder="17" editable="false" maxLength="100" name="params.load_balancer_template" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="File" visible="false">
+      <sections>
+        <section>CNF Load Balancer</section>
+      </sections>
+      <repositories>
+        <repository>Datafiles</repository>
+      </repositories>
+    </variable>
+    <variable displayName="Load Balancer Service Name" displayOrder="18" isUserLocked="true" maxLength="100" name="params.load_balancer_service_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>CNF Load Balancer</section>
+      </sections>
+    </variable>
+    <variable displayName="Ssh Remote Access Ip" displayOrder="19" isUserLocked="true" maxLength="100" name="params.ssh_remote_access_ip" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>CNF Load Balancer</section>
+      </sections>
+    </variable>
+    <variable displayName="Ssh Remote Access Port" displayOrder="20" isUserLocked="true" maxLength="100" name="params.ssh_remote_access_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>CNF Load Balancer</section>
+      </sections>
+    </variable>
+    <variable displayName="Service Load Balancer Name" displayOrder="41" isUserLocked="true" maxLength="100" name="params.service_lb_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>CNF Load Balancer</section>
+      </sections>
+    </variable>
+    <variable default="22" displayName="Container Port" displayOrder="63" isMandatory="true" isUserLocked="true" maxLength="100" name="params.container_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>CNF Load Balancer</section>
+      </sections>
+    </variable>
+    <variable displayName="Customer" displayOrder="92" maxLength="100" name="params.customer" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Customer">
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable default="14020601" displayName="Manufacturer Id" displayOrder="93" maxLength="100" name="params.manufacturer_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <values>
+        <value displayValue="Linux">14020601</value>
+      </values>
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable default="14020601" displayName="Model Id" displayOrder="94" maxLength="100" name="params.model_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <values>
+        <value displayValue="Generic">14020601</value>
+      </values>
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable displayName="Device Id" displayOrder="95" isUserLocked="true" keepOnImport="true" maxLength="165" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable displayName="Status In Msa" displayOrder="96" isUserLocked="true" maxLength="100" name="params.status in msa" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable displayName="Profile Ref" displayOrder="116" maxLength="100" name="params.profile_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Attach Profiles</section>
+      </sections>
+    </variable>
+    <variable displayName="Username" displayOrder="135" maxLength="100" name="params.username" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable displayName="Device Password" displayOrder="136" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Password">
+      <sections>
+        <section>Create Corresponding MSA Device</section>
+      </sections>
+    </variable>
+    <variable displayName="Service Name" displayOrder="138" maxLength="100" name="params.lb.0.service_lb_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Add Load Balancers</section>
+      </sections>
+    </variable>
+    <variable displayName="Related App Name" displayOrder="139" maxLength="100" name="params.lb.0.app_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Add Load Balancers</section>
+      </sections>
+    </variable>
+    <variable displayName="Container Port" displayOrder="140" maxLength="100" name="params.lb.0.container_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Add Load Balancers</section>
+      </sections>
+    </variable>
+    <variable displayName="Remote Access Ip" displayOrder="141" maxLength="100" name="params.lb.0.remote_access_ip" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Add Load Balancers</section>
+      </sections>
+    </variable>
+    <variable displayName="Remote Access Port" displayOrder="142" maxLength="100" name="params.lb.0.remote_access_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+      <sections>
+        <section>Add Load Balancers</section>
+      </sections>
+    </variable>
+  </variables>  <example>    <content/>  </example>
+<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments">
+    <visibility>5</visibility>
+    <displayName>CNF Deployments</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Deploy.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+      <displayName>Deploy</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Synchronize_k8s_Cluster_MicroServices.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+      <displayName>Synchronize k8s Cluster MicroServices</displayName>
+    </task>
+  </process>
+  
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF">
+    <visibility>5</visibility>
+    <displayName>Stop CNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+    
+    
+  
+    
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Stop_CNF/Tasks/Task_Stop_CNF.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF/Tasks/</processPath>
+      <displayName>Stop CNF</displayName>
+    </task>
+  </process>
+  
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods">
+    <visibility>5</visibility>
+    <displayName>Terminate CNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+  
+    
+    
+  
+    
+    
+  
+    
+    
+    
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Terminate_CNF.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
+      <displayName>Terminate CNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Delete_Load_Balancer_Service.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
+      <displayName>Delete Load Balancer Service</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Delete_MSA_Device.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
+      <displayName>Delete MSA Device</displayName>
+    </task>
+  </process>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Instance">
+    <visibility>5</visibility>
+    <displayName>Delete Instance</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>DELETE</type>
+  </process>
+
+<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status">
+    <visibility>5</visibility>
+    <displayName>Get CNF Status</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status/Tasks/Task_Get_Status.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status/Tasks/</processPath>
+      <displayName>Get Status</displayName>
+    </task>
+  </process>
+<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF">
+    <visibility>5</visibility>
+    <displayName>Start CNF</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    
+    
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Start_CNF/Tasks/Task_Start_CNF.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF/Tasks/</processPath>
+      <displayName>Start CNF</displayName>
+    </task>
+  </process>
+<process name="Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_">
+    <visibility>5</visibility>
+    <displayName>Add Docker Private Registry Secret</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="Task_Generate_Docker_config.json.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
+      <displayName>Generate Docker config.json</displayName>
+    </task>
+    <task name="Task_Docker_confg.json_base64_encoding.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
+      <displayName>Docker confg.json base64 encoding</displayName>
+    </task>
+    <task name="Task_Create_Private_Registry_Secret.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
+      <displayName>Create Private Registry Secret</displayName>
+    </task>
+  </process>
+<process name="Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Delete_Docker_Private_Registry_Secret">
+    <visibility>5</visibility>
+    <displayName>Delete Docker Private Registry Secret</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="Task_Delete_Private_Registry_Secret.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Delete_Docker_Private_Registry_Secret/Tasks/</processPath>
+      <displayName>Delete Private Registry Secret</displayName>
+    </task>
+  </process>
+<process name="Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Create_Instance">
+    <visibility>5</visibility>
+    <displayName>Create Instance</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>CREATE</type>
+  </process>
+<process name="Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_">
+    <visibility>5</visibility>
+    <displayName>MSA Managed Entity Creation</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+  
+    
+    
+    
+  
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+  <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="Task_CNF_Load_Balancer.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <displayName>CNF Load Balancer</displayName>
+    </task>
+    <task name="Task_Create_Corresponding_MSA_Device.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <displayName>Create Corresponding MSA Device</displayName>
+    </task>
+    <task name="Task_Update_Device_Management_Port.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <displayName>Update Device Management Port</displayName>
+    </task>
+    <task name="Task_Ping_Device.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <displayName>Ping Device</displayName>
+    </task>
+    <task name="Task_MSA_Initial_Device_Provisionning.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <displayName>MSA Initial Device Provisionning</displayName>
+    </task>
+  </process>
+
+<process name="Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Add_Dedicated_Load_Balancer">
+    <visibility>5</visibility>
+    <displayName>Add Dedicated Load Balancer</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="Task_Add_Load_Balancers.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Add_Dedicated_Load_Balancer/Tasks/</processPath>
+      <displayName>Add Load Balancers</displayName>
+    </task>
+  </process>
+  <process name="Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Remove_Dedicated_Load_Balancer">
+    <visibility>5</visibility>
+    <displayName>Remove Dedicated Load Balancer</displayName>
+    <icon/>
+    <poolId>0</poolId>
+    <allowSchedule>false</allowSchedule>
+    <type>UPDATE</type>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath/>
+      <displayName>Sync VIM-K8s services inventories</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath/>
+      <displayName>Get Token</displayName>
+    </task>
+    <task name="Task_Delete_Load_Balancers.php">
+      <processPath>/opt/fmc_repository/Process/KUBERNETES_V2/CNF_Mgmt_Yaml_Based/Process_Remove_Dedicated_Load_Balancer/Tasks/</processPath>
+      <displayName>Delete Load Balancers</displayName>
+    </task>
+  </process>
+</ObjectDefinition>
