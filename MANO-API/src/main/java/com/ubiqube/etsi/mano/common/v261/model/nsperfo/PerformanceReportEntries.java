@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo;
+package com.ubiqube.etsi.mano.common.v261.model.nsperfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PerformanceReportPerformanceValues;
 
 import io.swagger.annotations.ApiModelProperty;
 

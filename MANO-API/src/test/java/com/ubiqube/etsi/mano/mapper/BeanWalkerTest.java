@@ -14,11 +14,11 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
@@ -73,7 +73,7 @@ public class BeanWalkerTest {
 	@Test
 	void testHashMap() throws Exception {
 		final VnfPkgInfo subsJson = new VnfPkgInfo();
-		final Map<String, Object> userDefinedData = new HashMap<>();
+		final Map<String, String> userDefinedData = new HashMap<>();
 		userDefinedData.put("test", "value");
 		subsJson.setUserDefinedData(userDefinedData);
 		final BeanWalker bw = new BeanWalker();

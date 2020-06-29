@@ -62,6 +62,7 @@ public class GrantService {
 		final GrantsRequest grants = new GrantsRequest();
 		grants.setVnfLcmOpOccs(lcmOpOccs);
 		grants.setVnfdId(vnfInstance.getVnfdId());
+		grants.setVnfInstance(vnfInstance);
 		grants.setFlavourId(vnfPackage.getFlavorId());
 		grants.setAutomaticInvocation(false);
 		grants.setOperation(state);

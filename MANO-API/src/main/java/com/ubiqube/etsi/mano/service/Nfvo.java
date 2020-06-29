@@ -32,8 +32,8 @@ public class Nfvo {
 	}
 
 	public GrantResponse sendSyncGrantRequest(final GrantsRequest req) {
-		final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
-		return sendAndWaitGrantRequest(finalReq);
+		// final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
+		return sendAndWaitGrantRequest(req);
 	}
 
 	private GrantResponse sendAndWaitGrantRequest(final GrantsRequest grantRequest) {

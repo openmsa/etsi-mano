@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.model;
+package com.ubiqube.etsi.mano.common.v261.model.nslcm;
 
 import java.util.Objects;
 

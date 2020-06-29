@@ -17,7 +17,7 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.nfvo.v261.model.ResourceHandle;
+import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ChangeTypeEnum;
 
 import io.swagger.annotations.ApiModel;

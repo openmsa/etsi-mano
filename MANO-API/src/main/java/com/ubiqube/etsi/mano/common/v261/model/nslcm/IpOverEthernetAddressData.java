@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.model;
+package com.ubiqube.etsi.mano.common.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.IpOverEthernetAddressDataIpAddresses;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

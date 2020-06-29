@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
+package com.ubiqube.etsi.mano.common.v261.model.nsperfo;
 
 import java.util.Objects;
 

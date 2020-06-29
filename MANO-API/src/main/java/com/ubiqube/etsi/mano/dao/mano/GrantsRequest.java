@@ -10,15 +10,22 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
+
+import org.hibernate.search.annotations.FieldBridge;
+
+import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -37,6 +44,8 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	private String flavourId;
 
+	@Enumerated(EnumType.STRING)
+	@FieldBridge(impl = EnumFieldBridge.class)
 	private NsdChangeType operation;
 
 	private boolean isAutomaticInvocation;
@@ -98,6 +107,9 @@ public class GrantsRequest implements BaseEntity, Auditable {
 	 * Flag to say if grants have been, inspected.
 	 */
 	private Boolean available;
+
+	@ManyToOne
+	private VnfInstance vnfInstance;
 
 	@Override
 	public UUID getId() {
@@ -288,6 +300,14 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	public void setVimConstraints(final Set<VimConstraints> vimConstraints) {
 		this.vimConstraints = vimConstraints;
+	}
+
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
+	}
+
+	public void setVnfInstance(final VnfInstance _vnfInstance) {
+		vnfInstance = _vnfInstance;
 	}
 
 }

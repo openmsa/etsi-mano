@@ -1,8 +1,5 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.Files;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
@@ -54,20 +50,13 @@ public class GrantMngtSol005 implements GrantManagement {
 
 	@Override
 	public GrantResponse post(final GrantsRequest grantRequest) {
-		try {
-			final String content = objectMapper.writeValueAsString(grantRequest);
-			Files.write(content.getBytes(Charset.defaultCharset()), new File("grant-request.json"));
-			LOG.error("HellO {}", content);
-		} catch (final IOException e) {
-			LOG.warn("", e);
-		}
 		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		grants.setAvailable(Boolean.FALSE);
 		final GrantResponse grantsDb = grantsResponseJpa.save(grants);
-		LOG.debug("Sending grants {}", grants.getId());
-		eventManager.sendGrant(grants.getId(), new HashMap<>());
-		LOG.info("Grant request {} sent.", grants.getId());
-		return grants;
+		LOG.debug("Sending grants {}", grantsDb.getId());
+		eventManager.sendGrant(grantsDb.getId(), new HashMap<>());
+		LOG.info("Grant request {} sent.", grantsDb.getId());
+		return grantsDb;
 	}
 
 }

@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.PnfFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.nfvo.v261.model.Link;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;

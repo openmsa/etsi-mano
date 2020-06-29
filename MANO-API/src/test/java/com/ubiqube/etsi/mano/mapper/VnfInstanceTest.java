@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
@@ -23,8 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.nfvo.v261.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.nfvo.v261.model.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
