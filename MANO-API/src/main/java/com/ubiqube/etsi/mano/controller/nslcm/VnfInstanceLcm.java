@@ -29,6 +29,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -174,7 +176,8 @@ public class VnfInstanceLcm {
 	public VnfLcmOpOccs scale(final UUID uuid, final ScaleVnfRequest scaleVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
 		ensureInstantiated(vnfInstance);
-		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, scaleVnfRequest);
+		final VnfScaleRequest req = mapper.map(scaleVnfRequest, VnfScaleRequest.class);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, req);
 		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
 		return lcmOpOccs;
 	}
@@ -182,7 +185,8 @@ public class VnfInstanceLcm {
 	public VnfLcmOpOccs operate(final UUID uuid, final OperateVnfRequest operateVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
 		ensureInstantiated(vnfInstance);
-		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
+		final VnfOperateRequest req = mapper.map(operateVnfRequest, VnfOperateRequest.class);
+		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, req);
 		eventManager.sendAction(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<String, Object>());
 		return lcmOpOccs;
 	}

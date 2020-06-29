@@ -228,7 +228,7 @@ public class NsExecutionPlanner {
 			final NsInstantiate request = new NsInstantiate();
 			request.setNsFlavourId(nsdInstance.getFlavourId());
 			request.setNsInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
-			final NsUnitOfWork uow = new NsUow(x, request, null, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().toString());
+			final NsUnitOfWork uow = new NsUow(x, request, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().toString());
 			vertex.add(x.getNsdPackage().toString(), uow);
 			g.addVertex(uow);
 		});
