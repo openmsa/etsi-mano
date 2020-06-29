@@ -12,7 +12,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -27,7 +27,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	private final NsInstantiatedNs resourceHandle;
 
-	private final InstantiateNsRequest instantiateRequest;
+	private final NsInstantiate instantiateRequest;
 
 	private final TerminateNsRequest terminateRequest;
 
@@ -35,7 +35,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	private final NsLcmOpOccsService nsLcmOpOccsService;
 
-	public NsUow(final NsInstantiatedNs _resourceHandleEntity, final InstantiateNsRequest req, final TerminateNsRequest terminateReq, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService, final String _name) {
+	public NsUow(final NsInstantiatedNs _resourceHandleEntity, final NsInstantiate req, final TerminateNsRequest terminateReq, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService, final String _name) {
 		super(_resourceHandleEntity, _name);
 		resourceHandle = _resourceHandleEntity;
 		instantiateRequest = req;

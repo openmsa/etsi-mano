@@ -31,8 +31,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
+import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
@@ -225,7 +225,7 @@ public class NsExecutionPlanner {
 		resources.getAffectedNss().forEach(x -> {
 			x.getNsdPackage();
 			LOG.info("Adding NS vertex of {}", x.getNsInstanceId());
-			final InstantiateNsRequest request = new InstantiateNsRequest();
+			final NsInstantiate request = new NsInstantiate();
 			request.setNsFlavourId(nsdInstance.getFlavourId());
 			request.setNsInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
 			final NsUnitOfWork uow = new NsUow(x, request, null, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().toString());
