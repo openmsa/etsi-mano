@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VirtualStorageResourceInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfExtCpInfo;
@@ -171,7 +172,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
-		final VnfLcmOpOccs lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest);
+		final VnfInstantiate req = mapper.map(instantiateVnfRequest, VnfInstantiate.class);
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), req);
 		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}

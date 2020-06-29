@@ -17,8 +17,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
-
 public class IpOverEthernetAddressDataAddressRange {
 	@JsonProperty("minAddress")
 	private String minAddress = null;

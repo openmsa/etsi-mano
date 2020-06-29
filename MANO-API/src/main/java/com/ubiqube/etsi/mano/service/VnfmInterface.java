@@ -8,13 +8,13 @@ import javax.validation.constraints.NotNull;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 
 public interface VnfmInterface {
 
 	VnfInstance createVnfInstance(final VnfPackage vnf, String vnfInstanceDescription, String vnfInstanceName);
 
-	VnfLcmOpOccs vnfInstatiate(@Nonnull UUID vnfInstanceId, InstantiateVnfRequest instantiateVnfRequest, UUID vnfId);
+	VnfLcmOpOccs vnfInstatiate(@Nonnull UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest, UUID vnfId);
 
 	VnfLcmOpOccs getVnfLcmOpOccs(@NotNull UUID id);
 

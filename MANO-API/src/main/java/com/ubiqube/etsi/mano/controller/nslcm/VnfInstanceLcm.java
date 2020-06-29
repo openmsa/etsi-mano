@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -36,7 +37,6 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
@@ -121,7 +121,7 @@ public class VnfInstanceLcm {
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 
-	public VnfLcmOpOccs instantiate(@Nonnull final UUID vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
+	public VnfLcmOpOccs instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 

@@ -11,7 +11,7 @@ import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 
 @Service
 public class VnfmNfvo implements VnfmInterface {
@@ -27,7 +27,7 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest, final UUID vnfId) {
+	public VnfLcmOpOccs vnfInstatiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest, final UUID vnfId) {
 		return lcm.instantiate(vnfInstanceId, instantiateVnfRequest);
 	}
 

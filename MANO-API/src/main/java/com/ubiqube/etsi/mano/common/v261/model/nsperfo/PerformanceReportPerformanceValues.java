@@ -14,8 +14,6 @@ import io.swagger.annotations.ApiModelProperty;
  * PerformanceReportPerformanceValues
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:01:09.127+02:00")
-
 public class PerformanceReportPerformanceValues {
 	@JsonProperty("timeStamp")
 	private String timeStamp = null;
@@ -30,7 +28,7 @@ public class PerformanceReportPerformanceValues {
 
 	/**
 	 * Time stamp indicating when the data has been collected.
-	 * 
+	 *
 	 * @return timeStamp
 	 **/
 	@ApiModelProperty(required = true, value = "Time stamp indicating when the data has been collected. ")
@@ -53,7 +51,7 @@ public class PerformanceReportPerformanceValues {
 	 * Value of the metric collected. The type of this attribute shall correspond to
 	 * the related \"Measurement Unit\" as defined in clause 7.2. of ETSI GS NFV-IFA
 	 * 027.
-	 * 
+	 *
 	 * @return value
 	 **/
 	@ApiModelProperty(value = "Value of the metric collected. The type of this attribute shall correspond to the related \"Measurement Unit\" as defined in clause 7.2. of ETSI GS NFV-IFA 027. ")

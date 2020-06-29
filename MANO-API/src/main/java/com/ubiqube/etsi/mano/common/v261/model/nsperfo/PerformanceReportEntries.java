@@ -17,8 +17,6 @@ import io.swagger.annotations.ApiModelProperty;
  * PerformanceReportEntries
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:01:09.127+02:00")
-
 public class PerformanceReportEntries {
 	@JsonProperty("objectType")
 	private String objectType = null;
@@ -45,7 +43,7 @@ public class PerformanceReportEntries {
 	 * Defines the object type for which performance information is reported (i.e.
 	 * VNF type). The string value shall be set to the vnfdId of the VNF instance to
 	 * which the performance information relates.
-	 * 
+	 *
 	 * @return objectType
 	 **/
 	@ApiModelProperty(required = true, value = "Defines the object type for which performance information is reported (i.e. VNF type). The string value shall be set to the vnfdId of the VNF instance to which the performance information relates. ")
@@ -67,7 +65,7 @@ public class PerformanceReportEntries {
 	/**
 	 * The object instance (i.e. VNF instance) for which the performance metric is
 	 * reported.
-	 * 
+	 *
 	 * @return objectInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "The object instance (i.e. VNF instance) for which the performance metric is reported. ")
@@ -95,7 +93,7 @@ public class PerformanceReportEntries {
 	 * Sub-object: VnfcInstance1 Measurement: vCPU_utilization Sub-counters: vCPU
 	 * utilization of each of the vCPUs of VnfcInstance1 (vCPU_utilization.vCPU1,
 	 * vCPU_utilization.vCPU2, etc.).
-	 * 
+	 *
 	 * @return subObjectInstanceId
 	 **/
 	@ApiModelProperty(value = "Identifier of the sub-object of the measured object (i.e. a VNFC instance) for which the performance metric is reported. Shall be present if this is required in the measurement specification. The sub-object allows to structure the measured object, but is not to be confused with sub-counters which allow to structure the measurement. EXAMPLE:   Measured object:  VnfInstanceXYZ   Sub-object:       VnfcInstance1   Measurement:      vCPU_utilization   Sub-counters:     vCPU utilization of each of the vCPUs of VnfcInstance1                     (vCPU_utilization.vCPU1, vCPU_utilization.vCPU2, etc.). ")
@@ -116,7 +114,7 @@ public class PerformanceReportEntries {
 	/**
 	 * Name of the metric collected. This attribute shall contain the related
 	 * \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027.
-	 * 
+	 *
 	 * @return performanceMetric
 	 **/
 	@ApiModelProperty(required = true, value = "Name of the metric collected. This attribute shall contain the related \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027. ")
@@ -145,7 +143,7 @@ public class PerformanceReportEntries {
 
 	/**
 	 * List of performance values with associated timestamp.
-	 * 
+	 *
 	 * @return performanceValues
 	 **/
 	@ApiModelProperty(value = "List of performance values with associated timestamp. ")

@@ -24,7 +24,6 @@ import io.swagger.annotations.ApiModelProperty;
  * Links to resources related to this resource.
  */
 @ApiModel(description = "Links to resources related to this resource. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
 public class VnfInstanceLinks {
 	@JsonProperty("self")
 	private Link self = null;

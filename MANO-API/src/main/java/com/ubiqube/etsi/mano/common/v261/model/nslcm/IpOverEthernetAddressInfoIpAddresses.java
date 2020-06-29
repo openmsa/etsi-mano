@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
+package com.ubiqube.etsi.mano.common.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,13 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.IpOverEthernetAddressInfoAddressRange;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * IpOverEthernetAddressInfoIpAddresses
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
 public class IpOverEthernetAddressInfoIpAddresses {
 	/**
 	 * The type of the IP addresses. Permitted values: IPV4, IPV6.
@@ -38,7 +38,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 
 		private final String value;
 
-		TypeEnum(String value) {
+		TypeEnum(final String value) {
 			this.value = value;
 		}
 
@@ -49,7 +49,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 		}
 
 		@JsonCreator
-		public static TypeEnum fromValue(String text) {
+		public static TypeEnum fromValue(final String text) {
 			for (final TypeEnum b : TypeEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -74,14 +74,14 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	@JsonProperty("subnetId")
 	private String subnetId = null;
 
-	public IpOverEthernetAddressInfoIpAddresses type(TypeEnum type) {
+	public IpOverEthernetAddressInfoIpAddresses type(final TypeEnum type) {
 		this.type = type;
 		return this;
 	}
 
 	/**
 	 * The type of the IP addresses. Permitted values: IPV4, IPV6.
-	 * 
+	 *
 	 * @return type
 	 **/
 	@JsonProperty("type")
@@ -91,18 +91,18 @@ public class IpOverEthernetAddressInfoIpAddresses {
 		return type;
 	}
 
-	public void setType(TypeEnum type) {
+	public void setType(final TypeEnum type) {
 		this.type = type;
 	}
 
-	public IpOverEthernetAddressInfoIpAddresses addresses(List<String> addresses) {
+	public IpOverEthernetAddressInfoIpAddresses addresses(final List<String> addresses) {
 		this.addresses = addresses;
 		return this;
 	}
 
-	public IpOverEthernetAddressInfoIpAddresses addAddressesItem(String addressesItem) {
+	public IpOverEthernetAddressInfoIpAddresses addAddressesItem(final String addressesItem) {
 		if (this.addresses == null) {
-			this.addresses = new ArrayList<String>();
+			this.addresses = new ArrayList<>();
 		}
 		this.addresses.add(addressesItem);
 		return this;
@@ -111,7 +111,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	/**
 	 * Fixed addresses assigned (from the subnet defined by \&quot;subnetId\&quot;
 	 * if provided).
-	 * 
+	 *
 	 * @return addresses
 	 **/
 	@JsonProperty("addresses")
@@ -120,11 +120,11 @@ public class IpOverEthernetAddressInfoIpAddresses {
 		return addresses;
 	}
 
-	public void setAddresses(List<String> addresses) {
+	public void setAddresses(final List<String> addresses) {
 		this.addresses = addresses;
 	}
 
-	public IpOverEthernetAddressInfoIpAddresses isDynamic(Boolean isDynamic) {
+	public IpOverEthernetAddressInfoIpAddresses isDynamic(final Boolean isDynamic) {
 		this.isDynamic = isDynamic;
 		return this;
 	}
@@ -134,7 +134,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 * based on address information provided as input from the API consumer (false).
 	 * Shall be present if \&quot;addresses\&quot; is present and shall be absent
 	 * otherwise.
-	 * 
+	 *
 	 * @return isDynamic
 	 **/
 	@JsonProperty("isDynamic")
@@ -143,18 +143,18 @@ public class IpOverEthernetAddressInfoIpAddresses {
 		return isDynamic;
 	}
 
-	public void setIsDynamic(Boolean isDynamic) {
+	public void setIsDynamic(final Boolean isDynamic) {
 		this.isDynamic = isDynamic;
 	}
 
-	public IpOverEthernetAddressInfoIpAddresses addressRange(IpOverEthernetAddressInfoAddressRange addressRange) {
+	public IpOverEthernetAddressInfoIpAddresses addressRange(final IpOverEthernetAddressInfoAddressRange addressRange) {
 		this.addressRange = addressRange;
 		return this;
 	}
 
 	/**
 	 * Get addressRange
-	 * 
+	 *
 	 * @return addressRange
 	 **/
 	@JsonProperty("addressRange")
@@ -163,11 +163,11 @@ public class IpOverEthernetAddressInfoIpAddresses {
 		return addressRange;
 	}
 
-	public void setAddressRange(IpOverEthernetAddressInfoAddressRange addressRange) {
+	public void setAddressRange(final IpOverEthernetAddressInfoAddressRange addressRange) {
 		this.addressRange = addressRange;
 	}
 
-	public IpOverEthernetAddressInfoIpAddresses subnetId(String subnetId) {
+	public IpOverEthernetAddressInfoIpAddresses subnetId(final String subnetId) {
 		this.subnetId = subnetId;
 		return this;
 	}
@@ -175,7 +175,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	/**
 	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
 	 * this attribute is present, IP addresses are bound to that subnet.
-	 * 
+	 *
 	 * @return subnetId
 	 **/
 	@JsonProperty("subnetId")
@@ -184,7 +184,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 		return subnetId;
 	}
 
-	public void setSubnetId(String subnetId) {
+	public void setSubnetId(final String subnetId) {
 		this.subnetId = subnetId;
 	}
 
@@ -206,7 +206,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}
