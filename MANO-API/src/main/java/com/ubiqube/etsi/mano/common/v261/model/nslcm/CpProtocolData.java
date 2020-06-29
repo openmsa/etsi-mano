@@ -19,8 +19,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents network protocol data. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
-
 public class CpProtocolData {
 	/**
 	 * Identifier of layer(s) and protocol(s). This attribute allows to signal the

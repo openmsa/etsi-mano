@@ -19,8 +19,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents network address data for IP over Ethernet. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
-
 public class IpOverEthernetAddressData {
 	@JsonProperty("macAddress")
 	private String macAddress = null;

@@ -18,8 +18,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. Information about the resource is available from the VIM. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-03-30T14:49:43.249+02:00")
-
 public class ResourceHandle {
 	@JsonProperty("vimConnectionId")
 	private String vimConnectionId = null;

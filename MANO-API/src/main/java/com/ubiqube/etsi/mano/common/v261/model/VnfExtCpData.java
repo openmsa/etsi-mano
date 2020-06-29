@@ -21,8 +21,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents configuration information for external CPs created from a CPD. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
-
 public class VnfExtCpData {
 	@JsonProperty("cpdId")
 	private String cpdId = null;
