@@ -47,6 +47,7 @@ import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
@@ -68,6 +69,7 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 
 import ma.glasnost.orika.MapperFacade;
 
+@Service
 public class OpenStackVim implements Vim {
 	private static final long GIGA = 1024 * 1024 * 1024L;
 
