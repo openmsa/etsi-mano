@@ -23,7 +23,7 @@ global $OS_CURL_RETRY_DELAY;
 global $OS_CURL_RETRY_MAX_TIME;
 
 
-	 curl --tlsv1.2 -i -sw 'HTTP_CODE=%{http_code}' --connect-timeout 50 --max-time 50 -X POST --header "Authorization: Bearer eyJhbGciOiJ9zZXJ2KFBCt3RhNjnmCMla7tv_6w" -H "Content-Type: application/yaml" -k 'https://10.31.1.241:6443/apis/apps/v1/namespaces/default/deployments' -d '
+	 curl --tlsv1.2 -i -sw 'HTTP_CODE=%{http_code}' --connect-timeout 50 --max-time 50 -X POST --header "Authorization: Bearer $Token " -H "Content-Type: application/yaml" -k 'https://10.31.1.241:6443/apis/apps/v1/namespaces/default/deployments' -d '
 apiVersion: apps/v1
 kind: Deployment
 metadata:
