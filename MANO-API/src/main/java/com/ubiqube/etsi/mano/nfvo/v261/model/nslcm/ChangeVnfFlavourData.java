@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
 import io.swagger.annotations.ApiModel;

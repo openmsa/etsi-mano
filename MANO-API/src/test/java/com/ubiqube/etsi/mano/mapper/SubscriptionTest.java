@@ -8,6 +8,12 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
@@ -15,13 +21,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.SubscriptionQuery;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

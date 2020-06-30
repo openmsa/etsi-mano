@@ -20,7 +20,6 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.IpOverEthernetAddressInfoAddressRange;
 
 import io.swagger.annotations.ApiModelProperty;
 

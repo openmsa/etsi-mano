@@ -23,13 +23,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.UploadVnfPkgFromUriRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.event.ActionType;

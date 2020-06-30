@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;

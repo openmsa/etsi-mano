@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 
 public class SerializationTest {
 	ObjectMapper mapper = new ObjectMapper();

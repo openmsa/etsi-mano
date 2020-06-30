@@ -7,6 +7,8 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.bean.TestFactory;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageUsageStateType;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
@@ -17,8 +19,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageUsageStateType;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

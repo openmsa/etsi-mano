@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageOnboardingNotification;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

@@ -15,9 +15,9 @@ import java.io.InputStreamReader;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.WeakPatcher;
 

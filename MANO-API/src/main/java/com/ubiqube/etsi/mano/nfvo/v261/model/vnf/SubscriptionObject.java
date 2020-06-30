@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.vnf;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 
 import io.swagger.annotations.ApiModel;

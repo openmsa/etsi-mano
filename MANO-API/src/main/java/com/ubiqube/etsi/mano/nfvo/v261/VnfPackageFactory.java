@@ -7,17 +7,17 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageChangeType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageArtifactInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageArtifactInfo;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.PackageChangeType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageOnboardingNotification;
 
 public class VnfPackageFactory {
 	private VnfPackageFactory() {

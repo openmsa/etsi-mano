@@ -4,6 +4,11 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -12,11 +17,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;

@@ -19,8 +19,8 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

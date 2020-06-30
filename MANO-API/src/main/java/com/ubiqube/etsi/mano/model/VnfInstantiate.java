@@ -2,6 +2,8 @@ package com.ubiqube.etsi.mano.model;
 
 import java.util.List;
 
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
+
 public class VnfInstantiate {
 	private String flavourId = null;
 

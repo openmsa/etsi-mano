@@ -3,6 +3,9 @@ package com.ubiqube.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageUsageStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
@@ -12,9 +15,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 
 public class TestFactory {
 

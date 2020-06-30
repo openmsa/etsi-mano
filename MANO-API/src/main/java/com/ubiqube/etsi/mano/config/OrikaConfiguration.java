@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.config;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
@@ -15,7 +16,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
-import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;

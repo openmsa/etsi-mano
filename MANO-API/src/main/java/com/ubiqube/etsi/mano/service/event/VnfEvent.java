@@ -8,12 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.vnfm.v261.controller.vnf.Sol003Linkable;

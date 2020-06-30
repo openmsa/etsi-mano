@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.controller.lcm.LcmLinkable;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
@@ -24,7 +25,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm.LcmLinkable;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;

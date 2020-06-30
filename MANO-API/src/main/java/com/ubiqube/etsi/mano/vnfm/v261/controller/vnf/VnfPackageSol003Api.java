@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 /**

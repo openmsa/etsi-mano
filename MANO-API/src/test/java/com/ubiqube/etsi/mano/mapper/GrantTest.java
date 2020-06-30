@@ -14,15 +14,15 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ExtManagedVirtualLinkData;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;

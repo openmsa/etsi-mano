@@ -8,10 +8,10 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.grammar.JsonBeanProperty;
 import com.ubiqube.etsi.mano.grammar.JsonBeanUtil;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 
 public class JsonBeanUtilTest {
 

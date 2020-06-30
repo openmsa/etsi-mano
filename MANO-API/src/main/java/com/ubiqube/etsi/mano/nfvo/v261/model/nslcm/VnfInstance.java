@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
 
 import io.swagger.annotations.ApiModel;

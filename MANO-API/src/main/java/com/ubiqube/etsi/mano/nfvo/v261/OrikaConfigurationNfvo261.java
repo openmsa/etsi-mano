@@ -2,6 +2,10 @@ package com.ubiqube.etsi.mano.nfvo.v261;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
@@ -20,12 +24,8 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionObject;
 
 import ma.glasnost.orika.MapperFactory;

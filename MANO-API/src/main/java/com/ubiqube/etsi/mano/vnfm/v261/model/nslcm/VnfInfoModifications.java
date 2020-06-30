@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
