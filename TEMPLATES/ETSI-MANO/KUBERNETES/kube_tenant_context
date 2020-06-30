@@ -1,0 +1,27 @@
+{*
+<variables>
+  <variable name="KUBE_AUTH_METHOD" type="String" displayOrder="0" tableSizeFix="false" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="USER_DOMAIN_ID" type="String" displayOrder="0" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="KUBE_HTTP_PROTOCOL" type="String" displayOrder="0" tableSizeFix="false" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="HTTP_PROTOCOL" type="String" displayOrder="0" default="http" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="KUBE_PORT" type="String" displayOrder="0" tableSizeFix="false" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="PROJECT_DOMAIN_ID" type="String" displayOrder="0" numberOfRowMax="0" maxLength="100">  </variable>
+  <variable name="TENANT_ID" type="String" displayOrder="0" numberOfRowMax="0" maxLength="200">  </variable>
+  <variable name="ENDPOINTS_INTERFACE" type="String" displayOrder="0" default="public" numberOfRowMax="0" maxLength="100">
+    <values>
+      <value>public</value>
+      <value>admin</value>
+    </values>
+  </variable>
+  <variable name="KUBE_TOKEN" type="String" displayOrder="0" tableSizeFix="false" numberOfRowMax="0" maxLength="100">  </variable>
+</variables>
+*}
+{$TENANT_ID}
+{$USER_DOMAIN_ID}
+{$PROJECT_DOMAIN_ID}
+{$HTTP_PROTOCOL}
+{$ENDPOINTS_INTERFACE}
+{$KUBE_AUTH_METHOD}
+{$KUBE_TOKEN}
+{$KUBE_HTTP_PROTOCOL}
+{$KUBE_PORT}
