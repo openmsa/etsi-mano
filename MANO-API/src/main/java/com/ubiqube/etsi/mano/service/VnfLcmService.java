@@ -29,10 +29,10 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 
 @Service
 public class VnfLcmService {
@@ -94,7 +94,7 @@ public class VnfLcmService {
 		return vnfInstantiedExtCpJpa.findById(id);
 	}
 
-	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(NsdChangeType.SCALE_TO_LEVEL, vnfInstance.getId());
 		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(scaleVnfToLevelRequest.getInstantiationLevelId());
 		if (scaleVnfToLevelRequest.getScaleInfo() != null) {

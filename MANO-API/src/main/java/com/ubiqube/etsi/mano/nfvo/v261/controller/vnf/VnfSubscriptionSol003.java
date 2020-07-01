@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.List;
 

@@ -51,9 +51,9 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
+		final List<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
 				.map(x -> {
-					final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+					final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 					v.setLinks(links.getLinks(x.getId().toString()));
 					return v;
 				})
@@ -70,9 +70,9 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	}
 
 	@Override
-	public ResponseEntity<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
+	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest.getVnfdId(), createVnfRequest.getVnfInstanceName(), createVnfRequest.getVnfInstanceDescription());
-		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance inst = mapper.map(vnfInstance, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance inst = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 		inst.setLinks(links.getLinks(vnfInstance.getId().toString()));
 		return ResponseEntity.accepted().body(inst);
 	}
@@ -94,9 +94,9 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	}
 
 	@Override
-	public ResponseEntity<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
+	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
 		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
 	}

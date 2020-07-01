@@ -14,7 +14,6 @@ import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
@@ -26,7 +25,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionObject;
 
 import ma.glasnost.orika.MapperFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
@@ -46,15 +44,6 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("nestedNsInstanceId{}", "nestedNsInstance{id}")
 				.field("nsdId", "nsdInfo.nsdId")
 				.field("nsdInfoId", "nsdInfo.id")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(SubscriptionObject.class, Subscription.class)
-				.field("pkgmSubscription.callbackUri", "callbackUri")
-				.fieldMap("pkgmSubscription.filter", "filters").converter("filterConverter").add()
-				.field("pkgmSubscription.id", "id")
-				.field("subscriptionAuthentication.paramsBasic", "authentificationInformations.authParamBasic")
-				.field("subscriptionAuthentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
-				.field("subscriptionAuthentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
 

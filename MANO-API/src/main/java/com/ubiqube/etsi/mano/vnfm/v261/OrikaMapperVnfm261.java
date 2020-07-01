@@ -31,7 +31,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
-		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class, VnfInstance.class)
+		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VnfInstance.class)
 				.field("vnfPkgId", "vnfPkg.id")
 				.field("vnfConfigurableProperties{key}", "vnfConfigurableProperties{key}")
 				.field("vnfConfigurableProperties{value}", "vnfConfigurableProperties{value}")

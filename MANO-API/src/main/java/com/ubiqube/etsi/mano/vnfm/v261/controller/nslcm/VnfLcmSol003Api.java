@@ -36,6 +36,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -73,9 +76,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
+		final List<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
 				.map(x -> {
-					final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+					final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 					v.setLinks(links.getLinks(x.getId().toString()));
 					return v;
 				})
@@ -93,9 +96,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
+	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest.getVnfdId(), createVnfRequest.getVnfInstanceName(), createVnfRequest.getVnfInstanceDescription());
-		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance inst = mapper.map(vnfInstance, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance inst = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 		inst.setLinks(links.getLinks(vnfInstance.getId().toString()));
 		return ResponseEntity.accepted().body(inst);
 	}
@@ -129,9 +132,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
+	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
 		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
-		final com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.VnfInstance.class);
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfInstance.getVnfPkgId()));
 		mapper.map(vnfPackage, vnfInstance);
@@ -180,7 +183,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
-		final VnfLcmOpOccs lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), operateVnfRequest);
+		final VnfOperateRequest req = mapper.map(operateVnfRequest, VnfOperateRequest.class);
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), req);
 		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 		// after return.
@@ -201,7 +205,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId, final ScaleVnfRequest scaleVnfRequest) {
-		final VnfLcmOpOccs lcm = vnfInstanceLcm.scale(UUID.fromString(vnfInstanceId), scaleVnfRequest);
+		final VnfScaleRequest req = mapper.map(scaleVnfRequest, VnfScaleRequest.class);
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.scale(UUID.fromString(vnfInstanceId), req);
 		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
@@ -212,7 +217,8 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
-		final VnfLcmOpOccs lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), scaleVnfToLevelRequest);
+		final VnfScaleToLevelRequest req = mapper.map(scaleVnfToLevelRequest, VnfScaleToLevelRequest.class);
+		final VnfLcmOpOccs lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), req);
 		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.

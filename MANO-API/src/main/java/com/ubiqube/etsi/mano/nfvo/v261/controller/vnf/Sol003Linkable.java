@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -6,11 +6,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.model.FrontApiTypesEnum;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
-import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 
 public class Sol003Linkable implements Linkable {
 
@@ -75,7 +75,7 @@ public class Sol003Linkable implements Linkable {
 	}
 
 	@Override
-	public ApiTypesEnum getApi() {
-		return ApiTypesEnum.SOL003;
+	public FrontApiTypesEnum getApi() {
+		return FrontApiTypesEnum.SOL003;
 	}
 }

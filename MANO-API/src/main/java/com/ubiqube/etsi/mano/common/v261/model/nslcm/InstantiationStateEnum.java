@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
+package com.ubiqube.etsi.mano.common.v261.model.nslcm;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261;
+package com.ubiqube.etsi.mano.common.v261;
 
 import javax.annotation.Nonnull;
 
