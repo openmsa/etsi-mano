@@ -23,7 +23,7 @@ global $OS_CURL_RETRY_DELAY;
 global $OS_CURL_RETRY_MAX_TIME;
 
 
-	 curl --tlsv1.2 -i -sw 'HTTP_CODE=%{http_code}' --connect-timeout 50 --max-time 50 -X POST --header "Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkN1NDFDSmo0cW9haVo1V1dKOVlxS3prTW9lLXplckYySHVOQmF4V1IxYjQifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tbmM0eG4iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjkzNThhNTJhLTI2NTItNDE4MS05NThjLTQ3NGViMzJiNzYxOSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.yTawxTUfQewCHEGpA1MvV7-xOqM-1gq_3s9gxZYRHqnYDJNtlpo3yxtBLDBnIWc-BJNKXrpgnKlymRBsstwAxBOJTYX-4AZrDNT7EpkFOAtKFBoUE2iGSG6kOCt3RhNjnmCMNh6pE-ljzfbi6wWydFSSrY-QEIrnJOkDHLEl9VvypLMxuviA2uDSEVTKny-0_qHuV_MlLC-AxTUqo41-XvrCPXCUk8qMp9yNo9I3kz8Cm8UGnN5MlvwjrF6BjEonN8NoUpvRGKCAmh_qugZYFoRVy--k8kjKERANvZhDL_iZTSuvlYrqVampZGcvnIIexQdAsOzGw-J7cIla7tv_6w" -H "Content-Type: application/yaml" -k 'https://10.31.1.241:6443/apis/apps/v1/namespaces/default/deployments' -d '
+	 curl --tlsv1.2 -i -sw 'HTTP_CODE=%{http_code}' --connect-timeout 50 --max-time 50 -X POST --header "Authorization: Bearer $Token " -H "Content-Type: application/yaml" -k 'https://10.31.1.241:6443/apis/apps/v1/namespaces/default/deployments' -d '
 apiVersion: apps/v1
 kind: Deployment
 metadata:
