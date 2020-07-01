@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.controller.lcmgrant;
+package com.ubiqube.etsi.mano.controller.nslcm;
 
 import java.util.List;
 
@@ -12,12 +12,13 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
 import ma.glasnost.orika.MapperFacade;
 
 @Controller
-public class LcmGrantsVersionsSol005Api implements LcmGrantsVersions {
+public class LcmApiVersionsApiController implements LcmApiVersionsApi {
+
 	private final MapperFacade mapper;
 
 	private final List<EtsiImplementation> implementations;
 
-	public LcmGrantsVersionsSol005Api(final List<EtsiImplementation> _implementations, final MapperFacade _mapper) {
+	public LcmApiVersionsApiController(final List<EtsiImplementation> _implementations, final MapperFacade _mapper) {
 		implementations = _implementations;
 		mapper = _mapper;
 	}
