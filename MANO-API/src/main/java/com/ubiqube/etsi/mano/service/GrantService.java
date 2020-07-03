@@ -78,7 +78,7 @@ public class GrantService {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(ResourceTypeEnum.STORAGE);
-					grantInformation.setVduId(x.getVnfVirtualStorage().getId());
+					grantInformation.setVduId(x.getManoResourceId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
@@ -92,7 +92,7 @@ public class GrantService {
 					final GrantInformation grantInformation = new GrantInformation();
 					grantInformation.setResourceDefinitionId(x.getId().toString());
 					grantInformation.setType(ResourceTypeEnum.VL);
-					grantInformation.setVduId(x.getVnfVirtualLink().getId());
+					grantInformation.setVduId(x.getManoResourceId());
 					grantInformation.setResourceTemplateId(x.getToscaName());
 					return grantInformation;
 				}).collect(Collectors.toSet());
@@ -102,35 +102,35 @@ public class GrantService {
 	private static void addGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfInstantiatedComputes) {
 		final Set<GrantInformation> res = vnfInstantiatedComputes.stream()
 				.filter(x -> x.getChangeType() == ChangeType.ADDED)
-				.map(x -> createGrantInformation(x, ResourceTypeEnum.COMPUTE, x.getVnfCompute().getId())).collect(Collectors.toSet());
+				.map(x -> createGrantInformation(x, ResourceTypeEnum.COMPUTE, x.getManoResourceId())).collect(Collectors.toSet());
 		grants.getAddResources().addAll(res);
 	}
 
 	private static void removeGrantsLinkPorts(final GrantsRequest grants, final Set<VnfInstantiatedExtCp> vnfInstantiatedExtCps) {
 		final Set<GrantInformation> res = vnfInstantiatedExtCps.stream()
 				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
-				.map(x -> createGrantInformation(x, ResourceTypeEnum.LINKPORT, x.getVnfExtCp().getId())).collect(Collectors.toSet());
+				.map(x -> createGrantInformation(x, ResourceTypeEnum.LINKPORT, x.getManoResourceId())).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsStorage(final GrantsRequest grants, final Set<VnfInstantiatedStorage> vnfInstantiatedStorages) {
 		final Set<GrantInformation> res = vnfInstantiatedStorages.stream()
 				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
-				.map(x -> createGrantInformation(x, ResourceTypeEnum.STORAGE, x.getVnfVirtualStorage().getId())).collect(Collectors.toSet());
+				.map(x -> createGrantInformation(x, ResourceTypeEnum.STORAGE, x.getManoResourceId())).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsVl(final GrantsRequest grants, final Set<VnfInstantiatedVirtualLink> vnfInstantiatedVirtualLinks) {
 		final Set<GrantInformation> res = vnfInstantiatedVirtualLinks.stream()
 				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
-				.map(x -> createGrantInformation(x, ResourceTypeEnum.VL, x.getVnfVirtualLink().getId())).collect(Collectors.toSet());
+				.map(x -> createGrantInformation(x, ResourceTypeEnum.VL, x.getManoResourceId())).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 
 	private static void removeGrantsCompute(final GrantsRequest grants, final Set<VnfInstantiatedCompute> vnfInstantiatedComputes) {
 		final Set<GrantInformation> res = vnfInstantiatedComputes.stream()
 				.filter(x -> x.getChangeType() == ChangeType.REMOVED)
-				.map(x -> createGrantInformation(x, ResourceTypeEnum.COMPUTE, x.getVnfCompute().getId())).collect(Collectors.toSet());
+				.map(x -> createGrantInformation(x, ResourceTypeEnum.COMPUTE, x.getManoResourceId())).collect(Collectors.toSet());
 		grants.getRemoveResources().addAll(res);
 	}
 

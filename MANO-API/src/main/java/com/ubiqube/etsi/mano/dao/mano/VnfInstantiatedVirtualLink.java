@@ -22,9 +22,6 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
 
-	@ManyToOne
-	private VnfVl vnfVirtualLink;
-
 	@Override
 	public UUID getId() {
 		return id;
@@ -33,14 +30,6 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public VnfVl getVnfVirtualLink() {
-		return vnfVirtualLink;
-	}
-
-	public void setVnfVirtualLink(final VnfVl vnfVirtualLink) {
-		this.vnfVirtualLink = vnfVirtualLink;
 	}
 
 	@Override

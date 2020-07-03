@@ -220,7 +220,8 @@ public class VnfmActions {
 
 	private Map<String, String> getLiveVl(final VnfInstance vnfInstance) {
 		final List<VnfInstantiatedVirtualLink> res = vnfInstancesService.getLiveVirtualLinkInstanceOf(vnfInstance);
-		return res.stream().collect(Collectors.toMap(y -> y.getVnfVirtualLink().getToscaName(), VnfInstantiatedBase::getResourceId));
+		return res.stream()
+				.collect(Collectors.toMap(VnfInstantiatedVirtualLink::getToscaName, VnfInstantiatedBase::getResourceId));
 	}
 
 	private void copyGrantResourcesToInstantiated(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
@@ -430,7 +431,7 @@ public class VnfmActions {
 		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
 		instantiatedCompute.forEach(x -> {
 			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
-			affectedCompute.setVnfCompute(x.getVnfCompute());
+			affectedCompute.setManoResourceId(x.getManoResourceId());
 			final VnfLiveInstance vnfLiveInstance = vnfInstancesService.findLiveInstanceByInstantiated(x.getId());
 			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);

@@ -82,8 +82,7 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity, Serializable 
 
 	private Date endTime;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private VnfCompute vnfCompute;
+	private UUID manoResourceId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private VnfLcmOpOccs vnfLcmOpOccs;
@@ -195,12 +194,12 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity, Serializable 
 		this.endTime = endTime;
 	}
 
-	public VnfCompute getVnfCompute() {
-		return vnfCompute;
+	public UUID getManoResourceId() {
+		return manoResourceId;
 	}
 
-	public void setVnfCompute(final VnfCompute vnfCompute) {
-		this.vnfCompute = vnfCompute;
+	public void setManoResourceId(final UUID manoResourceId) {
+		this.manoResourceId = manoResourceId;
 	}
 
 	public VnfLcmOpOccs getVnfLcmOpOccs() {

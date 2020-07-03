@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -105,7 +105,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(AffectedVirtualLink.class, VnfInstantiatedVirtualLink.class)
 				.exclude("audit")
-				.field("virtualLinkDescId", "vnfVirtualLink.id")
+				.field("virtualLinkDescId", "manoResourceId")
 				.field("networkResource.resourceId", "resourceId")
 				.field("networkResource.resourceProviderId", "resourceProviderId")
 				.field("networkResource.vimLevelResourceType", "vimLevelResourceType")

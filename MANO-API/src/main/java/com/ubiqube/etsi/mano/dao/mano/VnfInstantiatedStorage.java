@@ -17,9 +17,6 @@ public class VnfInstantiatedStorage extends VnfInstantiatedBase {
 	private UUID id = null;
 
 	@ManyToOne
-	private VnfStorage vnfVirtualStorage;
-
-	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
 
 	@Override
@@ -30,14 +27,6 @@ public class VnfInstantiatedStorage extends VnfInstantiatedBase {
 	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public VnfStorage getVnfVirtualStorage() {
-		return vnfVirtualStorage;
-	}
-
-	public void setVnfVirtualStorage(final VnfStorage vnfVirtualStorage) {
-		this.vnfVirtualStorage = vnfVirtualStorage;
 	}
 
 	@Override
