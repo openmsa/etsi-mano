@@ -297,7 +297,6 @@ public class ExecutionPlanner {
 			final int num = vnfInstanceService.getNumberOfLiveVl(vnfInstance, x);
 			if (num == 0) {
 				final VnfInstantiatedVirtualLink aVl = createInstantiated(new VnfInstantiatedVirtualLink(), x, lcmOpOccs);
-				aVl.setManoResourceId(x.getId());
 				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
 			}
 		});
@@ -305,7 +304,6 @@ public class ExecutionPlanner {
 			final int num = vnfInstanceService.getNumberOfLiveStorage(vnfInstance, x);
 			if (num == 0) {
 				final VnfInstantiatedStorage aVs = createInstantiated(new VnfInstantiatedStorage(), x, lcmOpOccs);
-				aVs.setManoResourceId(x.getId());
 				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(aVs);
 			}
 		});
@@ -314,7 +312,6 @@ public class ExecutionPlanner {
 			final int num = vnfInstanceService.getNumberOfLiveExtCp(vnfInstance, x);
 			if (num == 0) {
 				final VnfInstantiatedExtCp aVs = createInstantiated(new VnfInstantiatedExtCp(), x, lcmOpOccs);
-				aVs.setManoResourceId(x.getId());
 				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
 			}
 		});
@@ -328,6 +325,7 @@ public class ExecutionPlanner {
 		aVs.setVnfLcmOpOccs(lcmOpOccs);
 		aVs.setAliasName(vduNamingStrategy.nameVdu(lcmOpOccs, x.getToscaName(), 0));
 		aVs.setToscaName(x.getToscaName());
+		aVs.setManoResourceId(x.getId());
 		return aVs;
 	}
 
@@ -359,13 +357,13 @@ public class ExecutionPlanner {
 			// final VnfInstantiedCompute savedVnfInstantiedCompute =
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(vnfInstantiedCompute);
 			if ((null != vnfCompute.getMonitoringParameters()) && !vnfCompute.getMonitoringParameters().isEmpty()) {
-				final VnfInstantiatedMonitoring instanceMonotor = new VnfInstantiatedMonitoring();
-				instanceMonotor.setChangeType(ChangeType.ADDED);
-				instanceMonotor.setVnfLcmOpOccs(lcmOpOccs);
-				instanceMonotor.setManoResourceId(vnfCompute.getId());
-				instanceMonotor.setInstantiationLevel(scaleLevel);
-				instanceMonotor.setStatus(InstantiationStatusType.NOT_STARTED);
-				lcmOpOccs.getResourceChanges().addAffectedMonitoring(instanceMonotor);
+				final VnfInstantiatedMonitoring instanceMonitor = new VnfInstantiatedMonitoring();
+				instanceMonitor.setChangeType(ChangeType.ADDED);
+				instanceMonitor.setVnfLcmOpOccs(lcmOpOccs);
+				instanceMonitor.setManoResourceId(vnfCompute.getId());
+				instanceMonitor.setInstantiationLevel(scaleLevel);
+				instanceMonitor.setStatus(InstantiationStatusType.NOT_STARTED);
+				lcmOpOccs.getResourceChanges().addAffectedMonitoring(instanceMonitor);
 			}
 			final int ci = i;
 			vnfCompute.getStorages().forEach(y -> {
