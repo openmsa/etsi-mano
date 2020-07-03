@@ -31,6 +31,7 @@ import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.QuotaSet;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.ServerCreate;
+import org.openstack4j.model.dns.v2.Recordset;
 import org.openstack4j.model.dns.v2.Zone;
 import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.identity.v3.Endpoint;
@@ -38,6 +39,7 @@ import org.openstack4j.model.identity.v3.Service;
 import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
+import org.openstack4j.model.network.Subnet;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,7 +231,7 @@ public class OpenStackTest {
 
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
-		final String net = vim.createNetwork(vimConnectionInformation, vl, "Junit-vl");
+		final String net = vim.createNetwork(vimConnectionInformation, vl, "Junit-vl", "mano.junit.net.", null);
 		final IpPool ipPool = new IpPool();
 		ipPool.setStartIpAddress("192.168.90.1");
 		ipPool.setEndIpAddress("192.168.90.126");
@@ -290,7 +292,7 @@ public class OpenStackTest {
 		vlProtocolData.setIpAllocationPools(ipAllocationPools);
 		vlProtocolData.setL3ProtocolData(l3ProtocolData);
 		final UnitOfWork vduA = new TestUnitOfWork("A");
-		final UnitOfWork vduB = new VirtualLinkUow(null, vlProtocolData, "B");
+		final UnitOfWork vduB = new VirtualLinkUow(null, vlProtocolData, "B", "");
 		final UnitOfWork vduC = new TestUnitOfWork("C");
 
 		final VlProtocolData vlProtocolData2 = new VlProtocolData();
@@ -304,7 +306,7 @@ public class OpenStackTest {
 		ipAllocationPools2.add(ipPool3);
 		vlProtocolData2.setIpAllocationPools(ipAllocationPools2);
 		vlProtocolData2.setL3ProtocolData(l3ProtocolData2);
-		final UnitOfWork vduD = new VirtualLinkUow(null, vlProtocolData2, "D");
+		final UnitOfWork vduD = new VirtualLinkUow(null, vlProtocolData2, "D", "");
 		final UnitOfWork vduE = new TestUnitOfWork("E");
 		final UnitOfWork vduF = new TestUnitOfWork("F");
 		g.addVertex(vduA);
@@ -420,7 +422,7 @@ public class OpenStackTest {
 		final List<RouterInterface> ret = routerList.stream()
 				.filter(x -> x.getDeviceId().equals(device))
 				.filter(x -> !x.getDeviceOwner().equals("network:router_gateway"))
-				.map(x -> x.getId())
+				.map(Port::getId)
 				.map(x -> os.networking().router().detachInterface(device, null, x))
 				.collect(Collectors.toList());
 		ret.forEach(x -> System.out.println("" + x));
@@ -475,13 +477,38 @@ public class OpenStackTest {
 	@Test
 	public void testCreateZone() throws Exception {
 		final OSClientV3 os = getTrainConnection();
-		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23")
+		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23.mano.com.")
 				.ttl(36)
 				.type(ZoneType.PRIMARY)
 				.email("mano@ubqube.com")
 				.build();
 		final Zone res = os.dns().zones().create(zone);
 		System.out.println("" + res);
+	}
+
+	@Test
+	void testAddHost() throws Exception {
+		final OSClientV3 os = getTrainConnection();
+		final List<String> records = new ArrayList<>();
+		records.add("192.168.10.6");
+		records.add("192.168.10.5");
+		final Recordset recordSet = Builders
+				.recordset()
+				.name("test.aed0bd5a-acf8-463f-9797-9af1af1bab23.mano.com.")
+				.type("A")
+				.records(records)
+				.build();
+		final Recordset res = os.dns().recordsets().create("32b90f02-765a-46c8-80a1-79a1a513d59f", recordSet);
+		System.out.println("" + res);
+	}
+
+	@Test
+	void testgetIp() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final List<? extends Subnet> l = os.networking().subnet().list();
+		l.forEach(System.out::println);
+		final List<? extends Port> l2 = os.networking().port().list();
+		l2.forEach(System.out::println);
 	}
 
 	@Test

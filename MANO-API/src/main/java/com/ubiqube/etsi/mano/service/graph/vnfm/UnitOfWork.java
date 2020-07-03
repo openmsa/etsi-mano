@@ -21,9 +21,10 @@ public interface UnitOfWork extends UnitOfWorkBase<UowType>, Serializable {
 		EXTMANAGEDVL("EXTMANAGEDVL"),
 		MONITORINGPARAM("MONITORINGPARAM"),
 		COMPUTE("COMPUTE"),
-		VSTORAGE("VSTORAGE");
+		VSTORAGE("VSTORAGE"),
+		DNSZONE("DNSZONE");
 
-		private String value;
+		private final String value;
 
 		UowType(final String value) {
 			this.value = value;

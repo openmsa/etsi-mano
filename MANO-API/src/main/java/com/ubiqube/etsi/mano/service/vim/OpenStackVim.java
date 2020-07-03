@@ -17,6 +17,8 @@ import org.jgrapht.ListenableGraph;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
+import org.openstack4j.api.exceptions.ClientResponseException;
+import org.openstack4j.api.exceptions.StatusCode;
 import org.openstack4j.api.storage.BlockVolumeService;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Identifier;
@@ -30,6 +32,8 @@ import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.builder.ServerCreateBuilder;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
+import org.openstack4j.model.dns.v2.Zone;
+import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.image.ContainerFormat;
 import org.openstack4j.model.image.DiskFormat;
 import org.openstack4j.model.image.builder.ImageBuilder;
@@ -165,16 +169,20 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, final String name) {
+	public String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, final String name, final String dnsDomain, final String qosPolicyId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 
 		final L2Data l2 = vl.getL2ProtocolData();
 		final NetworkBuilder bNet = Builders.network().tenantId(vimConnectionInformation.getAccessInfo().get("projectId"));
-		Optional.ofNullable(l2.getMtu()).ifPresent(x2 -> bNet.toString());
 		bNet.name(name);
+		Optional.ofNullable(l2.getMtu()).ifPresent(bNet::mtu);
 		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2.toUpperCase())));
+		// Don't know how to use vlan_transarent.
+		// Optional.ofNullable(l2.getVlanTransparent()).ifPresent(x ->
+		// bNet.vlanTransparent(x.booleanValue()));
+		Optional.ofNullable(dnsDomain).ifPresent(bNet::dnsDomain);
+		Optional.ofNullable(qosPolicyId).ifPresent(bNet::qosPolicyId);
 		final Network network = os.networking().network().create(bNet.adminStateUp(true).build());
-		l2.getVlanTransparent();
 		LOG.debug("Network created: {} = {}", network.getId(), network.getStatus());
 		return network.getId();
 	}
@@ -511,5 +519,31 @@ public class OpenStackVim implements Vim {
 		Optional.ofNullable(usage.getMaxTotalKeypairs()).ifPresent(quotas::setKeyPairsMax);
 		Optional.ofNullable(usage.getTotalKeyPairsUsed()).ifPresent(quotas::setKeyPairsUsed);
 		return quotas;
+	}
+
+	@Override
+	public String createDnsZone(final VimConnectionInformation vimConnectionInformation, final String zoneName) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final Zone zone = Builders.zone().name(zoneName)
+				.ttl(3600)
+				.type(ZoneType.PRIMARY)
+				.email("mano@ubqube.com")
+				.build();
+		try {
+			final Zone res = os.dns().zones().create(zone);
+			return res.getId();
+		} catch (final ClientResponseException e) {
+			if (e.getStatusCode() == StatusCode.CONFLICT) {
+				LOG.warn("Conflict wile creating {}", zoneName);
+				return null;
+			}
+			throw new GenericException(e);
+		}
+	}
+
+	@Override
+	public void deleteDnsZone(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.dns().zones().delete(resourceId);
 	}
 }

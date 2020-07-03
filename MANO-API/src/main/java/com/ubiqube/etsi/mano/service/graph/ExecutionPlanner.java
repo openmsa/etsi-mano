@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
@@ -29,6 +30,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedDnsZone;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedMonitoring;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
@@ -51,9 +53,12 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.ZoneUow;
 
 @Service
 public class ExecutionPlanner {
+
+	private static final String MANO_VM = ".mano.vm.";
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExecutionPlanner.class);
 
@@ -73,6 +78,11 @@ public class ExecutionPlanner {
 	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> plan(@NotNull final VnfLcmOpOccs vnfLcmOpOccs, @NotNull final VnfPackage vnfPackage, final ChangeType changeType) {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = GraphTools.createGraph();
 		final MultiValueMap<String, UnitOfWork> vertex = buildVertex(g, vnfLcmOpOccs, vnfPackage, changeType);
+
+		vnfLcmOpOccs.getResourceChanges().getDnsZones().forEach(x -> vertex.entrySet().stream()
+				.flatMap(y -> y.getValue().stream())
+				.filter(VirtualLinkUow.class::isInstance)
+				.forEach(y -> GraphTools.addEdge(g, vertex.get("zone"), y)));
 		// Connect LinkPort to VM
 		vnfPackage.getVnfLinkPort().forEach(x -> {
 			LOG.debug("LinkPort: {} -> {}", x.getVirtualLink(), x.getVirtualBinding());
@@ -130,12 +140,19 @@ public class ExecutionPlanner {
 
 	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VnfLcmOpOccs vnfLcmOpOccs, final VnfPackage vnfPackage, final ChangeType changeType) {
 		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
+		vnfLcmOpOccs.getResourceChanges().getDnsZones().stream()
+				.filter(x -> x.getChangeType() == changeType)
+				.forEach(x -> {
+					final UnitOfWork uow = new ZoneUow(x, x.getDomainName());
+					vertex.add("zone", uow);
+					g.addVertex(uow);
+				});
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
 				.filter(x -> x.getChangeType() == changeType)
 				.forEach(x -> {
 					final VnfVl vlProtocol = vnfPackageService.findVirtualLnkById(x.getVnfVirtualLink().getId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
-					final UnitOfWork uow = new VirtualLinkUow(x, vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName());
+					final UnitOfWork uow = new VirtualLinkUow(x, vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName(), vnfLcmOpOccs.getVnfInstance().getId() + MANO_VM);
 					vertex.add(vlProtocol.getToscaName(), uow);
 					g.addVertex(uow);
 				});
@@ -222,6 +239,17 @@ public class ExecutionPlanner {
 	}
 
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final Set<ScaleInfo> scaling) {
+		if (lcmOpOccs.getOperation() == NsdChangeType.INSTANTIATE) {
+			// Create DNS
+			final VnfInstantiatedDnsZone aVs = new VnfInstantiatedDnsZone();
+			aVs.setChangeType(ChangeType.ADDED);
+			aVs.setResourceProviderId("MANO-DNS");
+			aVs.setVnfLcmOpOccs(lcmOpOccs);
+			aVs.setDomainName(vnfInstance.getId() + MANO_VM);
+			aVs.setAliasName("dns-zone");
+			aVs.setToscaName("dns-zone");
+			lcmOpOccs.getResourceChanges().addAffectedDnsZone(aVs);
+		}
 		// instantiationLevelId is aspectId
 		vnfPakage.getVnfCompute().forEach(x -> {
 			Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
@@ -380,7 +408,18 @@ public class ExecutionPlanner {
 		}
 	}
 
-	public void terminatePlan(final VnfLcmOpOccs lcmOpOccs) {
+	public void terminatePlan(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
+		final List<VnfInstantiatedDnsZone> instantiatedDnsZone = vnfInstanceService.getLiveDnsZoneInstanceOf(lcmOpOccs.getVnfInstance());
+		instantiatedDnsZone.forEach(x -> {
+			final VnfInstantiatedDnsZone affectedCompute = copyInstantiedResource(x, new VnfInstantiatedDnsZone(), lcmOpOccs);
+			affectedCompute.setVnfCompute(x.getVnfCompute());
+			affectedCompute.setDomainName(vnfInstance.getId() + MANO_VM);
+			affectedCompute.setAliasName("dns-zone");
+			affectedCompute.setToscaName("dns-zone");
+			final VnfLiveInstance vnfLiveInstance = vnfInstanceService.findLiveInstanceByInstantiated(x.getId());
+			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
+			lcmOpOccs.getResourceChanges().addAffectedDnsZone(affectedCompute);
+		});
 		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstanceService.getLiveComputeInstanceOf(lcmOpOccs.getVnfInstance());
 		instantiatedCompute.forEach(x -> {
 			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);

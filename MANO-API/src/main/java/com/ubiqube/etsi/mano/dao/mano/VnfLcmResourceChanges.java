@@ -35,6 +35,10 @@ public class VnfLcmResourceChanges implements Serializable {
 	@JoinColumn
 	private Set<VnfInstantiatedMonitoring> instanceMonitors;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfInstantiatedDnsZone> dnsZones;
+
 	public Set<VnfInstantiatedCompute> getAffectedVnfcs() {
 		return affectedVnfcs;
 	}
@@ -108,6 +112,21 @@ public class VnfLcmResourceChanges implements Serializable {
 			instanceMonitors = new HashSet<>();
 		}
 		instanceMonitors.add(instanceMonotor);
+	}
+
+	public Set<VnfInstantiatedDnsZone> getDnsZones() {
+		return dnsZones;
+	}
+
+	public void setDnsZones(final Set<VnfInstantiatedDnsZone> dnsZones) {
+		this.dnsZones = dnsZones;
+	}
+
+	public void addAffectedDnsZone(final VnfInstantiatedDnsZone aVs) {
+		if (null == dnsZones) {
+			dnsZones = new HashSet<>();
+		}
+		dnsZones.add(aVs);
 	}
 
 }

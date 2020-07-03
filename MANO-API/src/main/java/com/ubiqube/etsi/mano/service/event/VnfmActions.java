@@ -352,7 +352,7 @@ public class VnfmActions {
 	private void vnfTerminateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
 		LOG.info("Executing Terminate on lcmOpOccs {}", lcmOpOccs.getId());
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
-		executionPlanner.terminatePlan(lcmOpOccs);
+		executionPlanner.terminatePlan(lcmOpOccs, vnfInstance);
 
 		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications

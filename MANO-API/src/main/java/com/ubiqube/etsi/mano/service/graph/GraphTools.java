@@ -61,4 +61,15 @@ public class GraphTools {
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
 	}
+
+	public static <V, U extends UnitOfWorkBase<V>> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final U right) {
+		if ((null == left) || (null == right)) {
+			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
+			return;
+		}
+		left.forEach(x -> {
+			LOG.info("  - Adding {} <-> {}", x, right.getName());
+			g.addEdge(x, right);
+		});
+	}
 }

@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -77,7 +78,7 @@ public class VnfInstanceTest {
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = new com.ubiqube.etsi.mano.dao.mano.VnfInstance();
 		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
-		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+		vnfInstance.setInstantiationState(InstantiationState.INSTANTIATED);
 		final NsdInstance nsInstance = new NsdInstance();
 		nsInstance.setFlavourId("flavor");
 		final NsdPackage nsdInfoId = new NsdPackage();

@@ -27,7 +27,7 @@ public interface Vim {
 	@Nonnull
 	VimImage getImagesInformations(VimConnectionInformation vimConnectionInformation, String name);
 
-	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name);
+	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name, String dnsDomain, String qosPolicyId);
 
 	void refineExecutionPlan(@Nonnull final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g);
 
@@ -68,4 +68,8 @@ public interface Vim {
 	void stopServer(VimConnectionInformation vimConnectionInformation, String resourceId);
 
 	ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation);
+
+	String createDnsZone(final VimConnectionInformation vimConnectionInformation, final String zoneName);
+
+	void deleteDnsZone(VimConnectionInformation vimConnectionInformation, String resourceId);
 }

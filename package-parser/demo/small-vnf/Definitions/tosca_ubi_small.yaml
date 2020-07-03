@@ -232,7 +232,7 @@ topology_template:
                 name: vl01L2
                 vlan_transparent: true
                 #network_type: VXLAN
-                mtu: 1500
+                mtu: 1442
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
                 dhcp_enabled: true
                 cidr: 192.168.0.0/24
