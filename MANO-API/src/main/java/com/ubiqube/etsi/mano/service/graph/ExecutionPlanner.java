@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
+import org.jgrapht.Graph;
 import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,10 +152,9 @@ public class ExecutionPlanner {
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
 				.filter(x -> x.getChangeType() == changeType)
 				.forEach(x -> {
-					final VnfVl vlProtocol = vnfPackageService.findVirtualLnkById(x.getManoResourceId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
-					final UnitOfWork uow = new VirtualLinkUow(x, vlProtocol.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vlProtocol.getToscaName(), vnfLcmOpOccs.getVnfInstance().getId() + MANO_VM);
-					vertex.add(vlProtocol.getToscaName(), uow);
-					g.addVertex(uow);
+					final VnfVl vnfVl = vnfPackageService.findVirtualLnkById(x.getManoResourceId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
+					final UnitOfWork uow = new VirtualLinkUow(x, vnfVl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vnfVl.getToscaName(), vnfLcmOpOccs.getVnfInstance().getId() + MANO_VM);
+					addVertex(vertex, vnfVl, uow, g);
 				});
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
@@ -167,8 +167,7 @@ public class ExecutionPlanner {
 					} else {
 						uow = new ObjectStorageUow(x, vstorage, vstorage.getToscaName());
 					}
-					vertex.add(vstorage.getToscaName(), uow);
-					g.addVertex(uow);
+					addVertex(vertex, vstorage, uow, g);
 				});
 
 		vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().stream()
@@ -176,19 +175,21 @@ public class ExecutionPlanner {
 				.forEach(x -> {
 					final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
 					final UnitOfWork uow = new ComputeUow(x, compute, vnfPackageService.findVnfVirtualLinks(vnfPackage));
-					vertex.add(compute.getToscaName(), uow);
-					g.addVertex(uow);
+					addVertex(vertex, compute, uow, g);
 				});
-		final Set<VnfInstantiatedExtCp> extCp = vnfLcmOpOccs.getResourceChanges().getAffectedExtCp();
-		extCp.stream()
+		vnfLcmOpOccs.getResourceChanges().getAffectedExtCp().stream()
 				.filter(x -> x.getChangeType() == changeType)
 				.forEach(x -> {
 					final VnfExtCp lextCp = vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getManoResourceId()));
 					final UnitOfWork uow = new VnfExtCpUow(x, lextCp);
-					vertex.add(lextCp.getToscaName(), uow);
-					g.addVertex(uow);
+					addVertex(vertex, lextCp, uow, g);
 				});
 		return vertex;
+	}
+
+	private static <U extends UnitOfWork> void addVertex(final MultiValueMap<String, U> vertex, final ToscaEntity entity, final U uow, final Graph<U, ConnectivityEdge<U>> graph) {
+		vertex.add(entity.getToscaName(), uow);
+		graph.addVertex(uow);
 	}
 
 	public static int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
