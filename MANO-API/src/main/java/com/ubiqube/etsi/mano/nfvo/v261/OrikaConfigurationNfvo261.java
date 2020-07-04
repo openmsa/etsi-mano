@@ -6,6 +6,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
@@ -14,6 +15,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
@@ -44,6 +46,13 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("nestedNsInstanceId{}", "nestedNsInstance{id}")
 				.field("nsdId", "nsdInfo.nsdId")
 				.field("nsdInfoId", "nsdInfo.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
 

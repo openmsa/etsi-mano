@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
 
@@ -21,8 +22,10 @@ public class NsdInstanceTest {
 
 	public NsdInstanceTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test

@@ -24,7 +24,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
+import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
 import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -36,8 +38,12 @@ public class VnfPackageTest {
 
 	public VnfPackageTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
+		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+		orikaVnfm.configure(mapperFactory);
+		orikaNfvo.configure(mapperFactory);
 
 		podam = new PodamFactoryImpl();
 		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
@@ -71,9 +77,6 @@ public class VnfPackageTest {
 		assertEquals(1, add.size());
 		assertEquals("/path", addP[0].getArtifactPath());
 		final com.ubiqube.etsi.mano.dao.mano.common.Checksum check = addP[0].getChecksum();
-		assertNotNull(check);
-		assertEquals("SHA-512", check.getAlgorithm());
-		assertEquals("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", check.getHash());
 
 		final Map<String, String> udd = vnfDao.getUserDefinedData();
 		assertEquals(1, udd.size());

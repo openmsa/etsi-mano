@@ -30,6 +30,7 @@ import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 import ma.glasnost.orika.MapperFacade;
@@ -42,9 +43,10 @@ public class VnfInstanceTest {
 
 	public VnfInstanceTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-
+		orikaVnfm.configure(mapperFactory);
 		podam = new PodamFactoryImpl();
 		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 	}

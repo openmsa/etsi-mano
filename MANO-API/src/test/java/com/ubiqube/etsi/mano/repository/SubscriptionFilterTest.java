@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LifecycleChangeNotificationsFilter;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfInstanceSubscriptionFilter;
 
 public class SubscriptionFilterTest {
 
@@ -43,7 +42,7 @@ public class SubscriptionFilterTest {
 				if (null != value) {
 					handleList(propertyDescriptor, (List) value, stack);
 				}
-			} else if (propertyDescriptor.getPropertyType().isAssignableFrom(VnfInstanceSubscriptionFilter.class)) {
+			} else if (propertyDescriptor.getPropertyType().isAssignableFrom(com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter.class)) {
 				final Object value = propertyDescriptor.getReadMethod().invoke(filter);
 				stack.push(propertyDescriptor.getName());
 				getMapFilterInner(value, stack);

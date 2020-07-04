@@ -25,8 +25,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
 
-import tosca.policies.nfv.VduScalingAspectDeltas;
-
 public class ToscaPackageProviderTest {
 	private final ToscaPackageProvider tpp;
 
@@ -114,7 +112,7 @@ public class ToscaPackageProviderTest {
 
 	@Test
 	void testVduScalingAspectDeltas() throws Exception {
-		final List<VduScalingAspectDeltas> list = tpp.getVduScalingAspectDeltas(new HashMap<String, String>());
+		final List<com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas> list = tpp.getVduScalingAspectDeltas(new HashMap<String, String>());
 		System.out.println("" + list);
 		assertNotNull(list);
 	}
