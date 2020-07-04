@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,7 +42,7 @@ public class VnfIndicatorNotificationsFilter {
 
 	/**
 	 * Filter criteria to select VNF instances about which to notify.
-	 * 
+	 *
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
 	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
@@ -71,7 +72,7 @@ public class VnfIndicatorNotificationsFilter {
 
 	/**
 	 * Match particular VNF indicator identifiers.
-	 * 
+	 *
 	 * @return indicatorIds
 	 **/
 	@ApiModelProperty(value = "Match particular VNF indicator identifiers. ")

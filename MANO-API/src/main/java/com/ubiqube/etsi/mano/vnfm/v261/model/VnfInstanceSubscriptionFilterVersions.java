@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt;
+package com.ubiqube.etsi.mano.vnfm.v261.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

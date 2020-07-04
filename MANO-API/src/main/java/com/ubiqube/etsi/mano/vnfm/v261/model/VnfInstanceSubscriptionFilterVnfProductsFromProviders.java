@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.vnfm.v261.model.indicator;
+package com.ubiqube.etsi.mano.vnfm.v261.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * VnfInstanceSubscriptionFilterVnfProductsFromProviders
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T15:58:19.438+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:03:26.781+02:00")
 
 public class VnfInstanceSubscriptionFilterVnfProductsFromProviders {
 	@JsonProperty("vnfProvider")

@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -70,7 +71,7 @@ public class PmNotificationsFilter {
 
 	/**
 	 * Filter criteria to select VNF instances about which to notify.
-	 * 
+	 *
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
 	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
@@ -96,7 +97,7 @@ public class PmNotificationsFilter {
 	 * The permitted values of the \"notificationTypes\" attribute are spelled
 	 * exactly as the names of the notification types to facilitate automated code
 	 * generation systems.
-	 * 
+	 *
 	 * @return notificationTypes
 	 **/
 	@ApiModelProperty(value = "Match particular notification types. Permitted values: * ThresholdCrossedNotification * PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
