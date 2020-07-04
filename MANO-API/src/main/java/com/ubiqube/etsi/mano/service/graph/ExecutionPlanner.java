@@ -6,6 +6,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -38,6 +40,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -294,28 +297,29 @@ public class ExecutionPlanner {
 			}
 		});
 		vnfPakage.getVnfVl().forEach(x -> {
-			// XXX They should scale.
 			final int num = vnfInstanceService.getNumberOfLiveVl(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiatedVirtualLink aVl = createInstantiated(new VnfInstantiatedVirtualLink(), x, lcmOpOccs);
-				lcmOpOccs.getResourceChanges().addAffectedVirtualLink(aVl);
+				copyInstantiatedToLcm(lcmOpOccs, x, VnfInstantiatedVirtualLink::new, VnfLcmResourceChanges::addAffectedVirtualLink);
 			}
 		});
 		vnfPakage.getVnfStorage().stream().forEach(x -> {
 			final int num = vnfInstanceService.getNumberOfLiveStorage(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiatedStorage aVs = createInstantiated(new VnfInstantiatedStorage(), x, lcmOpOccs);
-				lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(aVs);
+				copyInstantiatedToLcm(lcmOpOccs, x, VnfInstantiatedStorage::new, VnfLcmResourceChanges::addAffectedVirtualStorage);
 			}
 		});
 		// No ExtCp when spawning.
 		vnfPakage.getVnfExtCp().stream().forEach(x -> {
 			final int num = vnfInstanceService.getNumberOfLiveExtCp(vnfInstance, x);
 			if (num == 0) {
-				final VnfInstantiatedExtCp aVs = createInstantiated(new VnfInstantiatedExtCp(), x, lcmOpOccs);
-				lcmOpOccs.getResourceChanges().addAffectedExtCp(aVs);
+				copyInstantiatedToLcm(lcmOpOccs, x, VnfInstantiatedExtCp::new, VnfLcmResourceChanges::addAffectedExtCp);
 			}
 		});
+	}
+
+	private <U extends ToscaEntity, V extends VnfInstantiatedBase> void copyInstantiatedToLcm(final VnfLcmOpOccs lcmOpOccs, final U u, final Supplier<V> newInstance, final BiConsumer<VnfLcmResourceChanges, V> func) {
+		final V aVs = createInstantiated(newInstance.get(), u, lcmOpOccs);
+		func.accept(lcmOpOccs.getResourceChanges(), aVs);
 	}
 
 	private <U extends VnfInstantiatedBase> U createInstantiated(final U aVs, final ToscaEntity x, final VnfLcmOpOccs lcmOpOccs) {
@@ -407,7 +411,7 @@ public class ExecutionPlanner {
 	}
 
 	public void terminatePlan(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
-		final List<VnfInstantiatedDnsZone> instantiatedDnsZone = vnfInstanceService.getLiveDnsZoneInstanceOf(lcmOpOccs.getVnfInstance());
+		final List<VnfInstantiatedDnsZone> instantiatedDnsZone = vnfInstanceService.getLiveDnsZoneInstanceOf(vnfInstance);
 		instantiatedDnsZone.forEach(x -> {
 			final VnfInstantiatedDnsZone affectedCompute = copyInstantiedResource(x, new VnfInstantiatedDnsZone(), lcmOpOccs);
 			affectedCompute.setDomainName(vnfInstance.getId() + MANO_VM);
@@ -415,26 +419,28 @@ public class ExecutionPlanner {
 			affectedCompute.setToscaName("dns-zone");
 			lcmOpOccs.getResourceChanges().addAffectedDnsZone(affectedCompute);
 		});
-		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstanceService.getLiveComputeInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiatedCompute.forEach(x -> {
-			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
-			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
+		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstance);
+		addAllToResourceChange(lcmOpOccs, instantiatedCompute, VnfInstantiatedCompute::new, VnfLcmResourceChanges::addAffectedVnfcs);
+
+		final List<VnfInstantiatedExtCp> instantiatedExtCps = vnfInstanceService.getLiveExtCpInstanceOf(vnfInstance);
+		addAllToResourceChange(lcmOpOccs, instantiatedExtCps, VnfInstantiatedExtCp::new, VnfLcmResourceChanges::addAffectedExtCp);
+
+		final List<VnfInstantiatedStorage> instantiatedStorages = vnfInstanceService.getLiveStorageInstanceOf(vnfInstance);
+		addAllToResourceChange(lcmOpOccs, instantiatedStorages, VnfInstantiatedStorage::new, VnfLcmResourceChanges::addAffectedVirtualStorage);
+
+		final List<VnfInstantiatedVirtualLink> instantiatedVirtualLinks = vnfInstanceService.getLiveVirtualLinkInstanceOf(vnfInstance);
+		addAllToResourceChange(lcmOpOccs, instantiatedVirtualLinks, VnfInstantiatedVirtualLink::new, VnfLcmResourceChanges::addAffectedVirtualLink);
+	}
+
+	private <U extends VnfInstantiatedBase> void addAllToResourceChange(final VnfLcmOpOccs lcmOpOccs, final List<U> u, final Supplier<U> newInstance, final BiConsumer<VnfLcmResourceChanges, U> func) {
+		u.forEach(x -> {
+			copyInstantiatedToLcm(lcmOpOccs, x, newInstance, func);
 		});
-		final List<VnfInstantiatedExtCp> instantiatedExtCps = vnfInstanceService.getLiveExtCpInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiatedExtCps.forEach(x -> {
-			final VnfInstantiatedExtCp affectedCompute = copyInstantiedResource(x, new VnfInstantiatedExtCp(), lcmOpOccs);
-			lcmOpOccs.getResourceChanges().addAffectedExtCp(affectedCompute);
-		});
-		final List<VnfInstantiatedStorage> instantiatedStorages = vnfInstanceService.getLiveStorageInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiatedStorages.forEach(x -> {
-			final VnfInstantiatedStorage affectedStorage = copyInstantiedResource(x, new VnfInstantiatedStorage(), lcmOpOccs);
-			lcmOpOccs.getResourceChanges().addAffectedVirtualStorage(affectedStorage);
-		});
-		final List<VnfInstantiatedVirtualLink> instantiatedVirtualLinks = vnfInstanceService.getLiveVirtualLinkInstanceOf(lcmOpOccs.getVnfInstance());
-		instantiatedVirtualLinks.forEach(x -> {
-			final VnfInstantiatedVirtualLink affectedVirtualLink = copyInstantiedResource(x, new VnfInstantiatedVirtualLink(), lcmOpOccs);
-			lcmOpOccs.getResourceChanges().addAffectedVirtualLink(affectedVirtualLink);
-		});
+	}
+
+	private <U extends VnfInstantiatedBase> void copyInstantiatedToLcm(final VnfLcmOpOccs lcmOpOccs, final VnfInstantiatedBase source, final Supplier<U> newInstance, final BiConsumer<VnfLcmResourceChanges, U> func) {
+		final U affectedVirtualLink = copyInstantiedResource(source, newInstance.get(), lcmOpOccs);
+		func.accept(lcmOpOccs.getResourceChanges(), affectedVirtualLink);
 	}
 
 	private <T extends VnfInstantiatedBase> T copyInstantiedResource(final VnfInstantiatedBase source, @Nonnull final T inst, final VnfLcmOpOccs lcmOpOccs) {
