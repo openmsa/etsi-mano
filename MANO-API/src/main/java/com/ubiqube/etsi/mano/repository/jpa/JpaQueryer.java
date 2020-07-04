@@ -93,7 +93,7 @@ public class JpaQueryer {
 	}
 
 	private class Attr {
-		String name;
-		Optional<From<?, ?>> parent = Optional.empty();
+		private String name;
+		private Optional<From<?, ?>> parent = Optional.empty();
 	}
 }

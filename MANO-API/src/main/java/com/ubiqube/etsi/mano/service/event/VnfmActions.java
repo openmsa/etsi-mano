@@ -431,7 +431,6 @@ public class VnfmActions {
 		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
 		instantiatedCompute.forEach(x -> {
 			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
-			affectedCompute.setManoResourceId(x.getManoResourceId());
 			final VnfLiveInstance vnfLiveInstance = vnfInstancesService.findLiveInstanceByInstantiated(x.getId());
 			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
@@ -457,6 +456,7 @@ public class VnfmActions {
 		inst.setRemovedInstantiated(source.getId());
 		inst.setResourceId(source.getResourceId());
 		inst.setInstantiationLevel(source.getInstantiationLevel());
+		inst.setManoResourceId(source.getManoResourceId());
 		inst.setVnfLcmOpOccs(lcmOpOccs);
 		return inst;
 	}
