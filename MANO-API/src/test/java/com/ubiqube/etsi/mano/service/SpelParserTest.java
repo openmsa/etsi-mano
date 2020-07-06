@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.FileInputStream;
 
 import org.junit.jupiter.api.Test;
@@ -34,5 +36,6 @@ public class SpelParserTest {
 		final VnfPkgInfo vpi = new VnfPkgInfo();
 		final byte[] bytes = StreamUtils.copyToByteArray(fi);
 		sp.patch(new String(bytes), vpi);
+		assertEquals("ENABLED", vpi.getOperationalState().toString());
 	}
 }

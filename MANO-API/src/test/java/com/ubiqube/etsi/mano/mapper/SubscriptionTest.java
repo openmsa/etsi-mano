@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.mapper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -92,6 +93,6 @@ public class SubscriptionTest {
 		// subscriptionQuery.setSubscriptionFilter(subscriptionFilter);
 		subsDb.setFilters(subscriptionFilter);
 		final PkgmSubscription subsJson = mapper.map(subsDb, PkgmSubscription.class);
-		System.out.println("" + subsJson);
+		assertNotNull(subsJson.getId());
 	}
 }

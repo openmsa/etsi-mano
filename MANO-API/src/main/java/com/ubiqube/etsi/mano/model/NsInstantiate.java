@@ -1,8 +1,12 @@
 package com.ubiqube.etsi.mano.model;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
-public class NsInstantiate {
+public class NsInstantiate implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String nsFlavourId = null;
 
 	private OffsetDateTime startTime = null;

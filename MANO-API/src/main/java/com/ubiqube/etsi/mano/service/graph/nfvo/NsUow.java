@@ -28,9 +28,9 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	private final NsInstantiate instantiateRequest;
 
-	private final NsInstanceControllerService nsInstanceControllerService;
+	private final transient NsInstanceControllerService nsInstanceControllerService;
 
-	private final NsLcmOpOccsService nsLcmOpOccsService;
+	private final transient NsLcmOpOccsService nsLcmOpOccsService;
 
 	public NsUow(final NsInstantiatedNs _resourceHandleEntity, final NsInstantiate req, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService, final String _name) {
 		super(_resourceHandleEntity, _name);

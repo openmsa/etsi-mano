@@ -95,6 +95,7 @@ public class VnfInstanceTest {
 		vnfInstance.setExtensions(extensions);
 
 		final VnfInstance o = mapper.map(vnfInstance, VnfInstance.class);
+		assertNotNull(o.getInstantiatedVnfInfo());
 	}
 
 	@Test
@@ -102,7 +103,7 @@ public class VnfInstanceTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfInstance avcDb = podam.manufacturePojo(VnfInstance.class);
 		final VnfLcmOpOccs avc = mapper.map(avcDb, VnfLcmOpOccs.class);
-		System.out.println("" + avc);
+		assertNotNull(avc.getError());
 	}
 
 	void testInstantiateInfo2VnfInstance() throws Exception {
@@ -144,7 +145,7 @@ public class VnfInstanceTest {
 		extManagedVirtualLinks.add(podam.manufacturePojo(ExtManagedVirtualLinkData.class));
 		instantiateVnfRequest.setExtManagedVirtualLinks(extManagedVirtualLinks);
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance avc = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class);
-		System.out.println("" + avc);
+		assertNotNull(avc.getExtVirtualLinks());
 
 	}
 }

@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.mapper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.nfvo.v261.NsdFactories;
+import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
 import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 
@@ -27,8 +29,10 @@ public class OrikaTest {
 
 	public OrikaTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test
@@ -48,6 +52,7 @@ public class OrikaTest {
 		vnf.setAdditionalArtifacts(additionalArtifacts);
 		final VnfPackage cnv = mapper.map(vnf, VnfPackage.class);
 		System.out.println("" + cnv);
+		assertNotNull(cnv.getVnfCompute());
 	}
 
 	@Test

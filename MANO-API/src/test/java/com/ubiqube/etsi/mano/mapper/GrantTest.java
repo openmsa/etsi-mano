@@ -116,6 +116,6 @@ public class GrantTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final GrantRequest reqJson = podam.manufacturePojo(GrantRequest.class);
 		final GrantsRequest req = mapper.map(reqJson, GrantsRequest.class);
-		System.out.println("" + req);
+		assertNotNull(req.getVimConstraints());
 	}
 }
