@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a PNFD management notification, which informs the receiver of the deletion of an on-boarded PNFD. The notification shall comply with the provisions defined in Table 5.5.2.15-1. The support of this notification is mandatory. The notification is triggered when an on-boarded PNFD is deleted. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T17:15:58.583+01:00")
+
 
 public class PnfdDeletionNotification {
 	@JsonProperty("id")

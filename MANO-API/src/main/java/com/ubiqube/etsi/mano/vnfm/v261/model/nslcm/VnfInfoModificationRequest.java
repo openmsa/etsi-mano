@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiModelProperty;
  * based on the \&quot;VnfInstance\&quot; data type.
  */
 @ApiModel(description = "This type represents attribute modifications for an \"Individual VNF instance\" resource, i.e. modifications to a resource representation based on the \"VnfInstance\" data type. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class VnfInfoModificationRequest {
 	@JsonProperty("vnfInstanceName")
 	private String vnfInstanceName = null;

@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents an NSD management notification, which informs the receiver of the deletion of an on-boarded NSD. The notification shall comply with the provisions defined in Table 5.5.2.12-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when it has deleted an on-boarded NSD. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T17:15:58.583+01:00")
+
 
 public class NsdDeletionNotification {
 	@JsonProperty("id")

@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type specifies additional parameters on a per-nested NS instance basis.  It shall comply with the provisions defined in Table 6.5.3.21a-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class ParamsForNestedNs {
 	@JsonProperty("nsProfileId")

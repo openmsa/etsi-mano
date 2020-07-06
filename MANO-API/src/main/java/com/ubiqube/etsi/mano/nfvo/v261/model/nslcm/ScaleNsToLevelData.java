@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents the information used to scale an NS instance to a target size. The target size is either expressed as an NS instantiation level or as a list of NS scale levels, one per NS scaling aspect, of the current DF. The NS instantiation levels, the NS scaling aspects and their corresponding NS scale levels applicable to the NS instance are declared in the NSD. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class ScaleNsToLevelData {
 	@JsonProperty("nsInstantiationLevel")

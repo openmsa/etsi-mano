@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiModelProperty;
  * instance.
  */
 @ApiModel(description = "This type represents request parameters for the  \"Change external VNF connectivity\" operation to modify the external connectivity of a VNF instance. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class ChangeExtVnfConnectivityRequest {
 	@JsonProperty("extVirtualLinks")
 	private List<ExtVirtualLinkData> extVirtualLinks = new ArrayList<>();

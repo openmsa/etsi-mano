@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * ScaleVnfRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class ScaleVnfRequest {
 	/**
 	 * Indicates the type of the scale operation requested. Permitted values: *

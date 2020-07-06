@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 @Profile({ "!NFVO" })
 @RestController
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {

@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents location constraints for a VNF to be instantiated. The location constraints shall be presented as a country code, optionally followed by a civic address based on the format defined by IETF RFC 4776 [13]. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class LocationConstraints {
 	@JsonProperty("countryCode")

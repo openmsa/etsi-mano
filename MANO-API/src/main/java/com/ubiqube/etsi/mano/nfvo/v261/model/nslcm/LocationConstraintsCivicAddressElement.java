@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * LocationConstraintsCivicAddressElement
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
+
 
 public class LocationConstraintsCivicAddressElement {
 	@JsonProperty("caType")

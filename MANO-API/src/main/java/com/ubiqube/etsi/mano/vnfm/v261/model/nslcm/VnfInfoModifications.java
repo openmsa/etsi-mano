@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiModelProperty;
  * implicitly e.g. when modifying the referenced VNF package.
  */
 @ApiModel(description = "This type represents attribute modifications that were performed on an \"Individual VNF instance\" resource. The attributes that can be included consist of those requested to be modified explicitly in the \"VnfInfoModificationRequest\" data structure, and additional attributes of the \"VnfInstance\" data structure that were modified implicitly e.g. when modifying the referenced VNF package. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class VnfInfoModifications {
 	@JsonProperty("vnfInstanceName")
 	private String vnfInstanceName = null;

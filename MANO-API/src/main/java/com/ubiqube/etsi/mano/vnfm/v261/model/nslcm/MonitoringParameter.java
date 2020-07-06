@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * MonitoringParameter
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-08T09:30:40.833+02:00")
+
 
 public class MonitoringParameter {
 	@JsonProperty("id")

@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiModelProperty;
  * virtual storage resources.
  */
 @ApiModel(description = "This type provides information about added, deleted, modified and temporary virtual storage resources. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class AffectedVirtualStorage {
 	@JsonProperty("id")
 	private String id = null;

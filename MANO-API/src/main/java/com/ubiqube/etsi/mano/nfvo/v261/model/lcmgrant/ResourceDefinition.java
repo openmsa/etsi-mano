@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type provides information of an existing or proposed resource used by the VNF. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
+
 
 public class ResourceDefinition {
 	@JsonProperty("id")

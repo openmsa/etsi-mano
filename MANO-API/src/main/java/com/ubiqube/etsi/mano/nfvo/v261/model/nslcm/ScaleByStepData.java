@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type describes the information to scale a VNF instance by steps.  The NFVO shall then invoke the Scale VNF operation towards the appropriate VNFM. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class ScaleByStepData {
 	@JsonProperty("aspectId")

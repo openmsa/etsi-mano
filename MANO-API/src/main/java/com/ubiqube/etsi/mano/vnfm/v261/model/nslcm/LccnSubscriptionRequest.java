@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
  * VNF lifecycle changes.
  */
 @ApiModel(description = "This type represents a subscription request related to notifications about VNF lifecycle changes. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class LccnSubscriptionRequest {
 	@JsonProperty("filter")
 	private LifecycleChangeNotificationsFilter filter = null;

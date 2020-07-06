@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:01:09.127+02:00")
+
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
 public interface PmJobsSol003 {

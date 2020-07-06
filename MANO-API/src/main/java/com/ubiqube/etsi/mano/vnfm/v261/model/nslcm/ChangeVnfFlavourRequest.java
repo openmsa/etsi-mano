@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiModelProperty;
  * flavour\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Change VNF flavour\" operation. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class ChangeVnfFlavourRequest {
 	@JsonProperty("newFlavourId")
 	private String newFlavourId = null;

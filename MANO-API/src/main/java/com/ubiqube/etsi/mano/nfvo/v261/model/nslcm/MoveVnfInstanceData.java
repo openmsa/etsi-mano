@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type specifies existing VNF instances to be moved from one NS instance (source) to another NS instance (destination). The NS instance defined in the Update NS operation indicates the source NS instance and the destination NS instance is specified in this data type (referred to targetNsInstanceId). It shall comply with the provisions defined in Table 6.5.3.35-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
+
 
 public class MoveVnfInstanceData {
 	@JsonProperty("targetNsInstanceId")

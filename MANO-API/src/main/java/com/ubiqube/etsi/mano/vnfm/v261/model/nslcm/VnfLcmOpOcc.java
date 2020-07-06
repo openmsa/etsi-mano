@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiModelProperty;
  * This type represents a VNF lifecycle management operation occurrence.
  */
 @ApiModel(description = "This type represents a VNF lifecycle management operation occurrence. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class VnfLcmOpOcc {
 	@JsonProperty("id")
 	private String id = null;

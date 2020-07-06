@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "\"The payload body contains the address information based on which the NFVO can obtain the content of the VNF package\" ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
+
 
 public class UploadVnfPkgFromUriRequest {
 	@JsonProperty("userDefinedData")

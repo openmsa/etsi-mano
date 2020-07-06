@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Level\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Scale VNF to Level\" operation. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class ScaleVnfToLevelRequest {
 	@JsonProperty("instantiationLevelId")
 	private String instantiationLevelId = null;

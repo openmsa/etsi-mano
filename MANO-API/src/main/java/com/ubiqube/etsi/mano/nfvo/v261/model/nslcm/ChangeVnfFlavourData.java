@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "The type represents the information that is requested to be changed deployment flavor for an existing VNF instance. It shall comply with the provisions defined in Table 6.5.3.25-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class ChangeVnfFlavourData {
 	@JsonProperty("vnfInstanceId")

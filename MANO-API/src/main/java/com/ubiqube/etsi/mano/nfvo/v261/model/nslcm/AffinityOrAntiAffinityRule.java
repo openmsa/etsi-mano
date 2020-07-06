@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type describes the additional affinity or anti-affinity rule applicable between the VNF instances to be instantiated in the NS instantiation operation request or between the VNF instances to be instantiated in the NS instantiation operation request and the existing VNF instances.. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
+
 
 public class AffinityOrAntiAffinityRule {
 	@JsonProperty("vnfdId")

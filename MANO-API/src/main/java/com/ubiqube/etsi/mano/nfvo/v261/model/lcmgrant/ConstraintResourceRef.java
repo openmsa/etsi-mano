@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type references a resource either by its VIM-level identifier for existing resources, or by the identifier of a \"ResourceDefinition\" structure in the \"GrantRequest\" structure for new resources. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-08-30T10:47:24.034+02:00")
+
 
 public class ConstraintResourceRef {
 	/**

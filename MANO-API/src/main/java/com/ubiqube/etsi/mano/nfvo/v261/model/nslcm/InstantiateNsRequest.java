@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * InstantiateNsRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class InstantiateNsRequest {
 	@JsonProperty("nsFlavourId")

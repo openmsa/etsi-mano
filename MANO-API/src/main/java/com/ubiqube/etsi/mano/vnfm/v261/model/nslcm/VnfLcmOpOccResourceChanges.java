@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiModelProperty;
  * its start, if applicable.
  */
 @ApiModel(description = "This attribute contains information about the cumulative changes to virtualised resources that were performed so far by the LCM operation since its start, if applicable. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class VnfLcmOpOccResourceChanges {
 	@JsonProperty("affectedVnfcs")
 	private List<AffectedVnfc> affectedVnfcs = null;
