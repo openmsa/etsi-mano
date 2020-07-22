@@ -15,7 +15,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Links to resources related to this resource.
  */
 @ApiModel(description = "Links to resources related to this resource. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class LccnSubscriptionLinks {
 	@JsonProperty("self")
 	private Link self = null;

@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -12,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents the information used to heal a NS.  It shall comply with the provisions defined in Table 6.5.3.43-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class HealNsData {
 	/**
@@ -76,7 +76,7 @@ public class HealNsData {
 	private String healScript = null;
 
 	@JsonProperty("additionalParamsforNs")
-	private KeyValuePairs additionalParamsforNs = null;
+	private Map<String, String> additionalParamsforNs = null;
 
 	public HealNsData degreeHealing(final DegreeHealingEnum degreeHealing) {
 		this.degreeHealing = degreeHealing;
@@ -157,7 +157,7 @@ public class HealNsData {
 		this.healScript = healScript;
 	}
 
-	public HealNsData additionalParamsforNs(final KeyValuePairs additionalParamsforNs) {
+	public HealNsData additionalParamsforNs(final Map<String, String> additionalParamsforNs) {
 		this.additionalParamsforNs = additionalParamsforNs;
 		return this;
 	}
@@ -172,11 +172,11 @@ public class HealNsData {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParamsforNs() {
+	public Map<String, String> getAdditionalParamsforNs() {
 		return additionalParamsforNs;
 	}
 
-	public void setAdditionalParamsforNs(final KeyValuePairs additionalParamsforNs) {
+	public void setAdditionalParamsforNs(final Map<String, String> additionalParamsforNs) {
 		this.additionalParamsforNs = additionalParamsforNs;
 	}
 

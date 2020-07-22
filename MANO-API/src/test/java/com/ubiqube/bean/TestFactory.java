@@ -3,18 +3,19 @@ package com.ubiqube.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
+import com.ubiqube.etsi.mano.nfvo.v261.NsdFactories;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdOperationalStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 
 public class TestFactory {
 
@@ -65,9 +66,9 @@ public class TestFactory {
 
 	public static NsdPackage createNsdPackage() {
 		final NsdPackage nsdPackage = new NsdPackage();
-		nsdPackage.setNsdOnboardingState(NsdOnboardingStateType.ONBOARDED);
-		nsdPackage.setNsdOperationalState(PackageOperationalStateType.ENABLED);
-		nsdPackage.setNsdUsageState(PackageUsageStateType.IN_USE);
+		nsdPackage.setNsdOnboardingState(OnboardingStateType.ONBOARDED);
+		nsdPackage.setNsdOperationalState(PackageOperationalState.ENABLED);
+		nsdPackage.setNsdUsageState(PackageUsageState.IN_USE);
 		return nsdPackage;
 	}
 }

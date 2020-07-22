@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.PnfFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.Link;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;
@@ -152,7 +152,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String contentType, final CreatePnfdInfoRequest body) {
-		PnfDescriptor pnfdDb = PnfFactory.createPnfDescriptorsPnfdInfo(body);
+		PnfDescriptor pnfdDb = PnfFactory.createPnfDescriptorsPnfdInfo(body.getUserDefinedData());
 		pnfdDb = pnfdInfoRepository.save(pnfdDb);
 		final PnfdInfo pnfd = mapper.map(pnfdDb, PnfdInfo.class);
 		pnfd.setLinks(makeLinks(pnfd));

@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.nslcm.ExtVirtualLinkInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "Information about the changed VNF instance information, including VNF configurable properties,if applicable. When the \"changedInfo\" attribute is present,  either the \"changedVnfInfo\" attribute or the \"changedExtConnectivity\" attribute or both shall be present. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-12-05T16:49:58.135+01:00")
+
 
 public class AffectedVnfChangedInfo {
 	@JsonProperty("changedVnfInfo")

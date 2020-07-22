@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a subscription request related to notifications about NSD management. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T16:34:13.188+01:00")
+
 
 public class NsdmSubscriptionRequest {
 	@JsonProperty("filter")
@@ -37,7 +38,7 @@ public class NsdmSubscriptionRequest {
 
 	/**
 	 * Get filter
-	 * 
+	 *
 	 * @return filter
 	 **/
 	@ApiModelProperty(value = "")
@@ -59,7 +60,7 @@ public class NsdmSubscriptionRequest {
 
 	/**
 	 * The URI of the endpoint to send the notification to.
-	 * 
+	 *
 	 * @return callbackUri
 	 **/
 	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
@@ -83,7 +84,7 @@ public class NsdmSubscriptionRequest {
 	 * notifications corresponding to this subscription, as defined in clause 8.3.4
 	 * of ETSI GS NFV-SOL 013. This attribute shall only be present if the
 	 * subscriber requires authorization of notifications.
-	 * 
+	 *
 	 * @return authentication
 	 **/
 	@ApiModelProperty(value = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. ")

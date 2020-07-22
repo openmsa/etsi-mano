@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "User-defined data for the PNF descriptor resource to be created. It shall be present when the user defined data is set for the individual PNF descriptor resource to be created. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T16:34:13.188+01:00")
+
 
 public class CreatePnfdInfoRequest {
 	@JsonProperty("userDefinedData")

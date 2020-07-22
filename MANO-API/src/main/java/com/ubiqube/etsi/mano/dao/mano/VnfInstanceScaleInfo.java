@@ -27,7 +27,7 @@ public class VnfInstanceScaleInfo implements Serializable {
 		// Nothing.
 	}
 
-	public VnfInstanceScaleInfo(@NotNull final String aspectId2, @NotNull final int scaleLevel2) {
+	public VnfInstanceScaleInfo(@NotNull final String aspectId2, final int scaleLevel2) {
 		aspectId = aspectId2;
 		scaleLevel = scaleLevel2;
 	}

@@ -14,7 +14,7 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
 
 import ma.glasnost.orika.MapperFacade;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-19T11:42:02.797+02:00")
+
 
 @Controller
 public class ApiVersionsApiController implements ApiVersionsApi {

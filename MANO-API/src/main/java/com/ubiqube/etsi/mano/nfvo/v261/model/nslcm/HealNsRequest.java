@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This operation supports the healing of an NS instance,  either by healing the complete NS instance or by healing one of more of the VNF instances that are part of this NS.  It shall comply with the provisions defined in Table 6.5.2.13-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class HealNsRequest {
 	@JsonProperty("healNsData")

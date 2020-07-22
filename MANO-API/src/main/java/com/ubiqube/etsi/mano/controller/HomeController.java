@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload;
 import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload.ObjectType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -17,7 +18,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
-import com.ubiqube.etsi.mano.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.service.TemporaryDownloadService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 

@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -10,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type specifies additional parameters on a per-nested NS instance basis.  It shall comply with the provisions defined in Table 6.5.3.21a-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class ParamsForNestedNs {
 	@JsonProperty("nsProfileId")
@@ -29,7 +29,7 @@ public class ParamsForNestedNs {
 
 	@JsonProperty("additionalParam")
 	@Valid
-	private List<KeyValuePairs> additionalParam = null;
+	private List<Map<String, String>> additionalParam = null;
 
 	public ParamsForNestedNs nsProfileId(final String nsProfileId) {
 		this.nsProfileId = nsProfileId;
@@ -52,12 +52,12 @@ public class ParamsForNestedNs {
 		this.nsProfileId = nsProfileId;
 	}
 
-	public ParamsForNestedNs additionalParam(final List<KeyValuePairs> additionalParam) {
+	public ParamsForNestedNs additionalParam(final List<Map<String, String>> additionalParam) {
 		this.additionalParam = additionalParam;
 		return this;
 	}
 
-	public ParamsForNestedNs addAdditionalParamItem(final KeyValuePairs additionalParamItem) {
+	public ParamsForNestedNs addAdditionalParamItem(final Map<String, String> additionalParamItem) {
 		if (this.additionalParam == null) {
 			this.additionalParam = new ArrayList<>();
 		}
@@ -74,11 +74,11 @@ public class ParamsForNestedNs {
 
 	@Valid
 
-	public List<KeyValuePairs> getAdditionalParam() {
+	public List<Map<String, String>> getAdditionalParam() {
 		return additionalParam;
 	}
 
-	public void setAdditionalParam(final List<KeyValuePairs> additionalParam) {
+	public void setAdditionalParam(final List<Map<String, String>> additionalParam) {
 		this.additionalParam = additionalParam;
 	}
 

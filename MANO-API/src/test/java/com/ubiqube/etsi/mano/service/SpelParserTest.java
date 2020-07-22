@@ -1,15 +1,17 @@
 package com.ubiqube.etsi.mano.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.FileInputStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.mapper.JsonWalker;
 import com.ubiqube.etsi.mano.mapper.SpelWriter;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -34,5 +36,6 @@ public class SpelParserTest {
 		final VnfPkgInfo vpi = new VnfPkgInfo();
 		final byte[] bytes = StreamUtils.copyToByteArray(fi);
 		sp.patch(new String(bytes), vpi);
+		assertEquals("ENABLED", vpi.getOperationalState().toString());
 	}
 }

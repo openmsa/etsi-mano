@@ -3,9 +3,7 @@ package com.ubiqube.etsi.mano.service.event;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-
-import javax.validation.Valid;
+import java.util.Optional;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -28,10 +26,11 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
+import com.ubiqube.etsi.mano.dao.mano.AuthParamOath2;
+import com.ubiqube.etsi.mano.dao.mano.AuthType;
+import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication.AuthTypeEnum;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.SubscriptionAuthenticationParamsBasic;
 
 /**
  * This class handle the notification callback.
@@ -70,11 +69,11 @@ public class Notifications {
 	/**
 	 * Send a notification Object to the _uri
 	 *
-	 * @param obj   The JSON Onject.
-	 * @param _uri  The complete URL.
-	 * @param _auth Auth parameters.
+	 * @param obj  The JSON Onject.
+	 * @param _uri The complete URL.
+	 * @param auth Auth parameters.
 	 */
-	public void doNotification(final Object obj, final String _uri, final SubscriptionAuthentication _auth) {
+	public void doNotification(final Object obj, final String _uri, final AuthentificationInformations auth) {
 		String content;
 		try {
 			content = mapper.writeValueAsString(obj);
@@ -82,13 +81,13 @@ public class Notifications {
 			throw new GenericException(e);
 		}
 
-		sendRequest(content, _auth, _uri);
+		sendRequest(content, auth, _uri);
 	}
 
-	private void sendRequest(final String _content, final SubscriptionAuthentication _auth, final String _uri) {
+	private static void sendRequest(final String _content, final AuthentificationInformations auth, final String _uri) {
 		HttpClientContext context;
 		try {
-			context = createContext(_auth, _uri);
+			context = createContext(auth, _uri);
 		} catch (final MalformedURLException e) {
 			throw new GenericException(e);
 		}
@@ -109,44 +108,42 @@ public class Notifications {
 		}
 	}
 
-	private HttpClientContext createContext(final SubscriptionAuthentication _auth, final String _uri) throws MalformedURLException {
-		final List<AuthTypeEnum> auths = _auth.getAuthType();
+	private static HttpClientContext createContext(final AuthentificationInformations auth, final String _uri) throws MalformedURLException {
+		final AuthType authType = auth.getAuthType();
 		final URL url = new URL(_uri);
 		final HttpHost targetHost = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
 
-		final HttpClientContext context = auths.stream()
-				.map(x -> createContext(x, _auth, targetHost))
-				.findFirst()
+		final HttpClientContext context = Optional.ofNullable(createContext(authType, auth, targetHost))
 				.orElse(new HttpClientContext());
 		context.setTargetHost(targetHost);
 		return context;
 	}
 
-	private HttpClientContext createContext(final AuthTypeEnum authType, final SubscriptionAuthentication _auth, final HttpHost targetHost) {
-		if (authType == AuthTypeEnum.BASIC) {
-			return createBasicContext(_auth.getParamsBasic(), targetHost);
-		} else if (authType == AuthTypeEnum.OAUTH2_CLIENT_CREDENTIALS) {
-			return createOAuth2Context(_auth.getParamsOauth2ClientCredentials(), targetHost);
-		} else if (authType == AuthTypeEnum.TLS_CERT) {
+	private static HttpClientContext createContext(final AuthType authType, final AuthentificationInformations auth, final HttpHost targetHost) {
+		if (authType == AuthType.BASIC) {
+			return createBasicContext(auth.getAuthParamBasic(), targetHost);
+		} else if (authType == AuthType.OAUTH2_CLIENT_CREDENTIALS) {
+			return createOAuth2Context(auth.getAuthParamOath2(), targetHost);
+		} else if (authType == AuthType.TLS_CERT) {
 			return createTlsCertContext(targetHost);
 		}
 		throw new GenericException("Unknown Auth type.");
 	}
 
-	private HttpClientContext createTlsCertContext(final HttpHost _targetHost) {
+	private static HttpClientContext createTlsCertContext(final HttpHost _targetHost) {
 		// http://svn.apache.org/viewvc/httpcomponents/oac.hc3x/trunk/src/contrib/org/apache/commons/httpclient/contrib/ssl/AuthSSLProtocolSocketFactory.java?view=markup
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createOAuth2Context(final com.ubiqube.etsi.mano.nfvo.v261.model.vnf.@Valid SubscriptionAuthenticationParamsOauth2ClientCredentials subscriptionAuthenticationParamsOauth2ClientCredentials, final HttpHost _targetHost) {
+	private static HttpClientContext createOAuth2Context(final AuthParamOath2 authParamOath2, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 
-	private HttpClientContext createBasicContext(final SubscriptionAuthenticationParamsBasic _paramsBasic, final HttpHost _targetHost) {
+	private static HttpClientContext createBasicContext(final AuthParamBasic authParamBasic, final HttpHost _targetHost) {
 
 		final CredentialsProvider credsProvider = new BasicCredentialsProvider();
-		final String _username = _paramsBasic.getUserName();
-		final String _password = _paramsBasic.getPassword();
+		final String _username = authParamBasic.getUserName();
+		final String _password = authParamBasic.getPassword();
 		credsProvider.setCredentials(
 				new AuthScope(_targetHost.getHostName(), _targetHost.getPort()),
 				new UsernamePasswordCredentials(_username, _password));

@@ -14,14 +14,14 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiModelProperty;
  * flavour\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Change VNF flavour\" operation. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class ChangeVnfFlavourRequest {
 	@JsonProperty("newFlavourId")
 	private String newFlavourId = null;
@@ -49,7 +49,7 @@ public class ChangeVnfFlavourRequest {
 	private List<VimConnectionInfo> vimConnectionInfo = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ChangeVnfFlavourRequest newFlavourId(final String newFlavourId) {
 		this.newFlavourId = newFlavourId;
@@ -129,7 +129,7 @@ public class ChangeVnfFlavourRequest {
 
 	public ChangeVnfFlavourRequest addExtManagedVirtualLinksItem(final ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
 		if (this.extManagedVirtualLinks == null) {
-			this.extManagedVirtualLinks = new ArrayList<ExtManagedVirtualLinkData>();
+			this.extManagedVirtualLinks = new ArrayList<>();
 		}
 		this.extManagedVirtualLinks.add(extManagedVirtualLinksItem);
 		return this;
@@ -157,7 +157,7 @@ public class ChangeVnfFlavourRequest {
 
 	public ChangeVnfFlavourRequest addVimConnectionInfoItem(final VimConnectionInfo vimConnectionInfoItem) {
 		if (this.vimConnectionInfo == null) {
-			this.vimConnectionInfo = new ArrayList<VimConnectionInfo>();
+			this.vimConnectionInfo = new ArrayList<>();
 		}
 		this.vimConnectionInfo.add(vimConnectionInfoItem);
 		return this;
@@ -181,7 +181,7 @@ public class ChangeVnfFlavourRequest {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public ChangeVnfFlavourRequest additionalParams(final KeyValuePairs additionalParams) {
+	public ChangeVnfFlavourRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -195,11 +195,11 @@ public class ChangeVnfFlavourRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"InstantiateVnfOpConfig\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

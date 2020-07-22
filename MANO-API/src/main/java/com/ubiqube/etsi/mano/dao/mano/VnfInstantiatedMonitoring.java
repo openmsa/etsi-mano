@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 @Entity
 public class VnfInstantiatedMonitoring extends VnfInstantiatedBase {
@@ -18,9 +17,6 @@ public class VnfInstantiatedMonitoring extends VnfInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@OneToOne
-	private VnfInstantiatedCompute vnfInstantiatedCompute;
-
 	@Override
 	public UUID getId() {
 		return id;
@@ -29,14 +25,6 @@ public class VnfInstantiatedMonitoring extends VnfInstantiatedBase {
 	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public VnfInstantiatedCompute getVnfInstantiatedCompute() {
-		return vnfInstantiatedCompute;
-	}
-
-	public void setVnfInstantiatedCompute(final VnfInstantiatedCompute vnfInstantiatedCompute) {
-		this.vnfInstantiatedCompute = vnfInstantiatedCompute;
 	}
 
 }

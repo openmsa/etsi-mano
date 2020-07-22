@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
@@ -29,7 +30,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
@@ -152,7 +153,8 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final InstantiateNsRequest body) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsLcmOpOccs nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, body);
+		final NsInstantiate nsInst = mapper.map(body, NsInstantiate.class);
+		final NsLcmOpOccs nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, nsInst);
 
 		final String link = NsLcmOpOccsSol005Api.makeSelfLink(nsLcm);
 		return ResponseEntity.accepted().header("Location", link).build();

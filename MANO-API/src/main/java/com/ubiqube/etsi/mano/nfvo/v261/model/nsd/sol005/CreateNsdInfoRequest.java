@@ -17,13 +17,13 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type creates a completely new NS descriptor resource. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T16:34:13.188+01:00")
+
 
 public class CreateNsdInfoRequest {
 	@JsonProperty("userDefinedData")
-	private Map<String, Object> userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
-	public CreateNsdInfoRequest userDefinedData(final Map<String, Object> userDefinedData) {
+	public CreateNsdInfoRequest userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -37,11 +37,11 @@ public class CreateNsdInfoRequest {
 
 	@Valid
 
-	public Map<String, Object> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

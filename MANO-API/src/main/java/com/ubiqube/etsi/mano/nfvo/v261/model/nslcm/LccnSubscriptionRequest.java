@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a subscription request related to notifications  about NS lifecycle changes. It shall comply with the provisions defined in Table 6.5.2.2-1.. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class LccnSubscriptionRequest {
 	@JsonProperty("filter")
@@ -40,7 +41,7 @@ public class LccnSubscriptionRequest {
 	 * Filter settings for this subscription, to define the subset of all
 	 * notifications this subscription relates to. A particular notification is sent
 	 * to the subscriber if the filter matches, or if there is no filter.
-	 * 
+	 *
 	 * @return filter
 	 **/
 	@ApiModelProperty(value = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
@@ -62,7 +63,7 @@ public class LccnSubscriptionRequest {
 
 	/**
 	 * The URI of the endpoint to send the notification to.
-	 * 
+	 *
 	 * @return callbackUri
 	 **/
 	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
@@ -86,7 +87,7 @@ public class LccnSubscriptionRequest {
 	 * notifications corresponding to this subscription, as defined in clause 8.3.4
 	 * of ETSI GS NFV-SOL 013. This attribute shall only be present if the
 	 * subscriber requires authorization of notifications.
-	 * 
+	 *
 	 * @return authentication
 	 **/
 	@ApiModelProperty(value = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. ")

@@ -29,11 +29,10 @@ import com.ubiqube.etsi.mano.jpa.VnfInstantiedComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
+import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest.TypeEnum;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 
 @Service
 public class VnfLcmService {
@@ -95,7 +94,7 @@ public class VnfLcmService {
 		return vnfInstantiedExtCpJpa.findById(id);
 	}
 
-	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+	public VnfLcmOpOccs createScaleToLevelOpOcc(final VnfInstance vnfInstance, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(NsdChangeType.SCALE_TO_LEVEL, vnfInstance.getId());
 		lcmOpOccs.getVnfInstantiatedInfo().setInstantiationLevelId(scaleVnfToLevelRequest.getInstantiationLevelId());
 		if (scaleVnfToLevelRequest.getScaleInfo() != null) {
@@ -107,10 +106,10 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
-	public VnfLcmOpOccs createScaleOpOcc(final VnfInstance vnfInstance, final ScaleVnfRequest scaleVnfRequest) {
+	public VnfLcmOpOccs createScaleOpOcc(final VnfInstance vnfInstance, final VnfScaleRequest scaleVnfRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(NsdChangeType.SCALE, vnfInstance.getId());
 		lcmOpOccs.getVnfScaleInfo().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
-		lcmOpOccs.getVnfScaleInfo().setScaleType(ScaleTypeEnum.fromValue(scaleVnfRequest.getType().toString()));
+		lcmOpOccs.getVnfScaleInfo().setScaleType(scaleVnfRequest.getType());
 		lcmOpOccs.getVnfScaleInfo().setAspectId(scaleVnfRequest.getAspectId());
 		final Set<ScaleInfo> scaleStatus = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
 				.filter(x -> x.getAspectId().equals(scaleVnfRequest.getAspectId()))
@@ -120,8 +119,7 @@ public class VnfLcmService {
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 
-	@NotNull
-	private static int addDec(@NotNull final TypeEnum type, final int numberOfSteps, final int scaleLevel) {
+	private static int addDec(@NotNull final ScaleTypeEnum type, final int numberOfSteps, final int scaleLevel) {
 		switch (type) {
 		case IN:
 			return Math.max(0, scaleLevel - numberOfSteps);
@@ -132,12 +130,11 @@ public class VnfLcmService {
 		}
 	}
 
-	public VnfLcmOpOccs createOperateOpOcc(final VnfInstance vnfInstance, final OperateVnfRequest operateVnfRequest) {
+	public VnfLcmOpOccs createOperateOpOcc(final VnfInstance vnfInstance, final VnfOperateRequest operateVnfRequest) {
 		final VnfLcmOpOccs lcmOpOccs = LcmFactory.createVnfLcmOpOccs(NsdChangeType.OPERATE, vnfInstance.getId());
 		final OperateChanges opChanges = lcmOpOccs.getOperateChanges();
 		opChanges.setTerminationType(OperationalStateType.fromValue(operateVnfRequest.getChangeStateTo().toString()));
 		opChanges.setGracefulTerminationTimeout(operateVnfRequest.getGracefulStopTimeout());
-		operateVnfRequest.getStopType();
 		return vnfLcmOpOccsJpa.save(lcmOpOccs);
 	}
 

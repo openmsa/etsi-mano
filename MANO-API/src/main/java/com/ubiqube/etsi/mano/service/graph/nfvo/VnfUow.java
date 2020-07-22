@@ -10,9 +10,9 @@ import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.vim.Vim;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 public class VnfUow extends AbstractNsUnitOfWork {
 
@@ -23,9 +23,9 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	private final NsInstantiatedVnf resourceHandleEntity;
 
-	private final transient InstantiateVnfRequest request;
+	private final transient VnfInstantiate request;
 
-	public VnfUow(final NsInstantiatedVnf _resourceHandleEntity, final InstantiateVnfRequest _request, final String _name) {
+	public VnfUow(final NsInstantiatedVnf _resourceHandleEntity, final VnfInstantiate _request, final String _name) {
 		super(_resourceHandleEntity, _name);
 		resourceHandleEntity = _resourceHandleEntity;
 		request = _request;

@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.service.vim;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.QuotaSet;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.ServerCreate;
+import org.openstack4j.model.dns.v2.Recordset;
 import org.openstack4j.model.dns.v2.Zone;
 import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.identity.v3.Endpoint;
@@ -38,6 +40,7 @@ import org.openstack4j.model.identity.v3.Service;
 import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
+import org.openstack4j.model.network.Subnet;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +95,7 @@ public class OpenStackTest {
 
 	}
 
-	void testName() throws Exception {
+	static void testName() throws Exception {
 		final Identifier domainIdentifier = Identifier.byName("Default");
 		final OSClientV3 os = OSFactory.builderV3()
 				.endpoint("http://10.31.1.240:5000/v3")
@@ -135,7 +138,7 @@ public class OpenStackTest {
 
 	}
 
-	private void createServer(final OSClientV3 os) {
+	private static void createServer(final OSClientV3 os) {
 		final ServerCreate sc = Builders.server()
 				.name("cirros-ovi")
 				.flavor("1")
@@ -146,6 +149,7 @@ public class OpenStackTest {
 
 //Boot the Server
 		final Server server = os.compute().servers().boot(sc);
+		assertNotNull(server);
 	}
 
 	private void createStack() {
@@ -153,7 +157,7 @@ public class OpenStackTest {
 	}
 
 	@Test
-	void testConn() throws Exception {
+	static void testConn() throws Exception {
 		final Identifier domainIdentifier = Identifier.byId("default");
 		final Identifier projectIdentifier = Identifier.byId("df1f081bf2d345099e6bb53f6b9407ff");
 		final OSClientV3 os = OSFactory.builderV3()
@@ -171,10 +175,11 @@ public class OpenStackTest {
 		os.compute().serverGroups().list().forEach(System.out::println);
 		System.out.println("================= Agregates");
 		os.compute().hostAggregates().list().forEach(System.out::println);
+		assertNotNull(os);
 	}
 
 	@Test
-	void testConn2() throws Exception {
+	static void testConn2() throws Exception {
 		final Identifier domainIdentifier = Identifier.byId("default");
 		final Identifier projectIdentifier = Identifier.byId("ede0540276a94b75ae3de044cd7cc235");
 		final OSClientV3 os = OSFactory.builderV3()
@@ -191,6 +196,7 @@ public class OpenStackTest {
 		os.compute().zones().list(true).forEach(System.out::println);
 		System.out.println("================= SERVER GROUPS");
 		os.compute().serverGroups().list().forEach(System.out::println);
+		assertNotNull(os);
 	}
 
 	void testNetwork() throws Exception {
@@ -208,7 +214,8 @@ public class OpenStackTest {
 		vnfStorage.setToscaName("JUnit-test-volume");
 		when(vimJpa.findById(id)).thenReturn(Optional.of(vimConnectionInformation));
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
-		vim.createStorage(vimConnectionInformation, vnfStorage, "junit-test");
+		final String lid = vim.createStorage(vimConnectionInformation, vnfStorage, "junit-test");
+		assertNotNull(lid);
 	}
 
 	@Test
@@ -229,11 +236,12 @@ public class OpenStackTest {
 
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
-		final String net = vim.createNetwork(vimConnectionInformation, vl, "Junit-vl");
+		final String net = vim.createNetwork(vimConnectionInformation, vl, "Junit-vl", "mano.junit.net.", null);
 		final IpPool ipPool = new IpPool();
 		ipPool.setStartIpAddress("192.168.90.1");
 		ipPool.setEndIpAddress("192.168.90.126");
-		vim.createSubnet(vimConnectionInformation, l3ProtocolData, ipPool, net);
+		final String lid = vim.createSubnet(vimConnectionInformation, l3ProtocolData, ipPool, net);
+		assertNotNull(lid);
 	}
 
 	@Test
@@ -248,7 +256,8 @@ public class OpenStackTest {
 		img.setName("Junit-uploaded-image");
 		img.setSize(1L);
 		img.setImagePath("/home/olivier/Downloads/cirros-0.5.1-x86_64-disk.img");
-		vim.uploadSoftwareImage(vimConnectionInformation, img);
+		final SoftwareImage lid = vim.uploadSoftwareImage(vimConnectionInformation, img);
+		assertNotNull(lid);
 	}
 
 	@Test
@@ -260,7 +269,8 @@ public class OpenStackTest {
 		final int numVcpu = 1;
 		final long virtualMemorySize = 2 * 100000000L;
 		final long disk = 20 * 1000000000L;
-		vim.getOrCreateFlavor(vimConnectionInformation, "Junit-flavor", numVcpu, virtualMemorySize, disk);
+		final String lid = vim.getOrCreateFlavor(vimConnectionInformation, "Junit-flavor", numVcpu, virtualMemorySize, disk);
+		assertNotNull(lid);
 	}
 
 	@Test
@@ -275,6 +285,7 @@ public class OpenStackTest {
 		exporter.exportGraph(g, out);
 		final byte[] res = out.toByteArray();
 		Files.write(res, new File("plan.dot"));
+		assertNotNull(out);
 	}
 
 	private static ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createNetwork() {
@@ -290,7 +301,7 @@ public class OpenStackTest {
 		vlProtocolData.setIpAllocationPools(ipAllocationPools);
 		vlProtocolData.setL3ProtocolData(l3ProtocolData);
 		final UnitOfWork vduA = new TestUnitOfWork("A");
-		final UnitOfWork vduB = new VirtualLinkUow(null, vlProtocolData, "B");
+		final UnitOfWork vduB = new VirtualLinkUow(null, vlProtocolData, "B", "");
 		final UnitOfWork vduC = new TestUnitOfWork("C");
 
 		final VlProtocolData vlProtocolData2 = new VlProtocolData();
@@ -304,7 +315,7 @@ public class OpenStackTest {
 		ipAllocationPools2.add(ipPool3);
 		vlProtocolData2.setIpAllocationPools(ipAllocationPools2);
 		vlProtocolData2.setL3ProtocolData(l3ProtocolData2);
-		final UnitOfWork vduD = new VirtualLinkUow(null, vlProtocolData2, "D");
+		final UnitOfWork vduD = new VirtualLinkUow(null, vlProtocolData2, "D", "");
 		final UnitOfWork vduE = new TestUnitOfWork("E");
 		final UnitOfWork vduF = new TestUnitOfWork("F");
 		g.addVertex(vduA);
@@ -356,7 +367,8 @@ public class OpenStackTest {
 		vnfc.setName("vdu01");
 		final List<String> networks = new ArrayList<>();
 		final List<String> storages = new ArrayList<>();
-		vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null);
+		final String lid = vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null);
+		assertNotNull(lid);
 	}
 
 	private static OSClientV3 getTrainConnection() {
@@ -379,7 +391,7 @@ public class OpenStackTest {
 	}
 
 	@Test
-	void testTrain() throws Exception {
+	static void testTrain() throws Exception {
 		final OSClientV3 os = getTrainConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
@@ -387,10 +399,11 @@ public class OpenStackTest {
 		os.networking().agent().list().forEach(x -> {
 			System.out.println("" + x.getBinary());
 		});
+		assertNotNull(os);
 	}
 
 	@Test
-	void testQueens() throws Exception {
+	static void testQueens() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
@@ -398,18 +411,20 @@ public class OpenStackTest {
 		os.networking().agent().list().forEach(x -> {
 			System.out.println("" + x.getBinary());
 		});
+		assertNotNull(os);
 	}
 
 	@Test
-	void testDeleteNetwork() throws Exception {
+	static void testDeleteNetwork() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Port> ret = os.networking().port().list();
 		ret.forEach(System.out::println);
 		System.out.println("" + ret);
+		assertNotNull(os);
 	}
 
 	@Test
-	void testDeleteRouter() throws Exception {
+	static void testDeleteRouter() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final String device = "9f07f44f-3f06-48c8-ad75-5c7afcc46d2e";
 		final Router router = os.networking().router().get(device);
@@ -420,41 +435,45 @@ public class OpenStackTest {
 		final List<RouterInterface> ret = routerList.stream()
 				.filter(x -> x.getDeviceId().equals(device))
 				.filter(x -> !x.getDeviceOwner().equals("network:router_gateway"))
-				.map(x -> x.getId())
+				.map(Port::getId)
 				.map(x -> os.networking().router().detachInterface(device, null, x))
 				.collect(Collectors.toList());
 		ret.forEach(x -> System.out.println("" + x));
 		System.out.println("" + router);
 		final ActionResponse ret2 = os.networking().router().delete(device);
 		System.out.println("" + ret2);
+		assertNotNull(os);
 	}
 
 	@Test
-	void testGetPublic() throws Exception {
+	static void testGetPublic() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.networking().network().list().forEach(x -> {
 			System.out.println(x.getName() + " -- " + x.isRouterExternal() + " ==> " + x.getId());
 		});
+		assertNotNull(os);
 	}
 
 	@Test
-	void testNetworkExtension() throws Exception {
+	static void testNetworkExtension() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.networking().agent().list().forEach(x -> {
 			System.out.println("" + x.getTopic() + " " + x.getAgentType() + " " + x.getBinary());
 		});
+		assertNotNull(os);
 	}
 
 	@Test
-	void testDns01() throws Exception {
+	static void testDns01() throws Exception {
 		final OSClientV3 os = getTrainConnection();
 		os.dns().recordsets().list().forEach(x -> {
 			System.out.println("" + x);
 		});
+		assertNotNull(os);
 	}
 
 	@Test
-	public void testflavor() throws Exception {
+	public static void testflavor() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final int disk = 20;
 		final int ram = 4096;
@@ -470,22 +489,51 @@ public class OpenStackTest {
 				.flavors()
 				.create(build);
 		System.out.println("" + res);
+		assertNotNull(os);
 	}
 
 	@Test
-	public void testCreateZone() throws Exception {
+	public static void testCreateZone() throws Exception {
 		final OSClientV3 os = getTrainConnection();
-		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23")
+		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23.mano.com.")
 				.ttl(36)
 				.type(ZoneType.PRIMARY)
 				.email("mano@ubqube.com")
 				.build();
 		final Zone res = os.dns().zones().create(zone);
 		System.out.println("" + res);
+		assertNotNull(os);
 	}
 
 	@Test
-	public void testQuotas() {
+	static void testAddHost() throws Exception {
+		final OSClientV3 os = getTrainConnection();
+		final List<String> records = new ArrayList<>();
+		records.add("192.168.10.6");
+		records.add("192.168.10.5");
+		final Recordset recordSet = Builders
+				.recordset()
+				.name("test.aed0bd5a-acf8-463f-9797-9af1af1bab23.mano.com.")
+				.type("A")
+				.records(records)
+				.build();
+		final Recordset res = os.dns().recordsets().create("32b90f02-765a-46c8-80a1-79a1a513d59f", recordSet);
+		System.out.println("" + res);
+		assertNotNull(os);
+	}
+
+	@Test
+	static void testgetIp() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final List<? extends Subnet> l = os.networking().subnet().list();
+		l.forEach(System.out::println);
+		final List<? extends Port> l2 = os.networking().port().list();
+		l2.forEach(System.out::println);
+		assertNotNull(os);
+	}
+
+	@Test
+	public static void testQuotas() {
 		final OSClientV3 os = getQueensConnection();
 		os.compute().quotaSets().listTenantUsages().stream()
 				.forEach(x -> {
@@ -505,5 +553,6 @@ public class OpenStackTest {
 				.forEach(x -> {
 					System.out.println("" + x);
 				});
+		assertNotNull(os);
 	}
 }

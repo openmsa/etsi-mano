@@ -220,7 +220,8 @@ public class VnfmActions {
 
 	private Map<String, String> getLiveVl(final VnfInstance vnfInstance) {
 		final List<VnfInstantiatedVirtualLink> res = vnfInstancesService.getLiveVirtualLinkInstanceOf(vnfInstance);
-		return res.stream().collect(Collectors.toMap(y -> y.getVnfVirtualLink().getToscaName(), VnfInstantiatedBase::getResourceId));
+		return res.stream()
+				.collect(Collectors.toMap(VnfInstantiatedVirtualLink::getToscaName, VnfInstantiatedBase::getResourceId));
 	}
 
 	private void copyGrantResourcesToInstantiated(final VnfLcmOpOccs lcmOpOccs, final GrantResponse grantsResp) {
@@ -352,7 +353,7 @@ public class VnfmActions {
 	private void vnfTerminateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
 		LOG.info("Executing Terminate on lcmOpOccs {}", lcmOpOccs.getId());
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
-		executionPlanner.terminatePlan(lcmOpOccs);
+		executionPlanner.terminatePlan(lcmOpOccs, vnfInstance);
 
 		VnfLcmOpOccs localLcmOpOccs = vnfLcmService.save(lcmOpOccs);
 		// XXX Do it for VnfInfoModifications
@@ -430,7 +431,6 @@ public class VnfmActions {
 		final List<VnfInstantiatedCompute> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
 		instantiatedCompute.forEach(x -> {
 			final VnfInstantiatedCompute affectedCompute = copyInstantiedResource(x, new VnfInstantiatedCompute(), lcmOpOccs);
-			affectedCompute.setVnfCompute(x.getVnfCompute());
 			final VnfLiveInstance vnfLiveInstance = vnfInstancesService.findLiveInstanceByInstantiated(x.getId());
 			affectedCompute.setRemovedInstantiated(vnfLiveInstance.getId());
 			lcmOpOccs.getResourceChanges().addAffectedVnfcs(affectedCompute);
@@ -456,6 +456,7 @@ public class VnfmActions {
 		inst.setRemovedInstantiated(source.getId());
 		inst.setResourceId(source.getResourceId());
 		inst.setInstantiationLevel(source.getInstantiationLevel());
+		inst.setManoResourceId(source.getManoResourceId());
 		inst.setVnfLcmOpOccs(lcmOpOccs);
 		return inst;
 	}

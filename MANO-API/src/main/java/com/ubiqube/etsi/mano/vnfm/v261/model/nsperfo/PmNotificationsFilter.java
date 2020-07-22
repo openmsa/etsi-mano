@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a filter that can be used to subscribe for notifications related to performance management events. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-05-01T16:01:09.127+02:00")
+
 
 public class PmNotificationsFilter {
 	@JsonProperty("vnfInstanceSubscriptionFilter")
@@ -70,7 +71,7 @@ public class PmNotificationsFilter {
 
 	/**
 	 * Filter criteria to select VNF instances about which to notify.
-	 * 
+	 *
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
 	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
@@ -96,7 +97,7 @@ public class PmNotificationsFilter {
 	 * The permitted values of the \"notificationTypes\" attribute are spelled
 	 * exactly as the names of the notification types to facilitate automated code
 	 * generation systems.
-	 * 
+	 *
 	 * @return notificationTypes
 	 **/
 	@ApiModelProperty(value = "Match particular notification types. Permitted values: * ThresholdCrossedNotification * PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")

@@ -9,8 +9,6 @@ public interface BinaryRepository {
 
 	void storeObject(@NotNull UUID _id, @NotNull String _filename, Object _object);
 
-	<T, U extends Class> T loadObject(@NotNull final UUID _id, @NotNull final String _filename, final U t);
-
 	void storeBinary(@NotNull UUID _id, @NotNull String _filename, InputStream _stream);
 
 	byte[] getBinary(@NotNull UUID _id, @NotNull String _filename);

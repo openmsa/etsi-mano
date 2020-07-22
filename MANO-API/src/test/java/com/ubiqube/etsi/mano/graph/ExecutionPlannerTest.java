@@ -147,8 +147,7 @@ public class ExecutionPlannerTest {
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setInitialNumberOfInstance(12);
 		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
-
-		vnfCompute.setScalingAspectDeltas(new ArrayList<VnfComputeAspectDelta>());
+		vnfCompute.setScalingAspectDeltas(new HashSet<VnfComputeAspectDelta>());
 		final Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "bad", scaleInfo);
 		assertEquals(2, i);
 	}
@@ -164,7 +163,7 @@ public class ExecutionPlannerTest {
 		vnfCompute.setInitialNumberOfInstance(12);
 		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
 
-		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		final Set<VnfComputeAspectDelta> scaleDelta = new HashSet<>();
 		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 2, 1, 10, ""));
 		vnfCompute.setScalingAspectDeltas(scaleDelta);
 		Integer i = exec.getNumberOfInstance(vnfInstantiationLevels, vnfCompute, "demo", scaleInfo);
@@ -188,7 +187,7 @@ public class ExecutionPlannerTest {
 
 		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
 
-		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		final Set<VnfComputeAspectDelta> scaleDelta = new HashSet<>();
 		// scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 1));
 		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_1", 1, 1, 10, ""));
 		scaleDelta.add(new VnfComputeAspectDelta("right_aspect", "delta_2", 4, 2, 10, ""));
@@ -220,7 +219,7 @@ public class ExecutionPlannerTest {
 		vnfCompute.setInitialNumberOfInstance(12);
 		vnfCompute.addVduInstantiationLevel(new VduInstantiationLevel("demo", 1));
 
-		final List<VnfComputeAspectDelta> scaleDelta = new ArrayList<>();
+		final Set<VnfComputeAspectDelta> scaleDelta = new HashSet<>();
 		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 10, 1, 10, ""));
 		scaleDelta.add(new VnfComputeAspectDelta("left_aspect", "delta_1", 0, 2, 10, ""));
 		vnfCompute.setScalingAspectDeltas(scaleDelta);

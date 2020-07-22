@@ -12,19 +12,20 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * TerminateVnfRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class TerminateVnfRequest {
 	/**
 	 * Indicates whether forceful or graceful termination is requested. Permitted
@@ -71,7 +72,7 @@ public class TerminateVnfRequest {
 	private Integer gracefulTerminationTimeout = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public TerminateVnfRequest terminationType(final TerminationTypeEnum terminationType) {
 		this.terminationType = terminationType;
@@ -127,7 +128,7 @@ public class TerminateVnfRequest {
 		this.gracefulTerminationTimeout = gracefulTerminationTimeout;
 	}
 
-	public TerminateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public TerminateVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -141,11 +142,11 @@ public class TerminateVnfRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

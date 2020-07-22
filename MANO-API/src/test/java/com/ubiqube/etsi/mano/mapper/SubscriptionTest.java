@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.mapper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -8,6 +9,13 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
@@ -15,13 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.SubscriptionQuery;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionLinks;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -31,8 +33,10 @@ public class SubscriptionTest {
 
 	public SubscriptionTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test
@@ -51,10 +55,10 @@ public class SubscriptionTest {
 		subsJson.setId(UUID.randomUUID().toString());
 		final PkgmSubscriptionLinks links = new PkgmSubscriptionLinks();
 		subsJson.setLinks(links);
-		final SubscriptionObject so = new SubscriptionObject();
-		so.setPkgmSubscription(subsJson);
+		final PkgmSubscriptionRequest so = new PkgmSubscriptionRequest();
+		so.setFilter(filter);
 		final Subscription subsDb = mapper.map(so, Subscription.class);
-		final List<FilterAttributes> filters = subsDb.getSubscriptionFilter();
+		final List<FilterAttributes> filters = subsDb.getFilters();
 		assertEquals(2, filters.size()); // Should be 2
 		checkFilter(filters.get(0), "notificationTypes", "VnfPackageChangeNotification");
 		checkFilter(filters.get(1), "vnfProductsFromProviders[0].operationalState[0]", "DISABLED");
@@ -87,8 +91,8 @@ public class SubscriptionTest {
 		fa.setValue("DISABLED");
 		subscriptionFilter.add(fa);
 		// subscriptionQuery.setSubscriptionFilter(subscriptionFilter);
-		subsDb.setSubscriptionQuery(subscriptionQuery);
+		subsDb.setFilters(subscriptionFilter);
 		final PkgmSubscription subsJson = mapper.map(subsDb, PkgmSubscription.class);
-		System.out.println("" + subsJson);
+		assertNotNull(subsJson.getId());
 	}
 }

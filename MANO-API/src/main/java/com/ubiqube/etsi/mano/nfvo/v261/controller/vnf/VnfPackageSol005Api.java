@@ -23,14 +23,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ubiqube.etsi.mano.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.UploadVnfPkgFromUriRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.event.ActionType;
@@ -201,7 +201,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(vnfPkgUuid);
 		ensureNotOnboarded(vnfPackage);
 
-		final Map<String, Object> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
+		final Map<String, String> uddList = contentUploadFromUriPostRequest.getUserDefinedData();
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("url", uddList.get("url"));
 		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, vnfPkgUuid, parameters);

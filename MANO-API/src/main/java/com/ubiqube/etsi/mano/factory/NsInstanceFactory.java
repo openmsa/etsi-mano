@@ -3,24 +3,13 @@ package com.ubiqube.etsi.mano.factory;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
-import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 
 public class NsInstanceFactory {
 
 	private NsInstanceFactory() {
 		// Nothing.
-	}
-
-	@Nonnull
-	public static NsdInstance createNsInstancesNsInstance(final CreateNsRequest nsInstancesCreateNsRequest) {
-		final NsdInstance nsInstance = new NsdInstance();
-		nsInstance.setNsInstanceDescription(nsInstancesCreateNsRequest.getNsDescription());
-		nsInstance.setNsInstanceName(nsInstancesCreateNsRequest.getNsName());
-		nsInstance.setNsState(InstantiationState.NOT_INSTANTIATED);
-		return nsInstance;
 	}
 
 	@Nonnull

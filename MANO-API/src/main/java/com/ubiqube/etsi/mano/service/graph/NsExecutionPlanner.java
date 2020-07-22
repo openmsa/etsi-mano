@@ -31,7 +31,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.model.NsInstantiate;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.IpamService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
@@ -47,7 +48,6 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.PnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
-import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 @Service
 public class NsExecutionPlanner {
@@ -225,10 +225,10 @@ public class NsExecutionPlanner {
 		resources.getAffectedNss().forEach(x -> {
 			x.getNsdPackage();
 			LOG.info("Adding NS vertex of {}", x.getNsInstanceId());
-			final InstantiateNsRequest request = new InstantiateNsRequest();
+			final NsInstantiate request = new NsInstantiate();
 			request.setNsFlavourId(nsdInstance.getFlavourId());
 			request.setNsInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
-			final NsUnitOfWork uow = new NsUow(x, request, null, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().toString());
+			final NsUnitOfWork uow = new NsUow(x, request, nsInstanceControllerService, nsLcmOpOccsService, x.getNsdPackage().toString());
 			vertex.add(x.getNsdPackage().toString(), uow);
 			g.addVertex(uow);
 		});
@@ -258,7 +258,7 @@ public class NsExecutionPlanner {
 		});
 		resources.getAffectedVnfs().forEach(x -> {
 			LOG.info("Adding VNF vertex of {}", x.getNsdPackageVnfPackage().getToscaName());
-			final InstantiateVnfRequest request = new InstantiateVnfRequest();
+			final VnfInstantiate request = new VnfInstantiate();
 			request.setFlavourId(nsdInstance.getFlavourId());
 			request.setInstantiationLevelId(nsdInstance.getNsInstantiationLevelId());
 			final NsUnitOfWork uow = new VnfUow(x, request, x.getNsdPackageVnfPackage().getToscaName());

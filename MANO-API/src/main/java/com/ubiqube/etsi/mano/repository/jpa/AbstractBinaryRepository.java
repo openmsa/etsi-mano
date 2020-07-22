@@ -59,19 +59,8 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	@Override
 	public final byte[] getBinary(final UUID _id, final String _filename, final int min, final Long max) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
-		final InputStream os = contentManager.load(path, min, max);
-		try {
+		try (InputStream os = contentManager.load(path, min, max)) {
 			return StreamUtils.copyToByteArray(os);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	@Override
-	public final <T, U extends Class> T loadObject(@NotNull final UUID _id, final String _filename, final U t) {
-		final byte[] content = getBinary(_id, _filename, 0, null);
-		try {
-			return (T) jsonMapper.readValue(content, t);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

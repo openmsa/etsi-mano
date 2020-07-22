@@ -26,16 +26,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOnboardingStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageUsageStateType;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.PackageOnboardingStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageOperationalStateType;
-import com.ubiqube.etsi.mano.model.vnf.PackageUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnf.Sol003Linkable;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -64,7 +64,7 @@ public class VnfManagementTest {
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 
 		final Map<String, String> queryParameters = new HashMap<>();
-		final String res = vnfPManagement.vnfPackagesGet(queryParameters, new Sol003Linkable());
+		final String res = vnfPManagement.vnfPackagesGet(queryParameters);
 		assertEquals("[ ]", res);
 	}
 
@@ -77,7 +77,7 @@ public class VnfManagementTest {
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
 
 		final Map<String, String> queryParameters = new HashMap<>();
-		final String res = vnfPManagement.vnfPackagesGet(queryParameters, new Sol003Linkable());
+		final String res = vnfPManagement.vnfPackagesGet(queryParameters);
 		System.out.println(">>>" + res + "<<<");
 		final List<VnfPkgInfo> value = mapper.readValue(res, new TypeReference<List<VnfPkgInfo>>() {
 		});
@@ -95,7 +95,7 @@ public class VnfManagementTest {
 		when(vnfPackageRepository.get(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"))).thenReturn(value);
 		final MapperFacade mapperOrika = mapperFactory.getMapperFacade();
 		final VnfPackageManagement vnfPManagement = new VnfManagement(vnfPackageRepository, mapperOrika);
-		final VnfPkgInfo res = vnfPManagement.vnfPackagesVnfPkgIdGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), new Sol003Linkable());
+		final VnfPkgInfo res = vnfPManagement.vnfPackagesVnfPkgIdGet(UUID.fromString("79afa4e8-3f76-4239-9175-309c12a06b6e"), VnfPkgInfo.class);
 		assertNotNull(res);
 		// assertEquals("/79afa4e8-3f76-4239-9175-309c12a06b6e",
 		// res.getLinks().getSelf().getHref());

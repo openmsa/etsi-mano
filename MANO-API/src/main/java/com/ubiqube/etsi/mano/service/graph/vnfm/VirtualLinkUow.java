@@ -13,14 +13,19 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	private final VlProtocolData vlProtocolData;
+
 	private final String name;
+
 	private final VnfInstantiatedVirtualLink vnfInstantiedVirtualLink;
 
-	public VirtualLinkUow(final VnfInstantiatedVirtualLink _vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name) {
+	private final String domainName;
+
+	public VirtualLinkUow(final VnfInstantiatedVirtualLink _vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name, final String _domainName) {
 		super(_vnfInstantiedVirtualLink, _name);
 		vlProtocolData = _vlProtocolData;
 		name = _name;
 		vnfInstantiedVirtualLink = _vnfInstantiedVirtualLink;
+		domainName = _domainName;
 	}
 
 	public VlProtocolData getVlProtocolData() {
@@ -29,7 +34,9 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		return vim.createNetwork(vimConnectionInformation, vlProtocolData, vnfInstantiedVirtualLink.getAliasName());
+		final String zoneId = vim.createDnsZone(vimConnectionInformation, name + "." + domainName);
+		vnfInstantiedVirtualLink.setZoneId(zoneId);
+		return vim.createNetwork(vimConnectionInformation, vlProtocolData, vnfInstantiedVirtualLink.getAliasName(), domainName, null);
 	}
 
 	@Override
@@ -50,6 +57,7 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		vim.deleteVirtualLink(vimConnectionInformation, resourceId);
+		vim.deleteDnsZone(vimConnectionInformation, vnfInstantiedVirtualLink.getZoneId());
 		return null;
 	}
 

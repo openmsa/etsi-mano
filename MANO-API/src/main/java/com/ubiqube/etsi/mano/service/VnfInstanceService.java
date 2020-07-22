@@ -21,6 +21,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedDnsZone;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedMonitoring;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
@@ -33,6 +34,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
+import com.ubiqube.etsi.mano.jpa.VnfInstantiatedDnsZoneJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiedStorageJpa;
@@ -63,7 +65,9 @@ public class VnfInstanceService {
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService, final VnfLiveInstanceJpa _vnfLiveInstance) {
+	private final VnfInstantiatedDnsZoneJpa vnInstantiatedDnsZoneJpa;
+
+	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService, final VnfLiveInstanceJpa _vnfLiveInstance, final VnfInstantiatedDnsZoneJpa _vnInstantiatedDnsZoneJpa) {
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstantiedComputeJpa = _vnfInstantiedComputeJpa;
 		vnfInstantiedVirtualLinkJpa = _vnfInstantiedVirtualLinkJpa;
@@ -73,6 +77,7 @@ public class VnfInstanceService {
 		vnfLcmOpOccsJpa = _vnfLcmOpOccsJpa;
 		grantService = _grantService;
 		vnfLiveInstanceJpa = _vnfLiveInstance;
+		vnInstantiatedDnsZoneJpa = _vnInstantiatedDnsZoneJpa;
 	}
 
 	public List<ExtVirtualLinkDataEntity> getAllExtVirtualLinks(final VnfInstance vnfInstance) {
@@ -130,6 +135,10 @@ public class VnfInstanceService {
 
 	public List<VnfInstantiatedVirtualLink> getLiveVirtualLinkInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedVirtualLinkJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
+	}
+
+	public List<VnfInstantiatedDnsZone> getLiveDnsZoneInstanceOf(final VnfInstance vnfInstance) {
+		return vnInstantiatedDnsZoneJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
 	}
 
 	public VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId) {

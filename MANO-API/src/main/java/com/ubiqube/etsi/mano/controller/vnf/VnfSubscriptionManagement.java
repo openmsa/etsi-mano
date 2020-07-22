@@ -1,23 +1,16 @@
 package com.ubiqube.etsi.mano.controller.vnf;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication;
-import com.ubiqube.etsi.mano.model.vnf.SubscriptionObject;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmNotificationsFilter;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.notification.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgChangeNotification;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgOnboardingNotification;
+import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 
@@ -32,49 +25,31 @@ public class VnfSubscriptionManagement {
 		this.subscriptionRepository = _subscriptionRepository;
 	}
 
-	public List<PkgmSubscription> subscriptionsGet(final String filter, final Linkable links) {
-		final List<SubscriptionObject> result = subscriptionRepository.query(filter);
-		final List<PkgmSubscription> response = result.stream()
-				.map(SubscriptionObject::getPkgmSubscription)
-				.collect(Collectors.toList());
-		response.stream().forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
-		return response;
+	public List<Subscription> subscriptionsGet(final String filter) {
+		return subscriptionRepository.query(filter);
+
 	}
 
-	public List<PkgmSubscription> subscriptionsPost(@Nonnull final PkgmSubscriptionRequest subscriptionsPostQuery, final Linkable links) {
-		// Response
-		final ArrayList<PkgmSubscription> response = new ArrayList<>();
-		final String callback = subscriptionsPostQuery.getCallbackUri();
-		@Valid
-		final PkgmNotificationsFilter filter = subscriptionsPostQuery.getFilter();
-		final PkgmSubscription subscription = VnfPackageFactory.createSubscriptionsPkgmSubscription(callback, filter);
-
-		// TODO: Check test endpoint.
-		final SubscriptionObject subscriptionObject = new SubscriptionObject(subscriptionsPostQuery.getAuthentication(), subscription);
-		subscriptionObject.setApi(links.getApi());
-		subscriptionRepository.save(subscriptionObject);
-		subscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscription.getId()));
-		response.add(subscription);
-		return response;
+	public Subscription subscriptionsPost(@Nonnull final Subscription subscription) {
+		return subscriptionRepository.save(subscription);
 	}
 
-	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage) {
+	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPkgChangeNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 
-		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
-		final SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
-		final String callbackUri = subscriptionsRepository.getPkgmSubscription().getCallbackUri();
-
+		final Subscription subscriptionsRepository = subscriptionRepository.get(subscriptionId);
+		final AuthentificationInformations auth = subscriptionsRepository.getAuthentificationInformations();
+		final String callbackUri = subscriptionsRepository.getCallbackUri();
+		// There is a version, problem.
 		notifications.doNotification(notificationsMessage, callbackUri, auth);
 	}
 
-	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
+	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPkgOnboardingNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
-		final SubscriptionObject subscriptionsRepository = subscriptionRepository.get(subscriptionId);
-		final PkgmSubscription req = subscriptionsRepository.getPkgmSubscription();
-		final String cbUrl = req.getCallbackUri();
-		final com.ubiqube.etsi.mano.model.vnf.SubscriptionAuthentication auth = subscriptionsRepository.getSubscriptionAuthentication();
-
+		final Subscription subscription = subscriptionRepository.get(subscriptionId);
+		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
+		final String cbUrl = subscription.getCallbackUri();
+		// Version problem.
 		notifications.doNotification(notificationsMessage, cbUrl, auth);
 	}
 
@@ -84,8 +59,8 @@ public class VnfSubscriptionManagement {
 		subscriptionRepository.delete(subscriptionId);
 	}
 
-	public PkgmSubscription subscriptionsSubscriptionIdGet(@Nonnull final String _subscriptionId, final Linkable links) {
-		return subscriptionRepository.get(UUID.fromString(_subscriptionId)).getPkgmSubscription().links(links.createSubscriptionsPkgmSubscriptionLinks(_subscriptionId));
+	public Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId) {
+		return subscriptionRepository.get(_subscriptionId);
 	}
 
 }

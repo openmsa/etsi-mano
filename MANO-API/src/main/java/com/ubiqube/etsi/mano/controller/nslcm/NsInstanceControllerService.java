@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
@@ -83,7 +83,7 @@ public class NsInstanceControllerService {
 		return nsInstanceService.save(nsInstanceTmp);
 	}
 
-	public NsLcmOpOccs instantiate(final UUID nsUuid, final InstantiateNsRequest req) {
+	public NsLcmOpOccs instantiate(final UUID nsUuid, final NsInstantiate req) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
 		ensureNotInstantiated(nsInstanceDb);
 		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.INSTANTIATE);

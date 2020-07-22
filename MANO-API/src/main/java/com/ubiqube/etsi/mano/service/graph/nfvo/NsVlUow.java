@@ -33,7 +33,7 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 		// l3.setGatewayIp(gatewayIp);
 		l3.setIpVersion("ipv4");
 		// l3.setL3Name(l3Name);
-		return vim.createNetwork(vimConnectionInformation, vlProtocolData, null);
+		return vim.createNetwork(vimConnectionInformation, vlProtocolData, null, null, null);
 	}
 
 	@Override

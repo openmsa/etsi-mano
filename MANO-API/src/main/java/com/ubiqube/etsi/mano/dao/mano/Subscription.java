@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -35,10 +34,10 @@ public class Subscription implements BaseEntity {
 
 	private AuthentificationInformations authentificationInformations;
 
-	@Embedded
-	private SubscriptionQuery subscriptionQuery;
+	private String callbackUri;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<FilterAttributes> subscriptionFilter;
+	private List<FilterAttributes> filters;
 
 	@Override
 	public UUID getId() {
@@ -57,14 +56,6 @@ public class Subscription implements BaseEntity {
 		this.authentificationInformations = authentificationInformations;
 	}
 
-	public SubscriptionQuery getSubscriptionQuery() {
-		return subscriptionQuery;
-	}
-
-	public void setSubscriptionQuery(final SubscriptionQuery subscriptionQuery) {
-		this.subscriptionQuery = subscriptionQuery;
-	}
-
 	public ApiTypesEnum getApi() {
 		return api;
 	}
@@ -73,12 +64,20 @@ public class Subscription implements BaseEntity {
 		this.api = api;
 	}
 
-	public List<FilterAttributes> getSubscriptionFilter() {
-		return subscriptionFilter;
+	public String getCallbackUri() {
+		return callbackUri;
 	}
 
-	public void setSubscriptionFilter(final List<FilterAttributes> subscriptionFilter) {
-		this.subscriptionFilter = subscriptionFilter;
+	public void setCallbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+	}
+
+	public List<FilterAttributes> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(final List<FilterAttributes> filters) {
+		this.filters = filters;
 	}
 
 }

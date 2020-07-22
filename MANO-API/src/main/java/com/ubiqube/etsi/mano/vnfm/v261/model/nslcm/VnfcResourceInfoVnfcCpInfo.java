@@ -18,14 +18,14 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.nslcm.CpProtocolInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.CpProtocolInfo;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * VnfcResourceInfoVnfcCpInfo
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class VnfcResourceInfoVnfcCpInfo {
 	@JsonProperty("id")
 	private String id = null;

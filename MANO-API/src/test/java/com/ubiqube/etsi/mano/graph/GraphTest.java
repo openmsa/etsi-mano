@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.graph;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Set;
 
 import org.jgrapht.ListenableGraph;
@@ -21,7 +23,7 @@ public class GraphTest {
 	}
 
 	@Test
-	void testName() throws Exception {
+	static void testName() throws Exception {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
 		final UnitOfWork vduA = new TestUnitOfWork("A");
@@ -69,5 +71,6 @@ public class GraphTest {
 		edg.forEach(x -> {
 			System.out.println("Edge: " + x.getSource().getName() + " -> " + x.getTarget().getName());
 		});
+		assertEquals(2, edg.size());
 	}
 }

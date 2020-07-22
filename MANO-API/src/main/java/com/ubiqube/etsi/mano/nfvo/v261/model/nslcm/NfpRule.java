@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "The NfpRule data type is an expression of the conditions that shall be met in order for the NFP to be applicable to the packet. The condition acts as a flow classifier and it is met only if all the values expressed in the condition are matched by those in the packet. It shall comply with the provisions defined in Table 6.5.3.40-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-10-07T10:02:43.347+02:00")
+
 
 public class NfpRule {
 	@JsonProperty("etherDestinationAddress")

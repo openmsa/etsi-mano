@@ -20,11 +20,11 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.CancelModeType;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.nslcm.CancelModeType;
-import com.ubiqube.etsi.mano.model.nslcm.ExtVirtualLinkInfo;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiModelProperty;
  * This type represents a VNF lifecycle management operation occurrence.
  */
 @ApiModel(description = "This type represents a VNF lifecycle management operation occurrence. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class VnfLcmOpOcc {
 	@JsonProperty("id")
 	private String id = null;

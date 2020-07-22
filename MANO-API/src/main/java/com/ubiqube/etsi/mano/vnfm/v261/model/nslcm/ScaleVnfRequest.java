@@ -12,19 +12,20 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * ScaleVnfRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class ScaleVnfRequest {
 	/**
 	 * Indicates the type of the scale operation requested. Permitted values: *
@@ -70,7 +71,7 @@ public class ScaleVnfRequest {
 	private Integer numberOfSteps = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ScaleVnfRequest type(final TypeEnum type) {
 		this.type = type;
@@ -138,7 +139,7 @@ public class ScaleVnfRequest {
 		this.numberOfSteps = numberOfSteps;
 	}
 
-	public ScaleVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public ScaleVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -152,11 +153,11 @@ public class ScaleVnfRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

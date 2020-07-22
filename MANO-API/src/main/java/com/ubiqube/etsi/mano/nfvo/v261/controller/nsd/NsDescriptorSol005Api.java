@@ -8,11 +8,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,11 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.factory.NsdFactories;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.model.Link;
+import com.ubiqube.etsi.mano.nfvo.v261.NsdFactories;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;
@@ -247,17 +245,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) {
 		NsdInfo nsdDescriptor = NsdFactories.createNsdInfo();
-		final Map<String, Object> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
+		final Map<String, String> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
 		nsdDescriptor.setUserDefinedData(userDefinedData);
-		final List<String> vnfPkgIds = Optional.ofNullable((List<String>) userDefinedData.get("vnfPkgIds")).orElse(new ArrayList<String>());
-		// Verify if VNF Package exists.
-		vnfPkgIds.stream().forEach(x -> vnfPackageRepository.get(UUID.fromString(x)));
-		nsdDescriptor.setVnfPkgIds(vnfPkgIds);
-		userDefinedData.remove("vnfPkgIds");
 
-		final List<String> pnfPkgIds = (List<String>) userDefinedData.get("pnfPkgIds");
-		// TODO: verify PNF ids.
-		nsdDescriptor.setPnfdInfoIds(pnfPkgIds);
 		NsdPackage nsdPackage = mapper.map(nsdDescriptor, NsdPackage.class);
 		nsdPackage = nsdRepository.save(nsdPackage);
 		nsdDescriptor = mapper.map(nsdPackage, NsdInfo.class);

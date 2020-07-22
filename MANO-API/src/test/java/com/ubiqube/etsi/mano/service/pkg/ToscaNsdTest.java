@@ -42,30 +42,30 @@ public class ToscaNsdTest {
 	@Test
 	void testNsVirtualLink() throws Exception {
 		final Set<NsVirtualLink> list = tpp.getNsVirtualLink(new HashMap<String, String>());
-		System.out.println();
+		assertEquals(1, list.size());
 	}
 
 	@Test
 	void testNsSap() throws Exception {
 		final Set<NsSap> list = tpp.getNsSap(new HashMap<String, String>());
-		System.out.println();
+		assertEquals(1, list.size());
 	}
 
 	@Test
 	void testSecurityGroupAdapter() throws Exception {
 		final Set<SecurityGroupAdapter> list = tpp.getSecurityGroups(new HashMap<String, String>());
-		System.out.println();
+		assertEquals(1, list.size());
 	}
 
 	@Test
 	void testUbiqube01() throws Exception {
 		final Set<String> list = tpp.getVnfd(new HashMap<String, String>());
-		System.out.println("" + list);
+		assertEquals(1, list.size());
 	}
 
 	@Test
 	void testUbiqube02() throws Exception {
 		final Set<String> list = tpp.getNestedNsd(new HashMap<String, String>());
-		System.out.println("" + list);
+		assertEquals(1, list.size());
 	}
 }

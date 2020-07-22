@@ -15,6 +15,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
  * VNF lifecycle changes.
  */
 @ApiModel(description = "This type represents a subscription request related to notifications about VNF lifecycle changes. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class LccnSubscriptionRequest {
 	@JsonProperty("filter")
 	private LifecycleChangeNotificationsFilter filter = null;
@@ -35,7 +36,7 @@ public class LccnSubscriptionRequest {
 	@JsonProperty("authentication")
 	private SubscriptionAuthentication authentication = null;
 
-	public LccnSubscriptionRequest filter(LifecycleChangeNotificationsFilter filter) {
+	public LccnSubscriptionRequest filter(final LifecycleChangeNotificationsFilter filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -44,7 +45,7 @@ public class LccnSubscriptionRequest {
 	 * Filter settings for this subscription, to define the subset of all
 	 * notifications this subscription relates to. A particular notification is sent
 	 * to the subscriber if the filter matches, or if there is no filter.
-	 * 
+	 *
 	 * @return filter
 	 **/
 	@JsonProperty("filter")
@@ -53,18 +54,18 @@ public class LccnSubscriptionRequest {
 		return filter;
 	}
 
-	public void setFilter(LifecycleChangeNotificationsFilter filter) {
+	public void setFilter(final LifecycleChangeNotificationsFilter filter) {
 		this.filter = filter;
 	}
 
-	public LccnSubscriptionRequest callbackUri(String callbackUri) {
+	public LccnSubscriptionRequest callbackUri(final String callbackUri) {
 		this.callbackUri = callbackUri;
 		return this;
 	}
 
 	/**
 	 * The URI of the endpoint to send the notification to.
-	 * 
+	 *
 	 * @return callbackUri
 	 **/
 	@JsonProperty("callbackUri")
@@ -74,11 +75,11 @@ public class LccnSubscriptionRequest {
 		return callbackUri;
 	}
 
-	public void setCallbackUri(String callbackUri) {
+	public void setCallbackUri(final String callbackUri) {
 		this.callbackUri = callbackUri;
 	}
 
-	public LccnSubscriptionRequest authentication(SubscriptionAuthentication authentication) {
+	public LccnSubscriptionRequest authentication(final SubscriptionAuthentication authentication) {
 		this.authentication = authentication;
 		return this;
 	}
@@ -88,7 +89,7 @@ public class LccnSubscriptionRequest {
 	 * notifications corresponding to this subscription, as defined in clause
 	 * 4.5.3.4. This attribute shall only be present if the subscriber requires
 	 * authorization of notifications.
-	 * 
+	 *
 	 * @return authentication
 	 **/
 	@JsonProperty("authentication")
@@ -97,7 +98,7 @@ public class LccnSubscriptionRequest {
 		return authentication;
 	}
 
-	public void setAuthentication(SubscriptionAuthentication authentication) {
+	public void setAuthentication(final SubscriptionAuthentication authentication) {
 		this.authentication = authentication;
 	}
 
@@ -117,7 +118,7 @@ public class LccnSubscriptionRequest {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

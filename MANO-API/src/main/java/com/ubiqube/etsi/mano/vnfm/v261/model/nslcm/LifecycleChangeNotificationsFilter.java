@@ -18,8 +18,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationStateType;
-import com.ubiqube.etsi.mano.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationStateType;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationType;
+import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,7 +35,7 @@ import io.swagger.annotations.ApiModelProperty;
  * one filter attribute).
  */
 @ApiModel(description = "This type represents a subscription filter related to notifications about VNF lifecycle changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class LifecycleChangeNotificationsFilter {
 	@JsonProperty("vnfInstanceSubscriptionFilter")
 	private VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter = null;
@@ -51,7 +52,7 @@ public class LifecycleChangeNotificationsFilter {
 
 		private final String value;
 
-		NotificationTypesEnum(String value) {
+		NotificationTypesEnum(final String value) {
 			this.value = value;
 		}
 
@@ -62,7 +63,7 @@ public class LifecycleChangeNotificationsFilter {
 		}
 
 		@JsonCreator
-		public static NotificationTypesEnum fromValue(String text) {
+		public static NotificationTypesEnum fromValue(final String text) {
 			for (final NotificationTypesEnum b : NotificationTypesEnum.values()) {
 				if (String.valueOf(b.value).equals(text)) {
 					return b;
@@ -81,14 +82,14 @@ public class LifecycleChangeNotificationsFilter {
 	@JsonProperty("operationStates")
 	private List<LcmOperationStateType> operationStates = null;
 
-	public LifecycleChangeNotificationsFilter vnfInstanceSubscriptionFilter(VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
+	public LifecycleChangeNotificationsFilter vnfInstanceSubscriptionFilter(final VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
 		this.vnfInstanceSubscriptionFilter = vnfInstanceSubscriptionFilter;
 		return this;
 	}
 
 	/**
 	 * Filter criteria to select VNF instances about which to notify.
-	 * 
+	 *
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
 	@JsonProperty("vnfInstanceSubscriptionFilter")
@@ -97,18 +98,18 @@ public class LifecycleChangeNotificationsFilter {
 		return vnfInstanceSubscriptionFilter;
 	}
 
-	public void setVnfInstanceSubscriptionFilter(VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
+	public void setVnfInstanceSubscriptionFilter(final VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
 		this.vnfInstanceSubscriptionFilter = vnfInstanceSubscriptionFilter;
 	}
 
-	public LifecycleChangeNotificationsFilter notificationTypes(List<NotificationTypesEnum> notificationTypes) {
+	public LifecycleChangeNotificationsFilter notificationTypes(final List<NotificationTypesEnum> notificationTypes) {
 		this.notificationTypes = notificationTypes;
 		return this;
 	}
 
-	public LifecycleChangeNotificationsFilter addNotificationTypesItem(NotificationTypesEnum notificationTypesItem) {
+	public LifecycleChangeNotificationsFilter addNotificationTypesItem(final NotificationTypesEnum notificationTypesItem) {
 		if (this.notificationTypes == null) {
-			this.notificationTypes = new ArrayList<NotificationTypesEnum>();
+			this.notificationTypes = new ArrayList<>();
 		}
 		this.notificationTypes.add(notificationTypesItem);
 		return this;
@@ -120,7 +121,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * VnfIdentifierDeletionNotification The permitted values of the
 	 * \&quot;notificationTypes\&quot; attribute are spelled exactly as the names of
 	 * the notification types to facilitate automated code generation systems.
-	 * 
+	 *
 	 * @return notificationTypes
 	 **/
 	@JsonProperty("notificationTypes")
@@ -129,18 +130,18 @@ public class LifecycleChangeNotificationsFilter {
 		return notificationTypes;
 	}
 
-	public void setNotificationTypes(List<NotificationTypesEnum> notificationTypes) {
+	public void setNotificationTypes(final List<NotificationTypesEnum> notificationTypes) {
 		this.notificationTypes = notificationTypes;
 	}
 
-	public LifecycleChangeNotificationsFilter operationTypes(List<LcmOperationType> operationTypes) {
+	public LifecycleChangeNotificationsFilter operationTypes(final List<LcmOperationType> operationTypes) {
 		this.operationTypes = operationTypes;
 		return this;
 	}
 
-	public LifecycleChangeNotificationsFilter addOperationTypesItem(LcmOperationType operationTypesItem) {
+	public LifecycleChangeNotificationsFilter addOperationTypesItem(final LcmOperationType operationTypesItem) {
 		if (this.operationTypes == null) {
-			this.operationTypes = new ArrayList<LcmOperationType>();
+			this.operationTypes = new ArrayList<>();
 		}
 		this.operationTypes.add(operationTypesItem);
 		return this;
@@ -152,7 +153,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * \&quot;notificationTypes\&quot; attribute contains the value
 	 * \&quot;VnfLcmOperationOccurrenceNotification\&quot;, and shall be absent
 	 * otherwise.
-	 * 
+	 *
 	 * @return operationTypes
 	 **/
 	@JsonProperty("operationTypes")
@@ -161,18 +162,18 @@ public class LifecycleChangeNotificationsFilter {
 		return operationTypes;
 	}
 
-	public void setOperationTypes(List<LcmOperationType> operationTypes) {
+	public void setOperationTypes(final List<LcmOperationType> operationTypes) {
 		this.operationTypes = operationTypes;
 	}
 
-	public LifecycleChangeNotificationsFilter operationStates(List<LcmOperationStateType> operationStates) {
+	public LifecycleChangeNotificationsFilter operationStates(final List<LcmOperationStateType> operationStates) {
 		this.operationStates = operationStates;
 		return this;
 	}
 
-	public LifecycleChangeNotificationsFilter addOperationStatesItem(LcmOperationStateType operationStatesItem) {
+	public LifecycleChangeNotificationsFilter addOperationStatesItem(final LcmOperationStateType operationStatesItem) {
 		if (this.operationStates == null) {
-			this.operationStates = new ArrayList<LcmOperationStateType>();
+			this.operationStates = new ArrayList<>();
 		}
 		this.operationStates.add(operationStatesItem);
 		return this;
@@ -184,7 +185,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * \&quot;notificationTypes\&quot; attribute contains the value
 	 * \&quot;VnfLcmOperationOccurrenceNotification\&quot;, and shall be absent
 	 * otherwise.
-	 * 
+	 *
 	 * @return operationStates
 	 **/
 	@JsonProperty("operationStates")
@@ -193,7 +194,7 @@ public class LifecycleChangeNotificationsFilter {
 		return operationStates;
 	}
 
-	public void setOperationStates(List<LcmOperationStateType> operationStates) {
+	public void setOperationStates(final List<LcmOperationStateType> operationStates) {
 		this.operationStates = operationStates;
 	}
 
@@ -214,7 +215,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * Convert the given object to string with each line indented by 4 spaces
 	 * (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

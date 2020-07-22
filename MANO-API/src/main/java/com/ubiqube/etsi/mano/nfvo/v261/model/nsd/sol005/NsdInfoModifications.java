@@ -2,6 +2,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -9,7 +10,6 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents attribute modifications for an individual NS descriptor resource based on the NsdInfo data type. The attributes of NsdInfo that can be modified are included in the NsdInfoModifications data type.NOTE: At least one of the attributes - nsdOperationalState and userDefinedData - shall be present. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T16:34:13.188+01:00")
+
 
 public class NsdInfoModifications {
 	@JsonProperty("nsdOperationalState")
@@ -31,7 +31,7 @@ public class NsdInfoModifications {
 
 	@JsonProperty("userDefinedData")
 	@Valid
-	private List<KeyValuePairs> userDefinedData = null;
+	private List<Map<String, String>> userDefinedData = null;
 
 	public NsdInfoModifications nsdOperationalState(final NsdOperationalStateType nsdOperationalState) {
 		this.nsdOperationalState = nsdOperationalState;
@@ -40,7 +40,7 @@ public class NsdInfoModifications {
 
 	/**
 	 * Get nsdOperationalState
-	 * 
+	 *
 	 * @return nsdOperationalState
 	 **/
 	@ApiModelProperty(value = "")
@@ -55,12 +55,12 @@ public class NsdInfoModifications {
 		this.nsdOperationalState = nsdOperationalState;
 	}
 
-	public NsdInfoModifications userDefinedData(final List<KeyValuePairs> userDefinedData) {
+	public NsdInfoModifications userDefinedData(final List<Map<String, String>> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
 
-	public NsdInfoModifications addUserDefinedDataItem(final KeyValuePairs userDefinedDataItem) {
+	public NsdInfoModifications addUserDefinedDataItem(final Map<String, String> userDefinedDataItem) {
 		if (this.userDefinedData == null) {
 			this.userDefinedData = new ArrayList<>();
 		}
@@ -73,18 +73,18 @@ public class NsdInfoModifications {
 	 * note. If present, these modifications shall be applied according to the rules
 	 * of JSON Merge PATCH (see IETF RFC 7396 [25]). NOTE- At least one of the
 	 * attributes - nsdOperationalState and userDefinedData - shall be present.
-	 * 
+	 *
 	 * @return userDefinedData
 	 **/
 	@ApiModelProperty(value = "Modifications of the userDefinedData attribute in NsdInfo data type. See note. If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396 [25]). NOTE- At least one of the attributes - nsdOperationalState and userDefinedData - shall be present. ")
 
 	@Valid
 
-	public List<KeyValuePairs> getUserDefinedData() {
+	public List<Map<String, String>> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final List<KeyValuePairs> userDefinedData) {
+	public void setUserDefinedData(final List<Map<String, String>> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

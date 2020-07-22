@@ -14,15 +14,17 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -35,8 +37,12 @@ public class GrantTest {
 
 	public GrantTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
+		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
+		orikaVnfm.configure(mapperFactory);
+		orikaNfvo.configure(mapperFactory);
 		jsonMapper = new ObjectMapper();
 
 		podam = new PodamFactoryImpl();
@@ -110,6 +116,6 @@ public class GrantTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final GrantRequest reqJson = podam.manufacturePojo(GrantRequest.class);
 		final GrantsRequest req = mapper.map(reqJson, GrantsRequest.class);
-		System.out.println("" + req);
+		assertNotNull(req.getVimConstraints());
 	}
 }

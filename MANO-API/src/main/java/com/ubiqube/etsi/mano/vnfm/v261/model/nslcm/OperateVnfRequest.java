@@ -12,11 +12,12 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
+import java.util.Map;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.model.KeyValuePairs;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfOperationalStateType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,7 +27,7 @@ import io.swagger.annotations.ApiModelProperty;
  * operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-06-13T10:04:39.223+02:00")
+
 public class OperateVnfRequest {
 	@JsonProperty("changeStateTo")
 	private VnfOperationalStateType changeStateTo = null;
@@ -38,7 +39,7 @@ public class OperateVnfRequest {
 	private Integer gracefulStopTimeout = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public OperateVnfRequest changeStateTo(final VnfOperationalStateType changeStateTo) {
 		this.changeStateTo = changeStateTo;
@@ -118,7 +119,7 @@ public class OperateVnfRequest {
 		this.gracefulStopTimeout = gracefulStopTimeout;
 	}
 
-	public OperateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public OperateVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -132,11 +133,11 @@ public class OperateVnfRequest {
 	 **/
 	@JsonProperty("additionalParams")
 	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

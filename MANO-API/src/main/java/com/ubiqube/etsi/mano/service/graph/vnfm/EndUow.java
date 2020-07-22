@@ -2,14 +2,18 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork.UowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class EndUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(EndUow.class);
 
 	public EndUow(final VnfInstantiatedBase resourceHandleEntity) {
 		super(resourceHandleEntity, "");
@@ -17,6 +21,7 @@ public class EndUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+		LOG.info("Final context: {}", context);
 		return null;
 	}
 

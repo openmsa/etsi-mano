@@ -1,5 +1,7 @@
 package com.ubiqube.etsi.mano.service.rest;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.net.URI;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,8 @@ public class UbiRestTest {
 		final String url = _conf.get("msa.rest-api.url");
 		final UbiRest ubiRest = new UbiRest(_conf);
 		final URI uri = UriComponentsBuilder.fromHttpUrl(url).pathSegment("orchestration/v1/max-pool-number").build().toUri();
-		ubiRest.get(uri, Object.class);
+		final Object o = ubiRest.get(uri, Object.class);
+		assertNotNull(o);
 	}
 
 	@Test
@@ -23,6 +26,7 @@ public class UbiRestTest {
 		final String url = _conf.get("msa.rest-api.url");
 		final UbiRest ubiRest = new UbiRest(_conf);
 		final URI uri = UriComponentsBuilder.fromHttpUrl(url).pathSegment("orchestration/v1/max-pool-number").build().toUri();
-		ubiRest.get(uri, Object.class);
+		final Object o = ubiRest.get(uri, Object.class);
+		assertNotNull(o);
 	}
 }

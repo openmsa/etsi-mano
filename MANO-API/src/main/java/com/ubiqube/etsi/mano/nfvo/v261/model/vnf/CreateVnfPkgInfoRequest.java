@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-11-25T10:00:04.549+01:00")
+
 
 public class CreateVnfPkgInfoRequest {
 	@JsonProperty("userDefinedData")

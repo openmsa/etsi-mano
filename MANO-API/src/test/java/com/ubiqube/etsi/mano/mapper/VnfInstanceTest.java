@@ -13,9 +13,16 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.InstantiationStateEnum;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfOperationalStateType;
 import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -23,12 +30,7 @@ import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.model.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.model.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.model.nslcm.InstantiationStateEnum;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstance;
-import com.ubiqube.etsi.mano.model.nslcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.model.nslcm.VnfOperationalStateType;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 import ma.glasnost.orika.MapperFacade;
@@ -41,9 +43,10 @@ public class VnfInstanceTest {
 
 	public VnfInstanceTest() {
 		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-
+		orikaVnfm.configure(mapperFactory);
 		podam = new PodamFactoryImpl();
 		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 	}
@@ -77,7 +80,7 @@ public class VnfInstanceTest {
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = new com.ubiqube.etsi.mano.dao.mano.VnfInstance();
 		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
-		vnfInstance.setInstantiationState(InstantiationStateEnum.INSTANTIATED);
+		vnfInstance.setInstantiationState(InstantiationState.INSTANTIATED);
 		final NsdInstance nsInstance = new NsdInstance();
 		nsInstance.setFlavourId("flavor");
 		final NsdPackage nsdInfoId = new NsdPackage();
@@ -92,6 +95,7 @@ public class VnfInstanceTest {
 		vnfInstance.setExtensions(extensions);
 
 		final VnfInstance o = mapper.map(vnfInstance, VnfInstance.class);
+		assertNotNull(o.getInstantiatedVnfInfo());
 	}
 
 	@Test
@@ -99,7 +103,7 @@ public class VnfInstanceTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfInstance avcDb = podam.manufacturePojo(VnfInstance.class);
 		final VnfLcmOpOccs avc = mapper.map(avcDb, VnfLcmOpOccs.class);
-		System.out.println("" + avc);
+		assertNotNull(avc.getError());
 	}
 
 	void testInstantiateInfo2VnfInstance() throws Exception {
@@ -141,7 +145,7 @@ public class VnfInstanceTest {
 		extManagedVirtualLinks.add(podam.manufacturePojo(ExtManagedVirtualLinkData.class));
 		instantiateVnfRequest.setExtManagedVirtualLinks(extManagedVirtualLinks);
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance avc = mapper.map(instantiateVnfRequest, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class);
-		System.out.println("" + avc);
+		assertNotNull(avc.getExtVirtualLinks());
 
 	}
 }
