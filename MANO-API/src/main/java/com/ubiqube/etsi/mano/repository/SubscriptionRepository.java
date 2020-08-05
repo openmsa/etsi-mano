@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 
-public interface SubscriptionRepository extends CrudRepository<Subscription>, BinaryRepository {
+public interface SubscriptionRepository extends CrudRepository<Subscription> {
 
 	List<Subscription> selectNotifications(UUID vnfPkgId, String event);
 

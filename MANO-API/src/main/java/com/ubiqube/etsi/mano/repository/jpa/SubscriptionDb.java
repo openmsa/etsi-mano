@@ -7,20 +7,17 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
-import com.ubiqube.etsi.mano.repository.ContentManager;
-import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 @Service
-public class SubscriptionDb extends AbstractDirectJpa<Subscription> implements SubscriptionRepository {
+public class SubscriptionDb extends AbstractJpaOnly<Subscription> implements SubscriptionRepository {
 
 	private final SubscriptionJpa repository;
 
-	public SubscriptionDb(final EntityManager em, final SubscriptionJpa _repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, _repository, contentManager, jsonMapper, namingStrategy);
+	public SubscriptionDb(final EntityManager em, final SubscriptionJpa _repository) {
+		super(em, _repository);
 		repository = _repository;
 	}
 
