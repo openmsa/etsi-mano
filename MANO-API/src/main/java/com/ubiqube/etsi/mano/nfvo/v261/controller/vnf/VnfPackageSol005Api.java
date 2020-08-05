@@ -5,6 +5,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +122,7 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 		vnfPackage = vnfPackageRepository.save(vnfPackage);
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPackage.getId().toString()));
-		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.CREATED);
+		return ResponseEntity.created(URI.create(vnfPkgInfo.getLinks().getSelf().getHref())).build();
 	}
 
 	/**
