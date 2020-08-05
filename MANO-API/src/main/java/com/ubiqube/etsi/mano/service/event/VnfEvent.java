@@ -9,8 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ubiqube.etsi.mano.common.v261.VnfSubscriptionFactory;
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol003Linkable;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 /**
@@ -40,10 +45,30 @@ public class VnfEvent {
 	}
 
 	private void sendNotification(final UUID vnfPkgId, final Subscription subscription, final String event) {
-		final Object object = VnfSubscriptionFactory.createNotificationVnfPackageOnboardingNotification(subscription.getId(), vnfPkgId, "", null);
+		final Linkable links = getLinks(subscription.getApi());
+		Object object;
+		if ("VnfPackageChangeNotification".equals(event)) {
+			object = VnfSubscriptionFactory.createVnfPackageChangeNotification(subscription.getId(), vnfPkgId, event, links);
+		} else if ("".equals(event)) {
+			object = VnfSubscriptionFactory.createNotificationVnfPackageOnboardingNotification(subscription.getId(), vnfPkgId, event, links);
+		} else {
+			LOG.warn("Unknown event received: {}", event);
+			return;
+		}
 		final String callbackUri = subscription.getCallbackUri();
 		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
 		notifications.doNotification(object, callbackUri, auth);
+	}
+
+	private Linkable getLinks(final ApiTypesEnum api) {
+		switch (api) {
+		case SOL003:
+			return new Sol003Linkable();
+		case SOL005:
+			return new Sol005Linkable();
+		default:
+			throw new GenericException("Unable to find api: " + api);
+		}
 	}
 
 }
