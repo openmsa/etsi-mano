@@ -19,6 +19,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotificat
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgOnboardingNotification;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 
 import ma.glasnost.orika.MapperFacade;
@@ -52,7 +53,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
 		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
-		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription);
+		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
 		final PkgmSubscription pkgmSubscription = mapper.map(subscription, PkgmSubscription.class);
 		pkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgmSubscription.getId()));
 		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);

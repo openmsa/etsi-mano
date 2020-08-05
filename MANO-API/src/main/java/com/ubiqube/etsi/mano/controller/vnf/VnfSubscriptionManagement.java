@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgOnboardingNotification;
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
@@ -30,7 +31,8 @@ public class VnfSubscriptionManagement {
 
 	}
 
-	public Subscription subscriptionsPost(@Nonnull final Subscription subscription) {
+	public Subscription subscriptionsPost(@Nonnull final Subscription subscription, final ApiTypesEnum api) {
+		subscription.setApi(api);
 		return subscriptionRepository.save(subscription);
 	}
 
