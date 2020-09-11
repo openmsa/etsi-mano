@@ -1,14 +1,10 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
-import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
-import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
-import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
-import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,15 +27,11 @@ import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.nfvo.v261.NsdFactories;
+import com.ubiqube.etsi.mano.nfvo.controller.nsd.NsdController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
-import com.ubiqube.etsi.mano.service.event.ActionType;
-import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 import io.swagger.annotations.Api;
@@ -64,18 +56,14 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptorSol005Api.class);
 
-	private final NsdRepository nsdRepository;
 	private final Patcher patcher;
-	private final VnfPackageRepository vnfPackageRepository;
-	private final EventManager eventManager;
 	private final MapperFacade mapper;
+	private final NsdController nsdController;
 
-	public NsDescriptorSol005Api(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository, final Patcher _patcher, final EventManager _eventManager, final MapperFacade _mapper) {
-		nsdRepository = _nsdRepository;
-		vnfPackageRepository = _vnfPackageRepository;
+	public NsDescriptorSol005Api(final Patcher _patcher, final MapperFacade _mapper, final NsdController _nsdController) {
 		patcher = _patcher;
-		eventManager = _eventManager;
 		mapper = _mapper;
+		nsdController = _nsdController;
 		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
@@ -90,7 +78,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsDescriptorsGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsdPackage> nsds = nsdRepository.query(filter);
+		final List<NsdPackage> nsds = nsdController.nsDescriptorsGet(filter);
 
 		final List<NsdInfo> list = nsds.stream()
 				.map(x -> mapper.map(x, NsdInfo.class))
@@ -118,12 +106,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(final String nsdInfoId) {
 		final UUID nsdInfoUuid = UUID.fromString(nsdInfoId);
-		final NsdPackage nsdPackage = nsdRepository.get(nsdInfoUuid);
-		ensureDisabled(nsdPackage);
-		ensureNotInUse(nsdPackage);
-
-		nsdRepository.delete(nsdInfoUuid);
-		// NsdDeletionNotification OSS/BSS
+		nsdController.nsDescriptorsNsdInfoIdDelete(nsdInfoUuid);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -138,7 +121,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId) {
-		final NsdPackage nsdPackage = nsdRepository.get(UUID.fromString(nsdInfoId));
+		final NsdPackage nsdPackage = nsdController.nsDescriptorsNsdInfoIdGet(UUID.fromString(nsdInfoId));
 		final NsdInfo nsdInfo = mapper.map(nsdPackage, NsdInfo.class);
 		nsdInfo.setLinks(makeLinks(nsdInfoId));
 		return new ResponseEntity<>(nsdInfo, HttpStatus.OK);
@@ -169,9 +152,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
-		final NsdPackage nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
-		ensureIsOnboarded(nsdInfo);
-		final byte[] bytes = nsdRepository.getBinary(UUID.fromString(nsdInfoId), "nsd");
+		final byte[] bytes = nsdController.nsDescriptorsNsdInfoIdNsdContentGet(UUID.fromString(nsdInfoId));
 		return SpringUtil.handleBytes(bytes, range);
 	}
 
@@ -196,15 +177,11 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
-		final NsdPackage nsdInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
-		ensureNotOnboarded(nsdInfo);
-		try {
-			nsdRepository.storeBinary(UUID.fromString(nsdInfoId), "nsd", file.getInputStream());
+		try (InputStream is = file.getInputStream()) {
+			nsdController.nsDescriptorsNsdInfoIdNsdContentPut(UUID.fromString(nsdInfoId), is);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-
-		eventManager.sendAction(ActionType.NSD_PKG_ONBOARD_FROM_BYTES, nsdInfo.getId(), new HashMap<>());
 		return ResponseEntity.accepted().build();
 	}
 
@@ -226,12 +203,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final String body, final String contentType) {
-		NsdPackage nsdPkgInfo = nsdRepository.get(UUID.fromString(nsdInfoId));
-		patcher.patch(body, nsdPkgInfo);
-		nsdPkgInfo = nsdRepository.save(nsdPkgInfo);
+		final NsdPackage nsdPkgInfo = nsdController.nsDescriptorsNsdInfoIdPatch(UUID.fromString(nsdInfoId), body);
 		final NsdInfo ret = mapper.map(nsdPkgInfo, NsdInfo.class);
 		ret.setLinks(makeLinks(nsdInfoId));
-		// NsdChangeNotification OSS/BSS
 		return new ResponseEntity<>(ret, HttpStatus.OK);
 	}
 
@@ -244,13 +218,10 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) {
-		NsdInfo nsdDescriptor = NsdFactories.createNsdInfo();
 		final Map<String, String> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
-		nsdDescriptor.setUserDefinedData(userDefinedData);
+		final NsdPackage nsdPackage = nsdController.nsDescriptorsPost(userDefinedData);
 
-		NsdPackage nsdPackage = mapper.map(nsdDescriptor, NsdPackage.class);
-		nsdPackage = nsdRepository.save(nsdPackage);
-		nsdDescriptor = mapper.map(nsdPackage, NsdInfo.class);
+		final NsdInfo nsdDescriptor = mapper.map(nsdPackage, NsdInfo.class);
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
 		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
 	}
