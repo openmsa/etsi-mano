@@ -136,6 +136,7 @@ dependencies {
 
 	compile group: 'com.ubiqube.mano', name: 'etsi-model-common-261', version: '1.0-SNAPSHOT'
 	compile group: 'com.ubiqube.mano', name: 'etsi-model-261', version: '1.0-SNAPSHOT'
+	compile group: 'com.ubiqube.mano', name: 'mano-model', version: '0.0.1-SNAPSHOT'
 }
 
 springBoot {
