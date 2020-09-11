@@ -27,7 +27,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.NsInstantiate;
-import com.ubiqube.etsi.mano.nfvo.controller.nslcm.NsLcmController;
+import com.ubiqube.etsi.mano.nfvo.controller.nslcm.NsInstanceController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
@@ -47,9 +47,9 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private final MapperFacade mapper;
 
 	private final NsInstanceControllerService nsInstanceControllerService;
-	private final NsLcmController nsLcmController;
+	private final NsInstanceController nsLcmController;
 
-	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmController _nsLcmController) {
+	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
 		mapper = _mapper;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmController = _nsLcmController;

@@ -19,35 +19,32 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
-import com.ubiqube.etsi.mano.service.VnfLcmService;
+import com.ubiqube.etsi.mano.nfvo.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
-
 @Profile({ "!NFVO" })
 @RestController
 public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
-	private final VnfLcmService vnfLcmOpOccsRepository;
-	private final MapperFacade mapper;
-	private final VnfInstanceLcm vnfInstanceLcm;
 
-	public VnfLcmOpOccsSol003Api(final VnfLcmService _vnfLcmOpOccsRepository, final MapperFacade _mapper, final VnfInstanceLcm _vnfInstanceLcm) {
-		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
+	private final MapperFacade mapper;
+	private final VnfLcmController vnfLcmController;
+
+	public VnfLcmOpOccsSol003Api(final MapperFacade _mapper, final VnfLcmController _vnfLcmController) {
 		mapper = _mapper;
-		vnfInstanceLcm = _vnfInstanceLcm;
+		vnfLcmController = _vnfLcmController;
 		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");
 	}
 
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
-		final List<VnfLcmOpOccs> resultsDb = vnfLcmOpOccsRepository.query(filter);
+		final List<VnfLcmOpOccs> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final List<VnfLcmOpOcc> results = resultsDb.stream()
 				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
 				.collect(Collectors.toList());
@@ -73,7 +70,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
-		final VnfLcmOpOccs resultDb = vnfInstanceLcm.get(UUID.fromString(vnfLcmOpOccId));
+		final VnfLcmOpOccs resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		entity.setLinks(makeLink(entity));
 		return new ResponseEntity<>(entity, HttpStatus.OK);

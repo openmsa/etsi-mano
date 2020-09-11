@@ -15,12 +15,12 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 
-public class NsLcmController {
+public class NsInstanceController {
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsLcmOpOccsService lcmOpOccsService;
 	private final NsInstanceService nsInstanceService;
 
-	public NsLcmController(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsLcmOpOccsService _lcmOpOccsService) {
+	public NsInstanceController(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsLcmOpOccsService _lcmOpOccsService) {
 		nsInstanceRepository = _nsInstanceRepository;
 		nsInstanceService = _nsInstanceService;
 		lcmOpOccsService = _lcmOpOccsService;
