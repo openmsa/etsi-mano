@@ -31,7 +31,6 @@ import com.ubiqube.etsi.mano.nfvo.controller.nsd.NsdController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;
-import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 import io.swagger.annotations.Api;
@@ -56,12 +55,10 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptorSol005Api.class);
 
-	private final Patcher patcher;
 	private final MapperFacade mapper;
 	private final NsdController nsdController;
 
-	public NsDescriptorSol005Api(final Patcher _patcher, final MapperFacade _mapper, final NsdController _nsdController) {
-		patcher = _patcher;
+	public NsDescriptorSol005Api(final MapperFacade _mapper, final NsdController _nsdController) {
 		mapper = _mapper;
 		nsdController = _nsdController;
 		LOG.info("Starting NSD Management SOL005 Controller.");
