@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageController;
+import com.ubiqube.etsi.mano.controller.vnf.VnfPackageControll;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
@@ -54,9 +54,9 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	private final Linkable links = new Sol005Linkable();
 	private final VnfPackageManagement vnfManagement;
 	private final MapperFacade mapper;
-	private final VnfPackageController vnfPackageController;
+	private final VnfPackageControll vnfPackageController;
 
-	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController) {
+	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageControll _vnfPackageController) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
 		vnfPackageController = _vnfPackageController;

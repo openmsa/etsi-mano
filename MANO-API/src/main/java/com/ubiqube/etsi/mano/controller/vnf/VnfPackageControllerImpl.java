@@ -15,22 +15,24 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
-public class VnfPackageController {
+public class VnfPackageControllerImpl implements VnfPackageController {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;
 	private final EventManager eventManager;
 
-	public VnfPackageController(final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final EventManager _eventManager) {
+	public VnfPackageControllerImpl(final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final EventManager _eventManager) {
 		patcher = _patcher;
 		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
 	}
 
+	@Override
 	public VnfPackage vnfPackagesPost(final Map<String, String> userData) {
 		final VnfPackage vnfPackage = VnfPackageFactory.createVnfPkgInfo(userData);
 		return vnfPackageRepository.save(vnfPackage);
 	}
 
+	@Override
 	public void vnfPackagesVnfPkgIdDelete(final UUID id) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureDisabled(vnfPackage);
@@ -38,6 +40,7 @@ public class VnfPackageController {
 		vnfPackageRepository.delete(id);
 	}
 
+	@Override
 	public VnfPackage vnfPackagesVnfPkgIdPatch(final UUID id, final String body) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		patcher.patch(body, vnfPackage);
@@ -45,6 +48,7 @@ public class VnfPackageController {
 		return vnfPackageRepository.save(vnfPackage);
 	}
 
+	@Override
 	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureNotOnboarded(vnfPackage);
@@ -52,6 +56,7 @@ public class VnfPackageController {
 		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, null);
 	}
 
+	@Override
 	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final UUID id) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureNotOnboarded(vnfPackage);

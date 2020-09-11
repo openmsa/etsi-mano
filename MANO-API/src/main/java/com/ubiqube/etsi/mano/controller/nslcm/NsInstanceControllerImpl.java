@@ -15,31 +15,35 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 
-public class NsInstanceController {
+public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsLcmOpOccsService lcmOpOccsService;
 	private final NsInstanceService nsInstanceService;
 
-	public NsInstanceController(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsLcmOpOccsService _lcmOpOccsService) {
+	public NsInstanceControllerImpl(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsLcmOpOccsService _lcmOpOccsService) {
 		nsInstanceRepository = _nsInstanceRepository;
 		nsInstanceService = _nsInstanceService;
 		lcmOpOccsService = _lcmOpOccsService;
 	}
 
+	@Override
 	public List<NsdInstance> nsInstancesGet(final String filter) {
 		return nsInstanceRepository.query(filter);
 	}
 
+	@Override
 	public void nsInstancesNsInstanceIdDelete(final UUID id) {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
 		ensureNotInstantiated(nsInstanceDb);
 		nsInstanceService.delete(id);
 	}
 
+	@Override
 	public NsdInstance nsInstancesNsInstanceIdGet(final UUID id) {
 		return nsInstanceRepository.get(id);
 	}
 
+	@Override
 	public NsdInstance nsInstancesNsInstanceIdHealPost(final UUID id) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(id);
 		ensureInstantiated(nsInstance);
@@ -48,6 +52,7 @@ public class NsInstanceController {
 		throw new GenericException("TODO");
 	}
 
+	@Override
 	public NsdInstance nsInstancesNsInstanceIdScalePost(final UUID id) {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
 		ensureInstantiated(nsInstanceDb);
@@ -56,6 +61,7 @@ public class NsInstanceController {
 		throw new GenericException("TODO");
 	}
 
+	@Override
 	public void nsInstancesNsInstanceIdUpdatePost(final UUID id) {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
 		ensureInstantiated(nsInstanceDb);

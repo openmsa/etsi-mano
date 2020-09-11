@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,7 @@ import com.ubiqube.etsi.mano.service.event.EventManager;
 import ma.glasnost.orika.MapperFacade;
 
 @Service
-public class NsInstanceControllerService {
+public class NsInstanceControllerServiceImpl implements NsInstanceControllerService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstanceControllerService.class);
 
@@ -48,7 +46,7 @@ public class NsInstanceControllerService {
 
 	private final MapperFacade mapper;
 
-	public NsInstanceControllerService(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final NsLcmOpOccsService _nsLcmOpOccsService, final EventManager _eventManager, final MapperFacade _mapper) {
+	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final NsLcmOpOccsService _nsLcmOpOccsService, final EventManager _eventManager, final MapperFacade _mapper) {
 		super();
 		this.nsdPackageService = nsdPackageService;
 		this.nsInstanceService = nsInstanceService;
@@ -57,6 +55,7 @@ public class NsInstanceControllerService {
 		mapper = _mapper;
 	}
 
+	@Override
 	public NsdInstance createNsd(final String _nsdId, final String nsName, final String nsDescription) {
 		final UUID nsdId = UUID.fromString(_nsdId);
 		final NsdPackage nsd = nsdPackageService.findById(nsdId);
@@ -83,6 +82,7 @@ public class NsInstanceControllerService {
 		return nsInstanceService.save(nsInstanceTmp);
 	}
 
+	@Override
 	public NsLcmOpOccs instantiate(final UUID nsUuid, final NsInstantiate req) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
 		ensureNotInstantiated(nsInstanceDb);
@@ -94,7 +94,8 @@ public class NsInstanceControllerService {
 		return nsLcm;
 	}
 
-	public NsLcmOpOccs terminate(final UUID nsInstanceUuid, @Nullable final OffsetDateTime terminationTime) {
+	@Override
+	public NsLcmOpOccs terminate(final UUID nsInstanceUuid, final OffsetDateTime terminationTime) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
 		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.TERMINATE);
