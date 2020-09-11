@@ -1,8 +1,8 @@
 plugins {
 	id 'war'
-	id 'org.springframework.boot' version '2.3.1.RELEASE'
+	id 'org.springframework.boot' version '2.3.3.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'com.gorylenko.gradle-git-properties' version '2.2.2'
+	id 'com.gorylenko.gradle-git-properties' version '2.2.3'
 	id "org.liquibase.gradle" version "2.0.4"
 }
 apply plugin: 'jacoco'
@@ -79,7 +79,7 @@ dependencies {
 
 	liquibaseRuntime 'org.liquibase:liquibase-core:3.10.0'
 	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.2'
-	liquibaseRuntime 'org.postgresql:postgresql:42.2.14'
+	liquibaseRuntime 'org.postgresql:postgresql:42.2.16'
 	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.10.0'
 	liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
 	liquibaseRuntime sourceSets.main.output
@@ -101,7 +101,7 @@ dependencies {
 	compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.22'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0-SNAPSHOT'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0-SNAPSHOT'
-	compile group: 'com.github.joschi.jackson', name: 'jackson-datatype-threetenbp', version: '2.10.0'
+	compile group: 'com.github.joschi.jackson', name: 'jackson-datatype-threetenbp', version: '2.11.2'
 	compile group: 'org.webjars', name: 'swagger-ui', version: '3.23.8'
 
 	compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
@@ -111,26 +111,26 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.liquibase:liquibase-core'
 	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'org.postgresql:postgresql:42.2.13'
+	runtimeOnly 'org.postgresql:postgresql:42.2.16'
 
 	compile("org.springframework.boot:spring-boot-starter-security")
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-hateoas")
 	compile("org.springframework.boot:spring-boot-starter-quartz")
 
-	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.4.0'
-	compile group: 'org.jgrapht', name: 'jgrapht-io', version: '1.4.0'
+	compile group: 'org.jgrapht', name: 'jgrapht-core', version: '1.5.0'
+	compile group: 'org.jgrapht', name: 'jgrapht-io', version: '1.5.0'
 	// https://github.com/akihyro/orika-spring-boot-starter
 	compile 'net.rakugakibox.spring.boot:orika-spring-boot-starter:1.8.0'
 	
 	compile group: 'org.hibernate', name: 'hibernate-search', version: '5.11.5.Final'
-	compile 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.400'
+	compile 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.600'
 	// Demo stuff
 	compile 'com.ubiqube.mano:tosca-vnfd-class:0.1.0-SNAPSHOT'
 	compile 'com.ubiqube.mano:tosca-nsd-class:0.1.0-SNAPSHOT'
 
-	compile group: 'com.github.openstack4j.core', name: 'openstack4j', version: '3.6'
-	compile group: 'guru.nidi', name: 'graphviz-java', version: '0.16.3'
+	compile group: 'com.github.openstack4j.core', name: 'openstack4j', version: '3.9-SNAPSHOT'
+	compile group: 'guru.nidi', name: 'graphviz-java', version: '0.17.0'
 	//
 	compile group: 'com.github.dexecutor', name: 'dexecutor-core', version: '2.1.1'
 }
