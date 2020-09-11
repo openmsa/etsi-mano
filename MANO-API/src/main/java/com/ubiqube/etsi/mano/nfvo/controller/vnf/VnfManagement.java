@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.controller.vnf;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
