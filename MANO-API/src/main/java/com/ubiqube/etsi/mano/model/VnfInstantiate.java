@@ -2,14 +2,14 @@ package com.ubiqube.etsi.mano.model;
 
 import java.util.List;
 
-import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 
 public class VnfInstantiate {
 	private String flavourId = null;
 
 	private String instantiationLevelId = null;
 
-	private List<VimConnectionInfo> vimConnectionInfo = null;
+	private List<VimConnectionInformation> vimConnectionInfo = null;
 
 	private List<ExternalManagedVirtualLink> extManagedVirtualLinks = null;
 
@@ -31,11 +31,11 @@ public class VnfInstantiate {
 		this.instantiationLevelId = instantiationLevelId;
 	}
 
-	public List<VimConnectionInfo> getVimConnectionInfo() {
+	public List<VimConnectionInformation> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}
 
-	public void setVimConnectionInfo(final List<VimConnectionInfo> vimConnectionInfo) {
+	public void setVimConnectionInfo(final List<VimConnectionInformation> vimConnectionInfo) {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
