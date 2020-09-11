@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
+package com.ubiqube.etsi.mano.nfvo.controller.lcmgrant;
 
 import java.util.HashMap;
 import java.util.Optional;
