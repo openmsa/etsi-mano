@@ -135,6 +135,7 @@ dependencies {
 	compile group: 'com.github.dexecutor', name: 'dexecutor-core', version: '2.1.1'
 
 	compile group: 'com.ubiqube.mano', name: 'etsi-model-common-261', version: '1.0-SNAPSHOT'
+	compile group: 'com.ubiqube.mano', name: 'etsi-model-261', version: '1.0-SNAPSHOT'
 }
 
 springBoot {
