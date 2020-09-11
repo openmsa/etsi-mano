@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.controller.nsd;
+package com.ubiqube.etsi.mano.controller.nsd;
 
 import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;

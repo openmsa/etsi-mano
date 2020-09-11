@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.controller.vnf;
+package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,7 +25,6 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;

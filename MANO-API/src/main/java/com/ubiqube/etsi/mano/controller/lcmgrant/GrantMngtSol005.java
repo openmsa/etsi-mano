@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.controller.lcmgrant;
+package com.ubiqube.etsi.mano.controller.lcmgrant;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;

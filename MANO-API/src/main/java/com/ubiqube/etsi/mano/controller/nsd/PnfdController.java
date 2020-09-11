@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.controller.nsd;
+package com.ubiqube.etsi.mano.controller.nsd;
 
 import java.util.List;
 import java.util.Map;
