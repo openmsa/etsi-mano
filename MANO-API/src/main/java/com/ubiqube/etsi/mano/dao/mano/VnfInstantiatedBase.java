@@ -1,6 +1,5 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +20,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfInstantiatedBase implements Auditable, BaseEntity, Serializable {
+public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
