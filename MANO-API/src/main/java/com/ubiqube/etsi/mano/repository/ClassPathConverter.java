@@ -10,6 +10,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -29,6 +30,7 @@ public class ClassPathConverter {
 		path.put(NsdInstance.class, "nsd-instances");
 
 		path.put(VnfPackage.class, "vnf-packages");
+		path.put(Subscription.class, "vnf-subscription");
 		path.put(VnfLcmOpOccs.class, "vnf-lcm-op-occs");
 		path.put(VnfInstance.class, "vnf-instances");
 		path.put(com.ubiqube.etsi.mano.dao.mano.VnfInstance.class, "vnf-instances");

@@ -21,6 +21,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgOnboardingNotification;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.service.event.Notifications;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -36,9 +37,12 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	private final MapperFacade mapper;
 
-	public VnfSubscriptionSol005Api(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper) {
+	private final Notifications notifications;
+
+	public VnfSubscriptionSol005Api(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final Notifications _notifications) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 		mapper = _mapper;
+		notifications = _notifications;
 		LOG.info("Starting VNF Subscription Package SOL005 Controller.");
 	}
 
@@ -53,15 +57,18 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
 		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
+		// Check subscription.
+		notifications.check(subscription.getAuthentificationInformations(), subscription.getCallbackUri());
 		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
 		final PkgmSubscription pkgmSubscription = mapper.map(subscription, PkgmSubscription.class);
 		pkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgmSubscription.getId()));
-		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);
+		return new ResponseEntity<>(pkgmSubscription, HttpStatus.CREATED);
 	}
 
 	@Override
-	public void subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
 		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
+		return ResponseEntity.noContent().build();
 	}
 
 	@Override

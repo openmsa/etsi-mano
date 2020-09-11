@@ -11,6 +11,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
@@ -159,6 +160,28 @@ public class Notifications {
 		context.setCredentialsProvider(credsProvider);
 		context.setAuthCache(authCache);
 		return context;
+	}
+
+	public static void check(final AuthentificationInformations auth, final String _uri) {
+		HttpClientContext context;
+		try {
+			context = createContext(auth, _uri);
+		} catch (final MalformedURLException e) {
+			throw new GenericException(e);
+		}
+		final HttpGet httpPost = new HttpGet(_uri);
+		httpPost.setHeader("Content-type", "application/json");
+		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+			try (CloseableHttpResponse response = httpClient.execute(context.getTargetHost(), httpPost, context)) {
+				final int status = response.getStatusLine().getStatusCode();
+				if (status != 204) {
+					LOG.error("Status response must be 204 by was: {} <=> {}", status, _uri);
+					throw new GenericException("HttpClient got an error: " + status);
+				}
+			}
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 }
