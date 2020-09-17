@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControll;
-import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerServ;
+import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceController;
+import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -46,10 +46,10 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final MapperFacade mapper;
 
-	private final NsInstanceControllerServ nsInstanceControllerService;
-	private final NsInstanceControll nsLcmController;
+	private final NsInstanceControllerService nsInstanceControllerService;
+	private final NsInstanceController nsLcmController;
 
-	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerServ _nsInstanceControllerService, final NsInstanceControll _nsLcmController) {
+	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
 		mapper = _mapper;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmController = _nsLcmController;

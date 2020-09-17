@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nsd.NsdControll;
+import com.ubiqube.etsi.mano.controller.nsd.NsdController;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -56,9 +56,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptorSol005Api.class);
 
 	private final MapperFacade mapper;
-	private final NsdControll nsdController;
+	private final NsdController nsdController;
 
-	public NsDescriptorSol005Api(final MapperFacade _mapper, final NsdControll _nsdController) {
+	public NsDescriptorSol005Api(final MapperFacade _mapper, final NsdController _nsdController) {
 		mapper = _mapper;
 		nsdController = _nsdController;
 		LOG.info("Starting NSD Management SOL005 Controller.");

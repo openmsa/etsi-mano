@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nsd.PnfdControll;
+import com.ubiqube.etsi.mano.controller.nsd.PnfdController;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -33,10 +33,10 @@ import ma.glasnost.orika.MapperFacade;
 public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptorsSol005Api.class);
-	private final PnfdControll pnfdController;
+	private final PnfdController pnfdController;
 	private final MapperFacade mapper;
 
-	public PnfDescriptorsSol005Api(final PnfdControll _pnfdController, final MapperFacade _mapper) {
+	public PnfDescriptorsSol005Api(final PnfdController _pnfdController, final MapperFacade _mapper) {
 		pnfdController = _pnfdController;
 		mapper = _mapper;
 		LOG.info("Starting PNF Management SOL005 Controller.");
