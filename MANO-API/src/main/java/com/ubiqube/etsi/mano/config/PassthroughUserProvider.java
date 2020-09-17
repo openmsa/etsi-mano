@@ -22,13 +22,8 @@ public class PassthroughUserProvider extends AbstractUserDetailsAuthenticationPr
 	private static final Logger LOG = LoggerFactory.getLogger(PassthroughUserProvider.class);
 
 	@Override
-	protected void additionalAuthenticationChecks(UserDetails _userDetails, UsernamePasswordAuthenticationToken _authentication) {
-		LOG.debug("Additional check called.");
-	}
-
-	@Override
-	protected UserDetails retrieveUser(String _username, UsernamePasswordAuthenticationToken _authentication) {
-		LOG.debug("retreiving user: {}", _username);
+	protected UserDetails retrieveUser(final String _username, final UsernamePasswordAuthenticationToken _authentication) {
+		LOG.trace("retreiving user: {}", _username);
 		final Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 		return new User(_username, _authentication.getCredentials().toString(), authorities);
 	}
