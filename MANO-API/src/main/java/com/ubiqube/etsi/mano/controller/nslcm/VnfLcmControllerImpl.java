@@ -3,9 +3,12 @@ package com.ubiqube.etsi.mano.controller.nslcm;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 
+@Service
 public class VnfLcmControllerImpl implements VnfLcmController {
 	private final VnfLcmService vnfLcmOpOccsRepository;
 	private final VnfInstanceLcm vnfInstanceLcm;

@@ -7,6 +7,8 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -15,6 +17,7 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
+@Service
 public class VnfPackageControllerImpl implements VnfPackageController {
 	private final VnfPackageRepository vnfPackageRepository;
 	private final Patcher patcher;

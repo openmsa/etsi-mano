@@ -6,6 +6,8 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -15,6 +17,7 @@ import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 
+@Service
 public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsInstanceRepository nsInstanceRepository;
 	private final NsLcmOpOccsService lcmOpOccsService;
