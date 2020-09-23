@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 

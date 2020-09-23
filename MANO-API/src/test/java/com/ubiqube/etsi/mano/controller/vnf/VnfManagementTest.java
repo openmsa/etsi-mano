@@ -34,7 +34,6 @@ import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.VnfManagement;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 import ma.glasnost.orika.MapperFacade;

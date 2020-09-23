@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;

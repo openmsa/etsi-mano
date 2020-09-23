@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.controller.lcm.LcmLinkable;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;

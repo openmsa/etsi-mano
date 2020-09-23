@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.common.ActionResponse;
+import org.openstack4j.model.common.Extension;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.Flavor;
@@ -455,7 +456,7 @@ public class OpenStackTest {
 	}
 
 	@Test
-	static void testNetworkExtension() throws Exception {
+	static void testAgentList() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.networking().agent().list().forEach(x -> {
 			System.out.println("" + x.getTopic() + " " + x.getAgentType() + " " + x.getBinary());
@@ -554,5 +555,12 @@ public class OpenStackTest {
 					System.out.println("" + x);
 				});
 		assertNotNull(os);
+	}
+
+	@Test
+	void testNetworkExtension() throws Exception {
+	    final OSClientV3 os = getQueensConnection();
+	    List<? extends Extension> exts = os.networking().network().listExtensions();
+	    exts.forEach(System.out::println);
 	}
 }

@@ -242,6 +242,10 @@ public class ExecutionPlanner {
 				.collect(Collectors.toSet());
 	}
 
+	public void makePrePlan2(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final Set<ScaleInfo> scaling) {
+		//
+	}
+
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final Set<ScaleInfo> scaling) {
 		if (lcmOpOccs.getOperation() == NsdChangeType.INSTANTIATE) {
 			// Create DNS

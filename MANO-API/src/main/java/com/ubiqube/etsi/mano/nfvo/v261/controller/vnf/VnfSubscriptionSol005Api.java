@@ -16,8 +16,6 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgChangeNotification;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgOnboardingNotification;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
@@ -82,13 +80,13 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
-		final VnfPkgChangeNotification msg = mapper.map(notificationsMessage, VnfPkgChangeNotification.class);
+		final com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification msg = mapper.map(notificationsMessage, com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification.class);
 		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(msg);
 	}
 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
-		final VnfPkgOnboardingNotification msg = mapper.map(notificationsMessage, VnfPkgOnboardingNotification.class);
+		final com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification msg = mapper.map(notificationsMessage, com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification.class);
 		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(msg);
 	}
 
