@@ -13,7 +13,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public abstract class AbstractRest {
+public abstract class AbstractRest implements NfvoRest {
 	private final RestTemplate restTemplate;
 
 	public AbstractRest() {
@@ -24,32 +24,39 @@ public abstract class AbstractRest {
 
 	protected abstract MultiValueMap<String, String> getAutorization();
 
+	@Override
 	public final <T> T get(final URI uri, final Class<T> clazz) {
 		return call(uri, HttpMethod.GET, clazz);
 	}
 
+	@Override
 	public final <T> T post(final URI uri, final Class<T> clazz) {
 		return call(uri, HttpMethod.POST, clazz);
 	}
 
+	@Override
 	public final <T> T post(final URI uri, final Object body, final Class<T> clazz) {
 		return call(uri, HttpMethod.POST, body, clazz);
 	}
 
+	@Override
 	public final <T> T delete(final URI uri, final Class<T> clazz) {
 		return call(uri, HttpMethod.DELETE, clazz);
 	}
 
+	@Override
 	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz) {
 		final HttpEntity<String> request = new HttpEntity<>(getHttpHeaders());
 		return _call(uri, method, request, clazz);
 	}
 
+	@Override
 	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
 		final HttpEntity<Object> request = new HttpEntity<>(body, getHttpHeaders());
 		return _call(uri, method, request, clazz);
 	}
 
+	@Override
 	public final UriComponentsBuilder uriBuilder() {
 		return UriComponentsBuilder.fromHttpUrl(getUrl());
 	}

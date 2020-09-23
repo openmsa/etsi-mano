@@ -33,37 +33,14 @@ import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
-/**
- * This class handle the notification callback.
- * <li>
- * <ul>
- * Building the HTTP client.
- * </ul>
- * <ul>
- * Crafting the request.
- * </ul>
- * <ul>
- * Sending the request.
- * </ul>
- * <ul>
- * Interpreting the result.
- * </ul>
- * </li> This class should be compatible with Basic, OAuth2, TLS CERT
- * authentification. One the possiblities for OAuth authentification is group:
- * 'net.oauth.core', name: 'oauth-httpclient4', version: '20090913' you may also
- * need this: http://www.codedq.net/blog/articles/146.html
- *
- * @author ovi@ubiqube.com
- *
- */
 @Service
-public class Notifications {
+public class NotificationsImpl implements Notifications {
 	/** Logger instance. */
-	private static final Logger LOG = LoggerFactory.getLogger(Notifications.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NotificationsImpl.class);
 	/** JSON mapper. */
 	private final ObjectMapper mapper;
 
-	public Notifications(final ObjectMapper _mapper) {
+	public NotificationsImpl(final ObjectMapper _mapper) {
 		mapper = _mapper;
 	}
 
@@ -74,6 +51,7 @@ public class Notifications {
 	 * @param _uri The complete URL.
 	 * @param auth Auth parameters.
 	 */
+	@Override
 	public void doNotification(final Object obj, final String _uri, final AuthentificationInformations auth) {
 		String content;
 		try {
@@ -162,7 +140,8 @@ public class Notifications {
 		return context;
 	}
 
-	public static void check(final AuthentificationInformations auth, final String _uri) {
+	@Override
+	public void check(final AuthentificationInformations auth, final String _uri) {
 		HttpClientContext context;
 		try {
 			context = createContext(auth, _uri);

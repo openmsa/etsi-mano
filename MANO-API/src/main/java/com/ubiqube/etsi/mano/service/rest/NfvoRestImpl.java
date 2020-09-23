@@ -7,11 +7,11 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.service.Configuration;
 
 @Service
-public class NfvoRest extends AbstractRest {
+public class NfvoRestImpl extends AbstractRest {
 	private final String url;
 	private final MultiValueMap<String, String> auth = new HttpHeaders();
 
-	public NfvoRest(final Configuration _conf) {
+	public NfvoRestImpl(final Configuration _conf) {
 		url = _conf.build("nfvo.url").notNull().build();
 		final String user = _conf.get("nfvo.user");
 		if (null != user) {

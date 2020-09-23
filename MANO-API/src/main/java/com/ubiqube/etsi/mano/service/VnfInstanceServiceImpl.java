@@ -43,9 +43,8 @@ import com.ubiqube.etsi.mano.jpa.VnfLcmOpOccsJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 
 @Service
-public class VnfInstanceService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceService.class);
+public class VnfInstanceServiceImpl implements VnfInstanceService {
+	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceServiceImpl.class);
 
 	private final ExtVirtualLinkDataEntityJpa extVirtualLinkDataEntityJpa;
 
@@ -67,7 +66,7 @@ public class VnfInstanceService {
 
 	private final VnfInstantiatedDnsZoneJpa vnInstantiatedDnsZoneJpa;
 
-	public VnfInstanceService(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService, final VnfLiveInstanceJpa _vnfLiveInstance, final VnfInstantiatedDnsZoneJpa _vnInstantiatedDnsZoneJpa) {
+	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstantiedComputeJpa _vnfInstantiedComputeJpa, final VnfInstantiedVirtualLinkJpa _vnfInstantiedVirtualLinkJpa, final VnfInstantiedExtCpJpa _vnfInstantiedExtCpJpa, final VnfInstantiedStorageJpa _vnfInstantiedStorageJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLcmOpOccsJpa _vnfLcmOpOccsJpa, final GrantService _grantService, final VnfLiveInstanceJpa _vnfLiveInstance, final VnfInstantiatedDnsZoneJpa _vnInstantiatedDnsZoneJpa) {
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstantiedComputeJpa = _vnfInstantiedComputeJpa;
 		vnfInstantiedVirtualLinkJpa = _vnfInstantiedVirtualLinkJpa;
@@ -80,79 +79,98 @@ public class VnfInstanceService {
 		vnInstantiatedDnsZoneJpa = _vnInstantiatedDnsZoneJpa;
 	}
 
+	@Override
 	public List<ExtVirtualLinkDataEntity> getAllExtVirtualLinks(final VnfInstance vnfInstance) {
 		return extVirtualLinkDataEntityJpa.findByVnfInstance(vnfInstance);
 	}
 
+	@Override
 	public int getNumberOfLiveInstance(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
 		return vnfLiveInstanceJpa.countByVnfInstanceAndVduId(vnfInstance, vnfCompute.getId());
 	}
 
+	@Override
 	public Deque<VnfLiveInstance> getLiveComputeInstanceOf(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
 		return vnfLiveInstanceJpa.findByVduIdAndVnfInstance(vnfCompute.getId(), vnfInstance).stream().collect(Collectors.toCollection(ArrayDeque::new));
 	}
 
+	@Override
 	public int getNumberOfLiveVl(final VnfInstance vnfInstance, final VnfVl x) {
 		return vnfLiveInstanceJpa.countByVnfInstanceAndVduId(vnfInstance, x.getId());
 	}
 
+	@Override
 	public int getNumberOfLiveExtCp(final VnfInstance vnfInstance, final VnfExtCp extCp) {
 		return vnfLiveInstanceJpa.countByVnfInstanceAndVduId(vnfInstance, extCp.getId());
 	}
 
+	@Override
 	public VnfInstantiatedCompute save(final VnfInstantiatedCompute vnfInstantiedCompute) {
 		return vnfInstantiedComputeJpa.save(vnfInstantiedCompute);
 	}
 
+	@Override
 	public VnfInstantiatedVirtualLink save(final VnfInstantiatedVirtualLink vnfInstantiedVirtualLink) {
 		return vnfInstantiedVirtualLinkJpa.save(vnfInstantiedVirtualLink);
 	}
 
+	@Override
 	public VnfInstantiatedExtCp save(final VnfInstantiatedExtCp vnfInstantiedExtCp) {
 		return vnfInstantiedExtCpJpa.save(vnfInstantiedExtCp);
 	}
 
+	@Override
 	public VnfInstantiatedStorage save(final VnfInstantiatedStorage vs) {
 		return vnfInstantiedStorageJpa.save(vs);
 	}
 
+	@Override
 	public int getNumberOfLiveStorage(final VnfInstance vnfInstance, final VnfStorage x) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
 	public List<VnfInstantiatedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedComputeJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
 	}
 
+	@Override
 	public List<VnfInstantiatedExtCp> getLiveExtCpInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedExtCpJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
 	}
 
+	@Override
 	public List<VnfInstantiatedStorage> getLiveStorageInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedStorageJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
 	}
 
+	@Override
 	public List<VnfInstantiatedVirtualLink> getLiveVirtualLinkInstanceOf(final VnfInstance vnfInstance) {
 		return vnfInstantiedVirtualLinkJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
 	}
 
+	@Override
 	public List<VnfInstantiatedDnsZone> getLiveDnsZoneInstanceOf(final VnfInstance vnfInstance) {
 		return vnInstantiatedDnsZoneJpa.findByLiveInstanceOfVnfInstance(vnfInstance);
 	}
 
+	@Override
 	public VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId) {
 		return vnfInstanceJpa.findByVnfPkg_IdAndNsInstance_Id(vnfPackageId, nsdInstance.getId()).orElseThrow(() -> new NotFoundException("Could not find vnf=" + vnfPackageId + " nsInstance=" + nsdInstance.getId()));
 	}
 
+	@Override
 	public VnfInstance findById(final UUID id) {
 		return vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
 	}
 
+	@Override
 	public VnfInstance save(final VnfInstance vnfInstance) {
 		return vnfInstanceJpa.save(vnfInstance);
 	}
 
+	@Override
 	@Transactional
 	public void delete(final UUID vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstanceJpa.findById(vnfInstanceId).orElseThrow(() -> new NotFoundException("Vnf Instance " + vnfInstanceId + " not found."));
@@ -165,22 +183,27 @@ public class VnfInstanceService {
 		vnfInstanceJpa.deleteById(vnfInstanceId);
 	}
 
+	@Override
 	public VnfLiveInstance findLiveInstanceByInstantiated(final UUID id) {
 		return vnfLiveInstanceJpa.findByVnfInstantiatedBaseId(id);
 	}
 
+	@Override
 	public VnfLiveInstance save(final VnfLiveInstance vli) {
 		return vnfLiveInstanceJpa.save(vli);
 	}
 
+	@Override
 	public Optional<VnfLiveInstance> findLiveInstanceById(final UUID removedInstantiated) {
 		return vnfLiveInstanceJpa.findById(removedInstantiated);
 	}
 
+	@Override
 	public void deleteLiveInstanceById(final UUID id) {
 		vnfLiveInstanceJpa.deleteById(id);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends VnfInstantiatedBase> T save(final T y) {
 		if (y instanceof VnfInstantiatedCompute) {
