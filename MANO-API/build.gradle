@@ -134,6 +134,13 @@ dependencies {
 	//
 	compile group: 'com.github.dexecutor', name: 'dexecutor-core', version: '2.1.1'
 
+	// Tosca.
+	compile 'com.ubiqube.mano:tosca-vnfd-class:0.1.0-SNAPSHOT'
+	compile 'com.ubiqube.mano:tosca-nsd-class:0.1.0-SNAPSHOT'
+	// ETSI-MANO 2.6.1 APIs.
+	compile group: 'com.ubiqube.mano', name: 'etsi-nfvo-261', version: '1.0-SNAPSHOT'
+	compile group: 'com.ubiqube.mano', name: 'etsi-vnfm-261', version: '1.0-SNAPSHOT'
+
 	compile group: 'com.ubiqube.mano', name: 'etsi-model-common-261', version: '1.0-SNAPSHOT'
 	compile group: 'com.ubiqube.mano', name: 'etsi-nfvo-261', version: '1.0-SNAPSHOT'
 	compile group: 'com.ubiqube.mano', name: 'etsi-vnfm-261', version: '1.0-SNAPSHOT'
