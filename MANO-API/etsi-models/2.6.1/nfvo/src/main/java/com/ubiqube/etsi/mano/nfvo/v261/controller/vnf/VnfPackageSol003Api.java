@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +20,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -42,11 +50,14 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
 public class VnfPackageSol003Api implements VnfPackageSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
 	private final VnfPackageManagement vnfManagement;
+	private final MapperFacade mapper;
+
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	public VnfPackageSol003Api(final VnfPackageManagement _vnfManagement) {
+	public VnfPackageSol003Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
 		vnfManagement = _vnfManagement;
+		mapper = _mapper;
 		LOG.debug("Starting VNF Package SOL003 Controller.");
 	}
 
@@ -61,7 +72,25 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 */
 	@Override
 	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) {
-		final String resp = vnfManagement.vnfPackagesGet(requestParams);
+		final String filter = requestParams.get("filter");
+		final List<VnfPackage> vnfPackageInfos = vnfManagement.vnfPackagesGet(filter);
+		final List<VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
+				.map(x -> mapper.map(x, VnfPkgInfo.class))
+				.collect(Collectors.toList());
+
+		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
+
+		final String exclude = requestParams.get("exclude_fields");
+		final String fields = requestParams.get("fields");
+
+		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(exclude, fields, null, null);
+
+		String resp = null;
+		try {
+			resp = mapperForQuery.writeValueAsString(vnfPkginfos);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 

@@ -1,7 +1,6 @@
 package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -11,11 +10,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+
 public interface VnfPackageManagement {
 
 	<U> U vnfPackagesVnfPkgIdGet(@Nonnull UUID vnfPkgId, Class<U> u);
 
-	String vnfPackagesGet(@Nonnull Map<String, String> queryParameters);
+	List<VnfPackage> vnfPackagesGet(@Nonnull String filter);
 
 	/**
 	 *

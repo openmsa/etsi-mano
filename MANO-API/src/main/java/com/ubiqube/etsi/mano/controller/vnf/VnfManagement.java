@@ -4,9 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -22,13 +20,9 @@ import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
@@ -64,26 +58,8 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public String vnfPackagesGet(final Map<String, String> queryParameters) {
-		final String filter = queryParameters.get("filter");
-
-		final List<VnfPackage> vnfPackageInfos = vnfPackageRepository.query(filter);
-		final List<VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
-				.map(x -> mapper.map(x, VnfPkgInfo.class))
-				.collect(Collectors.toList());
-
-		// vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
-
-		final String exclude = queryParameters.get("exclude_fields");
-		final String fields = queryParameters.get("fields");
-
-		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(exclude, fields, null, null);
-
-		try {
-			return mapperForQuery.writeValueAsString(vnfPkginfos);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+	public List<VnfPackage> vnfPackagesGet(final String filter) {
+		return vnfPackageRepository.query(filter);
 	}
 
 	/**

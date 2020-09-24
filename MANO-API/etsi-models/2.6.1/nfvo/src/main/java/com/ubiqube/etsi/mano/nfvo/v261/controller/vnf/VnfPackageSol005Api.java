@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +19,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageController;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.UploadVnfPkgFromUriRequest;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
@@ -65,7 +70,25 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	@Override
 	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) {
-		final String resp = vnfManagement.vnfPackagesGet(requestParams);
+		final String filter = requestParams.get("filter");
+		final List<VnfPackage> vnfPackageInfos = vnfManagement.vnfPackagesGet(filter);
+		final List<VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
+				.map(x -> mapper.map(x, VnfPkgInfo.class))
+				.collect(Collectors.toList());
+
+		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
+
+		final String exclude = requestParams.get("exclude_fields");
+		final String fields = requestParams.get("fields");
+
+		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(exclude, fields, null, null);
+
+		String resp = null;
+		try {
+			resp = mapperForQuery.writeValueAsString(vnfPkginfos);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 		return ResponseEntity.ok(resp);
 	}
 
