@@ -10,7 +10,7 @@ function list_args() {
 //$context['operation']='Delete '.$context['vm_name'].' from MSA';
 
 if(empty($context['status in msa'])){
-task_exit(ENDED, "No MSA Device to delete");
+task_exit(ENDED, "No MSA Managed Entity to delete");
 }
 
 if($context['status in msa']=='Device Deleted') {
@@ -18,6 +18,10 @@ if($context['status in msa']=='Device Deleted') {
 	$response = prepare_json_response(ENDED, "No device to delete", $context, true);
 	echo $response;
 	exit;
+}
+
+if(empty($context['device_id'])){
+task_exit(ENDED, "No MSA Managed Entity to delete");
 }
 
 $device_id = substr($context['device_id'], 3);

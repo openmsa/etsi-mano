@@ -224,20 +224,20 @@
     
     
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
       <displayName>Get Token</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Deploy.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Deploy.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
       <displayName>Deploy</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Synchronize_k8s_Cluster_MicroServices.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Synchronize_k8s_Cluster_MicroServices.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
       <displayName>Synchronize k8s Cluster MicroServices</displayName>
     </task>
   </process>
@@ -256,16 +256,16 @@
   
     
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF/Tasks/Task_Stop_CNF.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF/Tasks/Task_Stop_CNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF/Tasks/</processPath>
       <displayName>Stop CNF</displayName>
     </task>
   </process>
@@ -289,24 +289,24 @@
     
     
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Terminate_CNF.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Terminate_CNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
       <displayName>Terminate CNF</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Delete_Load_Balancer_Service.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Delete_Load_Balancer_Service.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
       <displayName>Delete Load Balancer Service</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Delete_MSA_Device.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/Task_Delete_MSA_Device.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods/Tasks/</processPath>
       <displayName>Delete MSA Device</displayName>
     </task>
   </process>
@@ -329,16 +329,16 @@
   
     
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status/Tasks/Task_Get_Status.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status/Tasks/Task_Get_Status.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status/Tasks/</processPath>
       <displayName>Get Status</displayName>
     </task>
   </process>
@@ -352,16 +352,16 @@
     
     
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF/Tasks/Task_Start_CNF.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF/Tasks/</processPath>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF/Tasks/Task_Start_CNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF/Tasks/</processPath>
       <displayName>Start CNF</displayName>
     </task>
   </process>
@@ -374,24 +374,24 @@
     <type>UPDATE</type>
   
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
     <task name="Task_Generate_Docker_config.json.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
       <displayName>Generate Docker config.json</displayName>
     </task>
     <task name="Task_Docker_confg.json_base64_encoding.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
       <displayName>Docker confg.json base64 encoding</displayName>
     </task>
     <task name="Task_Create_Private_Registry_Secret.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_/Tasks/</processPath>
       <displayName>Create Private Registry Secret</displayName>
     </task>
   </process>
@@ -402,16 +402,16 @@
     <poolId>0</poolId>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
     <task name="Task_Delete_Private_Registry_Secret.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Docker_Private_Registry_Secret/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Docker_Private_Registry_Secret/Tasks/</processPath>
       <displayName>Delete Private Registry Secret</displayName>
     </task>
   </process>
@@ -459,32 +459,32 @@
     
     
     
-  <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
     <task name="Task_CNF_Load_Balancer.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
       <displayName>CNF Load Balancer</displayName>
     </task>
     <task name="Task_Create_Corresponding_MSA_Device.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
       <displayName>Create Corresponding MSA Device</displayName>
     </task>
     <task name="Task_Update_Device_Management_Port.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
       <displayName>Update Device Management Port</displayName>
     </task>
     <task name="Task_Ping_Device.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
       <displayName>Ping Device</displayName>
     </task>
     <task name="Task_MSA_Initial_Device_Provisionning.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_/Tasks/</processPath>
       <displayName>MSA Initial Device Provisionning</displayName>
     </task>
   </process>
@@ -496,16 +496,16 @@
     <poolId>0</poolId>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
     <task name="Task_Add_Load_Balancers.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Dedicated_Load_Balancer/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Dedicated_Load_Balancer/Tasks/</processPath>
       <displayName>Add Load Balancers</displayName>
     </task>
   </process>
@@ -516,16 +516,16 @@
     <poolId>0</poolId>
     <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
-    <task name="/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Get_Token.php">
       <processPath/>
       <displayName>Get Token</displayName>
     </task>
     <task name="Task_Delete_Load_Balancers.php">
-      <processPath>/opt/fmc_repository/Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Remove_Dedicated_Load_Balancer/Tasks/</processPath>
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Remove_Dedicated_Load_Balancer/Tasks/</processPath>
       <displayName>Delete Load Balancers</displayName>
     </task>
   </process>
