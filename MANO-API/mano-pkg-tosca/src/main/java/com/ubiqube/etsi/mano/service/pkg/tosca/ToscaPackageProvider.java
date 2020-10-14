@@ -29,8 +29,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.pkg.PackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -191,12 +191,12 @@ public class ToscaPackageProvider implements PackageProvider {
 		try {
 			tempFile = File.createTempFile("tosca", ".zip");
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new ToscaException(e);
 		}
 		try (final OutputStream os = new FileOutputStream(tempFile)) {
 			os.write(data);
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new ToscaException(e);
 		}
 		return tempFile;
 	}
