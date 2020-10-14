@@ -138,6 +138,7 @@ dependencies {
 	compile 'com.ubiqube.mano:tosca-vnfd-class:0.1.0-SNAPSHOT'
 	compile 'com.ubiqube.mano:tosca-nsd-class:0.1.0-SNAPSHOT'
 	compile 'com.ubiqube.mano:mano-pkg-tosca:0.0.1-SNAPSHOT'
+	compile 'com.ubiqube.mano:mano-vim-openstack:0.0.1-SNAPSHOT'
 	// ETSI-MANO 2.6.1 APIs.
 	compile group: 'com.ubiqube.mano', name: 'etsi-nfvo-261', version: '1.0-SNAPSHOT'
 	compile group: 'com.ubiqube.mano', name: 'etsi-vnfm-261', version: '1.0-SNAPSHOT'

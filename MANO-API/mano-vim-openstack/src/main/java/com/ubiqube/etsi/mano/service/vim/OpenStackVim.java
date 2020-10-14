@@ -63,8 +63,7 @@ import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.service.VimService;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -82,13 +81,18 @@ public class OpenStackVim implements Vim {
 
 	private static final ThreadLocal<Map<String, OSClientV3>> sessions = new ThreadLocal<>();
 
-	private final VimConnectionInformationJpa vciJpa;
+	private final VimService vciJpa;
 
 	private final MapperFacade mapper;
 
-	public OpenStackVim(final VimConnectionInformationJpa _vciJpa, final MapperFacade _mapper) {
+	public OpenStackVim(final VimService _vciJpa, final MapperFacade _mapper) {
 		vciJpa = _vciJpa;
 		mapper = _mapper;
+		LOG.info("Booting Openstack VIM.\n" +
+				"   ___  ___   __   _____ __  __ \n" +
+				"  / _ \\/ __|__\\ \\ / /_ _|  \\/  |\n" +
+				" | (_) \\__ \\___\\ V / | || |\\/| |\n" +
+				"  \\___/|___/    \\_/ |___|_|  |_|\n");
 	}
 
 	/**
@@ -163,7 +167,7 @@ public class OpenStackVim implements Vim {
 	public VimImage getImagesInformations(final VimConnectionInformation vimConnectionInformation, final String name) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final List<? extends Image> images = os.compute().images().list();
-		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new NotFoundException("Image " + name + " Cannot be found on Vim."));
+		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new VimException("Image " + name + " Cannot be found on Vim."));
 		return mapper.map(image, VimImage.class);
 	}
 
@@ -273,7 +277,7 @@ public class OpenStackVim implements Vim {
 		final Image image = os.compute().images().list().stream()
 				.filter(x -> x.getName().equals(imgName) || x.getId().equals(imgName))
 				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Image " + vnfStorage.getSoftwareImage().getName() + " not found"));
+				.orElseThrow(() -> new VimException("Image " + vnfStorage.getSoftwareImage().getName() + " not found"));
 		final VolumeBuilder bv = Builders.volume();
 		bv.size((int) (vnfStorage.getSize() / GIGA));
 		bv.name(aliasName);

@@ -29,7 +29,7 @@ public interface Vim {
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name, String dnsDomain, String qosPolicyId);
 
-	void refineExecutionPlan(@Nonnull final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g);
+	void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g);
 
 	Optional<SoftwareImage> getSwImageMatching(VimConnectionInformation vimConnectionInformation, SoftwareImage img);
 
