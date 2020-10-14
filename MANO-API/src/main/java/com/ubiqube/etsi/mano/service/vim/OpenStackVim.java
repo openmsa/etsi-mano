@@ -63,7 +63,6 @@ import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
@@ -138,7 +137,7 @@ public class OpenStackVim implements Vim {
 		}
 		return sess.computeIfAbsent(vimConnectionInformation.getVimId(), x -> {
 			final Optional<VimConnectionInformation> vim = vciJpa.findById(vimConnectionInformation.getId());
-			return authenticate(vim.orElseThrow(() -> new GenericException("Unable to find Vim " + x)));
+			return authenticate(vim.orElseThrow(() -> new VimException("Unable to find Vim " + x)));
 		});
 	}
 
@@ -321,13 +320,13 @@ public class OpenStackVim implements Vim {
 			try (Payload<URL> payload = Payloads.create(new URL(imagePath))) {
 				return doUpload(vimConnectionInformation, img, payload);
 			} catch (final IOException e) {
-				throw new GenericException(e);
+				throw new VimException(e);
 			}
 		}
 		try (Payload<File> payload = Payloads.create(new File(imagePath))) {
 			return doUpload(vimConnectionInformation, img, payload);
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new VimException(e);
 		}
 	}
 
@@ -537,7 +536,7 @@ public class OpenStackVim implements Vim {
 				LOG.warn("Conflict wile creating {}", zoneName);
 				return null;
 			}
-			throw new GenericException(e);
+			throw new VimException(e);
 		}
 	}
 

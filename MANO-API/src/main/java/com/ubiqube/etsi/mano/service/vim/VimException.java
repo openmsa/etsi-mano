@@ -6,6 +6,10 @@ public class VimException extends RuntimeException {
 		super(fault);
 	}
 
+	public VimException(final Throwable e) {
+		super(e);
+	}
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 }

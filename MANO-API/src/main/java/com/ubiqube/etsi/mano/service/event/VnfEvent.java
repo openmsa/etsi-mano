@@ -8,15 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ubiqube.etsi.mano.common.v261.VnfSubscriptionFactory;
-import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol003Linkable;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
 import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
+import com.ubiqube.etsi.mano.service.VersionManager;
+import com.ubiqube.etsi.mano.service.VersionService;
 
 /**
  *
@@ -31,11 +27,13 @@ public class VnfEvent {
 
 	private final SubscriptionRepository subscriptionRepository;
 	private final Notifications notifications;
+	private final VersionManager versionManager;
 
-	public VnfEvent(final SubscriptionRepository subscriptionRepository, final Notifications notifications) {
+	public VnfEvent(final SubscriptionRepository subscriptionRepository, final Notifications notifications, final VersionManager _versionManager) {
 		super();
 		this.subscriptionRepository = subscriptionRepository;
 		this.notifications = notifications;
+		versionManager = _versionManager;
 	}
 
 	public void onEvent(final UUID vnfPkgId, final String event) {
@@ -45,12 +43,12 @@ public class VnfEvent {
 	}
 
 	private void sendNotification(final UUID vnfPkgId, final Subscription subscription, final String event) {
-		final Linkable links = getLinks(subscription.getApi());
+		final VersionService subscrService = versionManager.getSubscriptionService(event);
 		Object object;
 		if ("VnfPackageChangeNotification".equals(event)) {
-			object = VnfSubscriptionFactory.createVnfPackageChangeNotification(subscription.getId(), vnfPkgId, event, links);
+			object = subscrService.createVnfPackageChangeNotification(subscription.getId(), vnfPkgId);
 		} else if ("".equals(event)) {
-			object = VnfSubscriptionFactory.createNotificationVnfPackageOnboardingNotification(subscription.getId(), vnfPkgId, event, links);
+			object = subscrService.createNotificationVnfPackageOnboardingNotification(subscription.getId(), vnfPkgId);
 		} else {
 			LOG.warn("Unknown event received: {}", event);
 			return;
@@ -58,17 +56,6 @@ public class VnfEvent {
 		final String callbackUri = subscription.getCallbackUri();
 		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
 		notifications.doNotification(object, callbackUri, auth);
-	}
-
-	private Linkable getLinks(final ApiTypesEnum api) {
-		switch (api) {
-		case SOL003:
-			return new Sol003Linkable();
-		case SOL005:
-			return new Sol005Linkable();
-		default:
-			throw new GenericException("Unable to find api: " + api);
-		}
 	}
 
 }

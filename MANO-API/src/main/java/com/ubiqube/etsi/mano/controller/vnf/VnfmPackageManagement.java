@@ -1,10 +1,10 @@
 package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 /**
@@ -48,16 +49,19 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public String vnfPackagesGet(final Map<String, String> queryParameters) {
+	public List<VnfPackage> vnfPackagesGet(final String filter) {
+		// XXX We have to change interface protocol.
 		final UriComponentsBuilder builder = nfvoRest.uriBuilder()
 				.pathSegment("vnfpkgm/v1/vnf_packages");
-		for (final Entry<String, String> entry : queryParameters.entrySet()) {
-			builder.queryParam(entry.getKey(), entry.getValue());
-		}
+		/*
+		 * for (final Entry<String, String> entry : queryParameters.entrySet()) {
+		 * builder.queryParam(entry.getKey(), entry.getValue()); }
+		 */
 		final URI uri = builder
 				.build()
 				.toUri();
-		return nfvoRest.get(uri, String.class);
+		return new ArrayList<>();
+		// return nfvoRest.get(uri, String.class);
 	}
 
 	@Override

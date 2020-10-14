@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload;
 import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload.ObjectType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -55,11 +54,10 @@ public class HomeController {
 	}
 
 	@PostMapping(value = "/registerVim")
-	public ResponseEntity<VimConnectionInfo> registerVim(@RequestBody final VimConnectionInfo body) {
-		VimConnectionInformation vci = mapper.map(body, VimConnectionInformation.class);
-		vci = vciJpa.save(vci);
+	public ResponseEntity<VimConnectionInformation> registerVim(@RequestBody final VimConnectionInformation body) {
+		final VimConnectionInformation vci = vciJpa.save(body);
 		vimManager.rebuildCache();
-		return ResponseEntity.ok(mapper.map(vci, VimConnectionInfo.class));
+		return ResponseEntity.ok(vci);
 	}
 
 	@GetMapping(value = "/download/{id}")
