@@ -48,6 +48,7 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.PnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnfUow;
 import com.ubiqube.etsi.mano.service.graph.nfvo.VnffgUow;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 @Service
 public class NsExecutionPlanner {

@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 public class GraphTools {
 

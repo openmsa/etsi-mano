@@ -19,7 +19,6 @@ import com.github.dexecutor.core.DexecutorConfig;
 import com.github.dexecutor.core.ExecutionConfig;
 import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
@@ -27,6 +26,7 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 @Controller

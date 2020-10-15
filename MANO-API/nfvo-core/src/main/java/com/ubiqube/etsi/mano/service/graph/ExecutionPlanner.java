@@ -58,6 +58,7 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ZoneUow;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 @Service
 public class ExecutionPlanner {

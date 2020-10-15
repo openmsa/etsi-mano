@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.service.graph;
+package com.ubiqube.etsi.mano.service.vim;
 
 public class ConnectivityEdge<U> {
 	private U source;
