@@ -5,6 +5,15 @@ public class ConnectivityEdge<U> {
 
 	private U target;
 
+	public ConnectivityEdge() {
+		// Nothing.
+	}
+
+	public ConnectivityEdge(final U _source, final U _target) {
+		source = _source;
+		target = _target;
+	}
+
 	public U getSource() {
 		return source;
 	}
