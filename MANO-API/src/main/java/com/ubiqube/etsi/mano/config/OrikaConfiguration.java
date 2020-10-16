@@ -2,12 +2,10 @@ package com.ubiqube.etsi.mano.config;
 
 import org.springframework.stereotype.Component;
 
-import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -61,10 +59,6 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 
-		orikaMapperFactory.classMap(VimConnectionInfo.class, VimConnectionInformation.class)
-				.fieldAToB("id", "vimId")
-				.byDefault()
-				.register();
 		orikaMapperFactory.classMap(GrantResponse.class, GrantsRequest.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
