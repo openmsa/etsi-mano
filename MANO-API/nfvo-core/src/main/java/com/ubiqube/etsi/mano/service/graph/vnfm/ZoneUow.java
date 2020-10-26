@@ -2,8 +2,11 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class ZoneUow extends AbstractUnitOfWork {
@@ -12,9 +15,9 @@ public class ZoneUow extends AbstractUnitOfWork {
 
 	private final String zoneName;
 
-	public ZoneUow(final VnfInstantiatedBase _dnsZoneInstantiated, final String _zoneName) {
-		super(_dnsZoneInstantiated, _zoneName.replaceAll("\\.", "_"));
-		zoneName = _zoneName;
+	public ZoneUow(final DnsZoneTask _dnsZoneTask) {
+		super(_dnsZoneTask);
+		zoneName = _dnsZoneTask.getDomainName();
 	}
 
 	@Override
@@ -41,6 +44,11 @@ public class ZoneUow extends AbstractUnitOfWork {
 	@Override
 	public String toString() {
 		return "ZoneUow [zoneName=" + zoneName + "]";
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+		// Nothing to do.
 	}
 
 }

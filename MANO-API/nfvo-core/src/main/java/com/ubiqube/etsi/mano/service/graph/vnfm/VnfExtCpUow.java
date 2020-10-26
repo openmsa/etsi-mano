@@ -2,9 +2,12 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfExtCpUow extends AbstractUnitOfWork {
@@ -12,19 +15,20 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	private final VnfExtCp extCp;
-	private final VnfInstantiatedExtCp vnfInstantiedExtCp;
 
-	public VnfExtCpUow(final VnfInstantiatedExtCp x, final VnfExtCp _extCp) {
-		super(x, _extCp.getToscaName());
+	private final ExternalCpTask task;
+
+	public VnfExtCpUow(final ExternalCpTask _ExternalCpTask, final VnfExtCp _extCp) {
+		super(_ExternalCpTask);
+		task = _ExternalCpTask;
 		extCp = _extCp;
-		vnfInstantiedExtCp = x;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
 		final String networkId = context.get(extCp.getInternalVirtualLink());
 		final String extNetwork = context.get(extCp.getExternalVirtualLink());
-		return vim.createRouter(vimConnectionInformation, vnfInstantiedExtCp.getAliasName(), networkId, extNetwork);
+		return vim.createRouter(vimConnectionInformation, task.getAlias(), networkId, extNetwork);
 	}
 
 	@Override
@@ -41,5 +45,11 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	@Override
 	protected String getPrefix() {
 		return "ext_cp";
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+		final UnitOfWork internal = cache.get(extCp.getInternalVirtualLink());
+		final UnitOfWork external = cache.get(extCp.getExternalVirtualLink());
 	}
 }

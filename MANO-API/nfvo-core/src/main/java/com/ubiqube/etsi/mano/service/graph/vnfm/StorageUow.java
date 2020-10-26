@@ -2,28 +2,31 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class StorageUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	private final StorageTask storageTask;
+
 	private final VnfStorage vnfStorage;
 
-	private final VnfInstantiatedStorage vnfInstantiedStorage;
-
-	public StorageUow(final VnfInstantiatedStorage _vnfInstantiedStorage, final VnfStorage x) {
-		super(_vnfInstantiedStorage, x.getToscaName());
-		vnfStorage = x;
-		vnfInstantiedStorage = _vnfInstantiedStorage;
+	public StorageUow(final StorageTask _storageTask, final VnfStorage _vnfStorage) {
+		super(_storageTask);
+		vnfStorage = _vnfStorage;
+		storageTask = _storageTask;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		return vim.createStorage(vimConnectionInformation, vnfStorage, vnfInstantiedStorage.getAliasName());
+		return vim.createStorage(vimConnectionInformation, vnfStorage, storageTask.getAlias());
 	}
 
 	@Override
@@ -40,6 +43,11 @@ public class StorageUow extends AbstractUnitOfWork {
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		vim.deleteStorage(vimConnectionInformation, resourceId);
 		return null;
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+		g.addEdge(cache.get(storageTask.getParentAlias()), this);
 	}
 
 }

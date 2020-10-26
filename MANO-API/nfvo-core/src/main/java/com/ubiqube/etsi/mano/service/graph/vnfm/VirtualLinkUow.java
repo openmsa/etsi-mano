@@ -2,9 +2,14 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VirtualLinkUow extends AbstractUnitOfWork {
@@ -16,16 +21,16 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	private final String name;
 
-	private final VnfInstantiatedVirtualLink vnfInstantiedVirtualLink;
+	private VnfInstantiatedVirtualLink vnfInstantiedVirtualLink;
 
-	private final String domainName;
+	private final NetworkTask networkTask;
 
-	public VirtualLinkUow(final VnfInstantiatedVirtualLink _vnfInstantiedVirtualLink, final VlProtocolData _vlProtocolData, final String _name, final String _domainName) {
-		super(_vnfInstantiedVirtualLink, _name);
-		vlProtocolData = _vlProtocolData;
-		name = _name;
-		vnfInstantiedVirtualLink = _vnfInstantiedVirtualLink;
-		domainName = _domainName;
+	public VirtualLinkUow(final NetworkTask _networkTask, final VnfVl vnfVl) {
+		super(_networkTask);
+		name = _networkTask.getToscaName();
+		// XXX
+		vlProtocolData = vnfVl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next();
+		networkTask = _networkTask;
 	}
 
 	public VlProtocolData getVlProtocolData() {
@@ -34,8 +39,10 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+		final String domainName = context.get("dns-name");
 		final String zoneId = vim.createDnsZone(vimConnectionInformation, name + "." + domainName);
 		vnfInstantiedVirtualLink.setZoneId(zoneId);
+		networkTask.setVimZoneId(zoneId);
 		return vim.createNetwork(vimConnectionInformation, vlProtocolData, vnfInstantiedVirtualLink.getAliasName(), domainName, null);
 	}
 
@@ -59,6 +66,11 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 		vim.deleteVirtualLink(vimConnectionInformation, resourceId);
 		vim.deleteDnsZone(vimConnectionInformation, vnfInstantiedVirtualLink.getZoneId());
 		return null;
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+		g.addEdge(cache.get("zone"), this);
 	}
 
 }

@@ -9,11 +9,12 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class StartUow extends AbstractUnitOfWork {
+public class DnsHostUow extends AbstractUnitOfWork {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public StartUow(final Task _task) {
+	public DnsHostUow(final Task _task) {
 		super(_task);
 	}
 
@@ -23,23 +24,25 @@ public class StartUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return null;
-	}
-
-	@Override
-	protected String getPrefix() {
-		return "vnf_mano_start";
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		// Nothing to do.
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public UowType getType() {
+		return UowType.DNSHOST;
+	}
+
+	@Override
+	protected String getPrefix() {
+		return "dns-host";
 	}
 
 }

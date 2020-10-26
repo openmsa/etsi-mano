@@ -2,9 +2,12 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.MonitoringTask;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class MonitoringUow extends AbstractUnitOfWork {
@@ -12,12 +15,10 @@ public class MonitoringUow extends AbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	private final VnfCompute vnfCompute;
-	private final String name;
 
-	public MonitoringUow(final VnfInstantiatedBase resourceHandleEntity, final VnfCompute x, final String _name) {
-		super(resourceHandleEntity, _name);
-		vnfCompute = x;
-		name = _name;
+	public MonitoringUow(final MonitoringTask monitoringTask, final VnfCompute _vnfCompute) {
+		super(monitoringTask);
+		vnfCompute = _vnfCompute;
 	}
 
 	@Override
@@ -40,6 +41,12 @@ public class MonitoringUow extends AbstractUnitOfWork {
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
