@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 
 @Service
@@ -20,12 +20,12 @@ public class VnfLcmControllerImpl implements VnfLcmController {
 	}
 
 	@Override
-	public List<VnfLcmOpOccs> vnfLcmOpOccsGet(final String filter) {
+	public List<Blueprint> vnfLcmOpOccsGet(final String filter) {
 		return vnfLcmOpOccsRepository.query(filter);
 	}
 
 	@Override
-	public VnfLcmOpOccs vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id) {
+	public Blueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id) {
 		return vnfInstanceLcm.get(id);
 	}
 }

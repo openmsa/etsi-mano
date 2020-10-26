@@ -18,8 +18,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 
 public final class LcmFactory {
@@ -73,17 +75,15 @@ public final class LcmFactory {
 	}
 
 	@Nonnull
-	public static VnfLcmOpOccs createVnfLcmOpOccs(final NsdChangeType operation, final UUID vnfInstanceId) {
-		final VnfLcmOpOccs vnfLcmOpOcc = new VnfLcmOpOccs();
+	public static Blueprint createVnfLcmOpOccs(final PlanOperationType operation, final UUID vnfInstanceId) {
+		final Blueprint vnfLcmOpOcc = new Blueprint();
 		vnfLcmOpOcc.setOperation(operation);
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setId(vnfInstanceId);
 		vnfLcmOpOcc.setVnfInstance(vnfInstance);
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
-		vnfLcmOpOcc.setOperationState(InstantiationStatusType.STARTING);
-		vnfLcmOpOcc.setIsAutomaticInvocation(Boolean.FALSE);
-		vnfLcmOpOcc.setIsCancelPending(Boolean.FALSE);
+		vnfLcmOpOcc.setOperationStatus(OperationStatusType.STARTING);
 		return vnfLcmOpOcc;
 	}
 
@@ -103,6 +103,17 @@ public final class LcmFactory {
 		default:
 			throw new NotFoundException("Unknwon LVM Operation: " + lcmOperationType);
 		}
+	}
+
+	public static Blueprint createBlueprint(final PlanOperationType operation, final UUID vnfInstanceId) {
+		final Blueprint blueprint = new Blueprint();
+		blueprint.setOperation(operation);
+		final VnfInstance vnfInstance = new VnfInstance();
+		vnfInstance.setId(vnfInstanceId);
+		blueprint.setVnfInstance(vnfInstance);
+		blueprint.setStartTime(new Date());
+		blueprint.setOperationStatus(OperationStatusType.NOT_STARTED);
+		return blueprint;
 	}
 
 }

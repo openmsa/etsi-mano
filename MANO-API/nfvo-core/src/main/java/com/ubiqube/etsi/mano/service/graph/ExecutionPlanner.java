@@ -29,7 +29,6 @@ import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
-import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
@@ -44,20 +43,14 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ObjectStorageUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.ZoneUow;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 @Service
@@ -116,78 +109,62 @@ public class ExecutionPlanner {
 		vnfInstantiedStart.setVnfLcmOpOccs(vnfLcmOpOccs);
 		vnfInstantiedStart.setStatus(InstantiationStatusType.NOT_STARTED);
 		// Add start
-		final UnitOfWork root = new StartUow(vnfInstantiedStart);
-		g.addVertex(root);
-		g.vertexSet().stream()
-				.filter(key -> g.incomingEdgesOf(key).isEmpty())
-				.forEach(key -> {
-					if (key != root) {
-						LOG.debug("Connecting root to {}", key.getName());
-						g.addEdge(root, key);
-					}
-				});
-		// And end Node
-		final VnfInstantiatedCompute vnfInstantiedEnd = new VnfInstantiatedCompute();
-		vnfInstantiedEnd.setChangeType(ChangeType.ADDED);
-		vnfInstantiedEnd.setVnfLcmOpOccs(vnfLcmOpOccs);
-		vnfInstantiedEnd.setStatus(InstantiationStatusType.NOT_STARTED);
-		final UnitOfWork end = new EndUow(vnfInstantiedEnd);
-		g.addVertex(end);
-		g.vertexSet().stream()
-				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
-				.forEach(key -> {
-					if (key != end) {
-						g.addEdge(key, end);
-					}
-				});
+		/*
+		 * final UnitOfWork root = new StartUow(vnfInstantiedStart); g.addVertex(root);
+		 * g.vertexSet().stream() .filter(key -> g.incomingEdgesOf(key).isEmpty())
+		 * .forEach(key -> { if (key != root) { LOG.debug("Connecting root to {}",
+		 * key.getName()); g.addEdge(root, key); } }); // And end Node final
+		 * VnfInstantiatedCompute vnfInstantiedEnd = new VnfInstantiatedCompute();
+		 * vnfInstantiedEnd.setChangeType(ChangeType.ADDED);
+		 * vnfInstantiedEnd.setVnfLcmOpOccs(vnfLcmOpOccs);
+		 * vnfInstantiedEnd.setStatus(InstantiationStatusType.NOT_STARTED); final
+		 * UnitOfWork end = new EndUow(vnfInstantiedEnd); g.addVertex(end);
+		 * g.vertexSet().stream() .filter(key -> g.outgoingEdgesOf(key).isEmpty())
+		 * .forEach(key -> { if (key != end) { g.addEdge(key, end); } });
+		 */
 		return g;
 	}
 
 	private MultiValueMap<String, UnitOfWork> buildVertex(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VnfLcmOpOccs vnfLcmOpOccs, final VnfPackage vnfPackage, final ChangeType changeType) {
 		final MultiValueMap<String, UnitOfWork> vertex = new LinkedMultiValueMap<>();
-		vnfLcmOpOccs.getResourceChanges().getDnsZones().stream()
-				.filter(x -> x.getChangeType() == changeType)
-				.forEach(x -> {
-					final UnitOfWork uow = new ZoneUow(x, x.getDomainName());
-					vertex.add("zone", uow);
-					g.addVertex(uow);
-				});
-
-		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
-				.filter(x -> x.getChangeType() == changeType)
-				.forEach(x -> {
-					final VnfVl vnfVl = vnfPackageService.findVirtualLnkById(x.getManoResourceId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Link resource " + x.getVduId()));
-					final UnitOfWork uow = new VirtualLinkUow(x, vnfVl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(), vnfVl.getToscaName(), vnfLcmOpOccs.getVnfInstance().getId() + MANO_VM);
-					addVertex(vertex, vnfVl, uow, g);
-				});
-
-		vnfLcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
-				.filter(x -> x.getChangeType() == changeType)
-				.forEach(x -> {
-					final VnfStorage vstorage = vnfPackageService.findVirtualStorageById(x.getManoResourceId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Strorage resource " + x.getManoResourceId()));
-					UnitOfWork uow;
-					if ("BLOCK".equals(vstorage.getType())) {
-						uow = new StorageUow(x, vstorage);
-					} else {
-						uow = new ObjectStorageUow(x, vstorage, vstorage.getToscaName());
-					}
-					addVertex(vertex, vstorage, uow, g);
-				});
-
-		vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().stream()
-				.filter(x -> x.getChangeType() == changeType)
-				.forEach(x -> {
-					final VnfCompute compute = vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find Virtual Compute resource " + x.getVduId()));
-					final UnitOfWork uow = new ComputeUow(x, compute, vnfPackageService.findVnfVirtualLinks(vnfPackage));
-					addVertex(vertex, compute, uow, g);
-				});
-		vnfLcmOpOccs.getResourceChanges().getAffectedExtCp().stream()
-				.filter(x -> x.getChangeType() == changeType)
-				.forEach(x -> {
-					final VnfExtCp lextCp = vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new NotFoundException("Unable to find ExtCp resource " + x.getManoResourceId()));
-					final UnitOfWork uow = new VnfExtCpUow(x, lextCp);
-					addVertex(vertex, lextCp, uow, g);
-				});
+		/*
+		 * vnfLcmOpOccs.getResourceChanges().getDnsZones().stream() .filter(x ->
+		 * x.getChangeType() == changeType) .forEach(x -> { final UnitOfWork uow = new
+		 * ZoneUow(x, x.getDomainName()); vertex.add("zone", uow); g.addVertex(uow); });
+		 * 
+		 * vnfLcmOpOccs.getResourceChanges().getAffectedVirtualLinks().stream()
+		 * .filter(x -> x.getChangeType() == changeType) .forEach(x -> { final VnfVl
+		 * vnfVl =
+		 * vnfPackageService.findVirtualLnkById(x.getManoResourceId()).orElseThrow(() ->
+		 * new NotFoundException("Unable to find Virtual Link resource " +
+		 * x.getVduId())); final UnitOfWork uow = new VirtualLinkUow(x,
+		 * vnfVl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next(),
+		 * vnfVl.getToscaName()); addVertex(vertex, vnfVl, uow, g); });
+		 * 
+		 * vnfLcmOpOccs.getResourceChanges().getAffectedVirtualStorages().stream()
+		 * .filter(x -> x.getChangeType() == changeType) .forEach(x -> { final
+		 * VnfStorage vstorage =
+		 * vnfPackageService.findVirtualStorageById(x.getManoResourceId()).orElseThrow((
+		 * ) -> new NotFoundException("Unable to find Virtual Strorage resource " +
+		 * x.getManoResourceId())); UnitOfWork uow; if
+		 * ("BLOCK".equals(vstorage.getType())) { uow = new StorageUow(x, vstorage); }
+		 * else { uow = new ObjectStorageUow(x, vstorage, vstorage.getToscaName()); }
+		 * addVertex(vertex, vstorage, uow, g); });
+		 * 
+		 * vnfLcmOpOccs.getResourceChanges().getAffectedVnfcs().stream() .filter(x ->
+		 * x.getChangeType() == changeType) .forEach(x -> { final VnfCompute compute =
+		 * vnfPackageService.findComputeById(x.getVduId()).orElseThrow(() -> new
+		 * NotFoundException("Unable to find Virtual Compute resource " +
+		 * x.getVduId())); final UnitOfWork uow = new ComputeUow(x, compute,
+		 * vnfPackageService.findVnfVirtualLinks(vnfPackage)); addVertex(vertex,
+		 * compute, uow, g); });
+		 * vnfLcmOpOccs.getResourceChanges().getAffectedExtCp().stream() .filter(x ->
+		 * x.getChangeType() == changeType) .forEach(x -> { final VnfExtCp lextCp =
+		 * vnfPackageService.findExtCpById(x.getVduId()).orElseThrow(() -> new
+		 * NotFoundException("Unable to find ExtCp resource " + x.getManoResourceId()));
+		 * final UnitOfWork uow = new VnfExtCpUow(x, lextCp); addVertex(vertex, lextCp,
+		 * uow, g); });
+		 */
 		return vertex;
 	}
 
@@ -244,7 +221,17 @@ public class ExecutionPlanner {
 	}
 
 	public void makePrePlan2(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final Set<ScaleInfo> scaling) {
-		//
+		final Blueprint plan = new Blueprint();
+		plan.setVnfInstance(vnfInstance);
+		if (lcmOpOccs.getOperation() == NsdChangeType.INSTANTIATE) {
+			final DnsZoneTask dnsZoneTask = new DnsZoneTask();
+			dnsZoneTask.setChangeType(ChangeType.ADDED);
+			dnsZoneTask.setDomainName(vnfInstance.getId() + MANO_VM);
+			plan.add(dnsZoneTask);
+		}
+		vnfPakage.getVnfCompute().forEach(x -> {
+
+		});
 	}
 
 	public void makePrePlan(final String instantiationLevelId, final VnfPackage vnfPakage, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs, final Set<ScaleInfo> scaling) {

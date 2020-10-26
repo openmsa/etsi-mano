@@ -43,10 +43,14 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.BlueprintService;
 import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.Nfvo;
+import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -54,6 +58,7 @@ import com.ubiqube.etsi.mano.service.graph.ExecutionPlanner;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.plan.Planner;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -81,8 +86,11 @@ public class VnfmActions {
 	private final VnfPackageRepository vnfPackageRepository;
 
 	private final Nfvo nfvo;
+	private final Planner planner;
+	private final BlueprintService planService;
+	private final VimResourceService vimResourceService;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfPackageRepository _vnfPackageRepository, final Nfvo _nfvo) {
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final ExecutionPlanner _executionPlanner, final PlanExecutor _executor, final VnfLcmService _vnfLcmService, final GrantService _grantService, final VnfInstanceService _vnfInstancesService, final VnfPackageRepository _vnfPackageRepository, final Nfvo _nfvo, final Planner _planner, final BlueprintService _planService, final VimResourceService _vimResourceService) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
@@ -94,24 +102,49 @@ public class VnfmActions {
 		vnfInstancesService = _vnfInstancesService;
 		vnfPackageRepository = _vnfPackageRepository;
 		nfvo = _nfvo;
+		planner = _planner;
+		planService = _planService;
+		vimResourceService = _vimResourceService;
 	}
 
-	public void vnfInstantiate(@Nonnull final UUID lcmOpOccsId) {
-		Thread.currentThread().setName(lcmOpOccsId + "-VI");
-		final VnfLcmOpOccs lcmOpOccs = vnfLcmService.findById(lcmOpOccsId);
-		final VnfInstance vnfInstance = vnfInstancesService.findById(lcmOpOccs.getVnfInstance().getId());
+	public void vnfInstantiate(@Nonnull final UUID blueprintId) {
+		Thread.currentThread().setName(blueprintId + "-VI");
+		final Blueprint blueprint = planService.findById(blueprintId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(blueprint.getVnfInstance().getId());
 		try {
-			vnfInstantiateInner(lcmOpOccs, vnfInstance);
-			LOG.info("Instantiate {} Success...", lcmOpOccsId);
+			instantiateInnerv2(blueprint, vnfInstance);
+			LOG.info("Instantiate {} Success...", blueprintId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
 			vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
-			lcmOpOccs.setOperationState(InstantiationStatusType.FAILED);
-			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
-			lcmOpOccs.setStateEnteredTime(new Date());
-			vnfLcmService.save(lcmOpOccs);
+			blueprint.setOperationStatus(OperationStatusType.FAILED);
+			blueprint.setError(new FailureDetails(500L, e.getMessage()));
+			planService.save(blueprint);
 			vnfInstancesService.save(vnfInstance);
 		}
+	}
+
+	public void instantiateInnerv2(final Blueprint blueprint, final VnfInstance vnfInstance) {
+		if (null == blueprint.getParameters().getInstantiationLevelId()) {
+			blueprint.getParameters().setInstantiationLevelId(vnfInstance.getInstantiatedVnfInfo().getInstantiationLevelId());
+		}
+		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
+		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
+		planner.doPlan(vnfPkg, blueprint, newScale);
+		final Blueprint localPlan = planService.save(blueprint);
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
+		vimResourceService.allocate(localPlan);
+		planService.updateState(localPlan, OperationStatusType.PROCESSING);
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> executionPlane = planner.convertToExecution(blueprint);
+	}
+
+	private static Set<ScaleInfo> merge(final Blueprint plan, final VnfInstance vnfInstance) {
+		final Set<ScaleInfo> tmp = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+				.filter(x -> notIn(x.getAspectId(), plan.getParameters().getScaleStatus()))
+				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
+				.collect(Collectors.toSet());
+		tmp.addAll(plan.getParameters().getScaleStatus());
+		return tmp;
 	}
 
 	private void vnfInstantiateInner(final VnfLcmOpOccs lcmOpOccs, final VnfInstance vnfInstance) {
@@ -160,7 +193,7 @@ public class VnfmActions {
 
 		// Create plan
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> createPlan = executionPlanner.planForCreation(localLcmOpOccs, vnfPkg);
-		vim.refineExecutionPlan(createPlan);
+		// vim.refineExecutionPlan(createPlan);
 		GraphTools.exportGraph(createPlan, vnfPkg.getId(), localVnfInstance, "create", vnfPackageRepository);
 
 		final ExecutionResults<UnitOfWork, String> createResults = executor.execCreate(createPlan, vimConnection, vim, context);

@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -25,20 +25,20 @@ public interface VnfInstanceLcm {
 
 	List<VnfInstance> get(final Map<String, String> queryParameters);
 
-	VnfLcmOpOccs get(final UUID id);
+	Blueprint get(final UUID id);
 
 	VnfInstance post(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription);
 
 	void delete(@Nonnull final UUID vnfInstanceId);
 
-	VnfLcmOpOccs instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest);
+	Blueprint instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest);
 
-	VnfLcmOpOccs terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout);
+	Blueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout);
 
-	VnfLcmOpOccs scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest);
+	Blueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest);
 
-	VnfLcmOpOccs scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest);
+	Blueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest);
 
-	VnfLcmOpOccs operate(final UUID uuid, final VnfOperateRequest operateVnfRequest);
+	Blueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest);
 
 }

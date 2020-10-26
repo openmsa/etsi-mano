@@ -39,6 +39,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
@@ -97,7 +99,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private Map<String, String> extensions = null;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private transient Set<VnfLcmOpOccs> lcmOpOccs;
+	private transient Set<Blueprint> blueprints;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
@@ -237,12 +239,12 @@ public class VnfInstance implements BaseEntity, Auditable {
 		this.extensions = extensions;
 	}
 
-	public Set<VnfLcmOpOccs> getLcmOpOccs() {
-		return lcmOpOccs;
+	public Set<Blueprint> getBlueprints() {
+		return blueprints;
 	}
 
-	public void setLcmOpOccs(final Set<VnfLcmOpOccs> lcmOpOccs) {
-		this.lcmOpOccs = lcmOpOccs;
+	public void setBlueprints(final Set<Blueprint> blueprints) {
+		this.blueprints = blueprints;
 	}
 
 	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {

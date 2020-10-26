@@ -97,7 +97,7 @@ public class VnfPackageServiceImpl implements VnfPackageService {
 
 	@Override
 	public VnfPackage findById(final UUID vnfPkgId) {
-		return vnfPackageJpa.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("VNF Package" + vnfPkgId + " not found."));
+		return vnfPackageJpa.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("VNF Package: " + vnfPkgId + " not found."));
 	}
 
 	@Override

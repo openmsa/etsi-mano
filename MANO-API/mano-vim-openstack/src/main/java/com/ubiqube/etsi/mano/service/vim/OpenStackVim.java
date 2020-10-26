@@ -3,7 +3,6 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import org.jgrapht.ListenableGraph;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
@@ -32,6 +30,7 @@ import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.builder.ServerCreateBuilder;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
+import org.openstack4j.model.dns.v2.Recordset;
 import org.openstack4j.model.dns.v2.Zone;
 import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.image.ContainerFormat;
@@ -60,14 +59,8 @@ import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.VimService;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -214,35 +207,8 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g) {
-		final List<UnitOfWork> vertexPool = new ArrayList<>();
-		LOG.info("Openstack, modification of execution plan.");
-		final ArrayList<UnitOfWork> vertexSet = new ArrayList<>(g.vertexSet());
-		vertexSet.forEach(x -> {
-			if (x instanceof VirtualLinkUow) {
-				LOG.debug("Found VL: {}", x.getName());
-				final VirtualLinkUow vlu = (VirtualLinkUow) x;
-				final VnfInstantiatedCompute vnfInstantiedCompute = new VnfInstantiatedCompute();
-				// XXX There is a big question here, we don"t have access to mano internal.
-				final NoopUow noop = new NoopUow(vnfInstantiedCompute);
-				g.addVertex(noop);
-
-				final ArrayList<ConnectivityEdge<UnitOfWork>> out = new ArrayList<>(g.outgoingEdgesOf(x));
-				g.removeAllEdges(new ArrayList<>(out));
-				final VlProtocolData vnfVl = vlu.getVlProtocolData();
-				vnfVl.getIpAllocationPools().forEach(y -> {
-					final OsSubnetworkUow subUow = new OsSubnetworkUow(new VnfInstantiatedVirtualLink(), vnfVl, y, x.getToscaName());
-					vertexPool.add(subUow);
-					g.addVertex(subUow);
-					g.addEdge(x, subUow);
-					g.addEdge(subUow, noop);
-					LOG.debug("Creating sub network : {}", subUow.getToscaName());
-				});
-				LOG.debug("Re-linking: {} <=> {}", noop.getName(), out);
-				out.forEach(y -> g.addEdge(noop, y.getTarget()));
-			}
-		});
-
+	public void addNodeToPlans(final ConnectionStorage connectionStorage) {
+		connectionStorage.insertAfter(com.ubiqube.etsi.mano.service.vim.node.Network.class, new OsSubNetwork());
 	}
 
 	@Override

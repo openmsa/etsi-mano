@@ -30,6 +30,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
@@ -218,6 +219,12 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 			return y;
 		}
 		throw new GenericException("Unknown class type: " + y.getClass());
+	}
+
+	@Override
+	public Deque<VnfLiveInstance> getLiveComputeInstanceOf(final Blueprint plan, final VnfCompute vnfCompute) {
+		// TODO
+		return new ArrayDeque<>();
 	}
 
 }

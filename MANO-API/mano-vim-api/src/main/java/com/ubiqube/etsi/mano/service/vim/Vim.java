@@ -6,16 +6,17 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-import org.jgrapht.ListenableGraph;
-
 import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.service.graph.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface Vim {
 
 	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformation grantInformation);
@@ -29,7 +30,12 @@ public interface Vim {
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name, String dnsDomain, String qosPolicyId);
 
-	void refineExecutionPlan(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g);
+	/**
+	 * Add VIM custom Node inside the global dependency network.
+	 *
+	 * @param connectionStorage The link descriptor instance.
+	 */
+	void addNodeToPlans(ConnectionStorage connectionStorage);
 
 	Optional<SoftwareImage> getSwImageMatching(VimConnectionInformation vimConnectionInformation, SoftwareImage img);
 
