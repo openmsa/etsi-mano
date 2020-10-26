@@ -22,14 +22,19 @@ import java.util.UUID;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -44,13 +49,31 @@ public class Task implements BaseEntity, Auditable {
 	@Embedded
 	private Audit audit;
 
-	LocalDateTime startDate;
+	private LocalDateTime startDate;
 
-	LocalDateTime endDate;
+	private LocalDateTime endDate;
 
-	PlanStatusType status;
+	private PlanStatusType status;
 
-	String vimResourceId;
+	private String vimResourceId;
+
+	private String vimReservationId;
+
+	private ChangeType changeType;
+
+	private String toscaName;
+
+	private String alias;
+
+	@Enumerated(EnumType.STRING)
+	private ResourceTypeEnum type;
+
+	private String zoneId;
+
+	private String resourceGroupId;
+
+	@ManyToOne
+	private Blueprint Blueprint;
 
 	@Override
 	public UUID getId() {
@@ -103,8 +126,68 @@ public class Task implements BaseEntity, Auditable {
 		this.vimResourceId = vimResourceId;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public ChangeType getChangeType() {
+		return changeType;
+	}
+
+	public void setChangeType(final ChangeType _changeType) {
+		changeType = _changeType;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(final String alias) {
+		this.alias = alias;
+	}
+
+	public String getVimReservationId() {
+		return vimReservationId;
+	}
+
+	public void setVimReservationId(final String vimReservationId) {
+		this.vimReservationId = vimReservationId;
+	}
+
+	public ResourceTypeEnum getType() {
+		return type;
+	}
+
+	public void setType(final ResourceTypeEnum type) {
+		this.type = type;
+	}
+
+	public String getZoneId() {
+		return zoneId;
+	}
+
+	public void setZoneId(final String zoneId) {
+		this.zoneId = zoneId;
+	}
+
+	public String getResourceGroupId() {
+		return resourceGroupId;
+	}
+
+	public void setResourceGroupId(final String resourceGroupId) {
+		this.resourceGroupId = resourceGroupId;
+	}
+
+	public Blueprint getBlueprint() {
+		return Blueprint;
+	}
+
+	public void setBlueprint(final Blueprint blueprint) {
+		Blueprint = blueprint;
 	}
 
 }
