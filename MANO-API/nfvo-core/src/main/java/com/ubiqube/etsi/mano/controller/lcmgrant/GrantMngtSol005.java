@@ -36,6 +36,11 @@ import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Profile("!NFVM")
 @Service
 @Transactional(TxType.NEVER)
