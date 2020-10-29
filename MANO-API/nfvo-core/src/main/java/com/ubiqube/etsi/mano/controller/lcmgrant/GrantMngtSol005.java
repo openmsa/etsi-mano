@@ -1,3 +1,19 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.etsi.mano.controller.lcmgrant;
 
 import java.util.HashMap;
@@ -12,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -32,13 +47,10 @@ public class GrantMngtSol005 implements GrantManagement {
 	private final MapperFacade mapper;
 	private final EventManager eventManager;
 
-	private final ObjectMapper objectMapper;
-
-	public GrantMngtSol005(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final EventManager _eventManager, final ObjectMapper _objectMapper) {
+	public GrantMngtSol005(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final EventManager _eventManager) {
 		grantsResponseJpa = _grantsJpa;
 		mapper = _mapper;
 		eventManager = _eventManager;
-		objectMapper = _objectMapper;
 	}
 
 	@Override
