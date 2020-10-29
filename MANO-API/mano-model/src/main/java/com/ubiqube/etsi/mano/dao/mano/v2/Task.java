@@ -73,7 +73,7 @@ public class Task implements BaseEntity, Auditable {
 	private String resourceGroupId;
 
 	@ManyToOne
-	private Blueprint Blueprint;
+	private Blueprint blueprint;
 
 	@Override
 	public UUID getId() {
@@ -183,11 +183,11 @@ public class Task implements BaseEntity, Auditable {
 	}
 
 	public Blueprint getBlueprint() {
-		return Blueprint;
+		return blueprint;
 	}
 
-	public void setBlueprint(final Blueprint blueprint) {
-		Blueprint = blueprint;
+	public void setBlueprint(final Blueprint _blueprint) {
+		blueprint = _blueprint;
 	}
 
 }

@@ -26,7 +26,7 @@ public enum ResourceTypeEnum {
 
 	STORAGE("STORAGE"),
 
-	LINKPORT("LINKPORT");
+	LINKPORT("LINKPORT"), DNSZONE("DNSZONE");
 
 	private final String value;
 

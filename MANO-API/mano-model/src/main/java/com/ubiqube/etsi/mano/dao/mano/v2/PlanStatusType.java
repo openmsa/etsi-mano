@@ -20,7 +20,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum PlanStatusType {
-	NOT_STARTED("NOT_STARTED");
+	NOT_STARTED("NOT_STARTED"),
+	REMOVED("REMOVED"),
+	LIVE("LIVE"),
+	STARTED("STARTED"),
+	SUCCESS("SUCCESS"),
+	FAILED("FAILED");
 
 	private final String value;
 

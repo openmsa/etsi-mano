@@ -93,7 +93,8 @@ public class Blueprint implements BaseEntity, Auditable {
 	@Embedded
 	private BlueprintParameters parameters = new BlueprintParameters();
 
-	private OperateChanges operateChanges;
+	@Embedded
+	private OperateChanges operateChanges = new OperateChanges();
 
 	@Embedded
 	private FailureDetails error;

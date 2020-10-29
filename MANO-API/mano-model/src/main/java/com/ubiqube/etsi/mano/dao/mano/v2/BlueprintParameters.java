@@ -1,3 +1,19 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.io.Serializable;
@@ -34,6 +50,8 @@ public class BlueprintParameters implements Serializable {
 	private ScaleTypeEnum scaleType;
 
 	private String aspectId;
+
+	private String flavourId;
 
 	public String getInstantiationLevelId() {
 		return instantiationLevelId;
@@ -81,6 +99,14 @@ public class BlueprintParameters implements Serializable {
 
 	public void setAspectId(final String aspectId) {
 		this.aspectId = aspectId;
+	}
+
+	public String getFlavourId() {
+		return flavourId;
+	}
+
+	public void setFlavourId(final String flavourId) {
+		this.flavourId = flavourId;
 	}
 
 }
