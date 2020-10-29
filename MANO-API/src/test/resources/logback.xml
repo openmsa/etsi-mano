@@ -8,12 +8,12 @@
     </encoder>
   </appender>
   	<logger name="org.jboss.ejb.client" additivity="false">
-		<level value="TRACE" />
+		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
 	<logger name="org.jboss.remoting" additivity="false">
-		<level value="TRACE" />
+		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</logger>
   
