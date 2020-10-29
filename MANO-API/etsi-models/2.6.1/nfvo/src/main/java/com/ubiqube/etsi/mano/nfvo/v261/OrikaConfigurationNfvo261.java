@@ -1,3 +1,17 @@
+/**
+ * This copy of Woodstox XML processor is licensed under the
+ * Apache (Software) License, version 2.0 ("the License").
+ * See the License for details about distribution rights, and the
+ * specific rights regarding derivate works.
+ *
+ * You may obtain a copy of the License at:
+ *
+ * http://www.apache.org/licenses/
+ *
+ * A copy is also included in the downloadable source code package
+ * containing Woodstox, in file "ASL2.0", under the same directory
+ * as this file.
+ */
 package com.ubiqube.etsi.mano.nfvo.v261;
 
 import org.springframework.stereotype.Component;
@@ -8,10 +22,8 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
@@ -20,6 +32,8 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;

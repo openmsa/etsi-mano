@@ -1,3 +1,17 @@
+/**
+ * This copy of Woodstox XML processor is licensed under the
+ * Apache (Software) License, version 2.0 ("the License").
+ * See the License for details about distribution rights, and the
+ * specific rights regarding derivate works.
+ *
+ * You may obtain a copy of the License at:
+ *
+ * http://www.apache.org/licenses/
+ *
+ * A copy is also included in the downloadable source code package
+ * containing Woodstox, in file "ASL2.0", under the same directory
+ * as this file.
+ */
 /*
  * SOL003 - VNF Lifecycle Management interface
  * SOL003 - VNF Lifecycle Management interface definition  IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to. In case of discrepancies the published ETSI Group Specification takes precedence.  In clause 4.3.2 of ETSI GS NFV-SOL 003 v2.4.1, an attribute-based filtering mechanism is defined. This mechanism is currently not included in the corresponding OpenAPI design for this GS version. Changes to the attribute-based filtering mechanism are being considered in v2.5.1 of this GS for inclusion in the corresponding future ETSI NFV OpenAPI design. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis&list_id=61&product=NFV&resolution=
