@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
 import ma.glasnost.orika.MapperFacade;

@@ -18,15 +18,20 @@ package com.ubiqube.etsi.mano.config;
 
 import org.springframework.stereotype.Component;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -78,6 +83,26 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 		orikaMapperFactory.classMap(GrantResponse.class, GrantsRequest.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantInformation.class, ComputeTask.class)
+				.field("vduId", "vnfCompute.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantInformation.class, NetworkTask.class)
+				.field("vduId", "vnfVl.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantInformation.class, DnsZoneTask.class)
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantInformation.class, StorageTask.class)
+				.field("vduId", "vnfStorage.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantsRequest.class, Blueprint.class)
+				.exclude("vnfInstance")
+				.field("vnfInstance.id", "vnfInstance.id")
 				.byDefault()
 				.register();
 		/*

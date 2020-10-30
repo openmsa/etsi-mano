@@ -46,7 +46,6 @@ import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.builder.ServerCreateBuilder;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
-import org.openstack4j.model.dns.v2.Recordset;
 import org.openstack4j.model.dns.v2.Zone;
 import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.image.ContainerFormat;
@@ -68,7 +67,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
@@ -155,13 +154,13 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public void allocateResources(final VimConnectionInformation vimConnectionInformation, final GrantInformation grantInformation) {
+	public void allocateResources(final VimConnectionInformation vimConnectionInformation, final GrantInformationExt grantInformation) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		// XXX Do placement with blazar.
 	}
 
 	@Override
-	public void freeResources(final VimConnectionInformation vimConnectionInformation, final GrantInformation grantInformation) {
+	public void freeResources(final VimConnectionInformation vimConnectionInformation, final GrantInformationExt grantInformation) {
 		// TODO Auto-generated method stub
 
 	}
@@ -199,6 +198,7 @@ public class OpenStackVim implements Vim {
 		return network.getId();
 	}
 
+	@Override
 	public String createSubnet(final VimConnectionInformation vimConnectionInformation, final L3Data l3ProtocolData, final IpPool ipAllocationPool, final String networkId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final SubnetBuilder bSub = Builders.subnet()

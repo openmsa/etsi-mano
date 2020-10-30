@@ -14,49 +14,32 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 
-@Entity
 public class GrantInformation implements BaseEntity, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String resourceDefinitionId = null;
+	private ResourceTypeEnum type;
 
-	private String reservationId = null;
+	private UUID vduId;
+
+	private String resourceTemplateId;
 
 	private String vimConnectionId = null;
 
 	private String resourceProviderId = null;
 
-	private String zoneId = null;
-
-	private String resourceGroupId = null;
-
-	private String resourceTemplateId;
-
-	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
-
-	@Enumerated(EnumType.STRING)
-	private ResourceTypeEnum type;
-
-	private UUID vduId;
 
 	@Override
 	public UUID getId() {
@@ -65,22 +48,6 @@ public class GrantInformation implements BaseEntity, Serializable {
 
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public String getResourceDefinitionId() {
-		return resourceDefinitionId;
-	}
-
-	public void setResourceDefinitionId(final String resourceDefinitionId) {
-		this.resourceDefinitionId = resourceDefinitionId;
-	}
-
-	public String getReservationId() {
-		return reservationId;
-	}
-
-	public void setReservationId(final String reservationId) {
-		this.reservationId = reservationId;
 	}
 
 	public String getVimConnectionId() {
@@ -97,22 +64,6 @@ public class GrantInformation implements BaseEntity, Serializable {
 
 	public void setResourceProviderId(final String resourceProviderId) {
 		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getZoneId() {
-		return zoneId;
-	}
-
-	public void setZoneId(final String zoneId) {
-		this.zoneId = zoneId;
-	}
-
-	public String getResourceGroupId() {
-		return resourceGroupId;
-	}
-
-	public void setResourceGroupId(final String resourceGroupId) {
-		this.resourceGroupId = resourceGroupId;
 	}
 
 	public ResourceTypeEnum getType() {

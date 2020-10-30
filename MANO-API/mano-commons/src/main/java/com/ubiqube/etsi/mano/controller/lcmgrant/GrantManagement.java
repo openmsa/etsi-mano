@@ -21,7 +21,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 
 public interface GrantManagement {
 	@Nonnull

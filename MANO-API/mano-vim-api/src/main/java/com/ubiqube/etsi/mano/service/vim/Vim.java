@@ -22,7 +22,9 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.IpPool;
+import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
@@ -35,9 +37,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
  */
 public interface Vim {
 
-	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformation grantInformation);
+	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
 
-	void freeResources(VimConnectionInformation vimConnectionInformation, GrantInformation grantInformation);
+	void freeResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
 
 	String getType();
 
@@ -45,6 +47,10 @@ public interface Vim {
 	VimImage getImagesInformations(VimConnectionInformation vimConnectionInformation, String name);
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name, String dnsDomain, String qosPolicyId);
+
+	String createSubnet(final VimConnectionInformation vimConnectionInformation, final L3Data l3ProtocolData, final IpPool ipAllocationPool, final String networkId);
+
+	void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId);
 
 	/**
 	 * Add VIM custom Node inside the global dependency network.

@@ -194,7 +194,6 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 		final Set<VnfLcmOpOccs> lcmOpOccs = vnfLcmOpOccsJpa.findByVnfInstance(vnfInstance);
 		lcmOpOccs.forEach(x -> {
 			LOG.info("Deleting LcmOpOccs {}", x.getId());
-			grantService.deleteByLcmOpOccs(x);
 			vnfLcmOpOccsJpa.delete(x);
 		});
 		vnfInstanceJpa.deleteById(vnfInstanceId);

@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,8 +23,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -33,34 +30,16 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.jpa.GrantInformationJpa;
-import com.ubiqube.etsi.mano.jpa.GrantRequestJpa;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 
 @Service
 public class GrantService {
-	private final GrantRequestJpa grantRequestJpa;
-
-	private final GrantInformationJpa grantInformationJpa;
-
-	public GrantService(final GrantRequestJpa _grantRequestJpa, final GrantInformationJpa _grantInformationJpa) {
-		grantRequestJpa = _grantRequestJpa;
-		grantInformationJpa = _grantInformationJpa;
-	}
-
-	public GrantsRequest createInstantiateGrantRequest(final VnfPackage vnfPkg, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
-		final GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, NsdChangeType.INSTANTIATE);
-		addGrantsObjects(grants, lcmOpOccs.getResourceChanges().getAffectedVnfcs(), ResourceTypeEnum.COMPUTE);
-		addGrantsObjects(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualLinks(), ResourceTypeEnum.VL);
-		addGrantsObjects(grants, lcmOpOccs.getResourceChanges().getAffectedVirtualStorages(), ResourceTypeEnum.STORAGE);
-		removeGrantResource(grants, lcmOpOccs.getResourceChanges());
-		grants.setVimConnections(vnfInstance.getVimConnectionInfo());
-		return grantRequestJpa.save(grants);
-	}
 
 	public GrantsRequest createTerminateGrantRequest(final VnfPackage vnfPkg, final VnfInstance vnfInstance, final VnfLcmOpOccs lcmOpOccs) {
 		final GrantsRequest grants = createGrant(vnfInstance, lcmOpOccs, vnfPkg, NsdChangeType.TERMINATE);
 		removeGrantResource(grants, lcmOpOccs.getResourceChanges());
-		return grantRequestJpa.save(grants);
+		return grants;
 	}
 
 	private static void removeGrantResource(final GrantsRequest grants, final VnfLcmResourceChanges resourceChange) {
@@ -83,11 +62,6 @@ public class GrantService {
 		return grants;
 	}
 
-	private static void addGrantsObjects(final GrantsRequest grants, final Set<? extends VnfInstantiatedBase> vnfInstantiated, final ResourceTypeEnum resourceType) {
-		final Set<GrantInformation> res = mapFilterChangeType(vnfInstantiated, ChangeType.ADDED, resourceType);
-		grants.getAddResources().addAll(res);
-	}
-
 	private static void removeGrantsObjects(final GrantsRequest grants, final Set<? extends VnfInstantiatedBase> vnfInstantiated, final ResourceTypeEnum resourceType) {
 		final Set<GrantInformation> res = mapFilterChangeType(vnfInstantiated, ChangeType.REMOVED, resourceType);
 		grants.getRemoveResources().addAll(res);
@@ -102,20 +76,10 @@ public class GrantService {
 
 	private static GrantInformation createGrantInformation(final VnfInstantiatedBase x, final ResourceTypeEnum type, final UUID vduId) {
 		final GrantInformation grantInformation = new GrantInformation();
-		grantInformation.setResourceDefinitionId(x.getId().toString());
 		grantInformation.setType(type);
 		grantInformation.setVduId(vduId);
 		grantInformation.setResourceTemplateId(x.getToscaName());
 		return grantInformation;
-	}
-
-	public Optional<GrantInformation> getGrantInformation(final UUID grantUuid) {
-		return grantInformationJpa.findById(grantUuid);
-	}
-
-	public void deleteByLcmOpOccs(final VnfLcmOpOccs lcmOpOccs) {
-		grantRequestJpa.deleteByVnfLcmOpOccs(lcmOpOccs);
-
 	}
 
 }

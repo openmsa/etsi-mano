@@ -14,38 +14,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import com.ubiqube.etsi.mano.dao.mano.ConstraintRef;
 
-@Entity
 public class VimConstraints implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
 	private boolean sameResourceGroup;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<ConstraintRef> resources;
 
-	@ManyToOne
 	private GrantsRequest grants;
 
 	public UUID getId() {

@@ -16,16 +16,25 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.Set;
 import java.util.UUID;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -35,6 +44,7 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @Service
+@Transactional(TxType.NEVER)
 public class ManoGrantService implements VimResourceService {
 
 	private final MapperFacade mapper;
@@ -69,10 +79,43 @@ public class ManoGrantService implements VimResourceService {
 		plan.setZoneGroups(grantsResp.getZoneGroups());
 		plan.setZones(grantsResp.getZones());
 		plan.getParameters().setExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
+		// XXX We should not use a DAO entity.
+		plan.setGrantsRequestId(grantsResp.getId().toString());
+		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
+	}
+
+	private static void mapVimAsset(final Set<Task> tasks, final GrantVimAssetsEntity vimAssets) {
+		tasks.stream()
+				.filter(x -> x instanceof ComputeTask)
+				.map(x -> (ComputeTask) x)
+				.forEach(x -> {
+					x.setFlavorId(findFlavor(vimAssets, x.getVnfCompute().getId()));
+					x.setImageId(findImage(vimAssets, x.getVnfCompute().getId()));
+				});
+	}
+
+	private static String findImage(final GrantVimAssetsEntity vimAssets, final UUID vduId) {
+		return vimAssets.getSoftwareImages().stream()
+				.filter(x -> x.getVnfdSoftwareImageId().equals(vduId.toString()))
+				.map(VimSoftwareImageEntity::getVimSoftwareImageId)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find Image for vdu: " + vduId));
+
+	}
+
+	private static String findFlavor(final GrantVimAssetsEntity vimAssets, final UUID vduId) {
+		return vimAssets.getComputeResourceFlavours().stream()
+				.filter(x -> x.getVnfdVirtualComputeDescId().equals(vduId.toString()))
+				.map(VimComputeResourceFlavourEntity::getVimFlavourId)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find flavor for vdu: " + vduId));
 	}
 
 	private static Task findTask(final Blueprint plan, final UUID grantUuid) {
-		return plan.getTasks().stream().filter(x -> x.getId() == grantUuid).findFirst().orElseThrow();
+		return plan.getTasks().stream()
+				.filter(x -> x.getId().compareTo(grantUuid) == 0)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("Could not find task: " + grantUuid));
 	}
 
 }

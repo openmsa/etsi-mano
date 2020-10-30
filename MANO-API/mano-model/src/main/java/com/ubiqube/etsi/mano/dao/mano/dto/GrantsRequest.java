@@ -14,69 +14,43 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.Valid;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 
-import org.hibernate.search.annotations.FieldBridge;
-
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
-
-@Entity
-@EntityListeners(AuditListener.class)
-public class GrantsRequest implements BaseEntity, Auditable {
+public class GrantsRequest implements BaseEntity {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
-
-	@Embedded
-	private Audit audit;
 
 	private String vnfdId;
 
 	private String flavourId;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private NsdChangeType operation;
 
 	private boolean isAutomaticInvocation;
 
 	private String instantiationLevelId;
 
-	@OneToOne
 	private VnfLcmOpOccs vnfLcmOpOccs = null;
 
-	@Valid
-	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VimConnectionInformation> vimConnections = null;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
 	private Set<ZoneInfoEntity> zones = null;
 
 	private String computeReservationId = null;
@@ -85,46 +59,28 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	private String storageReservationId = null;
 
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GrantInformation> addResources = new HashSet<>();
 
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GrantInformation> tempResources = new HashSet<>();
 
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GrantInformation> removeResources = new HashSet<>();
 
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<GrantInformation> updateResources = new HashSet<>();
 
-	@Embedded
 	private GrantVimAssetsEntity vimAssets = null;
 
-	@Valid
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
 
-	@Valid
-	@OneToMany(mappedBy = "grants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
 
-	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> additionalParams = null;
 
-	@Valid
-	@OneToMany(mappedBy = "grants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VimConstraints> vimConstraints;
 	/**
 	 * Flag to say if grants have been, inspected.
 	 */
 	private Boolean available;
 
-	@ManyToOne
 	private VnfInstance vnfInstance;
 
 	@Override
@@ -134,16 +90,6 @@ public class GrantsRequest implements BaseEntity, Auditable {
 
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
 	}
 
 	public Set<VimConnectionInformation> getVimConnections() {
