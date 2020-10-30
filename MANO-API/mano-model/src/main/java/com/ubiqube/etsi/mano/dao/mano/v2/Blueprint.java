@@ -25,6 +25,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -78,8 +80,10 @@ public class Blueprint implements BaseEntity, Auditable {
 
 	private String grantsRequestId;
 
+	@Enumerated(EnumType.STRING)
 	private PlanOperationType operation;
 
+	@Enumerated(EnumType.STRING)
 	private OperationStatusType operationStatus;
 
 	private Date stateEnteredTime;

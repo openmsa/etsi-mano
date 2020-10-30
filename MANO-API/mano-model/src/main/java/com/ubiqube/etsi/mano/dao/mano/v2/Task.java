@@ -53,12 +53,14 @@ public class Task implements BaseEntity, Auditable {
 
 	private LocalDateTime endDate;
 
+	@Enumerated(EnumType.STRING)
 	private PlanStatusType status;
 
 	private String vimResourceId;
 
 	private String vimReservationId;
 
+	@Enumerated(EnumType.STRING)
 	private ChangeType changeType;
 
 	private String toscaName;

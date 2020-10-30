@@ -16,38 +16,51 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 
-public enum ResourceTypeEnum {
-	COMPUTE("COMPUTE"),
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 
-	VL("VL"),
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Entity
+public class SubNetworkTask extends Task {
 
-	STORAGE("STORAGE"),
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
-	LINKPORT("LINKPORT"), DNSZONE("DNSZONE"), SUBNETWORK("SUBNETWORK");
+	@Embedded
+	private L3Data l3Data;
 
-	private final String value;
+	private IpPool ipPool;
 
-	ResourceTypeEnum(final String value) {
-		this.value = value;
+	private String parentName;
+
+	public L3Data getL3Data() {
+		return l3Data;
 	}
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
+	public void setL3Data(final L3Data l3Data) {
+		this.l3Data = l3Data;
 	}
 
-	@JsonCreator
-	public static ResourceTypeEnum fromValue(final String text) {
-		for (final ResourceTypeEnum b : ResourceTypeEnum.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
+	public IpPool getIpPool() {
+		return ipPool;
+	}
+
+	public void setIpPool(final IpPool ipPool) {
+		this.ipPool = ipPool;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(final String parentName) {
+		this.parentName = parentName;
 	}
 
 }
