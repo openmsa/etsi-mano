@@ -21,13 +21,15 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 
+@NoRepositoryBean
 public interface TaskBaseJpa<T extends Task> extends CrudRepository<T, UUID> {
 	@Query("SELECT vib from #{#entityName} vib \n" +
-			" left outer join VnfLiveInstance vli  on vib.id = vli.vnfInstantiatedBase \n" +
+			" left outer join VnfLiveInstance vli  on vib.id = vli.task \n" +
 			" where vli.vnfInstance =?1")
 	List<T> findByLiveInstanceOfVnfInstance(VnfInstance vnfInstance);
 }
