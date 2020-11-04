@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.ObjectStorage;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.Storage;
+import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
 
 public class ConnectionStorage {
 	private final List<ConnectivityEdge<Node>> connections;
@@ -42,8 +43,10 @@ public class ConnectionStorage {
 		// Network.
 		connections.add(new ConnectivityEdge<>(new DnsZone(), new Network()));
 		connections.add(new ConnectivityEdge<>(new Network(), new Storage()));
+		connections.add(new ConnectivityEdge<>(new Network(), new SubNetwork()));
 		// Compute Join
 		connections.add(new ConnectivityEdge<>(new Storage(), new Compute()));
+		connections.add(new ConnectivityEdge<>(new SubNetwork(), new Compute()));
 		// Monitoring.
 		connections.add(new ConnectivityEdge<>(new Compute(), new DnsHost()));
 		connections.add(new ConnectivityEdge<>(new Compute(), new Monitoring()));
