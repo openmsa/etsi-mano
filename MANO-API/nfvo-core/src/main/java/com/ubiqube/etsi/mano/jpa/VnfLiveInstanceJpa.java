@@ -19,16 +19,30 @@ package com.ubiqube.etsi.mano.jpa;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 
 public interface VnfLiveInstanceJpa extends CrudRepository<VnfLiveInstance, UUID> {
 
-	int countByVnfInstanceAndVduId(VnfInstance vnfInstance, UUID id);
+	int countByVnfInstanceAndTaskToscaName(VnfInstance vnfInstance, String id);
 
-	List<VnfLiveInstance> findByVduIdAndVnfInstance(UUID id, VnfInstance vnfInstance);
+	List<VnfLiveInstance> findByIdAndVnfInstance(UUID id, VnfInstance vnfInstance);
 
-	VnfLiveInstance findByVnfInstantiatedBaseId(UUID id);
+	VnfLiveInstance findByTaskId(UUID id);
+
+	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_vl_id is not null")
+	List<VnfLiveInstance> findByVnfInstanceAndTaskVnfVlNotNull(VnfInstance vnfLiveInstance);
+
+	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_compute_id is not null")
+	List<VnfLiveInstance> findByVnfInstanceAndTaskVnfComputeNotNull(VnfInstance vnfLiveInstance);
+
+	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_storage_id is not null")
+	List<VnfLiveInstance> findByVnfInstanceAndTaskVnfStorageIsNotNull(VnfInstance vnfInstance);
+
+	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_compute_id is not null")
+	List<VnfLiveInstance> findByTaskVnfInstanceAndVnfCompute(VnfInstance vnfInstance, VnfCompute vnfCompute);
 }
