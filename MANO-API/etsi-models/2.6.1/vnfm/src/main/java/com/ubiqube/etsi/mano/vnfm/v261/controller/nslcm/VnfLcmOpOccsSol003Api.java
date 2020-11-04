@@ -34,11 +34,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualStorage;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccLinks;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -86,6 +91,20 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
 		final Blueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
+		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.VL)
+				.map(x -> mapper.map(x, AffectedVirtualLink.class))
+				.forEach(resourceChanged::addAffectedVirtualLinksItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.STORAGE)
+				.map(x -> mapper.map(x, AffectedVirtualStorage.class))
+				.forEach(resourceChanged::addAffectedVirtualStoragesItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.COMPUTE)
+				.map(x -> mapper.map(x, AffectedVnfc.class))
+				.forEach(resourceChanged::addAffectedVnfcsItem);
+		entity.setResourceChanges(resourceChanged);
 		entity.setLinks(makeLink(entity));
 		return new ResponseEntity<>(entity, HttpStatus.OK);
 	}
