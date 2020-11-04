@@ -32,7 +32,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -104,9 +103,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn
-	private Set<VnfInstantiatedBase> extManagedVirtualLinks;
+	// private Set<VnfInstantiatedBase> extManagedVirtualLinks;
 
 	private Audit audit = new Audit();
 
@@ -253,14 +250,6 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
-	}
-
-	public Set<VnfInstantiatedBase> getExtManagedVirtualLinks() {
-		return extManagedVirtualLinks;
-	}
-
-	public void setExtManagedVirtualLinks(final Set<VnfInstantiatedBase> extManagedVirtualLinks) {
-		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
 	@Override
