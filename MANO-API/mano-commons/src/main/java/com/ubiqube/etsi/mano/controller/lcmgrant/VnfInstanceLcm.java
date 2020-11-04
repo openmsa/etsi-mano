@@ -51,10 +51,10 @@ public interface VnfInstanceLcm {
 
 	Blueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout);
 
-	Blueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest);
+	Blueprint scaleToLevel(@Nonnull final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest);
 
-	Blueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest);
+	Blueprint scale(@Nonnull final UUID uuid, final VnfScaleRequest scaleVnfRequest);
 
-	Blueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest);
+	Blueprint operate(@Nonnull final UUID uuid, final VnfOperateRequest operateVnfRequest);
 
 }
