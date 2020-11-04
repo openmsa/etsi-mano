@@ -26,6 +26,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfLiveInstance implements BaseEntity, Auditable {
@@ -42,17 +45,15 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 	private String instantiationLevel;
 
 	@ManyToOne
-	private VnfInstantiatedBase vnfInstantiatedBase;
+	private Task task;
 
 	@ManyToOne
-	private VnfLcmOpOccs vnfLcmOpOccs;
+	private Blueprint blueprint;
 
 	/**
 	 * VIM resourceId.
 	 */
 	private String resourceId;
-
-	private UUID vduId;
 
 	@Embedded
 	private Audit audit;
@@ -61,14 +62,13 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 		// Nothing.
 	}
 
-	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfInstantiatedBase vnfInstantiatedBase, final VnfLcmOpOccs vnfLcmOpOccs, final String _resourceId, final UUID _vduId) {
+	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final Task _task, final Blueprint _blueprint, final String _resourceId) {
 		super();
 		this.vnfInstance = vnfInstance;
 		this.instantiationLevel = instantiationLevel;
-		this.vnfInstantiatedBase = vnfInstantiatedBase;
-		this.vnfLcmOpOccs = vnfLcmOpOccs;
+		blueprint = _blueprint;
+		task = _task;
 		resourceId = _resourceId;
-		vduId = _vduId;
 	}
 
 	@Override
@@ -96,20 +96,20 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 		this.instantiationLevel = instantiationLevel;
 	}
 
-	public VnfInstantiatedBase getVnfInstantiatedBase() {
-		return vnfInstantiatedBase;
+	public Task getTask() {
+		return task;
 	}
 
-	public void setVnfInstantiatedBase(final VnfInstantiatedBase vnfInstantiatedBase) {
-		this.vnfInstantiatedBase = vnfInstantiatedBase;
+	public void setTask(final Task task) {
+		this.task = task;
 	}
 
-	public VnfLcmOpOccs getVnfLcmOpOccs() {
-		return vnfLcmOpOccs;
+	public Blueprint getBlueprint() {
+		return blueprint;
 	}
 
-	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
-		this.vnfLcmOpOccs = vnfLcmOpOccs;
+	public void setBlueprint(final Blueprint blueprint) {
+		this.blueprint = blueprint;
 	}
 
 	public String getResourceId() {
@@ -118,14 +118,6 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 
 	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
-	}
-
-	public UUID getVduId() {
-		return vduId;
-	}
-
-	public void setVduId(final UUID vduId) {
-		this.vduId = vduId;
 	}
 
 	@Override
