@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 
 public interface VduNamingStrategy {

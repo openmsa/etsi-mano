@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfExtCpUow extends AbstractUnitOfWork {

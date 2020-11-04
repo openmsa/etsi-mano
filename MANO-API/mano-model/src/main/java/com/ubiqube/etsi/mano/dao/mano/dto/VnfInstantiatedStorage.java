@@ -14,25 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 
-@Entity
-@EntityListeners(AuditListener.class)
 public class VnfInstantiatedStorage extends VnfInstantiatedBase {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
 
 	@Override

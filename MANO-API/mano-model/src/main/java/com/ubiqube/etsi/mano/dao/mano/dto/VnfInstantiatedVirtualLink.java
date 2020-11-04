@@ -14,24 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 
-@Entity
-public class VnfInstantiatedMonitoring extends VnfInstantiatedBase {
-
+public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
+
+	private VduInstantiationLevel instantiationLevel;
 
 	@Override
 	public UUID getId() {
@@ -43,4 +38,13 @@ public class VnfInstantiatedMonitoring extends VnfInstantiatedBase {
 		this.id = id;
 	}
 
+	@Override
+	public VduInstantiationLevel getInstantiationLevel() {
+		return instantiationLevel;
+	}
+
+	@Override
+	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
+		this.instantiationLevel = instantiationLevel;
+	}
 }

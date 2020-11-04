@@ -21,7 +21,7 @@ import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class NoopUow extends AbstractUnitOfWork {

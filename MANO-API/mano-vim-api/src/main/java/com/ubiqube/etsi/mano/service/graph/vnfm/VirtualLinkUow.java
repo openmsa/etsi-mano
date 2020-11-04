@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VirtualLinkUow extends AbstractUnitOfWork {

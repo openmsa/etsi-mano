@@ -14,37 +14,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
-@Entity
-@EntityListeners(AuditListener.class)
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+
 public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ManyToOne
 	private VduInstantiationLevel instantiationLevel;
 
 	/*
@@ -80,17 +72,14 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	/**
 	 * VIM Resources.
 	 */
-	@ManyToOne(cascade = CascadeType.DETACH)
 	private VimConnectionInformation vimConnectionInformation;
 
 	private String resourceId = null;
 
 	private String vimLevelResourceType = null;
 
-	@Enumerated(EnumType.STRING)
 	private InstantiationStatusType status = InstantiationStatusType.NOT_STARTED;
 
-	@Enumerated(EnumType.STRING)
 	private ChangeType changeType;
 
 	private Date startTime;
@@ -99,14 +88,12 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 
 	private UUID manoResourceId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
 	private VnfLcmOpOccs vnfLcmOpOccs;
 
 	private String aliasName;
 
 	private String toscaName;
 
-	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
 
 	@Embedded

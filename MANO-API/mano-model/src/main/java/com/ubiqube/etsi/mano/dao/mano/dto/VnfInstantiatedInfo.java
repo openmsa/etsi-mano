@@ -14,21 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.MonitoringParams;
+import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 
-@Embeddable
 public class VnfInstantiatedInfo implements Serializable {
 
 	/** Serial. */
@@ -36,39 +34,24 @@ public class VnfInstantiatedInfo implements Serializable {
 
 	private String flavourId = null;
 
-	@Enumerated(EnumType.STRING)
 	private OperationalStateType vnfState = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<ScaleInfo> scaleStatus = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<ExtCpInfo> extCpInfo = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinkInfo = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<VirtualLinkInfo> extManagedVirtualLinkInfo = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<MonitoringParams> monitoringParameters = null;
 
 	private String localizationLanguage = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfInstantiatedCompute> vnfcResourceInfo = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<VirtualLinkInfo> virtualLinkResourceInfo = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<VnfInstantiatedStorage> virtualStorageResourceInfo = null;
 
 	private String instantiationLevelId = null;

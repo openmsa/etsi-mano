@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class StartUow extends AbstractUnitOfWork {

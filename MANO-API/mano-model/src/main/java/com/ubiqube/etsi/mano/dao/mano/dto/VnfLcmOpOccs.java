@@ -14,99 +14,61 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
+import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
-@Entity
-@Indexed
-@EntityListeners(AuditListener.class)
 public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private InstantiationStatusType operationState = null;
 
-	@Field
 	private Date stateEnteredTime = null;
 
-	@Field
 	private Date startTime = null;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private VnfInstance vnfInstance = null;
 
-	@Field
 	private String grantId = null;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private NsdChangeType operation = null;
 
-	@Field
 	private Boolean isAutomaticInvocation = null;
 
-	@Field
 	private Boolean isCancelPending = null;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private CancelModeTypeEnum cancelMode = null;
 
-	@Embedded
 	private FailureDetails error = new FailureDetails();
 
 	private String externalProcessId;
 
-	@Embedded
 	private VnfInstantiatedInfo vnfInstantiatedInfo = new VnfInstantiatedInfo();
 
-	@Embedded
 	private VnfLcmResourceChanges resourceChanges = new VnfLcmResourceChanges();
 
-	@Embedded
 	private OperateChanges operateChanges = new OperateChanges();
 
-	// private VnfInfoModifications changedInfo = null;
-
-	// @Transient
-	// private List<ExtVirtualLinkInfo> changedExtConnectivity = null;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "vnfLcmOpOccs")
 	private Set<VnfInstantiatedBase> resourceHandleEntity;
 
-	@Embedded
 	private VnfScaleInfo vnfScaleInfo = new VnfScaleInfo();
 
-	@Embedded
 	private Audit audit;
 
 	@Override

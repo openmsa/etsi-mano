@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,56 +22,28 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import com.ubiqube.etsi.mano.dao.mano.CpProtocolDataEntity;
 
-@Entity
-@EntityListeners(AuditListener.class)
 public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@ElementCollection
 	private List<String> storageResourceIds = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<CpProtocolDataEntity> vnfcCpInfo = null;
 
-	@ElementCollection
 	private final Map<String, String> metadata = new HashMap<>();
 
 	private String flavorId;
 
 	private String imageId;
 
-	/**
-	 * XXX Should be computed.
-	 */
-	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> affectedVnfcCpIds = null;
 
-	/**
-	 * XXX Should be computed.
-	 */
-	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> addedStorageResourceIds = null;
 
-	/**
-	 * XXX Should be computed. This is a vien of current
-	 * VnfStorage.changeType==Removed.
-	 */
-	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> removedStorageResourceIds = null;
 
 	@Override

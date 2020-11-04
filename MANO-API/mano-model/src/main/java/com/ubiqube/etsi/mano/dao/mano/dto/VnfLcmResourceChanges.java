@@ -14,45 +14,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-
-@Embeddable
 public class VnfLcmResourceChanges implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfInstantiatedCompute> affectedVnfcs = new HashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfInstantiatedVirtualLink> affectedVirtualLinks = new HashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfInstantiatedStorage> affectedVirtualStorages = new HashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfInstantiatedExtCp> affectedExtCp = new HashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfInstantiatedMonitoring> instanceMonitors;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfInstantiatedDnsZone> dnsZones;
 
 	public Set<VnfInstantiatedCompute> getAffectedVnfcs() {

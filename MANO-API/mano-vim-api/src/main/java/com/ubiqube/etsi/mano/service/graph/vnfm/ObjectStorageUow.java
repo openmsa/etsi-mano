@@ -19,8 +19,8 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class ObjectStorageUow extends AbstractUnitOfWork {

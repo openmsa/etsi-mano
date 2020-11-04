@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedBase;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class EndUow extends AbstractUnitOfWork {
