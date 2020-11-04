@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.stereotype.Service;
-
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
@@ -33,7 +33,6 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.node.DnsZone;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
-@Service
 public class DnsZoneContributor implements PlanContributor {
 
 	@Override
@@ -47,6 +46,8 @@ public class DnsZoneContributor implements PlanContributor {
 		dnsZoneTask.setToscaName("zone");
 		dnsZoneTask.setAlias(plan.getVnfInstance().getId() + ".mano.vm");
 		dnsZoneTask.setDomainName(plan.getVnfInstance().getId() + ".mano.vm");
+		dnsZoneTask.setChangeType(ChangeType.ADDED);
+		dnsZoneTask.setType(ResourceTypeEnum.DNSZONE);
 		return Collections.singletonList(dnsZoneTask);
 	}
 

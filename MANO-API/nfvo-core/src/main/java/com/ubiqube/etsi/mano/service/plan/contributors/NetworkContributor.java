@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -60,6 +61,7 @@ public class NetworkContributor extends AbstractPlanContributor {
 			if (num == 0) {
 				final NetworkTask networkTask = createTask(NetworkTask::new);
 				networkTask.setAlias(vnfVl.getToscaName());
+				networkTask.setChangeType(ChangeType.ADDED);
 				networkTask.setToscaName(vnfVl.getToscaName());
 				networkTask.setType(ResourceTypeEnum.VL);
 				networkTask.setVnfVl(vnfVl);
@@ -74,10 +76,10 @@ public class NetworkContributor extends AbstractPlanContributor {
 		final ArrayList<UnitOfWork> ret = new ArrayList<>();
 		tasks.stream()
 				.filter(x -> x instanceof NetworkTask)
+				.map(x -> (NetworkTask) x)
 				.forEach(x -> {
-					final NetworkTask networkTask = (NetworkTask) x;
-					final VnfVl vnfVl = vnfPackageService.findVirtualLnkById(networkTask.getVnfVl().getId()).orElseThrow();
-					ret.add(new VirtualLinkUow(networkTask, vnfVl));
+					final VnfVl vnfVl = vnfPackageService.findVirtualLnkById(x.getVnfVl().getId()).orElseThrow();
+					ret.add(new VirtualLinkUow(x, vnfVl));
 				});
 		return ret;
 	}

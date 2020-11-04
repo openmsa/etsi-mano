@@ -26,8 +26,8 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
-import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -73,15 +73,15 @@ public class ComputeContributor extends AbstractPlanContributor {
 		vnfPackage.getVnfCompute().forEach(x -> {
 			final NumberOfCompute numInst = scalingStrategy.getNumberOfCompute(plan, vnfPackage, scaling, x);
 			if (numInst.getCurrent() < numInst.getWanted()) {
-				ret.addAll(addInstance(x, plan, null, numInst));
+				ret.addAll(addInstance(x, plan, numInst.getScaleInfo(), numInst));
 			} else if (numInst.getCurrent() > numInst.getWanted()) {
-				ret.addAll(removeInstance(x, plan, null, numInst));
+				ret.addAll(removeInstance(x, plan, numInst.getScaleInfo(), numInst));
 			}
 		});
 		return ret;
 	}
 
-	private Collection<? extends Task> removeInstance(final VnfCompute vnfCompute, final Blueprint plan, final VduInstantiationLevel scaleLevel, final NumberOfCompute numInst) {
+	private Collection<? extends Task> removeInstance(final VnfCompute vnfCompute, final Blueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
 		final int toDelete = numInst.getCurrent() - numInst.getWanted();
 		final Deque<VnfLiveInstance> instantiated = vnfInstanceService.getLiveComputeInstanceOf(plan, vnfCompute);
 		final List<Task> ret = new ArrayList<>();
@@ -91,14 +91,15 @@ public class ComputeContributor extends AbstractPlanContributor {
 			computeTask.setVnfCompute(vnfCompute);
 			computeTask.setChangeType(ChangeType.REMOVED);
 			computeTask.setStatus(PlanStatusType.NOT_STARTED);
-			computeTask.setInstantiationLevel(scaleLevel);
+			computeTask.setType(ResourceTypeEnum.COMPUTE);
+			computeTask.setScaleInfo(scaleInfo);
 			computeTask.setToscaName(vnfCompute.getToscaName());
 			computeTask.setVimResourceId(inst.getResourceId());
 		}
 		return ret;
 	}
 
-	private List<Task> addInstance(final VnfCompute vnfCompute, final Blueprint plan, final VduInstantiationLevel scaleLevel, final NumberOfCompute numInst) {
+	private List<Task> addInstance(final VnfCompute vnfCompute, final Blueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
 		final int toCreate = numInst.getWanted() - numInst.getCurrent();
 		final List<Task> ret = new ArrayList<>();
 		for (int i = 0; i < toCreate; i++) {
@@ -106,7 +107,8 @@ public class ComputeContributor extends AbstractPlanContributor {
 			computeTask.setVnfCompute(vnfCompute);
 			computeTask.setChangeType(ChangeType.ADDED);
 			computeTask.setStatus(PlanStatusType.NOT_STARTED);
-			computeTask.setInstantiationLevel(scaleLevel);
+			computeTask.setType(ResourceTypeEnum.COMPUTE);
+			computeTask.setScaleInfo(scaleInfo);
 			computeTask.setAlias(vduNamingStrategy.nameVdu(plan, vnfCompute.getToscaName(), numInst.getCurrent() + i));
 			computeTask.setToscaName(vnfCompute.getToscaName());
 			ret.add(computeTask);

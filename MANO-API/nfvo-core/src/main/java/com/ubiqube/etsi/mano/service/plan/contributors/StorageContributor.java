@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -55,6 +56,7 @@ public class StorageContributor implements PlanContributor {
 			task.setType(ResourceTypeEnum.STORAGE);
 			task.setParentAlias(ct.getAlias());
 			task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));
+			task.setChangeType(ChangeType.ADDED);
 			ret.add(task);
 		}));
 		return ret;
