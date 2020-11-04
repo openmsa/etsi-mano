@@ -14,6 +14,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +189,11 @@ public final class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
 		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
-		vnfPackageController.vnfPackagesVnfPkgIdPackageContentPut(vnfPkgUuid);
+		try {
+			vnfPackageController.vnfPackagesVnfPkgIdPackageContentPut(vnfPkgUuid, file.getBytes());
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 		return ResponseEntity.accepted().build();
 	}
 
