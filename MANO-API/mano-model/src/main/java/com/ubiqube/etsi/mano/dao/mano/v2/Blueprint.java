@@ -41,10 +41,10 @@ import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 
@@ -76,7 +76,7 @@ public class Blueprint implements BaseEntity, Auditable {
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<ZoneGroupInformation> zoneGroups = null;
+	private Set<BlueZoneGroupInformation> zoneGroups = null;
 
 	private String grantsRequestId;
 
@@ -182,11 +182,11 @@ public class Blueprint implements BaseEntity, Auditable {
 		this.zones = zones;
 	}
 
-	public Set<ZoneGroupInformation> getZoneGroups() {
+	public Set<BlueZoneGroupInformation> getZoneGroups() {
 		return zoneGroups;
 	}
 
-	public void setZoneGroups(final Set<ZoneGroupInformation> zoneGroups) {
+	public void setZoneGroups(final Set<BlueZoneGroupInformation> zoneGroups) {
 		this.zoneGroups = zoneGroups;
 	}
 
@@ -228,6 +228,13 @@ public class Blueprint implements BaseEntity, Auditable {
 
 	public void setStateEnteredTime(final Date stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
+	}
+
+	public void addTask(final Task task) {
+		if (null == tasks) {
+			tasks = new HashSet<>();
+		}
+		tasks.add(task);
 	}
 
 }
