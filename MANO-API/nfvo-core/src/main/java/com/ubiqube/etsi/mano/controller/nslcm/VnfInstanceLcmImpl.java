@@ -172,7 +172,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		final Blueprint blueprint = vnfLcmService.createTerminateOpOcc(vnfInstance);
-		eventManager.sendAction(ActionType.VNF_TERMINATE, blueprint.getId(), new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.VNF_TERMINATE, blueprint.getId(), new HashMap<>());
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
 		return blueprint;
 	}
@@ -182,7 +182,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
 		ensureInstantiated(vnfInstance);
 		final Blueprint lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest);
-		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
 	}
 
@@ -191,7 +191,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
 		ensureInstantiated(vnfInstance);
 		final Blueprint lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, scaleVnfRequest);
-		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
 	}
 
@@ -200,7 +200,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
 		ensureInstantiated(vnfInstance);
 		final Blueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
-		eventManager.sendAction(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<String, Object>());
+		eventManager.sendAction(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
 	}
 
