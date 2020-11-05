@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.plan;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
@@ -57,17 +59,23 @@ public class Planner {
 
 	public void doPlan(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
 		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, Start.class);
-		start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections));
+		final Set<String> cache = new HashSet<>();
+		start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections, cache));
 	}
 
-	private void doPlanInner(final VnfPackage vnfPackage, final Blueprint plan, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections) {
+	private void doPlanInner(final VnfPackage vnfPackage, final Blueprint plan, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections, final Set<String> cache) {
 		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, clazz);
 		if (!start.isEmpty()) {
 			final ConnectivityEdge<Node> edge = start.get(0);
-			contribute(vnfPackage, plan, scaling, edge.getSource().getClass());
-			start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections));
+			if (!cache.contains(edge.getSource().getClass().getName())) {
+				contribute(vnfPackage, plan, scaling, edge.getSource().getClass());
+				cache.add(edge.getSource().getClass().getName());
+			}
+			start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections, cache));
 		} else {
-			contribute(vnfPackage, plan, scaling, clazz);
+			if (!cache.contains(clazz.getName())) {
+				contribute(vnfPackage, plan, scaling, clazz);
+			}
 		}
 	}
 
@@ -88,11 +96,19 @@ public class Planner {
 		return connections.stream().filter(x -> x.getSource().getClass() == class1).collect(Collectors.toList());
 	}
 
-	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> convertToExecution(final Blueprint plan) {
-		final List<UnitOfWork> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(plan.getTasks(), plan).stream()).collect(Collectors.toList());
+	public ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> convertToExecution(final Blueprint plan, final ChangeType changeType) {
+		final Set<Task> tasks = plan.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
+		final List<UnitOfWork> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, plan).stream()).collect(Collectors.toList());
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = GraphTools.createGraph();
 		list.forEach(g::addVertex);
-		final Map<String, UnitOfWork> cache = list.stream().collect(Collectors.toMap(UnitOfWork::getToscaName, x -> x));
+		final Map<String, UnitOfWork> cache = list.stream()
+				.collect(
+						Collectors.toMap(
+								UnitOfWork::getToscaName, x -> x,
+								(x, y) -> {
+									LOG.warn("Duplicate key: {}", x.getName());
+									return x;
+								}));
 		list.forEach(x -> x.connect(g, cache));
 		final DOTExporter<UnitOfWork, ConnectivityEdge<UnitOfWork>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		try (final FileOutputStream out = new FileOutputStream("out.dot")) {
