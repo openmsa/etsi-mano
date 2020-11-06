@@ -45,4 +45,9 @@ public interface VnfLiveInstanceJpa extends CrudRepository<VnfLiveInstance, UUID
 
 	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_compute_id is not null")
 	List<VnfLiveInstance> findByTaskVnfInstanceAndVnfCompute(VnfInstance vnfInstance, VnfCompute vnfCompute);
+
+	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND t.class = ?2")
+	List<VnfLiveInstance> findByVnfInstanceIdAndClass(VnfInstance vnfInstance, String string);
+
+	List<VnfLiveInstance> findByVnfInstanceId(UUID id);
 }

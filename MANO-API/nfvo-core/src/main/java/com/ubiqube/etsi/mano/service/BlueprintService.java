@@ -27,27 +27,24 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.BlueprintJpa;
-import com.ubiqube.etsi.mano.jpa.ComputeTaskJpa;
-import com.ubiqube.etsi.mano.jpa.NetworkTaskJpa;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 
 @Service
 public class BlueprintService {
 	private final BlueprintJpa blueprintJpa;
-	private final NetworkTaskJpa networkTaskJpa;
-	private final ComputeTaskJpa computeTaskJpa;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public BlueprintService(final BlueprintJpa _blueprintJpa, final NetworkTaskJpa _networkTaskJpa, final ComputeTaskJpa _computeTaskJpa) {
+	public BlueprintService(final BlueprintJpa _blueprintJpa, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		blueprintJpa = _blueprintJpa;
-		networkTaskJpa = _networkTaskJpa;
-		computeTaskJpa = _computeTaskJpa;
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
 	public int getNumberOfLiveVl(final VnfInstance vnfInstance, final VnfVl x) {
-		return networkTaskJpa.findByLiveInstanceOfVnfInstance(vnfInstance).size();
+		return vnfLiveInstanceJpa.countByVnfInstanceAndTaskToscaName(vnfInstance, x.getToscaName());
 	}
 
-	public int getNumberOfLiveInstance(final VnfInstance vnfInstance, final VnfCompute x) {
-		return computeTaskJpa.countByOperationStatusAndVnfInstance(OperationStatusType.SUCCESS, vnfInstance);
+	public int getNumberOfLiveInstance(final VnfInstance vnfInstance, final VnfCompute vnfCompute) {
+		return vnfLiveInstanceJpa.countByVnfInstanceAndTaskToscaName(vnfInstance, vnfCompute.getToscaName());
 	}
 
 	public Blueprint save(final Blueprint plan) {
