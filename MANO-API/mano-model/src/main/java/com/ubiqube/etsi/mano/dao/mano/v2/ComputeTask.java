@@ -21,7 +21,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
-import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 
 @Entity
@@ -33,8 +32,6 @@ public class ComputeTask extends Task {
 	@ManyToOne
 	private VnfCompute vnfCompute;
 
-	private VduInstantiationLevel instantiationLevel;
-
 	private String flavorId;
 
 	private String imageId;
@@ -45,14 +42,6 @@ public class ComputeTask extends Task {
 
 	public void setVnfCompute(final VnfCompute vnfCompute) {
 		this.vnfCompute = vnfCompute;
-	}
-
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
 	}
 
 	public String getFlavorId() {
