@@ -27,11 +27,13 @@ public interface ScalingStrategy {
 	class NumberOfCompute {
 		private int current;
 		private int wanted;
+		private ScaleInfo scaleInfo;
 
-		public NumberOfCompute(final int current, final int wanted) {
+		public NumberOfCompute(final int current, final int wanted, final ScaleInfo _scaleInfo) {
 			super();
 			this.current = current;
 			this.wanted = wanted;
+			scaleInfo = _scaleInfo;
 		}
 
 		public int getCurrent() {
@@ -48,6 +50,14 @@ public interface ScalingStrategy {
 
 		public void setWanted(final int wanted) {
 			this.wanted = wanted;
+		}
+
+		public ScaleInfo getScaleInfo() {
+			return scaleInfo;
+		}
+
+		public void setScaleInfo(final ScaleInfo scaleInfo) {
+			this.scaleInfo = scaleInfo;
 		}
 
 	}

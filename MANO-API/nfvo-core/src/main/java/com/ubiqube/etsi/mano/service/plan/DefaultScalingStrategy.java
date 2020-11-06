@@ -76,9 +76,9 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 			final int currentInst = planService.getNumberOfLiveInstance(blueprint.getVnfInstance(), x);
 			final int wantedNumInst = getNumberOfInstance(instantiationLevels, x, instantiationLevelId, myscaling);
 			LOG.info("{}: Actual currentInst={} wantedInst={}", x.getToscaName(), currentInst, wantedNumInst);
-			return new NumberOfCompute(currentInst, wantedNumInst);
+			return new NumberOfCompute(currentInst, wantedNumInst, myscaling);
 		}
-		return new NumberOfCompute(0, 0);
+		return new NumberOfCompute(0, 0, myscaling);
 	}
 
 	public static Set<VnfInstantiationLevels> resolvLevelName(final String instantiationLevel, final int level, final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
