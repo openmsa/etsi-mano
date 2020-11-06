@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -68,11 +69,12 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	}
 
 	@Override
-	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id) {
+	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final byte[] data) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureNotOnboarded(vnfPackage);
-		// TODO
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, null);
+		final Map<String, Object> map = new HashMap<>();
+		map.put("data", data);
+		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, map);
 	}
 
 	@Override
