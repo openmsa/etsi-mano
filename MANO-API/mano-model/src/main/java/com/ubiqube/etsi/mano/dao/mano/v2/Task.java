@@ -19,11 +19,13 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -76,6 +79,15 @@ public class Task implements BaseEntity, Auditable {
 
 	@ManyToOne
 	private Blueprint blueprint;
+
+	private UUID removedVnfLiveInstance;
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private ScaleInfo scaleInfo;
+
+	private String resourceProviderId;
+
+	private String vimConnectionId;
 
 	@Override
 	public UUID getId() {
@@ -190,6 +202,38 @@ public class Task implements BaseEntity, Auditable {
 
 	public void setBlueprint(final Blueprint _blueprint) {
 		blueprint = _blueprint;
+	}
+
+	public UUID getRemovedVnfLiveInstance() {
+		return removedVnfLiveInstance;
+	}
+
+	public void setRemovedVnfLiveInstance(final UUID removedVnfLiveInstance) {
+		this.removedVnfLiveInstance = removedVnfLiveInstance;
+	}
+
+	public ScaleInfo getScaleInfo() {
+		return scaleInfo;
+	}
+
+	public void setScaleInfo(final ScaleInfo scaleInfo) {
+		this.scaleInfo = scaleInfo;
+	}
+
+	public String getResourceProviderId() {
+		return resourceProviderId;
+	}
+
+	public void setResourceProviderId(final String resourceProviderId) {
+		this.resourceProviderId = resourceProviderId;
+	}
+
+	public String getVimConnectionId() {
+		return vimConnectionId;
+	}
+
+	public void setVimConnectionId(final String vimConnectionId) {
+		this.vimConnectionId = vimConnectionId;
 	}
 
 }
