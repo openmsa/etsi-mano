@@ -24,6 +24,7 @@ import javax.transaction.Transactional.TxType;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
@@ -74,12 +75,13 @@ public class ManoGrantService implements VimResourceService {
 			task.setVimReservationId(x.getReservationId());
 			task.setResourceGroupId(x.getResourceGroupId());
 			task.setZoneId(x.getZoneId());
+			task.setResourceProviderId(x.getResourceProviderId());
+			task.setVimConnectionId(x.getVimConnectionId());
 		});
 		plan.setVimConnections(grantsResp.getVimConnections());
-		plan.setZoneGroups(grantsResp.getZoneGroups());
+		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
 		plan.setZones(grantsResp.getZones());
 		plan.getParameters().setExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
-		// XXX We should not use a DAO entity.
 		plan.setGrantsRequestId(grantsResp.getId().toString());
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 	}
@@ -87,6 +89,7 @@ public class ManoGrantService implements VimResourceService {
 	private static void mapVimAsset(final Set<Task> tasks, final GrantVimAssetsEntity vimAssets) {
 		tasks.stream()
 				.filter(x -> x instanceof ComputeTask)
+				.filter(x -> x.getChangeType() != ChangeType.REMOVED)
 				.map(x -> (ComputeTask) x)
 				.forEach(x -> {
 					x.setFlavorId(findFlavor(vimAssets, x.getVnfCompute().getId()));
