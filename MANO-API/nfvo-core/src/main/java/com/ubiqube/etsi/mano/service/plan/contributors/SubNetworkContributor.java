@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.plan.contributors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -26,10 +27,14 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.BlueprintService;
 import com.ubiqube.etsi.mano.service.graph.vnfm.SubNetworkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -45,8 +50,11 @@ import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
 public class SubNetworkContributor extends AbstractPlanContributor {
 	private final BlueprintService blueprintService;
 
-	public SubNetworkContributor(final BlueprintService _blueprintService) {
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public SubNetworkContributor(final BlueprintService _blueprintService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		blueprintService = _blueprintService;
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
 	@Override
@@ -56,6 +64,9 @@ public class SubNetworkContributor extends AbstractPlanContributor {
 
 	@Override
 	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminatePlan(plan.getVnfInstance());
+		}
 		final ArrayList<Task> ret = new ArrayList<>();
 		final Set<VnfVl> vls = vnfPackage.getVnfVl();
 		// XXX Or, we can enumerate plan/tasks and create subnetworks.
@@ -80,6 +91,21 @@ public class SubNetworkContributor extends AbstractPlanContributor {
 			}
 		}
 		return ret;
+	}
+
+	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, SubNetworkTask.class.getSimpleName());
+		return instances.stream().map(x -> {
+			final SubNetworkTask snt = new SubNetworkTask();
+			snt.setAlias(x.getTask().getAlias());
+			snt.setChangeType(ChangeType.REMOVED);
+			snt.setToscaName(x.getTask().getToscaName());
+			snt.setType(ResourceTypeEnum.SUBNETWORK);
+			snt.setRemovedVnfLiveInstance(x.getId());
+			snt.setVimResourceId(x.getResourceId());
+			snt.setParentName(((SubNetworkTask) x.getTask()).getParentName());
+			return snt;
+		}).collect(Collectors.toList());
 	}
 
 	@Override

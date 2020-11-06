@@ -26,12 +26,15 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.service.VnfPackageService;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -39,7 +42,11 @@ import com.ubiqube.etsi.mano.service.vim.node.Storage;
 
 @Service
 public class StorageContributor implements PlanContributor {
-	VnfPackageService VnfPackageService;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public StorageContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+	}
 
 	@Override
 	public Class<? extends Node> getContributionType() {
@@ -48,6 +55,12 @@ public class StorageContributor implements PlanContributor {
 
 	@Override
 	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminatePlan(plan.getVnfInstance());
+		}
+
+		// XXX Maybe we can enumerate compute node in current plan and create / delete
+		// storage ?
 		final List<Task> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> x.getStorages().forEach(y -> {
 			final Task ct = findCompute(plan, x.getToscaName());
@@ -60,6 +73,21 @@ public class StorageContributor implements PlanContributor {
 			ret.add(task);
 		}));
 		return ret;
+	}
+
+	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
+		return instances.stream().map(x -> {
+			final StorageTask task = new StorageTask();
+			task.setToscaName(x.getTask().getToscaName());
+			task.setType(ResourceTypeEnum.STORAGE);
+			task.setParentAlias(x.getTask().getAlias());
+			task.setChangeType(ChangeType.REMOVED);
+			task.setRemovedVnfLiveInstance(x.getId());
+			task.setVimResourceId(x.getResourceId());
+			task.setVnfStorage(((StorageTask) x.getTask()).getVnfStorage());
+			return task;
+		}).collect(Collectors.toList());
 	}
 
 	private static Task findCompute(final Blueprint plan, final String toscaName) {

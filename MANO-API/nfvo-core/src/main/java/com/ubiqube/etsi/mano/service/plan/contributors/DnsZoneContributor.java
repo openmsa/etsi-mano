@@ -20,20 +20,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.vnfm.DnsZoneUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.node.DnsZone;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 public class DnsZoneContributor implements PlanContributor {
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public DnsZoneContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+	}
 
 	@Override
 	public Class<? extends Node> getContributionType() {
@@ -42,6 +53,9 @@ public class DnsZoneContributor implements PlanContributor {
 
 	@Override
 	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminatePlan(plan.getVnfInstance());
+		}
 		final DnsZoneTask dnsZoneTask = new DnsZoneTask();
 		dnsZoneTask.setToscaName("zone");
 		dnsZoneTask.setAlias(plan.getVnfInstance().getId() + ".mano.vm");
@@ -49,6 +63,19 @@ public class DnsZoneContributor implements PlanContributor {
 		dnsZoneTask.setChangeType(ChangeType.ADDED);
 		dnsZoneTask.setType(ResourceTypeEnum.DNSZONE);
 		return Collections.singletonList(dnsZoneTask);
+	}
+
+	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, NetworkTask.class.getSimpleName());
+		return instances.stream().map(x -> {
+			final DnsZoneTask dnsZoneTask = new DnsZoneTask();
+			dnsZoneTask.setToscaName("zone");
+			dnsZoneTask.setAlias(x.getTask().getAlias());
+			dnsZoneTask.setChangeType(ChangeType.ADDED);
+			dnsZoneTask.setType(ResourceTypeEnum.DNSZONE);
+			dnsZoneTask.setVimResourceId(x.getResourceId());
+			return dnsZoneTask;
+		}).collect(Collectors.toList());
 	}
 
 	@Override
