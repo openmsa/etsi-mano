@@ -57,7 +57,8 @@ public class PlanExecutor {
 	}
 
 	public ExecutionResults<UnitOfWork, String> execDelete(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		return createExecutor(g, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa));
+		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> rev = GraphTools.revert(g);
+		return createExecutor(rev, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa));
 	}
 
 	private static <U> ExecutionResults<U, String> createExecutor(final ListenableGraph<U, ConnectivityEdge<U>> g, final TaskProvider<U, String> uowTaskProvider) {
