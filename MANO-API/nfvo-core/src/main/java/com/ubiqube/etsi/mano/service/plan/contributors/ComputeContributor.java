@@ -22,6 +22,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.VduNamingStrategy;
@@ -54,12 +57,14 @@ public class ComputeContributor extends AbstractPlanContributor {
 	private final VduNamingStrategy vduNamingStrategy;
 	private final VnfInstanceService vnfInstanceService;
 	private final VnfPackageService vnfPackageService;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public ComputeContributor(final ScalingStrategy _scalingStrategy, final VduNamingStrategy _vduNamingStrategy, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
+	public ComputeContributor(final ScalingStrategy _scalingStrategy, final VduNamingStrategy _vduNamingStrategy, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		scalingStrategy = _scalingStrategy;
 		vduNamingStrategy = _vduNamingStrategy;
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
 	@Override
@@ -69,6 +74,9 @@ public class ComputeContributor extends AbstractPlanContributor {
 
 	@Override
 	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminatePlan(plan.getVnfInstance());
+		}
 		final List<Task> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
 			final NumberOfCompute numInst = scalingStrategy.getNumberOfCompute(plan, vnfPackage, scaling, x);
@@ -79,6 +87,21 @@ public class ComputeContributor extends AbstractPlanContributor {
 			}
 		});
 		return ret;
+	}
+
+	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ComputeTask.class.getSimpleName());
+		return instances.stream().map(x -> {
+			final ComputeTask computeTask = new ComputeTask();
+			computeTask.setChangeType(ChangeType.REMOVED);
+			computeTask.setStatus(PlanStatusType.NOT_STARTED);
+			computeTask.setType(ResourceTypeEnum.COMPUTE);
+			computeTask.setToscaName(x.getTask().getToscaName());
+			computeTask.setVimResourceId(x.getResourceId());
+			computeTask.setRemovedVnfLiveInstance(x.getId());
+			computeTask.setVnfCompute(((ComputeTask) x.getTask()).getVnfCompute());
+			return computeTask;
+		}).collect(Collectors.toList());
 	}
 
 	private Collection<? extends Task> removeInstance(final VnfCompute vnfCompute, final Blueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
@@ -95,6 +118,7 @@ public class ComputeContributor extends AbstractPlanContributor {
 			computeTask.setScaleInfo(scaleInfo);
 			computeTask.setToscaName(vnfCompute.getToscaName());
 			computeTask.setVimResourceId(inst.getResourceId());
+			computeTask.setRemovedVnfLiveInstance(inst.getId());
 		}
 		return ret;
 	}
