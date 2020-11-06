@@ -18,6 +18,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
@@ -26,11 +28,13 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
@@ -117,25 +121,45 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 					}
 				})
 				.register();
-		orikaMapperFactory.classMap(AffectedVirtualLink.class, VnfInstantiatedVirtualLink.class)
+		orikaMapperFactory.classMap(AffectedVirtualLink.class, Task.class)
 				.exclude("audit")
-				.field("virtualLinkDescId", "manoResourceId")
-				.field("networkResource.resourceId", "resourceId")
+				// .field("virtualLinkDescId", "vnfVl.id")
+				.field("networkResource.resourceId", "vimResourceId")
 				.field("networkResource.resourceProviderId", "resourceProviderId")
-				.field("networkResource.vimLevelResourceType", "vimLevelResourceType")
-				.field("networkResource.vimConnectionId", "vimConnectionInformation.id")
+				.field("networkResource.vimConnectionId", "vimConnectionId")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(AffectedVnfc.class, VnfInstantiatedCompute.class)
+		orikaMapperFactory.classMap(AffectedVnfc.class, ComputeTask.class)
 				.exclude("audit")
-				.field("computeResource.resourceId", "resourceId")
+				.field("computeResource.resourceId", "vimResourceId")
 				.field("computeResource.resourceProviderId", "resourceProviderId")
-				.field("computeResource.vimLevelResourceType", "vimLevelResourceType")
-				.field("computeResource.vimConnectionId", "vimConnectionInformation.id")
+				.field("computeResource.vimConnectionId", "vimConnectionId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfLcmOpOccs.class)
 				.field("vnfInstanceId", "vnfInstance.id")
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(VnfcResourceInfo.class, VnfLiveInstance.class)
+				// .field("vduId", "task.vnfCompute.id")
+				.field("computeResource.resourceId", "task.vimResourceId")
+				.field("reservationId", "task.vimReservationId")
+				.field("computeResource.resourceProviderId", "task.resourceProviderId")
+				.field("computeResource.vimConnectionId", "task.vimConnectionId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfVirtualLinkResourceInfo.class, VnfLiveInstance.class)
+				// .field("vnfVirtualLinkDescId", "task.vnfVl.id")
+				.field("networkResource.resourceId", "task.vimResourceId")
+				.field("reservationId", "task.vimReservationId")
+				.field("networkResource.resourceProviderId", "task.resourceProviderId")
+				.field("networkResource.vimConnectionId", "task.vimConnectionId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, Blueprint.class)
+				.field("vnfInstanceId", "vnfInstance.id")
+				.field("grantId", "grantsRequestId")
 				.byDefault()
 				.register();
 	}
