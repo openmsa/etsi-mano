@@ -30,6 +30,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedBase;
+
 @Entity
 public class VirtualLinkInfo extends VnfInstantiatedBase {
 	/** Serial. */

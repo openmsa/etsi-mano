@@ -135,7 +135,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public Blueprint instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
@@ -169,7 +169,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public Blueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		final Blueprint blueprint = vnfLcmService.createTerminateOpOcc(vnfInstance);
 		eventManager.sendAction(ActionType.VNF_TERMINATE, blueprint.getId(), new HashMap<>());

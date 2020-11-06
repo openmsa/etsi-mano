@@ -23,7 +23,7 @@ import org.jgrapht.ListenableGraph;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork.UowType;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
@@ -41,7 +41,7 @@ public interface UnitOfWork extends UnitOfWorkBase<UowType>, Serializable {
 		MONITORINGPARAM("MONITORINGPARAM"),
 		COMPUTE("COMPUTE"),
 		VSTORAGE("VSTORAGE"),
-		DNSZONE("DNSZONE"), DNSHOST("DNSHOST");
+		DNSZONE("DNSZONE"), DNSHOST("DNSHOST"), SUBNETWORK("SUBNETWORK");
 
 		private final String value;
 
@@ -67,7 +67,7 @@ public interface UnitOfWork extends UnitOfWorkBase<UowType>, Serializable {
 
 	String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, Map<String, String> context);
 
-	VnfInstantiatedBase getResourceHandleEntity();
+	Task getTaskEntity();
 
 	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, String resourceId, Map<String, String> context);
 

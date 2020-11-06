@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -24,9 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
-import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -61,7 +60,7 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 				if (null != res) {
 					context.put(uaow.getToscaName(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
-					uaow.getResourceHandleEntity().setResourceId(res);
+					uaow.getTaskEntity().setVimResourceId(res);
 				}
 				return res;
 			};
@@ -73,20 +72,20 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 	@Override
 	public final String execute() {
 		RuntimeException eRoot = null;
-		final VnfInstantiatedBase resource = this.uaow.getResourceHandleEntity();
-		resource.setStartTime(new Date());
-		resource.setStatus(InstantiationStatusType.STARTED);
+		final com.ubiqube.etsi.mano.dao.mano.v2.Task resource = this.uaow.getTaskEntity();
+		resource.setStartDate(LocalDateTime.now());
+		resource.setStatus(PlanStatusType.STARTED);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
-			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getResourceId()));
-			resource.setStatus(InstantiationStatusType.SUCCESS);
+			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getVimResourceId()));
+			resource.setStatus(PlanStatusType.SUCCESS);
 		} catch (final RuntimeException e) {
 			LOG.warn("Task {} failed.", uaow.getName(), e);
 			eRoot = e;
-			resource.setStatus(InstantiationStatusType.FAILED);
+			resource.setStatus(PlanStatusType.FAILED);
 		}
 		LOG.info("Task {} Finished.", uaow.getName());
-		resource.setEndTime(new Date());
+		resource.setEndDate(LocalDateTime.now());
 		if (eRoot != null) {
 			throw eRoot;
 		}

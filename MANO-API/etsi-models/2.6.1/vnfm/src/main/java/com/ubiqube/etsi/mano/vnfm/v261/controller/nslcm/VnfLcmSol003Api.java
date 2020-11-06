@@ -41,10 +41,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -154,19 +151,19 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		mapper.map(vnfPackage, vnfInstance);
 		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
 
-		final List<VnfInstantiatedCompute> liveCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstanceDb);
+		final List<VnfLiveInstance> liveCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstanceDb);
 		final List<VnfcResourceInfo> vnfcResourceInfo = mapper.mapAsList(liveCompute, VnfcResourceInfo.class);
 		instantiatedVnfInfo.setVnfcResourceInfo(vnfcResourceInfo);
 
-		final List<VnfInstantiatedExtCp> liveExtCp = vnfInstanceService.getLiveExtCpInstanceOf(vnfInstanceDb);
+		final List<VnfLiveInstance> liveExtCp = vnfInstanceService.getLiveExtCpInstanceOf(vnfInstanceDb);
 		final List<VnfExtCpInfo> extCpInfo = mapper.mapAsList(liveExtCp, VnfExtCpInfo.class);
 		instantiatedVnfInfo.setExtCpInfo(extCpInfo);
 
-		final List<VnfInstantiatedStorage> liveStorage = vnfInstanceService.getLiveStorageInstanceOf(vnfInstanceDb);
+		final List<VnfLiveInstance> liveStorage = vnfInstanceService.getLiveStorageInstanceOf(vnfInstanceDb);
 		final List<VirtualStorageResourceInfo> virtualStorageResourceInfo = mapper.mapAsList(liveStorage, VirtualStorageResourceInfo.class);
 		instantiatedVnfInfo.setVirtualStorageResourceInfo(virtualStorageResourceInfo);
 
-		final List<VnfInstantiatedVirtualLink> liveVirtualLink = vnfInstanceService.getLiveVirtualLinkInstanceOf(vnfInstanceDb);
+		final List<VnfLiveInstance> liveVirtualLink = vnfInstanceService.getLiveVirtualLinkInstanceOf(vnfInstanceDb);
 		final List<VnfVirtualLinkResourceInfo> virtualLinkResourceInfo = mapper.mapAsList(liveVirtualLink, VnfVirtualLinkResourceInfo.class);
 		instantiatedVnfInfo.setVirtualLinkResourceInfo(virtualLinkResourceInfo);
 

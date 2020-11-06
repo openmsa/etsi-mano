@@ -17,12 +17,12 @@
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
@@ -36,8 +36,6 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	private final VlProtocolData vlProtocolData;
 
 	private final String name;
-
-	private VnfInstantiatedVirtualLink vnfInstantiedVirtualLink;
 
 	private final NetworkTask networkTask;
 
@@ -56,10 +54,11 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
 		final String domainName = context.get("dns-name");
-		final String zoneId = vim.createDnsZone(vimConnectionInformation, name + "." + domainName);
-		vnfInstantiedVirtualLink.setZoneId(zoneId);
-		networkTask.setVimZoneId(zoneId);
-		return vim.createNetwork(vimConnectionInformation, vlProtocolData, vnfInstantiedVirtualLink.getAliasName(), domainName, null);
+		// final String zoneId = vim.createDnsZone(vimConnectionInformation, name + "."
+		// + domainName);
+		// vnfInstantiedVirtualLink.setZoneId(zoneId);
+		// networkTask.setVimZoneId(zoneId);
+		return vim.createNetwork(vimConnectionInformation, vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
 	@Override
@@ -80,13 +79,12 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		vim.deleteVirtualLink(vimConnectionInformation, resourceId);
-		vim.deleteDnsZone(vimConnectionInformation, vnfInstantiedVirtualLink.getZoneId());
 		return null;
 	}
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		g.addEdge(cache.get("zone"), this);
+		Optional.ofNullable(cache.get("zone")).ifPresent(x -> g.addEdge(x, this));
 	}
 
 }

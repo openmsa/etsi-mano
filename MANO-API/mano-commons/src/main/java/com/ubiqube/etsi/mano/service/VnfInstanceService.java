@@ -26,12 +26,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedDnsZone;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
@@ -49,25 +43,7 @@ public interface VnfInstanceService {
 
 	int getNumberOfLiveExtCp(final VnfInstance vnfInstance, final VnfExtCp extCp);
 
-	VnfInstantiatedCompute save(final VnfInstantiatedCompute vnfInstantiedCompute);
-
-	VnfInstantiatedVirtualLink save(final VnfInstantiatedVirtualLink vnfInstantiedVirtualLink);
-
-	VnfInstantiatedExtCp save(final VnfInstantiatedExtCp vnfInstantiedExtCp);
-
-	VnfInstantiatedStorage save(final VnfInstantiatedStorage vs);
-
 	int getNumberOfLiveStorage(final VnfInstance vnfInstance, final VnfStorage x);
-
-	List<VnfInstantiatedCompute> getLiveComputeInstanceOf(final VnfInstance vnfInstance);
-
-	List<VnfInstantiatedExtCp> getLiveExtCpInstanceOf(final VnfInstance vnfInstance);
-
-	List<VnfInstantiatedStorage> getLiveStorageInstanceOf(final VnfInstance vnfInstance);
-
-	List<VnfInstantiatedVirtualLink> getLiveVirtualLinkInstanceOf(final VnfInstance vnfInstance);
-
-	List<VnfInstantiatedDnsZone> getLiveDnsZoneInstanceOf(final VnfInstance vnfInstance);
 
 	VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId);
 
@@ -81,11 +57,17 @@ public interface VnfInstanceService {
 
 	VnfLiveInstance save(final VnfLiveInstance vli);
 
-	Optional<VnfLiveInstance> findLiveInstanceById(final UUID removedInstantiated);
+	Optional<VnfLiveInstance> findLiveInstanceById(final UUID vnfLiveInstance);
 
 	void deleteLiveInstanceById(final UUID id);
 
-	<T extends VnfInstantiatedBase> T save(final T y);
-
 	Deque<VnfLiveInstance> getLiveComputeInstanceOf(Blueprint plan, VnfCompute x);
+
+	List<VnfLiveInstance> getLiveVirtualLinkInstanceOf(VnfInstance vnfInstance);
+
+	List<VnfLiveInstance> getLiveComputeInstanceOf(VnfInstance vnfInstance);
+
+	List<VnfLiveInstance> getLiveExtCpInstanceOf(VnfInstance vnfInstance);
+
+	List<VnfLiveInstance> getLiveStorageInstanceOf(VnfInstance vnfInstance);
 }
