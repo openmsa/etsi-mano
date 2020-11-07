@@ -25,6 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
+import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -53,11 +54,7 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		final String domainName = context.get("dns-name");
-		// final String zoneId = vim.createDnsZone(vimConnectionInformation, name + "."
-		// + domainName);
-		// vnfInstantiedVirtualLink.setZoneId(zoneId);
-		// networkTask.setVimZoneId(zoneId);
+		final String domainName = context.get(NodeNaming.dnsZone());
 		return vim.createNetwork(vimConnectionInformation, vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
@@ -84,7 +81,7 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		Optional.ofNullable(cache.get("zone")).ifPresent(x -> g.addEdge(x, this));
+		Optional.ofNullable(cache.get(NodeNaming.dnsZone())).ifPresent(x -> g.addEdge(x, this));
 	}
 
 }
