@@ -63,7 +63,7 @@ public class StorageUow extends AbstractUnitOfWork {
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		g.addEdge(cache.get(storageTask.getParentAlias()), this);
+		// Nothing to do.
 	}
 
 }
