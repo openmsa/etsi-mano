@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.BlueprintService;
+import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.SubNetworkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -78,9 +79,9 @@ public class SubNetworkContributor extends AbstractPlanContributor {
 							x.getIpAllocationPools().stream()
 									.forEach(y -> {
 										final SubNetworkTask snt = new SubNetworkTask();
-										snt.setAlias("sub_" + vnfVl.getToscaName());
+										snt.setAlias(NodeNaming.subnetwork(vnfVl.getToscaName()));
 										snt.setChangeType(ChangeType.ADDED);
-										snt.setToscaName("sub_" + vnfVl.getToscaName());
+										snt.setToscaName(NodeNaming.subnetwork(vnfVl.getToscaName()));
 										snt.setType(ResourceTypeEnum.SUBNETWORK);
 										snt.setL3Data(x.getL3ProtocolData());
 										snt.setIpPool(y);

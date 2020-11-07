@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -65,7 +66,7 @@ public class StorageContributor implements PlanContributor {
 		vnfPackage.getVnfCompute().forEach(x -> x.getStorages().forEach(y -> {
 			final Task ct = findCompute(plan, x.getToscaName());
 			final StorageTask task = new StorageTask();
-			task.setToscaName(x.getToscaName() + "-" + y);
+			task.setToscaName(NodeNaming.storageName(x.getToscaName(), y));
 			task.setType(ResourceTypeEnum.STORAGE);
 			task.setParentAlias(ct.getAlias());
 			task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));

@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
+import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -83,7 +84,7 @@ public class ComputeUow extends AbstractUnitOfWork {
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
 		vnfLinkPort.stream()
 				.map(VnfLinkPort::getVirtualLink)
-				.map(x -> cache.get("sub_" + x))
+				.map(x -> cache.get(NodeNaming.subnetwork(x)))
 				.filter(Objects::nonNull)
 				.forEach(x -> g.addEdge(x, this));
 	}

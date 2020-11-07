@@ -34,6 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.DnsZoneUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.node.DnsZone;
@@ -57,7 +58,7 @@ public class DnsZoneContributor implements PlanContributor {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
 		final DnsZoneTask dnsZoneTask = new DnsZoneTask();
-		dnsZoneTask.setToscaName("zone");
+		dnsZoneTask.setToscaName(NodeNaming.dnsZone());
 		dnsZoneTask.setAlias(plan.getVnfInstance().getId() + ".mano.vm");
 		dnsZoneTask.setDomainName(plan.getVnfInstance().getId() + ".mano.vm");
 		dnsZoneTask.setChangeType(ChangeType.ADDED);
@@ -69,7 +70,7 @@ public class DnsZoneContributor implements PlanContributor {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, NetworkTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final DnsZoneTask dnsZoneTask = new DnsZoneTask();
-			dnsZoneTask.setToscaName("zone");
+			dnsZoneTask.setToscaName(NodeNaming.dnsZone());
 			dnsZoneTask.setAlias(x.getTask().getAlias());
 			dnsZoneTask.setChangeType(ChangeType.ADDED);
 			dnsZoneTask.setType(ResourceTypeEnum.DNSZONE);
