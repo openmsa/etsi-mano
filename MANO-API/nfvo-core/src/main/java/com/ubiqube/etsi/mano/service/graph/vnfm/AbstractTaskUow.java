@@ -59,6 +59,7 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 				final String res = uaow.exec(vimConnectionInformation, vim, context);
 				if (null != res) {
 					context.put(uaow.getToscaName(), res);
+					context.put(uaow.getTaskEntity().getAlias(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
 					uaow.getTaskEntity().setVimResourceId(res);
 				}
