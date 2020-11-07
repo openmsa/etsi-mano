@@ -63,7 +63,7 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceLcm.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceLcmImpl.class);
 
 	private final VnfInstancesRepository vnfInstancesRepository;
 
