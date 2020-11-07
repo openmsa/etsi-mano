@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,8 @@ public class ComputeUow extends AbstractUnitOfWork {
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
 		vnfLinkPort.stream()
 				.map(VnfLinkPort::getVirtualLink)
-				.map(cache::get)
+				.map(x -> cache.get("sub_" + x))
+				.filter(Objects::nonNull)
 				.forEach(x -> g.addEdge(x, this));
 	}
 
