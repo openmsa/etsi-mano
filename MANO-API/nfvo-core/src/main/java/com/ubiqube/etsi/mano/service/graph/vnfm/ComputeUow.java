@@ -45,13 +45,13 @@ public class ComputeUow extends AbstractUnitOfWork {
 
 	private final List<VnfLinkPort> vnfLinkPort;
 
-	private final ComputeTask computeTask;
+	private final ComputeTask task;
 
 	public ComputeUow(final ComputeTask _computeTask, final VnfCompute _vnfCompute, final Set<VnfLinkPort> _linkPort) {
 		super(_computeTask);
 		vnfCompute = _vnfCompute;
 		vnfLinkPort = _linkPort.stream().collect(Collectors.toList());
-		computeTask = _computeTask;
+		task = _computeTask;
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ComputeUow extends AbstractUnitOfWork {
 				.map(VnfLinkPort::getVirtualLink)
 				.map(context::get)
 				.collect(Collectors.toList());
-		return vim.createCompute(vimConnectionInformation, computeTask.getAlias(), computeTask.getFlavorId(), computeTask.getImageId(), networks, storages, vnfCompute.getBootData());
+		return vim.createCompute(vimConnectionInformation, task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getBootData());
 	}
 
 	@Override
@@ -87,6 +87,7 @@ public class ComputeUow extends AbstractUnitOfWork {
 				.map(x -> cache.get(NodeNaming.subnetwork(x)))
 				.filter(Objects::nonNull)
 				.forEach(x -> g.addEdge(x, this));
+		task.getVnfCompute().getStorages().stream().forEach(x -> g.addEdge(cache.get(NodeNaming.storageName(task.getVnfCompute().getToscaName(), x)), this));
 	}
 
 }
