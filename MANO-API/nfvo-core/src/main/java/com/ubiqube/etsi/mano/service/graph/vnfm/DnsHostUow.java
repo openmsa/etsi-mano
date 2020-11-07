@@ -21,7 +21,7 @@ import java.util.Map;
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.DnsHostTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -30,25 +30,28 @@ public class DnsHostUow extends AbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public DnsHostUow(final Task _task) {
+	private final DnsHostTask task;
+
+	public DnsHostUow(final DnsHostTask _task) {
 		super(_task);
+		task = _task;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		return null;
+		return vim.createDnsRecordSet(vimConnectionInformation, task.getZoneId(), task.getHostname(), task.getNetworkName());
 	}
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		// TODO Auto-generated method stub
+		vim.deleteDnsRecordSet(vimConnectionInformation, resourceId, task.getZoneId(), task.getIps());
 		return null;
 	}
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		// TODO Auto-generated method stub
-
+		final UnitOfWork parent = cache.get(task.getParentAlias());
+		g.addEdge(parent, this);
 	}
 
 	@Override

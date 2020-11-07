@@ -16,12 +16,11 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
-import java.util.UUID;
+import java.util.Set;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 
 @Entity
 public class DnsHostTask extends Task {
@@ -29,8 +28,57 @@ public class DnsHostTask extends Task {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+	private String hostname;
+
+	private String zoneId;
+
+	private String networkName;
+
+	private String parentAlias;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> ips;
+
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(final String hostname) {
+		this.hostname = hostname;
+	}
+
+	@Override
+	public String getZoneId() {
+		return zoneId;
+	}
+
+	@Override
+	public void setZoneId(final String zoneId) {
+		this.zoneId = zoneId;
+	}
+
+	public String getNetworkName() {
+		return networkName;
+	}
+
+	public void setNetworkName(final String networkName) {
+		this.networkName = networkName;
+	}
+
+	public String getParentAlias() {
+		return parentAlias;
+	}
+
+	public void setParentAlias(final String parentAlias) {
+		this.parentAlias = parentAlias;
+	}
+
+	public Set<String> getIps() {
+		return ips;
+	}
+
+	public void setIps(final Set<String> ips) {
+		this.ips = ips;
+	}
 
 }

@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -100,4 +101,8 @@ public interface Vim {
 	String createDnsZone(final VimConnectionInformation vimConnectionInformation, final String zoneName);
 
 	void deleteDnsZone(VimConnectionInformation vimConnectionInformation, String resourceId);
+
+	String createDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String zoneId, final String hostname, final String networkName);
+
+	void deleteDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String resourceId, final String zoneId, final Set<String> ips);
 }

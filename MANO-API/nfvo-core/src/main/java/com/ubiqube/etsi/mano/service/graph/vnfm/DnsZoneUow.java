@@ -21,7 +21,7 @@ import java.util.Map;
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -29,27 +29,27 @@ public class DnsZoneUow extends AbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+	private final DnsZoneTask task;
 
-	public DnsZoneUow(final Task _task) {
+	public DnsZoneUow(final DnsZoneTask _task) {
 		super(_task);
+		task = _task;
 	}
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
-		return null;
+		return vim.createDnsZone(vimConnectionInformation, task.getDomainName());
 	}
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		// TODO Auto-generated method stub
+		vim.deleteDnsZone(vimConnectionInformation, resourceId);
 		return null;
 	}
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		// TODO Auto-generated method stub
-
+		// Nothing to do.
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -40,12 +41,14 @@ import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
 import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.Action;
+import org.openstack4j.model.compute.Address;
 import org.openstack4j.model.compute.BlockDeviceMappingCreate;
 import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.builder.ServerCreateBuilder;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
+import org.openstack4j.model.dns.v2.Recordset;
 import org.openstack4j.model.dns.v2.Zone;
 import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.image.ContainerFormat;
@@ -448,6 +451,7 @@ public class OpenStackVim implements Vim {
 		checkResult(os.objectStorage().containers().delete(resourceId));
 	}
 
+	@Override
 	public void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		checkResult(os.networking().subnet().delete(resourceId));
@@ -530,5 +534,37 @@ public class OpenStackVim implements Vim {
 	public void deleteDnsZone(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		os.dns().zones().delete(resourceId);
+	}
+
+	@Override
+	public String createDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String zoneId, final String hostname, final String networkName) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final Server server = os.compute().servers().list().stream().filter(x -> x.getName().equals(hostname)).findFirst().orElseThrow();
+		final List<String> addresses = server.getAddresses().getAddresses(networkName).stream().map(Address::getAddr).collect(Collectors.toList());
+		final Optional<? extends Recordset> rropt = os.dns().recordsets().list().stream()
+				.filter(x -> hostname.equals(x.getName()))
+				.findFirst();
+		Recordset rr;
+		if (rropt.isPresent()) {
+			rr = rropt.get();
+			addresses.addAll(rr.getRecords());
+			rr = rr.toBuilder().records(addresses).build();
+		} else {
+			rr = os.dns().recordsets().create(zoneId, hostname, "A", addresses);
+		}
+		os.dns().recordsets().update(zoneId, rr);
+		return rr.getId();
+	}
+
+	@Override
+	public void deleteDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String resourceId, final String zoneId, final Set<String> ips) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final Recordset rr = os.dns().recordsets().get(zoneId, resourceId);
+		final List<String> recs = rr.getRecords().stream().filter(x -> !ips.contains(x)).collect(Collectors.toList());
+		if (recs.isEmpty()) {
+			os.dns().recordsets().delete(zoneId, resourceId);
+		} else {
+			os.dns().recordsets().update(zoneId, rr.toBuilder().records(recs).build());
+		}
 	}
 }
