@@ -14,26 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2;
+package com.ubiqube.etsi.mano.service.vim.node;
 
-import javax.persistence.Entity;
-
-import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-
-@Entity
-public class ExternalCpTask extends Task {
-
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private VnfExtCp vnfExtCp;
-
-	public VnfExtCp getVnfExtCp() {
-		return vnfExtCp;
-	}
-
-	public void setVnfExtCp(final VnfExtCp vnfExtCp) {
-		this.vnfExtCp = vnfExtCp;
-	}
-
+public class VnfExtCp implements Node {
+	// Nothing.
 }
