@@ -18,15 +18,11 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 @RestController
-@RequestMapping("/sol003/vnffm/v1")
 public class FaultAlarmsSol003Api implements FaultAlarmsSol003 {
 
 	private final ObjectMapper objectMapper;
