@@ -34,10 +34,10 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 
 	private final ExternalCpTask task;
 
-	public VnfExtCpUow(final ExternalCpTask _ExternalCpTask, final VnfExtCp _extCp) {
+	public VnfExtCpUow(final ExternalCpTask _ExternalCpTask) {
 		super(_ExternalCpTask);
 		task = _ExternalCpTask;
-		extCp = _extCp;
+		extCp = task.getVnfExtCp();
 	}
 
 	@Override
@@ -66,6 +66,6 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
 		final UnitOfWork internal = cache.get(extCp.getInternalVirtualLink());
-		final UnitOfWork external = cache.get(extCp.getExternalVirtualLink());
+		g.addEdge(internal, this);
 	}
 }
