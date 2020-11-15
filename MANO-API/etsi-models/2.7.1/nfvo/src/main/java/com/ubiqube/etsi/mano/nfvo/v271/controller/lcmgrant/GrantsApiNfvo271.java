@@ -51,7 +51,8 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T17:47:42.824+01:00")
 
 @Api(value = "grants", description = "the grants API")
-@RequestMapping(value = "/sol003/grant/v1/grants", headers = "Version=2.7.1")
+// "Version=1.3.0"
+@RequestMapping(value = "/sol003/grant/v1/grants", headers = { "Version=2.7.1" })
 public interface GrantsApiNfvo271 {
 
 	Logger log = LoggerFactory.getLogger(GrantsApiNfvo271.class);

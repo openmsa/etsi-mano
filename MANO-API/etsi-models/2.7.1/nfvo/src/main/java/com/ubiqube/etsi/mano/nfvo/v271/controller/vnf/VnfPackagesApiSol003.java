@@ -45,7 +45,8 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
 
 @Api(value = "vnf_packages", description = "the vnf_packages API")
-@RequestMapping(value = "/sol003/vnfpkgm/v1", headers = "Version=2.7.1")
+//"Version=2.0.0"
+@RequestMapping(value = "/sol003/vnfpkgm/v1", headers = { "Version=2.7.1" })
 public interface VnfPackagesApiSol003 {
 
 	Logger log = LoggerFactory.getLogger(VnfPackagesApiSol003.class);

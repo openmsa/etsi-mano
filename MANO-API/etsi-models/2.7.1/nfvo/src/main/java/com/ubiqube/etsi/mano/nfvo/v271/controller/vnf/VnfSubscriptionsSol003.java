@@ -48,7 +48,7 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
 
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = "/sol003/vnfpkgm/v1/subscriptions", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol003/vnfpkgm/v1/subscriptions", headers = { "Version=2.7.1", "Version=2.0.0" })
 public interface VnfSubscriptionsSol003 {
 
 	Logger log = LoggerFactory.getLogger(VnfSubscriptionsSol003.class);
