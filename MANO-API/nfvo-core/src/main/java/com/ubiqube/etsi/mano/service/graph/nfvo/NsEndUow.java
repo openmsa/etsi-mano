@@ -37,11 +37,6 @@ public class NsEndUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public NsUowType getType() {
-		return null;
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
 		return null;
 	}

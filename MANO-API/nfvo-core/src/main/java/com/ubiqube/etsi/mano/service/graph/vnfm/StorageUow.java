@@ -46,11 +46,6 @@ public class StorageUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.VSTORAGE;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "block_storage";
 	}

@@ -49,22 +49,29 @@ public class Planner {
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
 	private final List<PlanContributor> planContributors;
+
 	private final List<ConnectivityEdge<Node>> connections;
+
+	Map<Node, List<ConnectivityEdge<Node>>> sourceCache;
+
+	Map<Node, List<ConnectivityEdge<Node>>> targetCache;
 
 	public Planner(final List<PlanContributor> _planContributors) {
 		planContributors = _planContributors;
 		// XXX Some how it could depend on planContributors.
 		connections = new ConnectionStorage().getConnections();
+		sourceCache = connections.stream().collect(Collectors.groupingBy(ConnectivityEdge::getSource, Collectors.toList()));
+		targetCache = connections.stream().collect(Collectors.groupingBy(ConnectivityEdge::getTarget, Collectors.toList()));
 	}
 
 	public void doPlan(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
-		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, Start.class);
+		final List<ConnectivityEdge<Node>> start = sourceCache.get(Start.class);
 		final Set<String> cache = new HashSet<>();
 		start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections, cache));
 	}
 
 	private void doPlanInner(final VnfPackage vnfPackage, final Blueprint plan, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections, final Set<String> cache) {
-		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, clazz);
+		final List<ConnectivityEdge<Node>> start = sourceCache.get(clazz);
 		if (!start.isEmpty()) {
 			final ConnectivityEdge<Node> edge = start.get(0);
 			if (!cache.contains(edge.getSource().getClass().getName())) {
@@ -118,4 +125,5 @@ public class Planner {
 		}
 		return g;
 	}
+
 }

@@ -39,11 +39,6 @@ public class NoopUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return null;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "noop";
 	}

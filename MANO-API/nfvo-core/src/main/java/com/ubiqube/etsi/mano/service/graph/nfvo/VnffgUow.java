@@ -21,7 +21,6 @@ import java.util.Map;
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnffg;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork.NsUowType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnffgUow extends AbstractNsUnitOfWork {
@@ -36,11 +35,6 @@ public class VnffgUow extends AbstractNsUnitOfWork {
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public NsUowType getType() {
-		return NsUowType.VNFFG;
 	}
 
 	@Override

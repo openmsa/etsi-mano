@@ -55,11 +55,6 @@ public class DnsHostUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.DNSHOST;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "dns-host";
 	}

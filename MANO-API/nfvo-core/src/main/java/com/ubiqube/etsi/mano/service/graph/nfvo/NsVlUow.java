@@ -53,12 +53,6 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public NsUowType getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
 		// TODO Auto-generated method stub
 		return null;

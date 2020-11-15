@@ -65,11 +65,6 @@ public class ComputeUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.COMPUTE;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "compute";
 	}

@@ -44,11 +44,6 @@ public class ObjectStorageUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.VSTORAGE;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "object_storage";
 	}

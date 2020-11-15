@@ -39,11 +39,6 @@ public class StartUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return null;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "vnf_mano_start";
 	}

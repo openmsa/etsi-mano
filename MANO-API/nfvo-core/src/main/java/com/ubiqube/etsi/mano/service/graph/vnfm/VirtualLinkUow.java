@@ -59,11 +59,6 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.VL;
-	}
-
-	@Override
 	public String toString() {
 		return "VirtualLinkUow [name=" + name + "]";
 	}

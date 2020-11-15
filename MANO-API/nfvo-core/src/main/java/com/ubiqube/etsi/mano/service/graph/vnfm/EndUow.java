@@ -44,12 +44,6 @@ public class EndUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "vnf_mano_end";
 	}

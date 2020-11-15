@@ -53,11 +53,6 @@ public class DnsZoneUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.DNSZONE;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "dnz-";
 	}

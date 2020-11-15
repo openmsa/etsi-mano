@@ -48,11 +48,6 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.EXTCP;
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		vim.deleteRouter(vimConnectionInformation, resourceId);
 		return null;

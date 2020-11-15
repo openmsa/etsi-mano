@@ -67,11 +67,6 @@ public class NsUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public NsUowType getType() {
-		return NsUowType.NSD;
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
 		final NsLcmOpOccs lcm = nsInstanceControllerService.terminate(UUID.fromString(resourceHandle.getNsInstanceId()), null);
 		final NsLcmOpOccs result = waitLcmCompletion(lcm);

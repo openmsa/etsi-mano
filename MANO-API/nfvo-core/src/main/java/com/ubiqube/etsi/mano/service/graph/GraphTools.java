@@ -52,7 +52,7 @@ public class GraphTools {
 		return g;
 	}
 
-	public static <V, U extends UnitOfWorkBase<V>> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final List<U> right) {
+	public static <V, U extends UnitOfWorkBase> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final List<U> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;
@@ -63,7 +63,7 @@ public class GraphTools {
 		}));
 	}
 
-	public static <U extends UnitOfWorkBase<?>> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, @Nonnull final UUID _id, final BaseEntity vnfInstance, final String subName, final BinaryRepository repo) {
+	public static <U extends UnitOfWorkBase> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, @Nonnull final UUID _id, final BaseEntity vnfInstance, final String subName, final BinaryRepository repo) {
 		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exporter.exportGraph(g, out);
@@ -79,7 +79,7 @@ public class GraphTools {
 		return gNew;
 	}
 
-	public static <V, U extends UnitOfWorkBase<V>> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final U right) {
+	public static <V, U extends UnitOfWorkBase> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final U right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;

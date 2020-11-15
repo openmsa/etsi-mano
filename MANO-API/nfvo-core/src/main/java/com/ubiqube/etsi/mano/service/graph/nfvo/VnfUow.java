@@ -58,11 +58,6 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public NsUowType getType() {
-		return NsUowType.VNF;
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
 		final Blueprint lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance());
 		final Blueprint result = waitLcmCompletion(lcm, vnfm);

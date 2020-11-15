@@ -69,11 +69,6 @@ public class SubNetworkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.SUBNETWORK;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "subnet";
 	}

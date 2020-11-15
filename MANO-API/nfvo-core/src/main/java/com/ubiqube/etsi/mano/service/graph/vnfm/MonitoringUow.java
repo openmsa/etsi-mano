@@ -44,11 +44,6 @@ public class MonitoringUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.MONITORINGPARAM;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "monitoring";
 	}

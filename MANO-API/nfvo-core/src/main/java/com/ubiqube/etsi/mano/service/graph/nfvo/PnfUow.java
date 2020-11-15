@@ -38,11 +38,6 @@ public class PnfUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public NsUowType getType() {
-		return NsUowType.PNF;
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
 		// TODO Auto-generated method stub
 		return null;
