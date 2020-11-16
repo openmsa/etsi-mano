@@ -52,7 +52,8 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:22:49.340+01:00")
 
 @Api(value = "alarms", description = "the alarms API")
-@RequestMapping(value = "/sol003/vnffm/v1/alarms", headers = "Version=2.7.1")
+// "Version=1.3.0"
+@RequestMapping(value = "/sol003/vnffm/v1/alarms", headers = { "Version=2.7.1" })
 public interface AlarmsApi {
 
 	Logger log = LoggerFactory.getLogger(AlarmsApi.class);

@@ -62,6 +62,7 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
 
 @Api(value = "vnf_instances", description = "the vnf_instances API")
+// "Version=1.4.0"
 @RequestMapping(value = "/sol003/vnflcm/v1/vnf_instances", headers = "Version=2.7.1")
 public interface VnfInstancesApi {
 
