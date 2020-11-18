@@ -19,16 +19,26 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import org.hibernate.search.util.impl.Executors;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
@@ -36,6 +46,7 @@ import org.openstack4j.api.exceptions.ClientResponseException;
 import org.openstack4j.api.exceptions.StatusCode;
 import org.openstack4j.api.storage.BlockVolumeService;
 import org.openstack4j.model.common.ActionResponse;
+import org.openstack4j.model.common.Extension;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
@@ -54,6 +65,7 @@ import org.openstack4j.model.dns.v2.ZoneType;
 import org.openstack4j.model.image.ContainerFormat;
 import org.openstack4j.model.image.DiskFormat;
 import org.openstack4j.model.image.builder.ImageBuilder;
+import org.openstack4j.model.network.Agent;
 import org.openstack4j.model.network.AttachInterfaceType;
 import org.openstack4j.model.network.IPVersionType;
 import org.openstack4j.model.network.Network;
@@ -566,5 +578,94 @@ public class OpenStackVim implements Vim {
 		} else {
 			os.dns().recordsets().update(zoneId, rr.toBuilder().records(recs).build());
 		}
+	}
+
+	@Override
+	public List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation) {
+		final ThreadPoolExecutor tpe = Executors.newFixedThreadPool(5, "os-vim");
+		final CompletionService<List<VimCapability>> completionService = new ExecutorCompletionService<>(tpe);
+		final List<? extends Extension> exts;
+		completionService.submit(getExtensions(vimConnectionInformation));
+		completionService.submit(getAgents(vimConnectionInformation));
+		int received = 0;
+		final List<VimCapability> res = new ArrayList<>();
+		res.add(VimCapability.REQUIRE_SUBNET_ALLOCATION);
+		Exception ex = null;
+		while (received < 2) {
+			try {
+				final Future<List<VimCapability>> resultFuture = completionService.take();
+				res.addAll(resultFuture.get());
+				received++;
+			} catch (final InterruptedException e) {
+				ex = e;
+				LOG.info("", e);
+				Thread.currentThread().interrupt();
+				break;
+			} catch (final ExecutionException e) {
+				ex = e;
+				break;
+			}
+		}
+		tpe.shutdown();
+		try {
+			tpe.awaitTermination(5, TimeUnit.MINUTES);
+		} catch (final InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new VimException(e);
+		}
+		if (null != ex) {
+			throw new VimException(ex);
+		}
+		return res;
+	}
+
+	private Callable<List<VimCapability>> getExtensions(final VimConnectionInformation vimConnectionInformation) {
+		return () -> {
+			final OSClientV3 os = this.getClient(vimConnectionInformation);
+			final List<? extends Extension> list = os.networking().network().listExtensions();
+			return list.stream()
+					.map(this::convertExtenstionToCaps)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+		};
+	}
+
+	private Callable<List<VimCapability>> getAgents(final VimConnectionInformation vimConnectionInformation) {
+		return () -> {
+			final OSClientV3 os = this.getClient(vimConnectionInformation);
+			final List<? extends Agent> list = os.networking().agent().list();
+			return list.stream()
+					.map(this::convertAgentToCaps)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
+		};
+	}
+
+	private VimCapability convertExtenstionToCaps(final Extension ext) {
+		if ("dns-integration".equals(ext.getAlias())) {
+			return VimCapability.HAVE_DNS;
+		} else if ("availability_zone".equals(ext.getAlias())) {
+			return VimCapability.HAVE_AVAILABILITY_ZONE;
+		} else if ("bgp".equals(ext.getAlias())) {
+			return VimCapability.HAVE_BGP;
+		} else if ("net-mtu".equals(ext.getAlias())) {
+			return VimCapability.HAVE_NET_MTU;
+		} else if ("qos".equals(ext.getAlias())) {
+			return VimCapability.HAVE_QOS;
+		} else if ("router".equals(ext.getAlias())) {
+			return VimCapability.HAVE_ROUTER;
+		} else if ("vlan-transparent".equals(ext.getAlias())) {
+			return VimCapability.HAVE_VLAN_TRANSPARENT;
+		} else if ("extra_dhcp_opt".equals(ext.getAlias())) {
+			return VimCapability.HAVE_DHCP;
+		}
+		return null;
+	}
+
+	private VimCapability convertAgentToCaps(final Agent agent) {
+		if ("neutron-openvswitch-agent".equals(agent.getBinary())) {
+			return VimCapability.HAVE_VXNET;
+		}
+		return null;
 	}
 }

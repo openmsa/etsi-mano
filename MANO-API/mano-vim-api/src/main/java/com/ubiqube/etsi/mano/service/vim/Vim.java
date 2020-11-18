@@ -105,4 +105,6 @@ public interface Vim {
 	String createDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String zoneId, final String hostname, final String networkName);
 
 	void deleteDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String resourceId, final String zoneId, final Set<String> ips);
+
+	List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation);
 }
