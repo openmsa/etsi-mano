@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
@@ -43,17 +42,14 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 
 	private final Map<String, String> context;
 
-	private final transient VnfLiveInstanceJpa vnfLiveInstanceJpa;
-
 	private final transient Function<Parameters, String> function;
 
-	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork uaow, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> _context, final boolean _create) {
+	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork uaow, final Map<String, String> _context, final boolean _create) {
 		super();
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
 		this.uaow = uaow;
 		context = _context;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 		if (_create) {
 			function = x -> {
 				final String res = uaow.exec(vimConnectionInformation, vim, context);
