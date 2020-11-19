@@ -91,4 +91,9 @@ public class VimManager {
 	public Optional<VimConnectionInformation> findOptionalVimByVimId(final String vimId) {
 		return vimConnectionInformationJpa.findByVimId(vimId);
 	}
+
+	public Iterable<VimConnectionInformation> findAllVimconnections() {
+		return vimConnectionInformationJpa.findAll();
+
+	}
 }
