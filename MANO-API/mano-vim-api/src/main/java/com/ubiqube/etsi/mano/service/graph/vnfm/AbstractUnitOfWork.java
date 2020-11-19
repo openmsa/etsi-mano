@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 
 /**
  *
@@ -27,19 +27,18 @@ public abstract class AbstractUnitOfWork implements UnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final VnfInstantiatedBase resourceHandleEntity;
-
 	private final String name;
 
-	// Nothing.
-	public AbstractUnitOfWork(final VnfInstantiatedBase _resourceHandleEntity, final String _name) {
-		resourceHandleEntity = _resourceHandleEntity;
-		name = _name;
+	private final Task task;
+
+	public AbstractUnitOfWork(final Task _task) {
+		task = _task;
+		name = task.getToscaName();
 	}
 
 	@Override
-	public final VnfInstantiatedBase getResourceHandleEntity() {
-		return resourceHandleEntity;
+	public final Task getTaskEntity() {
+		return task;
 	}
 
 	@Override
