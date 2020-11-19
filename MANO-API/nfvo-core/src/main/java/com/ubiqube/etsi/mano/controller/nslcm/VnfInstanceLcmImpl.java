@@ -121,7 +121,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public void delete(@Nonnull final UUID vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
 		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId())) {
@@ -179,7 +179,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public Blueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final Blueprint lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest);
 		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
@@ -188,7 +188,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public Blueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final Blueprint lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, scaleVnfRequest);
 		eventManager.sendAction(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
@@ -197,7 +197,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public Blueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(uuid);
+		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final Blueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
 		eventManager.sendAction(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<>());
