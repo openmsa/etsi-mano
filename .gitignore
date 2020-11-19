@@ -11,3 +11,4 @@ target/
 com.ubiqube.etsi.mano.dao.mano*/
 *.csar
 vendor/
+.groovy/
