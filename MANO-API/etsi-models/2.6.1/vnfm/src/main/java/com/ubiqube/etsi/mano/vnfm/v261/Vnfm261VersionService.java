@@ -16,8 +16,11 @@ package com.ubiqube.etsi.mano.vnfm.v261;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.service.VersionService;
 
+@Service
 public class Vnfm261VersionService implements VersionService {
 
 	@Override
