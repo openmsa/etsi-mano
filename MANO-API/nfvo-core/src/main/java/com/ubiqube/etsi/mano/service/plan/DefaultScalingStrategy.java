@@ -49,7 +49,7 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 	}
 
 	@Override
-	public NumberOfCompute getNumberOfCompute(final Blueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute x) {
+	public NumberOfCompute getNumberOfCompute(final Blueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute vnfCompute) {
 		final String instantiationLevelId = blueprint.getParameters().getInstantiationLevelId();
 		Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
 		if (null != instantiationLevelId) {
@@ -57,25 +57,25 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 			instantiationLevels = resolvLevelName(instantiationLevelId, 0, vnfPakage.getVnfInstantiationLevels());
 			// filter using tis vnfc.
 			instantiationLevels = instantiationLevels.stream()
-					.filter(y -> match(x, y))
+					.filter(y -> match(vnfCompute, y))
 					.collect(Collectors.toSet());
 		}
 		// Filter myScaling.
 		ScaleInfo myscaling = new ScaleInfo("whatEver", 0);
 		if (null != scaling) {
 			final Set<ScaleInfo> myscalings = scaling.stream()
-					.filter(y -> match(x, y))
+					.filter(y -> match(vnfCompute, y))
 					.collect(Collectors.toSet());
 			if (myscalings.size() > 1) {
-				throw new GenericException("VDU " + x.getToscaName() + " have multiple scalings.");
+				throw new GenericException("VDU " + vnfCompute.getToscaName() + " have multiple scalings.");
 			} else if (!myscalings.isEmpty()) {
 				myscaling = myscalings.iterator().next();
 			}
 		}
 		if (!instantiationLevels.isEmpty()) {
-			final int currentInst = planService.getNumberOfLiveInstance(blueprint.getVnfInstance(), x);
-			final int wantedNumInst = getNumberOfInstance(instantiationLevels, x, instantiationLevelId, myscaling);
-			LOG.info("{}: Actual currentInst={} wantedInst={}", x.getToscaName(), currentInst, wantedNumInst);
+			final int currentInst = planService.getNumberOfLiveInstance(blueprint.getVnfInstance(), vnfCompute);
+			final int wantedNumInst = getNumberOfInstance(instantiationLevels, vnfCompute, instantiationLevelId, myscaling);
+			LOG.info("{}: Actual currentInst={} wantedInst={}", vnfCompute.getToscaName(), currentInst, wantedNumInst);
 			return new NumberOfCompute(currentInst, wantedNumInst, myscaling);
 		}
 		return new NumberOfCompute(0, 0, myscaling);
