@@ -18,14 +18,16 @@ package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractUnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 public class OsSubnetworkUow extends AbstractUnitOfWork {
 	/** Serial. */
@@ -38,8 +40,8 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 
 	private final String parentName;
 
-	public OsSubnetworkUow(final VnfInstantiatedBase resourceHandleEntity, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
-		super(resourceHandleEntity, _ipAllocationPool.getStartIpAddress().replaceAll("\\.", "_"));
+	public OsSubnetworkUow(final Task _task, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
+		super(_task);
 		vlProtocolData = y;
 		ipAllocationPool = _ipAllocationPool;
 		parentName = _parentName;
@@ -54,11 +56,6 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.VL;
-	}
-
-	@Override
 	protected String getPrefix() {
 		return "os_subnet";
 	}
@@ -69,6 +66,18 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 		LOG.debug("Deleting subnetwork: {}", resourceId);
 		// XXX Don't delete for the momment osVim.deleteSubnet(vimConnectionInformation,
 		// resourceId);
+		return null;
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Object getType() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
