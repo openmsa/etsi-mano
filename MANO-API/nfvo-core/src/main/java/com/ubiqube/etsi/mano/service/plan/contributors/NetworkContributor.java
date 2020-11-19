@@ -39,8 +39,10 @@ import com.ubiqube.etsi.mano.service.BlueprintService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
+import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.Start;
 
 @Service
 public class NetworkContributor extends AbstractPlanContributor {
@@ -107,6 +109,11 @@ public class NetworkContributor extends AbstractPlanContributor {
 					ret.add(new VirtualLinkUow(x, vnfVl));
 				});
 		return ret;
+	}
+
+	@Override
+	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+		dependencyBuilder.connectionFrom(Start.class);
 	}
 
 }

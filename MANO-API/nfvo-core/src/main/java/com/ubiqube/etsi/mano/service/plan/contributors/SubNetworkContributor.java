@@ -39,6 +39,8 @@ import com.ubiqube.etsi.mano.service.BlueprintService;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.SubNetworkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
+import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
 
@@ -119,6 +121,11 @@ public class SubNetworkContributor extends AbstractPlanContributor {
 					ret.add(new SubNetworkUow(x));
 				});
 		return ret;
+	}
+
+	@Override
+	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+		dependencyBuilder.replace(Network.class).connectFrom(Network.class);
 	}
 
 }

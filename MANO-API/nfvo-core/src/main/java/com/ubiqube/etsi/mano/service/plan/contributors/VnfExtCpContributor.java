@@ -33,6 +33,8 @@ import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
+import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
+import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.VnfExtCp;
 
@@ -81,6 +83,11 @@ public class VnfExtCpContributor extends AbstractPlanContributor {
 					ret.add(new VnfExtCpUow(extCpTask));
 				});
 		return ret;
+	}
+
+	@Override
+	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+		dependencyBuilder.connectionFrom(Network.class);
 	}
 
 }

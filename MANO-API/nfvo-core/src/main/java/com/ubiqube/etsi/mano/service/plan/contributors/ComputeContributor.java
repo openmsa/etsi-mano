@@ -45,11 +45,18 @@ import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.VduNamingStrategy;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy.NumberOfCompute;
 import com.ubiqube.etsi.mano.service.vim.node.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class ComputeContributor extends AbstractPlanContributor {
 
@@ -154,6 +161,11 @@ public class ComputeContributor extends AbstractPlanContributor {
 					ret.add(new ComputeUow(computeTask, vnfCompute.get(), linkPort));
 				});
 		return ret;
+	}
+
+	@Override
+	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+		dependencyBuilder.connectionFrom(Network.class);
 	}
 
 }

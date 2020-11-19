@@ -38,7 +38,10 @@ import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
+import com.ubiqube.etsi.mano.service.vim.node.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.Storage;
 
 @Service
@@ -109,6 +112,11 @@ public class StorageContributor implements PlanContributor {
 				.map(x -> (StorageTask) x)
 				.map(x -> new StorageUow(x, x.getVnfStorage()))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+		dependencyBuilder.connectionFrom(Start.class).connectTo(Compute.class);
 	}
 
 }

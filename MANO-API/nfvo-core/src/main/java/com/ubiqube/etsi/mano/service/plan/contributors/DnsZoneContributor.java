@@ -37,8 +37,11 @@ import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.DnsZoneUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.DnsZone;
+import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.Start;
 
 public class DnsZoneContributor implements PlanContributor {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
@@ -90,6 +93,11 @@ public class DnsZoneContributor implements PlanContributor {
 					ret.add(dns);
 				});
 		return ret;
+	}
+
+	@Override
+	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+		dependencyBuilder.connectionFrom(Start.class).connectTo(Network.class);
 	}
 
 }
