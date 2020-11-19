@@ -65,13 +65,13 @@ public class Planner {
 	}
 
 	public void doPlan(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
-		final List<ConnectivityEdge<Node>> start = sourceCache.get(Start.class);
+		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, Start.class);
 		final Set<String> cache = new HashSet<>();
 		start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections, cache));
 	}
 
 	private void doPlanInner(final VnfPackage vnfPackage, final Blueprint plan, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections, final Set<String> cache) {
-		final List<ConnectivityEdge<Node>> start = sourceCache.get(clazz);
+		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, clazz);
 		if (!start.isEmpty()) {
 			final ConnectivityEdge<Node> edge = start.get(0);
 			if (!cache.contains(edge.getSource().getClass().getName())) {
