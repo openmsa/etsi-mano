@@ -104,6 +104,7 @@ public class ComputeContributor extends AbstractPlanContributor {
 			computeTask.setStatus(PlanStatusType.NOT_STARTED);
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
 			computeTask.setToscaName(x.getTask().getToscaName());
+			computeTask.setAlias(x.getTask().getAlias());
 			computeTask.setVimResourceId(x.getResourceId());
 			computeTask.setRemovedVnfLiveInstance(x.getId());
 			computeTask.setVnfCompute(((ComputeTask) x.getTask()).getVnfCompute());
@@ -124,8 +125,10 @@ public class ComputeContributor extends AbstractPlanContributor {
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
 			computeTask.setScaleInfo(scaleInfo);
 			computeTask.setToscaName(vnfCompute.getToscaName());
+			computeTask.setAlias(inst.getTask().getAlias());
 			computeTask.setVimResourceId(inst.getResourceId());
 			computeTask.setRemovedVnfLiveInstance(inst.getId());
+			ret.add(computeTask);
 		}
 		return ret;
 	}
