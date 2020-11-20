@@ -34,8 +34,10 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.NoopTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
+import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectionStorage;
@@ -111,11 +113,22 @@ public class Planner {
 		final Map<String, UnitOfWork> cache = list.stream()
 				.collect(
 						Collectors.toMap(
-								UnitOfWork::getToscaName, x -> x,
+								x -> x.getTaskEntity().getAlias(), x -> x,
 								(x, y) -> {
 									LOG.warn("Duplicate key: {}", x.getName());
 									return x;
 								}));
+		// Add start
+		final UnitOfWork root = new StartUow(new NoopTask());
+		g.addVertex(root);
+		g.vertexSet().stream()
+				.filter(key -> g.incomingEdgesOf(key).isEmpty())
+				.forEach(key -> {
+					if (key != root) {
+						LOG.debug("Connecting root to {}", key.getName());
+						g.addEdge(root, key);
+					}
+				});
 		list.forEach(x -> x.connect(g, cache));
 		final DOTExporter<UnitOfWork, ConnectivityEdge<UnitOfWork>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		try (final FileOutputStream out = new FileOutputStream("out.dot")) {
