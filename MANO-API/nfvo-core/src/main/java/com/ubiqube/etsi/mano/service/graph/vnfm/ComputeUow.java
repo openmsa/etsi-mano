@@ -58,6 +58,7 @@ public class ComputeUow extends AbstractUnitOfWork {
 	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
 		final List<String> storages = vnfCompute.getStorages().stream().map(context::get).collect(Collectors.toList());
 		final List<String> networks = vnfLinkPort.stream()
+				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
 				.map(context::get)
 				.collect(Collectors.toList());
