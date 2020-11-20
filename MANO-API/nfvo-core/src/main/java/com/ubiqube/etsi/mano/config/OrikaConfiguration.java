@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -103,6 +104,12 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 		orikaMapperFactory.classMap(GrantsRequest.class, Blueprint.class)
 				.exclude("vnfInstance")
 				.field("vnfInstance.id", "vnfInstance.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfInstantiate.class, Blueprint.class)
+				.field("vimConnectionInfo", "vimConnections")
+				.field("instantiationLevelId", "parameters.instantiationLevelId")
+				.field("flavourId", "parameters.flavourId")
 				.byDefault()
 				.register();
 		/*
