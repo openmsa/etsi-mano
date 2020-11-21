@@ -24,6 +24,8 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -142,6 +144,12 @@ public class VnfManagement implements VnfPackageManagement {
 		} else {
 			bodyBuilder.contentType(MediaType.APPLICATION_OCTET_STREAM);
 		}
+	}
+
+	@Override
+	public ResponseEntity<Void> getPackageManifest(final UUID fromString, @Valid final String includeSignatures) {
+		// TODO: Look inside csar manifest for any metadata entry.
+		return ResponseEntity.ok().build();
 	}
 
 }

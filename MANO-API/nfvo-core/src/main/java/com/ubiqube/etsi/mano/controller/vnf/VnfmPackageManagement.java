@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -104,6 +106,12 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID _vnfPkgId, final String _range) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Void> getPackageManifest(final UUID fromString, @Valid final String includeSignatures) {
 		// TODO Auto-generated method stub
 		return null;
 	}

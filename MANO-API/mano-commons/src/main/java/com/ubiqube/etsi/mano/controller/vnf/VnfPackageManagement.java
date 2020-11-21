@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -46,5 +47,7 @@ public interface VnfPackageManagement {
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId, @Nullable String accept);
 
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID _vnfPkgId, @Nullable String range);
+
+	ResponseEntity<Void> getPackageManifest(UUID fromString, @Valid String includeSignatures);
 
 }
