@@ -23,11 +23,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
-import com.ubiqube.etsi.mano.common.v261.model.FrontApiTypesEnum;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
+import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
 
 public class Sol005Linkable implements Linkable {
 
