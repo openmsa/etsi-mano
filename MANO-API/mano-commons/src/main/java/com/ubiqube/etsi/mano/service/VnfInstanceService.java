@@ -61,7 +61,7 @@ public interface VnfInstanceService {
 
 	void deleteLiveInstanceById(final UUID id);
 
-	Deque<VnfLiveInstance> getLiveComputeInstanceOf(Blueprint plan, VnfCompute x);
+	Deque<VnfLiveInstance> getLiveComputeInstanceOf(Blueprint plan, VnfCompute vnfCompute);
 
 	List<VnfLiveInstance> getLiveVirtualLinkInstanceOf(VnfInstance vnfInstance);
 
