@@ -25,7 +25,10 @@ public class L3Data implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private boolean dhcpEnabled;
+	/*
+	 * XXX Side effect of embedded ? Must be an Object.
+	 */
+	private Boolean dhcpEnabled;
 
 	private String ipv6AddressMode;
 
@@ -37,11 +40,11 @@ public class L3Data implements Serializable {
 
 	private String gatewayIp;
 
-	public boolean isDhcpEnabled() {
+	public Boolean isDhcpEnabled() {
 		return dhcpEnabled;
 	}
 
-	public void setDhcpEnabled(final boolean dhcpEnabled) {
+	public void setDhcpEnabled(final Boolean dhcpEnabled) {
 		this.dhcpEnabled = dhcpEnabled;
 	}
 

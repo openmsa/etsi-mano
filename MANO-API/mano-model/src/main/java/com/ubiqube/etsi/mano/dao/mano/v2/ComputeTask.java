@@ -16,13 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
@@ -34,22 +29,12 @@ public class ComputeTask extends Task {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-
 	@ManyToOne
-	VnfCompute vnfCompute;
+	private VnfCompute vnfCompute;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+	private String flavorId;
 
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
+	private String imageId;
 
 	public VnfCompute getVnfCompute() {
 		return vnfCompute;
@@ -57,6 +42,22 @@ public class ComputeTask extends Task {
 
 	public void setVnfCompute(final VnfCompute vnfCompute) {
 		this.vnfCompute = vnfCompute;
+	}
+
+	public String getFlavorId() {
+		return flavorId;
+	}
+
+	public void setFlavorId(final String flavorId) {
+		this.flavorId = flavorId;
+	}
+
+	public String getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(final String imageId) {
+		this.imageId = imageId;
 	}
 
 }

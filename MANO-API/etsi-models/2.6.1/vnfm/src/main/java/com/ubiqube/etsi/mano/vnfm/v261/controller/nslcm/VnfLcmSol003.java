@@ -1,3 +1,20 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
 import java.util.Map;
@@ -27,7 +44,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
 import io.swagger.annotations.ApiParam;
 
-@RequestMapping("/sol003/vnflcm/v1/vnf_instances")
+@RequestMapping(value = "/sol003/vnflcm/v1/vnf_instances", headers = "Version=2.6.1")
 public interface VnfLcmSol003 {
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query VNF  The GET method queries information about multiple VNF instances. ", response = VnfInstance.class, responseContainer = "List", tags = {})
 	@io.swagger.annotations.ApiResponses(value = {

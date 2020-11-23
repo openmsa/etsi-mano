@@ -24,6 +24,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedBase;
+
 @Entity
 public class ExtLinkPortDataEntity extends VnfInstantiatedBase {
 	/** Serial. */

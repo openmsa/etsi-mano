@@ -1,33 +1,41 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.etsi.mano.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
+import java.util.Set;
+import java.util.UUID;
 
-import org.jgrapht.ListenableGraph;
-import org.jgrapht.graph.DefaultListenableGraph;
-import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.dexecutor.core.DefaultDexecutor;
-import com.github.dexecutor.core.DexecutorConfig;
-import com.github.dexecutor.core.ExecutionConfig;
-import com.github.dexecutor.core.task.Task;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.service.VimResourceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
-import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
-import com.ubiqube.etsi.mano.service.graph.vnfm.EndUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.NoopUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.utils.SpringUtils;
+import com.ubiqube.etsi.mano.service.plan.Planner;
 
 @Controller
 @RequestMapping("/exec")
@@ -37,111 +45,30 @@ public class TestController {
 
 	private final PlanExecutor planExecutor;
 
-	public TestController(final PlanExecutor _planExecutor) {
+	private final Planner planner;
+	private final VnfPackageService vnfPackageService;
+	private final VnfInstanceService vnfInstanceService;
+	private final VimResourceService vimResourceService;
+
+	public TestController(final PlanExecutor _planExecutor, final Planner _planner, final VnfPackageService _vnfPackageService, final VnfInstanceService _vnfInstanceService, final VimResourceService _vimResourceService) {
 		planExecutor = _planExecutor;
+		planner = _planner;
+		vnfPackageService = _vnfPackageService;
+		vnfInstanceService = _vnfInstanceService;
+		vimResourceService = _vimResourceService;
 	}
 
-	public void doExecutor() {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
-		g.addGraphListener(new EdgeListener<UnitOfWork>());
-		final UnitOfWork vduA = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduB = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduC = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduD = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduE = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduF = new NoopUow(new VnfInstantiatedCompute());
-		g.addVertex(vduA);
-		g.addVertex(vduB);
-		g.addVertex(vduC);
-		g.addVertex(vduD);
-		g.addVertex(vduE);
-		g.addVertex(vduF);
-
-		g.addEdge(vduA, vduB);
-		g.addEdge(vduA, vduC);
-
-		g.addEdge(vduB, vduD);
-		g.addEdge(vduC, vduD);
-
-		g.addEdge(vduE, vduC);
-		g.addEdge(vduE, vduF);
-		final UnitOfWork root = new StartUow(new VnfInstantiatedCompute());
-		g.addVertex(root);
-		g.vertexSet().stream()
-				.filter(key -> g.incomingEdgesOf(key).isEmpty())
-				.forEach(key -> {
-					if (key != root) {
-						g.addEdge(root, key);
-					}
-				});
-		// And end Node
-		final UnitOfWork end = new EndUow(new VnfInstantiatedCompute());
-		g.addVertex(end);
-		g.vertexSet().stream()
-				.filter(key -> g.outgoingEdgesOf(key).isEmpty())
-				.forEach(key -> {
-					if (key != end) {
-						g.addEdge(key, end);
-					}
-				});
-		planExecutor.execCreate(g, null, null, new HashMap<>());
-	}
-
-	public void doExecutor2() {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
-		LOG.warn("Running...................................................");
-		g.addGraphListener(new EdgeListener<UnitOfWork>());
-		final UnitOfWork vduA = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduB = new NoopUow(new VnfInstantiatedCompute());
-		g.addVertex(vduA);
-		g.addVertex(vduB);
-		g.addEdge(vduA, vduB);
-		planExecutor.execCreate(g, null, null, new HashMap<>());
-		LOG.warn("Running................................................... Done!");
-	}
-
-	/**
-	 * Yes executor is cleaned after shutdown.
-	 */
-	public void doExecutor3() {
-		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "executor");
-		final UnitOfWork vduA = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduB = new NoopUow(new VnfInstantiatedCompute());
-		final Map<String, String> map = new ConcurrentHashMap<>();
-		executorService.submit(() -> {
-			try {
-				final Task<UnitOfWork, String> provider = new UowTaskCreateProvider(null, null, null, map).provideTask(vduA);
-				provider.execute();
-			} catch (final Exception e) {
-				LOG.error("", e);
-			}
-		});
-		executorService.submit(() -> {
-			final Task<UnitOfWork, String> provider = new UowTaskCreateProvider(null, null, null, map).provideTask(vduB);
-			provider.execute();
-		});
-		executorService.shutdown();
-	}
-
-	@GetMapping
-	public void doExecutor4() {
-		final UnitOfWork vduA = new NoopUow(new VnfInstantiatedCompute());
-		final UnitOfWork vduB = new NoopUow(new VnfInstantiatedCompute());
-		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "executor");
-		final UowTaskCreateProvider uowTaskProvider = new UowTaskCreateProvider(null, null, null, new ConcurrentHashMap<>());
-		final DexecutorConfig<UnitOfWork, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
-		// What about config setExecutionListener.
-		final DefaultDexecutor<UnitOfWork, String> executor = new DefaultDexecutor<>(config);
-
-		executor.addIndependent(vduA);
-		executor.execute(ExecutionConfig.TERMINATING);
-	}
-
-	private static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
-		final Class<ConnectivityEdge<U>> t = (Class<ConnectivityEdge<U>>) (Object) ConnectivityEdge.class;
-		// Vertex everyThing
-		final ListenableGraph<U, ConnectivityEdge<U>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(t));
-		g.addGraphListener(new EdgeListener<U>());
-		return g;
+	@GetMapping(value = "/plan", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<Blueprint> testPlan() {
+		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString("d1814a92-7b09-420b-b212-6f9cd078456b"));
+		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString("e381cdbc-5993-4ae4-9525-89db3237b309"));
+		final Blueprint plan = new Blueprint();
+		plan.setId(UUID.randomUUID());
+		plan.setVnfInstance(vnfInstance);
+		final Set<ScaleInfo> scaling = null;
+		planner.doPlan(vnfPackage, plan, scaling);
+		planner.convertToExecution(plan, ChangeType.ADDED);
+		vimResourceService.allocate(plan);
+		return ResponseEntity.ok(null);
 	}
 }

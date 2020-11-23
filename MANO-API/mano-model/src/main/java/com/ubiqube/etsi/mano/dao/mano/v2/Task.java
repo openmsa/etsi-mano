@@ -19,17 +19,25 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -44,13 +52,42 @@ public class Task implements BaseEntity, Auditable {
 	@Embedded
 	private Audit audit;
 
-	LocalDateTime startDate;
+	private LocalDateTime startDate;
 
-	LocalDateTime endDate;
+	private LocalDateTime endDate;
 
-	PlanStatusType status;
+	@Enumerated(EnumType.STRING)
+	private PlanStatusType status;
 
-	String vimResourceId;
+	private String vimResourceId;
+
+	private String vimReservationId;
+
+	@Enumerated(EnumType.STRING)
+	private ChangeType changeType;
+
+	private String toscaName;
+
+	private String alias;
+
+	@Enumerated(EnumType.STRING)
+	private ResourceTypeEnum type;
+
+	private String zoneId;
+
+	private String resourceGroupId;
+
+	@ManyToOne
+	private Blueprint blueprint;
+
+	private UUID removedVnfLiveInstance;
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private ScaleInfo scaleInfo;
+
+	private String resourceProviderId;
+
+	private String vimConnectionId;
 
 	@Override
 	public UUID getId() {
@@ -103,8 +140,100 @@ public class Task implements BaseEntity, Auditable {
 		this.vimResourceId = vimResourceId;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public ChangeType getChangeType() {
+		return changeType;
+	}
+
+	public void setChangeType(final ChangeType _changeType) {
+		changeType = _changeType;
+	}
+
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(final String alias) {
+		this.alias = alias;
+	}
+
+	public String getVimReservationId() {
+		return vimReservationId;
+	}
+
+	public void setVimReservationId(final String vimReservationId) {
+		this.vimReservationId = vimReservationId;
+	}
+
+	public ResourceTypeEnum getType() {
+		return type;
+	}
+
+	public void setType(final ResourceTypeEnum type) {
+		this.type = type;
+	}
+
+	public String getZoneId() {
+		return zoneId;
+	}
+
+	public void setZoneId(final String zoneId) {
+		this.zoneId = zoneId;
+	}
+
+	public String getResourceGroupId() {
+		return resourceGroupId;
+	}
+
+	public void setResourceGroupId(final String resourceGroupId) {
+		this.resourceGroupId = resourceGroupId;
+	}
+
+	public Blueprint getBlueprint() {
+		return blueprint;
+	}
+
+	public void setBlueprint(final Blueprint _blueprint) {
+		blueprint = _blueprint;
+	}
+
+	public UUID getRemovedVnfLiveInstance() {
+		return removedVnfLiveInstance;
+	}
+
+	public void setRemovedVnfLiveInstance(final UUID removedVnfLiveInstance) {
+		this.removedVnfLiveInstance = removedVnfLiveInstance;
+	}
+
+	public ScaleInfo getScaleInfo() {
+		return scaleInfo;
+	}
+
+	public void setScaleInfo(final ScaleInfo scaleInfo) {
+		this.scaleInfo = scaleInfo;
+	}
+
+	public String getResourceProviderId() {
+		return resourceProviderId;
+	}
+
+	public void setResourceProviderId(final String resourceProviderId) {
+		this.resourceProviderId = resourceProviderId;
+	}
+
+	public String getVimConnectionId() {
+		return vimConnectionId;
+	}
+
+	public void setVimConnectionId(final String vimConnectionId) {
+		this.vimConnectionId = vimConnectionId;
 	}
 
 }

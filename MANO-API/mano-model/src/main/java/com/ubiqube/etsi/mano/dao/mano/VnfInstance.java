@@ -32,12 +32,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 
 @Entity
 @Indexed
@@ -97,14 +98,12 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private Map<String, String> extensions = null;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private transient Set<VnfLcmOpOccs> lcmOpOccs;
+	private transient Set<Blueprint> blueprints;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn
-	private Set<VnfInstantiatedBase> extManagedVirtualLinks;
+	// private Set<VnfInstantiatedBase> extManagedVirtualLinks;
 
 	private Audit audit = new Audit();
 
@@ -237,12 +236,12 @@ public class VnfInstance implements BaseEntity, Auditable {
 		this.extensions = extensions;
 	}
 
-	public Set<VnfLcmOpOccs> getLcmOpOccs() {
-		return lcmOpOccs;
+	public Set<Blueprint> getBlueprints() {
+		return blueprints;
 	}
 
-	public void setLcmOpOccs(final Set<VnfLcmOpOccs> lcmOpOccs) {
-		this.lcmOpOccs = lcmOpOccs;
+	public void setBlueprints(final Set<Blueprint> blueprints) {
+		this.blueprints = blueprints;
 	}
 
 	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
@@ -251,14 +250,6 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
-	}
-
-	public Set<VnfInstantiatedBase> getExtManagedVirtualLinks() {
-		return extManagedVirtualLinks;
-	}
-
-	public void setExtManagedVirtualLinks(final Set<VnfInstantiatedBase> extManagedVirtualLinks) {
-		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
 	@Override

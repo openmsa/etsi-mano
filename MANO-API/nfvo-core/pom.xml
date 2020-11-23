@@ -104,14 +104,6 @@
 			<artifactId>jgrapht-io</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.openstack4j.core</groupId>
-			<artifactId>openstack4j-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.openstack4j.core.connectors</groupId>
-			<artifactId>openstack4j-httpclient</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 		</dependency>
@@ -143,6 +135,16 @@
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>mano-vim-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>3.0.6</version>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 

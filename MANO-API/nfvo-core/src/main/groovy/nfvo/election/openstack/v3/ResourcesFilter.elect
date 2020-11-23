@@ -1,0 +1,10 @@
+package nfvo.election.openstack.v3;
+
+c
+class test {
+	def d
+}
+
+def quota = vim.getQuota(vimConnectionInformation);
+
+quota.getKeyPairsFree()

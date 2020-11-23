@@ -1,3 +1,20 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -20,11 +37,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualStorage;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccLinks;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -44,7 +66,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
-		final List<VnfLcmOpOccs> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
+		final List<Blueprint> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final List<VnfLcmOpOcc> results = resultsDb.stream()
 				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
 				.collect(Collectors.toList());
@@ -70,8 +92,22 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
-		final VnfLcmOpOccs resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
+		final Blueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
+		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.VL)
+				.map(x -> mapper.map(x, AffectedVirtualLink.class))
+				.forEach(resourceChanged::addAffectedVirtualLinksItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.STORAGE)
+				.map(x -> mapper.map(x, AffectedVirtualStorage.class))
+				.forEach(resourceChanged::addAffectedVirtualStoragesItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.COMPUTE)
+				.map(x -> mapper.map(x, AffectedVnfc.class))
+				.forEach(resourceChanged::addAffectedVnfcsItem);
+		entity.setResourceChanges(resourceChanged);
 		entity.setLinks(makeLink(entity));
 		return new ResponseEntity<>(entity, HttpStatus.OK);
 	}
