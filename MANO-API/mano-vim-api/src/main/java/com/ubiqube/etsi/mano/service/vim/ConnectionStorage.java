@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import com.ubiqube.etsi.mano.service.vim.node.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.DnsHost;
 import com.ubiqube.etsi.mano.service.vim.node.DnsZone;
-import com.ubiqube.etsi.mano.service.vim.node.ExtCp;
 import com.ubiqube.etsi.mano.service.vim.node.Monitoring;
 import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -32,6 +31,7 @@ import com.ubiqube.etsi.mano.service.vim.node.ObjectStorage;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.Storage;
 import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
+import com.ubiqube.etsi.mano.service.vim.node.VnfExtCp;
 
 public class ConnectionStorage {
 	private final List<ConnectivityEdge<Node>> connections;
@@ -50,7 +50,7 @@ public class ConnectionStorage {
 		// Monitoring.
 		connections.add(new ConnectivityEdge<>(new Compute(), new DnsHost()));
 		connections.add(new ConnectivityEdge<>(new Compute(), new Monitoring()));
-		connections.add(new ConnectivityEdge<>(new DnsHost(), new ExtCp()));
+		connections.add(new ConnectivityEdge<>(new DnsHost(), new VnfExtCp()));
 	}
 
 	public void insertAfter(final Class<? extends Node> origin, final Node toInsert) {

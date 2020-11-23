@@ -84,6 +84,7 @@ public class Planner {
 		} else {
 			if (!cache.contains(clazz.getName())) {
 				contribute(vnfPackage, plan, scaling, clazz);
+				cache.add(clazz.getName());
 			}
 		}
 	}

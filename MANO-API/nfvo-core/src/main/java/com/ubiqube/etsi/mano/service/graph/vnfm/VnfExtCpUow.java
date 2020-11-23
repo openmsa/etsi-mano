@@ -60,7 +60,9 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
-		final UnitOfWork internal = cache.get(extCp.getInternalVirtualLink());
-		g.addEdge(internal, this);
+		final UnitOfWork internal = cache.get("sub_" + extCp.getInternalVirtualLink());
+		if (null != internal) {
+			g.addEdge(internal, this);
+		}
 	}
 }
