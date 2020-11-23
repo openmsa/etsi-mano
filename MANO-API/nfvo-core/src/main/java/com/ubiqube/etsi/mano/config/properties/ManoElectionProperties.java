@@ -14,11 +14,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.config.properties;
 
-public interface Configuration {
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-	<T> T get(String key);
+@Configuration
+@ConfigurationProperties(prefix = "mano.election")
+public class ManoElectionProperties {
 
-	<T> ConfigurationBuilder<T> build(String _key);
+	private String scriptPath;
+
+	public String getScriptPath() {
+		return scriptPath;
+	}
+
+	public void setScriptPath(final String scriptPath) {
+		this.scriptPath = scriptPath;
+	}
+
 }

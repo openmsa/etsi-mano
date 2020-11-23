@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.ubiqube.etsi.mano.service.Configuration;
+import com.ubiqube.etsi.mano.config.properties.ManoMsaProperties;
 
 public class UbiRest {
 
@@ -38,16 +39,16 @@ public class UbiRest {
 
 	private final boolean isv2;
 
-	public UbiRest(final Configuration _conf) {
+	public UbiRest(final ManoMsaProperties props) {
 		restTemplate = new RestTemplate();
 
-		url = _conf.get("msa.rest-api.url");
-		final String user = _conf.get("msa.rest-api.user");
+		url = props.getUrl();
+		final String user = props.getUser();
 		String password = null;
 		if (null != user) {
-			password = _conf.build("msa.rest-api.password").withDefault("").build();
+			password = Optional.ofNullable(props.getPassword()).orElse("");
 		}
-		isv2 = "2.0".equals(_conf.get("msa.rest-api.version"));
+		isv2 = "2.0".equals(props.getVersion());
 		if (isv2) {
 			restTemplate.getInterceptors().add(new Msa2ClientHttpRequestInterceptor(url, user, password));
 		} else {

@@ -34,10 +34,10 @@ import java.util.stream.Stream;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.config.properties.ManoElectionProperties;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.service.Configuration;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import groovy.lang.Binding;
@@ -46,12 +46,12 @@ import jline.internal.Log;
 
 @Service
 public class GroovyElection implements VimElection {
-	private final Configuration configuration;
 	private final VimManager vimManager;
+	private final ManoElectionProperties properties;
 
-	public GroovyElection(final VimManager _vimManager, final Configuration _configuration) {
+	public GroovyElection(final VimManager _vimManager, final ManoElectionProperties _properties) {
 		vimManager = _vimManager;
-		configuration = _configuration;
+		properties = _properties;
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class GroovyElection implements VimElection {
 	}
 
 	List<Path> findScript() {
-		final String scriPtath = configuration.get("election.script.path");
+		final String scriPtath = properties.getScriptPath();
 		final Path path = Paths.get(scriPtath);
 		try (Stream<Path> stream = Files.walk(path)) {
 			return stream.filter(x -> x.toFile().isFile())

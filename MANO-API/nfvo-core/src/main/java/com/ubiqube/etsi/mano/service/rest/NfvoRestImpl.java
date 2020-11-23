@@ -15,25 +15,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.ubiqube.etsi.mano.service.rest;
+import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.service.Configuration;
+import com.ubiqube.etsi.mano.config.properties.ManoVnfmProperties;
 
 @Service
 public class NfvoRestImpl extends AbstractRest {
 	private final String url;
 	private final MultiValueMap<String, String> auth = new HttpHeaders();
 
-	public NfvoRestImpl(final Configuration _conf) {
-		url = _conf.build("nfvo.url").notNull().build();
-		final String user = _conf.get("nfvo.user");
+	public NfvoRestImpl(final ManoVnfmProperties props) {
+		url = props.getNfvoUrl();
+		final String user = props.getNfvoUser();
 		if (null != user) {
-			final String password = _conf.build("nfvo.password").withDefault("").build();
+			final String password = Optional.of(props.getNfvoPassword()).orElse("");
 			auth.add("Authorization", authBasic(user, password));
 		}
+		Assert.notNull(url, "nfvo.url is not declared in property file.");
 	}
 
 	@Override

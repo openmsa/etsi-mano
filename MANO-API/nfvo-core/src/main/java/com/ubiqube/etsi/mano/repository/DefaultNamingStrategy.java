@@ -22,15 +22,15 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.Configuration;
+import com.ubiqube.etsi.mano.config.properties.ManoRepositoryProperties;
 
 @Service
 public class DefaultNamingStrategy implements NamingStrategy {
 	private final ClassPathConverter cpConverter = new ClassPathConverter();
 	private final String root;
 
-	public DefaultNamingStrategy(final Configuration configuration) {
-		root = configuration.build("repository.phys.root").notNull().build();
+	public DefaultNamingStrategy(final ManoRepositoryProperties props) {
+		root = props.getPhysRoot();
 	}
 
 	protected static final String sanitize(final String filename) {

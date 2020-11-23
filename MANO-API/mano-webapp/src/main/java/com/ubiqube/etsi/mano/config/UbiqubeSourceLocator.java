@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,50 +22,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.springframework.stereotype.Service;
+import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertySource;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 
-@Service
-public class PropertiesConfiguration implements Configuration {
+public class UbiqubeSourceLocator implements PropertySourceLocator {
 
-	private final Properties props;
-
-	public PropertiesConfiguration() {
-		props = new Properties();
-		final String confDirName = System.getProperty("user.home") + "/.mano/";
-		final String filename = confDirName + "configuration.properties";
-
-		final File confDir = new File(confDirName);
-		if (!confDir.exists()) {
-			confDir.mkdir();
-		}
-
-		final File confFile = new File(filename);
-		if (!confFile.exists()) {
-			throw new GenericException("Unable to find " + confFile);
-		}
+	@Override
+	public PropertySource<?> locate(final Environment environment) {
+		final Properties props = new Properties();
+		final File confDirName = new File(System.getProperty("user.home"), ".mano");
+		final File filename = new File(confDirName, "configuration.properties");
 
 		try (InputStream inStream = new FileInputStream(filename);) {
 			props.load(inStream);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-
+		return new UbiqubePropertySource("ubiqube", props);
 	}
-
-	@Override
-	public <T> T get(final String _key) {
-		return (T) props.get(_key);
-	}
-
-	public void set(final String string, final Object root) {
-		props.put(string, root);
-	}
-
-	@Override
-	public <T> ConfigurationBuilder<T> build(final String _key) {
-		return new ConfigurationBuilder<>(this, _key);
-	}
-
 }

@@ -14,25 +14,45 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.ubiqube.etsi.mano.config.properties;
 
-package com.ubiqube.etsi.mano.config;
-
-import javax.sql.DataSource;
-
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Configuration
-public class JdbcConfig {
+@ConfigurationProperties(prefix = "mano.vnfm")
+public class ManoVnfmProperties {
+	private String nfvoUrl;
+	private String nfvoUser;
+	private String nfvoPassword;
 
-	@Bean
-	public static DataSource sqlDataSource(final com.ubiqube.etsi.mano.service.Configuration _conf) {
-		final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setUrl(_conf.build("jdbc.url").notNull().build());
-		dataSource.setUsername(_conf.get("jdbc.username"));
-		dataSource.setPassword(_conf.get("jdbc.password"));
-
-		return dataSource;
+	public String getNfvoUrl() {
+		return nfvoUrl;
 	}
+
+	public void setNfvoUrl(final String nfvoUrl) {
+		this.nfvoUrl = nfvoUrl;
+	}
+
+	public String getNfvoUser() {
+		return nfvoUser;
+	}
+
+	public void setNfvoUser(final String nfvoUser) {
+		this.nfvoUser = nfvoUser;
+	}
+
+	public String getNfvoPassword() {
+		return nfvoPassword;
+	}
+
+	public void setNfvoPassword(final String nfvoPassword) {
+		this.nfvoPassword = nfvoPassword;
+	}
+
 }
