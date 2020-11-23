@@ -143,7 +143,7 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	@Override
 	public Deque<VnfLiveInstance> getLiveComputeInstanceOf(final Blueprint plan, final VnfCompute vnfCompute) {
-		return vnfLiveInstanceJpa.findByTaskVnfInstanceAndVnfCompute(plan.getVnfInstance(), vnfCompute)
+		return vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(plan.getVnfInstance(), vnfCompute.getToscaName())
 				.stream()
 				.collect(Collectors.toCollection(ArrayDeque::new));
 	}
