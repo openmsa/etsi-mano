@@ -9,7 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<artifactId>etsi-model-261-pom</artifactId>
+	<artifactId>etsi-models</artifactId>
 	<description>Build document for ETSI-MANO model 2.6.1</description>
 	<packaging>pom</packaging>
 	<properties>
@@ -17,9 +17,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 	</properties>
 	<modules>
-		<module>etsi-model-common-261</module>
-		<module>model</module>
-		<module>nfvo-controllers</module>
-		<module>vnfm-controllers</module>
+		<module>2.6.1</module>
+		<module>2.7.1</module>
 	</modules>
 </project>
