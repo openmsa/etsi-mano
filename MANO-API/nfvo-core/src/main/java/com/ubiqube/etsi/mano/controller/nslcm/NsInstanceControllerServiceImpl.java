@@ -106,7 +106,7 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 		// XXX Should be mapped in lcm as an intermediate result.
 		mapper.map(req, nsInstanceDb);
 		nsInstanceService.save(nsInstanceDb);
-		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());
+		eventManager.sendActionNfvo(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
 	}
 
@@ -116,7 +116,7 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 		ensureInstantiated(nsInstanceDb);
 		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.TERMINATE);
 		// XXX we can use quartz cron job for terminationTime.
-		eventManager.sendAction(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
+		eventManager.sendActionNfvo(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
 	}
 }

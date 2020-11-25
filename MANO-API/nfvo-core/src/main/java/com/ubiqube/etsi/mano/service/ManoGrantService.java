@@ -44,6 +44,7 @@ import ma.glasnost.orika.MapperFacade;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+// Not VNFM
 @Service
 @Transactional(TxType.NEVER)
 public class ManoGrantService implements VimResourceService {

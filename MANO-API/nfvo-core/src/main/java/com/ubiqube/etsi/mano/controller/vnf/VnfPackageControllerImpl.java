@@ -74,7 +74,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> map = new HashMap<>();
 		map.put("data", data);
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, map);
+		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, map);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureNotOnboarded(vnfPackage);
 		// TODO
-		eventManager.sendAction(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, null);
+		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, null);
 
 	}
 }

@@ -19,6 +19,7 @@
 	</properties>
 	<modules>
 		<module>nfvo-core</module>
+		<module>vnfm-core</module>
 		<module>mano-vim-api</module>
 		<module>mano-vim-openstack</module>
 		<module>mano-pkg-api</module>

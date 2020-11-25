@@ -38,9 +38,9 @@ import com.ubiqube.etsi.mano.jpa.NsInstantiatedVlJpa;
 import com.ubiqube.etsi.mano.jpa.NsInstantiatedVnfJpa;
 import com.ubiqube.etsi.mano.jpa.NsSapJpa;
 import com.ubiqube.etsi.mano.jpa.NsVirtualLinkJpa;
+import com.ubiqube.etsi.mano.jpa.NsVnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.NsdInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 
 @Service
 public class NsInstanceService {
@@ -50,7 +50,7 @@ public class NsInstanceService {
 
 	private final NsdPackageJpa nsdPackageJpa;
 
-	private final VnfPackageJpa vnfPackageJpa;
+	private final NsVnfPackageJpa vnfPackageJpa;
 
 	private final NsdInstanceJpa nsdInstanceJpa;
 
@@ -59,7 +59,7 @@ public class NsInstanceService {
 	private final NsInstantiatedVlJpa nsInstantiatedVlJpa;
 	private final NsInstantiatedVnfJpa nsInstantiatedVnfJpa;
 
-	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final VnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa,
+	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa,
 			final NsInstantiatedNsJpa _nsInstantiatedNsJpa, final NsInstantiatedSapJpa _nsInstantiatedSapJpa, final NsInstantiatedVlJpa _nsInstantiatedVlJpa, final NsInstantiatedVnfJpa _nsInstantiatedVnfJpa) {
 		nsSapJpa = _nsSapJpa;
 		nsVirtualLinkJpa = _nsVirtualLinkJpa;

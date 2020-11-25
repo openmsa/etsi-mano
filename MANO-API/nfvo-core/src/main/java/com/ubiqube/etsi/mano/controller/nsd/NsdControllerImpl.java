@@ -88,7 +88,7 @@ public class NsdControllerImpl implements NsdController {
 		final NsdPackage nsdInfo = nsdRepository.get(id);
 		ensureNotOnboarded(nsdInfo);
 		nsdRepository.storeBinary(id, "nsd", is);
-		eventManager.sendAction(ActionType.NSD_PKG_ONBOARD_FROM_BYTES, nsdInfo.getId(), new HashMap<>());
+		eventManager.sendActionNfvo(ActionType.NSD_PKG_ONBOARD_FROM_BYTES, nsdInfo.getId(), new HashMap<>());
 	}
 
 	@Override

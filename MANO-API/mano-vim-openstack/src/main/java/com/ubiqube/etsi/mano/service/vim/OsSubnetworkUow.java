@@ -75,10 +75,4 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 
 	}
 
-	@Override
-	public Object getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

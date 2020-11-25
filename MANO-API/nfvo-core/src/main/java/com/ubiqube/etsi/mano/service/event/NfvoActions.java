@@ -47,7 +47,7 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.NsExecutionPlanner;
-import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
+import com.ubiqube.etsi.mano.service.graph.NsPlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -65,11 +65,11 @@ public class NfvoActions {
 	private final EventManager eventManager;
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
-	private final PlanExecutor executor;
+	private final NsPlanExecutor executor;
 
 	private final NsExecutionPlanner executionPlanner;
 
-	public NfvoActions(final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsExecutionPlanner _executionPlanner, final PlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
+	public NfvoActions(final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsExecutionPlanner _executionPlanner, final NsPlanExecutor _executor, final NsLcmOpOccsService _nsLcmOpOccsService, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
 		super();
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
