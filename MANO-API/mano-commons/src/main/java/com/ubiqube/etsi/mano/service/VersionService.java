@@ -16,7 +16,19 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.util.MultiValueMap;
+
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 
 public interface VersionService {
 
@@ -27,4 +39,24 @@ public interface VersionService {
 	Object createNotificationVnfPackageOnboardingNotification(UUID subscriptionId, UUID vnfPkgId);
 
 	Object createVnfPackageChangeNotification(UUID subscriptionId, UUID vnfPkgId);
+
+	Blueprint vnfInstanceGet(UUID id);
+
+	List<VnfInstance> vnfInstanceGet(MultiValueMap<String, String> params);
+
+	VnfInstance vnfInstancePost(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
+
+	Blueprint vnfInstanceOperate(UUID uuid, VnfOperateRequest operateVnfRequest);
+
+	Blueprint vnfInstanceScale(UUID uuid, VnfScaleRequest scaleVnfRequest);
+
+	Blueprint vnfInstanceScaleToLevel(UUID uuid, VnfScaleToLevelRequest scaleVnfToLevelRequest);
+
+	Blueprint vnfInstanceTerminate(UUID vnfInstanceId, CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
+
+	Blueprint vnfInstanceInstantiate(UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest);
+
+	void vnfInstanceDelete(UUID vnfInstanceId);
+
+	List<VnfInstance> vnfInstanceGet(Map<String, String> queryParameters);
 }

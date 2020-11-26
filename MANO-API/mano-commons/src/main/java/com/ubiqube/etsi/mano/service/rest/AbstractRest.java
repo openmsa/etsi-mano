@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Base64;
 import java.util.Collections;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -68,6 +69,13 @@ public abstract class AbstractRest implements NfvoRest {
 	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
 		final HttpEntity<Object> request = new HttpEntity<>(body, getHttpHeaders());
 		return _call(uri, method, request, clazz);
+	}
+
+	@Override
+	public final <T> T get(final URI uri, final ParameterizedTypeReference<T> params) {
+		final HttpEntity<Object> request = new HttpEntity<>(getHttpHeaders());
+		final ResponseEntity<T> resp = restTemplate.exchange(uri, HttpMethod.GET, request, params);
+		return resp.getBody();
 	}
 
 	@Override

@@ -25,11 +25,12 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-@ConfigurationProperties(prefix = "mano.vnfm.nfvo")
-public class NfvoConnectionProperties {
+@ConfigurationProperties(prefix = "mano.nfvo.vnfm")
+public class VnfmConnectionProperties {
 	private String url;
 	private String username;
 	private String password;
+	private String version;
 
 	public String getUrl() {
 		return url;
@@ -53,6 +54,14 @@ public class NfvoConnectionProperties {
 
 	public void setPassword(final String password) {
 		this.password = password;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(final String version) {
+		this.version = version;
 	}
 
 }

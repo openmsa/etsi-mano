@@ -17,10 +17,20 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.service.VersionService;
 
 @Service
@@ -44,6 +54,66 @@ public class Vnfm261VersionService implements VersionService {
 	@Override
 	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
 		throw new IllegalArgumentException("No Package notification on VNFM.");
+	}
+
+	@Override
+	public Blueprint vnfInstanceGet(final UUID id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VnfInstance> vnfInstanceGet(final MultiValueMap<String, String> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public VnfInstance vnfInstancePost(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Blueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Blueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Blueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Blueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Blueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void vnfInstanceDelete(final UUID vnfInstanceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<VnfInstance> vnfInstanceGet(final Map<String, String> queryParameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -105,6 +105,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.exclude("vnfInstance")
 				.field("vnfInstance.id", "vnfInstance.id")
 				.field("vnfLcmOpOccs.id", "id")
+				.field("vnfdId", "vnfInstance.vnfdId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, Blueprint.class)

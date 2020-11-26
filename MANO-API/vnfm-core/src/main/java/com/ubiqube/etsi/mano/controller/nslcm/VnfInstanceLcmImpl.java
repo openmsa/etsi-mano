@@ -58,7 +58,6 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import ma.glasnost.orika.MapperFacade;
 
-//@Profile({ "!NFVO" })
 @Service
 public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 

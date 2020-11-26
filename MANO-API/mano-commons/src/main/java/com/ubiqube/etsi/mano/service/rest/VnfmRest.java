@@ -24,7 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public interface NfvoRest {
+public interface VnfmRest {
 
 	<T> T get(URI uri, Class<T> clazz);
 

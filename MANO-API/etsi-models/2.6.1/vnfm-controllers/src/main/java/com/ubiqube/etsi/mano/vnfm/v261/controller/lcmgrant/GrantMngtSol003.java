@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -51,7 +52,7 @@ public class GrantMngtSol003 implements GrantManagement {
 	private final NfvoRest nfvoRest;
 	private final MapperFacade mapper;
 
-	public GrantMngtSol003(final NfvoRest _nfvoRest, final MapperFacade _mapper) {
+	public GrantMngtSol003(@Qualifier("nfvoRestImpl") final NfvoRest _nfvoRest, final MapperFacade _mapper) {
 		nfvoRest = _nfvoRest;
 		mapper = _mapper;
 	}

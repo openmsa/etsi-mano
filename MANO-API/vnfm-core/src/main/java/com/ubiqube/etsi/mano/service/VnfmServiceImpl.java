@@ -16,6 +16,9 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-public interface VnfmService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class VnfmServiceImpl implements VnfmService {
 	// Nothing.
 }
