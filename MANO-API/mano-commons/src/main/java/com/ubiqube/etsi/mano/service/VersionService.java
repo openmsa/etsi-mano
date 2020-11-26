@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.util.MultiValueMap;
@@ -58,5 +57,4 @@ public interface VersionService {
 
 	void vnfInstanceDelete(UUID vnfInstanceId);
 
-	List<VnfInstance> vnfInstanceGet(Map<String, String> queryParameters);
 }

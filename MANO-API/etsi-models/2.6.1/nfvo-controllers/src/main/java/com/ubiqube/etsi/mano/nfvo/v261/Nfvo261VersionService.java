@@ -18,6 +18,7 @@
 package com.ubiqube.etsi.mano.nfvo.v261;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +40,13 @@ import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
 import com.ubiqube.etsi.mano.service.VersionService;
 import com.ubiqube.etsi.mano.service.rest.VnfmRest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -77,9 +85,17 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceGet(final UUID id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Blueprint vnfInstanceGet(final UUID vnfdId) {
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", vnfdId);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance res = vnfmRest.get(uri, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
+		// XXX VNF instance is a vnf instance not a blueprint ! a blueprint is a
+		// VnfLcmOpOccs
+		return mapper.map(res, Blueprint.class);
 	}
 
 	@Override
@@ -97,50 +113,95 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public VnfInstance vnfInstancePost(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
-		// TODO Auto-generated method stub
-		return null;
+		final CreateVnfRequest req = new CreateVnfRequest();
+		req.setVnfdId(vnfdId);
+		req.setVnfInstanceDescription(vnfInstanceDescription);
+		req.setVnfInstanceName(vnfInstanceName);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances")
+				.build()
+				.toUri();
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance res = vnfmRest.post(uri, req, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
+		return mapper.map(res, VnfInstance.class);
 	}
 
 	@Override
 	public Blueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
-		// TODO Auto-generated method stub
+		final OperateVnfRequest operateRequest = mapper.map(operateVnfRequest, OperateVnfRequest.class);
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", uuid);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		vnfmRest.post(uri, operateRequest, Void.class);
+		// XXX At this level we are returning nothing.
 		return null;
 	}
 
 	@Override
 	public Blueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
-		// TODO Auto-generated method stub
+		final ScaleVnfRequest scaleRequest = mapper.map(scaleVnfRequest, ScaleVnfRequest.class);
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", uuid);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		vnfmRest.post(uri, scaleRequest, Void.class);
 		return null;
 	}
 
 	@Override
 	public Blueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
-		// TODO Auto-generated method stub
+		final ScaleVnfToLevelRequest scaleRequest = mapper.map(scaleVnfToLevelRequest, ScaleVnfToLevelRequest.class);
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", uuid);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		vnfmRest.post(uri, scaleRequest, Void.class);
 		return null;
 	}
 
 	@Override
 	public Blueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		// TODO Auto-generated method stub
+		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
+		terminateVnfRequest.setGracefulTerminationTimeout(gracefulTerminationTimeout);
+		terminateVnfRequest.setTerminationType(TerminationTypeEnum.valueOf(terminationType.toString()));
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", vnfInstanceId);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		vnfmRest.post(uri, terminateVnfRequest, Void.class);
 		return null;
 	}
 
 	@Override
 	public Blueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
-		// TODO Auto-generated method stub
+		final InstantiateVnfRequest request = mapper.map(instantiateVnfRequest, InstantiateVnfRequest.class);
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", vnfInstanceId);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		vnfmRest.post(uri, request, Void.class);
 		return null;
 	}
 
 	@Override
 	public void vnfInstanceDelete(final UUID vnfInstanceId) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<VnfInstance> vnfInstanceGet(final Map<String, String> queryParameters) {
-
-		return null;
+		final Map<String, Object> uriVariables = new HashMap<>();
+		uriVariables.put("id", vnfInstanceId);
+		final URI uri = vnfmRest.uriBuilder()
+				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.buildAndExpand(uriVariables)
+				.toUri();
+		vnfmRest.delete(uri, null);
 	}
 
 }

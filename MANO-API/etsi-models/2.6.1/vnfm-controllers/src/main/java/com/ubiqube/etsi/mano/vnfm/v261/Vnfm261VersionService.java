@@ -18,7 +18,6 @@
 package com.ubiqube.etsi.mano.vnfm.v261;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -108,12 +107,6 @@ public class Vnfm261VersionService implements VersionService {
 	public void vnfInstanceDelete(final UUID vnfInstanceId) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public List<VnfInstance> vnfInstanceGet(final Map<String, String> queryParameters) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
