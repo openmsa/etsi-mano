@@ -47,6 +47,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -89,12 +90,10 @@ public class Nfvo261VersionService implements VersionService {
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfdId);
 		final URI uri = vnfmRest.uriBuilder()
-				.pathSegment("vnflcm/v1/vnf_instances/{id}")
+				.pathSegment("vnflcm/v1/vnf_lcm_op_occs/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
-		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance res = vnfmRest.get(uri, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
-		// XXX VNF instance is a vnf instance not a blueprint ! a blueprint is a
-		// VnfLcmOpOccs
+		final VnfLcmOpOcc res = vnfmRest.get(uri, VnfLcmOpOcc.class);
 		return mapper.map(res, Blueprint.class);
 	}
 
