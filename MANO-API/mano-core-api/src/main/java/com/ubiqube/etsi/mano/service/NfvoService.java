@@ -14,29 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.nslcm;
+package com.ubiqube.etsi.mano.service;
 
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-
-import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
-import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
-
-@Service
-public class VnfmGrantManagement implements GrantManagement {
-
-	@Override
-	public GrantResponse get(final UUID grantId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GrantResponse post(final GrantsRequest grant) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public interface NfvoService {
 
 }

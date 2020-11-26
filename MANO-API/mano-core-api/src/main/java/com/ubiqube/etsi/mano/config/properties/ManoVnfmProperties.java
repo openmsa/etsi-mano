@@ -25,34 +25,34 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-@ConfigurationProperties(prefix = "mano.vnfm")
+@ConfigurationProperties(prefix = "mano.nfvo.vnfm")
 public class ManoVnfmProperties {
-	private String nfvoUrl;
-	private String nfvoUser;
-	private String nfvoPassword;
+	private String url;
+	private String user;
+	private String password;
 
-	public String getNfvoUrl() {
-		return nfvoUrl;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setNfvoUrl(final String nfvoUrl) {
-		this.nfvoUrl = nfvoUrl;
+	public void setUrl(final String url) {
+		this.url = url;
 	}
 
-	public String getNfvoUser() {
-		return nfvoUser;
+	public String getUser() {
+		return user;
 	}
 
-	public void setNfvoUser(final String nfvoUser) {
-		this.nfvoUser = nfvoUser;
+	public void setUser(final String user) {
+		this.user = user;
 	}
 
-	public String getNfvoPassword() {
-		return nfvoPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setNfvoPassword(final String nfvoPassword) {
-		this.nfvoPassword = nfvoPassword;
+	public void setPassword(final String password) {
+		this.password = password;
 	}
 
 }

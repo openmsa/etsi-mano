@@ -9,8 +9,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<artifactId>mano-webapp</artifactId>
-	<name>mano-webapp</name>
+	<artifactId>nfvo-webapp</artifactId>
+	<name>nfvo-webapp</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

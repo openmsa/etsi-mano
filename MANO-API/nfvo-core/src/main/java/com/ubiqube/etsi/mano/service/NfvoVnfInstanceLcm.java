@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 
-@ConditionalOnMissingBean(VnfInstanceLcm.class)
+@ConditionalOnMissingBean(VnfmService.class)
 @Service
 public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 

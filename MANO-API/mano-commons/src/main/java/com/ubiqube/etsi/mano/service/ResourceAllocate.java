@@ -16,25 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Service;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+public interface ResourceAllocate {
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-// Not NFVO
-@ConditionalOnMissingBean(VimResourceService.class)
-@Service
-public class Sol003ResourceService implements VimResourceService {
-
-	@Override
-	public void allocate(final Blueprint plan) {
-		// TODO Auto-generated method stub
-
-	}
+	GrantResponse sendSyncGrantRequest(GrantsRequest req);
 
 }

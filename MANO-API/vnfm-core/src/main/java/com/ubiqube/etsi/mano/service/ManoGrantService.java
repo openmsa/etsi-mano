@@ -50,9 +50,9 @@ import ma.glasnost.orika.MapperFacade;
 public class ManoGrantService implements VimResourceService {
 
 	private final MapperFacade mapper;
-	private final Nfvo nfvo;
+	private final ResourceAllocate nfvo;
 
-	public ManoGrantService(final MapperFacade _mapper, final Nfvo _nfvo) {
+	public ManoGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
 		mapper = _mapper;
 		nfvo = _nfvo;
 	}

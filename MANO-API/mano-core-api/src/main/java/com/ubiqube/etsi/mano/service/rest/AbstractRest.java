@@ -38,8 +38,6 @@ public abstract class AbstractRest implements NfvoRest {
 
 	protected abstract String getUrl();
 
-	protected abstract MultiValueMap<String, String> getAutorization();
-
 	@Override
 	public final <T> T get(final URI uri, final Class<T> clazz) {
 		return call(uri, HttpMethod.GET, clazz);
@@ -77,6 +75,11 @@ public abstract class AbstractRest implements NfvoRest {
 		return UriComponentsBuilder.fromHttpUrl(getUrl());
 	}
 
+	@Override
+	public RestTemplate getRestTemplate() {
+		return restTemplate;
+	}
+
 	private final <T, Tbody> T _call(final URI uri, final HttpMethod method, final HttpEntity<Tbody> request, final Class<T> clazz) {
 		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
 		return resp.getBody();
@@ -88,6 +91,7 @@ public abstract class AbstractRest implements NfvoRest {
 		httpHeaders.addAll(auth);
 		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		httpHeaders.add("Version", "2.6.1");
 		return httpHeaders;
 	}
 

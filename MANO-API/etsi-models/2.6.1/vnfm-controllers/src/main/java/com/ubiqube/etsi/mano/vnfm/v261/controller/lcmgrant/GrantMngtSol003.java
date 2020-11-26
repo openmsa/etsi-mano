@@ -18,24 +18,36 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.lcmgrant;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile("NFVM")
 @Service
 public class GrantMngtSol003 implements GrantManagement {
+	private final static Pattern UUID_REGEXP = Pattern.compile("(?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})$");
 	private final NfvoRest nfvoRest;
 	private final MapperFacade mapper;
 
@@ -52,8 +64,16 @@ public class GrantMngtSol003 implements GrantManagement {
 				.pathSegment("grant/v1/grants/{grantId}")
 				.buildAndExpand(uriVariables)
 				.toUri();
-		final Grant grants = nfvoRest.get(uri, Grant.class);
-		return mapper.map(grants, GrantResponse.class);
+		final HttpEntity<Object> request = new HttpEntity<>(getHttpHeaders());
+		final ResponseEntity<Grant> resp = nfvoRest.getRestTemplate().exchange(uri, HttpMethod.GET, request, Grant.class);
+		GrantResponse grants = new GrantResponse();
+		if ((resp.getStatusCodeValue() == 202)) {
+			grants.setId(grantId);
+			grants.setAvailable(Boolean.FALSE);
+		} else {
+			grants = mapper.map(resp.getBody(), GrantResponse.class);
+		}
+		return grants;
 	}
 
 	@Override
@@ -63,8 +83,33 @@ public class GrantMngtSol003 implements GrantManagement {
 				.build()
 				.toUri();
 		// XXX Elect version, and map.
-		final Grant grantPost = nfvoRest.post(uri, grant, Grant.class);
-		return mapper.map(grantPost, GrantResponse.class);
+		final GrantRequest manoGrant = mapper.map(grant, GrantRequest.class);
+		final HttpEntity<Object> request = new HttpEntity<>(manoGrant, getHttpHeaders());
+		final ResponseEntity<Grant> resp = nfvoRest.getRestTemplate().exchange(uri, HttpMethod.POST, request, Grant.class);
+		final GrantResponse grants = new GrantResponse();
+		if ((resp.getStatusCodeValue() == 201)) {
+			final Optional<List<String>> loc = Optional.ofNullable(resp.getHeaders().get("Location"));
+			if (loc.isPresent()) {
+				final Matcher m = UUID_REGEXP.matcher(loc.get().get(0));
+				m.find();
+				final String uuid = m.group("uuid");
+				grants.setId(UUID.fromString(uuid));
+				grants.setAvailable(Boolean.FALSE);
+				return grants;
+			}
+			throw new GenericException("Grant post received a ACCEPTED response with no Location header");
+		}
+		return mapper.map(resp.getBody(), GrantResponse.class);
+	}
+
+	private final HttpHeaders getHttpHeaders() {
+		final HttpHeaders httpHeaders = new HttpHeaders();
+		final MultiValueMap<String, String> auth = nfvoRest.getAutorization();
+		httpHeaders.addAll(auth);
+		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		httpHeaders.add("Version", "2.6.1");
+		return httpHeaders;
 	}
 
 }

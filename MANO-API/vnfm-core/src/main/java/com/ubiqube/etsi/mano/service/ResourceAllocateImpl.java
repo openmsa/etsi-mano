@@ -25,8 +25,6 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
-import ma.glasnost.orika.MapperFacade;
-
 /**
  * Communication layer between VNFM -> NFVO from a NFVM point of view.
  *
@@ -34,19 +32,17 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @Service
-public class Nfvo {
+public class ResourceAllocateImpl implements ResourceAllocate {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Nfvo.class);
-
-	private final MapperFacade mapper;
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceAllocateImpl.class);
 
 	private final GrantManagement grantManagement;
 
-	public Nfvo(final MapperFacade _mapper, final GrantManagement _grantManagement) {
-		mapper = _mapper;
+	public ResourceAllocateImpl(final GrantManagement _grantManagement) {
 		grantManagement = _grantManagement;
 	}
 
+	@Override
 	public GrantResponse sendSyncGrantRequest(final GrantsRequest req) {
 		// final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
 		return sendAndWaitGrantRequest(req);

@@ -14,33 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.rest;
+package com.ubiqube.etsi.mano.service;
 
-import java.net.URI;
-
-import org.springframework.http.HttpMethod;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-public interface NfvoRest {
-
-	<T> T get(URI uri, Class<T> clazz);
-
-	<T> T post(URI uri, Class<T> clazz);
-
-	<T> T post(URI uri, Object body, Class<T> clazz);
-
-	<T> T delete(URI uri, Class<T> clazz);
-
-	<T> T call(URI uri, HttpMethod method, Class<T> clazz);
-
-	<T> T call(URI uri, HttpMethod method, Object body, Class<T> clazz);
-
-	UriComponentsBuilder uriBuilder();
-
-	RestTemplate getRestTemplate();
-
-	MultiValueMap<String, String> getAutorization();
+public interface VnfmService {
 
 }

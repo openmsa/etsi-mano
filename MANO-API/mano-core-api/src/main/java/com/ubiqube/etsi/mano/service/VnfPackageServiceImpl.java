@@ -42,6 +42,12 @@ import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 
+/**
+ * TODO: Move this one because NFVO & VNFM need this.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfPackageServiceImpl implements VnfPackageService {
 	private final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa;
