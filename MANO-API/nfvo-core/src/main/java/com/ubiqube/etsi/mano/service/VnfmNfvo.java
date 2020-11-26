@@ -48,8 +48,8 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public Blueprint getVnfLcmOpOccs(@NotNull final UUID id) {
-		return lcm.get(id);
+	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+		return lcm.vnfLcmOpOccsGet(id);
 	}
 
 	@Override

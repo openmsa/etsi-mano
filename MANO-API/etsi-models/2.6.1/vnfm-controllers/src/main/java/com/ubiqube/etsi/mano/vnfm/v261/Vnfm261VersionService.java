@@ -20,6 +20,8 @@ package com.ubiqube.etsi.mano.vnfm.v261;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
@@ -53,12 +55,6 @@ public class Vnfm261VersionService implements VersionService {
 	@Override
 	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
 		throw new IllegalArgumentException("No Package notification on VNFM.");
-	}
-
-	@Override
-	public Blueprint vnfInstanceGet(final UUID id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -107,6 +103,12 @@ public class Vnfm261VersionService implements VersionService {
 	public void vnfInstanceDelete(final UUID vnfInstanceId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

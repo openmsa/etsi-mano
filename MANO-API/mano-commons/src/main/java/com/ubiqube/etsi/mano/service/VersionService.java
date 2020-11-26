@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
@@ -39,8 +41,6 @@ public interface VersionService {
 
 	Object createVnfPackageChangeNotification(UUID subscriptionId, UUID vnfPkgId);
 
-	Blueprint vnfInstanceGet(UUID id);
-
 	List<VnfInstance> vnfInstanceGet(MultiValueMap<String, String> params);
 
 	VnfInstance vnfInstancePost(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
@@ -56,5 +56,7 @@ public interface VersionService {
 	Blueprint vnfInstanceInstantiate(UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest);
 
 	void vnfInstanceDelete(UUID vnfInstanceId);
+
+	Blueprint vnfLcmOpOccsGet(@NotNull UUID id);
 
 }

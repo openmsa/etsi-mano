@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -60,11 +62,6 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public Blueprint get(final UUID id) {
-		return versionService.vnfInceGet(id);
-	}
-
-	@Override
 	public VnfInstance post(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
 		return versionService.vnfInstancePost(vnfdId, vnfInstanceName, vnfInstanceDescription);
 	}
@@ -97,6 +94,11 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	@Override
 	public Blueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		return versionService.vnfInstanceOperate(uuid, operateVnfRequest);
+	}
+
+	@Override
+	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+		return versionService.vnfLcmOpOccsGet(id);
 	}
 
 }

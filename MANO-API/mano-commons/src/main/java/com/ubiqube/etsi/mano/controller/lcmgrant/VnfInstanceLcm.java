@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -41,8 +42,6 @@ public interface VnfInstanceLcm {
 
 	List<VnfInstance> get(final Map<String, String> queryParameters);
 
-	Blueprint get(final UUID id);
-
 	VnfInstance post(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription);
 
 	void delete(@Nonnull final UUID vnfInstanceId);
@@ -56,5 +55,7 @@ public interface VnfInstanceLcm {
 	Blueprint scale(@Nonnull final UUID uuid, final VnfScaleRequest scaleVnfRequest);
 
 	Blueprint operate(@Nonnull final UUID uuid, final VnfOperateRequest operateVnfRequest);
+
+	Blueprint vnfLcmOpOccsGet(@NotNull UUID id);
 
 }

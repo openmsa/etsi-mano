@@ -85,7 +85,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceGet(final UUID vnfdId) {
+	public Blueprint vnfLcmOpOccsGet(final UUID vnfdId) {
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfdId);
 		final URI uri = vnfmRest.uriBuilder()

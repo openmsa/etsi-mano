@@ -83,7 +83,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 		Blueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = tmp.getOperationStatus();
 		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
-			tmp = vnfm.getVnfLcmOpOccs(vnfLcmOpOccs.getId());
+			tmp = vnfm.vnfLcmOpOccsGet(vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}

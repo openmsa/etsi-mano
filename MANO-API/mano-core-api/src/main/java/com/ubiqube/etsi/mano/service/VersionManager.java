@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
@@ -48,10 +50,6 @@ public class VersionManager {
 	public VersionService getSubscriptionService(final String event) {
 		//
 		return services.get(0);
-	}
-
-	public Blueprint vnfInceGet(final UUID id) {
-		return vnfmConn.vnfInstanceGet(id);
 	}
 
 	public List<VnfInstance> vnfInstanceGet(final MultiValueMap<String, String> params) {
@@ -84,5 +82,9 @@ public class VersionManager {
 
 	public Blueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		return vnfmConn.vnfInstanceOperate(uuid, operateVnfRequest);
+	}
+
+	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+		return vnfmConn.vnfLcmOpOccsGet(id);
 	}
 }

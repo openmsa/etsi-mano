@@ -32,7 +32,7 @@ public interface VnfmInterface {
 
 	Blueprint vnfInstatiate(@Nonnull UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest, UUID vnfId);
 
-	Blueprint getVnfLcmOpOccs(@NotNull UUID id);
+	Blueprint vnfLcmOpOccsGet(@NotNull UUID id);
 
 	Blueprint vnfTerminate(@Nonnull UUID nsInstanceId);
 

@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,13 +96,6 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public List<VnfInstance> get(final Map<String, String> queryParameters) {
 		final String filter = queryParameters.get("filter");
 		return vnfInstancesRepository.query(filter);
-	}
-
-	@Override
-	public Blueprint get(final UUID id) {
-		final Blueprint lcm = planService.findById(id);
-		// TODO
-		return lcm;
 	}
 
 	@Override
@@ -200,6 +194,11 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final Blueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
+	}
+
+	@Override
+	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+		return vnfLcmService.findById(id);
 	}
 
 }

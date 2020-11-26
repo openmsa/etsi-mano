@@ -42,6 +42,6 @@ public class VnfLcmControllerImpl implements VnfLcmController {
 
 	@Override
 	public Blueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id) {
-		return vnfInstanceLcm.get(id);
+		return vnfLcmOpOccsRepository.findById(id);
 	}
 }

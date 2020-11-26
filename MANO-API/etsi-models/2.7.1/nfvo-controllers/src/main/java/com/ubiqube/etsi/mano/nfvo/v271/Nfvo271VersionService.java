@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.nfvo.v271;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
@@ -50,12 +52,6 @@ public class Nfvo271VersionService implements VersionService {
 
 	@Override
 	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Blueprint vnfInstanceGet(final UUID id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -106,6 +102,12 @@ public class Nfvo271VersionService implements VersionService {
 	public void vnfInstanceDelete(final UUID vnfInstanceId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

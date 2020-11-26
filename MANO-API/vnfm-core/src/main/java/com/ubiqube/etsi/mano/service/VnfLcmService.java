@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -117,5 +118,9 @@ public class VnfLcmService {
 		final SearchQueryer sq = new SearchQueryer(em);
 		return (List<Blueprint>) sq.getCriteria(filter, Blueprint.class)
 				.getResultStream().collect(Collectors.toList());
+	}
+
+	public Blueprint findById(final UUID id) {
+		return planJpa.findById(id).orElseThrow();
 	}
 }
