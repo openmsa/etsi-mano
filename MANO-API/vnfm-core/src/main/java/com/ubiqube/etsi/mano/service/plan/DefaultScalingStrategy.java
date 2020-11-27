@@ -33,23 +33,23 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.service.BlueprintService;
+import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 
 @Service
 public class DefaultScalingStrategy implements ScalingStrategy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultScalingStrategy.class);
 
-	private final BlueprintService planService;
+	private final VnfBlueprintService planService;
 
-	public DefaultScalingStrategy(final BlueprintService _planService) {
+	public DefaultScalingStrategy(final VnfBlueprintService _planService) {
 		planService = _planService;
 	}
 
 	@Override
-	public NumberOfCompute getNumberOfCompute(final Blueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute vnfCompute) {
+	public NumberOfCompute getNumberOfCompute(final VnfBlueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute vnfCompute) {
 		final String instantiationLevelId = blueprint.getParameters().getInstantiationLevelId();
 		Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
 		if (null != instantiationLevelId) {

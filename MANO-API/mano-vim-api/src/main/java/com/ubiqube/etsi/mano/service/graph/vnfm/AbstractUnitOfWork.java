@@ -16,28 +16,28 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractUnitOfWork implements UnitOfWork {
+public abstract class AbstractUnitOfWork implements UnitOfWork<VnfTask> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	private final String name;
 
-	private final Task task;
+	private final VnfTask task;
 
-	public AbstractUnitOfWork(final Task _task) {
+	public AbstractUnitOfWork(final VnfTask _task) {
 		task = _task;
 		name = task.getToscaName();
 	}
 
 	@Override
-	public final Task getTaskEntity() {
+	public final VnfTask getTaskEntity() {
 		return task;
 	}
 

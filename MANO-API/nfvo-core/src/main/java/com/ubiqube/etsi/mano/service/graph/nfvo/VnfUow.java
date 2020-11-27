@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -49,8 +49,8 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		final Blueprint res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance(), request, null);
-		final Blueprint result = waitLcmCompletion(res, vnfm);
+		final VnfBlueprint res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance(), request, null);
+		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
@@ -59,8 +59,8 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		final Blueprint lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance());
-		final Blueprint result = waitLcmCompletion(lcm, vnfm);
+		final VnfBlueprint lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance());
+		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
@@ -79,8 +79,8 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	 * @param vnfm
 	 * @return
 	 */
-	private static Blueprint waitLcmCompletion(final Blueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
-		Blueprint tmp = vnfLcmOpOccs;
+	private static VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
+		VnfBlueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = tmp.getOperationStatus();
 		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
 			tmp = vnfm.vnfLcmOpOccsGet(vnfLcmOpOccs.getId());

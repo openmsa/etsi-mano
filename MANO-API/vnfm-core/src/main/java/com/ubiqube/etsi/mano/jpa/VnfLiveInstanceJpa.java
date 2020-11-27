@@ -33,19 +33,19 @@ public interface VnfLiveInstanceJpa extends CrudRepository<VnfLiveInstance, UUID
 
 	VnfLiveInstance findByTaskId(UUID id);
 
-	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_vl_id is not null")
+	@Query("select vli, t from VnfLiveInstance vli join VnfTask t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_vl_id is not null")
 	List<VnfLiveInstance> findByVnfInstanceAndTaskVnfVlNotNull(VnfInstance vnfLiveInstance);
 
-	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_compute_id is not null")
+	@Query("select vli, t from VnfLiveInstance vli join VnfTask t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_compute_id is not null")
 	List<VnfLiveInstance> findByVnfInstanceAndTaskVnfComputeNotNull(VnfInstance vnfLiveInstance);
 
-	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_storage_id is not null")
+	@Query("select vli, t from VnfLiveInstance vli join VnfTask t on t.id = vli.task where vli.vnfInstance = ?1 AND vnf_storage_id is not null")
 	List<VnfLiveInstance> findByVnfInstanceAndTaskVnfStorageIsNotNull(VnfInstance vnfInstance);
 
-	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND t.toscaName = ?2 ORDER BY vli.audit.createdOn DESC")
+	@Query("select vli, t from VnfLiveInstance vli join VnfTask t on t.id = vli.task where vli.vnfInstance = ?1 AND t.toscaName = ?2 ORDER BY vli.audit.createdOn DESC")
 	List<VnfLiveInstance> findByTaskVnfInstanceAndToscaName(VnfInstance vnfInstance, String alias);
 
-	@Query("select vli, t from VnfLiveInstance vli join Task t on t.id = vli.task where vli.vnfInstance = ?1 AND t.class = ?2")
+	@Query("select vli, t from VnfLiveInstance vli join VnfTask t on t.id = vli.task where vli.vnfInstance = ?1 AND t.class = ?2")
 	List<VnfLiveInstance> findByVnfInstanceIdAndClass(VnfInstance vnfInstance, String string);
 
 	List<VnfLiveInstance> findByVnfInstanceId(UUID id);

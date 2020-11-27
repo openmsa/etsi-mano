@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 
 @Entity
-public class NetworkTask extends Task {
+public class NetworkTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

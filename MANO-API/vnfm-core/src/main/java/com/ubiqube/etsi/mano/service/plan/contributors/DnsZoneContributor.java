@@ -28,11 +28,11 @@ import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.DnsZoneUow;
@@ -43,7 +43,7 @@ import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
-public class DnsZoneContributor implements PlanContributor {
+public class DnsZoneContributor extends AbstractPlanContributor {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public DnsZoneContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
@@ -56,7 +56,7 @@ public class DnsZoneContributor implements PlanContributor {
 	}
 
 	@Override
-	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
@@ -69,7 +69,7 @@ public class DnsZoneContributor implements PlanContributor {
 		return Collections.singletonList(dnsZoneTask);
 	}
 
-	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+	private List<VnfTask> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, NetworkTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final DnsZoneTask dnsZoneTask = new DnsZoneTask();
@@ -83,8 +83,8 @@ public class DnsZoneContributor implements PlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork> convertTasksToExecNode(final Set<Task> tasks, final Blueprint plan) {
-		final List<UnitOfWork> ret = new ArrayList<>();
+	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		final List<UnitOfWork<VnfTask>> ret = new ArrayList<>();
 		tasks.stream()
 				.filter(x -> x instanceof DnsZoneTask)
 				.map(x -> (DnsZoneTask) x)
@@ -96,7 +96,7 @@ public class DnsZoneContributor implements PlanContributor {
 	}
 
 	@Override
-	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+	public void getDependencies(final DependencyBuilder dependencyBuilder) {
 		dependencyBuilder.connectionFrom(Start.class).connectTo(Network.class);
 	}
 

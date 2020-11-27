@@ -23,18 +23,18 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.jpa.BlueprintJpa;
+import com.ubiqube.etsi.mano.jpa.VnfBlueprintJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 
 @Service
-public class BlueprintService {
-	private final BlueprintJpa blueprintJpa;
+public class VnfBlueprintService {
+	private final VnfBlueprintJpa blueprintJpa;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public BlueprintService(final BlueprintJpa _blueprintJpa, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+	public VnfBlueprintService(final VnfBlueprintJpa _blueprintJpa, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		blueprintJpa = _blueprintJpa;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
@@ -47,16 +47,16 @@ public class BlueprintService {
 		return vnfLiveInstanceJpa.countByVnfInstanceAndTaskToscaName(vnfInstance, vnfCompute.getToscaName());
 	}
 
-	public Blueprint save(final Blueprint plan) {
+	public VnfBlueprint save(final VnfBlueprint plan) {
 		return blueprintJpa.save(plan);
 	}
 
-	public Blueprint updateState(final Blueprint plan, final OperationStatusType processing) {
+	public VnfBlueprint updateState(final VnfBlueprint plan, final OperationStatusType processing) {
 		plan.setOperationStatus(processing);
 		return save(plan);
 	}
 
-	public Blueprint findById(final UUID blueprintId) {
+	public VnfBlueprint findById(final UUID blueprintId) {
 		return blueprintJpa.findById(blueprintId).orElseThrow(() -> new GenericException("Blueprint not found " + blueprintId));
 	}
 

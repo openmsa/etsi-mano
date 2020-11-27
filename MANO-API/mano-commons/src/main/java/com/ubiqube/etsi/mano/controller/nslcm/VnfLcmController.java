@@ -19,11 +19,11 @@ package com.ubiqube.etsi.mano.controller.nslcm;
 import java.util.List;
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public interface VnfLcmController {
 
-	List<Blueprint> vnfLcmOpOccsGet(final String filter);
+	List<VnfBlueprint> vnfLcmOpOccsGet(final String filter);
 
-	Blueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id);
+	VnfBlueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id);
 }

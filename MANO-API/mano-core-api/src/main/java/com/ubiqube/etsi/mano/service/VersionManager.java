@@ -28,7 +28,7 @@ import com.ubiqube.etsi.mano.config.properties.NfvoConnectionProperties;
 import com.ubiqube.etsi.mano.config.properties.VnfmConnectionProperties;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -64,27 +64,27 @@ public class VersionManager {
 		vnfmConn.vnfInstanceDelete(vnfInstanceId);
 	}
 
-	public Blueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
+	public VnfBlueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		return vnfmConn.vnfInstanceInstantiate(vnfInstanceId, instantiateVnfRequest);
 	}
 
-	public Blueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+	public VnfBlueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		return vnfmConn.vnfInstanceTerminate(vnfInstanceId, terminationType, gracefulTerminationTimeout);
 	}
 
-	public Blueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+	public VnfBlueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		return vnfmConn.vnfInstanceScaleToLevel(uuid, scaleVnfToLevelRequest);
 	}
 
-	public Blueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
+	public VnfBlueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
 		return vnfmConn.vnfInstanceScale(uuid, scaleVnfRequest);
 	}
 
-	public Blueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
+	public VnfBlueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		return vnfmConn.vnfInstanceOperate(uuid, operateVnfRequest);
 	}
 
-	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
 		return vnfmConn.vnfLcmOpOccsGet(id);
 	}
 }

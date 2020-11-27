@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.service.graph;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 @Service
 public class DefaultVduNamingStrategy implements VduNamingStrategy {
@@ -31,7 +31,7 @@ public class DefaultVduNamingStrategy implements VduNamingStrategy {
 	}
 
 	@Override
-	public String nameVdu(final Blueprint plan, final String toscaName, final int count) {
+	public String nameVdu(final VnfBlueprint plan, final String toscaName, final int count) {
 		final String vnfInstanceId = plan.getVnfInstance().getId().toString();
 		return vnfInstanceId.substring(0, 8) + '-' + toscaName + '-' + String.format("%04d", count);
 	}

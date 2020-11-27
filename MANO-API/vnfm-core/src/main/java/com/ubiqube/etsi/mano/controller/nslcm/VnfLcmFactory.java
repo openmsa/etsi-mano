@@ -31,9 +31,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public class VnfLcmFactory {
 
@@ -69,8 +69,8 @@ public class VnfLcmFactory {
 	}
 
 	@Nonnull
-	public static Blueprint createVnfLcmOpOccs(final PlanOperationType operation, final UUID vnfInstanceId) {
-		final Blueprint vnfLcmOpOcc = new Blueprint();
+	public static VnfBlueprint createVnfLcmOpOccs(final PlanOperationType operation, final UUID vnfInstanceId) {
+		final VnfBlueprint vnfLcmOpOcc = new VnfBlueprint();
 		vnfLcmOpOcc.setOperation(operation);
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setId(vnfInstanceId);
@@ -81,8 +81,8 @@ public class VnfLcmFactory {
 		return vnfLcmOpOcc;
 	}
 
-	public static Blueprint createBlueprint(final PlanOperationType operation, final UUID vnfInstanceId) {
-		final Blueprint blueprint = new Blueprint();
+	public static VnfBlueprint createVnfBlueprint(final PlanOperationType operation, final UUID vnfInstanceId) {
+		final VnfBlueprint blueprint = new VnfBlueprint();
 		blueprint.setOperation(operation);
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setId(vnfInstanceId);

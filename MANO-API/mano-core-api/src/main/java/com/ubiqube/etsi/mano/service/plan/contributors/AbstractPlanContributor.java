@@ -19,13 +19,15 @@ package com.ubiqube.etsi.mano.service.plan.contributors;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
-public abstract class AbstractPlanContributor implements PlanContributor {
+public abstract class AbstractPlanContributor implements PlanContributor<VnfPackage, VnfBlueprint, VnfTask> {
 
-	protected static <U> U createTask(final Supplier<Task> newInstance) {
-		final Task task = newInstance.get();
+	protected static <U> U createTask(final Supplier<VnfTask> newInstance) {
+		final VnfTask task = newInstance.get();
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);
 		return (U) task;

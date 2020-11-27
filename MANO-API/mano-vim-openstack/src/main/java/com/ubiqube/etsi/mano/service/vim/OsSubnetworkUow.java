@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.AbstractUnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
@@ -40,7 +40,7 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 
 	private final String parentName;
 
-	public OsSubnetworkUow(final Task _task, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
+	public OsSubnetworkUow(final VnfTask _task, final VlProtocolData y, final IpPool _ipAllocationPool, final String _parentName) {
 		super(_task);
 		vlProtocolData = y;
 		ipAllocationPool = _ipAllocationPool;
@@ -70,7 +70,7 @@ public class OsSubnetworkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
 		// TODO Auto-generated method stub
 
 	}

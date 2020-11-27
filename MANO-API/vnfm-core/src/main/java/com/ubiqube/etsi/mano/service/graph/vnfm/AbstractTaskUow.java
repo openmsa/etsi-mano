@@ -28,7 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
+public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> extends Task<UnitOfWork<U>, String> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -38,13 +38,13 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 
 	private final transient Vim vim;
 
-	private final UnitOfWork uaow;
+	private final UnitOfWork<U> uaow;
 
 	private final Map<String, String> context;
 
 	private final transient Function<Parameters, String> function;
 
-	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork uaow, final Map<String, String> _context, final boolean _create) {
+	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork<U> uaow, final Map<String, String> _context, final boolean _create) {
 		super();
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
@@ -69,7 +69,7 @@ public abstract class AbstractTaskUow extends Task<UnitOfWork, String> {
 	@Override
 	public final String execute() {
 		RuntimeException eRoot = null;
-		final com.ubiqube.etsi.mano.dao.mano.v2.Task resource = this.uaow.getTaskEntity();
+		final U resource = this.uaow.getTaskEntity();
 		resource.setStartDate(LocalDateTime.now());
 		resource.setStatus(PlanStatusType.STARTED);
 		try {

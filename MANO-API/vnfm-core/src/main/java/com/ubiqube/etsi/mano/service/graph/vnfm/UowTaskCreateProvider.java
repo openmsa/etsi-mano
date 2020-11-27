@@ -28,7 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class UowTaskCreateProvider implements TaskProvider<UnitOfWork, String> {
+public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<UnitOfWork<U>, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowTaskCreateProvider.class);
 
@@ -49,8 +49,8 @@ public class UowTaskCreateProvider implements TaskProvider<UnitOfWork, String> {
 	}
 
 	@Override
-	public Task<UnitOfWork, String> provideTask(final UnitOfWork uaow) {
+	public Task<UnitOfWork<U>, String> provideTask(final UnitOfWork<U> uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecCreateTask(vimConnectionInformation, vim, uaow, vnfLiveInstanceJpa, context);
+		return new UowExecCreateTask<>(vimConnectionInformation, vim, uaow, vnfLiveInstanceJpa, context);
 	}
 }

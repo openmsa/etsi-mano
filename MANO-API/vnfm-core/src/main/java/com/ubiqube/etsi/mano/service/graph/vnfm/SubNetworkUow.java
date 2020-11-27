@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -60,7 +61,7 @@ public class SubNetworkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
 		final Optional<UnitOfWork> parent = Optional.ofNullable(cache.get(task.getParentName()));
 		LOG.warn("Subnetwork: " + task.getAlias() + " => " + task.getParentName() + " => " + cache);
 		parent.ifPresent(x -> {

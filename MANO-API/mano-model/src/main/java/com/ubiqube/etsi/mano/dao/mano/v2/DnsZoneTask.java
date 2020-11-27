@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 import javax.persistence.Entity;
 
 @Entity
-public class DnsZoneTask extends Task {
+public class DnsZoneTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -86,7 +86,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfLcmOpOccsGet(final UUID vnfdId) {
+	public VnfBlueprint vnfLcmOpOccsGet(final UUID vnfdId) {
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfdId);
 		final URI uri = vnfmRest.uriBuilder()
@@ -94,7 +94,7 @@ public class Nfvo261VersionService implements VersionService {
 				.buildAndExpand(uriVariables)
 				.toUri();
 		final VnfLcmOpOcc res = vnfmRest.get(uri, VnfLcmOpOcc.class);
-		return mapper.map(res, Blueprint.class);
+		return mapper.map(res, VnfBlueprint.class);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
+	public VnfBlueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		final OperateVnfRequest operateRequest = mapper.map(operateVnfRequest, OperateVnfRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", uuid);
@@ -139,7 +139,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
+	public VnfBlueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
 		final ScaleVnfRequest scaleRequest = mapper.map(scaleVnfRequest, ScaleVnfRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", uuid);
@@ -152,7 +152,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+	public VnfBlueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		final ScaleVnfToLevelRequest scaleRequest = mapper.map(scaleVnfToLevelRequest, ScaleVnfToLevelRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", uuid);
@@ -165,7 +165,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+	public VnfBlueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
 		terminateVnfRequest.setGracefulTerminationTimeout(gracefulTerminationTimeout);
 		terminateVnfRequest.setTerminationType(TerminationTypeEnum.valueOf(terminationType.toString()));
@@ -180,7 +180,7 @@ public class Nfvo261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
+	public VnfBlueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		final InstantiateVnfRequest request = mapper.map(instantiateVnfRequest, InstantiateVnfRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfInstanceId);

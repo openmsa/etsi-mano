@@ -30,12 +30,12 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
-import com.ubiqube.etsi.mano.service.BlueprintService;
+import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
@@ -46,11 +46,11 @@ import com.ubiqube.etsi.mano.service.vim.node.Start;
 
 @Service
 public class NetworkContributor extends AbstractPlanContributor {
-	private final BlueprintService planService;
+	private final VnfBlueprintService planService;
 	private final VnfPackageService vnfPackageService;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public NetworkContributor(final BlueprintService _planService, final VnfPackageService _vnfPackageService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+	public NetworkContributor(final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
 		planService = _planService;
 		vnfPackageService = _vnfPackageService;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
@@ -62,11 +62,11 @@ public class NetworkContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final ArrayList<Task> ret = new ArrayList<>();
+		final ArrayList<VnfTask> ret = new ArrayList<>();
 		final Set<VnfVl> vls = vnfPackage.getVnfVl();
 		for (final VnfVl vnfVl : vls) {
 			final int num = planService.getNumberOfLiveVl(plan.getVnfInstance(), vnfVl);
@@ -83,7 +83,7 @@ public class NetworkContributor extends AbstractPlanContributor {
 		return ret;
 	}
 
-	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+	private List<VnfTask> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, NetworkTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final NetworkTask networkTask = createTask(NetworkTask::new);
@@ -99,8 +99,8 @@ public class NetworkContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork> convertTasksToExecNode(final Set<Task> tasks, final Blueprint plan) {
-		final ArrayList<UnitOfWork> ret = new ArrayList<>();
+	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
 		tasks.stream()
 				.filter(x -> x instanceof NetworkTask)
 				.map(x -> (NetworkTask) x)
@@ -112,7 +112,7 @@ public class NetworkContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+	public void getDependencies(final DependencyBuilder dependencyBuilder) {
 		dependencyBuilder.connectionFrom(Start.class);
 	}
 

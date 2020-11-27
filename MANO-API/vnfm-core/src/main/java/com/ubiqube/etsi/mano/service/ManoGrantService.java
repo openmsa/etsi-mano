@@ -32,9 +32,9 @@ import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 
 import ma.glasnost.orika.MapperFacade;
@@ -58,7 +58,7 @@ public class ManoGrantService implements VimResourceService {
 	}
 
 	@Override
-	public void allocate(final Blueprint plan) {
+	public void allocate(final VnfBlueprint plan) {
 		final GrantsRequest grantRequest = mapper.map(plan, GrantsRequest.class);
 		plan.getTasks().forEach(x -> {
 			if (x.getChangeType() == ChangeType.ADDED) {
@@ -72,7 +72,7 @@ public class ManoGrantService implements VimResourceService {
 		grantsResp.getAddResources().forEach(x -> {
 			// Get VNFM Grant Resource information ID.
 			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
-			final Task task = findTask(plan, grantUuid);
+			final VnfTask task = findTask(plan, grantUuid);
 			task.setVimReservationId(x.getReservationId());
 			task.setResourceGroupId(x.getResourceGroupId());
 			task.setZoneId(x.getZoneId());
@@ -87,7 +87,7 @@ public class ManoGrantService implements VimResourceService {
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 	}
 
-	private static void mapVimAsset(final Set<Task> tasks, final GrantVimAssetsEntity vimAssets) {
+	private static void mapVimAsset(final Set<VnfTask> tasks, final GrantVimAssetsEntity vimAssets) {
 		tasks.stream()
 				.filter(x -> x instanceof ComputeTask)
 				.filter(x -> x.getChangeType() != ChangeType.REMOVED)
@@ -115,7 +115,7 @@ public class ManoGrantService implements VimResourceService {
 				.orElseThrow(() -> new NotFoundException("Could not find flavor for vdu: " + vduId));
 	}
 
-	private static Task findTask(final Blueprint plan, final UUID grantUuid) {
+	private static VnfTask findTask(final VnfBlueprint plan, final UUID grantUuid) {
 		return plan.getTasks().stream()
 				.filter(x -> x.getId().compareTo(grantUuid) == 0)
 				.findFirst()

@@ -33,10 +33,10 @@ import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.jpa.BlueprintJpa;
+import com.ubiqube.etsi.mano.jpa.VnfBlueprintJpa;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
@@ -45,33 +45,33 @@ import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 @Service
 public class VnfLcmService {
 
-	private final BlueprintJpa planJpa;
+	private final VnfBlueprintJpa planJpa;
 
 	private final EntityManager em;
 
-	public VnfLcmService(final BlueprintJpa _planJpa, final EntityManager _em) {
+	public VnfLcmService(final VnfBlueprintJpa _planJpa, final EntityManager _em) {
 		planJpa = _planJpa;
 		em = _em;
 	}
 
 	@Nonnull
-	public Blueprint createIntatiateOpOcc(final VnfInstance vnfInstance) {
-		return createIntatiateTerminateBlueprint(vnfInstance, PlanOperationType.INSTANTIATE);
+	public VnfBlueprint createIntatiateOpOcc(final VnfInstance vnfInstance) {
+		return createIntatiateTerminateVnfBlueprint(vnfInstance, PlanOperationType.INSTANTIATE);
 	}
 
 	@Nonnull
-	public Blueprint createTerminateOpOcc(final VnfInstance vnfInstance) {
-		return createIntatiateTerminateBlueprint(vnfInstance, PlanOperationType.TERMINATE);
+	public VnfBlueprint createTerminateOpOcc(final VnfInstance vnfInstance) {
+		return createIntatiateTerminateVnfBlueprint(vnfInstance, PlanOperationType.TERMINATE);
 	}
 
 	@Nonnull
-	private Blueprint createIntatiateTerminateBlueprint(final VnfInstance vnfInstance, final PlanOperationType state) {
-		final Blueprint blueprint = VnfLcmFactory.createBlueprint(state, vnfInstance.getId());
-		return planJpa.save(blueprint);
+	private VnfBlueprint createIntatiateTerminateVnfBlueprint(final VnfInstance vnfInstance, final PlanOperationType state) {
+		final VnfBlueprint VnfBlueprint = VnfLcmFactory.createVnfBlueprint(state, vnfInstance.getId());
+		return planJpa.save(VnfBlueprint);
 	}
 
-	public Blueprint createScaleToLevelOpOcc(final VnfInstance vnfInstance, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
-		final Blueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.SCALE_TO_LEVEL, vnfInstance.getId());
+	public VnfBlueprint createScaleToLevelOpOcc(final VnfInstance vnfInstance, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+		final VnfBlueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.SCALE_TO_LEVEL, vnfInstance.getId());
 		lcmOpOccs.getParameters().setInstantiationLevelId(scaleVnfToLevelRequest.getInstantiationLevelId());
 		if (scaleVnfToLevelRequest.getScaleInfo() != null) {
 			final Set<ScaleInfo> scaleStatus = scaleVnfToLevelRequest.getScaleInfo().stream()
@@ -82,8 +82,8 @@ public class VnfLcmService {
 		return planJpa.save(lcmOpOccs);
 	}
 
-	public Blueprint createScaleOpOcc(final VnfInstance vnfInstance, final VnfScaleRequest scaleVnfRequest) {
-		final Blueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.SCALE, vnfInstance.getId());
+	public VnfBlueprint createScaleOpOcc(final VnfInstance vnfInstance, final VnfScaleRequest scaleVnfRequest) {
+		final VnfBlueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.SCALE, vnfInstance.getId());
 		lcmOpOccs.getParameters().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
 		lcmOpOccs.getParameters().setScaleType(scaleVnfRequest.getType());
 		lcmOpOccs.getParameters().setAspectId(scaleVnfRequest.getAspectId());
@@ -106,21 +106,21 @@ public class VnfLcmService {
 		}
 	}
 
-	public Blueprint createOperateOpOcc(final VnfInstance vnfInstance, final VnfOperateRequest operateVnfRequest) {
-		final Blueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.OPERATE, vnfInstance.getId());
+	public VnfBlueprint createOperateOpOcc(final VnfInstance vnfInstance, final VnfOperateRequest operateVnfRequest) {
+		final VnfBlueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.OPERATE, vnfInstance.getId());
 		final OperateChanges opChanges = lcmOpOccs.getOperateChanges();
 		opChanges.setTerminationType(OperationalStateType.fromValue(operateVnfRequest.getChangeStateTo().toString()));
 		opChanges.setGracefulTerminationTimeout(operateVnfRequest.getGracefulStopTimeout());
 		return planJpa.save(lcmOpOccs);
 	}
 
-	public List<Blueprint> query(final String filter) {
+	public List<VnfBlueprint> query(final String filter) {
 		final SearchQueryer sq = new SearchQueryer(em);
-		return (List<Blueprint>) sq.getCriteria(filter, Blueprint.class)
+		return (List<VnfBlueprint>) sq.getCriteria(filter, VnfBlueprint.class)
 				.getResultStream().collect(Collectors.toList());
 	}
 
-	public Blueprint findById(final UUID id) {
+	public VnfBlueprint findById(final UUID id) {
 		return planJpa.findById(id).orElseThrow();
 	}
 }

@@ -39,7 +39,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
@@ -142,7 +142,7 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 	}
 
 	@Override
-	public Deque<VnfLiveInstance> getLiveComputeInstanceOf(final Blueprint plan, final VnfCompute vnfCompute) {
+	public Deque<VnfLiveInstance> getLiveComputeInstanceOf(final VnfBlueprint plan, final VnfCompute vnfCompute) {
 		return vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(plan.getVnfInstance(), vnfCompute.getToscaName())
 				.stream()
 				.collect(Collectors.toCollection(ArrayDeque::new));

@@ -28,6 +28,7 @@ import com.github.dexecutor.core.ExecutionConfig;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
@@ -37,7 +38,7 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 @Service
-public class PlanExecutor {
+public class PlanExecutor<U extends Task> {
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
@@ -45,23 +46,23 @@ public class PlanExecutor {
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
 	}
 
-	public ExecutionResults<UnitOfWork, String> execCreate(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
-		return createExecutor(g, new UowTaskCreateProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa, baseContext));
+	public ExecutionResults<UnitOfWork<U>, String> execCreate(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> baseContext) {
+		return createExecutor(g, new UowTaskCreateProvider<>(vimConnectionInformation, vim, vnfLiveInstanceJpa, baseContext));
 	}
 
-	public ExecutionResults<UnitOfWork, String> execDelete(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
-		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> rev = GraphTools.revert(g);
-		return createExecutor(rev, new UowTaskDeleteProvider(vimConnectionInformation, vim, vnfLiveInstanceJpa));
+	public ExecutionResults<UnitOfWork<U>, String> execDelete(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final VimConnectionInformation vimConnectionInformation, final Vim vim) {
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> rev = GraphTools.revert(g);
+		return createExecutor(rev, new UowTaskDeleteProvider<>(vimConnectionInformation, vim, vnfLiveInstanceJpa));
 	}
 
-	private static <U> ExecutionResults<U, String> createExecutor(final ListenableGraph<U, ConnectivityEdge<U>> g, final TaskProvider<U, String> uowTaskProvider) {
+	private ExecutionResults<UnitOfWork<U>, String> createExecutor(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final TaskProvider<UnitOfWork<U>, String> uowTaskProvider) {
 		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "executor");
-		final DexecutorConfig<U, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
+		final DexecutorConfig<UnitOfWork<U>, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
-		final DefaultDexecutor<U, String> executor = new DefaultDexecutor<>(config);
+		final DefaultDexecutor<UnitOfWork<U>, String> executor = new DefaultDexecutor<>(config);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
-		final ExecutionResults<U, String> res = executor.execute(ExecutionConfig.TERMINATING);
+		final ExecutionResults<UnitOfWork<U>, String> res = executor.execute(ExecutionConfig.TERMINATING);
 		executorService.shutdown();
 		return res;
 	}

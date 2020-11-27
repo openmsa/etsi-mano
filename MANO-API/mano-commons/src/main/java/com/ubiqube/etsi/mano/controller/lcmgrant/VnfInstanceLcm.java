@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -46,16 +46,16 @@ public interface VnfInstanceLcm {
 
 	void delete(@Nonnull final UUID vnfInstanceId);
 
-	Blueprint instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest);
+	VnfBlueprint instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest);
 
-	Blueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout);
+	VnfBlueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout);
 
-	Blueprint scaleToLevel(@Nonnull final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest);
+	VnfBlueprint scaleToLevel(@Nonnull final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest);
 
-	Blueprint scale(@Nonnull final UUID uuid, final VnfScaleRequest scaleVnfRequest);
+	VnfBlueprint scale(@Nonnull final UUID uuid, final VnfScaleRequest scaleVnfRequest);
 
-	Blueprint operate(@Nonnull final UUID uuid, final VnfOperateRequest operateVnfRequest);
+	VnfBlueprint operate(@Nonnull final UUID uuid, final VnfOperateRequest operateVnfRequest);
 
-	Blueprint vnfLcmOpOccsGet(@NotNull UUID id);
+	VnfBlueprint vnfLcmOpOccsGet(@NotNull UUID id);
 
 }

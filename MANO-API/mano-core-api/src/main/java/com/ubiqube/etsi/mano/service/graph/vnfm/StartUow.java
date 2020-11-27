@@ -25,12 +25,14 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class StartUow extends AbstractUnitOfWork {
+public class StartUow<T extends Task> implements UnitOfWork<T> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public StartUow(final Task _task) {
-		super(_task);
+	private final T task;
+
+	public StartUow(final T _task) {
+		task = _task;
 	}
 
 	@Override
@@ -39,18 +41,28 @@ public class StartUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	protected String getPrefix() {
-		return "vnf_mano_start";
-	}
-
-	@Override
 	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
 		return null;
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<T>, ConnectivityEdge<UnitOfWork<T>>> g, final Map<String, UnitOfWork<T>> cache) {
 		// Nothing to do.
+	}
+
+	@Override
+	public String getName() {
+		return "start";
+	}
+
+	@Override
+	public String getToscaName() {
+		return "start";
+	}
+
+	@Override
+	public T getTaskEntity() {
+		return task;
 	}
 
 }

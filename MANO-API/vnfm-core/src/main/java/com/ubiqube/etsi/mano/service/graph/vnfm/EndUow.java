@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -33,7 +33,7 @@ public class EndUow extends AbstractUnitOfWork {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EndUow.class);
 
-	public EndUow(final Task task) {
+	public EndUow(final VnfTask task) {
 		super(task);
 	}
 
@@ -54,7 +54,7 @@ public class EndUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, final Map<String, UnitOfWork> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
 		// Nothing to do.
 	}
 

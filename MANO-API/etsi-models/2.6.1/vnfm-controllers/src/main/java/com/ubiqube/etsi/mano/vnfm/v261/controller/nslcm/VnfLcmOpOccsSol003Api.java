@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
@@ -66,7 +66,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
-		final List<Blueprint> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
+		final List<VnfBlueprint> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final List<VnfLcmOpOcc> results = resultsDb.stream()
 				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
 				.collect(Collectors.toList());
@@ -92,7 +92,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
-		final Blueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
+		final VnfBlueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
 		resultDb.getTasks().stream()

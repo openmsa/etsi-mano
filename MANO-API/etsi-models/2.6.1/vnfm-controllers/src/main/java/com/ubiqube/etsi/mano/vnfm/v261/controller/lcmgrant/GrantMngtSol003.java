@@ -46,6 +46,12 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 import ma.glasnost.orika.MapperFacade;
 
+/**
+ * Handle HTTP. XXX Should be moved to versinService.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class GrantMngtSol003 implements GrantManagement {
 	private final static Pattern UUID_REGEXP = Pattern.compile("(?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})$");

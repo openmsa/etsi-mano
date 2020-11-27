@@ -27,13 +27,13 @@ import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public interface UnitOfWork extends UnitOfWorkBase, Serializable {
+public interface UnitOfWork<U extends Task> extends UnitOfWorkBase, Serializable {
 
 	String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, Map<String, String> context);
 
-	Task getTaskEntity();
+	U getTaskEntity();
 
 	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, String resourceId, Map<String, String> context);
 
-	void connect(ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, Map<String, UnitOfWork> cache);
+	void connect(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, Map<String, UnitOfWork<U>> cache);
 }

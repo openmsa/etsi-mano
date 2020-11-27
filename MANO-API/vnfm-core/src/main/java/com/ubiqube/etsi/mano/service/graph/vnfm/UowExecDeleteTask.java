@@ -19,14 +19,15 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class UowExecDeleteTask extends AbstractTaskUow {
+public class UowExecDeleteTask<U extends Task> extends AbstractTaskUow<U> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public UowExecDeleteTask(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork uaow, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> _context) {
+	public UowExecDeleteTask(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork<U> uaow, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> _context) {
 		super(vimConnectionInformation, vim, uaow, _context, false);
 	}
 

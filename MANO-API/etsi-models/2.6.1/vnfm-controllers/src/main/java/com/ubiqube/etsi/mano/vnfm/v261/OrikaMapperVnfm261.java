@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
@@ -139,7 +139,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("computeResource.vimConnectionId", "vimConnectionInformation.id")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfLcmOpOcc.class, Blueprint.class)
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("resourceChanges", "tasks")
 				.field("grantId", "grantsRequestId")

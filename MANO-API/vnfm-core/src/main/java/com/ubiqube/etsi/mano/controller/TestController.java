@@ -31,11 +31,12 @@ import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
-import com.ubiqube.etsi.mano.service.plan.Planner;
+import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 
 @Controller
 @RequestMapping("/exec")
@@ -45,12 +46,12 @@ public class TestController {
 
 	private final PlanExecutor planExecutor;
 
-	private final Planner planner;
+	private final VnfPlanner planner;
 	private final VnfPackageService vnfPackageService;
 	private final VnfInstanceService vnfInstanceService;
 	private final VimResourceService vimResourceService;
 
-	public TestController(final PlanExecutor _planExecutor, final Planner _planner, final VnfPackageService _vnfPackageService, final VnfInstanceService _vnfInstanceService, final VimResourceService _vimResourceService) {
+	public TestController(final PlanExecutor _planExecutor, final VnfPlanner _planner, final VnfPackageService _vnfPackageService, final VnfInstanceService _vnfInstanceService, final VimResourceService _vimResourceService) {
 		planExecutor = _planExecutor;
 		planner = _planner;
 		vnfPackageService = _vnfPackageService;
@@ -62,7 +63,7 @@ public class TestController {
 	public ResponseEntity<Blueprint> testPlan() {
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString("d1814a92-7b09-420b-b212-6f9cd078456b"));
 		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString("e381cdbc-5993-4ae4-9525-89db3237b309"));
-		final Blueprint plan = new Blueprint();
+		final VnfBlueprint plan = new VnfBlueprint();
 		plan.setId(UUID.randomUUID());
 		plan.setVnfInstance(vnfInstance);
 		final Set<ScaleInfo> scaling = null;

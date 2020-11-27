@@ -30,7 +30,7 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.service.VersionManager;
 import com.ubiqube.etsi.mano.service.VnfmService;
 
 /**
+ * This class Is preparing querying a VNFM using HHTP.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -55,9 +56,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	@Override
 	public List<VnfInstance> get(final Map<String, String> queryParameters) {
 		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		queryParameters.entrySet().forEach(x -> {
-			params.add(x.getKey(), x.getValue());
-		});
+		queryParameters.entrySet().forEach(x -> params.add(x.getKey(), x.getValue()));
 		return versionService.vnfInstanceGet(params);
 	}
 
@@ -72,32 +71,32 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public Blueprint instantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
+	public VnfBlueprint instantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		return versionService.vnfInstanceInstantiate(vnfInstanceId, instantiateVnfRequest);
 	}
 
 	@Override
-	public Blueprint terminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+	public VnfBlueprint terminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		return versionService.vnfInstanceTerminate(vnfInstanceId, terminationType, gracefulTerminationTimeout);
 	}
 
 	@Override
-	public Blueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+	public VnfBlueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		return versionService.vnfInstanceScaleToLevel(uuid, scaleVnfToLevelRequest);
 	}
 
 	@Override
-	public Blueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
+	public VnfBlueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
 		return versionService.vnfInstanceScale(uuid, scaleVnfRequest);
 	}
 
 	@Override
-	public Blueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
+	public VnfBlueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		return versionService.vnfInstanceOperate(uuid, operateVnfRequest);
 	}
 
 	@Override
-	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
 		return versionService.vnfLcmOpOccsGet(id);
 	}
 

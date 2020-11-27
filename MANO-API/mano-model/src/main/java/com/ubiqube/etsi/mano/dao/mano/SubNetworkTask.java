@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
 /**
  *
@@ -27,7 +27,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Task;
  *
  */
 @Entity
-public class SubNetworkTask extends Task {
+public class SubNetworkTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

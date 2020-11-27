@@ -20,9 +20,9 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
-public interface BlueprintJpa extends CrudRepository<Blueprint, UUID> {
+public interface VnfBlueprintJpa extends CrudRepository<VnfBlueprint, UUID> {
 
 	/// void find
 }

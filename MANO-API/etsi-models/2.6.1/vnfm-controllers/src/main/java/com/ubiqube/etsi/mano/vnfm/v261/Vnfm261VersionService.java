@@ -27,7 +27,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -70,31 +70,31 @@ public class Vnfm261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
+	public VnfBlueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Blueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
+	public VnfBlueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Blueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+	public VnfBlueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Blueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+	public VnfBlueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Blueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
+	public VnfBlueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -106,7 +106,7 @@ public class Vnfm261VersionService implements VersionService {
 	}
 
 	@Override
-	public Blueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

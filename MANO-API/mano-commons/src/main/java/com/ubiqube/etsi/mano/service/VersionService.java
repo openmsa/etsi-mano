@@ -25,7 +25,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -45,18 +45,18 @@ public interface VersionService {
 
 	VnfInstance vnfInstancePost(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
 
-	Blueprint vnfInstanceOperate(UUID uuid, VnfOperateRequest operateVnfRequest);
+	VnfBlueprint vnfInstanceOperate(UUID uuid, VnfOperateRequest operateVnfRequest);
 
-	Blueprint vnfInstanceScale(UUID uuid, VnfScaleRequest scaleVnfRequest);
+	VnfBlueprint vnfInstanceScale(UUID uuid, VnfScaleRequest scaleVnfRequest);
 
-	Blueprint vnfInstanceScaleToLevel(UUID uuid, VnfScaleToLevelRequest scaleVnfToLevelRequest);
+	VnfBlueprint vnfInstanceScaleToLevel(UUID uuid, VnfScaleToLevelRequest scaleVnfToLevelRequest);
 
-	Blueprint vnfInstanceTerminate(UUID vnfInstanceId, CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
+	VnfBlueprint vnfInstanceTerminate(UUID vnfInstanceId, CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
 
-	Blueprint vnfInstanceInstantiate(UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest);
+	VnfBlueprint vnfInstanceInstantiate(UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest);
 
 	void vnfInstanceDelete(UUID vnfInstanceId);
 
-	Blueprint vnfLcmOpOccsGet(@NotNull UUID id);
+	VnfBlueprint vnfLcmOpOccsGet(@NotNull UUID id);
 
 }

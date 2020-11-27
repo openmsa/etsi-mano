@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service.plan.contributors;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -34,11 +33,11 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -80,11 +79,11 @@ public class ComputeContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final List<Task> ret = new ArrayList<>();
+		final List<VnfTask> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
 			final NumberOfCompute numInst = scalingStrategy.getNumberOfCompute(plan, vnfPackage, scaling, x);
 			if (numInst.getCurrent() < numInst.getWanted()) {
@@ -96,7 +95,7 @@ public class ComputeContributor extends AbstractPlanContributor {
 		return ret;
 	}
 
-	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+	private List<VnfTask> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ComputeTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final ComputeTask computeTask = new ComputeTask();
@@ -112,10 +111,10 @@ public class ComputeContributor extends AbstractPlanContributor {
 		}).collect(Collectors.toList());
 	}
 
-	private Collection<? extends Task> removeInstance(final VnfCompute vnfCompute, final Blueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
+	private List<VnfTask> removeInstance(final VnfCompute vnfCompute, final VnfBlueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
 		final int toDelete = numInst.getCurrent() - numInst.getWanted();
 		final Deque<VnfLiveInstance> instantiated = vnfInstanceService.getLiveComputeInstanceOf(plan, vnfCompute);
-		final List<Task> ret = new ArrayList<>();
+		final List<VnfTask> ret = new ArrayList<>();
 		for (int i = 0; i < toDelete; i++) {
 			final ComputeTask computeTask = new ComputeTask();
 			final VnfLiveInstance inst = instantiated.pop();
@@ -133,9 +132,9 @@ public class ComputeContributor extends AbstractPlanContributor {
 		return ret;
 	}
 
-	private List<Task> addInstance(final VnfCompute vnfCompute, final Blueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
+	private List<VnfTask> addInstance(final VnfCompute vnfCompute, final VnfBlueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
 		final int toCreate = numInst.getWanted() - numInst.getCurrent();
-		final List<Task> ret = new ArrayList<>();
+		final List<VnfTask> ret = new ArrayList<>();
 		for (int i = 0; i < toCreate; i++) {
 			final ComputeTask computeTask = new ComputeTask();
 			computeTask.setVnfCompute(vnfCompute);
@@ -151,8 +150,8 @@ public class ComputeContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork> convertTasksToExecNode(final Set<Task> tasks, final Blueprint plan) {
-		final ArrayList<UnitOfWork> ret = new ArrayList<>();
+	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
 		final VnfInstance vnfInstance = vnfInstanceService.findById(plan.getVnfInstance().getId());
 		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
 		tasks.stream()
@@ -167,7 +166,7 @@ public class ComputeContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+	public void getDependencies(final DependencyBuilder dependencyBuilder) {
 		dependencyBuilder.connectionFrom(Network.class);
 	}
 

@@ -30,10 +30,11 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
@@ -45,7 +46,7 @@ import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.Storage;
 
 @Service
-public class StorageContributor implements PlanContributor {
+public class StorageContributor extends AbstractPlanContributor {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public StorageContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
@@ -58,14 +59,14 @@ public class StorageContributor implements PlanContributor {
 	}
 
 	@Override
-	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
+	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
 
 		// XXX Maybe we can enumerate compute node in current plan and create / delete
 		// storage ?
-		final List<Task> ret = new ArrayList<>();
+		final List<VnfTask> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> x.getStorages().forEach(y -> {
 			final Task ct = findCompute(plan, x.getToscaName());
 			final StorageTask task = new StorageTask();
@@ -79,7 +80,7 @@ public class StorageContributor implements PlanContributor {
 		return ret;
 	}
 
-	private List<Task> doTerminatePlan(final VnfInstance vnfInstance) {
+	private List<VnfTask> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final StorageTask task = new StorageTask();
@@ -94,7 +95,7 @@ public class StorageContributor implements PlanContributor {
 		}).collect(Collectors.toList());
 	}
 
-	private static Task findCompute(final Blueprint plan, final String toscaName) {
+	private static VnfTask findCompute(final VnfBlueprint plan, final String toscaName) {
 		return plan.getTasks().stream().filter(x -> x.getToscaName().equals(toscaName)).findAny().orElseThrow();
 	}
 
@@ -106,7 +107,7 @@ public class StorageContributor implements PlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork> convertTasksToExecNode(final Set<Task> tasks, final Blueprint plan) {
+	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
 				.filter(x -> x instanceof StorageTask)
 				.map(x -> (StorageTask) x)
@@ -115,7 +116,7 @@ public class StorageContributor implements PlanContributor {
 	}
 
 	@Override
-	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+	public void getDependencies(final DependencyBuilder dependencyBuilder) {
 		dependencyBuilder.connectionFrom(Start.class).connectTo(Compute.class);
 	}
 

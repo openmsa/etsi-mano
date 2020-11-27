@@ -27,10 +27,10 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
@@ -52,8 +52,8 @@ public class VnfExtCpContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<Task> contribute(final VnfPackage vnfPackage, final Blueprint plan, final Set<ScaleInfo> scaling) {
-		final List<Task> ret = new ArrayList<>();
+	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
+		final List<VnfTask> ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
 			final Optional<NetworkTask> vl = plan.getTasks().stream()
 					.filter(y -> y instanceof NetworkTask)
@@ -74,8 +74,8 @@ public class VnfExtCpContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork> convertTasksToExecNode(final Set<Task> tasks, final Blueprint plan) {
-		final ArrayList<UnitOfWork> ret = new ArrayList<>();
+	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
 		tasks.stream()
 				.filter(x -> x instanceof ExternalCpTask)
 				.map(x -> (ExternalCpTask) x)
@@ -86,7 +86,7 @@ public class VnfExtCpContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public <U extends Node> void getDependencies(final DependencyBuilder dependencyBuilder) {
+	public void getDependencies(final DependencyBuilder dependencyBuilder) {
 		dependencyBuilder.connectionFrom(Network.class);
 	}
 
