@@ -51,7 +51,7 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 
 	private final List<PlanContributor<P, B, U>> planContributors;
 
-	private final List<ConnectivityEdge<Node>> connections;
+	private final List<ConnectivityEdge<Node>> conns;
 
 	Map<Node, List<ConnectivityEdge<Node>>> sourceCache;
 
@@ -60,39 +60,39 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 	public Planner(final List<PlanContributor<P, B, U>> _planContributors) {
 		planContributors = _planContributors;
 		// XXX Some how it could depend on planContributors.
-		connections = new ConnectionStorage().getConnections();
-		sourceCache = connections.stream().collect(Collectors.groupingBy(ConnectivityEdge::getSource, Collectors.toList()));
-		targetCache = connections.stream().collect(Collectors.groupingBy(ConnectivityEdge::getTarget, Collectors.toList()));
+		conns = new ConnectionStorage().getConnections();
+		sourceCache = conns.stream().collect(Collectors.groupingBy(ConnectivityEdge::getSource, Collectors.toList()));
+		targetCache = conns.stream().collect(Collectors.groupingBy(ConnectivityEdge::getTarget, Collectors.toList()));
 	}
 
-	public void doPlan(final P vnfPackage, final B plan, final Set<ScaleInfo> scaling) {
-		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, Start.class);
+	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling) {
+		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(conns, Start.class);
 		final Set<String> cache = new HashSet<>();
-		start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections, cache));
+		start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget().getClass(), scaling, conns, cache));
 	}
 
-	private void doPlanInner(final P vnfPackage, final B plan, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections, final Set<String> cache) {
+	private void doPlanInner(final P bundle, final B blueprint, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections, final Set<String> cache) {
 		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, clazz);
 		if (!start.isEmpty()) {
 			final ConnectivityEdge<Node> edge = start.get(0);
 			if (!cache.contains(edge.getSource().getClass().getName())) {
-				contribute(vnfPackage, plan, scaling, edge.getSource().getClass());
+				contribute(bundle, blueprint, scaling, edge.getSource().getClass());
 				cache.add(edge.getSource().getClass().getName());
 			}
-			start.forEach(x -> doPlanInner(vnfPackage, plan, x.getTarget().getClass(), scaling, connections, cache));
+			start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget().getClass(), scaling, connections, cache));
 		} else {
 			if (!cache.contains(clazz.getName())) {
-				contribute(vnfPackage, plan, scaling, clazz);
+				contribute(bundle, blueprint, scaling, clazz);
 				cache.add(clazz.getName());
 			}
 		}
 	}
 
-	private void contribute(final P vnfPackage, final B plan, final Set<ScaleInfo> scaling, final Class<? extends Node> node) {
+	private void contribute(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final Class<? extends Node> node) {
 		final List<PlanContributor<P, B, U>> contributors = getContributors(node);
 		LOG.debug("Contributors for node {} = {}", node, contributors);
-		plan.getTasks().addAll(contributors.stream()
-				.flatMap(x -> x.contribute(vnfPackage, plan, scaling).stream())
+		blueprint.getTasks().addAll(contributors.stream()
+				.flatMap(x -> x.contribute(bundle, blueprint, scaling).stream())
 				.collect(Collectors.toList()));
 	}
 
@@ -104,9 +104,9 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 		return connections.stream().filter(x -> x.getSource().getClass() == class1).collect(Collectors.toList());
 	}
 
-	public ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> convertToExecution(final B plan, final ChangeType changeType) {
-		final Set<U> tasks = plan.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
-		final List<UnitOfWork<U>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, plan).stream()).collect(Collectors.toList());
+	public ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> convertToExecution(final B blueprint, final ChangeType changeType) {
+		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
+		final List<UnitOfWork<U>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
 		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g = GraphTools.createGraph();
 		list.forEach(g::addVertex);
 		final Map<String, UnitOfWork<U>> cache = list.stream()
