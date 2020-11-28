@@ -38,7 +38,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 @Entity
 @Indexed
@@ -98,7 +98,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private Map<String, String> extensions = null;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private transient Set<Blueprint> blueprints;
+	private transient Set<VnfBlueprint> blueprints;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
@@ -236,11 +236,11 @@ public class VnfInstance implements BaseEntity, Auditable {
 		this.extensions = extensions;
 	}
 
-	public Set<Blueprint> getBlueprints() {
+	public Set<VnfBlueprint> getBlueprints() {
 		return blueprints;
 	}
 
-	public void setBlueprints(final Set<Blueprint> blueprints) {
+	public void setBlueprints(final Set<VnfBlueprint> blueprints) {
 		this.blueprints = blueprints;
 	}
 

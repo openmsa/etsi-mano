@@ -26,12 +26,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 
+@MappedSuperclass
 public abstract class AbstractBlueprint<U extends Task> implements Blueprint<U>, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

@@ -20,20 +20,17 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
-import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 
-@Entity
-@EntityListeners(AuditListener.class)
+@MappedSuperclass
 public abstract class AbstractTask implements Task {
 
 	/** Serial. */
