@@ -16,31 +16,46 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.List;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 
-public class NsBlueprintService {
+@Service
+public class NsBlueprintServiceImpl implements NsBlueprintService {
 
+	@Override
 	public int getNumberOfLiveSap(final NsdInstance nsInstance, final NsSap x) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
 	public int getNumberOfLiveVl(final NsdInstance nsInstance, final NsVirtualLink x) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
 	public NsBlueprint findById(final UUID blueprintId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public NsBlueprint save(final NsBlueprint nsBlueprint) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<NsLcmOpOccs> query(final String filter) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -24,25 +24,25 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
+import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
-import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 
 @Service
 public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsInstanceRepository nsInstanceRepository;
-	private final NsLcmOpOccsService lcmOpOccsService;
+	private final NsBlueprintService blueprintService;
 	private final NsInstanceService nsInstanceService;
 
-	public NsInstanceControllerImpl(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsLcmOpOccsService _lcmOpOccsService) {
+	public NsInstanceControllerImpl(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService) {
 		nsInstanceRepository = _nsInstanceRepository;
 		nsInstanceService = _nsInstanceService;
-		lcmOpOccsService = _lcmOpOccsService;
+		blueprintService = _lcmOpOccsService;
 	}
 
 	@Override
@@ -66,8 +66,8 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	public NsdInstance nsInstancesNsInstanceIdHealPost(final UUID id) {
 		final NsdInstance nsInstance = nsInstanceRepository.get(id);
 		ensureInstantiated(nsInstance);
-		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstance, NsdChangeType.HEAL);
-		lcmOpOccsService.save(lcmOpOccs);
+		final NsBlueprint lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstance, PlanOperationType.HEAL);
+		blueprintService.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -75,8 +75,8 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	public NsdInstance nsInstancesNsInstanceIdScalePost(final UUID id) {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsdChangeType.SCALE);
-		lcmOpOccsService.save(lcmOpOccs);
+		final NsBlueprint lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.SCALE);
+		blueprintService.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 
@@ -84,8 +84,8 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	public void nsInstancesNsInstanceIdUpdatePost(final UUID id) {
 		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, NsdChangeType.UPDATE);
-		lcmOpOccsService.save(lcmOpOccs);
+		final NsBlueprint lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.UPDATE);
+		blueprintService.save(lcmOpOccs);
 		throw new GenericException("TODO");
 	}
 }

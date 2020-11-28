@@ -39,8 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceController;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -153,7 +153,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final InstantiateNsRequest body) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsInstantiate nsInst = mapper.map(body, NsInstantiate.class);
-		final NsLcmOpOccs nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, nsInst);
+		final NsBlueprint nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, nsInst);
 
 		final String link = NsLcmOpOccsSol005Api.makeSelfLink(nsLcm);
 		return ResponseEntity.accepted().header("Location", link).build();
@@ -186,7 +186,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String contentType, final TerminateNsRequest request) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsLcmOpOccs lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request.getTerminationTime());
+		final NsBlueprint lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request.getTerminationTime());
 
 		final String link = NsLcmOpOccsSol005Api.makeSelfLink(lcm);
 		return ResponseEntity.accepted().header("Location", link).build();

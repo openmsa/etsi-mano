@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -32,7 +33,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
-import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -49,9 +49,9 @@ import com.ubiqube.etsi.mano.service.vim.node.NsdNode;
 public class NsdConributor extends AbstractNsContributor {
 	private final NsInstanceService nsInstanceService;
 	private final NsInstanceControllerService nsInstanceControllerService;
-	private final NsLcmOpOccsService nsLcmOpOccsService;
+	private final VnfInstanceLcm nsLcmOpOccsService;
 
-	public NsdConributor(final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
+	public NsdConributor(final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService) {
 		nsInstanceService = _nsInstanceService;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmOpOccsService = _nsLcmOpOccsService;

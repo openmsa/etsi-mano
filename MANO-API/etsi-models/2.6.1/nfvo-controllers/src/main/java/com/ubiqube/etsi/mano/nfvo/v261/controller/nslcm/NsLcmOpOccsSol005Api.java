@@ -34,13 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccsResourceChanges;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOccLinks;
-import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
+import com.ubiqube.etsi.mano.service.NsBlueprintService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -48,10 +48,10 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
-	private final NsLcmOpOccsService nsLcmOpOccsService;
+	private final NsBlueprintService nsLcmOpOccsService;
 	private final MapperFacade mapper;
 
-	public NsLcmOpOccsSol005Api(final NsLcmOpOccsService _nsLcmOpOccsRepository, final MapperFacade _mapper) {
+	public NsLcmOpOccsSol005Api(final NsBlueprintService _nsLcmOpOccsRepository, final MapperFacade _mapper) {
 		nsLcmOpOccsService = _nsLcmOpOccsRepository;
 		mapper = _mapper;
 	}
@@ -113,14 +113,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String contentType) {
-		final NsLcmOpOccs nsLcmOpOccs = nsLcmOpOccsService.get(UUID.fromString(nsLcmOpOccId));
-		final NsLcmOpOccsResourceChanges resources = nsLcmOpOccs.getResourceChanges();
-		resources.setAffectedNss(resources.getAffectedNss().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
-		resources.setAffectedPnfs(resources.getAffectedPnfs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
-		resources.setAffectedSaps(resources.getAffectedSaps().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
-		resources.setAffectedVls(resources.getAffectedVls().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
-		resources.setAffectedVnffgs(resources.getAffectedVnffgs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
-		resources.setAffectedVnfs(resources.getAffectedVnfs().stream().filter(x -> x.getResourceId() != null).collect(Collectors.toSet()));
+		final NsBlueprint nsLcmOpOccs = nsLcmOpOccsService.findById(UUID.fromString(nsLcmOpOccId));
 		final NsLcmOpOcc res = mapper.map(nsLcmOpOccs, NsLcmOpOcc.class);
 		res.setLinks(makeLink(res));
 
@@ -163,7 +156,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
 	public static NsLcmOpOccLinks makeLink(@NotNull final NsLcmOpOcc nsLcmOpOccs) {
 		@NotNull
-		final String id = nsLcmOpOccs.getId();
+		final String id = nsLcmOpOccs.getId().toString();
 		final NsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccLinks();
 
 		final Link _continue = new Link();
@@ -188,7 +181,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		return nsLcmOpOccLinks;
 	}
 
-	public static String makeSelfLink(final NsLcmOpOccs nsLcmOpOccs) {
+	public static String makeSelfLink(final NsBlueprint nsLcmOpOccs) {
 		final String id = nsLcmOpOccs.getId().toString();
 		return linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref();
 	}

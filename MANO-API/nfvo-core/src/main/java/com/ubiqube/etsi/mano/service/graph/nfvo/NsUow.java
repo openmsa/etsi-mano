@@ -22,14 +22,14 @@ import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
-import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.NsInstantiate;
-import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
@@ -47,13 +47,13 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	private final NsdTask nsdTask;
 
-	private final NsInstantiate instantiateRequest;
+	private final VnfInstantiate instantiateRequest;
 
 	private final transient NsInstanceControllerService nsInstanceControllerService;
 
-	private final transient NsLcmOpOccsService nsLcmOpOccsService;
+	private final transient VnfInstanceLcm nsLcmOpOccsService;
 
-	public NsUow(final NsdTask _task, final NsInstantiate req, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService) {
+	public NsUow(final NsdTask _task, final VnfInstantiate req, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService) {
 		super(_task);
 		nsdTask = _task;
 		instantiateRequest = req;
@@ -63,9 +63,9 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String exec(final NsParameters params) {
-		final NsLcmOpOccs lcm = nsInstanceControllerService.instantiate(nsdTask.getNsInstanceId(), instantiateRequest);
-		final NsLcmOpOccs result = waitLcmCompletion(lcm);
-		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
+		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getNsInstanceId(), instantiateRequest);
+		final VnfBlueprint result = waitLcmCompletion(lcm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
@@ -73,9 +73,9 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String rollback(final NsParameters params) {
-		final NsLcmOpOccs lcm = nsInstanceControllerService.terminate(nsdTask.getNsInstanceId(), null);
-		final NsLcmOpOccs result = waitLcmCompletion(lcm);
-		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
+		final VnfBlueprint lcm = nsLcmOpOccsService.terminate(nsdTask.getNsInstanceId(), null, 0);
+		final VnfBlueprint result = waitLcmCompletion(lcm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
@@ -86,12 +86,12 @@ public class NsUow extends AbstractNsUnitOfWork {
 		return "nsd";
 	}
 
-	private NsLcmOpOccs waitLcmCompletion(final NsLcmOpOccs lcm) {
-		NsLcmOpOccs tmp = lcm;
-		InstantiationStatusType state = tmp.getOperationState();
-		while ((state == InstantiationStatusType.PROCESSING) || (InstantiationStatusType.STARTING == state)) {
-			tmp = nsLcmOpOccsService.findById(lcm.getId());
-			state = tmp.getOperationState();
+	private VnfBlueprint waitLcmCompletion(final VnfBlueprint lcm) {
+		VnfBlueprint tmp = lcm;
+		OperationStatusType state = tmp.getOperationStatus();
+		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
+			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(lcm.getId());
+			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}
 		LOG.info("VNF Lcm complete with state: {}", state);

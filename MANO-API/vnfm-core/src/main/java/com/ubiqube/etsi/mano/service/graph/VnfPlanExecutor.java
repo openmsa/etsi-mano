@@ -14,10 +14,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.jpa;
+package com.ubiqube.etsi.mano.service.graph;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVl;
+import org.springframework.stereotype.Service;
 
-public interface NsInstantiatedVlJpa extends NsInstantiatedBaseJpa<NsInstantiatedVl> {
-	// Nothing.
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
+
+@Service
+public class VnfPlanExecutor extends PlanExecutor<VnfTask, VnfParameters> {
+
 }

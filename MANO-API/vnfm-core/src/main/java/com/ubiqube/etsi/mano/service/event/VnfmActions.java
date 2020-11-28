@@ -57,7 +57,7 @@ import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
-import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
+import com.ubiqube.etsi.mano.service.graph.VnfPlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
@@ -80,7 +80,7 @@ public class VnfmActions {
 
 	private final EventManager eventManager;
 
-	private final PlanExecutor<VnfTask, VnfParameters> executor;
+	private final VnfPlanExecutor executor;
 
 	private final VnfInstanceService vnfInstancesService;
 
@@ -92,7 +92,7 @@ public class VnfmActions {
 
 	private VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final PlanExecutor<VnfTask, VnfParameters> _executor, final VnfInstanceService _vnfInstancesService, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final VnfPlanExecutor _executor, final VnfInstanceService _vnfInstancesService, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;

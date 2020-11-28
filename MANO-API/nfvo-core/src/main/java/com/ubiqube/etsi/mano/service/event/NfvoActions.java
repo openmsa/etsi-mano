@@ -180,7 +180,7 @@ public class NfvoActions {
 				}
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());
-				final NsLiveInstance vli = nsLiveInstanceJpa.findByNsInstantiatedBaseResourceId(rhe.getVimResourceId());
+				final NsLiveInstance vli = nsLiveInstanceJpa.findByNsBlueprintId(rhe.getVimResourceId());
 				nsLiveInstanceJpa.deleteById(vli.getId());
 			}
 		});

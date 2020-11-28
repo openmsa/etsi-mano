@@ -14,40 +14,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 
-@Entity
-@EntityListeners(AuditListener.class)
-public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
+public class NsInstantiatedBase implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
 	private Date startTime;
 
 	private Date endTime;
 
-	@Enumerated(EnumType.STRING)
 	private NsdChangeType changeType;
 
-	@Enumerated(EnumType.STRING)
 	private InstantiationStatusType changeResult = InstantiationStatusType.NOT_STARTED;
 
 	// Vim or VNFM resourceId.
@@ -55,13 +43,10 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 
 	private String instantiationLevel;
 
-	@ManyToOne
 	private NsLcmOpOccs nsLcmOpOccs;
 
-	@Embedded
 	private Audit audit;
 
-	@Override
 	public UUID getId() {
 		return id;
 	}
@@ -126,12 +111,10 @@ public class NsInstantiatedBase implements Auditable, BaseEntity, Serializable {
 		this.nsLcmOpOccs = nsLcmOpOccs;
 	}
 
-	@Override
 	public Audit getAudit() {
 		return audit;
 	}
 
-	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
 	}

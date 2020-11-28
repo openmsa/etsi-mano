@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 import org.jgrapht.ListenableGraph;
-import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.DefaultDexecutor;
 import com.github.dexecutor.core.DexecutorConfig;
@@ -32,7 +31,6 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
-@Service
 public class PlanExecutor<U extends Task, P> {
 
 	public ExecutionResults<UnitOfWork<U, P>, String> execCreate(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, final Supplier<TaskProvider<UnitOfWork<U, P>, String>> supplier) {

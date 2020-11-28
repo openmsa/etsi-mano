@@ -35,7 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
-import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
+import com.ubiqube.etsi.mano.service.graph.VnfPlanExecutor;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 
 @Controller
@@ -44,14 +44,14 @@ public class TestController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
 
-	private final PlanExecutor planExecutor;
+	private final VnfPlanExecutor planExecutor;
 
 	private final VnfPlanner planner;
 	private final VnfPackageService vnfPackageService;
 	private final VnfInstanceService vnfInstanceService;
 	private final VimResourceService vimResourceService;
 
-	public TestController(final PlanExecutor _planExecutor, final VnfPlanner _planner, final VnfPackageService _vnfPackageService, final VnfInstanceService _vnfInstanceService, final VimResourceService _vimResourceService) {
+	public TestController(final VnfPlanExecutor _planExecutor, final VnfPlanner _planner, final VnfPackageService _vnfPackageService, final VnfInstanceService _vnfInstanceService, final VimResourceService _vimResourceService) {
 		planExecutor = _planExecutor;
 		planner = _planner;
 		vnfPackageService = _vnfPackageService;

@@ -14,31 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
 
-@Entity
-@EntityListeners(AuditListener.class)
 public class NsInstantiatedSap extends NsInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
 	private String sapInstanceId = null;
 
-	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsSap sapd = null;
 
 	private String sapName = null;

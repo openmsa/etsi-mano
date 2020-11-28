@@ -14,45 +14,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-
-@Embeddable
 public class NsLcmOpOccsResourceChanges implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<NsInstantiatedVnf> affectedVnfs = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<NsInstantiatedPnf> affectedPnfs = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<NsInstantiatedVl> affectedVls = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<NsInstantiatedVnffg> affectedVnffgs = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<NsInstantiatedNs> affectedNss = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<NsInstantiatedSap> affectedSaps = new HashSet<>();
 
 	public Set<NsInstantiatedVnf> getAffectedVnfs() {

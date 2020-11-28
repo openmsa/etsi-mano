@@ -14,14 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.jpa;
+package com.ubiqube.etsi.mano.service;
 
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+public interface NsBlueprintService {
 
-public interface NsLcmOpOccsJpa extends CrudRepository<NsLcmOpOccs, UUID> {
-	// Nothing.
+	int getNumberOfLiveSap(NsdInstance nsInstance, NsSap x);
+
+	int getNumberOfLiveVl(NsdInstance nsInstance, NsVirtualLink x);
+
+	NsBlueprint findById(UUID blueprintId);
+
+	NsBlueprint save(NsBlueprint nsBlueprint);
+
+	List<NsLcmOpOccs> query(String filter);
+
 }

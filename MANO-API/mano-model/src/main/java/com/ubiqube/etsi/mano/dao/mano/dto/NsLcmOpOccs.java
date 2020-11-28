@@ -14,79 +14,47 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
-@Entity
-@Indexed
 public class NsLcmOpOccs implements BaseEntity, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@Enumerated(EnumType.STRING)
-	@Field
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private InstantiationStatusType operationState = null;
 
-	@Field
 	private Date stateEnteredTime = null;
 
-	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance = null;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
 	private NsdChangeType lcmOperationType = null;
 
-	@Field
 	private Date startTime = null;
 
-	@Field
 	private Boolean isAutomaticInvocation = null;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
 	private NsdChangeType operationParams = null;
 
-	@Field
 	private Boolean isCancelPending = null;
 
-	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
 	private CancelModeTypeEnum cancelMode = null;
 
 	private FailureDetails error = null;
 
 	private String externalProcessId;
 
-	@Embedded
 	private NsLcmOpOccsResourceChanges resourceChanges = new NsLcmOpOccsResourceChanges();
 
 	@Override

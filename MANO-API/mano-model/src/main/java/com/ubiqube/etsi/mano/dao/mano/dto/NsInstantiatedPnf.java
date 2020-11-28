@@ -14,28 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-@EntityListeners(AuditListener.class)
 public class NsInstantiatedPnf extends NsInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
 	private String pnfId = null;
@@ -46,7 +34,6 @@ public class NsInstantiatedPnf extends NsInstantiatedBase {
 
 	private String pnfName = null;
 
-	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> cpInstanceId = new HashSet<>();
 
 	@Override
