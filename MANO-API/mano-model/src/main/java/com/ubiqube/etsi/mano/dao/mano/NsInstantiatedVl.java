@@ -26,6 +26,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+
 @Entity
 @EntityListeners(AuditListener.class)
 public class NsInstantiatedVl extends NsInstantiatedBase {

@@ -16,34 +16,23 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
-import java.util.Map;
-
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class NsStartUow extends AbstractNsUnitOfWork {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+public class NsParameters extends GenericExecParams {
 
-	public NsStartUow(final NsInstantiatedBase _resourceHandleEntity) {
-		super(_resourceHandleEntity, "");
+	public NsParameters(final Vim vim) {
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
+	public static Vim getVim() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
+	public VimConnectionInformation getVimConnectionInformation() {
+		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	protected String getPrefix() {
-		return "ns_mano_start";
-	}
-
 }

@@ -26,9 +26,16 @@ import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.service.graph.UowExecCreateTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<UnitOfWork<U>, String> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ */
+public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<AbstractVnfUnitOfWork, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowTaskCreateProvider.class);
 
@@ -40,17 +47,18 @@ public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.T
 
 	private final Map<String, String> context;
 
-	public UowTaskCreateProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> baseContext) {
+	public UowTaskCreateProvider(final VnfParameters params) {
 		super();
-		this.vimConnectionInformation = vimConnectionInformation;
-		this.vim = vim;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
-		context = new ConcurrentHashMap<>(baseContext);
+		this.vimConnectionInformation = params.getVimConnectionInformation();
+		this.vim = params.getVim();
+		vnfLiveInstanceJpa = params.getVnfLiveInstanceJpa();
+		context = new ConcurrentHashMap<>(params.getContext());
 	}
 
 	@Override
-	public Task<UnitOfWork<U>, String> provideTask(final UnitOfWork<U> uaow) {
+	public Task<AbstractVnfUnitOfWork, String> provideTask(final AbstractVnfUnitOfWork uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecCreateTask<>(vimConnectionInformation, vim, uaow, vnfLiveInstanceJpa, context);
+		final VnfParameters params = new VnfParameters(vimConnectionInformation, vim, vnfLiveInstanceJpa, context);
+		return new UowExecCreateTask(uaow, params);
 	}
 }

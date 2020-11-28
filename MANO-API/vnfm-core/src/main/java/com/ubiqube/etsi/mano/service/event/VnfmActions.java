@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,12 +52,16 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.PlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -75,7 +80,7 @@ public class VnfmActions {
 
 	private final EventManager eventManager;
 
-	private final PlanExecutor<VnfTask> executor;
+	private final PlanExecutor<VnfTask, VnfParameters> executor;
 
 	private final VnfInstanceService vnfInstancesService;
 
@@ -85,7 +90,9 @@ public class VnfmActions {
 	private final VnfBlueprintService blueprintService;
 	private final VimResourceService vimResourceService;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final PlanExecutor<VnfTask> _executor, final VnfInstanceService _vnfInstancesService, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
+	private VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final PlanExecutor<VnfTask, VnfParameters> _executor, final VnfInstanceService _vnfInstancesService, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
@@ -125,19 +132,21 @@ public class VnfmActions {
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
 		localPlan = blueprintService.updateState(localPlan, OperationStatusType.PROCESSING);
-		final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> executionPlane = planner.convertToExecution(localPlan, ChangeType.REMOVED);
+		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> executionPlane = planner.convertToExecution(localPlan, ChangeType.REMOVED);
 		//////////////////////////////////
 		// XXX We can't refine a removal plan, because it has already been reverted.
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = localPlan.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
-		final ExecutionResults<UnitOfWork<VnfTask>, String> removeResults = executor.execDelete(executionPlane, vimConnection, vim);
+		final Map<String, String> context = new HashMap<>();
+		final VnfParameters vparams = new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, context);
+		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> removeResults = executor.execDelete(executionPlane, () -> new UowTaskDeleteProvider<>(vparams));
 		/// XXX split this function for adding / removing live instances.
 		setLiveSatus(localPlan, vnfInstance, removeResults);
 		// Create plan
-		final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> createPlan = planner.convertToExecution(localPlan, ChangeType.ADDED);
-		final Map<String, String> context = buildContext(localPlan, vnfInstance);
-		final ExecutionResults<UnitOfWork<VnfTask>, String> createResults = executor.execCreate(createPlan, vimConnection, vim, context);
+		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> createPlan = planner.convertToExecution(localPlan, ChangeType.ADDED);
+		final VnfParameters params = buildContext(vimConnection, vim, localPlan, vnfInstance);
+		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider(params));
 		setResultLcmInstance(localPlan, createResults);
 		setLiveSatus(localPlan, vnfInstance, createResults);
 		Optional.ofNullable(localPlan.getParameters().getScaleStatus())
@@ -162,12 +171,12 @@ public class VnfmActions {
 
 	}
 
-	private Map<String, String> buildContext(final VnfBlueprint blueprint, final VnfInstance vnfInstance) {
+	private VnfParameters buildContext(final VimConnectionInformation vimConnection, final Vim vim, final VnfBlueprint blueprint, final VnfInstance vnfInstance) {
 		final Map<String, String> context = blueprint.getParameters().getExtManagedVirtualLinks().stream()
 				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
 		// Add all present VL if any.
 		context.putAll(getLiveVl(vnfInstance));
-		return context;
+		return new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, context);
 	}
 
 	private static Set<ScaleInfo> merge(final VnfBlueprint plan, final VnfInstance vnfInstance) {
@@ -206,7 +215,7 @@ public class VnfmActions {
 				.collect(Collectors.toMap(x -> x.getTask().getToscaName(), x -> x.getTask().getVimResourceId()));
 	}
 
-	private static void setResultLcmInstance(@NotNull final VnfBlueprint blueprint, final ExecutionResults<UnitOfWork<VnfTask>, String> results) {
+	private static void setResultLcmInstance(@NotNull final VnfBlueprint blueprint, final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> results) {
 		if (results.getErrored().isEmpty()) {
 			blueprint.setOperationStatus(OperationStatusType.COMPLETED);
 		} else {
@@ -300,7 +309,7 @@ public class VnfmActions {
 		return task;
 	}
 
-	private void setLiveSatus(@NotNull final VnfBlueprint blueprint, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork<VnfTask>, String> results) {
+	private void setLiveSatus(@NotNull final VnfBlueprint blueprint, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> results) {
 		LOG.info("Creating / deleting live instances.");
 		results.getSuccess().forEach(x -> {
 			final VnfTask rhe = x.getId().getTaskEntity();

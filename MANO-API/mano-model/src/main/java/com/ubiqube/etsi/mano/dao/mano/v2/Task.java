@@ -19,15 +19,16 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 import java.time.LocalDateTime;
 
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
-import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 
-public interface Task extends BaseEntity, Auditable {
+public interface Task extends ToscaEntity, Auditable {
 
 	ChangeType getChangeType();
 
 	String getAlias();
 
+	@Override
 	String getToscaName();
 
 	void setStartDate(LocalDateTime now);

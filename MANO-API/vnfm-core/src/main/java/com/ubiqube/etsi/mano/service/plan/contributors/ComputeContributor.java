@@ -44,6 +44,7 @@ import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.VduNamingStrategy;
 import com.ubiqube.etsi.mano.service.graph.vnfm.ComputeUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy.NumberOfCompute;
@@ -57,7 +58,7 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
  *
  */
 @Service
-public class ComputeContributor extends AbstractPlanContributor {
+public class ComputeContributor extends AbstractVnfPlanContributor {
 
 	private final ScalingStrategy scalingStrategy;
 	private final VduNamingStrategy vduNamingStrategy;
@@ -150,24 +151,22 @@ public class ComputeContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
-		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
+	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		final VnfInstance vnfInstance = vnfInstanceService.findById(plan.getVnfInstance().getId());
 		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
-		tasks.stream()
+		return tasks.stream()
 				.filter(x -> x instanceof ComputeTask)
 				.map(x -> (ComputeTask) x)
-				.forEach(computeTask -> {
-					final Optional<VnfCompute> vnfCompute = vnfPackageService.findComputeById(computeTask.getVnfCompute().getId());
+				.map(x -> {
+					final Optional<VnfCompute> vnfCompute = vnfPackageService.findComputeById(x.getVnfCompute().getId());
 					final Set<VnfLinkPort> linkPort = vnfPackageService.findVnfVirtualLinks(vnfPackage);
-					ret.add(new ComputeUow(computeTask, vnfCompute.get(), linkPort));
-				});
-		return ret;
+					return new ComputeUow(x, vnfCompute.get(), linkPort);
+				})
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
 		dependencyBuilder.connectionFrom(Network.class);
 	}
-
 }

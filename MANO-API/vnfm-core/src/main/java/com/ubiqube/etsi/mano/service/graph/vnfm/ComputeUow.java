@@ -24,14 +24,12 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
  *
@@ -56,14 +54,14 @@ public class ComputeUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		final List<String> storages = vnfCompute.getStorages().stream().map(context::get).collect(Collectors.toList());
+	public String exec(final VnfParameters params) {
+		final List<String> storages = vnfCompute.getStorages().stream().map(x -> params.getContext().get(x)).collect(Collectors.toList());
 		final List<String> networks = vnfLinkPort.stream()
 				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
-				.map(context::get)
+				.map(x -> params.getContext().get(x))
 				.collect(Collectors.toList());
-		return vim.createCompute(vimConnectionInformation, task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getBootData());
+		return params.getVim().createCompute(params.getVimConnectionInformation(), task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getBootData());
 	}
 
 	@Override
@@ -72,13 +70,13 @@ public class ComputeUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		vim.deleteCompute(vimConnectionInformation, resourceId);
+	public String rollback(final VnfParameters params) {
+		params.getVim().deleteCompute(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
 		vnfLinkPort.stream()
 				.map(VnfLinkPort::getVirtualLink)
 				.map(x -> cache.get(NodeNaming.subnetwork(x)))

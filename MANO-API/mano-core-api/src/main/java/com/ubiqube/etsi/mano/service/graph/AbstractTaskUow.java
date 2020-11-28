@@ -14,55 +14,47 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.service.graph;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
-public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> extends Task<UnitOfWork<U>, String> {
+public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task, P extends GenericExecParams> extends Task<UnitOfWork<U, P>, String> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractTaskUow.class);
 
-	private final VimConnectionInformation vimConnectionInformation;
+	private final UnitOfWork<U, P> uaow;
 
-	private final transient Vim vim;
+	private final transient Function<P, String> function;
 
-	private final UnitOfWork<U> uaow;
+	private final transient P params;
 
-	private final Map<String, String> context;
-
-	private final transient Function<Parameters, String> function;
-
-	public AbstractTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork<U> uaow, final Map<String, String> _context, final boolean _create) {
+	public AbstractTaskUow(final UnitOfWork<U, P> uaow, final P params, final boolean _create) {
 		super();
-		this.vimConnectionInformation = vimConnectionInformation;
-		this.vim = vim;
 		this.uaow = uaow;
-		context = _context;
+		this.params = params;
 		if (_create) {
 			function = x -> {
-				final String res = uaow.exec(vimConnectionInformation, vim, context);
+				final String res = uaow.exec(params);
 				if (null != res) {
-					context.put(uaow.getToscaName(), res);
-					context.put(uaow.getTaskEntity().getAlias(), res);
+					params.getWorkflowContext().put(uaow.getToscaName(), res);
+					params.getWorkflowContext().put(uaow.getTaskEntity().getAlias(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
 					uaow.getTaskEntity().setVimResourceId(res);
 				}
 				return res;
 			};
 		} else {
-			function = x -> uaow.rollback(x.vimConnectionInformationLocal, x.vimLocal, x.resourceId, x.contextLocal);
+			function = x -> uaow.rollback(params);
 		}
 	}
 
@@ -74,7 +66,7 @@ public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v
 		resource.setStatus(PlanStatusType.STARTED);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
-			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getVimResourceId()));
+			function.apply(params);
 			resource.setStatus(PlanStatusType.SUCCESS);
 		} catch (final RuntimeException e) {
 			LOG.warn("Task {} failed.", uaow.getName(), e);
@@ -89,17 +81,4 @@ public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v
 		return null;
 	}
 
-	class Parameters {
-		public Parameters(final VimConnectionInformation _vimConnectionInformation, final Vim _vim, final Map<String, String> _context, final String _resourceId) {
-			vimConnectionInformationLocal = _vimConnectionInformation;
-			vimLocal = _vim;
-			contextLocal = _context;
-			resourceId = _resourceId;
-		}
-
-		private final VimConnectionInformation vimConnectionInformationLocal;
-		private final Vim vimLocal;
-		private final Map<String, String> contextLocal;
-		private final String resourceId;
-	}
 }

@@ -45,11 +45,11 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
 @Service
-public class Planner<U extends Task, P, B extends Blueprint<U>> {
+public class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
-	private final List<PlanContributor<P, B, U>> planContributors;
+	private final List<PlanContributor<P, B, U, PA>> planContributors;
 
 	private final List<ConnectivityEdge<Node>> conns;
 
@@ -57,7 +57,7 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 
 	Map<Node, List<ConnectivityEdge<Node>>> targetCache;
 
-	public Planner(final List<PlanContributor<P, B, U>> _planContributors) {
+	public Planner(final List<PlanContributor<P, B, U, PA>> _planContributors) {
 		planContributors = _planContributors;
 		// XXX Some how it could depend on planContributors.
 		conns = new ConnectionStorage().getConnections();
@@ -89,14 +89,14 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 	}
 
 	private void contribute(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final Class<? extends Node> node) {
-		final List<PlanContributor<P, B, U>> contributors = getContributors(node);
+		final List<PlanContributor<P, B, U, PA>> contributors = getContributors(node);
 		LOG.debug("Contributors for node {} = {}", node, contributors);
 		blueprint.getTasks().addAll(contributors.stream()
 				.flatMap(x -> x.contribute(bundle, blueprint, scaling).stream())
 				.collect(Collectors.toList()));
 	}
 
-	private List<PlanContributor<P, B, U>> getContributors(final Class<? extends Node> node) {
+	private List<PlanContributor<P, B, U, PA>> getContributors(final Class<? extends Node> node) {
 		return planContributors.stream().filter(x -> x.getContributionType() == node).collect(Collectors.toList());
 	}
 
@@ -104,12 +104,12 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 		return connections.stream().filter(x -> x.getSource().getClass() == class1).collect(Collectors.toList());
 	}
 
-	public ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> convertToExecution(final B blueprint, final ChangeType changeType) {
+	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
-		final List<UnitOfWork<U>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
-		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g = GraphTools.createGraph();
+		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
+		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = GraphTools.createGraph();
 		list.forEach(g::addVertex);
-		final Map<String, UnitOfWork<U>> cache = list.stream()
+		final Map<String, UnitOfWork<U, PA>> cache = list.stream()
 				.collect(
 						Collectors.toMap(
 								x -> x.getTaskEntity().getAlias(), x -> x,
@@ -118,7 +118,7 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 									return x;
 								}));
 		// Add start
-		final UnitOfWork<U> root = new StartUow(new NoopTask());
+		final UnitOfWork<U, PA> root = new StartUow(new NoopTask());
 		g.addVertex(root);
 		g.vertexSet().stream()
 				.filter(key -> g.incomingEdgesOf(key).isEmpty())
@@ -129,7 +129,7 @@ public class Planner<U extends Task, P, B extends Blueprint<U>> {
 					}
 				});
 		list.forEach(x -> x.connect(g, cache));
-		final DOTExporter<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
+		final DOTExporter<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		try (final FileOutputStream out = new FileOutputStream("out.dot")) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {

@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.SubNetworkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -50,7 +51,7 @@ import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
  *
  */
 @Service
-public class SubNetworkContributor extends AbstractPlanContributor {
+public class SubNetworkContributor extends AbstractVnfPlanContributor {
 	private final VnfBlueprintService blueprintService;
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
@@ -112,15 +113,12 @@ public class SubNetworkContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
-		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
-		tasks.stream()
+	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		return tasks.stream()
 				.filter(x -> x instanceof SubNetworkTask)
 				.map(x -> (SubNetworkTask) x)
-				.forEach(x -> {
-					ret.add(new SubNetworkUow(x));
-				});
-		return ret;
+				.map(SubNetworkUow::new)
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -21,14 +21,12 @@ import java.util.Optional;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VirtualLinkUow extends AbstractUnitOfWork {
 
@@ -54,9 +52,9 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		final String domainName = context.get(NodeNaming.dnsZone());
-		return vim.createNetwork(vimConnectionInformation, vlProtocolData, networkTask.getAlias(), domainName, null);
+	public String exec(final VnfParameters params) {
+		final String domainName = params.getContext().get(NodeNaming.dnsZone());
+		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
 	@Override
@@ -70,13 +68,13 @@ public class VirtualLinkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		vim.deleteVirtualLink(vimConnectionInformation, resourceId);
+	public String rollback(final VnfParameters params) {
+		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
 		Optional.ofNullable(cache.get(NodeNaming.dnsZone())).ifPresent(x -> g.addEdge(x, this));
 	}
 

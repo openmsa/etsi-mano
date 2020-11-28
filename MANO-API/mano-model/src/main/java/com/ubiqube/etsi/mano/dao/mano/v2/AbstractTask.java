@@ -19,75 +19,152 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 
-public class AbstractTask implements Task {
+@Entity
+@EntityListeners(AuditListener.class)
+public abstract class AbstractTask implements Task {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+
+	@Embedded
+	private Audit audit;
+
+	@Enumerated(EnumType.STRING)
+	private ChangeType changeType;
+
+	private String toscaName;
+
+	private String toscaId;
+	private String state;
+
+	private String alias;
+
+	private LocalDateTime startDate;
+
+	private LocalDateTime endDate;
+
+	@Enumerated(EnumType.STRING)
+	private PlanStatusType status;
+
+	private String vimResourceId;
+
+	public abstract void setId(final UUID id);
 
 	@Override
 	public UUID getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	@Override
 	public Audit getAudit() {
-		// TODO Auto-generated method stub
-		return null;
+		return audit;
 	}
 
 	@Override
 	public void setAudit(final Audit audit) {
-		// TODO Auto-generated method stub
-
+		this.audit = audit;
 	}
 
 	@Override
 	public ChangeType getChangeType() {
-		// TODO Auto-generated method stub
-		return null;
+		return changeType;
 	}
 
-	@Override
-	public String getAlias() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setChangeType(final ChangeType changeType) {
+		this.changeType = changeType;
 	}
 
 	@Override
 	public String getToscaName() {
-		// TODO Auto-generated method stub
-		return null;
+		return toscaName;
 	}
 
 	@Override
-	public void setStartDate(final LocalDateTime now) {
-		// TODO Auto-generated method stub
-
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
 	}
 
 	@Override
-	public void setStatus(final PlanStatusType started) {
-		// TODO Auto-generated method stub
+	public String getAlias() {
+		return alias;
+	}
 
+	public void setAlias(final String alias) {
+		this.alias = alias;
+	}
+
+	public LocalDateTime getStartDate() {
+		return startDate;
 	}
 
 	@Override
-	public void setEndDate(final LocalDateTime now) {
-		// TODO Auto-generated method stub
+	public void setStartDate(final LocalDateTime startDate) {
+		this.startDate = startDate;
+	}
 
+	public LocalDateTime getEndDate() {
+		return endDate;
 	}
 
 	@Override
-	public void setVimResourceId(final String res) {
-		// TODO Auto-generated method stub
+	public void setEndDate(final LocalDateTime endDate) {
+		this.endDate = endDate;
+	}
 
+	public PlanStatusType getStatus() {
+		return status;
+	}
+
+	@Override
+	public void setStatus(final PlanStatusType status) {
+		this.status = status;
 	}
 
 	@Override
 	public String getVimResourceId() {
-		// TODO Auto-generated method stub
-		return null;
+		return vimResourceId;
+	}
+
+	@Override
+	public void setVimResourceId(final String vimResourceId) {
+		this.vimResourceId = vimResourceId;
+	}
+
+	@Override
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	@Override
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
+	}
+
+	@Override
+	public String getState() {
+		return state;
+	}
+
+	@Override
+	public void setState(final String state) {
+		this.state = state;
 	}
 
 }

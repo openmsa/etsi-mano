@@ -16,11 +16,9 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -31,12 +29,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfTask extends AbstractTask {
@@ -47,26 +49,10 @@ public class VnfTask extends AbstractTask {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@Embedded
-	private Audit audit;
-
-	private LocalDateTime startDate;
-
-	private LocalDateTime endDate;
-
-	@Enumerated(EnumType.STRING)
-	private PlanStatusType status;
-
-	private String vimResourceId;
-
 	private String vimReservationId;
 
 	@Enumerated(EnumType.STRING)
 	private ChangeType changeType;
-
-	private String toscaName;
-
-	private String alias;
 
 	@Enumerated(EnumType.STRING)
 	private ResourceTypeEnum type;
@@ -92,55 +78,9 @@ public class VnfTask extends AbstractTask {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
-
-	@Override
-	public void setStartDate(final LocalDateTime startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDateTime getEndDate() {
-		return endDate;
-	}
-
-	@Override
-	public void setEndDate(final LocalDateTime endDate) {
-		this.endDate = endDate;
-	}
-
-	public PlanStatusType getStatus() {
-		return status;
-	}
-
-	@Override
-	public void setStatus(final PlanStatusType status) {
-		this.status = status;
-	}
-
-	@Override
-	public String getVimResourceId() {
-		return vimResourceId;
-	}
-
-	@Override
-	public void setVimResourceId(final String vimResourceId) {
-		this.vimResourceId = vimResourceId;
 	}
 
 	@Override
@@ -148,26 +88,9 @@ public class VnfTask extends AbstractTask {
 		return changeType;
 	}
 
+	@Override
 	public void setChangeType(final ChangeType _changeType) {
 		changeType = _changeType;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(final String alias) {
-		this.alias = alias;
 	}
 
 	public String getVimReservationId() {

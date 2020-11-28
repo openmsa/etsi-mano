@@ -14,42 +14,51 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractUnitOfWork implements UnitOfWork<VnfTask> {
+@Entity
+public class NsBlueprint extends AbstractBlueprint<NsTask> {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
-	private final String name;
+	@ManyToOne
+	private NsdInstance nsInstance;
 
-	private final VnfTask task;
+	public NsdInstance getNsInstance() {
+		return nsInstance;
+	}
 
-	public AbstractUnitOfWork(final VnfTask _task) {
-		task = _task;
-		name = task.getToscaName();
+	public void setNsInstance(final NsdInstance nsInstance) {
+		this.nsInstance = nsInstance;
 	}
 
 	@Override
-	public final VnfTask getTaskEntity() {
-		return task;
+	public UUID getId() {
+		return id;
 	}
 
-	@Override
-	public final String getName() {
-		return getPrefix() + "_" + name;
+	public void setId(final UUID id) {
+		this.id = id;
 	}
 
-	protected abstract String getPrefix();
-
-	@Override
-	public final String getToscaName() {
-		return name;
-	}
 }

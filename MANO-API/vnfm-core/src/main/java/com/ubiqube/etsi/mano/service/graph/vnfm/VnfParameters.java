@@ -14,38 +14,49 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.nfvo;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedPnf;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class PnfUow extends AbstractNsUnitOfWork {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class VnfParameters extends GenericExecParams {
 
-	public PnfUow(final NsInstantiatedPnf _resourceHandleEntity, final String _name) {
-		super(_resourceHandleEntity, _name);
+	public VnfParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context) {
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
+	public VimConnectionInformation getVimConnectionInformation() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
+	public VnfLiveInstanceJpa getVnfLiveInstanceJpa() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	protected String getPrefix() {
-		return "pnf";
+	public Map<String, String> getContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Vim getVim() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getVimResourceId() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -46,7 +47,7 @@ import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.Storage;
 
 @Service
-public class StorageContributor extends AbstractPlanContributor {
+public class StorageContributor extends AbstractVnfPlanContributor {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public StorageContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
@@ -107,7 +108,7 @@ public class StorageContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
 				.filter(x -> x instanceof StorageTask)
 				.map(x -> (StorageTask) x)

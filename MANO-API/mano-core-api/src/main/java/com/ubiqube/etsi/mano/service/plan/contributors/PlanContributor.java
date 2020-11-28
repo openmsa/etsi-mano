@@ -25,13 +25,13 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
-public interface PlanContributor<P, B, U extends Task> {
+public interface PlanContributor<P, B, U extends Task, PA> {
 
 	Class<? extends Node> getContributionType();
 
-	List<U> contribute(P vnfPackage, B plan, Set<ScaleInfo> scaling);
+	List<U> contribute(P bundle, B blueprint, Set<ScaleInfo> scaling);
 
-	List<UnitOfWork<U>> convertTasksToExecNode(Set<U> tasks, B plan);
+	List<UnitOfWork<U, PA>> convertTasksToExecNode(Set<U> tasks, B blueprint);
 
 	void getDependencies(DependencyBuilder dependencyBuilder);
 }

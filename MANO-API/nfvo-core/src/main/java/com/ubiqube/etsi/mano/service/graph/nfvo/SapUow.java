@@ -18,34 +18,53 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedSap;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import org.jgrapht.ListenableGraph;
 
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.SapTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class SapUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+	private final NsSap nsSapd;
 
-	public SapUow(final NsInstantiatedSap _resourceHandleEntity, final String _name) {
-		super(_resourceHandleEntity, _name);
-	}
-
-	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		// TODO Auto-generated method stub
-		return null;
+	public SapUow(final SapTask _taskEntity) {
+		super(_taskEntity);
+		nsSapd = _taskEntity.getSapd();
 	}
 
 	@Override
 	protected String getPrefix() {
 		return "sap";
+	}
+
+	@Override
+	public String exec(final NsParameters params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String rollback(final NsParameters params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
+		final UnitOfWork<NsTask, NsParameters> extVl = cache.get(nsSapd.getExternalVirtualLink());
+		final UnitOfWork<NsTask, NsParameters> intVl = cache.get(nsSapd.getInternalVirtualLink());
+		if ((intVl != null) && (extVl != null)) {
+			g.addEdge(extVl, intVl);
+		}
 	}
 
 }

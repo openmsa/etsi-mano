@@ -26,6 +26,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+
 @Entity
 @EntityListeners(AuditListener.class)
 public class NsLiveInstance implements BaseEntity, Auditable {
@@ -36,13 +39,11 @@ public class NsLiveInstance implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String instantiationLevel;
+	@ManyToOne
+	private NsTask nsTask;
 
 	@ManyToOne
-	private NsInstantiatedBase nsInstantiatedBase;
-
-	@ManyToOne
-	private NsLcmOpOccs nsLcmOpOccs;
+	private NsBlueprint nsBlueprint;
 
 	private String resourceId;
 
@@ -56,12 +57,11 @@ public class NsLiveInstance implements BaseEntity, Auditable {
 		// Nothing.
 	}
 
-	public NsLiveInstance(final String vnfInstanceId, final String instantiationLevel, final NsInstantiatedBase nsInstantiatedBase, final NsLcmOpOccs nsLcmOpOccs, final NsdInstance nsInstance) {
+	public NsLiveInstance(final String vnfInstanceId, final NsTask nsTask, final NsBlueprint nsBlueprint, final NsdInstance nsInstance) {
 		super();
 		this.resourceId = vnfInstanceId;
-		this.instantiationLevel = instantiationLevel;
-		this.nsInstantiatedBase = nsInstantiatedBase;
-		this.nsLcmOpOccs = nsLcmOpOccs;
+		this.nsTask = nsTask;
+		this.nsBlueprint = nsBlueprint;
 		this.nsInstance = nsInstance;
 	}
 
@@ -74,28 +74,20 @@ public class NsLiveInstance implements BaseEntity, Auditable {
 		this.id = id;
 	}
 
-	public String getInstantiationLevel() {
-		return instantiationLevel;
+	public NsTask getNsTask() {
+		return nsTask;
 	}
 
-	public void setInstantiationLevel(final String instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
+	public void setNsTask(final NsTask nsTask) {
+		this.nsTask = nsTask;
 	}
 
-	public NsInstantiatedBase getNsInstantiatedBase() {
-		return nsInstantiatedBase;
+	public NsBlueprint getNsBlueprint() {
+		return nsBlueprint;
 	}
 
-	public void setNsInstantiatedBase(final NsInstantiatedBase nsInstantiatedBase) {
-		this.nsInstantiatedBase = nsInstantiatedBase;
-	}
-
-	public NsLcmOpOccs getNsLcmOpOccs() {
-		return nsLcmOpOccs;
-	}
-
-	public void setNsLcmOpOccs(final NsLcmOpOccs nsLcmOpOccs) {
-		this.nsLcmOpOccs = nsLcmOpOccs;
+	public void setNsBlueprint(final NsBlueprint nsBlueprint) {
+		this.nsBlueprint = nsBlueprint;
 	}
 
 	public String getResourceId() {

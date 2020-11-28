@@ -40,6 +40,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
 @Entity

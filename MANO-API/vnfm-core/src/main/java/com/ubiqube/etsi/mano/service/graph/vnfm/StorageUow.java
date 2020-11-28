@@ -20,12 +20,10 @@ import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class StorageUow extends AbstractUnitOfWork {
 	/** Serial. */
@@ -42,8 +40,8 @@ public class StorageUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		return vim.createStorage(vimConnectionInformation, vnfStorage, storageTask.getAlias());
+	public String exec(final VnfParameters params) {
+		return params.getVim().createStorage(params.getVimConnectionInformation(), vnfStorage, storageTask.getAlias());
 	}
 
 	@Override
@@ -52,14 +50,15 @@ public class StorageUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		vim.deleteStorage(vimConnectionInformation, resourceId);
+	public String rollback(final VnfParameters params) {
+		params.getVim().deleteStorage(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
-		// Nothing to do.
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

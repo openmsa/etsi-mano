@@ -20,12 +20,10 @@ import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class StartUow<T extends Task> implements UnitOfWork<T> {
+public class StartUow<T extends Task, P> implements UnitOfWork<T, P> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -36,17 +34,17 @@ public class StartUow<T extends Task> implements UnitOfWork<T> {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+	public String exec(final P params) {
 		return null;
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
+	public String rollback(final P params) {
 		return null;
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<T>, ConnectivityEdge<UnitOfWork<T>>> g, final Map<String, UnitOfWork<T>> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<T, P>, ConnectivityEdge<UnitOfWork<T, P>>> g, final Map<String, UnitOfWork<T, P>> cache) {
 		// Nothing to do.
 	}
 

@@ -23,8 +23,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 
-public abstract class AbstractPlanContributor implements PlanContributor<VnfPackage, VnfBlueprint, VnfTask> {
+public abstract class AbstractVnfPlanContributor implements PlanContributor<VnfPackage, VnfBlueprint, VnfTask, VnfParameters> {
 
 	protected static <U> U createTask(final Supplier<VnfTask> newInstance) {
 		final VnfTask task = newInstance.get();

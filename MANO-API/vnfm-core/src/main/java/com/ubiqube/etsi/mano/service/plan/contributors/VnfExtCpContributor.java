@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -44,7 +46,7 @@ import com.ubiqube.etsi.mano.service.vim.node.VnfExtCp;
  *
  */
 @Service
-public class VnfExtCpContributor extends AbstractPlanContributor {
+public class VnfExtCpContributor extends AbstractVnfPlanContributor {
 
 	@Override
 	public Class<? extends Node> getContributionType() {
@@ -74,15 +76,12 @@ public class VnfExtCpContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
-		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
-		tasks.stream()
+	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		return tasks.stream()
 				.filter(x -> x instanceof ExternalCpTask)
 				.map(x -> (ExternalCpTask) x)
-				.forEach(extCpTask -> {
-					ret.add(new VnfExtCpUow(extCpTask));
-				});
-		return ret;
+				.map(VnfExtCpUow::new)
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -24,10 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
  *
@@ -49,29 +47,29 @@ public class SubNetworkUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		final String networkId = context.get(task.getParentName());
-		return vim.createSubnet(vimConnectionInformation, task.getL3Data(), task.getIpPool(), networkId);
+	public String exec(final VnfParameters params) {
+		final String networkId = params.getContext().get(task.getParentName());
+		return params.getVim().createSubnet(params.getVimConnectionInformation(), task.getL3Data(), task.getIpPool(), networkId);
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		vim.deleteSubnet(vimConnectionInformation, resourceId);
+	public String rollback(final VnfParameters params) {
+		params.getVim().deleteSubnet(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
-		final Optional<UnitOfWork> parent = Optional.ofNullable(cache.get(task.getParentName()));
-		LOG.warn("Subnetwork: " + task.getAlias() + " => " + task.getParentName() + " => " + cache);
-		parent.ifPresent(x -> {
-			g.addEdge(x, this);
-		});
 	}
 
 	@Override
 	protected String getPrefix() {
 		return "subnet";
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
+		final Optional<UnitOfWork> parent = Optional.ofNullable(cache.get(task.getParentName()));
+		LOG.warn("Subnetwork: " + task.getAlias() + " => " + task.getParentName() + " => " + cache);
+		parent.ifPresent(x -> {
+			g.addEdge(x, this);
+		});
 	}
 
 }

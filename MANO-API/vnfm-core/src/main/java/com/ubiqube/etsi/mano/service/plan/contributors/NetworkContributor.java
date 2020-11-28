@@ -39,13 +39,14 @@ import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
 @Service
-public class NetworkContributor extends AbstractPlanContributor {
+public class NetworkContributor extends AbstractVnfPlanContributor {
 	private final VnfBlueprintService planService;
 	private final VnfPackageService vnfPackageService;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
@@ -99,16 +100,16 @@ public class NetworkContributor extends AbstractPlanContributor {
 	}
 
 	@Override
-	public List<UnitOfWork<VnfTask>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
-		final ArrayList<UnitOfWork<VnfTask>> ret = new ArrayList<>();
-		tasks.stream()
+	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
+		final ArrayList<UnitOfWork<VnfTask, VnfParameters>> ret = new ArrayList<>();
+		return tasks.stream()
 				.filter(x -> x instanceof NetworkTask)
 				.map(x -> (NetworkTask) x)
-				.forEach(x -> {
+				.map(x -> {
 					final VnfVl vnfVl = vnfPackageService.findVirtualLnkById(x.getVnfVl().getId()).orElseThrow();
-					ret.add(new VirtualLinkUow(x, vnfVl));
-				});
-		return ret;
+					return new VirtualLinkUow(x, vnfVl);
+				})
+				.collect(Collectors.toList());
 	}
 
 	@Override

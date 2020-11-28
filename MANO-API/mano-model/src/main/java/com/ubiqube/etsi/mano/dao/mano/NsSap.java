@@ -33,9 +33,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsSap implements BaseEntity, Auditable {
+public class NsSap extends NsTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -43,11 +50,7 @@ public class NsSap implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String toscaId;
-
 	private String toscaName;
-
-	private String state;
 
 	private String role;
 
@@ -80,32 +83,19 @@ public class NsSap implements BaseEntity, Auditable {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
 
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
+	@Override
 	public String getToscaName() {
 		return toscaName;
 	}
 
+	@Override
 	public void setToscaName(final String toscaName) {
 		this.toscaName = toscaName;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(final String state) {
-		this.state = state;
 	}
 
 	public String getRole() {

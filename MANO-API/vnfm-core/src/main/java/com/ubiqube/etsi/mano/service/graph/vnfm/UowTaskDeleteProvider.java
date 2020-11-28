@@ -16,41 +16,36 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
+import com.ubiqube.etsi.mano.service.graph.UowExecDeleteTask;
 
-public class UowTaskDeleteProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<UnitOfWork<U>, String> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ * @param <P>
+ */
+public class UowTaskDeleteProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task, P extends GenericExecParams> implements TaskProvider<UnitOfWork<U, P>, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowTaskDeleteProvider.class);
 
-	private final VimConnectionInformation vimConnectionInformation;
+	private final P params;
 
-	private final Vim vim;
-
-	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
-
-	private final Map<String, String> context = new HashMap<>();
-
-	public UowTaskDeleteProvider(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+	public UowTaskDeleteProvider(final P params) {
 		super();
-		this.vimConnectionInformation = vimConnectionInformation;
-		this.vim = vim;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+		this.params = params;
 	}
 
 	@Override
-	public Task<UnitOfWork<U>, String> provideTask(final UnitOfWork<U> uaow) {
+	public Task<UnitOfWork<U, P>, String> provideTask(final UnitOfWork<U, P> uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecDeleteTask<>(vimConnectionInformation, vim, uaow, vnfLiveInstanceJpa, context);
+		return new UowExecDeleteTask(uaow, params);
 	}
 
 }

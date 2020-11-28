@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
 import java.util.UUID;
 
@@ -29,15 +29,27 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.NsVlConnectivityType;
+import com.ubiqube.etsi.mano.dao.mano.NsVlProfile;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
+
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsVirtualLink implements BaseEntity, Auditable {
+public class NsVirtualLink implements ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
+	private String toscaName;
+	private String state;
+	private String toscaId;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private NsVlProfile nsVlProfile;
@@ -92,6 +104,36 @@ public class NsVirtualLink implements BaseEntity, Auditable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	@Override
+	public String getToscaName() {
+		return toscaName;
+	}
+
+	@Override
+	public void setToscaName(final String toscaName) {
+		this.toscaName = toscaName;
+	}
+
+	@Override
+	public String getState() {
+		return state;
+	}
+
+	@Override
+	public void setState(final String state) {
+		this.state = state;
+	}
+
+	@Override
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	@Override
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
 	}
 
 }

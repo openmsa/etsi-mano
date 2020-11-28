@@ -18,24 +18,26 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
+
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVl;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 public class NsVlUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NsVlUow(final NsInstantiatedVl _resourceHandleEntity, final String _name) {
-		super(_resourceHandleEntity, _name);
+	public NsVlUow(final NsVirtualLinkTask _task) {
+		super(_task);
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
+	public String exec(final NsParameters params) {
 		final VlProtocolData vlProtocolData = new VlProtocolData();
 		final L2Data l2 = new L2Data();
 		l2.setMtu(1500);
@@ -49,19 +51,24 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 		// l3.setGatewayIp(gatewayIp);
 		l3.setIpVersion("ipv4");
 		// l3.setL3Name(l3Name);
-		return vim.createNetwork(vimConnectionInformation, vlProtocolData, null, null, null);
+		return NsParameters.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, null, null, null);
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
+	public String rollback(final NsParameters params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String getPrefix() {
+		return "nsvl";
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
 		// TODO Auto-generated method stub
-		return null;
+
 	}
 
 }

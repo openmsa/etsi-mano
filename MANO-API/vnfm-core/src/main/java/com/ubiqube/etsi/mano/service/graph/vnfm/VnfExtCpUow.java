@@ -20,12 +20,10 @@ import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class VnfExtCpUow extends AbstractUnitOfWork {
 	/** Serial. */
@@ -42,15 +40,15 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
-		final String networkId = context.get(extCp.getInternalVirtualLink());
-		final String extNetwork = context.get(extCp.getExternalVirtualLink());
-		return vim.createRouter(vimConnectionInformation, task.getAlias(), networkId, extNetwork);
+	public String exec(final VnfParameters params) {
+		final String networkId = params.getContext().get(extCp.getInternalVirtualLink());
+		final String extNetwork = params.getContext().get(extCp.getExternalVirtualLink());
+		return params.getVim().createRouter(params.getVimConnectionInformation(), task.getAlias(), networkId, extNetwork);
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
-		vim.deleteRouter(vimConnectionInformation, resourceId);
+	public String rollback(final VnfParameters params) {
+		params.getVim().deleteRouter(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
 	}
 
@@ -60,7 +58,7 @@ public class VnfExtCpUow extends AbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask>, ConnectivityEdge<UnitOfWork<VnfTask>>> g, final Map<String, UnitOfWork<VnfTask>> cache) {
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
 		final UnitOfWork internal = cache.get("sub_" + extCp.getInternalVirtualLink());
 		if (null != internal) {
 			g.addEdge(internal, this);

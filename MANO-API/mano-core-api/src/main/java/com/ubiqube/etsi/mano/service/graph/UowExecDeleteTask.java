@@ -14,21 +14,17 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.service.graph;
 
-import java.util.Map;
-
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
-public class UowExecCreateTask<U extends Task> extends AbstractTaskUow<U> {
+public class UowExecDeleteTask<U extends Task, P extends GenericExecParams> extends AbstractTaskUow<U, P> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public UowExecCreateTask(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UnitOfWork<U> uaow, final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final Map<String, String> _context) {
-		super(vimConnectionInformation, vim, uaow, _context, true);
+	public UowExecDeleteTask(final UnitOfWork<U, P> uaow, final P params) {
+		super(uaow, params, false);
 	}
 
 }
