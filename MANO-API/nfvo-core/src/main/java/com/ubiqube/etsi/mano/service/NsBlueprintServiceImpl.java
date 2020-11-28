@@ -21,37 +21,51 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+import com.ubiqube.etsi.mano.jpa.NsBlueprintJpa;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class NsBlueprintServiceImpl implements NsBlueprintService {
 
+	private final NsBlueprintJpa nsBlueprintJpa;
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+
+	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
+		nsBlueprintJpa = _nsBlueprintJpa;
+		nsLiveInstanceJpa = _nsLiveInstanceJpa;
+	}
+
 	@Override
 	public int getNumberOfLiveSap(final NsdInstance nsInstance, final NsSap x) {
-		// TODO Auto-generated method stub
-		return 0;
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndTaskSapIsNotNull(nsInstance, x.getToscaName());
+		return res.size();
 	}
 
 	@Override
 	public int getNumberOfLiveVl(final NsdInstance nsInstance, final NsVirtualLink x) {
-		// TODO Auto-generated method stub
-		return 0;
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndTaskVlIsNotNull(nsInstance, x.getToscaName());
+		return res.size();
 	}
 
 	@Override
 	public NsBlueprint findById(final UUID blueprintId) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsBlueprintJpa.findById(blueprintId).orElseThrow();
 	}
 
 	@Override
 	public NsBlueprint save(final NsBlueprint nsBlueprint) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsBlueprintJpa.save(nsBlueprint);
 	}
 
 	@Override
