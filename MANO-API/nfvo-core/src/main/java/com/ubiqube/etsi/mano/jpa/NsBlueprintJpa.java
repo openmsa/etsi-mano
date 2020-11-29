@@ -14,35 +14,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
+package com.ubiqube.etsi.mano.jpa;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import org.springframework.data.repository.CrudRepository;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Entity
-public class SapTask extends NsTask {
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private NsSap sapd;
-
-	public NsSap getSapd() {
-		return sapd;
-	}
-
-	public void setSapd(final NsSap sapd) {
-		this.sapd = sapd;
-	}
-
+public interface NsBlueprintJpa extends CrudRepository<NsBlueprint, UUID> {
+	// Nothing.
 }

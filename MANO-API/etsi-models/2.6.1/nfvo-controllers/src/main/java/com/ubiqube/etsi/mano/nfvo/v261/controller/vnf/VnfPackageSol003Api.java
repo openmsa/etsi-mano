@@ -183,7 +183,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	 */
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId), accept);
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId));
 	}
 
 }

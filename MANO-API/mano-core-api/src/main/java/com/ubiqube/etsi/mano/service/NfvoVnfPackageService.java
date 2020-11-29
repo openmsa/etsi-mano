@@ -134,4 +134,10 @@ public class NfvoVnfPackageService implements VnfPackageService {
 		return null;
 	}
 
+	@Override
+	public VnfPackage findByVnfdId(final UUID id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

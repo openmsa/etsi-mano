@@ -32,8 +32,11 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 @Service
 public class VnfPackageDb extends AbstractDirectJpa<VnfPackage> implements VnfPackageRepository {
 
-	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, contentManager, jsonMapper, namingStrategy);
+	private final CrudRepository<VnfPackage, UUID> repository;
+
+	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> _repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, _repository, contentManager, jsonMapper, namingStrategy);
+		repository = _repository;
 	}
 
 	@Override

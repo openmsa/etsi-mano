@@ -27,7 +27,6 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,6 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Profile("VNFM")
 @Service
 public class VnfmPackageManagement implements VnfPackageManagement {
 
@@ -99,12 +97,6 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final String accept) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID _vnfPkgId, final String _range) {
 		// TODO Auto-generated method stub
 		return null;
@@ -112,6 +104,44 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<Void> getPackageManifest(final UUID fromString, @Valid final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(final UUID fromString, final String artifactPath, final String range) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(final UUID vnfdId, @Valid final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(final UUID vnfdId, final String range) {
+		if (null == range) {
+			final Map<String, Object> uriVariables = new HashMap<>();
+			uriVariables.put("vnfdId", vnfdId);
+			final URI uri = nfvoRest.uriBuilder()
+					.pathSegment("/vnfpkgm/v1/onboarded_vnf_packages/{vnfdId}/package_content")
+					.buildAndExpand(uriVariables)
+					.toUri();
+			return nfvoRest.get(uri, ResponseEntity.class);
+		}
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final UUID vnfdId, @Valid final String includeSignatures) {
 		// TODO Auto-generated method stub
 		return null;
 	}

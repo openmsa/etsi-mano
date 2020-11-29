@@ -65,4 +65,6 @@ public interface VnfPackageService {
 
 	Set<VnfLinkPort> findVnfVirtualLinks(final VnfPackage vnfPackage);
 
+	VnfPackage findByVnfdId(final UUID id);
+
 }

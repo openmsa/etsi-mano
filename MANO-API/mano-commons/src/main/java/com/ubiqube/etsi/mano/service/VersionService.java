@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.util.MultiValueMap;
@@ -37,25 +38,25 @@ public interface VersionService {
 
 	boolean isNfvo();
 
-	Object createNotificationVnfPackageOnboardingNotification(UUID subscriptionId, UUID vnfPkgId);
+	Object createNotificationVnfPackageOnboardingNotification(UUID subscriptionId, @Nonnull UUID vnfPkgId);
 
-	Object createVnfPackageChangeNotification(UUID subscriptionId, UUID vnfPkgId);
+	Object createVnfPackageChangeNotification(UUID subscriptionId, @Nonnull UUID vnfPkgId);
 
 	List<VnfInstance> vnfInstanceGet(MultiValueMap<String, String> params);
 
 	VnfInstance vnfInstancePost(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
 
-	VnfBlueprint vnfInstanceOperate(UUID uuid, VnfOperateRequest operateVnfRequest);
+	VnfBlueprint vnfInstanceOperate(@Nonnull UUID uuid, @Nonnull VnfOperateRequest operateVnfRequest);
 
-	VnfBlueprint vnfInstanceScale(UUID uuid, VnfScaleRequest scaleVnfRequest);
+	VnfBlueprint vnfInstanceScale(@Nonnull UUID uuid, @Nonnull VnfScaleRequest scaleVnfRequest);
 
-	VnfBlueprint vnfInstanceScaleToLevel(UUID uuid, VnfScaleToLevelRequest scaleVnfToLevelRequest);
+	VnfBlueprint vnfInstanceScaleToLevel(@Nonnull UUID uuid, @Nonnull VnfScaleToLevelRequest scaleVnfToLevelRequest);
 
-	VnfBlueprint vnfInstanceTerminate(UUID vnfInstanceId, CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
+	VnfBlueprint vnfInstanceTerminate(@Nonnull UUID vnfInstanceId, @Nonnull CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
 
-	VnfBlueprint vnfInstanceInstantiate(UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest);
+	VnfBlueprint vnfInstanceInstantiate(@Nonnull UUID vnfInstanceId, @Nonnull VnfInstantiate instantiateVnfRequest);
 
-	void vnfInstanceDelete(UUID vnfInstanceId);
+	void vnfInstanceDelete(@Nonnull UUID vnfInstanceId);
 
 	VnfBlueprint vnfLcmOpOccsGet(@NotNull UUID id);
 

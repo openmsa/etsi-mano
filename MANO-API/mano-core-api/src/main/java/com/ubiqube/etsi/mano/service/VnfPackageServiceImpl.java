@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -155,6 +156,11 @@ public class VnfPackageServiceImpl implements VnfPackageService {
 	@Override
 	public Set<VnfLinkPort> findVnfVirtualLinks(final VnfPackage vnfPackage) {
 		return vnfLinkPortJpa.findByVnfPackage(vnfPackage);
+	}
+
+	@Override
+	public VnfPackage findByVnfdId(final UUID id) {
+		return vnfPackageJpa.findByVnfdIdAnsOnboardingState(id, OnboardingStateType.ONBOARDED).orElseThrow();
 	}
 
 }

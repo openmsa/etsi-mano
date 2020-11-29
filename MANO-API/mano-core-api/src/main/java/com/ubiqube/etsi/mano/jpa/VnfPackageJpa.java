@@ -22,6 +22,7 @@ import java.util.UUID;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.repository.CrudRepository;
 
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 @Primary
@@ -32,4 +33,7 @@ public interface VnfPackageJpa extends CrudRepository<VnfPackage, UUID> {
 	Optional<VnfPackage> findByDescriptorIdAndVnfSoftwareVersion(String name, String version);
 
 	Optional<VnfPackage> findByDescriptorIdAndFlavorIdAndVnfdVersion(String descriptorId, String flavorId, String versionId);
+
+	Optional<VnfPackage> findByVnfdIdAnsOnboardingState(UUID id, OnboardingStateType state);
+
 }
