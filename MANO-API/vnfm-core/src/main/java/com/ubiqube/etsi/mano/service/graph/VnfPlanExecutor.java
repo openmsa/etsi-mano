@@ -23,5 +23,5 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 
 @Service
 public class VnfPlanExecutor extends PlanExecutor<VnfTask, VnfParameters> {
-
+	// Nothing.
 }

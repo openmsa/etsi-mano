@@ -29,12 +29,10 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
@@ -57,13 +55,9 @@ import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
-import com.ubiqube.etsi.mano.service.graph.VnfPlanExecutor;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
+import com.ubiqube.etsi.mano.service.graph.VnfReport;
+import com.ubiqube.etsi.mano.service.graph.VnfWorkflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
-import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.service.vim.VnfConnections;
@@ -81,26 +75,23 @@ public class VnfmActions {
 
 	private final EventManager eventManager;
 
-	private final VnfPlanExecutor executor;
-
 	private final VnfInstanceService vnfInstancesService;
 
 	private final VnfPackageService vnfPackageService;
 
-	private final VnfPlanner planner;
+	private final VnfWorkflow vnfWorkflow;
 	private final VnfBlueprintService blueprintService;
 	private final VimResourceService vimResourceService;
 
 	private VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final VnfPlanExecutor _executor, final VnfInstanceService _vnfInstancesService, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final VnfInstanceService _vnfInstancesService, final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;
 		eventManager = _eventManager;
-		executor = _executor;
 		vnfInstancesService = _vnfInstancesService;
-		planner = _planner;
+		vnfWorkflow = _planner;
 		blueprintService = _blueprintService;
 		vimResourceService = _vimResourceService;
 	}
@@ -129,28 +120,39 @@ public class VnfmActions {
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
 		final VnfConnections conn = new VnfConnections();
-		planner.doPlan(vnfPkg, blueprint, newScale, conn.getConnections());
+		vnfWorkflow.doPlan(vnfPkg, blueprint, newScale, conn.getConnections());
 		VnfBlueprint localPlan = blueprintService.save(blueprint);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
 		localPlan = blueprintService.updateState(localPlan, OperationStatusType.PROCESSING);
-		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> executionPlane = planner.convertToExecution(localPlan, ChangeType.REMOVED);
 		//////////////////////////////////
-		// XXX We can't refine a removal plan, because it has already been reverted.
 		// XXX Multiple Vim ?
 		final VimConnectionInformation vimConnection = localPlan.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
-		final Map<String, String> context = new HashMap<>();
-		final VnfParameters vparams = new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, context);
-		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> removeResults = executor.execDelete(executionPlane, () -> new UowTaskDeleteProvider<>(vparams));
-		/// XXX split this function for adding / removing live instances.
+		//
+		final VnfParameters vparams = new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, new HashMap<>());
+		final VnfReport removeResults = vnfWorkflow.execDelete(localPlan, vparams);
 		setLiveSatus(localPlan, vnfInstance, removeResults);
 		// Create plan
-		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> createPlan = planner.convertToExecution(localPlan, ChangeType.ADDED);
 		final VnfParameters params = buildContext(vimConnection, vim, localPlan, vnfInstance);
-		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider(params));
-		setResultLcmInstance(localPlan, createResults);
+		final VnfReport createResults = vnfWorkflow.execCreate(localPlan, params);
 		setLiveSatus(localPlan, vnfInstance, createResults);
+		//
+		setResultLcmInstance(localPlan, createResults);
+		if (OperationStatusType.COMPLETED == localPlan.getOperationStatus()) {
+			setInstanceStatus(vnfInstance, localPlan, newScale);
+		}
+		// XXX ??? error duplicate key in NSD.
+		vnfInstance.setVimConnectionInfo(null);
+		vnfInstancesService.save(vnfInstance);
+		LOG.info("Saving VNF LCM OP OCCS.");
+		localPlan = blueprintService.save(localPlan);
+		// XXX Send COMPLETED event.
+		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
+
+	}
+
+	private static void setInstanceStatus(final VnfInstance vnfInstance, final VnfBlueprint localPlan, final Set<ScaleInfo> newScale) {
 		Optional.ofNullable(localPlan.getParameters().getScaleStatus())
 				.map(x -> x.stream()
 						.map(y -> new VnfInstanceScaleInfo(y.getAspectId(), y.getScaleLevel()))
@@ -163,14 +165,6 @@ public class VnfmActions {
 		}
 		// XXX Copy new ScaleInfo.
 		removeScaleScatus(vnfInstance, newScale);
-		// XXX ??? error duplicate key in NSD.
-		vnfInstance.setVimConnectionInfo(null);
-		vnfInstancesService.save(vnfInstance);
-		LOG.info("Saving VNF LCM OP OCCS.");
-		localPlan = blueprintService.save(localPlan);
-		// XXX Send COMPLETED event.
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
-
 	}
 
 	private VnfParameters buildContext(final VimConnectionInformation vimConnection, final Vim vim, final VnfBlueprint blueprint, final VnfInstance vnfInstance) {
@@ -217,8 +211,8 @@ public class VnfmActions {
 				.collect(Collectors.toMap(x -> x.getTask().getToscaName(), x -> x.getTask().getVimResourceId()));
 	}
 
-	private static void setResultLcmInstance(@NotNull final VnfBlueprint blueprint, final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> results) {
-		if (results.getErrored().isEmpty()) {
+	private static void setResultLcmInstance(@NotNull final VnfBlueprint blueprint, final VnfReport createResults) {
+		if (createResults.getErrored().isEmpty()) {
 			blueprint.setOperationStatus(OperationStatusType.COMPLETED);
 		} else {
 			blueprint.setOperationStatus(OperationStatusType.FAILED);
@@ -311,9 +305,9 @@ public class VnfmActions {
 		return task;
 	}
 
-	private void setLiveSatus(@NotNull final VnfBlueprint blueprint, @NotNull final VnfInstance vnfInstance, final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> results) {
+	private void setLiveSatus(@NotNull final VnfBlueprint blueprint, @NotNull final VnfInstance vnfInstance, final VnfReport createResults) {
 		LOG.info("Creating / deleting live instances.");
-		results.getSuccess().forEach(x -> {
+		createResults.getSuccess().forEach(x -> {
 			final VnfTask rhe = x.getId().getTaskEntity();
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
