@@ -143,6 +143,7 @@ public class NfvoActions {
 		final NsConnections nsConn = new NsConnections();
 		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
 		final NsBlueprint localBlueprint = nsBlueprintService.save(blueprint);
+		//
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		// Create Ns.
@@ -154,7 +155,7 @@ public class NfvoActions {
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));
 		setResultLcmInstance(localBlueprint, results);
 		LOG.debug("Done, Saving ...");
-		setLiveStatus(localBlueprint, nsdId, results);
+		setLiveStatus(localBlueprint, results);
 		// XXX Send COMPLETED event.
 		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localBlueprint.getId());
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
@@ -169,7 +170,7 @@ public class NfvoActions {
 		blueprint.setStateEnteredTime(new Date());
 	}
 
-	private void setLiveStatus(final NsBlueprint blueprint, @Nonnull final UUID nsInstanceId, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
+	private void setLiveStatus(final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
 		results.getSuccess().forEach(x -> {
 			final NsTask rhe = x.getId().getTaskEntity();
 			final ChangeType ct = rhe.getChangeType();
