@@ -28,7 +28,6 @@ import org.jgrapht.ListenableGraph;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
@@ -39,33 +38,21 @@ import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
-import com.ubiqube.etsi.mano.service.vim.ConnectionStorage;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
-@Service
 public class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
 	private final List<PlanContributor<P, B, U, PA>> planContributors;
 
-	private final List<ConnectivityEdge<Node>> conns;
-
-	Map<Node, List<ConnectivityEdge<Node>>> sourceCache;
-
-	Map<Node, List<ConnectivityEdge<Node>>> targetCache;
-
 	public Planner(final List<PlanContributor<P, B, U, PA>> _planContributors) {
 		planContributors = _planContributors;
-		// XXX Some how it could depend on planContributors.
-		conns = new ConnectionStorage().getConnections();
-		sourceCache = conns.stream().collect(Collectors.groupingBy(ConnectivityEdge::getSource, Collectors.toList()));
-		targetCache = conns.stream().collect(Collectors.groupingBy(ConnectivityEdge::getTarget, Collectors.toList()));
 	}
 
-	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling) {
+	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
 		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(conns, Start.class);
 		final Set<String> cache = new HashSet<>();
 		start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget().getClass(), scaling, conns, cache));

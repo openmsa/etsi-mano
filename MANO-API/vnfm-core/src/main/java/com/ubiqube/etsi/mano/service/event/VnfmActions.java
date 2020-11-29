@@ -66,6 +66,7 @@ import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
+import com.ubiqube.etsi.mano.service.vim.VnfConnections;
 
 /**
  *
@@ -127,7 +128,8 @@ public class VnfmActions {
 		}
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
-		planner.doPlan(vnfPkg, blueprint, newScale);
+		final VnfConnections conn = new VnfConnections();
+		planner.doPlan(vnfPkg, blueprint, newScale, conn.getConnections());
 		VnfBlueprint localPlan = blueprintService.save(blueprint);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);

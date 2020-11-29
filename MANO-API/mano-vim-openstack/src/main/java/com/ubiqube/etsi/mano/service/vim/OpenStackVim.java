@@ -238,7 +238,7 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public void addNodeToPlans(final ConnectionStorage connectionStorage) {
+	public void addNodeToPlans(final VnfConnections connectionStorage) {
 		connectionStorage.insertAfter(com.ubiqube.etsi.mano.service.vim.node.Network.class, new OsSubNetwork());
 	}
 

@@ -33,10 +33,10 @@ import com.ubiqube.etsi.mano.service.vim.node.Storage;
 import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
 import com.ubiqube.etsi.mano.service.vim.node.VnfExtCp;
 
-public class ConnectionStorage {
+public class VnfConnections {
 	private final List<ConnectivityEdge<Node>> connections;
 
-	public ConnectionStorage() {
+	public VnfConnections() {
 		connections = new ArrayList<>();
 		connections.add(new ConnectivityEdge<>(new Start(), new DnsZone()));
 		connections.add(new ConnectivityEdge<>(new Start(), new ObjectStorage()));

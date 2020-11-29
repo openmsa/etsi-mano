@@ -105,7 +105,8 @@ public class NfvoActions {
 		final VimConnectionInformation vimInfo = electVim(null, null);
 
 		final NsdPackage nsdInfo = nsdRepository.get(nsInstance.getNsdInfo().getId());
-		nsPlanner.doPlan(nsdInfo, blueprint, null);
+		final NsConnections nsConn = new NsConnections();
+		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
 		final NsBlueprint localPlan = nsBlueprintService.save(blueprint);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
 		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localPlan, ChangeType.REMOVED);
@@ -139,7 +140,8 @@ public class NfvoActions {
 		final UUID nsdId = nsInstance.getNsdInfo().getId();
 		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
 		// Make plan in lcmOpOccs
-		nsPlanner.doPlan(nsdInfo, blueprint, null);
+		final NsConnections nsConn = new NsConnections();
+		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
 		final NsBlueprint localBlueprint = nsBlueprintService.save(blueprint);
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
