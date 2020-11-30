@@ -16,15 +16,11 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
-import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 
 @Entity
@@ -62,48 +58,6 @@ public class ComputeTask extends VnfTask {
 
 	public void setImageId(final String imageId) {
 		this.imageId = imageId;
-	}
-
-	@Override
-	public void setChangeType(final ChangeType removed) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setStatus(final PlanStatusType notStarted) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setType(final ResourceTypeEnum compute) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setAlias(final String alias) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setVimResourceId(final String resourceId) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setRemovedVnfLiveInstance(final UUID id) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

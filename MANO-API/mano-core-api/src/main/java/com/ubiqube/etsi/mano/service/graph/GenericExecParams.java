@@ -16,9 +16,34 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
+import java.util.Map;
+
 public class GenericExecParams {
 
-	public WorkflowContext getWorkflowContext() {
-		return null;
+	private Map<String, String> context;
+
+	private String vimResourceId;
+
+	public GenericExecParams(final Map<String, String> context, final String vimResourceId) {
+		super();
+		this.context = context;
+		this.vimResourceId = vimResourceId;
 	}
+
+	public final Map<String, String> getContext() {
+		return context;
+	}
+
+	public final void setContext(final Map<String, String> context) {
+		this.context = context;
+	}
+
+	public final String getVimResourceId() {
+		return vimResourceId;
+	}
+
+	public final void setVimResourceId(final String vimResourceId) {
+		this.vimResourceId = vimResourceId;
+	}
+
 }
