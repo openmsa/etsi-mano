@@ -32,7 +32,7 @@ public class ReplaceBuilder {
 	}
 
 	public ReplaceBuilder connectTo(final Class<? extends Node> class1) {
-		edges.add(new ConnectivityEdge(contributor, class1));
+		edges.add(new ConnectivityEdge<>(contributor, class1));
 		return this;
 	}
 
@@ -41,7 +41,7 @@ public class ReplaceBuilder {
 	}
 
 	public ReplaceBuilder connectFrom(final Class<Network> class1) {
-		edges.add(new ConnectivityEdge(class1, contributor));
+		edges.add(new ConnectivityEdge<>(class1, contributor));
 		return this;
 	}
 

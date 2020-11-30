@@ -14,42 +14,47 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.dao.mano.nfvo;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import java.util.UUID;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public abstract class VnfAbstractUnitOfWork extends VnfmUnitOfWork {
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import org.hibernate.search.annotations.Indexed;
+
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+
+@Entity
+@Indexed
+@EntityListeners(AuditListener.class)
+public class NsVnfInstance {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id = null;
 
-	private final VnfTask task;
+	private String vnfPkgIds;
 
-	public VnfAbstractUnitOfWork(final VnfTask _task) {
-		task = _task;
-		name = task.getToscaName();
+	public UUID getId() {
+		return id;
 	}
 
-	@Override
-	public final VnfTask getTaskEntity() {
-		return task;
+	public void setId(final UUID id) {
+		this.id = id;
 	}
 
-	@Override
-	public final String getName() {
-		return getPrefix() + "_" + name;
+	public String getVnfPkgIds() {
+		return vnfPkgIds;
 	}
 
-	protected abstract String getPrefix();
-
-	@Override
-	public final String getToscaName() {
-		return name;
+	public void setVnfPkgIds(final String vnfPkgIds) {
+		this.vnfPkgIds = vnfPkgIds;
 	}
+
 }

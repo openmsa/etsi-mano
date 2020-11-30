@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
@@ -160,8 +160,7 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	@Override
 	public List<VnfLiveInstance> getLiveExtCpInstanceOf(final VnfInstance vnfInstanceDb) {
-		// TODO Auto-generated method stub
-		return new ArrayList<>();
+		return vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstanceDb, ExternalCpTask.class.getSimpleName());
 	}
 
 	@Override

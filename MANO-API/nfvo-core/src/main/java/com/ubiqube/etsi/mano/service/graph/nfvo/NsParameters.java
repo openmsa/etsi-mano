@@ -16,25 +16,36 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
+import java.util.Map;
+
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class NsParameters extends GenericExecParams {
+	private Vim vim;
+	private VimConnectionInformation vimConnectionInformation;
 
-	public NsParameters(final Vim vim) {
-		super(null, null);
-		// TODO Auto-generated constructor stub
+	public NsParameters(final Vim _vim, final VimConnectionInformation _vimConnectionInformation, final Map<String, String> context, final String vimResourceId) {
+		super(context, vimResourceId);
+		vim = _vim;
+		vimConnectionInformation = _vimConnectionInformation;
 	}
 
-	public static Vim getVim() {
-		// TODO Auto-generated method stub
-		return null;
+	public Vim getVim() {
+		return vim;
+	}
+
+	public void setVim(final Vim vim) {
+		this.vim = vim;
 	}
 
 	public VimConnectionInformation getVimConnectionInformation() {
-		// TODO Auto-generated method stub
-		return null;
+		return vimConnectionInformation;
+	}
+
+	public void setVimConnectionInformation(final VimConnectionInformation vimConnectionInformation) {
+		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 }

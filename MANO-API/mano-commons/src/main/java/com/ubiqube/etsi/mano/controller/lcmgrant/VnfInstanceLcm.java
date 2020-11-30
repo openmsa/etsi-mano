@@ -32,8 +32,7 @@ import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 
 /**
- * NFVO+VNFM & VNFM Implementation. TODO: Make terminate Async and this will be
- * generic again.
+ * NFVO+VNFM & VNFM Implementation.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *

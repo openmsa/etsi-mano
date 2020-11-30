@@ -74,7 +74,7 @@ public class GraphTools {
 		repo.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", stream);
 	}
 
-	public static <U extends UnitOfWorkBase> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, final String fileName) {
+	public static <U extends UnitOfWorkBase> void exportGraph(final ListenableGraph g, final String fileName) {
 		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);

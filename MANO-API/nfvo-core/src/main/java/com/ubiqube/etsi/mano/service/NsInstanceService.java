@@ -16,17 +16,20 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.NsSapJpa;
 import com.ubiqube.etsi.mano.jpa.NsVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.NsVnfPackageJpa;
@@ -45,32 +48,35 @@ public class NsInstanceService {
 
 	private final NsdInstanceJpa nsdInstanceJpa;
 
-	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa) {
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+
+	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
 		nsSapJpa = _nsSapJpa;
 		nsVirtualLinkJpa = _nsVirtualLinkJpa;
 		nsdPackageJpa = _nsdPackageJpa;
 		vnfPackageJpa = _vnfPackageJpa;
 		nsdInstanceJpa = _nsdInstanceJpa;
+		nsLiveInstanceJpa = _nsLiveInstanceJpa;
 	}
 
 	public int countLiveInstanceOfSap(final NsdInstance nsInstance, final UUID id) {
-		// TODO Auto-generated method stub
+		// TODO
 		return 0;
 	}
 
 	public int countLiveInstanceOfVirtualLink(final NsdInstance nsInstance, final UUID id) {
-		// TODO Auto-generated method stub
-		return 0;
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndNsTaskNsVirtualLinkId(nsInstance, id);
+		return res.size();
 	}
 
 	public int countLiveInstanceOfVnf(final NsdInstance nsInstance, final UUID id) {
-		// TODO Auto-generated method stub
-		return 0;
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndNsTaskVnfdId(nsInstance, id);
+		return res.size();
 	}
 
 	public int countLiveInstanceOfNsd(final NsdInstance nsInstance, final UUID id) {
-		// TODO Auto-generated method stub
-		return 0;
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndNsTaskNsdId(nsInstance, id);
+		return res.size();
 	}
 
 	public Set<NsSap> findSapsByNsInstance(final NsdPackage nsdInfo) {

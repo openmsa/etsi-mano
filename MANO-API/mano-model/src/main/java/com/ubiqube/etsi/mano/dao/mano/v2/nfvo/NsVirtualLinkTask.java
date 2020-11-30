@@ -29,4 +29,14 @@ public class NsVirtualLinkTask extends NsTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	private NsVirtualLink nsVirtualLink;
+
+	public NsVirtualLink getNsVirtualLink() {
+		return nsVirtualLink;
+	}
+
+	public void setNsVirtualLink(final NsVirtualLink nsVirtualLink) {
+		this.nsVirtualLink = nsVirtualLink;
+	}
+
 }

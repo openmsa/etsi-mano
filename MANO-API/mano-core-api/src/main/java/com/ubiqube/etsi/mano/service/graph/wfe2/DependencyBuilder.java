@@ -35,12 +35,12 @@ public class DependencyBuilder {
 	}
 
 	public DependencyBuilder connectionFrom(final Class<? extends Node> class1) {
-		edges.add(new ConnectivityEdge(class1, contributor));
+		edges.add(new ConnectivityEdge<>(class1, contributor));
 		return this;
 	}
 
 	public DependencyBuilder connectTo(final Class<? extends Node> class1) {
-		edges.add(new ConnectivityEdge(contributor, class1));
+		edges.add(new ConnectivityEdge<>(contributor, class1));
 		return this;
 	}
 

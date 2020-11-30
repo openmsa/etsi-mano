@@ -36,7 +36,7 @@ public class EdgeListener<V> implements GraphListener<V, ConnectivityEdge<V>> {
 
 	@Override
 	public void edgeAdded(final GraphEdgeChangeEvent<V, ConnectivityEdge<V>> e) {
-		final ConnectivityEdge edge = e.getEdge();
+		final ConnectivityEdge<V> edge = e.getEdge();
 		edge.setSource(e.getEdgeSource());
 		edge.setTarget(e.getEdgeTarget());
 	}

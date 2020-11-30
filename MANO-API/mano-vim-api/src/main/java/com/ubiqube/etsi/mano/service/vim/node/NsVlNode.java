@@ -14,42 +14,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
-
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+package com.ubiqube.etsi.mano.service.vim.node;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class VnfAbstractUnitOfWork extends VnfmUnitOfWork {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private final String name;
-
-	private final VnfTask task;
-
-	public VnfAbstractUnitOfWork(final VnfTask _task) {
-		task = _task;
-		name = task.getToscaName();
-	}
-
-	@Override
-	public final VnfTask getTaskEntity() {
-		return task;
-	}
-
-	@Override
-	public final String getName() {
-		return getPrefix() + "_" + name;
-	}
-
-	protected abstract String getPrefix();
-
-	@Override
-	public final String getToscaName() {
-		return name;
-	}
+public class NsVlNode implements Node {
+	// Nothing.
 }

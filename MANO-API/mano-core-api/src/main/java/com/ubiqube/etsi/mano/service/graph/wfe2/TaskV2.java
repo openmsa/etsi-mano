@@ -16,9 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service.graph.wfe2;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +26,6 @@ import java.util.Set;
 import org.jgrapht.GraphPath;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
-import org.jgrapht.nio.dot.DOTExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -104,16 +100,7 @@ public class TaskV2 {
 			}
 		});
 		optimze(g);
-		final DOTExporter<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> exporter = new DOTExporter<>(x -> x.getSimpleName().replace('-', '_'));
-		try (final FileOutputStream out = new FileOutputStream("../test.dot")) {
-			exporter.exportGraph(g, out);
-		} catch (final FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		GraphTools.exportGraph(g, "test.out");
 	}
 
 	private static void optimze(final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g) {

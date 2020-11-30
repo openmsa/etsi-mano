@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.service.event.quartz;
 
 import java.util.UUID;
 
@@ -26,10 +26,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.VnfmActionController;
+
 /**
  * this class handle job reception.
  *
- * TODO: I keep Package here for the momment.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *

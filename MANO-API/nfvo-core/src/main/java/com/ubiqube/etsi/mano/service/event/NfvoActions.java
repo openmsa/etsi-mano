@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -112,7 +113,7 @@ public class NfvoActions {
 		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localPlan, ChangeType.REMOVED);
 		GraphTools.exportGraph(executionPlane, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
 
-		final NsParameters params = new NsParameters(vim);
+		final NsParameters params = new NsParameters(vim, vimInfo, new HashMap<>(), null);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execDelete(executionPlane, () -> new UowNsTaskDeleteProvider(params));
 		setResultLcmInstance(localPlan, results);
 		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), blueprint.getId());
@@ -150,7 +151,7 @@ public class NfvoActions {
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
-		final NsParameters params = new NsParameters(vim);
+		final NsParameters params = new NsParameters(vim, vimInfo, pubNet, null);
 		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));
 		setLiveStatus(localBlueprint, results);

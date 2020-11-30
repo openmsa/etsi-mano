@@ -39,6 +39,8 @@ public class NsVnfTask extends NsTask {
 
 	private UUID vnfInstance;
 
+	private String vnfdId;
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -63,6 +65,14 @@ public class NsVnfTask extends NsTask {
 
 	public void setVnfInstance(final UUID vnfInstance) {
 		this.vnfInstance = vnfInstance;
+	}
+
+	public String getVnfdId() {
+		return vnfdId;
+	}
+
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
 	}
 
 }

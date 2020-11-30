@@ -38,7 +38,6 @@ public class MonitoringUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String exec(final VnfParameters params) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

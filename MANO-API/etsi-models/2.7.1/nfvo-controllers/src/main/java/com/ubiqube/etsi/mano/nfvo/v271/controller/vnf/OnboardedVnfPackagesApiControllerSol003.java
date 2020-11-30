@@ -40,7 +40,6 @@ public class OnboardedVnfPackagesApiControllerSol003 implements OnboardedVnfPack
 
 	@Override
 	public ResponseEntity<List<VnfPkgInfo>> onboardedVnfPackagesGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
-		// TODO Auto-generated method stub
 		return OnboardedVnfPackagesApiSol003.super.onboardedVnfPackagesGet(filter, allFields, fields, excludeFields, excludeDefault, nextpageOpaqueMarker);
 	}
 

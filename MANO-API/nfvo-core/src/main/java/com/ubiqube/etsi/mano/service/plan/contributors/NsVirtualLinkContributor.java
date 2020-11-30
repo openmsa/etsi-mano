@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.NsVlUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.NsVlNode;
 
 /**
  *
@@ -48,8 +49,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 
 	@Override
 	public Class<? extends Node> getContributionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return NsVlNode.class;
 	}
 
 	@Override
