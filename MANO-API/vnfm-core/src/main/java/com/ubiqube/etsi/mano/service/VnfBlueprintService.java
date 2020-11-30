@@ -18,6 +18,8 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -47,6 +49,7 @@ public class VnfBlueprintService {
 		return vnfLiveInstanceJpa.countByVnfInstanceAndTaskToscaName(vnfInstance, vnfCompute.getToscaName());
 	}
 
+	@Nonnull
 	public VnfBlueprint save(final VnfBlueprint plan) {
 		return blueprintJpa.save(plan);
 	}

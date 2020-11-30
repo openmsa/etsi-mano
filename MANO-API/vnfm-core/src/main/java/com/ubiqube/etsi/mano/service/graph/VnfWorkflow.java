@@ -39,8 +39,8 @@ public class VnfWorkflow {
 	VnfPlanner planner;
 	VnfPlanExecutor executor;
 
-	public void doPlan(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
-		//
+	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
+		planner.doPlan(bundle, blueprint, scaling, conns);
 	}
 
 	public VnfReport execCreate(final VnfBlueprint plan, final VnfParameters params) {

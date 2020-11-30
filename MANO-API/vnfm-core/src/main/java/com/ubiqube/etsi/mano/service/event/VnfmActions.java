@@ -120,7 +120,7 @@ public class VnfmActions {
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
 		final VnfConnections conn = new VnfConnections();
-		vnfWorkflow.doPlan(vnfPkg, blueprint, newScale, conn.getConnections());
+		vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint, newScale, conn.getConnections());
 		VnfBlueprint localPlan = blueprintService.save(blueprint);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);

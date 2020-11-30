@@ -150,12 +150,12 @@ public class NfvoActions {
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
-		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
 		final NsParameters params = new NsParameters(vim);
+		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));
+		setLiveStatus(localBlueprint, results);
 		setResultLcmInstance(localBlueprint, results);
 		LOG.debug("Done, Saving ...");
-		setLiveStatus(localBlueprint, results);
 		// XXX Send COMPLETED event.
 		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localBlueprint.getId());
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());

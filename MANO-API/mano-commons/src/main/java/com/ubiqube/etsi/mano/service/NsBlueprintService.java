@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
@@ -33,6 +35,7 @@ public interface NsBlueprintService {
 
 	NsBlueprint findById(UUID blueprintId);
 
+	@Nonnull
 	NsBlueprint save(NsBlueprint nsBlueprint);
 
 	List<NsLcmOpOccs> query(String filter);
