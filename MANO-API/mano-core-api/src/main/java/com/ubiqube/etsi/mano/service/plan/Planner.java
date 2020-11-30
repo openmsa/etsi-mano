@@ -16,8 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service.plan;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
-import org.jgrapht.nio.dot.DOTExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +99,7 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 									LOG.warn("Duplicate key: {}", x.getName());
 									return x;
 								}));
+		list.forEach(x -> x.connect(g, cache));
 		// Add start
 		final UnitOfWork<U, PA> root = getStartNode();
 		g.addVertex(root);
@@ -113,13 +111,6 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 						g.addEdge(root, key);
 					}
 				});
-		list.forEach(x -> x.connect(g, cache));
-		final DOTExporter<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
-		try (final FileOutputStream out = new FileOutputStream("out.dot")) {
-			exporter.exportGraph(g, out);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
 		return g;
 	}
 
