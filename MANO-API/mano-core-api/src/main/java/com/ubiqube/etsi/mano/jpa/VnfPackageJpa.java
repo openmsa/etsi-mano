@@ -34,6 +34,6 @@ public interface VnfPackageJpa extends CrudRepository<VnfPackage, UUID> {
 
 	Optional<VnfPackage> findByDescriptorIdAndFlavorIdAndVnfdVersion(String descriptorId, String flavorId, String versionId);
 
-	Optional<VnfPackage> findByVnfdIdAndOnboardingState(UUID id, OnboardingStateType state);
+	Optional<VnfPackage> findByVnfdIdAndOnboardingState(String id, OnboardingStateType state);
 
 }

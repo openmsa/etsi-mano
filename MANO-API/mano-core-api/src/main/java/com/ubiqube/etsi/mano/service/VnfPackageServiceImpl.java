@@ -160,7 +160,7 @@ public class VnfPackageServiceImpl implements VnfPackageService {
 
 	@Override
 	public VnfPackage findByVnfdId(final UUID id) {
-		return vnfPackageJpa.findByVnfdIdAndOnboardingState(id, OnboardingStateType.ONBOARDED).orElseThrow();
+		return vnfPackageJpa.findByVnfdIdAndOnboardingState(id.toString(), OnboardingStateType.ONBOARDED).orElseThrow();
 	}
 
 }

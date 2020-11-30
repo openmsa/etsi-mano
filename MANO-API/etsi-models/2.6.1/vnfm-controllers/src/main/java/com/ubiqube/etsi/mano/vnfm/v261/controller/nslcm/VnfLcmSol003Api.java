@@ -152,6 +152,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfInstance.getVnfPkgId()));
 		mapper.map(vnfPackage, vnfInstance);
+		vnfInstance.setId(vnfInstanceDb.getId().toString());
 		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
 
 		final List<VnfLiveInstance> liveCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstanceDb);
