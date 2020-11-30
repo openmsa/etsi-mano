@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractUnitOfWork extends VnfmUnitOfWork {
+public abstract class VnfAbstractUnitOfWork extends VnfmUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public abstract class AbstractUnitOfWork extends VnfmUnitOfWork {
 
 	private final VnfTask task;
 
-	public AbstractUnitOfWork(final VnfTask _task) {
+	public VnfAbstractUnitOfWork(final VnfTask _task) {
 		task = _task;
 		name = task.getToscaName();
 	}

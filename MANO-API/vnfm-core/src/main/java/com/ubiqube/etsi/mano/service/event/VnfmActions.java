@@ -130,7 +130,7 @@ public class VnfmActions {
 		final VimConnectionInformation vimConnection = localPlan.getVimConnections().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		//
-		final VnfParameters vparams = new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, new HashMap<>());
+		final VnfParameters vparams = new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, new HashMap<>(), null);
 		final VnfReport removeResults = vnfWorkflow.execDelete(localPlan, vparams);
 		setLiveSatus(localPlan, vnfInstance, removeResults);
 		// Create plan
@@ -172,7 +172,7 @@ public class VnfmActions {
 				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
 		// Add all present VL if any.
 		context.putAll(getLiveVl(vnfInstance));
-		return new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, context);
+		return new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, context, null);
 	}
 
 	private static Set<ScaleInfo> merge(final VnfBlueprint plan, final VnfInstance vnfInstance) {

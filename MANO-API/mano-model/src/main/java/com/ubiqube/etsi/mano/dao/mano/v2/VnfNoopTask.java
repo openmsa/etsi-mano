@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
-public class NoopTask extends VnfTask {
+public class VnfNoopTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

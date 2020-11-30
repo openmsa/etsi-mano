@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SubNetworkUow extends AbstractUnitOfWork {
+public class SubNetworkUow extends VnfAbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

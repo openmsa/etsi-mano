@@ -14,11 +14,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 
-public abstract class AbstractVnfUnitOfWork implements UnitOfWork<NsTask, VnfParameters> {
+public class NsNoopTask extends NsTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

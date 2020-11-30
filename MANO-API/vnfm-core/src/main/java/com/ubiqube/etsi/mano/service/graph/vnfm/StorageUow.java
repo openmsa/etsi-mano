@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-public class StorageUow extends AbstractUnitOfWork {
+public class StorageUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

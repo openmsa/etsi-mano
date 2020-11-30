@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.MonitoringTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-public class MonitoringUow extends AbstractUnitOfWork {
+public class MonitoringUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

@@ -28,7 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-public class VirtualLinkUow extends AbstractUnitOfWork {
+public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

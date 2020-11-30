@@ -17,17 +17,12 @@
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
@@ -44,10 +39,6 @@ public abstract class AbstractBlueprint<U extends Task> implements Blueprint<U>,
 	private FailureDetails error;
 	@Embedded
 	private Audit audit;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<U> tasks = new HashSet<>();
 
 	@Enumerated(EnumType.STRING)
 	private PlanOperationType operation;
@@ -66,19 +57,7 @@ public abstract class AbstractBlueprint<U extends Task> implements Blueprint<U>,
 		this.audit = audit;
 	}
 
-	@Override
-	public Set<U> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(final Set<U> tasks) {
-		this.tasks = tasks;
-	}
-
-	@Override
-	public void addTask(final U task) {
-		tasks.add(task);
-	}
+	public abstract void setTasks(final Set<U> tasks);
 
 	@Override
 	public PlanOperationType getOperation() {

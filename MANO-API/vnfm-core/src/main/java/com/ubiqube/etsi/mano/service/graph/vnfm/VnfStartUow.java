@@ -20,47 +20,38 @@ import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfNoopTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-public class StartUow<T extends Task, P> implements UnitOfWork<T, P> {
+public class VnfStartUow extends VnfAbstractUnitOfWork {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final T task;
-
-	public StartUow(final T _task) {
-		task = _task;
+	public VnfStartUow() {
+		super(new VnfNoopTask());
 	}
 
 	@Override
-	public String exec(final P params) {
+	public String exec(final VnfParameters params) {
 		return null;
 	}
 
 	@Override
-	public String rollback(final P params) {
+	public String rollback(final VnfParameters params) {
 		return null;
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<T, P>, ConnectivityEdge<UnitOfWork<T, P>>> g, final Map<String, UnitOfWork<T, P>> cache) {
-		// Nothing to do.
+	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
+		// Nothing.
+
 	}
 
 	@Override
-	public String getName() {
+	protected String getPrefix() {
 		return "start";
-	}
-
-	@Override
-	public String getToscaName() {
-		return "start";
-	}
-
-	@Override
-	public T getTaskEntity() {
-		return task;
 	}
 
 }

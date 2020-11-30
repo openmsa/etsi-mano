@@ -32,24 +32,22 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.NoopTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
-import com.ubiqube.etsi.mano.service.graph.vnfm.StartUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
-public class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
+public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
 	private final List<PlanContributor<P, B, U, PA>> planContributors;
 
-	public Planner(final List<PlanContributor<P, B, U, PA>> _planContributors) {
-		planContributors = _planContributors;
+	public Planner(final List<PlanContributor<P, B, U, PA>> contributor) {
+		planContributors = contributor;
 	}
 
 	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
@@ -105,7 +103,7 @@ public class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 									return x;
 								}));
 		// Add start
-		final UnitOfWork<U, PA> root = new StartUow(new NoopTask());
+		final UnitOfWork<U, PA> root = getStartNode();
 		g.addVertex(root);
 		g.vertexSet().stream()
 				.filter(key -> g.incomingEdgesOf(key).isEmpty())
@@ -125,4 +123,5 @@ public class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 		return g;
 	}
 
+	protected abstract UnitOfWork<U, PA> getStartNode();
 }

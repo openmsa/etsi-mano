@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.ObjectStorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-public class ObjectStorageUow extends AbstractUnitOfWork {
+public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 
 	private final VnfStorage vnfStorage;
 

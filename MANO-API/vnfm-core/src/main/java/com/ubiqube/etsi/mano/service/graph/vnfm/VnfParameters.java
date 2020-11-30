@@ -29,34 +29,39 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  *
  */
 public class VnfParameters extends GenericExecParams {
+	private final VimConnectionInformation vimConnectionInformation;
+	private final Vim vim;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+	private final Map<String, String> context;
+	private final String vimResourceId;
 
-	public VnfParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context) {
-		// TODO Auto-generated constructor stub
+	public VnfParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context, final String _vimResourceId) {
+		super();
+		this.vimConnectionInformation = vimConnectionInformation;
+		this.vim = vim;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+		this.context = context;
+		vimResourceId = _vimResourceId;
 	}
 
 	public VimConnectionInformation getVimConnectionInformation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public VnfLiveInstanceJpa getVnfLiveInstanceJpa() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Map<String, String> getContext() {
-		// TODO Auto-generated method stub
-		return null;
+		return vimConnectionInformation;
 	}
 
 	public Vim getVim() {
-		// TODO Auto-generated method stub
-		return null;
+		return vim;
+	}
+
+	public VnfLiveInstanceJpa getVnfLiveInstanceJpa() {
+		return vnfLiveInstanceJpa;
+	}
+
+	public Map<String, String> getContext() {
+		return context;
 	}
 
 	public String getVimResourceId() {
-		// TODO Auto-generated method stub
-		return null;
+		return vimResourceId;
 	}
 
 }

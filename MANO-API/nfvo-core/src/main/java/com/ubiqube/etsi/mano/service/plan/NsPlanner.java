@@ -24,6 +24,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
+import com.ubiqube.etsi.mano.service.graph.nfvo.NsStartUow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 
 /**
@@ -36,6 +38,11 @@ public class NsPlanner extends Planner<NsTask, NsdPackage, NsParameters, Bluepri
 
 	public NsPlanner(final List<PlanContributor<NsdPackage, Blueprint<NsTask>, NsTask, NsParameters>> _planContributors) {
 		super(_planContributors);
+	}
+
+	@Override
+	protected UnitOfWork<NsTask, NsParameters> getStartNode() {
+		return new NsStartUow();
 	}
 
 }

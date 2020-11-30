@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.DnsHostTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-public class DnsHostUow extends AbstractUnitOfWork {
+public class DnsHostUow extends VnfAbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

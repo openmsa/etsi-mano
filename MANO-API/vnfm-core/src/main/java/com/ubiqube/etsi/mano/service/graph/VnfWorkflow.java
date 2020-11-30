@@ -38,8 +38,14 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 @Service
 public class VnfWorkflow {
-	VnfPlanner planner;
-	VnfPlanExecutor executor;
+	private final VnfPlanner planner;
+	private final VnfPlanExecutor executor;
+
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor) {
+		super();
+		this.planner = planner;
+		this.executor = executor;
+	}
 
 	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
 		planner.doPlan(bundle, blueprint, scaling, conns);

@@ -23,7 +23,10 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfStartUow;
+import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 
 /**
@@ -34,8 +37,13 @@ import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 @Service
 public class VnfPlanner extends Planner<VnfTask, VnfPackage, VnfParameters, Blueprint<VnfTask>> {
 
-	public VnfPlanner(final List<PlanContributor<VnfPackage, Blueprint<VnfTask>, VnfTask, VnfParameters>> _planContributors) {
-		super(_planContributors);
+	public VnfPlanner(final List<AbstractVnfPlanContributor> _planContributors) {
+		super((List<PlanContributor<VnfPackage, Blueprint<VnfTask>, VnfTask, VnfParameters>>) ((Object) _planContributors));
+	}
+
+	@Override
+	protected UnitOfWork<VnfTask, VnfParameters> getStartNode() {
+		return new VnfStartUow();
 	}
 
 }

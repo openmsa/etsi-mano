@@ -72,7 +72,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private final Set<VnfTask> tasks = new HashSet<>();
+	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Embedded
 	private BlueprintParameters parameters = new BlueprintParameters();
@@ -143,5 +143,23 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 
 	public void setOperateChanges(final OperateChanges operateChanges) {
 		this.operateChanges = operateChanges;
+	}
+
+	@Override
+	public Set<VnfTask> getTasks() {
+		return tasks;
+	}
+
+	@Override
+	public void addTask(final VnfTask task) {
+		if (null == tasks) {
+			tasks = new HashSet<>();
+		}
+		tasks.add(task);
+	}
+
+	@Override
+	public void setTasks(final Set<VnfTask> _tasks) {
+		tasks = _tasks;
 	}
 }

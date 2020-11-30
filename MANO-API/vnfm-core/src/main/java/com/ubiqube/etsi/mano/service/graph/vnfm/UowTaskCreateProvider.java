@@ -16,18 +16,12 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.UowExecCreateTask;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
  *
@@ -35,30 +29,20 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  *
  * @param <U>
  */
-public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<AbstractVnfUnitOfWork, String> {
+public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<VnfmUnitOfWork, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowTaskCreateProvider.class);
 
-	private final VimConnectionInformation vimConnectionInformation;
+	private final VnfParameters params;
 
-	private final Vim vim;
-
-	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
-
-	private final Map<String, String> context;
-
-	public UowTaskCreateProvider(final VnfParameters params) {
+	public UowTaskCreateProvider(final VnfParameters _params) {
 		super();
-		this.vimConnectionInformation = params.getVimConnectionInformation();
-		this.vim = params.getVim();
-		vnfLiveInstanceJpa = params.getVnfLiveInstanceJpa();
-		context = new ConcurrentHashMap<>(params.getContext());
+		params = _params;
 	}
 
 	@Override
-	public Task<AbstractVnfUnitOfWork, String> provideTask(final AbstractVnfUnitOfWork uaow) {
+	public Task<VnfmUnitOfWork, String> provideTask(final VnfmUnitOfWork uaow) {
 		LOG.debug("Called with: {}", uaow);
-		final VnfParameters params = new VnfParameters(vimConnectionInformation, vim, vnfLiveInstanceJpa, context);
 		return new UowExecCreateTask(uaow, params);
 	}
 }
