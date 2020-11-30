@@ -46,8 +46,8 @@ public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v
 			function = x -> {
 				final String res = uaow.exec(params);
 				if (null != res) {
-					params.getWorkflowContext().put(uaow.getToscaName(), res);
-					params.getWorkflowContext().put(uaow.getTaskEntity().getAlias(), res);
+					params.getContext().put(uaow.getToscaName(), res);
+					params.getContext().put(uaow.getTaskEntity().getAlias(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
 					uaow.getTaskEntity().setVimResourceId(res);
 				}
@@ -64,6 +64,7 @@ public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v
 		final U resource = this.uaow.getTaskEntity();
 		resource.setStartDate(LocalDateTime.now());
 		resource.setStatus(PlanStatusType.STARTED);
+		params.setVimResourceId(resource.getVimResourceId());
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
 			function.apply(params);

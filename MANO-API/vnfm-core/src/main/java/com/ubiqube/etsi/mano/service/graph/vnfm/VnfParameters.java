@@ -33,15 +33,13 @@ public class VnfParameters extends GenericExecParams {
 	private final Vim vim;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 	private final Map<String, String> context;
-	private final String vimResourceId;
 
 	public VnfParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context, final String _vimResourceId) {
-		super();
+		super(context, _vimResourceId);
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.context = context;
-		vimResourceId = _vimResourceId;
 	}
 
 	public VimConnectionInformation getVimConnectionInformation() {
@@ -54,14 +52,6 @@ public class VnfParameters extends GenericExecParams {
 
 	public VnfLiveInstanceJpa getVnfLiveInstanceJpa() {
 		return vnfLiveInstanceJpa;
-	}
-
-	public Map<String, String> getContext() {
-		return context;
-	}
-
-	public String getVimResourceId() {
-		return vimResourceId;
 	}
 
 }

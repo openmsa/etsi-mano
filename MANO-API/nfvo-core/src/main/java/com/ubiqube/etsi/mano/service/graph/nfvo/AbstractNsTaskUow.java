@@ -50,7 +50,7 @@ public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParame
 			function = x -> {
 				final String res = uaow.exec(params);
 				if (null != res) {
-					params.getWorkflowContext().put(uaow.getToscaName(), res);
+					params.getContext().put(uaow.getToscaName(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
 					uaow.getTaskEntity().setVimResourceId(res);
 				}

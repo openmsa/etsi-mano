@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 public class NsParameters extends GenericExecParams {
 
 	public NsParameters(final Vim vim) {
+		super(null, null);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -35,4 +36,5 @@ public class NsParameters extends GenericExecParams {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
