@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jgrapht.ListenableGraph;
+import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
@@ -35,6 +36,7 @@ import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
+@Service
 public class VnfWorkflow {
 	VnfPlanner planner;
 	VnfPlanExecutor executor;

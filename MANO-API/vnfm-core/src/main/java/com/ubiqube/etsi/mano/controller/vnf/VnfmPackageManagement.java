@@ -27,6 +27,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,7 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@ConditionalOnMissingBean(VnfPackageManagement.class)
 @Service
 public class VnfmPackageManagement implements VnfPackageManagement {
 
