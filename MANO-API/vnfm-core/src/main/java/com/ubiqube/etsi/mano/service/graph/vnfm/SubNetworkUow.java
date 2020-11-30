@@ -54,7 +54,8 @@ public class SubNetworkUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteSubnet(params.getVimConnectionInformation(), params.getVimResourceId());
+		// params.getVim().deleteSubnet(params.getVimConnectionInformation(),
+		// params.getVimResourceId());
 		return null;
 	}
 
