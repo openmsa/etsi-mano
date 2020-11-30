@@ -58,6 +58,9 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@Field
 	private InstantiationState instantiationState = null;
 
+	@Field
+	private String vnfInstanceDescription;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
@@ -68,28 +71,10 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private Map<String, String> vnfConfigurableProperties = null;
 
 	@Field
-	private String vnfdId = null;
-
-	@Field
-	private String vnfdVersion = null;
-
-	@Field
-	private String vnfInstanceDescription = null;
-
-	@Field
 	private String vnfInstanceName = null;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private VnfPackage vnfPkg = null;
-
-	@Field
-	private String vnfProductName = null;
-
-	@Field
-	private String vnfProvider = null;
-
-	@Field
-	private String vnfSoftwareVersion = null;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private NsdInstance nsInstance;
@@ -124,34 +109,6 @@ public class VnfInstance implements BaseEntity, Auditable {
 		return vimConnectionInfo;
 	}
 
-	public String getVnfdId() {
-		return vnfdId;
-	}
-
-	public String getVnfdVersion() {
-		return vnfdVersion;
-	}
-
-	public String getVnfInstanceDescription() {
-		return vnfInstanceDescription;
-	}
-
-	public String getVnfInstanceName() {
-		return vnfInstanceName;
-	}
-
-	public String getVnfProductName() {
-		return vnfProductName;
-	}
-
-	public String getVnfProvider() {
-		return vnfProvider;
-	}
-
-	public String getVnfSoftwareVersion() {
-		return vnfSoftwareVersion;
-	}
-
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -168,36 +125,12 @@ public class VnfInstance implements BaseEntity, Auditable {
 		this.vimConnectionInfo = vimConnectionInfo;
 	}
 
-	public void setVnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
-	}
-
-	public void setVnfdVersion(final String vnfdVersion) {
-		this.vnfdVersion = vnfdVersion;
-	}
-
-	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
-		this.vnfInstanceDescription = vnfInstanceDescription;
-	}
-
 	public void setVnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
 	public void setVnfPkg(final VnfPackage vnfPkgId) {
 		this.vnfPkg = vnfPkgId;
-	}
-
-	public void setVnfProductName(final String vnfProductName) {
-		this.vnfProductName = vnfProductName;
-	}
-
-	public void setVnfProvider(final String vnfProvider) {
-		this.vnfProvider = vnfProvider;
-	}
-
-	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
-		this.vnfSoftwareVersion = vnfSoftwareVersion;
 	}
 
 	public Map<String, String> getMetadata() {
@@ -250,6 +183,18 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
+	}
+
+	public String getVnfInstanceDescription() {
+		return vnfInstanceDescription;
+	}
+
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+	}
+
+	public String getVnfInstanceName() {
+		return vnfInstanceName;
 	}
 
 	@Override

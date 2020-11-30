@@ -52,6 +52,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
@@ -68,6 +69,8 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private final VnfPackageRepository vnfPackageRepository;
 
+	private final VnfPackageService vnfPackageService;
+
 	private final EventManager eventManager;
 
 	private final MapperFacade mapper;
@@ -80,7 +83,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private final VnfBlueprintService planService;
 
-	public VnfInstanceLcmImpl(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService) {
+	public VnfInstanceLcmImpl(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService) {
 		super();
 		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
@@ -90,6 +93,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		vnfInstanceService = _vnfInstanceService;
 		vimManager = _vimManager;
 		planService = _planService;
+		vnfPackageService = _vnfPackageService;
 	}
 
 	@Override
@@ -100,10 +104,10 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfInstance post(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
-		final VnfPackage vnfPkgInfo = vnfPackageRepository.get(UUID.fromString(vnfdId));
+		final VnfPackage vnfPkgInfo = vnfPackageService.findByVnfdId(UUID.fromString(vnfdId));
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
-		VnfInstance vnfInstance = VnfLcmFactory.createVnfInstance(vnfdId, vnfInstanceName, vnfInstanceDescription, vnfPkgInfo);
+		VnfInstance vnfInstance = VnfLcmFactory.createVnfInstance(vnfInstanceName, vnfInstanceDescription, vnfPkgInfo);
 		mapper.map(vnfPkgInfo, vnfInstance);
 		// VnfIdentifierCreationNotification NFVO + EM
 		vnfInstance = vnfInstanceService.save(vnfInstance);

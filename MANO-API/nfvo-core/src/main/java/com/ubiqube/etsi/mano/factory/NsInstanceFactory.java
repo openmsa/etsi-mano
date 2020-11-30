@@ -33,8 +33,6 @@ public class NsInstanceFactory {
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
 		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
-		nsInstancesNsInstanceVnfInstance.setVnfdId(_vnfPkgInfo.getVnfdId());
-		nsInstancesNsInstanceVnfInstance.setVnfdVersion(_vnfPkgInfo.getVnfdVersion());
 		final VnfPackage vnfPackage = new VnfPackage();
 		vnfPackage.setId(_vnfPkgInfo.getId());
 		nsInstancesNsInstanceVnfInstance.setVnfPkg(vnfPackage);

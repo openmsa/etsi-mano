@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -82,7 +82,7 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 		nsInstance.setNsState(InstantiationState.NOT_INSTANTIATED);
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
-		final List<VnfInstance> vnfInstances = new ArrayList<>();
+		final List<NsVnfInstance> vnfInstances = new ArrayList<>();
 
 		nsd.getNestedNsdInfoIds().forEach(x -> {
 			// create nested instance.

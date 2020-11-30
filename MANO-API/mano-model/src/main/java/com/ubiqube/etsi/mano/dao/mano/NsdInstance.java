@@ -37,6 +37,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
 @Entity
@@ -65,7 +66,7 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
-	private List<VnfInstance> vnfInstance = null;
+	private List<NsVnfInstance> vnfInstance = null;
 
 	// XXX Add pnfInfo
 	// XXX Add virtualLinkInfo
@@ -135,11 +136,11 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.flavourId = flavourId;
 	}
 
-	public List<VnfInstance> getVnfInstance() {
+	public List<NsVnfInstance> getVnfInstance() {
 		return vnfInstance;
 	}
 
-	public void setVnfInstance(final List<VnfInstance> vnfInstance) {
+	public void setVnfInstance(final List<NsVnfInstance> vnfInstance) {
 		this.vnfInstance = vnfInstance;
 	}
 

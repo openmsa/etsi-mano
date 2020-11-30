@@ -39,18 +39,11 @@ public class VnfLcmFactory {
 
 	// XXX Is it to be in LCM ?
 	@Nonnull
-	public static VnfInstance createVnfInstance(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription, final VnfPackage vnfPkgInfo) {
+	public static VnfInstance createVnfInstance(final String vnfInstanceName, final String vnfInstanceDescription, final VnfPackage vnfPkgInfo) {
 		final VnfInstance vnfInstance = new VnfInstance();
-		vnfInstance.setVnfdId(vnfdId);
 		vnfInstance.setVnfPkg(vnfPkgInfo);
-		vnfInstance.setVnfInstanceDescription(vnfInstanceDescription);
 		vnfInstance.setVnfInstanceName(vnfInstanceName);
-		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
-		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
-		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
-		vnfInstance.setVnfdId(vnfPkgInfo.getVnfdId());
-		vnfInstance.setVnfdVersion(vnfPkgInfo.getVnfdVersion());
-
+		vnfInstance.setVnfInstanceDescription(vnfInstanceDescription);
 		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
 		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
