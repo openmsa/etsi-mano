@@ -18,6 +18,8 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
@@ -70,6 +72,15 @@ public class GraphTools {
 		final byte[] res = out.toByteArray();
 		final InputStream stream = new ByteArrayInputStream(res);
 		repo.storeBinary(_id, subName + "-" + vnfInstance.getId() + ".dot", stream);
+	}
+
+	public static <U extends UnitOfWorkBase> void exportGraph(final ListenableGraph<U, ConnectivityEdge<U>> g, final String fileName) {
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
+		try (final FileOutputStream out = new FileOutputStream(fileName)) {
+			exporter.exportGraph(g, out);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static <U> ListenableGraph<U, ConnectivityEdge<U>> revert(final ListenableGraph<U, ConnectivityEdge<U>> g) {

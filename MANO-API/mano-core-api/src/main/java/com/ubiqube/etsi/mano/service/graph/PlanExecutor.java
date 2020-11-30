@@ -39,6 +39,7 @@ public class PlanExecutor<U extends Task, P> {
 
 	public ExecutionResults<UnitOfWork<U, P>, String> execDelete(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, final Supplier<TaskProvider<UnitOfWork<U, P>, String>> supplier) {
 		final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> rev = GraphTools.revert(g);
+		GraphTools.exportGraph(rev, "del-rev.dot");
 		return createExecutor(rev, supplier.get());
 	}
 
