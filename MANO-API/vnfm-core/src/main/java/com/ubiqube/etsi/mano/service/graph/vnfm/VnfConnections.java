@@ -14,24 +14,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim;
+package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ubiqube.etsi.mano.service.vim.node.Compute;
-import com.ubiqube.etsi.mano.service.vim.node.DnsHost;
-import com.ubiqube.etsi.mano.service.vim.node.DnsZone;
-import com.ubiqube.etsi.mano.service.vim.node.Monitoring;
-import com.ubiqube.etsi.mano.service.vim.node.Network;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
-import com.ubiqube.etsi.mano.service.vim.node.ObjectStorage;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
-import com.ubiqube.etsi.mano.service.vim.node.Storage;
-import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
-import com.ubiqube.etsi.mano.service.vim.node.VnfExtCp;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsHost;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsZone;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Monitoring;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.ObjectStorage;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.SubNetwork;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.VnfExtCp;
 
 public class VnfConnections {
 	private final List<ConnectivityEdge<Node>> connections;

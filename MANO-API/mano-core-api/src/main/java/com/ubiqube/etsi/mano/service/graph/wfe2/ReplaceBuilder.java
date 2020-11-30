@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class ReplaceBuilder {
 	private final List<ConnectivityEdge<Class<? extends Node>>> edges = new ArrayList<>();

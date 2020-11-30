@@ -14,8 +14,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim.node;
+package com.ubiqube.etsi.mano.service.vim.node.nfvo;
 
-public class SubNetwork implements Node {
+import com.ubiqube.etsi.mano.service.vim.node.Node;
+
+public class NsdNode implements Node {
 	// Nothing.
 }

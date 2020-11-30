@@ -37,7 +37,7 @@ import com.ubiqube.etsi.mano.service.graph.nfvo.SapUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
-import com.ubiqube.etsi.mano.service.vim.node.SapNode;
+import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
 
 /**
  *

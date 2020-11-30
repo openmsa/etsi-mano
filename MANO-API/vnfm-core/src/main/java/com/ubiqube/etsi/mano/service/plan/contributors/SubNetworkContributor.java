@@ -41,9 +41,9 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.SubNetworkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
-import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
-import com.ubiqube.etsi.mano.service.vim.node.SubNetwork;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.SubNetwork;
 
 /**
  *

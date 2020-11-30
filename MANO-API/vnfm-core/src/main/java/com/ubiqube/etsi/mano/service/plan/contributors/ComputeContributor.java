@@ -48,9 +48,9 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy.NumberOfCompute;
-import com.ubiqube.etsi.mano.service.vim.node.Compute;
-import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 /**
  *

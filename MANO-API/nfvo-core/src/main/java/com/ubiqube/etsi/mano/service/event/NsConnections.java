@@ -22,10 +22,10 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
-import com.ubiqube.etsi.mano.service.vim.node.NsdNode;
-import com.ubiqube.etsi.mano.service.vim.node.SapNode;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
-import com.ubiqube.etsi.mano.service.vim.node.VnfNode;
+import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsdNode;
+import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
+import com.ubiqube.etsi.mano.service.vim.node.nfvo.VnfNode;
 
 public class NsConnections {
 

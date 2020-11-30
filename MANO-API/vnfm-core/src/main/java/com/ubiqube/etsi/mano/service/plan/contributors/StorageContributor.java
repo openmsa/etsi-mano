@@ -41,10 +41,10 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
-import com.ubiqube.etsi.mano.service.vim.node.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
-import com.ubiqube.etsi.mano.service.vim.node.Storage;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
 
 @Service
 public class StorageContributor extends AbstractVnfPlanContributor {

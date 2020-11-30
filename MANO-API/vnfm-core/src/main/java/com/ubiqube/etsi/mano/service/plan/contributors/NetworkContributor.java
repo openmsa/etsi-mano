@@ -41,9 +41,9 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VirtualLinkUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
-import com.ubiqube.etsi.mano.service.vim.node.Network;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 @Service
 public class NetworkContributor extends AbstractVnfPlanContributor {

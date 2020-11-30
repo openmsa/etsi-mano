@@ -57,10 +57,10 @@ import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.VnfReport;
 import com.ubiqube.etsi.mano.service.graph.VnfWorkflow;
+import com.ubiqube.etsi.mano.service.graph.vnfm.VnfConnections;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mano.service.vim.VnfConnections;
 
 /**
  *
