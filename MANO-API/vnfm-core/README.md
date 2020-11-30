@@ -1,0 +1,2 @@
+VNFM core api.
+=
