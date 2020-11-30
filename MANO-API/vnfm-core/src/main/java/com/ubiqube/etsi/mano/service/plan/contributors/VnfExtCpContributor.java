@@ -27,11 +27,15 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
@@ -47,6 +51,11 @@ import com.ubiqube.etsi.mano.service.vim.node.VnfExtCp;
  */
 @Service
 public class VnfExtCpContributor extends AbstractVnfPlanContributor {
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public VnfExtCpContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+	}
 
 	@Override
 	public Class<? extends Node> getContributionType() {
@@ -55,6 +64,9 @@ public class VnfExtCpContributor extends AbstractVnfPlanContributor {
 
 	@Override
 	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminatePlan(plan.getVnfInstance());
+		}
 		final List<VnfTask> ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
 			final Optional<NetworkTask> vl = plan.getTasks().stream()
@@ -73,6 +85,21 @@ public class VnfExtCpContributor extends AbstractVnfPlanContributor {
 			});
 		});
 		return ret;
+	}
+
+	private List<VnfTask> doTerminatePlan(final VnfInstance vnfInstance) {
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ExternalCpTask.class.getSimpleName());
+		return instances.stream().map(x -> {
+			final ExternalCpTask networkTask = createTask(ExternalCpTask::new);
+			networkTask.setAlias(x.getTask().getAlias());
+			networkTask.setChangeType(ChangeType.REMOVED);
+			networkTask.setToscaName(x.getTask().getToscaName());
+			networkTask.setType(ResourceTypeEnum.VL);
+			networkTask.setRemovedVnfLiveInstance(x.getId());
+			networkTask.setVimResourceId(x.getResourceId());
+			networkTask.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
+			return networkTask;
+		}).collect(Collectors.toList());
 	}
 
 	@Override
