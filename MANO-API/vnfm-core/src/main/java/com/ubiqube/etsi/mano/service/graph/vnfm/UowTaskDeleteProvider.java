@@ -30,6 +30,7 @@ import com.ubiqube.etsi.mano.service.graph.UowExecDeleteTask;
  *
  * @param <U>
  * @param <P>
+ *
  */
 public class UowTaskDeleteProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task, P extends GenericExecParams> implements TaskProvider<UnitOfWork<U, P>, String> {
 
@@ -45,7 +46,7 @@ public class UowTaskDeleteProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.T
 	@Override
 	public Task<UnitOfWork<U, P>, String> provideTask(final UnitOfWork<U, P> uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecDeleteTask(uaow, params);
+		return new UowExecDeleteTask<>(uaow, params);
 	}
 
 }

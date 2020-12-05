@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.UowExecCreateTask;
 
 /**
@@ -28,21 +29,23 @@ import com.ubiqube.etsi.mano.service.graph.UowExecCreateTask;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  * @param <U>
+ * @param <P>
+ *
  */
-public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task> implements TaskProvider<VnfmUnitOfWork, String> {
+public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task, P extends GenericExecParams> implements TaskProvider<UnitOfWork<U, P>, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowTaskCreateProvider.class);
 
-	private final VnfParameters params;
+	private final P params;
 
-	public UowTaskCreateProvider(final VnfParameters _params) {
+	public UowTaskCreateProvider(final P _params) {
 		super();
 		params = _params;
 	}
 
 	@Override
-	public Task<VnfmUnitOfWork, String> provideTask(final VnfmUnitOfWork uaow) {
+	public Task<UnitOfWork<U, P>, String> provideTask(final UnitOfWork<U, P> uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecCreateTask(uaow, params);
+		return new UowExecCreateTask<>(uaow, params);
 	}
 }

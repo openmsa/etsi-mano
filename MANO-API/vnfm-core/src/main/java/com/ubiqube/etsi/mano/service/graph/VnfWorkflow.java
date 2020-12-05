@@ -54,7 +54,7 @@ public class VnfWorkflow {
 	public VnfReport execCreate(final VnfBlueprint plan, final VnfParameters params) {
 		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> createPlan = planner.convertToExecution(plan, ChangeType.ADDED);
 		GraphTools.exportGraph(createPlan, "added.dot");
-		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider(params));
+		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider<>(params));
 		return new VnfReport(createResults);
 	}
 
