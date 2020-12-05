@@ -23,14 +23,12 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.jpa.NsSapJpa;
 import com.ubiqube.etsi.mano.jpa.NsVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.NsVnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.NsdInstanceJpa;
@@ -38,8 +36,6 @@ import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 
 @Service
 public class NsInstanceService {
-	private final NsSapJpa nsSapJpa;
-
 	private final NsVirtualLinkJpa nsVirtualLinkJpa;
 
 	private final NsdPackageJpa nsdPackageJpa;
@@ -50,8 +46,7 @@ public class NsInstanceService {
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsInstanceService(final NsSapJpa _nsSapJpa, final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
-		nsSapJpa = _nsSapJpa;
+	public NsInstanceService(final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
 		nsVirtualLinkJpa = _nsVirtualLinkJpa;
 		nsdPackageJpa = _nsdPackageJpa;
 		vnfPackageJpa = _vnfPackageJpa;
@@ -65,22 +60,18 @@ public class NsInstanceService {
 	}
 
 	public int countLiveInstanceOfVirtualLink(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndNsTaskNsVirtualLinkId(nsInstance, id);
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
 		return res.size();
 	}
 
 	public int countLiveInstanceOfVnf(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndNsTaskVnfdId(nsInstance, id);
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
 		return res.size();
 	}
 
 	public int countLiveInstanceOfNsd(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByVnfInstanceAndNsTaskNsdId(nsInstance, id);
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
 		return res.size();
-	}
-
-	public Set<NsSap> findSapsByNsInstance(final NsdPackage nsdInfo) {
-		return nsSapJpa.findByNsdPackage(nsdInfo);
 	}
 
 	public Set<NsVirtualLink> findVlsByNsInstance(final NsdPackage nsdInfo) {

@@ -28,8 +28,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.SapTask;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
@@ -46,8 +46,13 @@ import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
  */
 @Service
 public class SapContributor extends AbstractNsContributor {
-	NsBlueprintService blueprintService;
-	NsdPackageService nsdPackageService;
+	private final NsBlueprintService blueprintService;
+	private final NsdPackageService nsdPackageService;
+
+	public SapContributor(final NsBlueprintService _blueprintService, final NsdPackageService _nsdPackageService) {
+		blueprintService = _blueprintService;
+		nsdPackageService = _nsdPackageService;
+	}
 
 	@Override
 	public Class<? extends Node> getContributionType() {
@@ -60,8 +65,8 @@ public class SapContributor extends AbstractNsContributor {
 		return saps.stream()
 				.filter(x -> 0 == blueprintService.getNumberOfLiveSap(plan.getNsInstance(), x))
 				.map(x -> {
-					final SapTask sap = createTask(SapTask::new, x);
-					sap.setSapd(x);
+					final NsSapTask sap = createTask(NsSapTask::new, x);
+					sap.setNsSap(x);
 					sap.setChangeType(ChangeType.ADDED);
 					return sap;
 				}).collect(Collectors.toList());
@@ -71,8 +76,8 @@ public class SapContributor extends AbstractNsContributor {
 	public List<UnitOfWork<NsTask, NsParameters>> convertTasksToExecNode(final Set<NsTask> tasks, final NsBlueprint plan) {
 		final ArrayList<UnitOfWork<NsTask, NsParameters>> ret = new ArrayList<>();
 		tasks.stream()
-				.filter(x -> x instanceof SapTask)
-				.map(x -> (SapTask) x)
+				.filter(x -> x instanceof NsSapTask)
+				.map(x -> (NsSapTask) x)
 				.forEach(x -> {
 					ret.add(new SapUow(x));
 				});

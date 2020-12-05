@@ -20,9 +20,8 @@ import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.SapTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
@@ -34,11 +33,11 @@ import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 public class SapUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	private final NsSap nsSapd;
+	private final NsSapTask nsSapd;
 
-	public SapUow(final SapTask _taskEntity) {
+	public SapUow(final NsSapTask _taskEntity) {
 		super(_taskEntity);
-		nsSapd = _taskEntity.getSapd();
+		nsSapd = _taskEntity;
 	}
 
 	@Override
@@ -60,8 +59,8 @@ public class SapUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
-		final UnitOfWork<NsTask, NsParameters> extVl = cache.get(nsSapd.getExternalVirtualLink());
-		final UnitOfWork<NsTask, NsParameters> intVl = cache.get(nsSapd.getInternalVirtualLink());
+		final UnitOfWork<NsTask, NsParameters> extVl = cache.get(nsSapd.getNsSap().getExternalVirtualLink());
+		final UnitOfWork<NsTask, NsParameters> intVl = cache.get(nsSapd.getNsSap().getInternalVirtualLink());
 		if ((intVl != null) && (extVl != null)) {
 			g.addEdge(extVl, intVl);
 		}

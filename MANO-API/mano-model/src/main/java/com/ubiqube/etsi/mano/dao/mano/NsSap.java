@@ -33,16 +33,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-
 /**
+ * A part of NSD.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsSap extends NsTask {
+public class NsSap implements ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -75,6 +74,10 @@ public class NsSap extends NsTask {
 	@ManyToOne
 	private NsdPackage nsdPackage;
 
+	private String toscaId;
+
+	private String state;
+
 	@Embedded
 	private Audit audit;
 
@@ -83,7 +86,6 @@ public class NsSap extends NsTask {
 		return id;
 	}
 
-	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -178,6 +180,26 @@ public class NsSap extends NsTask {
 	}
 
 	@Override
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	@Override
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
+	}
+
+	@Override
+	public String getState() {
+		return state;
+	}
+
+	@Override
+	public void setState(final String state) {
+		this.state = state;
+	}
+
+	@Override
 	public Audit getAudit() {
 		return audit;
 	}
@@ -186,5 +208,4 @@ public class NsSap extends NsTask {
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
 	}
-
 }

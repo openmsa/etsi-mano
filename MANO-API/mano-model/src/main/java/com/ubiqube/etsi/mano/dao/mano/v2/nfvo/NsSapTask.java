@@ -14,19 +14,51 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.jpa;
+package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
-import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 
-public interface NsSapJpa extends CrudRepository<NsSap, UUID> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Entity
+public class NsSapTask extends NsTask {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
-	Set<NsSap> findByNsdPackage(NsdPackage nsdInfo);
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
-	Set<NsSap> findByNsdPackageId(UUID id);
+	@ManyToOne
+	private NsSap nsSap;
+
+	@Override
+	public UUID getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(final UUID id) {
+		this.id = id;
+	}
+
+	public NsSap getNsSap() {
+		return nsSap;
+	}
+
+	public void setNsSap(final NsSap nsSap) {
+		this.nsSap = nsSap;
+	}
+
 }

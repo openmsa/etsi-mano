@@ -34,7 +34,7 @@ public interface NsLiveInstanceJpa extends CrudRepository<NsLiveInstance, UUID> 
 
 	NsLiveInstance findByNsBlueprintId(String resourceId);
 
-	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND ns_saps_id is not null AND t.toscaName = ?2 ORDER BY nli.audit.createdOn DESC")
+	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND ns_sap_id is not null AND t.toscaName = ?2 ORDER BY nli.audit.createdOn DESC")
 	List<NsLiveInstance> findByVnfInstanceAndTaskSapIsNotNull(NsdInstance vnfInstance, String toscaName);
 
 	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND sapd is not null AND t.toscaName = ?2 ORDER BY nli.audit.createdOn DESC")
@@ -43,10 +43,6 @@ public interface NsLiveInstanceJpa extends CrudRepository<NsLiveInstance, UUID> 
 	@Query("select vli, t from VnfLiveInstance vli join VnfTask t on t.id = vli.task where vli.vnfInstance = ?1 AND t.class = ?2")
 	List<NsLiveInstance> findByVnfInstanceIdAndClass(NsdInstance vnfInstance, String string);
 
-	List<NsLiveInstance> findByVnfInstanceAndNsTaskNsdId(NsdInstance nsInstance, UUID id);
-
-	List<NsLiveInstance> findByVnfInstanceAndNsTaskVnfdId(NsdInstance nsInstance, UUID id);
-
-	List<NsLiveInstance> findByVnfInstanceAndNsTaskNsVirtualLinkId(NsdInstance nsInstance, UUID id);
+	List<NsLiveInstance> findByNsInstanceAndNsTaskId(NsdInstance nsInstance, UUID id);
 
 }

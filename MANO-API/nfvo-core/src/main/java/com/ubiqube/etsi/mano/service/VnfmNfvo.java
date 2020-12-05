@@ -39,7 +39,7 @@ public class VnfmNfvo implements VnfmInterface {
 
 	@Override
 	public VnfInstance createVnfInstance(final VnfPackage vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
-		return lcm.post(vnf.getId().toString(), vnfInstanceName, vnfInstanceDescription);
+		return lcm.post(vnf.getVnfdId(), vnfInstanceName, vnfInstanceDescription);
 	}
 
 	@Override

@@ -112,11 +112,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> userDefinedData;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<NsSap> nsSaps;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<NsVirtualLink> nsVirtualLinks;
 

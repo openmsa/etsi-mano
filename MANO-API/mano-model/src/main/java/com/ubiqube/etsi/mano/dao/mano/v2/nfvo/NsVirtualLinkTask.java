@@ -16,7 +16,10 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -29,6 +32,7 @@ public class NsVirtualLinkTask extends NsTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private NsVirtualLink nsVirtualLink;
 
 	public NsVirtualLink getNsVirtualLink() {

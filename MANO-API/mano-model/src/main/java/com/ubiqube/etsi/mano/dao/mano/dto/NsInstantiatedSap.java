@@ -18,7 +18,7 @@ package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 
 public class NsInstantiatedSap extends NsInstantiatedBase {
 	/** Serial. */
@@ -28,7 +28,7 @@ public class NsInstantiatedSap extends NsInstantiatedBase {
 
 	private String sapInstanceId = null;
 
-	private NsSap sapd = null;
+	private NsSapTask sapd = null;
 
 	private String sapName = null;
 
@@ -50,11 +50,11 @@ public class NsInstantiatedSap extends NsInstantiatedBase {
 		this.sapInstanceId = sapInstanceId;
 	}
 
-	public NsSap getSapd() {
+	public NsSapTask getSapd() {
 		return sapd;
 	}
 
-	public void setSapd(final NsSap sapd) {
+	public void setSapd(final NsSapTask sapd) {
 		this.sapd = sapd;
 	}
 

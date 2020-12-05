@@ -34,6 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
@@ -51,10 +52,11 @@ import com.ubiqube.etsi.mano.service.vim.node.nfvo.VnfNode;
 @Service
 public class VnfContributor extends AbstractNsContributor {
 	private final NsInstanceService nsInstanceService;
-	private VnfmInterface vnfm;
+	private final VnfmInterface vnfm;
 
-	public VnfContributor(final NsInstanceService _nsInstanceService) {
+	public VnfContributor(final NsInstanceService _nsInstanceService, final VnfmInterface _vnfm) {
 		nsInstanceService = _nsInstanceService;
+		vnfm = _vnfm;
 	}
 
 	@Override
@@ -79,6 +81,8 @@ public class VnfContributor extends AbstractNsContributor {
 					// vnfInstance.setMetadata(metadata);
 					// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
 					sap.setVnfInstance(vnfInstance.getId());
+					sap.setAlias(nsPackageVnfPackage.getToscaName());
+					sap.setToscaName(nsPackageVnfPackage.getToscaName());
 					// XXX Not sure about the profileId is.
 					return sap;
 				}).collect(Collectors.toList());
@@ -97,7 +101,8 @@ public class VnfContributor extends AbstractNsContributor {
 				.filter(x -> x instanceof NsVnfTask)
 				.map(x -> (NsVnfTask) x)
 				.forEach(x -> {
-					ret.add(new VnfUow(x, null, vnfm));
+					final VnfInstantiate request = new VnfInstantiate();
+					ret.add(new VnfUow(x, request, vnfm));
 				});
 		return ret;
 	}

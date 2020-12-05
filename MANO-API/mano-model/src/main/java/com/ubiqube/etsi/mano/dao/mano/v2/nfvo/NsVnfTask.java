@@ -18,10 +18,13 @@ package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 
@@ -35,6 +38,7 @@ public class NsVnfTask extends NsTask {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private NsdPackageVnfPackage nsPackageVnfPackage;
 
 	private UUID vnfInstance;

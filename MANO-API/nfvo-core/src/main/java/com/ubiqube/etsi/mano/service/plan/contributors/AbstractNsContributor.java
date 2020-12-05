@@ -32,6 +32,7 @@ public abstract class AbstractNsContributor implements PlanContributor<NsdPackag
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);
 		task.setToscaName(toscaEntity.getToscaName());
+		task.setAlias(toscaEntity.getToscaName());
 		return (U) task;
 	}
 

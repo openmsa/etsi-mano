@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsStartUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.plan.contributors.AbstractNsContributor;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 
 /**
@@ -36,8 +37,8 @@ import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 @Service
 public class NsPlanner extends Planner<NsTask, NsdPackage, NsParameters, Blueprint<NsTask>> {
 
-	public NsPlanner(final List<PlanContributor<NsdPackage, Blueprint<NsTask>, NsTask, NsParameters>> _planContributors) {
-		super(_planContributors);
+	public NsPlanner(final List<AbstractNsContributor> _planContributors) {
+		super((List<PlanContributor<NsdPackage, Blueprint<NsTask>, NsTask, NsParameters>>) ((Object) _planContributors));
 	}
 
 	@Override

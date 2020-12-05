@@ -68,8 +68,7 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 
 	@Override
 	public NsdInstance createNsd(final String _nsdId, final String nsName, final String nsDescription) {
-		final UUID nsdId = UUID.fromString(_nsdId);
-		final NsdPackage nsd = nsdPackageService.findById(nsdId);
+		final NsdPackage nsd = nsdPackageService.findByNsdId(_nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
 		nsd.setNsdUsageState(PackageUsageState.IN_USE);
