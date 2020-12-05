@@ -14,37 +14,44 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.repository.jpa;
+package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
-import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 
 @Service
-public class SubscriptionDb extends AbstractJpaOnly<Subscription> implements SubscriptionRepository {
+public class SubscriptionService {
+	private final SubscriptionJpa subscriptionJpa;
 
-	private final SubscriptionJpa repository;
-
-	public SubscriptionDb(final EntityManager em, final SubscriptionJpa _repository) {
-		super(em, _repository);
-		repository = _repository;
+	public SubscriptionService(final SubscriptionJpa repository) {
+		super();
+		this.subscriptionJpa = repository;
 	}
 
-	@Override
-	protected Class<Subscription> getFrontClass() {
-		return Subscription.class;
+	public List<Subscription> query(final String filter) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	@Override
+	public Subscription save(final Subscription subscription) {
+		return subscriptionJpa.save(subscription);
+	}
+
+	public void delete(final UUID subscriptionId) {
+		subscriptionJpa.deleteById(subscriptionId);
+	}
+
+	public Subscription findById(final UUID subscriptionId) {
+		return subscriptionJpa.findById(subscriptionId).orElseThrow();
+	}
+
 	public List<Subscription> selectNotifications(final UUID vnfPkgId, final String event) {
-		return repository.findEventAndVnfPkg(event, vnfPkgId.toString());
+		return subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
 	}
 
 }

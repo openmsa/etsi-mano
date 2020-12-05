@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.service.SubscriptionService;
+import com.ubiqube.etsi.mano.repository.SubscriptionRepository;
 import com.ubiqube.etsi.mano.service.VersionManager;
 import com.ubiqube.etsi.mano.service.VersionService;
 
@@ -41,19 +41,19 @@ public class VnfEvent {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(VnfEvent.class);
 
-	private final SubscriptionService subscriptionService;
+	private final SubscriptionRepository subscriptionRepository;
 	private final Notifications notifications;
 	private final VersionManager versionManager;
 
-	public VnfEvent(final SubscriptionService subscriptionRepository, final Notifications notifications, final VersionManager _versionManager) {
+	public VnfEvent(final SubscriptionRepository subscriptionRepository, final Notifications notifications, final VersionManager _versionManager) {
 		super();
-		this.subscriptionService = subscriptionRepository;
+		this.subscriptionRepository = subscriptionRepository;
 		this.notifications = notifications;
 		versionManager = _versionManager;
 	}
 
 	public void onEvent(final UUID vnfPkgId, final String event) {
-		final List<Subscription> res = subscriptionService.selectNotifications(vnfPkgId, event);
+		final List<Subscription> res = subscriptionRepository.selectNotifications(vnfPkgId, event);
 		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
 		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
 	}
