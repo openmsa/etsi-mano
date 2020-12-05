@@ -47,7 +47,6 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
-import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -65,8 +64,6 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceLcmImpl.class);
 
-	private final VnfInstancesRepository vnfInstancesRepository;
-
 	private final VnfPackageRepository vnfPackageRepository;
 
 	private final VnfPackageService vnfPackageService;
@@ -83,9 +80,8 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private final VnfBlueprintService planService;
 
-	public VnfInstanceLcmImpl(final VnfInstancesRepository vnfInstancesRepository, final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService) {
+	public VnfInstanceLcmImpl(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService) {
 		super();
-		this.vnfInstancesRepository = vnfInstancesRepository;
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
 		mapper = _mapper;
@@ -99,7 +95,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	@Override
 	public List<VnfInstance> get(final Map<String, String> queryParameters) {
 		final String filter = queryParameters.get("filter");
-		return vnfInstancesRepository.query(filter);
+		return vnfInstanceService.query(filter);
 	}
 
 	@Override
@@ -120,7 +116,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
-		if (vnfInstancesRepository.isInstantiate(vnfInstance.getVnfPkg().getId())) {
+		if (vnfInstanceService.isInstantiate(vnfInstance.getVnfPkg().getId())) {
 			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId());
 			vnfPkg.setUsageState(PackageUsageState.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);

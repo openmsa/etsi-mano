@@ -53,7 +53,6 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
-import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
@@ -73,14 +72,14 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol003Api.class);
 	@Nonnull
 	private final LcmLinkable links = new Sol003LcmLinkable();
-	private final VnfInstancesRepository vnfInstancesRepository;
+	private final VnfInstanceService vnfInstancesService;
 	private final VnfInstanceLcm vnfInstanceLcm;
 	private final MapperFacade mapper;
 	private final VnfInstanceService vnfInstanceService;
 	private final VnfPackageService vnfPackageService;
 
-	public VnfLcmSol003Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
-		vnfInstancesRepository = _vnfInstancesRepository;
+	public VnfLcmSol003Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
+		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
 		vnfInstanceService = _vnfInstanceService;
@@ -119,7 +118,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId, final ChangeExtVnfConnectivityRequest changeExtVnfConnectivityRequest) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.
@@ -130,7 +129,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 		// after return.
@@ -147,7 +146,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
-		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstanceDb = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfInstance.getVnfPkgId()));
@@ -177,7 +176,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		ensureInstantiated(vnfInstance);
 
 		throw new GenericException("TODO");
@@ -210,7 +209,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		throw new GenericException("TODO");
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO

@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,25 +41,24 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile({ "!NFVO" })
 @RestController
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);
 	@Nonnull
 	private final LcmLinkable links = new Sol002LcmLinkable();
-	private final VnfInstancesRepository vnfInstancesRepository;
+	private final VnfInstanceService vnfInstancesService;
 	private final VnfInstanceLcm vnfInstanceLcm;
 	private final MapperFacade mapper;
 
-	public VnfLcmSol002Api(final VnfInstancesRepository _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
-		vnfInstancesRepository = _vnfInstancesRepository;
+	public VnfLcmSol002Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
+		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
 		LOG.info("Starting Ns Instance SOL002 Controller.");
@@ -112,7 +110,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	@Override
 	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
-		final VnfInstance vnfInstanceDb = vnfInstancesRepository.get(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstanceDb = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
 		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);

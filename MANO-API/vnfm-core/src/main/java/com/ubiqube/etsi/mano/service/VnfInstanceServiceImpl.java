@@ -168,4 +168,15 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 		return vnfLiveInstanceJpa.findByVnfInstanceAndTaskVnfStorageIsNotNull(vnfInstance);
 	}
 
+	@Override
+	public List<VnfInstance> query(final String filter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isInstantiate(final UUID id) {
+		return 0 == vnfInstanceJpa.countByVnfPkgId(id);
+	}
+
 }

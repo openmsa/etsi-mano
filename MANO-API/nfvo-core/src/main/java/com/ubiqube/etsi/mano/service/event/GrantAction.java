@@ -57,8 +57,8 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.repository.VnfInstancesRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -81,13 +81,13 @@ public class GrantAction {
 
 	private final VnfPackageRepository vnfPackageRepository;
 
-	private final VnfInstancesRepository vnfInstancesRepository;
+	private final VnfInstanceService vnfInstanceService;
 
-	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfPackageRepository _vnfPackageRepository, final VnfInstancesRepository _vnfInstancesRepository) {
+	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfPackageRepository _vnfPackageRepository, final VnfInstanceService _vnfInstancesRepository) {
 		grantJpa = _grantJpa;
 		vimManager = _vimManager;
 		vnfPackageRepository = _vnfPackageRepository;
-		vnfInstancesRepository = _vnfInstancesRepository;
+		vnfInstanceService = _vnfInstancesRepository;
 	}
 
 	public void grantRequest(final UUID objectId) {
@@ -225,7 +225,8 @@ public class GrantAction {
 	}
 
 	private VnfPackage getPackageFromVnfInstanceId(@NotNull final UUID vnfInstanceId) {
-		final VnfInstance instance = vnfInstancesRepository.get(vnfInstanceId);
+		// TODO No, We dont have access to tanles, it must be bridged.
+		final VnfInstance instance = vnfInstanceService.findById(vnfInstanceId);
 		return vnfPackageRepository.get(instance.getVnfPkg().getId());
 	}
 

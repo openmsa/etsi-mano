@@ -70,4 +70,8 @@ public interface VnfInstanceService {
 	List<VnfLiveInstance> getLiveExtCpInstanceOf(VnfInstance vnfInstance);
 
 	List<VnfLiveInstance> getLiveStorageInstanceOf(VnfInstance vnfInstance);
+
+	List<VnfInstance> query(final String filter);
+
+	boolean isInstantiate(UUID id);
 }
