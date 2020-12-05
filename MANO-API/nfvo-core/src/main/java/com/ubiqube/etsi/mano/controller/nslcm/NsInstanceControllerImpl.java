@@ -29,42 +29,39 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 
 @Service
 public class NsInstanceControllerImpl implements NsInstanceController {
-	private final NsInstanceRepository nsInstanceRepository;
 	private final NsBlueprintService blueprintService;
 	private final NsInstanceService nsInstanceService;
 
-	public NsInstanceControllerImpl(final NsInstanceRepository _nsInstanceRepository, final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService) {
-		nsInstanceRepository = _nsInstanceRepository;
+	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService) {
 		nsInstanceService = _nsInstanceService;
 		blueprintService = _lcmOpOccsService;
 	}
 
 	@Override
 	public List<NsdInstance> nsInstancesGet(final String filter) {
-		return nsInstanceRepository.query(filter);
+		return nsInstanceService.query(filter);
 	}
 
 	@Override
 	public void nsInstancesNsInstanceIdDelete(final UUID id) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
+		final NsdInstance nsInstanceDb = nsInstanceService.findById(id);
 		ensureNotInstantiated(nsInstanceDb);
 		nsInstanceService.delete(id);
 	}
 
 	@Override
 	public NsdInstance nsInstancesNsInstanceIdGet(final UUID id) {
-		return nsInstanceRepository.get(id);
+		return nsInstanceService.findById(id);
 	}
 
 	@Override
 	public NsdInstance nsInstancesNsInstanceIdHealPost(final UUID id) {
-		final NsdInstance nsInstance = nsInstanceRepository.get(id);
+		final NsdInstance nsInstance = nsInstanceService.findById(id);
 		ensureInstantiated(nsInstance);
 		final NsBlueprint lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstance, PlanOperationType.HEAL);
 		blueprintService.save(lcmOpOccs);
@@ -73,7 +70,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 
 	@Override
 	public NsdInstance nsInstancesNsInstanceIdScalePost(final UUID id) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
+		final NsdInstance nsInstanceDb = nsInstanceService.findById(id);
 		ensureInstantiated(nsInstanceDb);
 		final NsBlueprint lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.SCALE);
 		blueprintService.save(lcmOpOccs);
@@ -82,7 +79,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 
 	@Override
 	public void nsInstancesNsInstanceIdUpdatePost(final UUID id) {
-		final NsdInstance nsInstanceDb = nsInstanceRepository.get(id);
+		final NsdInstance nsInstanceDb = nsInstanceService.findById(id);
 		ensureInstantiated(nsInstanceDb);
 		final NsBlueprint lcmOpOccs = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.UPDATE);
 		blueprintService.save(lcmOpOccs);

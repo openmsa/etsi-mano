@@ -43,9 +43,9 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.repository.NsInstanceRepository;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
+import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.NsPlanExecutor;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
@@ -62,7 +62,7 @@ public class NfvoActions {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NfvoActions.class);
 
-	private final NsInstanceRepository nsInstanceRepository;
+	private final NsInstanceService nsInstanceRepository;
 	private final NsdRepository nsdRepository;
 	private final VimManager vimManager;
 	private final EventManager eventManager;
@@ -73,7 +73,7 @@ public class NfvoActions {
 	private final NsPlanner nsPlanner;
 	private final NsBlueprintService nsBlueprintService;
 
-	public NfvoActions(final NsInstanceRepository _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsPlanner _nsPlanner, final NsPlanExecutor _executor, final NsLiveInstanceJpa _nsLiveInstanceJpa, final NsBlueprintService _nsBlueprintService) {
+	public NfvoActions(final NsInstanceService _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsPlanner _nsPlanner, final NsPlanExecutor _executor, final NsLiveInstanceJpa _nsLiveInstanceJpa, final NsBlueprintService _nsBlueprintService) {
 		super();
 		nsInstanceRepository = _nsInstanceRepository;
 		nsdRepository = _nsdRepository;
@@ -88,7 +88,7 @@ public class NfvoActions {
 	public void nsTerminate(@Nonnull final UUID lcmOpOccsId) {
 		Thread.currentThread().setName(lcmOpOccsId + "-NT");
 		final NsBlueprint lcmOpOccs = nsBlueprintService.findById(lcmOpOccsId);
-		final NsdInstance nsInstance = nsInstanceRepository.get(lcmOpOccs.getNsInstance().getId());
+		final NsdInstance nsInstance = nsInstanceRepository.findById(lcmOpOccs.getNsInstance().getId());
 		try {
 			nsTerminateInner(lcmOpOccs, nsInstance);
 		} catch (final RuntimeException e) {
@@ -123,7 +123,7 @@ public class NfvoActions {
 	public void nsInstantiate(@Nonnull final UUID blueprintId) {
 		Thread.currentThread().setName(blueprintId + "-NI");
 		final NsBlueprint nsBlueprint = nsBlueprintService.findById(blueprintId);
-		final NsdInstance nsInstance = nsInstanceRepository.get(nsBlueprint.getNsInstance().getId());
+		final NsdInstance nsInstance = nsInstanceRepository.findById(nsBlueprint.getNsInstance().getId());
 
 		try {
 			nsInstantiateInner(nsBlueprint, nsInstance);

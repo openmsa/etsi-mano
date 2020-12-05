@@ -98,4 +98,9 @@ public class NsInstanceService {
 		return nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("Not found " + nsUuid));
 	}
 
+	public List<NsdInstance> query(final String filter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
