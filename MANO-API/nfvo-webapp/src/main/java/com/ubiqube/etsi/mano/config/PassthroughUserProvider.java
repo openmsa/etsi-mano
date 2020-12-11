@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -39,14 +39,16 @@ public class PassthroughUserProvider extends AbstractUserDetailsAuthenticationPr
 	private static final Logger LOG = LoggerFactory.getLogger(PassthroughUserProvider.class);
 
 	@Override
-	protected void additionalAuthenticationChecks(UserDetails _userDetails, UsernamePasswordAuthenticationToken _authentication) {
+	protected void additionalAuthenticationChecks(final UserDetails _userDetails, final UsernamePasswordAuthenticationToken _authentication) {
 		LOG.debug("Additional check called.");
 	}
 
 	@Override
-	protected UserDetails retrieveUser(String _username, UsernamePasswordAuthenticationToken _authentication) {
+	protected UserDetails retrieveUser(final String _username, final UsernamePasswordAuthenticationToken _authentication) {
 		LOG.debug("retreiving user: {}", _username);
-		final Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
+		final Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_NFVO"));
+		authorities.add(new SimpleGrantedAuthority("ROLE_VNFM"));
 		return new User(_username, _authentication.getCredentials().toString(), authorities);
 	}
 
