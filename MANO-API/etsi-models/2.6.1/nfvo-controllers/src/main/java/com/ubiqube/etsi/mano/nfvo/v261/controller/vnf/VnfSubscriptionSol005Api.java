@@ -20,9 +20,10 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +41,7 @@ import com.ubiqube.etsi.mano.service.event.Notifications;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 

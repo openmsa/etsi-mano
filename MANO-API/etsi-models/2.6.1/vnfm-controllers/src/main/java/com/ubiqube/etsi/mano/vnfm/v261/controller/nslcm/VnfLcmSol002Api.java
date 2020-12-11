@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
 import ma.glasnost.orika.MapperFacade;
 
+@RolesAllowed({ "ROLE_EM" })
 @RestController
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);

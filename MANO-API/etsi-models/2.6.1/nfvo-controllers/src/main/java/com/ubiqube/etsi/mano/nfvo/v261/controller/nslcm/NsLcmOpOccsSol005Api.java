@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +44,7 @@ import com.ubiqube.etsi.mano.service.NsBlueprintService;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 

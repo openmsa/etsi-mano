@@ -20,14 +20,15 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Profile;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsPostResponse;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public class ThresholdsSol005Api implements ThresholdsSol005 {
 
 	/**

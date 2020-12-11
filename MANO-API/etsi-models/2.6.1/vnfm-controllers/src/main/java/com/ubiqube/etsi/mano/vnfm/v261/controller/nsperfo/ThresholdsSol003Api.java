@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 @RestController
+@RolesAllowed({ "ROLE_NFVO" })
 @RequestMapping("/sol003/vnfpm/v1")
 public class ThresholdsSol003Api implements ThresholdsSol003 {
 

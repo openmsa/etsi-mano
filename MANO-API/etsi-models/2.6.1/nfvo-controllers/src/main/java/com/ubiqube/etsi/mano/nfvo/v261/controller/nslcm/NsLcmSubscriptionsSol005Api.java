@@ -20,7 +20,8 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Profile;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 

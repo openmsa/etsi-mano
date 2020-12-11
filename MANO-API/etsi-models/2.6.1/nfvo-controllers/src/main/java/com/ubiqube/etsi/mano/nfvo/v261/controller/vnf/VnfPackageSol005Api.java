@@ -69,8 +69,8 @@ import ma.glasnost.orika.MapperFacade;
  * could be here and not Jackson, in this case you can use object2String.
  *
  */
-@RolesAllowed({ "ROLE_NFVO" })
 @RestController
+@RolesAllowed({ "ROLE_OSSBSS" })
 public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
 	@Nonnull

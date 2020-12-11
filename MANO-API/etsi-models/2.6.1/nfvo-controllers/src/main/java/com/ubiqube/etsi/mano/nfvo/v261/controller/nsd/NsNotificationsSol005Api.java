@@ -17,9 +17,10 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.NsdChangeNotification;
@@ -30,7 +31,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdDeletio
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdOnBoardingFailureNotification;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdOnBoardingNotification;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsNotificationsSol005Api implements NsNotificationsSol005 {
 

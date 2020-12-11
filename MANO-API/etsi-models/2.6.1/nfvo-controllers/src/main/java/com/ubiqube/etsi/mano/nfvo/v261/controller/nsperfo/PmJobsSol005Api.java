@@ -20,7 +20,8 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Profile;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,7 +29,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public class PmJobsSol005Api implements PmJobsSol005 {
 	/**
 	 * Query PM jobs.

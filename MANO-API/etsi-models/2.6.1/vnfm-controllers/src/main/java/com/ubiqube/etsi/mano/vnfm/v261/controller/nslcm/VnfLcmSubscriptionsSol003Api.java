@@ -17,15 +17,15 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
-import org.springframework.context.annotation.Profile;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 
-
-@Profile({ "!NFVO" })
+@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfLcmSubscriptionsSol003Api implements VnfLcmSubscriptionsSol003 {
 

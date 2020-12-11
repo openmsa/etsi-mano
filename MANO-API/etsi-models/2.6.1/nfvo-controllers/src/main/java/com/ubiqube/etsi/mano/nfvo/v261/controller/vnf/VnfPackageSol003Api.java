@@ -24,11 +24,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ import ma.glasnost.orika.MapperFacade;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Profile({ "!NFVO" })
+@RolesAllowed({ "ROLE_VNFM" })
 @RestController
 @RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
 public class VnfPackageSol003Api implements VnfPackageSol003 {
