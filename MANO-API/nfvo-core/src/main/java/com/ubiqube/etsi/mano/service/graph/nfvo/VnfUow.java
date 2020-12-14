@@ -18,18 +18,25 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
+import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedVnf;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class VnfUow extends AbstractNsUnitOfWork {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfUow.class);
@@ -37,20 +44,22 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final NsInstantiatedVnf resourceHandleEntity;
-
 	private final transient VnfInstantiate request;
+	private final VnfmInterface vnfm;
 
-	public VnfUow(final NsInstantiatedVnf _resourceHandleEntity, final VnfInstantiate _request, final String _name) {
-		super(_resourceHandleEntity, _name);
-		resourceHandleEntity = _resourceHandleEntity;
+	private final NsVnfTask task;
+
+	public VnfUow(final NsVnfTask _task, final VnfInstantiate _request, final VnfmInterface _vnfm) {
+		super(_task);
+		task = _task;
 		request = _request;
+		vnfm = _vnfm;
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		final Blueprint res = vnfm.vnfInstatiate(resourceHandleEntity.getVnfInstance(), request, null);
-		final Blueprint result = waitLcmCompletion(res, vnfm);
+	public String exec(final NsParameters params) {
+		final VnfBlueprint res = vnfm.vnfInstatiate(task.getVnfInstance(), request, null);
+		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
@@ -58,9 +67,9 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		final Blueprint lcm = vnfm.vnfTerminate(resourceHandleEntity.getVnfInstance());
-		final Blueprint result = waitLcmCompletion(lcm, vnfm);
+	public String rollback(final NsParameters params) {
+		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getVnfInstance());
+		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
@@ -79,11 +88,11 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	 * @param vnfm
 	 * @return
 	 */
-	private static Blueprint waitLcmCompletion(final Blueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
-		Blueprint tmp = vnfLcmOpOccs;
+	private static VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
+		VnfBlueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = tmp.getOperationStatus();
 		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
-			tmp = vnfm.getVnfLcmOpOccs(vnfLcmOpOccs.getId());
+			tmp = vnfm.vnfLcmOpOccsGet(vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}
@@ -99,4 +108,11 @@ public class VnfUow extends AbstractNsUnitOfWork {
 			Thread.currentThread().interrupt();
 		}
 	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

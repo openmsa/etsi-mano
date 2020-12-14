@@ -27,14 +27,15 @@ import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -100,9 +101,15 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vduId", "vnfStorage.id")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantsRequest.class, Blueprint.class)
+		orikaMapperFactory.classMap(GrantsRequest.class, VnfBlueprint.class)
 				.exclude("vnfInstance")
 				.field("vnfInstance.id", "vnfInstance.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
+				.field("vimConnectionInfo", "vimConnections")
+				.field("instantiationLevelId", "parameters.instantiationLevelId")
+				.field("flavourId", "parameters.flavourId")
 				.byDefault()
 				.register();
 		/*

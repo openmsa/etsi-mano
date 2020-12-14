@@ -35,9 +35,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
@@ -124,7 +124,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 					}
 				})
 				.register();
-		orikaMapperFactory.classMap(AffectedVirtualLink.class, Task.class)
+		orikaMapperFactory.classMap(AffectedVirtualLink.class, VnfTask.class)
 				.exclude("audit")
 				// .field("virtualLinkDescId", "vnfVl.id")
 				.field("networkResource.resourceId", "vimResourceId")
@@ -160,7 +160,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("networkResource.vimConnectionId", "task.vimConnectionId")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(VnfLcmOpOcc.class, Blueprint.class)
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("grantId", "grantsRequestId")
 				.byDefault()

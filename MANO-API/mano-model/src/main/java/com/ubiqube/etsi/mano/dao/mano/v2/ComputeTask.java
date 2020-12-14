@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 
 @Entity
 @EntityListeners(AuditListener.class)
-public class ComputeTask extends Task {
+public class ComputeTask extends VnfTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

@@ -25,7 +25,7 @@ import javax.transaction.Transactional.TxType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
@@ -41,7 +41,7 @@ import ma.glasnost.orika.MapperFacade;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Profile("!NFVM")
+@Primary
 @Service
 @Transactional(TxType.NEVER)
 public class GrantMngtSol005 implements GrantManagement {

@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -24,70 +24,60 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
-import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.NsInstantiatedBaseJpa;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public abstract class AbstractNsTaskUow extends Task<NsUnitOfWork, String> {
+public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParameters>, String> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractNsTaskUow.class);
 
-	private final VimConnectionInformation vimConnectionInformation;
+	private final UnitOfWork<NsTask, NsParameters> uaow;
 
-	private final transient Vim vim;
+	private final transient Function<NsParameters, String> function;
 
-	private final NsUnitOfWork uaow;
+	private NsParameters params;
 
-	private final Map<String, String> context;
-
-	private final transient NsInstantiatedBaseJpa resourceHandleEntityJpa;
-
-	private final transient Function<Parameters, String> function;
-
-	public AbstractNsTaskUow(final VimConnectionInformation vimConnectionInformation, final Vim vim, final NsUnitOfWork uaow, final NsInstantiatedBaseJpa _resourceHandleEntityJpa, final Map<String, String> _context, final boolean _create, final VnfmInterface vnfm) {
+	public AbstractNsTaskUow(final UnitOfWork<NsTask, NsParameters> uaow, final boolean _create, final NsParameters params) {
 		super();
-		this.vimConnectionInformation = vimConnectionInformation;
-		this.vim = vim;
 		this.uaow = uaow;
-		context = _context;
-		resourceHandleEntityJpa = _resourceHandleEntityJpa;
+		this.params = params;
 		if (_create) {
 			function = x -> {
-				final String res = uaow.exec(vimConnectionInformation, vnfm, vim, context);
+				final String res = uaow.exec(params);
 				if (null != res) {
-					context.put(uaow.getToscaName(), res);
+					params.getContext().put(uaow.getToscaName(), res);
 					LOG.debug("Adding to context: {} => {}", uaow.getName(), res);
-					uaow.getResourceHandleEntity().setResourceId(res);
+					uaow.getTaskEntity().setVimResourceId(res);
 				}
 				return res;
 			};
 		} else {
-			function = x -> uaow.rollback(x.vimConnectionInformationLocal, vnfm, x.vimLocal, x.resourceId, x.contextLocal);
+			function = x -> uaow.rollback(params);
 		}
 	}
 
 	@Override
 	public final String execute() {
 		RuntimeException eRoot = null;
-		final NsInstantiatedBase resource = this.uaow.getResourceHandleEntity();
-		resource.setStartTime(new Date());
-		resource.setChangeResult(InstantiationStatusType.STARTED);
+		final NsTask resource = this.uaow.getTaskEntity();
+		resource.setStartDate(LocalDateTime.now());
+		resource.setStatus(PlanStatusType.STARTED);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
-			function.apply(new Parameters(vimConnectionInformation, vim, context, resource.getResourceId()));
-			resource.setChangeResult(InstantiationStatusType.SUCCESS);
+			function.apply(params);
+			resource.setStatus(PlanStatusType.SUCCESS);
 		} catch (final RuntimeException e) {
 			LOG.warn("Task {} failed.", uaow.getName(), e);
 			eRoot = e;
-			resource.setChangeResult(InstantiationStatusType.FAILED);
+			resource.setStatus(PlanStatusType.FAILED);
 		}
 		LOG.info("Task {} Finished.", uaow.getName());
-		resource.setEndTime(new Date());
+		resource.setEndDate(LocalDateTime.now());
 		if (eRoot != null) {
 			throw eRoot;
 		}

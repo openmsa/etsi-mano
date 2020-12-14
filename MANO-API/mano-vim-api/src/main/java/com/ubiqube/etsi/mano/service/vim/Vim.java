@@ -58,7 +58,7 @@ public interface Vim {
 	 *
 	 * @param connectionStorage The link descriptor instance.
 	 */
-	void addNodeToPlans(ConnectionStorage connectionStorage);
+	// TODO void addNodeToPlans(VnfConnections connectionStorage);
 
 	Optional<SoftwareImage> getSwImageMatching(VimConnectionInformation vimConnectionInformation, SoftwareImage img);
 

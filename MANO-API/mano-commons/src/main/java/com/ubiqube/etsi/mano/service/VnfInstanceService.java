@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public interface VnfInstanceService {
 
@@ -61,7 +61,7 @@ public interface VnfInstanceService {
 
 	void deleteLiveInstanceById(final UUID id);
 
-	Deque<VnfLiveInstance> getLiveComputeInstanceOf(Blueprint plan, VnfCompute x);
+	Deque<VnfLiveInstance> getLiveComputeInstanceOf(VnfBlueprint plan, VnfCompute vnfCompute);
 
 	List<VnfLiveInstance> getLiveVirtualLinkInstanceOf(VnfInstance vnfInstance);
 
@@ -70,4 +70,8 @@ public interface VnfInstanceService {
 	List<VnfLiveInstance> getLiveExtCpInstanceOf(VnfInstance vnfInstance);
 
 	List<VnfLiveInstance> getLiveStorageInstanceOf(VnfInstance vnfInstance);
+
+	List<VnfInstance> query(final String filter);
+
+	boolean isInstantiate(UUID id);
 }

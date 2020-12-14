@@ -17,22 +17,27 @@
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
-import java.util.UUID;
 
+import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
-import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedNs;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.model.NsInstantiate;
-import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class NsUow extends AbstractNsUnitOfWork {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsUow.class);
@@ -40,37 +45,37 @@ public class NsUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final NsInstantiatedNs resourceHandle;
+	private final NsdTask nsdTask;
 
-	private final NsInstantiate instantiateRequest;
+	private final VnfInstantiate instantiateRequest;
 
 	private final transient NsInstanceControllerService nsInstanceControllerService;
 
-	private final transient NsLcmOpOccsService nsLcmOpOccsService;
+	private final transient VnfInstanceLcm nsLcmOpOccsService;
 
-	public NsUow(final NsInstantiatedNs _resourceHandleEntity, final NsInstantiate req, final NsInstanceControllerService _nsInstanceControllerService, final NsLcmOpOccsService _nsLcmOpOccsService, final String _name) {
-		super(_resourceHandleEntity, _name);
-		resourceHandle = _resourceHandleEntity;
+	public NsUow(final NsdTask _task, final VnfInstantiate req, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService) {
+		super(_task);
+		nsdTask = _task;
 		instantiateRequest = req;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmOpOccsService = _nsLcmOpOccsService;
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
-		final NsLcmOpOccs lcm = nsInstanceControllerService.instantiate(UUID.fromString(resourceHandle.getNsInstanceId()), instantiateRequest);
-		final NsLcmOpOccs result = waitLcmCompletion(lcm);
-		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
+	public String exec(final NsParameters params) {
+		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getNsInstanceId(), instantiateRequest);
+		final VnfBlueprint result = waitLcmCompletion(lcm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
-		final NsLcmOpOccs lcm = nsInstanceControllerService.terminate(UUID.fromString(resourceHandle.getNsInstanceId()), null);
-		final NsLcmOpOccs result = waitLcmCompletion(lcm);
-		if (InstantiationStatusType.COMPLETED != result.getOperationState()) {
+	public String rollback(final NsParameters params) {
+		final VnfBlueprint lcm = nsLcmOpOccsService.terminate(nsdTask.getNsInstanceId(), null, 0);
+		final VnfBlueprint result = waitLcmCompletion(lcm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
@@ -81,12 +86,12 @@ public class NsUow extends AbstractNsUnitOfWork {
 		return "nsd";
 	}
 
-	private NsLcmOpOccs waitLcmCompletion(final NsLcmOpOccs lcm) {
-		NsLcmOpOccs tmp = lcm;
-		InstantiationStatusType state = tmp.getOperationState();
-		while ((state == InstantiationStatusType.PROCESSING) || (InstantiationStatusType.STARTING == state)) {
-			tmp = nsLcmOpOccsService.findById(lcm.getId());
-			state = tmp.getOperationState();
+	private VnfBlueprint waitLcmCompletion(final VnfBlueprint lcm) {
+		VnfBlueprint tmp = lcm;
+		OperationStatusType state = tmp.getOperationStatus();
+		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
+			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(lcm.getId());
+			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}
 		LOG.info("VNF Lcm complete with state: {}", state);
@@ -100,6 +105,12 @@ public class NsUow extends AbstractNsUnitOfWork {
 			LOG.warn("Interrupted exception.", e);
 			Thread.currentThread().interrupt();
 		}
+
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
+		// TODO Auto-generated method stub
 
 	}
 

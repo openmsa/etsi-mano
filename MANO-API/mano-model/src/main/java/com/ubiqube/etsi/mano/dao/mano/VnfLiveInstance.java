@@ -26,8 +26,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -45,10 +45,10 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 	private String instantiationLevel;
 
 	@ManyToOne
-	private Task task;
+	private VnfTask task;
 
 	@ManyToOne
-	private Blueprint blueprint;
+	private VnfBlueprint blueprint;
 
 	/**
 	 * VIM resourceId.
@@ -62,7 +62,7 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 		// Nothing.
 	}
 
-	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final Task _task, final Blueprint _blueprint, final String _resourceId) {
+	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfTask _task, final VnfBlueprint _blueprint, final String _resourceId) {
 		super();
 		this.vnfInstance = vnfInstance;
 		this.instantiationLevel = instantiationLevel;
@@ -96,19 +96,19 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 		this.instantiationLevel = instantiationLevel;
 	}
 
-	public Task getTask() {
+	public VnfTask getTask() {
 		return task;
 	}
 
-	public void setTask(final Task task) {
+	public void setTask(final VnfTask task) {
 		this.task = task;
 	}
 
-	public Blueprint getBlueprint() {
+	public VnfBlueprint getBlueprint() {
 		return blueprint;
 	}
 
-	public void setBlueprint(final Blueprint blueprint) {
+	public void setBlueprint(final VnfBlueprint blueprint) {
 		this.blueprint = blueprint;
 	}
 

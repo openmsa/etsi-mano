@@ -27,20 +27,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.NsInstantiate;
+import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
-import com.ubiqube.etsi.mano.service.NsLcmOpOccsService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -50,31 +49,26 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class NsInstanceControllerServiceImpl implements NsInstanceControllerService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsInstanceControllerService.class);
-
 	private final NsdPackageService nsdPackageService;
 
 	private final NsInstanceService nsInstanceService;
 
-	private final NsLcmOpOccsService nsLcmOpOccsService;
-
 	private final EventManager eventManager;
 
 	private final MapperFacade mapper;
+	private final NsBlueprintService nsBlueprintService;
 
-	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final NsLcmOpOccsService _nsLcmOpOccsService, final EventManager _eventManager, final MapperFacade _mapper) {
-		super();
+	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager _eventManager, final MapperFacade _mapper, final NsBlueprintService _nsBlueprintService) {
 		this.nsdPackageService = nsdPackageService;
 		this.nsInstanceService = nsInstanceService;
-		nsLcmOpOccsService = _nsLcmOpOccsService;
 		eventManager = _eventManager;
 		mapper = _mapper;
+		nsBlueprintService = _nsBlueprintService;
 	}
 
 	@Override
 	public NsdInstance createNsd(final String _nsdId, final String nsName, final String nsDescription) {
-		final UUID nsdId = UUID.fromString(_nsdId);
-		final NsdPackage nsd = nsdPackageService.findById(nsdId);
+		final NsdPackage nsd = nsdPackageService.findByNsdId(_nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
 		nsd.setNsdUsageState(PackageUsageState.IN_USE);
@@ -87,7 +81,7 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 		nsInstance.setNsState(InstantiationState.NOT_INSTANTIATED);
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
-		final List<VnfInstance> vnfInstances = new ArrayList<>();
+		final List<NsVnfInstance> vnfInstances = new ArrayList<>();
 
 		nsd.getNestedNsdInfoIds().forEach(x -> {
 			// create nested instance.
@@ -99,24 +93,26 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 	}
 
 	@Override
-	public NsLcmOpOccs instantiate(final UUID nsUuid, final NsInstantiate req) {
+	public NsBlueprint instantiate(final UUID nsUuid, final NsInstantiate req) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
 		ensureNotInstantiated(nsInstanceDb);
-		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.INSTANTIATE);
+		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.INSTANTIATE);
+		nsBlueprintService.save(nsLcm);
 		// XXX Should be mapped in lcm as an intermediate result.
 		mapper.map(req, nsInstanceDb);
 		nsInstanceService.save(nsInstanceDb);
-		eventManager.sendAction(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());
+		eventManager.sendActionNfvo(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
 	}
 
 	@Override
-	public NsLcmOpOccs terminate(final UUID nsInstanceUuid, final OffsetDateTime terminationTime) {
+	public NsBlueprint terminate(final UUID nsInstanceUuid, final OffsetDateTime terminationTime) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
-		final NsLcmOpOccs nsLcm = nsLcmOpOccsService.createLcmOpOccs(nsInstanceDb, NsdChangeType.TERMINATE);
+		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.TERMINATE);
+		nsBlueprintService.save(nsLcm);
 		// XXX we can use quartz cron job for terminationTime.
-		eventManager.sendAction(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
+		eventManager.sendActionNfvo(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
 	}
 }

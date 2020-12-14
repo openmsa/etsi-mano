@@ -21,19 +21,17 @@ import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public interface UnitOfWork extends UnitOfWorkBase, Serializable {
+public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializable {
 
-	String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, Map<String, String> context);
+	String exec(P params);
 
-	Task getTaskEntity();
+	U getTaskEntity();
 
-	String rollback(VimConnectionInformation vimConnectionInformation, Vim vim, String resourceId, Map<String, String> context);
+	String rollback(P params);
 
-	void connect(ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g, Map<String, UnitOfWork> cache);
+	void connect(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, Map<String, UnitOfWork<U, P>> cache);
 }

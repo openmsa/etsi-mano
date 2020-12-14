@@ -21,10 +21,10 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.common.v261.model.FrontApiTypesEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
+import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
 
 /**
  * This is a technical interface for creating live links from VNF common

@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload;
 import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload.ObjectType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.service.TemporaryDownloadService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -64,6 +65,9 @@ public class HomeController {
 
 	@PostMapping(value = "/registerVim")
 	public ResponseEntity<VimConnectionInformation> registerVim(@RequestBody final VimConnectionInformation body) {
+		if (null == body.getVimId()) {
+			throw new GenericException("'vimId' cannot be [null].");
+		}
 		final VimConnectionInformation vci = vciJpa.save(body);
 		vimManager.rebuildCache();
 		return ResponseEntity.ok(vci);

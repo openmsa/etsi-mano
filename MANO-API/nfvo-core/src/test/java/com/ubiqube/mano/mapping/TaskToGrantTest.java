@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -70,7 +70,7 @@ public class TaskToGrantTest {
 		System.out.println("");
 	}
 
-	private static void setBase(final Task task) {
+	private static void setBase(final VnfTask task) {
 		task.setAlias("alias");
 		final Audit audit = new Audit();
 		audit.setCreatedOn(LocalDateTime.now());

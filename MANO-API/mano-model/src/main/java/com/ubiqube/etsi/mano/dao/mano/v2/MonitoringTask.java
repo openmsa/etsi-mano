@@ -24,7 +24,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class MonitoringTask extends Task {
+public class MonitoringTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

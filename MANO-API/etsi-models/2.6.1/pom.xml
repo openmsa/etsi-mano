@@ -19,7 +19,7 @@
 	<modules>
 		<module>etsi-model-common-261</module>
 		<module>model</module>
-		<module>nfvo</module>
-		<module>vnfm</module>
+		<module>nfvo-controllers</module>
+		<module>vnfm-controllers</module>
 	</modules>
 </project>

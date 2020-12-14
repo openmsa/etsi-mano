@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 
 @Entity
-public class ExternalCpTask extends Task {
+public class ExternalCpTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

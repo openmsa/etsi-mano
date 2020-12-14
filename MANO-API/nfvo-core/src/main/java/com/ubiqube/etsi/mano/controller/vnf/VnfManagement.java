@@ -24,9 +24,10 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -40,6 +41,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
 
@@ -51,19 +53,20 @@ import ma.glasnost.orika.MapperFacade;
  * @author ovi@ubiqube.com
  *
  */
-@Profile({ "!VNFM" })
 @Service
 public class VnfManagement implements VnfPackageManagement {
 	private static final String APPLICATION_ZIP = "application/zip";
 	private static final Logger LOG = LoggerFactory.getLogger(VnfManagement.class);
 
 	private final VnfPackageRepository vnfPackageRepository;
+	private final VnfPackageService vnfPackageService;
 	private final MapperFacade mapper;
 
-	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final MapperFacade _mapper) {
+	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final MapperFacade _mapper, final VnfPackageService _vnfPackageService) {
 		super();
 		vnfPackageRepository = _vnfPackageRepository;
 		mapper = _mapper;
+		vnfPackageService = _vnfPackageService;
 		LOG.info("Starting VNF Package Management For NFVO+VNFM or NFVO Only Management.");
 	}
 
@@ -112,7 +115,7 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final String accept) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId) {
 		vnfPackageRepository.get(vnfPkgId);
 
 		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
@@ -142,6 +145,36 @@ public class VnfManagement implements VnfPackageManagement {
 		} else {
 			bodyBuilder.contentType(MediaType.APPLICATION_OCTET_STREAM);
 		}
+	}
+
+	@Override
+	public ResponseEntity<Void> getPackageManifest(final UUID vnfPkgId, @Valid final String includeSignatures) {
+		// TODO: Look inside csar manifest for any metadata entry.
+		return ResponseEntity.ok().build();
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(final UUID fromString, final String artifactPath, final String range) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(fromString);
+		return vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPackage.getId(), artifactPath, range);
+	}
+
+	@Override
+	public ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(final UUID vnfdId, @Valid final String includeSignatures) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
+		return getPackageManifest(vnfPackage.getId(), includeSignatures);
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(final UUID vnfdId, final String range) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
+		return vnfPackagesVnfPkgIdPackageContentGet(vnfPackage.getId(), range);
+	}
+
+	@Override
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final UUID vnfdId, @Valid final String includeSignatures) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
+		return vnfPackagesVnfPkgIdVnfdGet(vnfPackage.getId());
 	}
 
 }

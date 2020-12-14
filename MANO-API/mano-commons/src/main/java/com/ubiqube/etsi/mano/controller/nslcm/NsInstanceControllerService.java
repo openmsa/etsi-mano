@@ -21,16 +21,16 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.model.NsInstantiate;
 
 public interface NsInstanceControllerService {
 
 	NsdInstance createNsd(String _nsdId, String nsName, String nsDescription);
 
-	NsLcmOpOccs instantiate(UUID nsUuid, NsInstantiate req);
+	NsBlueprint instantiate(UUID nsUuid, NsInstantiate req);
 
-	NsLcmOpOccs terminate(UUID nsInstanceUuid, @Nullable OffsetDateTime terminationTime);
+	NsBlueprint terminate(UUID nsInstanceUuid, @Nullable OffsetDateTime terminationTime);
 
 }

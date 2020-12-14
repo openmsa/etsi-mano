@@ -16,11 +16,9 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
-public interface UnitOfWorkBase<U> {
+public interface UnitOfWorkBase {
 
 	String getName();
-
-	U getType();
 
 	String getToscaName();
 }

@@ -9,11 +9,12 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<artifactId>etsi-model271</artifactId>
-	<name>etsi-model271</name>
+	<artifactId>etsi-model-271-pom</artifactId>
+	<name>etsi-model-271-pom</name>
 	<packaging>pom</packaging>
 	<modules>
-		<module>nfvo</module>
-		<module>vnfm</module>
+		<module>model</module>
+		<module>nfvo-controllers</module>
+		<module>vnfm-controllers</module>
 	</modules>
 </project>

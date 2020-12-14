@@ -33,9 +33,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+/**
+ * A part of NSD.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @EntityListeners(AuditListener.class)
-public class NsSap implements BaseEntity, Auditable {
+public class NsSap implements ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -43,11 +49,7 @@ public class NsSap implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String toscaId;
-
 	private String toscaName;
-
-	private String state;
 
 	private String role;
 
@@ -72,6 +74,10 @@ public class NsSap implements BaseEntity, Auditable {
 	@ManyToOne
 	private NsdPackage nsdPackage;
 
+	private String toscaId;
+
+	private String state;
+
 	@Embedded
 	private Audit audit;
 
@@ -84,28 +90,14 @@ public class NsSap implements BaseEntity, Auditable {
 		this.id = id;
 	}
 
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
+	@Override
 	public String getToscaName() {
 		return toscaName;
 	}
 
+	@Override
 	public void setToscaName(final String toscaName) {
 		this.toscaName = toscaName;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(final String state) {
-		this.state = state;
 	}
 
 	public String getRole() {
@@ -188,6 +180,26 @@ public class NsSap implements BaseEntity, Auditable {
 	}
 
 	@Override
+	public String getToscaId() {
+		return toscaId;
+	}
+
+	@Override
+	public void setToscaId(final String toscaId) {
+		this.toscaId = toscaId;
+	}
+
+	@Override
+	public String getState() {
+		return state;
+	}
+
+	@Override
+	public void setState(final String state) {
+		this.state = state;
+	}
+
+	@Override
 	public Audit getAudit() {
 		return audit;
 	}
@@ -196,5 +208,4 @@ public class NsSap implements BaseEntity, Auditable {
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
 	}
-
 }

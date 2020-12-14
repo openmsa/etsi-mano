@@ -37,6 +37,9 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+
 @Entity
 @Indexed
 public class NsdInstance implements BaseEntity, Serializable {
@@ -63,7 +66,7 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
-	private List<VnfInstance> vnfInstance = null;
+	private List<NsVnfInstance> vnfInstance = null;
 
 	// XXX Add pnfInfo
 	// XXX Add virtualLinkInfo
@@ -90,7 +93,7 @@ public class NsdInstance implements BaseEntity, Serializable {
 	private Set<VnfInstanceData> vnfInstanceData;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
-	private Set<NsLcmOpOccs> lcmOpOccs;
+	private Set<NsBlueprint> blueprint;
 
 	@Override
 	public UUID getId() {
@@ -133,11 +136,11 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.flavourId = flavourId;
 	}
 
-	public List<VnfInstance> getVnfInstance() {
+	public List<NsVnfInstance> getVnfInstance() {
 		return vnfInstance;
 	}
 
-	public void setVnfInstance(final List<VnfInstance> vnfInstance) {
+	public void setVnfInstance(final List<NsVnfInstance> vnfInstance) {
 		this.vnfInstance = vnfInstance;
 	}
 
@@ -181,12 +184,12 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.vnfInstanceData = vnfInstanceData;
 	}
 
-	public Set<NsLcmOpOccs> getLcmOpOccs() {
-		return lcmOpOccs;
+	public Set<NsBlueprint> getBlueprint() {
+		return blueprint;
 	}
 
-	public void setLcmOpOccs(final Set<NsLcmOpOccs> lcmOpOccs) {
-		this.lcmOpOccs = lcmOpOccs;
+	public void setBlueprint(final Set<NsBlueprint> blueprint) {
+		this.blueprint = blueprint;
 	}
 
 	public void addNestedNsInstance(final NsdInstance nsIn) {

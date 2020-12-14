@@ -23,7 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 
 @Entity
-public class DnsHostTask extends Task {
+public class DnsHostTask extends VnfTask {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

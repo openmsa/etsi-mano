@@ -19,8 +19,8 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedBase;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
 import com.ubiqube.etsi.mano.service.vim.Vim;

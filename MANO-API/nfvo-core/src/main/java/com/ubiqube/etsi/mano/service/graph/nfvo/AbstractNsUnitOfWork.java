@@ -16,24 +16,30 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
-public abstract class AbstractNsUnitOfWork implements NsUnitOfWork {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public abstract class AbstractNsUnitOfWork implements UnitOfWork<NsTask, NsParameters> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final NsInstantiatedBase resourceHandleEntity;
+	private final NsTask resourceHandleEntity;
 
 	private final String name;
 
 	// Nothing.
-	public AbstractNsUnitOfWork(final NsInstantiatedBase _resourceHandleEntity, final String _name) {
+	public AbstractNsUnitOfWork(final NsTask _resourceHandleEntity) {
 		resourceHandleEntity = _resourceHandleEntity;
-		name = _name;
+		name = _resourceHandleEntity.getToscaName();
 	}
 
 	@Override
-	public final NsInstantiatedBase getResourceHandleEntity() {
+	public final NsTask getTaskEntity() {
 		return resourceHandleEntity;
 	}
 

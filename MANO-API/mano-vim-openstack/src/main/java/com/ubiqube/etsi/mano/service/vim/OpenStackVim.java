@@ -238,11 +238,6 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public void addNodeToPlans(final ConnectionStorage connectionStorage) {
-		connectionStorage.insertAfter(com.ubiqube.etsi.mano.service.vim.node.Network.class, new OsSubNetwork());
-	}
-
-	@Override
 	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();

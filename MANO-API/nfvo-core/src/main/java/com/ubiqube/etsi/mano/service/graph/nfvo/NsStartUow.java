@@ -18,32 +18,38 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 
 import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsInstantiatedBase;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.vim.Vim;
+import org.jgrapht.ListenableGraph;
+
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 public class NsStartUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NsStartUow(final NsInstantiatedBase _resourceHandleEntity) {
-		super(_resourceHandleEntity, "");
+	public NsStartUow() {
+		super(new NsNoopTask());
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final Map<String, String> context) {
+	public String exec(final NsParameters params) {
 		return null;
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final VnfmInterface vnfm, final Vim vim, final String resourceId, final Map<String, String> context) {
+	public String rollback(final NsParameters params) {
 		return null;
+	}
+
+	@Override
+	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
+		// Nothing.
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "ns_mano_start";
+		return "start";
 	}
 
 }

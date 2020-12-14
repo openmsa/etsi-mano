@@ -38,14 +38,9 @@ public class VnfInstanceFactory {
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		nsInstancesNsInstanceVnfInstance.setId(vnfInstance.getId());
-		nsInstancesNsInstanceVnfInstance.setVnfdId(vnfInstance.getVnfdId());
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceDescription(vnfInstance.getVnfInstanceDescription());
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceName(vnfInstance.getVnfInstanceName());
 		nsInstancesNsInstanceVnfInstance.setVnfPkg(vnfInstance.getVnfPkg());
-		nsInstancesNsInstanceVnfInstance.setVnfProductName(vnfInstance.getVnfProductName());
-		nsInstancesNsInstanceVnfInstance.setVnfProvider(vnfInstance.getVnfProvider());
-		nsInstancesNsInstanceVnfInstance.setVnfdVersion(vnfInstance.getVnfdVersion());
-		nsInstancesNsInstanceVnfInstance.setVnfSoftwareVersion(vnfInstance.getVnfSoftwareVersion());
 		return nsInstancesNsInstanceVnfInstance;
 	}
 }

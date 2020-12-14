@@ -18,7 +18,10 @@ package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public interface NfvoRest {
@@ -35,6 +38,12 @@ public interface NfvoRest {
 
 	<T> T call(URI uri, HttpMethod method, Object body, Class<T> clazz);
 
+	<T> T get(URI uri, ParameterizedTypeReference<T> myBean);
+
 	UriComponentsBuilder uriBuilder();
+
+	RestTemplate getRestTemplate();
+
+	MultiValueMap<String, String> getAutorization();
 
 }

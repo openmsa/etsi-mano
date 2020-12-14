@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.config;
 
 import javax.jms.ConnectionFactory;
 
-import org.apache.activemq.artemis.jms.client.ActiveMQJMSConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -30,21 +29,10 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
-import com.ubiqube.etsi.mano.service.Configuration;
-
 @org.springframework.context.annotation.Configuration
 public class ArtemisConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ArtemisConfiguration.class);
-
-	@Bean
-	public static ConnectionFactory activeMQJMSConnectionFactory(final Configuration configuration) {
-		final ActiveMQJMSConnectionFactory activeMQJMSConnectionFactory = new ActiveMQJMSConnectionFactory((String) configuration.build("jms.artemis.url").withDefault("localhost").build());
-		activeMQJMSConnectionFactory.setUser(configuration.get("jms.artemis.user"));
-		activeMQJMSConnectionFactory.setPassword(configuration.get("jms.artemis.password"));
-		activeMQJMSConnectionFactory.setIgnoreJTA(true);
-		return activeMQJMSConnectionFactory;
-	}
 
 	@Bean
 	public static MessageConverter jacksonJmsMessageConverter() {
