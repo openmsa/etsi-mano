@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 
@@ -42,10 +44,14 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * This type represents attribute modifications for an \&quot;Individual VNF
  * instance\&quot; resource, i.e. modifications to a resource representation
- * based on the \&quot;VnfInstance\&quot; data type.
+ * based on the \&quot;VnfInstance\&quot; data type. The attributes of
+ * \&quot;VnfInstance\&quot; that can be modified according to the provisions in
+ * clause 5.5.2.2 are included in the \&quot;VnfInfoModificationRequest\&quot;
+ * data type. The \&quot;VnfInfoModificationRequest\&quot; data type shall
+ * comply with the provisions defined in table 5.5.2.12-1.
  */
-@ApiModel(description = "This type represents attribute modifications for an \"Individual VNF instance\" resource, i.e. modifications to a resource representation based on the \"VnfInstance\" data type. ")
-
+@ApiModel(description = "This type represents attribute modifications for an \"Individual VNF instance\" resource, i.e. modifications to a resource representation based on the \"VnfInstance\" data type. The attributes of \"VnfInstance\" that can be modified according to the provisions in clause 5.5.2.2 are included in the \"VnfInfoModificationRequest\" data type. The \"VnfInfoModificationRequest\" data type shall comply with the provisions defined in table 5.5.2.12-1. ")
+@Validated
 public class VnfInfoModificationRequest {
 	@JsonProperty("vnfInstanceName")
 	private String vnfInstanceName = null;
@@ -74,12 +80,11 @@ public class VnfInfoModificationRequest {
 	}
 
 	/**
-	 * New value of the \&quot;vnfInstanceName\&quot; attribute in
-	 * \&quot;VnfInstance\&quot;, or \&quot;null\&quot; to remove the attribute.
+	 * New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or
+	 * \"null\" to remove the attribute.
 	 *
 	 * @return vnfInstanceName
 	 **/
-	@JsonProperty("vnfInstanceName")
 	@ApiModelProperty(value = "New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute.       ")
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
@@ -95,12 +100,11 @@ public class VnfInfoModificationRequest {
 	}
 
 	/**
-	 * New value of the \&quot;vnfInstanceDescription\&quot; attribute in
-	 * \&quot;VnfInstance\&quot;, or \&quot;null\&quot; to remove the attribute.
+	 * New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or
+	 * \"null\" to remove the attribute.
 	 *
 	 * @return vnfInstanceDescription
 	 **/
-	@JsonProperty("vnfInstanceDescription")
 	@ApiModelProperty(value = "New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute.   ")
 	public String getVnfInstanceDescription() {
 		return vnfInstanceDescription;

@@ -14,78 +14,69 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-package com.ubiqube.etsi.mano.vnfm.v261.model.indicator;
+package com.ubiqube.etsi.mano.vnfm.v261.model.vnfconfig;
 
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.common.v261.model.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Links for this resource.
+ * Network address that has been configured on the CP. See NOTE 1.
  */
-@ApiModel(description = "Links for this resource. ")
+@ApiModel(description = "Network address that has been configured on the CP. See NOTE 1. ")
 @Validated
-public class VnfIndicatorLinks {
-	@JsonProperty("self")
-	private Link self = null;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
 
-	@JsonProperty("vnfInstance")
-	private Link vnfInstance = null;
+public class CpAddressAddress {
+	@JsonProperty("macAddress")
+	private String macAddress = null;
 
-	public VnfIndicatorLinks self(final Link self) {
-		this.self = self;
+	@JsonProperty("ipAddress")
+	private String ipAddress = null;
+
+	public CpAddressAddress macAddress(final String macAddress) {
+		this.macAddress = macAddress;
 		return this;
 	}
 
 	/**
-	 * URI of this resource.
+	 * Mac address. See NOTE 2.
 	 *
-	 * @return self
+	 * @return macAddress
 	 **/
-	@ApiModelProperty(required = true, value = "URI of this resource. ")
-	@NotNull
+	@ApiModelProperty(value = "Mac address. See NOTE 2. ")
 
-	@Valid
-
-	public Link getSelf() {
-		return self;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setSelf(final Link self) {
-		this.self = self;
+	public void setMacAddress(final String macAddress) {
+		this.macAddress = macAddress;
 	}
 
-	public VnfIndicatorLinks vnfInstance(final Link vnfInstance) {
-		this.vnfInstance = vnfInstance;
+	public CpAddressAddress ipAddress(final String ipAddress) {
+		this.ipAddress = ipAddress;
 		return this;
 	}
 
 	/**
-	 * Link to the related \"Individual VNF instance\" resource.
+	 * IP address. See NOTE 2.
 	 *
-	 * @return vnfInstance
+	 * @return ipAddress
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the related \"Individual VNF instance\" resource. ")
-	@NotNull
+	@ApiModelProperty(value = "IP address. See NOTE 2. ")
 
-	@Valid
-
-	public Link getVnfInstance() {
-		return vnfInstance;
+	public String getIpAddress() {
+		return ipAddress;
 	}
 
-	public void setVnfInstance(final Link vnfInstance) {
-		this.vnfInstance = vnfInstance;
+	public void setIpAddress(final String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 
 	@Override
@@ -96,23 +87,23 @@ public class VnfIndicatorLinks {
 		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
-		final VnfIndicatorLinks vnfIndicatorLinks = (VnfIndicatorLinks) o;
-		return Objects.equals(this.self, vnfIndicatorLinks.self) &&
-				Objects.equals(this.vnfInstance, vnfIndicatorLinks.vnfInstance);
+		final CpAddressAddress cpAddressAddress = (CpAddressAddress) o;
+		return Objects.equals(this.macAddress, cpAddressAddress.macAddress) &&
+				Objects.equals(this.ipAddress, cpAddressAddress.ipAddress);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(self, vnfInstance);
+		return Objects.hash(macAddress, ipAddress);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("class VnfIndicatorLinks {\n");
+		sb.append("class CpAddressAddress {\n");
 
-		sb.append("    self: ").append(toIndentedString(self)).append("\n");
-		sb.append("    vnfInstance: ").append(toIndentedString(vnfInstance)).append("\n");
+		sb.append("    macAddress: ").append(toIndentedString(macAddress)).append("\n");
+		sb.append("    ipAddress: ").append(toIndentedString(ipAddress)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

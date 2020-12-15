@@ -29,7 +29,12 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
+import java.util.Objects;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -41,7 +46,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Links to resources related to this resource.
  */
 @ApiModel(description = "Links to resources related to this resource. ")
-
+@Validated
 public class VnfLcmOpOccLinks {
 	@JsonProperty("self")
 	private Link self = null;
@@ -74,9 +79,9 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return self
 	 **/
-	@JsonProperty("self")
 	@ApiModelProperty(required = true, value = "URI of this resource. ")
 	@NotNull
+	@Valid
 	public Link getSelf() {
 		return self;
 	}
@@ -95,9 +100,9 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return vnfInstance
 	 **/
-	@JsonProperty("vnfInstance")
 	@ApiModelProperty(required = true, value = "Link to the VNF instance that the operation applies to. ")
 	@NotNull
+	@Valid
 	public Link getVnfInstance() {
 		return vnfInstance;
 	}
@@ -116,8 +121,8 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return grant
 	 **/
-	@JsonProperty("grant")
 	@ApiModelProperty(value = "Link to the grant for this operation, if one exists. ")
+	@Valid
 	public Link getGrant() {
 		return grant;
 	}
@@ -132,13 +137,13 @@ public class VnfLcmOpOccLinks {
 	}
 
 	/**
-	 * Link to the task resource that represents the \&quot;cancel\&quot; operation
-	 * for this VNF LCM operation occurrence, if cancelling is currently allowed.
+	 * Link to the task resource that represents the \"cancel\" operation for this
+	 * VNF LCM operation occurrence, if cancelling is currently allowed.
 	 *
 	 * @return cancel
 	 **/
-	@JsonProperty("cancel")
 	@ApiModelProperty(value = "Link to the task resource that represents the \"cancel\" operation for this VNF LCM operation occurrence, if cancelling is currently allowed. ")
+	@Valid
 	public Link getCancel() {
 		return cancel;
 	}
@@ -153,13 +158,13 @@ public class VnfLcmOpOccLinks {
 	}
 
 	/**
-	 * Link to the task resource that represents the \&quot;retry\&quot; operation
-	 * for this VNF LCM operation occurrence, if retrying is currently allowed.
+	 * Link to the task resource that represents the \"retry\" operation for this
+	 * VNF LCM operation occurrence, if retrying is currently allowed.
 	 *
 	 * @return retry
 	 **/
-	@JsonProperty("retry")
 	@ApiModelProperty(value = "Link to the task resource that represents the \"retry\" operation for this VNF LCM operation occurrence, if retrying is currently allowed. ")
+	@Valid
 	public Link getRetry() {
 		return retry;
 	}
@@ -174,14 +179,13 @@ public class VnfLcmOpOccLinks {
 	}
 
 	/**
-	 * Link to the task resource that represents the \&quot;rollback\&quot;
-	 * operation for this VNF LCM operation occurrence, if rolling back is currently
-	 * allowed.
+	 * Link to the task resource that represents the \"rollback\" operation for this
+	 * VNF LCM operation occurrence, if rolling back is currently allowed.
 	 *
 	 * @return rollback
 	 **/
-	@JsonProperty("rollback")
 	@ApiModelProperty(value = "Link to the task resource that represents the \"rollback\" operation for this VNF LCM operation occurrence, if rolling back is currently allowed. ")
+	@Valid
 	public Link getRollback() {
 		return rollback;
 	}
@@ -196,20 +200,42 @@ public class VnfLcmOpOccLinks {
 	}
 
 	/**
-	 * Link to the task resource that represents the \&quot;fail\&quot; operation
-	 * for this VNF LCM operation occurrence, if declaring as failed is currently
-	 * allowed.
+	 * Link to the task resource that represents the \"fail\" operation for this VNF
+	 * LCM operation occurrence, if declaring as failed is currently allowed.
 	 *
 	 * @return fail
 	 **/
-	@JsonProperty("fail")
 	@ApiModelProperty(value = "Link to the task resource that represents the \"fail\" operation for this VNF LCM operation occurrence, if declaring as failed is currently allowed. ")
+	@Valid
 	public Link getFail() {
 		return fail;
 	}
 
 	public void setFail(final Link fail) {
 		this.fail = fail;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final VnfLcmOpOccLinks vnfLcmOpOccLinks = (VnfLcmOpOccLinks) o;
+		return Objects.equals(this.self, vnfLcmOpOccLinks.self) &&
+				Objects.equals(this.vnfInstance, vnfLcmOpOccLinks.vnfInstance) &&
+				Objects.equals(this.grant, vnfLcmOpOccLinks.grant) &&
+				Objects.equals(this.cancel, vnfLcmOpOccLinks.cancel) &&
+				Objects.equals(this.retry, vnfLcmOpOccLinks.retry) &&
+				Objects.equals(this.rollback, vnfLcmOpOccLinks.rollback) &&
+				Objects.equals(this.fail, vnfLcmOpOccLinks.fail);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(self, vnfInstance, grant, cancel, retry, rollback, fail);
 	}
 
 	@Override

@@ -148,7 +148,6 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 		orikaMapperFactory.classMap(GrantRequest.class, GrantsRequest.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
-				.field("vnfdId", "vnfInstance.vnfdId")
 				.byDefault()
 				.register();
 	}
