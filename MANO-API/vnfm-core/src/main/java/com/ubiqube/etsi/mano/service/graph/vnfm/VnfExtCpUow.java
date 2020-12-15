@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
@@ -23,7 +25,10 @@ import org.jgrapht.ListenableGraph;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
@@ -63,5 +68,15 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 		if (null != internal) {
 			g.addEdge(internal, this);
 		}
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		return Arrays.asList(new WfDependency(Network.class, extCp.getInternalVirtualLink()));
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(com.ubiqube.etsi.mano.service.vim.node.vnfm.VnfExtCp.class, task.getToscaName(), task.getId()));
 	}
 }

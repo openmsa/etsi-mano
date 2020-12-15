@@ -16,11 +16,14 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
@@ -50,6 +53,18 @@ public class NsStartUow extends AbstractNsUnitOfWork {
 	@Override
 	protected String getPrefix() {
 		return "start";
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

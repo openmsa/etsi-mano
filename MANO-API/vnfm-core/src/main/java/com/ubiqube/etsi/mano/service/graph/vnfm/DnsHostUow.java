@@ -16,13 +16,19 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsHostTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsHost;
 
 public class DnsHostUow extends VnfAbstractUnitOfWork {
 
@@ -56,6 +62,16 @@ public class DnsHostUow extends VnfAbstractUnitOfWork {
 	@Override
 	protected String getPrefix() {
 		return "dns-host";
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		return Arrays.asList(new WfDependency(Compute.class, task.getParentAlias()));
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(DnsHost.class, task.getToscaName(), task.getId()));
 	}
 
 }

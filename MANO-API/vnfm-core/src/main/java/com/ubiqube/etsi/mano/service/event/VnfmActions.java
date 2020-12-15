@@ -57,7 +57,6 @@ import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.VnfReport;
 import com.ubiqube.etsi.mano.service.graph.VnfWorkflow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.VnfConnections;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -119,8 +118,7 @@ public class VnfmActions {
 		}
 		final VnfPackage vnfPkg = vnfPackageService.findById(vnfInstance.getVnfPkg());
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
-		final VnfConnections conn = new VnfConnections();
-		vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint, newScale, conn.getConnections());
+		vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint, newScale);
 		VnfBlueprint localPlan = blueprintService.save(blueprint);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANTIATE, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);

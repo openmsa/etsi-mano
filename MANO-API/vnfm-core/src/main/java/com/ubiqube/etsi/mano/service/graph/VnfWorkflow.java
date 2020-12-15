@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,10 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
+import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
+import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
+import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
@@ -40,15 +44,18 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
 public class VnfWorkflow {
 	private final VnfPlanner planner;
 	private final VnfPlanExecutor executor;
+	private final List<AbstractVnfPlanContributor> planContributors;
 
-	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor) {
-		super();
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final List<AbstractVnfPlanContributor> _planContributors) {
 		this.planner = planner;
 		this.executor = executor;
+		planContributors = _planContributors;
 	}
 
-	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
-		planner.doPlan(bundle, blueprint, scaling, conns);
+	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling) {
+		final WfConfiguration wfc = new WfConfiguration((List<PlanContributor>) (Object) planContributors);
+		final List<ConnectivityEdge<Class<? extends Node>>> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
+		planner.doPlan(bundle, blueprint, scaling, (List<ConnectivityEdge<Node>>) (Object) conns);
 	}
 
 	public VnfReport execCreate(final VnfBlueprint plan, final VnfParameters params) {

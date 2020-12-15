@@ -16,12 +16,16 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfNoopTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 public class VnfStartUow extends VnfAbstractUnitOfWork {
@@ -52,6 +56,16 @@ public class VnfStartUow extends VnfAbstractUnitOfWork {
 	@Override
 	protected String getPrefix() {
 		return "start";
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return new ArrayList<>();
 	}
 
 }

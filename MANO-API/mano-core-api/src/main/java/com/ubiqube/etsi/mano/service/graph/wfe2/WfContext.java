@@ -14,38 +14,37 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.service.graph.wfe2;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
-import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- * @param <U>
- * @param <P>
- */
-public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializable {
+public class WfContext<U extends Task, P> {
+	private final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g;
+	private final UnitOfWork<U, P> origin;
 
-	String exec(P params);
+	public WfContext(final UnitOfWork<U, P> _origin, final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> _g) {
+		origin = _origin;
+		g = _g;
+	}
 
-	U getTaskEntity();
-
-	String rollback(P params);
-
-	void connect(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, Map<String, UnitOfWork<U, P>> cache);
-
-	List<WfDependency> getDependencies();
-
-	List<WfProduce> getProduce();
+	public String getProducedValue(final Class<?> node) {
+		final Set<ConnectivityEdge<UnitOfWork<U, P>>> edges = g.incomingEdgesOf(origin);
+		for (final ConnectivityEdge<UnitOfWork<U, P>> connectivityEdge : edges) {
+			final List<WfProduce> produced = connectivityEdge.getSource().getProduce();
+			for (final WfProduce produce : produced) {
+				if (produce.getNode() == node) {
+					return connectivityEdge.getSource().getTaskEntity().getVimResourceId();
+				}
+			}
+		}
+		return null;
+	}
 }

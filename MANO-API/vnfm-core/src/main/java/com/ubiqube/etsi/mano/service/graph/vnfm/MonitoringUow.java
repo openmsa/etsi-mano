@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
@@ -23,7 +25,10 @@ import org.jgrapht.ListenableGraph;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.v2.MonitoringTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 
 public class MonitoringUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
@@ -56,6 +61,17 @@ public class MonitoringUow extends VnfAbstractUnitOfWork {
 	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		return Arrays.asList(new WfDependency(Compute.class, vnfCompute.getToscaName()));
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

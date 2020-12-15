@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
@@ -30,6 +31,8 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
@@ -112,6 +115,18 @@ public class NsUow extends AbstractNsUnitOfWork {
 	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

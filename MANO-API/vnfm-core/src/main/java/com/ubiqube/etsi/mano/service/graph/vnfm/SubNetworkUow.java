@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,7 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.SubNetwork;
 
 /**
  *
@@ -71,6 +77,16 @@ public class SubNetworkUow extends VnfAbstractUnitOfWork {
 		parent.ifPresent(x -> {
 			g.addEdge(x, this);
 		});
+	}
+
+	@Override
+	public List<WfDependency> getDependencies() {
+		return Arrays.asList(new WfDependency(Network.class, task.getParentName()));
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(SubNetwork.class, task.getToscaName(), task.getId()));
 	}
 
 }
