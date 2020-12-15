@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
@@ -28,6 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
@@ -60,13 +62,20 @@ public class ManoGrantService implements VimResourceService {
 	@Override
 	public void allocate(final VnfBlueprint plan) {
 		final GrantsRequest grantRequest = mapper.map(plan, GrantsRequest.class);
-		plan.getTasks().forEach(x -> {
-			if (x.getChangeType() == ChangeType.ADDED) {
-				grantRequest.getAddResources().add(mapper.map(x, GrantInformation.class));
-			} else if (x.getChangeType() == ChangeType.REMOVED) {
-				grantRequest.getRemoveResources().add(mapper.map(x, GrantInformation.class));
-			}
-		});
+		final Predicate<? super VnfTask> isManoClass = x -> (x.getType() == ResourceTypeEnum.COMPUTE) ||
+				(x.getType() == ResourceTypeEnum.LINKPORT) ||
+				(x.getType() == ResourceTypeEnum.STORAGE) ||
+				(x.getType() == ResourceTypeEnum.VL);
+		plan.getTasks().stream()
+				.filter(isManoClass)
+				.forEach(x -> {
+					if (x.getChangeType() == ChangeType.ADDED) {
+						x.getType();
+						grantRequest.getAddResources().add(mapper.map(x, GrantInformation.class));
+					} else if (x.getChangeType() == ChangeType.REMOVED) {
+						grantRequest.getRemoveResources().add(mapper.map(x, GrantInformation.class));
+					}
+				});
 		final GrantResponse grantsResp = nfvo.sendSyncGrantRequest(grantRequest);
 		// Merge resources.
 		grantsResp.getAddResources().forEach(x -> {
