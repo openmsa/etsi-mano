@@ -50,6 +50,7 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 @Api(value = "vnf_lcm_op_occs", description = "the vnf_lcm_op_occs API")
+@RequestMapping("/sol002/vnflcm/v1")
 public interface VnfLcmOpOccs261Sol002Api {
 
 	Logger log = LoggerFactory.getLogger(VnfLcmOpOccs261Sol002Api.class);

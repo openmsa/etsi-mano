@@ -51,6 +51,7 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:19:34.580+01:00")
 
 @Api(value = "indicators", description = "the indicators API")
+@RequestMapping("/sol002/vnfind/v1")
 public interface Indicators261Sol002Api {
 
 	Logger log = LoggerFactory.getLogger(Indicators261Sol002Api.class);

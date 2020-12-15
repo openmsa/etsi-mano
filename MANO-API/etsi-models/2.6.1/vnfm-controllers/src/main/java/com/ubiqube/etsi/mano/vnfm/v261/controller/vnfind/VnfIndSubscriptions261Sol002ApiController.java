@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind;
 
 import java.util.Optional;
 
@@ -24,17 +24,17 @@ import org.springframework.stereotype.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:14:16.145+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:19:34.580+01:00")
 
 @Controller
-public class Subscriptions261Sol002ApiController implements VnfPmSubscriptions261Sol002Api {
+public class VnfIndSubscriptions261Sol002ApiController implements VnfIndSubscriptions261Sol002Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public Subscriptions261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public VnfIndSubscriptions261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}

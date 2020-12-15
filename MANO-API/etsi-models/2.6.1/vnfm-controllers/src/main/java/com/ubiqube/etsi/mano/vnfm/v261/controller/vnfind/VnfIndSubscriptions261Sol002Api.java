@@ -53,9 +53,10 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:19:34.580+01:00")
 
 @Api(value = "subscriptions", description = "the subscriptions API")
-public interface Subscriptions261Sol002Api {
+@RequestMapping("/sol002/vnfind/v1")
+public interface VnfIndSubscriptions261Sol002Api {
 
-	Logger log = LoggerFactory.getLogger(Subscriptions261Sol002Api.class);
+	Logger log = LoggerFactory.getLogger(VnfIndSubscriptions261Sol002Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

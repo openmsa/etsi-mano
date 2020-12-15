@@ -53,6 +53,7 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:14:16.145+01:00")
 
 @Api(value = "thresholds", description = "the thresholds API")
+@RequestMapping("/sol002/vnfpm/v1")
 public interface Thresholds261Sol002Api {
 
 	Logger log = LoggerFactory.getLogger(Thresholds261Sol002Api.class);

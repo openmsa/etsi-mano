@@ -54,6 +54,7 @@ import io.swagger.annotations.ApiResponses;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:14:16.145+01:00")
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
+@RequestMapping("/sol002/vnfpm/v1")
 public interface PmJobs261Sol002Api {
 
 	Logger log = LoggerFactory.getLogger(PmJobs261Sol002Api.class);
