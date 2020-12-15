@@ -42,6 +42,7 @@ public class VnfApiVersionsApiController implements VnfApiVersionsApi {
 	@Override
 	public ResponseEntity<ApiVersionInformation> apiVersionsGet(final String version) {
 		final ApiVersionInformation apiVersionInformation = new ApiVersionInformation();
+		apiVersionInformation.setUriPrefix("v1");
 		apiVersionInformation.setApiVersions(mapper.mapAsList(implementations, ApiVersionInformationApiVersions.class));
 		return ResponseEntity.ok(apiVersionInformation);
 	}
@@ -49,6 +50,7 @@ public class VnfApiVersionsApiController implements VnfApiVersionsApi {
 	@Override
 	public ResponseEntity<ApiVersionInformation> apiVersionsV1Get(final String version) {
 		final ApiVersionInformation apiVersionInformation = new ApiVersionInformation();
+		apiVersionInformation.setUriPrefix("v1");
 		apiVersionInformation.setApiVersions(mapper.mapAsList(implementations, ApiVersionInformationApiVersions.class));
 		return ResponseEntity.ok(apiVersionInformation);
 	}
