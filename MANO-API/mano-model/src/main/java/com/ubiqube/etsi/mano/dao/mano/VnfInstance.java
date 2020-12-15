@@ -89,6 +89,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
 	// private Set<VnfInstantiatedBase> extManagedVirtualLinks;
+	private String vnfdId;
 
 	private Audit audit = new Audit();
 
@@ -195,6 +196,14 @@ public class VnfInstance implements BaseEntity, Auditable {
 
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
+	}
+
+	public String getVnfdId() {
+		return vnfdId;
+	}
+
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
 	}
 
 	@Override
