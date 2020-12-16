@@ -17,7 +17,11 @@
 
 package com.ubiqube.etsi.mano.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.BufferedImageHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -32,6 +36,12 @@ public class WebConfig implements WebMvcConfigurer {
 				.addResourceLocations("classpath:/META-INF/resources/webjars/");
 
 		WebMvcConfigurer.super.addResourceHandlers(registry);
+	}
+
+	@Override
+	public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
+		converters.add(new BufferedImageHttpMessageConverter());
+		WebMvcConfigurer.super.configureMessageConverters(converters);
 	}
 
 }
