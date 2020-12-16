@@ -75,19 +75,7 @@ public class WfConfiguration {
 			edges.addAll(dependencyBuilder.getEdges());
 		});
 		final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g = (ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>>) (Object) GraphTools.createGraph();
-		final Set<Class<? extends Node>> vertex = new HashSet<>();
-		edges.forEach(x -> {
-			vertex.add(x.getSource());
-			vertex.add(x.getTarget());
-		});
-		replacements.entrySet().stream()
-				.flatMap(x -> x.getValue().getEdges().stream())
-				.forEach(x -> {
-					vertex.add(x.getSource());
-					vertex.add(x.getTarget());
-				});
-		vertex.add(Start.class);
-		vertex.stream().forEach(g::addVertex);
+		createVertex(g, edges);
 		replacements.entrySet().stream()
 				.flatMap(x -> x.getValue().getEdges().stream())
 				.forEach(x -> {
@@ -109,6 +97,21 @@ public class WfConfiguration {
 		});
 		optimze(g);
 		return g;
+	}
+
+	private void createVertex(final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g, final List<ConnectivityEdge<Class<? extends Node>>> edges) {
+		final Set<Class<? extends Node>> vertex = new HashSet<>();
+		edges.forEach(x -> vertexAdd(vertex, x));
+		replacements.entrySet().stream()
+				.flatMap(x -> x.getValue().getEdges().stream())
+				.forEach(x -> vertexAdd(vertex, x));
+		vertex.add(Start.class);
+		vertex.stream().forEach(g::addVertex);
+	}
+
+	private static void vertexAdd(final Set<Class<? extends Node>> vertex, final ConnectivityEdge<Class<? extends Node>> x) {
+		vertex.add(x.getSource());
+		vertex.add(x.getTarget());
 	}
 
 	public <U extends Task, P> ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> autoConnect(final List<UnitOfWork<U, P>> uows) {
@@ -156,36 +159,33 @@ public class WfConfiguration {
 		});
 	}
 
-	private static <U extends Task, P> List<UnitOfWork<U, P>> getAllMatchingNodes(final Set<ConnectivityEdge<UnitOfWork<U, P>>> out, final List<ConnectivityEdge<Class<? extends Node>>> nodes) {
-		final List<UnitOfWork<U, P>> ret = new ArrayList<>();
-		out.forEach(x -> {
-			final List<WfProduce> l = x.getTarget().getProduce();
-			if (have(nodes, l)) {
-				ret.add(x.getTarget());
-			}
-		});
-		return ret;
+	private static <U extends Task, P> List<UnitOfWork<U, P>> getAllMatchingNodes(final Set<ConnectivityEdge<UnitOfWork<U, P>>> edges, final List<ConnectivityEdge<Class<? extends Node>>> nodes) {
+		return edges.stream()
+				.filter(x -> have(nodes, x.getTarget().getProduce()))
+				.map(ConnectivityEdge::getTarget)
+				.collect(Collectors.toList());
 	}
 
 	private static boolean have(final List<ConnectivityEdge<Class<? extends Node>>> nodes, final List<WfProduce> l) {
 		for (final WfProduce wfProduce : l) {
-			for (final ConnectivityEdge<Class<? extends Node>> edge : nodes) {
-				if (edge.getTarget() == wfProduce.getNode()) {
-					return true;
-				}
+			if (nodes.stream().anyMatch(x -> x.getTarget() == wfProduce.getNode())) {
+				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * The concept is an ending node is a node that doesn't appear in a source node.
+	 * for example : A -> B -> C
+	 *
+	 * @param repl A replace builder instance.
+	 * @return list of ending Nodes.
+	 */
 	private static List<ConnectivityEdge<Class<? extends Node>>> findOutterVertex(final ReplaceBuilder repl) {
-		final List<ConnectivityEdge<Class<? extends Node>>> ret = new ArrayList<>();
-		repl.getEdges().forEach(x -> {
-			if (dontHaveSource(repl, x.getTarget())) {
-				ret.add(x);
-			}
-		});
-		return ret;
+		return repl.getEdges().stream()
+				.filter(x -> dontHaveSource(repl, x.getTarget()))
+				.collect(Collectors.toList());
 	}
 
 	private static boolean dontHaveSource(final ReplaceBuilder repl, final Class<? extends Node> target) {
