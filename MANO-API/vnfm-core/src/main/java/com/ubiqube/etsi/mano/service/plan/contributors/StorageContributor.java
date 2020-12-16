@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
@@ -30,13 +31,12 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
-import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.StorageUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
@@ -65,19 +65,22 @@ public class StorageContributor extends AbstractVnfPlanContributor {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
 
-		// XXX Maybe we can enumerate compute node in current plan and create / delete
-		// storage ?
 		final List<VnfTask> ret = new ArrayList<>();
-		vnfPackage.getVnfCompute().forEach(x -> x.getStorages().forEach(y -> {
-			final Task ct = findCompute(plan, x.getToscaName());
-			final StorageTask task = new StorageTask();
-			task.setToscaName(NodeNaming.storageName(x.getToscaName(), y));
-			task.setType(ResourceTypeEnum.STORAGE);
-			task.setParentAlias(ct.getAlias());
-			task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));
-			task.setChangeType(ChangeType.ADDED);
-			ret.add(task);
-		}));
+		plan.getTasks().stream()
+				.filter(x -> x instanceof ComputeTask)
+				.map(x -> (ComputeTask) x)
+				.forEach(x -> {
+					x.getVnfCompute().getStorages().forEach(y -> {
+						final StorageTask task = new StorageTask();
+						task.setToscaName(y);
+						task.setType(ResourceTypeEnum.STORAGE);
+						task.setAlias(y + "-" + x.getAlias() + "-" + RandomStringUtils.random(5, true, true));
+						task.setParentAlias(x.getAlias());
+						task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));
+						task.setChangeType(ChangeType.ADDED);
+						ret.add(task);
+					});
+				});
 		return ret;
 	}
 

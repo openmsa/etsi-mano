@@ -52,4 +52,10 @@ public abstract class VnfAbstractUnitOfWork extends VnfmUnitOfWork {
 	public final String getToscaName() {
 		return name;
 	}
+
+	@Override
+	public String toString() {
+		return task.getClass().getSimpleName() + "(" + name + ")";
+	}
+
 }

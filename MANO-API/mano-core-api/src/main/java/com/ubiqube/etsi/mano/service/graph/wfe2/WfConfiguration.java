@@ -221,7 +221,10 @@ public class WfConfiguration {
 				makeConnection(g, k, from.get(0), element, deferedConnetion);
 			}
 		} else {
-			LOG.warn("{} ========> {}", from, to);
+			LOG.debug("Multimode: {} ========> {}", from, to);
+			for (int i = 0; i < from.size(); i++) {
+				makeConnection(g, k, from.get(i), to.get(i), deferedConnetion);
+			}
 		}
 	}
 

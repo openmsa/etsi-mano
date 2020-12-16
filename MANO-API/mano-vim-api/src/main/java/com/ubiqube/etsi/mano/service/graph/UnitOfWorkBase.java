@@ -16,9 +16,21 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface UnitOfWorkBase {
-
+	/**
+	 *
+	 * @return The instance Name.
+	 */
 	String getName();
 
+	/**
+	 *
+	 * @return The className (vl01 / vl02 / ...).
+	 */
 	String getToscaName();
 }
