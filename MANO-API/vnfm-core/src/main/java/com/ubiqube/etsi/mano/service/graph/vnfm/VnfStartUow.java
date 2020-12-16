@@ -18,15 +18,10 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfNoopTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 
 public class VnfStartUow extends VnfAbstractUnitOfWork {
 
@@ -45,12 +40,6 @@ public class VnfStartUow extends VnfAbstractUnitOfWork {
 	@Override
 	public String rollback(final VnfParameters params) {
 		return null;
-	}
-
-	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		// Nothing.
-
 	}
 
 	@Override

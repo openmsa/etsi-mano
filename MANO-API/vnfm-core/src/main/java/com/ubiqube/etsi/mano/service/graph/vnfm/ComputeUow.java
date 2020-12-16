@@ -19,21 +19,14 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
@@ -80,16 +73,6 @@ public class ComputeUow extends VnfAbstractUnitOfWork {
 	public String rollback(final VnfParameters params) {
 		params.getVim().deleteCompute(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		vnfLinkPort.stream()
-				.map(VnfLinkPort::getVirtualLink)
-				.map(x -> cache.get(NodeNaming.subnetwork(x)))
-				.filter(Objects::nonNull)
-				.forEach(x -> g.addEdge(x, this));
-		task.getVnfCompute().getStorages().stream().forEach(x -> g.addEdge(cache.get(NodeNaming.storageName(task.getVnfCompute().getToscaName(), x)), this));
 	}
 
 	@Override

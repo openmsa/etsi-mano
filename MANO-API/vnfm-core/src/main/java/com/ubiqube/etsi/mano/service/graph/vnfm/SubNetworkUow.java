@@ -18,18 +18,13 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-import org.jgrapht.ListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.SubNetwork;
 
@@ -68,15 +63,6 @@ public class SubNetworkUow extends VnfAbstractUnitOfWork {
 	@Override
 	protected String getPrefix() {
 		return "subnet";
-	}
-
-	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		final Optional<UnitOfWork> parent = Optional.ofNullable(cache.get(task.getParentName()));
-		LOG.warn("Subnetwork: " + task.getAlias() + " => " + task.getParentName() + " => " + cache);
-		parent.ifPresent(x -> {
-			g.addEdge(x, this);
-		});
 	}
 
 	@Override

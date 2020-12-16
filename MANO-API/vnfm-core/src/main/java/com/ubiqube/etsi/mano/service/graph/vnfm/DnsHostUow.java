@@ -18,15 +18,10 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsHostTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsHost;
 
@@ -51,12 +46,6 @@ public class DnsHostUow extends VnfAbstractUnitOfWork {
 	public String rollback(final VnfParameters params) {
 		params.getVim().deleteDnsRecordSet(params.getVimConnectionInformation(), params.getVimResourceId(), task.getZoneId(), task.getIps());
 		return null;
-	}
-
-	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		final UnitOfWork<VnfTask, VnfParameters> parent = cache.get(task.getParentAlias());
-		g.addEdge(parent, this);
 	}
 
 	@Override

@@ -19,16 +19,11 @@ package com.ubiqube.etsi.mano.service.graph.vnfm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
 
 public class StorageUow extends VnfAbstractUnitOfWork {
@@ -59,12 +54,6 @@ public class StorageUow extends VnfAbstractUnitOfWork {
 	public String rollback(final VnfParameters params) {
 		params.getVim().deleteStorage(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
