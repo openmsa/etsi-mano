@@ -29,6 +29,9 @@
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.source>11</maven.compiler.source>
+		<com.ubiqube.hibernate-search.version>5.7.2.Final</com.ubiqube.hibernate-search.version>
+		<com.ubiqube.springfox-swagger.version>3.0.0-SNAPSHOT</com.ubiqube.springfox-swagger.version>
+		<com.ubiqube.openstack4j.version>3.9-SNAPSHOT</com.ubiqube.openstack4j.version>
 	</properties>
 	<build>
 		<plugins>
@@ -132,17 +135,17 @@
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger-ui</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>${com.ubiqube.springfox-swagger.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger2</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>${com.ubiqube.springfox-swagger.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-spring-webmvc</artifactId>
-				<version>3.0.0-SNAPSHOT</version>
+				<version>${com.ubiqube.springfox-swagger.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.rakugakibox.spring.boot</groupId>
@@ -172,12 +175,12 @@
 			<dependency>
 				<groupId>com.github.openstack4j.core</groupId>
 				<artifactId>openstack4j-core</artifactId>
-				<version>3.9-SNAPSHOT</version>
+				<version>${com.ubiqube.openstack4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.openstack4j.core.connectors</groupId>
 				<artifactId>openstack4j-httpclient</artifactId>
-				<version>3.9-SNAPSHOT</version>
+				<version>${com.ubiqube.openstack4j.version}</version>
 			</dependency>
 
 		</dependencies>
