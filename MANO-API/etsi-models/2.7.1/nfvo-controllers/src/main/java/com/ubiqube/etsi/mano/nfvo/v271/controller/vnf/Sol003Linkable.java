@@ -20,9 +20,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
-import com.ubiqube.etsi.mano.model.v271.sol003.vnf.Link;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfoLinks;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
 public class Sol003Linkable implements Linkable {
 

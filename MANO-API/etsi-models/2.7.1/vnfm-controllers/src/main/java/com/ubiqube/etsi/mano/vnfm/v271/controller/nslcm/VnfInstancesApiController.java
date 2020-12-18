@@ -16,33 +16,216 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.ChangeExtVnfConnectivityRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.ChangeVnfFlavourRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.HealVnfRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VirtualStorageResourceInfo;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInfoModificationRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfcResourceInfo;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
+
+import ma.glasnost.orika.MapperFacade;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Controller
 public class VnfInstancesApiController implements VnfInstancesApi {
+	private static final String LOCATION = "Location";
+	private static final Logger LOG = LoggerFactory.getLogger(VnfInstancesApiController.class);
+	@Nonnull
+	private final LcmLinkable links = new Sol003LcmLinkable();
+	private final VnfInstanceService vnfInstancesService;
+	private final VnfInstanceLcm vnfInstanceLcm;
+	private final MapperFacade mapper;
+	private final VnfInstanceService vnfInstanceService;
+	private final VnfPackageService vnfPackageService;
 
-    private final ObjectMapper objectMapper;
+	public VnfInstancesApiController(final VnfInstanceService vnfInstancesService, final VnfInstanceLcm vnfInstanceLcm, final MapperFacade mapper, final VnfInstanceService vnfInstanceService, final VnfPackageService vnfPackageService) {
+		super();
+		this.vnfInstancesService = vnfInstancesService;
+		this.vnfInstanceLcm = vnfInstanceLcm;
+		this.mapper = mapper;
+		this.vnfInstanceService = vnfInstanceService;
+		this.vnfPackageService = vnfPackageService;
+	}
 
-    private final HttpServletRequest request;
+	@Override
+	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
+		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
+				.map(x -> {
+					final VnfInstance v = mapper.map(x, VnfInstance.class);
+					v.setLinks(links.getLinks(x.getId().toString()));
+					return v;
+				})
+				.collect(Collectors.toList());
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public VnfInstancesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+		final String exclude = queryParameters.get("exclude_fields");
+		final String fields = queryParameters.get("fields");
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+		final ObjectMapper mapperForView = MapperForView.getMapperForView(exclude, fields, null, null);
+		try {
+			return new ResponseEntity<>(mapperForView.writeValueAsString(result), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<VnfInstance> vnfInstancesPost(@Valid final CreateVnfRequest createVnfRequest) {
+		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest.getVnfdId(), createVnfRequest.getVnfInstanceName(), createVnfRequest.getVnfInstanceDescription());
+		final VnfInstance inst = mapper.map(vnfInstance, VnfInstance.class);
+		inst.setLinks(links.getLinks(vnfInstance.getId().toString()));
+		return ResponseEntity.accepted().body(inst);
+	}
 
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId, @Valid final ChangeExtVnfConnectivityRequest changeExtVnfConnectivityRequest) {
+		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		ensureInstantiated(vnfInstance);
+		throw new GenericException("TODO");
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId, @Valid final ChangeVnfFlavourRequest changeVnfFlavourRequest) {
+		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		ensureInstantiated(vnfInstance);
+		throw new GenericException("TODO");
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(final String vnfInstanceId) {
+		vnfInstanceLcm.delete(UUID.fromString(vnfInstanceId));
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
+		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstanceDb = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		final VnfInstance vnfInstance = mapper.map(vnfInstanceDb, VnfInstance.class);
+
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId()));
+		mapper.map(vnfPackage, vnfInstance);
+		vnfInstance.setId(vnfInstanceDb.getId().toString());
+		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
+
+		final List<VnfLiveInstance> liveCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstanceDb);
+		final List<VnfcResourceInfo> vnfcResourceInfo = mapper.mapAsList(liveCompute, VnfcResourceInfo.class);
+		instantiatedVnfInfo.setVnfcResourceInfo(vnfcResourceInfo);
+
+		final List<VnfLiveInstance> liveExtCp = vnfInstanceService.getLiveExtCpInstanceOf(vnfInstanceDb);
+		final List<VnfExtCpInfo> extCpInfo = mapper.mapAsList(liveExtCp, VnfExtCpInfo.class);
+		instantiatedVnfInfo.setExtCpInfo(extCpInfo);
+
+		final List<VnfLiveInstance> liveStorage = vnfInstanceService.getLiveStorageInstanceOf(vnfInstanceDb);
+		final List<VirtualStorageResourceInfo> virtualStorageResourceInfo = mapper.mapAsList(liveStorage, VirtualStorageResourceInfo.class);
+		instantiatedVnfInfo.setVirtualStorageResourceInfo(virtualStorageResourceInfo);
+
+		final List<VnfLiveInstance> liveVirtualLink = vnfInstanceService.getLiveVirtualLinkInstanceOf(vnfInstanceDb);
+		final List<VnfVirtualLinkResourceInfo> virtualLinkResourceInfo = mapper.mapAsList(liveVirtualLink, VnfVirtualLinkResourceInfo.class);
+		instantiatedVnfInfo.setVirtualLinkResourceInfo(virtualLinkResourceInfo);
+
+		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
+		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdHealPost(final String vnfInstanceId, @Valid final HealVnfRequest healVnfRequest) {
+		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		ensureInstantiated(vnfInstance);
+		throw new GenericException("TODO");
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, @Valid final InstantiateVnfRequest instantiateVnfRequest) {
+		final VnfInstantiate req = mapper.map(instantiateVnfRequest, VnfInstantiate.class);
+		final VnfBlueprint lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), req);
+		final String link = VnfLcmOpOccsApiController.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.accepted().header(LOCATION, link).build();
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, @Valid final OperateVnfRequest operateVnfRequest) {
+		final VnfOperateRequest req = mapper.map(operateVnfRequest, VnfOperateRequest.class);
+		final VnfBlueprint lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), req);
+		final String link = VnfLcmOpOccsApiController.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.accepted().header(LOCATION, link).build();
+	}
+
+	@Override
+	public ResponseEntity<VnfInstance> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId, @Valid final VnfInfoModificationRequest vnfInfoModificationRequest) {
+		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		throw new GenericException("TODO");
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId, @Valid final ScaleVnfRequest scaleVnfRequest) {
+		final VnfScaleRequest req = mapper.map(scaleVnfRequest, VnfScaleRequest.class);
+		final VnfBlueprint lcm = vnfInstanceLcm.scale(UUID.fromString(vnfInstanceId), req);
+		final String link = VnfLcmOpOccsApiController.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header(LOCATION, link).build();
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId, @Valid final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
+		final VnfScaleToLevelRequest req = mapper.map(scaleVnfToLevelRequest, VnfScaleToLevelRequest.class);
+		final VnfBlueprint lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), req);
+		final String link = VnfLcmOpOccsApiController.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header(LOCATION, link).build();
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, @Valid final TerminateVnfRequest terminateVnfRequest) {
+		final VnfBlueprint lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), CancelModeTypeEnum.fromValue(terminateVnfRequest.toString()), terminateVnfRequest.getGracefulTerminationTimeout());
+		final String link = VnfLcmOpOccsApiController.getSelfLink(lcm.getId().toString());
+		return ResponseEntity.noContent().header(LOCATION, link).build();
+	}
+
+	public static String getSelfLink(final String id) {
+		return linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
+	}
 }

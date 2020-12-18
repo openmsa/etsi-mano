@@ -86,7 +86,6 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String version) {
-		// VnfLcmOperationOccurenceNotification(result, FAILED, changes) NFVO
 		throw new GenericException("TODO");
 	}
 

@@ -18,81 +18,84 @@
 package com.ubiqube.etsi.mano.model.v271.sol005.nsfault;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsfault.Link;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * Links for this resource. 
+ * Links for this resource.
  */
 @ApiModel(description = "Links for this resource. ")
 @Validated
-public class AlarmLinks   {
-  @JsonProperty("self")
-  private Link self = null;
+public class AlarmLinks {
+	@JsonProperty("self")
+	private Link self = null;
 
-  public AlarmLinks self(Link self) {
-    this.self = self;
-    return this;
-  }
+	public AlarmLinks self(final Link self) {
+		this.self = self;
+		return this;
+	}
 
-  /**
-   * Get self
-   * @return self
-  **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
+	/**
+	 * Get self
+	 *
+	 * @return self
+	 **/
+	@ApiModelProperty(required = true, value = "")
+	@NotNull
 
-    @Valid
-    public Link getSelf() {
-    return self;
-  }
+	@Valid
+	public Link getSelf() {
+		return self;
+	}
 
-  public void setSelf(Link self) {
-    this.self = self;
-  }
+	public void setSelf(final Link self) {
+		this.self = self;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AlarmLinks alarmLinks = (AlarmLinks) o;
+		return Objects.equals(this.self, alarmLinks.self);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AlarmLinks alarmLinks = (AlarmLinks) o;
-    return Objects.equals(this.self, alarmLinks.self);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(self);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(self);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AlarmLinks {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AlarmLinks {\n");
-    
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    self: ").append(toIndentedString(self)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
