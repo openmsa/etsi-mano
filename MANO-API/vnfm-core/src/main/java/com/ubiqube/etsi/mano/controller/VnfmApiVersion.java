@@ -120,6 +120,9 @@ public class VnfmApiVersion {
 		apiVersion.setUriPrefix("/sol003/" + module + "/v1/");
 
 		final List<String> versions = dedupe.get(module);
+		if (null == versions) {
+			return ResponseEntity.noContent().build();
+		}
 		final List<ApiVersionInformationApiVersions> list = versions.stream().map(x -> new ApiVersionInformationApiVersions().version(x).isDeprecated(Boolean.FALSE)).collect(Collectors.toList());
 		apiVersion.setApiVersions(list);
 		return ResponseEntity.ok(apiVersion);
