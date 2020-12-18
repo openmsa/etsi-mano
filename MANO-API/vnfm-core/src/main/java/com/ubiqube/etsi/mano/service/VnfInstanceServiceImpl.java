@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
 public class VnfInstanceServiceImpl implements VnfInstanceService {
@@ -55,10 +57,13 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance) {
+	private final EntityManager entityManager;
+
+	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance, final EntityManager _entityManager) {
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstanceJpa = _vnfInstanceJpa;
 		vnfLiveInstanceJpa = _vnfLiveInstance;
+		entityManager = _entityManager;
 	}
 
 	@Override
@@ -170,8 +175,9 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	@Override
 	public List<VnfInstance> query(final String filter) {
-		// TODO Auto-generated method stub
-		return null;
+		final SearchQueryer sq = new SearchQueryer(entityManager);
+		return (List<VnfInstance>) sq.getCriteria(filter, VnfInstance.class)
+				.getResultStream().collect(Collectors.toList());
 	}
 
 	@Override

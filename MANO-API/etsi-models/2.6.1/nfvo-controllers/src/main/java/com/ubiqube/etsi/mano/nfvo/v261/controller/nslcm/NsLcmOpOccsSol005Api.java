@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -68,7 +67,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final String filter, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsLcmOpOccs> result = nsLcmOpOccsService.query(filter);
+		final List<NsBlueprint> result = nsLcmOpOccsService.query(filter);
 		final List<NsLcmOpOcc> list = result.stream()
 				.map(x -> {
 					final NsLcmOpOcc res = mapper.map(x, NsLcmOpOcc.class);

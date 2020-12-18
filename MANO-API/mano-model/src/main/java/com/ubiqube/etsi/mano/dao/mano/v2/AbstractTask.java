@@ -27,6 +27,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.search.annotations.Field;
+
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 
@@ -44,22 +46,25 @@ public abstract class AbstractTask implements Task {
 	private Audit audit;
 
 	@Enumerated(EnumType.STRING)
+	@Field
 	private ChangeType changeType;
 
+	@Field
 	private String toscaName;
 
 	private String toscaId;
 	private String state;
-
+	@Field
 	private String alias;
-
+	@Field
 	private LocalDateTime startDate;
-
+	@Field
 	private LocalDateTime endDate;
 
 	@Enumerated(EnumType.STRING)
+	@Field
 	private PlanStatusType status;
-
+	@Field
 	private String vimResourceId;
 
 	public abstract void setId(final UUID id);

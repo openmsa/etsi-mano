@@ -42,6 +42,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
@@ -73,17 +74,22 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@Field
 	private String vnfdVersion;
 
+	@Field
 	private String flavorId;
 
+	@Field
 	private String descriptorId;
 
+	@Field
 	private String descriptorVersion;
 
 	@Embedded
+	@IndexedEmbedded
 	private PkgChecksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@IndexedEmbedded
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
@@ -107,21 +113,26 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfCompute> vnfCompute = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfStorage> vnfStorage = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@IndexedEmbedded
 	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfExtCp> vnfExtCp = new LinkedHashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -131,6 +142,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 	private Audit audit;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@IndexedEmbedded
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
 	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")

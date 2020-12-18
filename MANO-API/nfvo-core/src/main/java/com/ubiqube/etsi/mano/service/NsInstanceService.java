@@ -19,6 +19,9 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,7 @@ import com.ubiqube.etsi.mano.jpa.NsVirtualLinkJpa;
 import com.ubiqube.etsi.mano.jpa.NsVnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.NsdInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
 public class NsInstanceService {
@@ -46,12 +50,15 @@ public class NsInstanceService {
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsInstanceService(final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
+	private final EntityManager em;
+
+	public NsInstanceService(final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em) {
 		nsVirtualLinkJpa = _nsVirtualLinkJpa;
 		nsdPackageJpa = _nsdPackageJpa;
 		vnfPackageJpa = _vnfPackageJpa;
 		nsdInstanceJpa = _nsdInstanceJpa;
 		nsLiveInstanceJpa = _nsLiveInstanceJpa;
+		em = _em;
 	}
 
 	public int countLiveInstanceOfSap(final NsdInstance nsInstance, final UUID id) {
@@ -99,8 +106,9 @@ public class NsInstanceService {
 	}
 
 	public List<NsdInstance> query(final String filter) {
-		// TODO Auto-generated method stub
-		return null;
+		final SearchQueryer sq = new SearchQueryer(em);
+		return (List<NsdInstance>) sq.getCriteria(filter, NsdInstance.class)
+				.getResultStream().collect(Collectors.toList());
 	}
 
 }

@@ -34,6 +34,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
@@ -42,12 +47,14 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 
 @Entity
+@Indexed
 @EntityListeners(AuditListener.class)
 public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@DocumentId
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
@@ -68,6 +75,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	@JoinColumn
 	private Set<BlueZoneGroupInformation> zoneGroups = null;
 
+	@Field
 	private String grantsRequestId;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -75,9 +83,11 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Embedded
+	@IndexedEmbedded
 	private BlueprintParameters parameters = new BlueprintParameters();
 
 	@Embedded
+	@IndexedEmbedded
 	private OperateChanges operateChanges = new OperateChanges();
 
 	@Override

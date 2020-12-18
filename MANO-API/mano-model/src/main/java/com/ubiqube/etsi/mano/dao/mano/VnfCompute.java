@@ -33,6 +33,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.search.annotations.Field;
+
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfCompute implements ToscaEntity, Auditable {
@@ -45,23 +47,31 @@ public class VnfCompute implements ToscaEntity, Auditable {
 
 	private String toscaId;
 
+	@Field
 	private String toscaName;
 
 	private String state;
 
+	@Field
 	private String name;
 
+	@Field
 	private String description;
 
 	@Column(length = 9000)
+	@Field
 	private String bootData;
 
+	@Field
 	private long virtualMemorySize;
 
+	@Field
 	private String cpuArchitecture;
 
+	@Field
 	private long numVcpu;
 
+	@Field
 	private long diskSize;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
