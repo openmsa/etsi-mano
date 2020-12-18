@@ -39,12 +39,12 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 @Entity
 @Indexed
@@ -55,32 +55,33 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@DocumentId
 	private UUID id;
 
 	private String defaultInstantiationLevel;
 
-	@Field
+	@FullTextField
 	private String vnfdId;
 
-	@Field
+	@FullTextField
 	private String vnfProvider;
 
-	@Field
+	@FullTextField
 	private String vnfProductName;
 
-	@Field
+	@FullTextField
 	private String vnfSoftwareVersion;
 
-	@Field
+	@FullTextField
 	private String vnfdVersion;
 
-	@Field
+	@FullTextField
 	private String flavorId;
 
-	@Field
+	@FullTextField
 	private String descriptorId;
 
-	@Field
+	@FullTextField
 	private String descriptorVersion;
 
 	@Embedded
@@ -93,18 +94,15 @@ public class VnfPackage implements BaseEntity, Auditable {
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
-	@Field
-	@FieldBridge(impl = EnumFieldBridge.class)
+	@FullTextField
 	private OnboardingStateType onboardingState;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private PackageOperationalState operationalState;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private PackageUsageState usageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -114,6 +112,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	private Set<VnfCompute> vnfCompute = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

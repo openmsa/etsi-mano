@@ -27,7 +27,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
@@ -46,25 +47,25 @@ public abstract class AbstractTask implements Task {
 	private Audit audit;
 
 	@Enumerated(EnumType.STRING)
-	@Field
+	@FullTextField
 	private ChangeType changeType;
 
-	@Field
+	@FullTextField
 	private String toscaName;
 
 	private String toscaId;
 	private String state;
-	@Field
+	@FullTextField
 	private String alias;
-	@Field
+	@GenericField
 	private LocalDateTime startDate;
-	@Field
+	@GenericField
 	private LocalDateTime endDate;
 
 	@Enumerated(EnumType.STRING)
-	@Field
+	@FullTextField
 	private PlanStatusType status;
-	@Field
+	@FullTextField
 	private String vimResourceId;
 
 	public abstract void setId(final UUID id);

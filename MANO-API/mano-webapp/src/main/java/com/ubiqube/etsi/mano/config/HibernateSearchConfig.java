@@ -21,8 +21,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -41,9 +41,9 @@ public class HibernateSearchConfig implements ApplicationListener<ContextRefresh
 	@Transactional
 	public void onApplicationEvent(final ContextRefreshedEvent event) {
 
-		final FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+		final SearchSession fullTextEntityManager = Search.session(entityManager);
 		try {
-			fullTextEntityManager.createIndexer().startAndWait();
+			fullTextEntityManager.massIndexer().startAndWait();
 		} catch (final InterruptedException e) {
 			Thread.currentThread().interrupt();
 			LOG.warn("Hibernate Search have been interrupted.", e);

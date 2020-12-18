@@ -34,10 +34,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
@@ -75,7 +75,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	@JoinColumn
 	private Set<BlueZoneGroupInformation> zoneGroups = null;
 
-	@Field
+	@FullTextField
 	private String grantsRequestId;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

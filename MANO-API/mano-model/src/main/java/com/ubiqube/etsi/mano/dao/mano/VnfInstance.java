@@ -35,8 +35,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
@@ -55,10 +55,10 @@ public class VnfInstance implements BaseEntity, Auditable {
 	private VnfInstanceStatus instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
-	@Field
+	@FullTextField
 	private InstantiationState instantiationState = null;
 
-	@Field
+	@FullTextField
 	private String vnfInstanceDescription;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -70,7 +70,7 @@ public class VnfInstance implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> vnfConfigurableProperties = null;
 
-	@Field
+	@FullTextField
 	private String vnfInstanceName = null;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)

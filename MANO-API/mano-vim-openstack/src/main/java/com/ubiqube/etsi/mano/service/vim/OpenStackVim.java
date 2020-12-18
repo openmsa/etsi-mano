@@ -31,14 +31,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import org.hibernate.search.util.impl.Executors;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
@@ -577,7 +577,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation) {
-		final ThreadPoolExecutor tpe = Executors.newFixedThreadPool(5, "os-vim");
+		final ExecutorService tpe = Executors.newFixedThreadPool(5);
 		final CompletionService<List<VimCapability>> completionService = new ExecutorCompletionService<>(tpe);
 		final List<? extends Extension> exts;
 		completionService.submit(getExtensions(vimConnectionInformation));

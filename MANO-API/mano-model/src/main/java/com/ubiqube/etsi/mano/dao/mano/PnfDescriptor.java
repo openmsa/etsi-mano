@@ -27,13 +27,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @Indexed
 public class PnfDescriptor implements BaseEntity, Serializable {
@@ -42,23 +45,21 @@ public class PnfDescriptor implements BaseEntity, Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-	@Field
+	@FullTextField
 	private String pnfdId;
-	@Field
+	@FullTextField
 	private String pnfdName;
-	@Field
+	@FullTextField
 	private String pnfdersion;
-	@Field
+	@FullTextField
 	private String pnfdProvider;
-	@Field
+	@FullTextField
 	private String pnfdInvariantId;
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private OnboardingStateType pnfdOnboardingState;
 	@Embedded
 	private FailureDetails onboardingFailureDetails;
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private PackageUsageState pnfdUsageState;
 	private String userDefinedData;
 

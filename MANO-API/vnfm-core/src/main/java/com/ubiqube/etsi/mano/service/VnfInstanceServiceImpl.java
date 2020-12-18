@@ -176,8 +176,7 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 	@Override
 	public List<VnfInstance> query(final String filter) {
 		final SearchQueryer sq = new SearchQueryer(entityManager);
-		return (List<VnfInstance>) sq.getCriteria(filter, VnfInstance.class)
-				.getResultStream().collect(Collectors.toList());
+		return sq.getCriteria(filter, VnfInstance.class);
 	}
 
 	@Override

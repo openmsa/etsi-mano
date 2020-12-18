@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -78,8 +77,7 @@ public class NsBlueprintServiceImpl implements NsBlueprintService {
 	@Override
 	public List<NsBlueprint> query(final String filter) {
 		final SearchQueryer sq = new SearchQueryer(em);
-		return (List<NsBlueprint>) sq.getCriteria(filter, NsBlueprint.class)
-				.getResultStream().collect(Collectors.toList());
+		return sq.getCriteria(filter, NsBlueprint.class);
 	}
 
 }

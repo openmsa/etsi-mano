@@ -23,25 +23,29 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
-import org.hibernate.search.annotations.FieldBridge;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class LcmAffectedVnfc {
 	@Id
 	private String id = null;
+
 	// Probably a vdu instance.
 	private String vduId = null;
+
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
 	private ChangeType changeType = null;
 
 	private VimResource computeResource = null;
 
 	@JsonProperty("metadata")
 	private Map<String, String> metadata = null;
-// Those are also instances.
+
+	// Those are also instances.
 	private List<String> affectedVnfcCpIds = null;
 
 	private List<String> addedStorageResourceIds = null;

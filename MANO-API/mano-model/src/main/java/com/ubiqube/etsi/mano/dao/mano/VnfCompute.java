@@ -33,45 +33,50 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 @Entity
 @EntityListeners(AuditListener.class)
+@Indexed
 public class VnfCompute implements ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@DocumentId
 	private UUID id;
 
 	private String toscaId;
 
-	@Field
+	@FullTextField
 	private String toscaName;
 
 	private String state;
 
-	@Field
+	@FullTextField
 	private String name;
 
-	@Field
+	@FullTextField
 	private String description;
 
 	@Column(length = 9000)
-	@Field
+	@GenericField
 	private String bootData;
 
-	@Field
+	@GenericField
 	private long virtualMemorySize;
 
-	@Field
+	@FullTextField
 	private String cpuArchitecture;
 
-	@Field
+	@GenericField
 	private long numVcpu;
 
-	@Field
+	@GenericField
 	private long diskSize;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

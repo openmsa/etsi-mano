@@ -29,11 +29,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 @Entity
 @Indexed
@@ -44,8 +41,7 @@ public class Subscription implements BaseEntity {
 
 	// Used for rebuilding links.
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private ApiTypesEnum api;
 
 	private AuthentificationInformations authentificationInformations;

@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -107,8 +106,7 @@ public class NsInstanceService {
 
 	public List<NsdInstance> query(final String filter) {
 		final SearchQueryer sq = new SearchQueryer(em);
-		return (List<NsdInstance>) sq.getCriteria(filter, NsdInstance.class)
-				.getResultStream().collect(Collectors.toList());
+		return sq.getCriteria(filter, NsdInstance.class);
 	}
 
 }

@@ -116,8 +116,7 @@ public class VnfLcmService {
 
 	public List<VnfBlueprint> query(final String filter) {
 		final SearchQueryer sq = new SearchQueryer(em);
-		return (List<VnfBlueprint>) sq.getCriteria(filter, VnfBlueprint.class)
-				.getResultStream().collect(Collectors.toList());
+		return sq.getCriteria(filter, VnfBlueprint.class);
 	}
 
 	public VnfBlueprint findById(final UUID id) {
