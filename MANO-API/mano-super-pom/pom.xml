@@ -118,51 +118,7 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.6</version>
-					<executions>
-						<execution>
-							<id>default-instrument</id>
-							<goals>
-								<goal>instrument</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>default-restore-instrumented-classes</id>
-							<goals>
-								<goal>restore-instrumented-classes</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>default-report</id>
-							<goals>
-								<goal>report</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>default-check</id>
-							<goals>
-								<goal>check</goal>
-							</goals>
-							<configuration>
-								<rules>
-									<rule>
-										<element>BUNDLE</element>
-										<limits>
-											<limit>
-												<counter>COMPLEXITY</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.60</minimum>
-											</limit>
-										</limits>
-									</rule>
-								</rules>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
+				
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -256,6 +212,22 @@
 					elasticsearch-rest-client-sniffer
 				</artifactId>
 				<version>7.10.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy-all</artifactId>
+				<version>3.0.7</version>
+				<type>pom</type>
+				<exclusions>
+					<exclusion>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-test</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-testng</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
