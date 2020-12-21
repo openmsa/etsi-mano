@@ -19,9 +19,6 @@ package com.ubiqube.etsi.mano.service.pkg;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -32,13 +29,13 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
+import com.ubiqube.etsi.mano.test.TestTools;
 
 public class ToscaNsdTest {
 	private final ToscaPackageProvider tpp;
 
 	public ToscaNsdTest() throws IOException {
-		final Path path = Paths.get("src/test/resources/ubi-nsd-tosca.csar");
-		final byte[] data = Files.readAllBytes(path);
+		final byte[] data = TestTools.readFile("/ubi-nsd-tosca.csar");
 		tpp = new ToscaPackageProvider(data);
 	}
 

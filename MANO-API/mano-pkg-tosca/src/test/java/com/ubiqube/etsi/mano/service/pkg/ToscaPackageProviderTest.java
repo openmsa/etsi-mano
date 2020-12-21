@@ -20,9 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -40,13 +37,13 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
+import com.ubiqube.etsi.mano.test.TestTools;
 
 public class ToscaPackageProviderTest {
 	private final ToscaPackageProvider tpp;
 
 	public ToscaPackageProviderTest() throws IOException {
-		final Path path = Paths.get("src/test/resources/ubi-tosca.csar");
-		final byte[] data = Files.readAllBytes(path);
+		final byte[] data = TestTools.readFile("/ubi-tosca.csar");
 		tpp = new ToscaPackageProvider(data);
 	}
 
