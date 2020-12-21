@@ -20,10 +20,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Physical driver properties.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Configuration
 @ConfigurationProperties(prefix = "mano.repository")
 public class ManoRepositoryProperties {
-
+	/**
+	 * Path on file system to store packages.
+	 */
 	@Value("${mano.repository.phys.root}")
 	private String physRoot;
 
