@@ -19,19 +19,18 @@ package com.ubiqube.etsi.mano.filter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileInputStream;
-
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.test.TestTools;
 
 public class MapperForViewTest {
 	@Test
 	void simpleExcludeTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
-		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(new FileInputStream("src/test/resources/VnfPkgInfo.json"), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
 		final String exclude = "_links";
 		final String fields = null;
 		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
@@ -42,7 +41,7 @@ public class MapperForViewTest {
 	@Test
 	void multiExcludeTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
-		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(new FileInputStream("src/test/resources/VnfPkgInfo.json"), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
 		final String exclude = "_links,checksum.algorithm";
 		final String fields = null;
 		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
@@ -54,7 +53,7 @@ public class MapperForViewTest {
 	@Test
 	void simpleFieldsTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
-		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(new FileInputStream("src/test/resources/VnfPkgInfo.json"), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
 		final String exclude = null;
 		final String fields = "id";
 		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
@@ -67,7 +66,7 @@ public class MapperForViewTest {
 	@Test
 	void multipleFieldsTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
-		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(new FileInputStream("src/test/resources/VnfPkgInfo.json"), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
 		final String exclude = null;
 		final String fields = "id,checksum.algorithm";
 		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);

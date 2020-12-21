@@ -20,27 +20,20 @@ import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.ubiqube.etsi.mano.service.Configuration;
+import com.ubiqube.etsi.mano.config.properties.ManoMsaProperties;
 
+@Tag("Remote")
 public class UbiRestTest {
 	@Test
-	void testMsaV17() throws Exception {
-		final Configuration _conf = new MsaConf("17.0", "10.31.1.247");
-		final String url = _conf.get("msa.rest-api.url");
-		final UbiRest ubiRest = new UbiRest(_conf);
-		final URI uri = UriComponentsBuilder.fromHttpUrl(url).pathSegment("orchestration/v1/max-pool-number").build().toUri();
-		final Object o = ubiRest.get(uri, Object.class);
-		assertNotNull(o);
-	}
-
-	@Test
-	void testMsaV2() throws Exception {
-		final Configuration _conf = new MsaConf("2.0", "10.31.1.127");
-		final String url = _conf.get("msa.rest-api.url");
-		final UbiRest ubiRest = new UbiRest(_conf);
+	static void testMsaV17() throws Exception {
+		final ManoMsaProperties msaProperties = new ManoMsaProperties();
+		final String url = "";
+		msaProperties.setUrl(url);
+		final UbiRest ubiRest = new UbiRest(msaProperties);
 		final URI uri = UriComponentsBuilder.fromHttpUrl(url).pathSegment("orchestration/v1/max-pool-number").build().toUri();
 		final Object o = ubiRest.get(uri, Object.class);
 		assertNotNull(o);

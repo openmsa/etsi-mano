@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.mapper;
+package com.ubiqube.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,13 +28,16 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilterVnfProductsFromProviders;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilter.NotificationTypesEnum;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
+import com.ubiqube.etsi.mano.mapper.AttrHolder;
+import com.ubiqube.etsi.mano.mapper.BeanWalker;
+import com.ubiqube.etsi.mano.mapper.CollectNonNullListener;
+import com.ubiqube.etsi.mano.mapper.SpelWriter;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
@@ -43,9 +46,7 @@ public class BeanWalkerTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public BeanWalkerTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
-		orikaConfiguration.configure(mapperFactory);
 	}
 
 	@Test

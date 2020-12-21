@@ -16,12 +16,10 @@
  */
 package com.ubiqube.etsi.mano.graph;
 
-import java.util.Map;
+import java.util.List;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedBase;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class TestUnitOfWork implements UnitOfWork {
 	/** Serial. */
@@ -44,7 +42,13 @@ public class TestUnitOfWork implements UnitOfWork {
 	}
 
 	@Override
-	public String exec(final VimConnectionInformation vimConnectionInformation, final Vim vim, final Map<String, String> context) {
+	public String getToscaName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String exec(final Object params) {
 		try {
 			Thread.sleep((long) (Math.random() * 5000));
 		} catch (final InterruptedException e) {
@@ -55,24 +59,25 @@ public class TestUnitOfWork implements UnitOfWork {
 	}
 
 	@Override
-	public UowType getType() {
-		return UowType.COMPUTE;
-	}
-
-	@Override
-	public String getToscaName() {
+	public Task getTaskEntity() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String rollback(final VimConnectionInformation vimConnectionInformation, final Vim vim, final String resourceId, final Map<String, String> context) {
+	public String rollback(final Object params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public VnfInstantiatedBase getResourceHandleEntity() {
+	public List getDependencies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List getProduce() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -20,7 +20,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -30,6 +29,7 @@ import java.util.StringJoiner;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.test.TestTools;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LifecycleChangeNotificationsFilter;
 
@@ -38,7 +38,7 @@ public class SubscriptionFilterTest {
 	@Test
 	void testName() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
-		final LccnSubscriptionRequest subscription = desMapper.readValue(new FileInputStream("src/test/resources/Sol003LcmSubscription-req.json"), LccnSubscriptionRequest.class);
+		final LccnSubscriptionRequest subscription = desMapper.readValue(TestTools.readFile("/Sol003LcmSubscription-req.json"), LccnSubscriptionRequest.class);
 		final LifecycleChangeNotificationsFilter filter = subscription.getFilter();
 		getMapFilter(filter);
 	}
