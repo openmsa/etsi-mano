@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.mapper;
+package com.ubiqube.etsi.mano.nfvo.v261.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,14 +22,13 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.bean.TestFactory;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
+import com.ubiqube.etsi.mano.nfvo.v261.factory.TestFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdOperationalStateType;
@@ -42,11 +41,9 @@ public class NsdPackageTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public NsdPackageTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
-		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
+		final OrikaConfigurationNfvo261 orikaConfiguration = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test

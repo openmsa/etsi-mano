@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.mapper;
+package com.ubiqube.etsi.mano.nfvo.v261.mapper;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,10 +23,9 @@ import java.time.OffsetDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.bean.TestFactory;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
-import com.ubiqube.etsi.mano.dao.mano.NsLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
+import com.ubiqube.etsi.mano.nfvo.v261.factory.TestFactory;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeResultEnum;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeTypeEnum;
@@ -39,11 +38,9 @@ public class NsLcmOpOccsTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public NsLcmOpOccsTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
-		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
+		final OrikaConfigurationNfvo261 orikaConfiguration = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test

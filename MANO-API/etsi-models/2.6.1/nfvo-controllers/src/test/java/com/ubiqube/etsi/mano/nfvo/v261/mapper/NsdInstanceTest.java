@@ -14,17 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.mapper;
+package com.ubiqube.etsi.mano.nfvo.v261.mapper;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
@@ -37,11 +36,9 @@ public class NsdInstanceTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public NsdInstanceTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
-		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
+		final OrikaConfigurationNfvo261 orikaConfiguration = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test
