@@ -15,13 +15,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.nfvo.v261;
+package com.ubiqube.etsi.mano.common.v261;
+
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageArtifactInfo;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public class VnfPackageFactory {
 	private VnfPackageFactory() {
@@ -45,6 +51,17 @@ public class VnfPackageFactory {
 		artefact.artifactPath(_filename);
 		artefact.setChecksum(_checksum);
 		return artefact;
+	}
+
+	@Nonnull
+	public static VnfPackage createVnfPkgInfo(final Map<String, String> userData) {
+		final VnfPackage vnfPkgInfo = new VnfPackage();
+		vnfPkgInfo.setOnboardingState(OnboardingStateType.CREATED);
+		vnfPkgInfo.setUserDefinedData(userData);
+		vnfPkgInfo.setOperationalState(PackageOperationalState.DISABLED);
+		vnfPkgInfo.setUsageState(PackageUsageState.NOT_IN_USE);
+
+		return vnfPkgInfo;
 	}
 
 }
