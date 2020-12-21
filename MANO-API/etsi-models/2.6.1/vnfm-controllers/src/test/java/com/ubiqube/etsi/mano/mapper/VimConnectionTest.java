@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.jpa;
+package com.ubiqube.etsi.mano.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,8 +25,9 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.test.TestTools;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -35,7 +36,7 @@ public class VimConnectionTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public VimConnectionTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
 	}
@@ -44,7 +45,7 @@ public class VimConnectionTest {
 	void testJsonToDaoMapping() throws Exception {
 		final ObjectMapper mapper = new ObjectMapper();
 		final File src = new File("src/test/resources/vim-connection/openstack.json");
-		final VimConnectionInfo vci = mapper.readValue(src, VimConnectionInfo.class);
+		final VimConnectionInfo vci = mapper.readValue(TestTools.readFile("/vim-connection/openstack.json"), VimConnectionInfo.class);
 
 		System.out.println("vci=" + vci);
 

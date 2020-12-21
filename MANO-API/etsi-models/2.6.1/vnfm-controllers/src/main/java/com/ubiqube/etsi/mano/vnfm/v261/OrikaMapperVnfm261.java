@@ -150,6 +150,12 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("computeResource.vimConnectionId", "vimConnectionInformation.id")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(VnfInstantiatedCompute.class, VnfCompute.class)
+				.exclude("id")
+				.field("storageResourceIds", "storages")
+				.field("vduId", "id")
+				.byDefault()
+				.register();
 		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("resourceChanges", "tasks")

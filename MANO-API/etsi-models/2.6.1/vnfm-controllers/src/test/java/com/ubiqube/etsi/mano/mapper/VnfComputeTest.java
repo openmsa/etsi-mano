@@ -16,14 +16,14 @@
  */
 package com.ubiqube.etsi.mano.mapper;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -34,7 +34,7 @@ public class VnfComputeTest {
 	private final PodamFactoryImpl podam;
 
 	public VnfComputeTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
 
