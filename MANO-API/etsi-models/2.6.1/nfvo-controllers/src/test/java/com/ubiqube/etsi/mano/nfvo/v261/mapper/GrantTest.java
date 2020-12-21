@@ -14,26 +14,30 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.mapper;
+package com.ubiqube.etsi.mano.nfvo.v261.mapper;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
-import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-public class VnfVlTest {
+public class GrantTest {
+
 	private final DefaultMapperFactory mapperFactory;
 	private final PodamFactoryImpl podam;
 
-	public VnfVlTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+	public GrantTest() {
+		final OrikaConfigurationNfvo261 orikaConfiguration = new OrikaConfigurationNfvo261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
 
@@ -42,12 +46,16 @@ public class VnfVlTest {
 	}
 
 	@Test
-	void testVnfVl2VnfVirtualLinkInfo() throws Exception {
+	void testRequestJson() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final VnfVl avcDb = podam.manufacturePojo(VnfVl.class);
-		final VirtualLinkInfo avc = mapper.map(avcDb, VirtualLinkInfo.class);
-		assertNotNull(avc.getId());
-		// assertEquals(avcDb.getId(), avc.getVnfVirtualLinkDescId());
+		final GrantRequest gr = podam.manufacturePojo(GrantRequest.class);
+		final GrantResponse resp = mapper.map(gr, GrantResponse.class);
+		assertEquals(5, resp.getAddResources().size());
+		final GrantInformationExt res = resp.getAddResources().iterator().next();
+		assertNull(res.getId());
+		assertNotNull(res.getVduId());
+		assertEquals(5, resp.getVimConnections().size());
+		assertNotNull(resp.getVimConnections().iterator().next().getVimId());
 	}
 
 }

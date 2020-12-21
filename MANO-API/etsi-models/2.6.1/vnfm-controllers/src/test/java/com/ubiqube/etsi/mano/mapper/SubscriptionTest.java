@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.mapper;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +32,13 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmNotificationsFilterVnfPro
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.SubscriptionQuery;
-import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -48,11 +47,9 @@ public class SubscriptionTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public SubscriptionTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
-		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-		orikaNfvo.configure(mapperFactory);
 	}
 
 	@Test

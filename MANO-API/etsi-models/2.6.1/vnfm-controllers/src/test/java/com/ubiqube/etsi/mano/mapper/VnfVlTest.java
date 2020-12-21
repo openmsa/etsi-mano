@@ -16,28 +16,24 @@
  */
 package com.ubiqube.etsi.mano.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-public class VimConnectionInformationTest {
+public class VnfVlTest {
 	private final DefaultMapperFactory mapperFactory;
-
 	private final PodamFactoryImpl podam;
 
-	public VimConnectionInformationTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+	public VnfVlTest() {
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
 
@@ -46,24 +42,12 @@ public class VimConnectionInformationTest {
 	}
 
 	@Test
-	void testJson2Orm() throws Exception {
+	void testVnfVl2VnfVirtualLinkInfo() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final VimConnectionInfo avcDb = podam.manufacturePojo(VimConnectionInfo.class);
-		final VimConnectionInformation avc = mapper.map(avcDb, VimConnectionInformation.class);
-		assertEquals(avcDb.getId(), avc.getVimId());
+		final VnfVl avcDb = podam.manufacturePojo(VnfVl.class);
+		final VirtualLinkInfo avc = mapper.map(avcDb, VirtualLinkInfo.class);
+		assertNotNull(avc.getId());
+		// assertEquals(avcDb.getId(), avc.getVnfVirtualLinkDescId());
 	}
 
-	@Test
-	void testListJson2ListOrm() throws Exception {
-		final MapperFacade mapper = mapperFactory.getMapperFacade();
-		final List<VimConnectionInfo> vims = new ArrayList<>();
-		vims.add(podam.manufacturePojo(VimConnectionInfo.class));
-		vims.add(podam.manufacturePojo(VimConnectionInfo.class));
-		vims.add(podam.manufacturePojo(VimConnectionInfo.class));
-		vims.add(podam.manufacturePojo(VimConnectionInfo.class));
-		final List<VimConnectionInformation> avc = mapper.mapAsList(vims, VimConnectionInformation.class);
-		for (int i = 0; i < vims.size(); i++) {
-			assertEquals(vims.get(i).getId(), avc.get(i).getVimId());
-		}
-	}
 }

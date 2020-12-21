@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.mapper;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,21 +27,19 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.bean.TestFactory;
+import com.ubiqube.etsi.mano.common.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.PkgChecksum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
-import com.ubiqube.etsi.mano.nfvo.v261.VnfPackageFactory;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.factory.TestFactory;
 import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
@@ -53,13 +51,9 @@ public class VnfPackageTest {
 	private final PodamFactoryImpl podam;
 
 	public VnfPackageTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
-		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
-		final OrikaConfigurationNfvo261 orikaNfvo = new OrikaConfigurationNfvo261();
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
-		orikaVnfm.configure(mapperFactory);
-		orikaNfvo.configure(mapperFactory);
 
 		podam = new PodamFactoryImpl();
 		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
@@ -139,11 +133,7 @@ public class VnfPackageTest {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final VnfPackage avcDb = podam.manufacturePojo(VnfPackage.class);
 		final VnfInstance avc = mapper.map(avcDb, VnfInstance.class);
-		assertEquals(avcDb.getVnfdVersion(), avc.getVnfdVersion());
 		assertEquals(avcDb.getId(), avc.getVnfPkg().getId());
-		assertEquals(avcDb.getVnfProductName(), avc.getVnfProductName());
-		assertEquals(avcDb.getVnfProvider(), avc.getVnfProvider());
-		assertEquals(avcDb.getVnfSoftwareVersion(), avc.getVnfSoftwareVersion());
 	}
 
 	void testVnfPackage2Lcm() throws Exception {

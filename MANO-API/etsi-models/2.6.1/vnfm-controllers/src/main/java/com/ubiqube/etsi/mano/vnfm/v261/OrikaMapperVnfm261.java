@@ -21,12 +21,18 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -34,8 +40,12 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
+import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
@@ -43,6 +53,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
+import ma.glasnost.orika.converter.ConverterFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
 @Component
@@ -150,5 +161,39 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExtManagedVirtualLinkDataEntity.class)
+				.field("vmfVirtualLinkDescId", "vnfVirtualLinkDescId")
+				.field("vimId", "vimConnectionId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfLcmOpOccs.class)
+				.field("vnfInstanceId", "vnfInstance.id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfcResourceInfo.class, VnfInstantiatedCompute.class)
+				.field("computeResource.resourceId", "resourceId")
+				.field("computeResource.resourceProviderId", "resourceProviderId")
+				.field("computeResource.vimConnectionId", "vimConnectionInformation.vimId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformationExt.class)
+				.exclude("id")
+				.field("id", "resourceDefinitionId")
+				.field("type", "type")
+				.field("vduId", "vduId")
+				.field("resource.vimConnectionId", "vimConnectionId")
+				.field("resource.resourceProviderId", "resourceProviderId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
+		converterFactory.registerConverter(new UuidConverter());
+		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
 	}
 }

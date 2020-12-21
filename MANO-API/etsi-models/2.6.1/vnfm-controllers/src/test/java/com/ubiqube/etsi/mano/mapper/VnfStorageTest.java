@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.mapper;
 
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
+import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
@@ -26,7 +26,7 @@ public class VnfStorageTest {
 	private final PodamFactoryImpl podam;
 
 	public VnfStorageTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
 

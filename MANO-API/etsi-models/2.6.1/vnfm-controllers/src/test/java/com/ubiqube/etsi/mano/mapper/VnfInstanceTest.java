@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.mapper;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,6 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfOperationalStateType;
-import com.ubiqube.etsi.mano.config.OrikaConfiguration;
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
@@ -44,8 +43,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo;
-import com.ubiqube.etsi.mano.dao.mano.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedInfo;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
@@ -58,7 +57,7 @@ public class VnfInstanceTest {
 	private final PodamFactoryImpl podam;
 
 	public VnfInstanceTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
@@ -106,7 +105,6 @@ public class VnfInstanceTest {
 		final Set<VimConnectionInformation> vimConnectionInfo = new HashSet<>();
 		vimConnectionInfo.add(new VimConnectionInformation());
 		vnfInstance.setVimConnectionInfo(vimConnectionInfo);
-		vnfInstance.setVnfProvider("provider");
 		final Map<String, String> extensions = new HashMap<>();
 		vnfInstance.setExtensions(extensions);
 
@@ -143,7 +141,7 @@ public class VnfInstanceTest {
 		extVirtualLinkDataEntity.setResourceId("zzzzz");
 		extVirtualLinkInfo.add(extVirtualLinkDataEntity);
 		vii.setExtVirtualLinkInfo(extVirtualLinkInfo);
-		final VnfInstantiatedInfo avc = mapper.map(vii, com.ubiqube.etsi.mano.dao.mano.VnfInstantiatedInfo.class);
+		final VnfInstantiatedInfo avc = mapper.map(vii, VnfInstantiatedInfo.class);
 		System.out.println("" + avc);
 	}
 
