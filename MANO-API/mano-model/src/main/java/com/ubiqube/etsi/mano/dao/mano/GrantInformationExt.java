@@ -125,4 +125,31 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 		this.vduId = vduId;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class GrantInformationExt {\n");
+		sb.append("id:" + id);
+		sb.append("    type: ").append(toIndentedString(type)).append("\n");
+		sb.append("    vduId: ").append(toIndentedString(vduId)).append("\n");
+		sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
+		sb.append("    reservationId: ").append(toIndentedString(reservationId)).append("\n");
+		sb.append("    vimConnectionId: ").append(toIndentedString(vimConnectionId)).append("\n");
+		sb.append("    resourceProviderId: ").append(toIndentedString(resourceProviderId)).append("\n");
+		sb.append("    zoneId: ").append(toIndentedString(zoneId)).append("\n");
+		sb.append("    resourceGroupId: ").append(toIndentedString(resourceGroupId)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
