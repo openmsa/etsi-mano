@@ -17,9 +17,9 @@
 package com.ubiqube.etsi.mano.service.rest;
 import java.util.Optional;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.config.properties.NfvoConnectionProperties;
@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.config.properties.NfvoConnectionProperties;
 @Service
 public class NfvoRestImpl extends AbstractRest {
 	private final String url;
-	private final MultiValueMap<String, String> auth = new HttpHeaders();
+	private final MultiValueMap<String, String> auth = new LinkedMultiValueMap<>();
 
 	public NfvoRestImpl(final NfvoConnectionProperties props) {
 		url = props.getUrl();
