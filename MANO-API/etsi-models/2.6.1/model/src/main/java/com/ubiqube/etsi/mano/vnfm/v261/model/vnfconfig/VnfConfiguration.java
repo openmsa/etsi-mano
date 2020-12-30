@@ -36,8 +36,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents configuration parameters of a VNF instance and its VNFC instances. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
-
 public class VnfConfiguration {
 	@JsonProperty("vnfConfigurationData")
 	private VnfConfigurationData vnfConfigurationData = null;

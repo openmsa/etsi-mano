@@ -34,8 +34,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents the escalated value of the perceived severity for an alarm. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-15T08:29:53.588+01:00")
-
 public class PerceivedSeverityRequest {
 	@JsonProperty("proposedPerceivedSeverity")
 	private PerceivedSeverityType proposedPerceivedSeverity = null;

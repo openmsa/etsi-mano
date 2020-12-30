@@ -38,8 +38,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents request parameters for the \"Set Configuration\" operation.   * NOTE 1: At least one of \"vnfConfigurationData\" and \"vnfcConfigurationData\"             shall be present.   * NOTE 2: The VnfcConfiguration data type can only be used to modify the configuration             of existing VNFC instances. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
-
 public class VnfConfigModifications {
 	@JsonProperty("vnfConfigurationData")
 	private VnfConfigurationData vnfConfigurationData = null;
