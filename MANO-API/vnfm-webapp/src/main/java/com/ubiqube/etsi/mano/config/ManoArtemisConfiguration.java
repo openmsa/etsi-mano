@@ -30,9 +30,9 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
 @org.springframework.context.annotation.Configuration
-public class ArtemisConfiguration {
+public class ManoArtemisConfiguration {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ArtemisConfiguration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ManoArtemisConfiguration.class);
 
 	@Bean
 	public static MessageConverter jacksonJmsMessageConverter() {
