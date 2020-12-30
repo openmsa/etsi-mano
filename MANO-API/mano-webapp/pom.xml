@@ -181,6 +181,10 @@
 					<groupId>org.apache.activemq</groupId>
 					<artifactId>artemis-jms-server</artifactId>
 				</dependency>
+				<dependency>
+					<groupId>io.springfox</groupId>
+					<artifactId>springfox-swagger2</artifactId>
+				</dependency>
 			</dependencies>
 		</profile>
 
