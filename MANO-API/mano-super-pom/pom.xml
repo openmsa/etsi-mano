@@ -191,6 +191,12 @@
 				<version>${com.ubiqube.hibernate-search6.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.hibernate.search</groupId>
+				<artifactId>hibernate-search-engine</artifactId>
+				<version>${com.ubiqube.hibernate-search6.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.google.code.findbugs</groupId>
 				<artifactId>jsr305</artifactId>
 				<version>3.0.2</version>
@@ -211,9 +217,34 @@
 				<version>${com.ubiqube.springfox-swagger.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-spring-web</artifactId>
+				<version>${com.ubiqube.springfox-swagger.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-core</artifactId>
+				<version>${com.ubiqube.springfox-swagger.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-spi</artifactId>
+				<version>${com.ubiqube.springfox-swagger.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>1.5.20</version>
+			</dependency>
+			<dependency>
 				<groupId>net.rakugakibox.spring.boot</groupId>
 				<artifactId>orika-spring-boot-starter</artifactId>
 				<version>1.9.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ma.glasnost.orika</groupId>
+				<artifactId>orika-core</artifactId>
+				<version>1.5.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.threeten</groupId>
@@ -273,6 +304,11 @@
 						<artifactId>groovy-testng</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.jgrapht</groupId>
+				<artifactId>jgrapht-core</artifactId>
+				<version>1.5.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
