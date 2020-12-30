@@ -126,7 +126,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -157,7 +158,7 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-				
+
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -182,6 +183,11 @@
 			<dependency>
 				<groupId>org.hibernate.search</groupId>
 				<artifactId>hibernate-search-backend-elasticsearch</artifactId>
+				<version>${com.ubiqube.hibernate-search6.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.search</groupId>
+				<artifactId>hibernate-search-mapper-pojo-base</artifactId>
 				<version>${com.ubiqube.hibernate-search6.version}</version>
 			</dependency>
 			<dependency>
@@ -239,7 +245,7 @@
 				<artifactId>openstack4j-httpclient</artifactId>
 				<version>${com.ubiqube.openstack4j.version}</version>
 			</dependency>
-			<!--  Hibernate search 6.x -->
+			<!-- Hibernate search 6.x -->
 			<dependency>
 				<groupId>org.elasticsearch.client</groupId>
 				<artifactId>elasticsearch-rest-client</artifactId>
