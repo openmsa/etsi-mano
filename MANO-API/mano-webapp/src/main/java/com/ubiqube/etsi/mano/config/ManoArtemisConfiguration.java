@@ -22,6 +22,7 @@ import javax.jms.ConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
@@ -29,10 +30,10 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
-@org.springframework.context.annotation.Configuration
-public class ArtemisConfiguration {
+@Configuration
+public class ManoArtemisConfiguration {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ArtemisConfiguration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ManoArtemisConfiguration.class);
 
 	@Bean
 	public static MessageConverter jacksonJmsMessageConverter() {
