@@ -16,37 +16,41 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
-import java.util.Optional;
+import javax.validation.Valid;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.PerceivedSeverityRequest;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:11:39.646+01:00")
 
 @Controller
 public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public Alarms261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	@Override
+	public ResponseEntity<Void> alarmsAlarmIdEscalatePost(final String alarmId, @Valid final PerceivedSeverityRequest perceivedSeverityRequest) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	@Override
+	public ResponseEntity<Alarm> alarmsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

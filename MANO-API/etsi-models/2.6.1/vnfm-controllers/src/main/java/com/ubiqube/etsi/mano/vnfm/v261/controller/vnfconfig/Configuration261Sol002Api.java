@@ -21,22 +21,13 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfconfig;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfconfig.VnfConfigModifications;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfconfig.VnfConfiguration;
@@ -51,20 +42,6 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "configuration", description = "the configuration API")
 public interface Configuration261Sol002Api {
-
-	Logger log = LoggerFactory.getLogger(Configuration261Sol002Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "Read VNF/VNFC configuration from VNF", nickname = "configurationGet", notes = "The client can use this method to read configuration information about a VNF instance and/or its VNFC instances. ", response = VnfConfiguration.class, tags = {})
 	@ApiResponses(value = {
@@ -82,23 +59,7 @@ public interface Configuration261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/configuration", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<VnfConfiguration> configurationGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"vnfConfigurationData\" : {    \"extCpConfig\" : {      \"addresses\" : [ {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      }, {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      } ],      \"cpdId\" : { },      \"cpId\" : { }    },    \"vnfSpecificData\" : { }  },  \"vnfcConfigurationData\" : [ {    \"extCpConfig\" : {      \"addresses\" : [ {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      }, {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      } ],      \"cpdId\" : { },      \"cpId\" : { }    }  }, {    \"extCpConfig\" : {      \"addresses\" : [ {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      }, {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      } ],      \"cpdId\" : { },      \"cpId\" : { }    }  } ]}",
-							VnfConfiguration.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ConfigurationApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfConfiguration> configurationGet();
 
 	@ApiOperation(value = "Modify VNF/VNFC configuration.", nickname = "configurationPatch", notes = "This method sets or modifies a configuration resource.", response = VnfConfigModifications.class, tags = {})
 	@ApiResponses(value = {
@@ -117,22 +78,6 @@ public interface Configuration261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/configuration", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
-	default ResponseEntity<VnfConfigModifications> configurationPatch(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The parameter for the configuration modification, as defined in clause 9.5.2.2. ", required = true) @Valid @RequestBody final VnfConfigModifications configModifications, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"vnfConfigurationData\" : {    \"extCpConfig\" : {      \"addresses\" : [ {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      }, {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      } ],      \"cpdId\" : { },      \"cpId\" : { }    },    \"vnfSpecificData\" : { }  },  \"vnfcConfigurationData\" : [ {    \"extCpConfig\" : {      \"addresses\" : [ {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      }, {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      } ],      \"cpdId\" : { },      \"cpId\" : { }    }  }, {    \"extCpConfig\" : {      \"addresses\" : [ {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      }, {        \"address\" : {          \"macAddress\" : { },          \"ipAddress\" : { }        },        \"useDynamicAddress\" : true,        \"port\" : 0      } ],      \"cpdId\" : { },      \"cpId\" : { }    }  } ],  \"vnfcConfigurationDataDeleteIds\" : [ { }, { } ]}",
-							VnfConfigModifications.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ConfigurationApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfConfigModifications> configurationPatch(@ApiParam(value = "The parameter for the configuration modification, as defined in clause 9.5.2.2. ", required = true) @Valid @RequestBody final VnfConfigModifications configModifications);
 
 }

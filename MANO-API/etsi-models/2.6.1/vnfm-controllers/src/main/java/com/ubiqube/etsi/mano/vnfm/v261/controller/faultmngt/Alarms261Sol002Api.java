@@ -21,7 +21,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,11 +28,9 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,13 +82,8 @@ public interface Alarms261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/alarms/{alarmId}/escalate", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<Void> alarmsAlarmIdEscalatePost(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "The proposed \"escalated perceived severity\" value") @Valid @RequestBody final PerceivedSeverityRequest perceivedSeverityRequest) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default AlarmsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> alarmsAlarmIdEscalatePost(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId,
+			@ApiParam(value = "The proposed \"escalated perceived severity\" value") @Valid @RequestBody final PerceivedSeverityRequest perceivedSeverityRequest);
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdGet", notes = "The client can use this method to read an individual alarm. ", response = Alarm.class, tags = {})
 	@ApiResponses(value = {
@@ -109,21 +101,7 @@ public interface Alarms261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/alarms/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Alarm> alarmsAlarmIdGet(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"isRootCause\" : { },  \"rootCauseFaultyResource\" : {    \"faultyResource\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"faultyResourceType\" : { }  },  \"alarmRaisedTime\" : { },  \"_links\" : {    \"objectInstance\" : {      \"href\" : { }    },    \"self\" : {      \"href\" : { }    }  },  \"eventType\" : { },  \"ackState\" : \"UNACKNOWLEDGED\",  \"perceivedSeverity\" : { },  \"probableCause\" : \"probableCause\",  \"vnfcInstanceIds\" : [ { }, { } ],  \"faultType\" : \"faultType\",  \"correlatedAlarmIds\" : [ null, null ],  \"faultDetails\" : [ \"faultDetails\", \"faultDetails\" ],  \"id\" : { }}", Alarm.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default AlarmsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Alarm> alarmsAlarmIdGet(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId);
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdPatch", notes = "This method modifies an individual alarm resource. ", response = AlarmModifications.class, tags = {})
 	@ApiResponses(value = {
@@ -143,22 +121,7 @@ public interface Alarms261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/alarms/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
-	default ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The parameter for the alarm modification", required = true) @Valid @RequestBody final AlarmModifications alarmModifications, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept,
-			@ApiParam(value = "The Content-Type header shall be set to \"application/mergepatch+json\" Reference: IETF RFC 7396 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"ackState\" : \"ACKNOWLEDGED\"}", AlarmModifications.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default AlarmsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId);
 
 	@ApiOperation(value = "", nickname = "alarmsGet", notes = "The client can use this method to retrieve information about the alarm list. ", response = Alarm.class, tags = {})
 	@ApiResponses(value = {
@@ -176,22 +139,8 @@ public interface Alarms261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/alarms", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Alarm> alarmsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
+	ResponseEntity<Alarm> alarmsGet(
 			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM may supply this parameter. The VNF may supply its instance Id as an attribute filter. The following attribute names shall be supported in the filter expression: id, managedObjectId, vnfcInstanceIds, rootCauseFaultyResource.faultyResourceType, eventType, perceivedSeverity, probableCause. If the vnfcInstanceIds parameter is provided, exactly one value for the managedObjectId attribute shall be provided. EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 5.2 of ETSI GS NFV-SOL 013  for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"isRootCause\" : { },  \"rootCauseFaultyResource\" : {    \"faultyResource\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"faultyResourceType\" : { }  },  \"alarmRaisedTime\" : { },  \"_links\" : {    \"objectInstance\" : {      \"href\" : { }    },    \"self\" : {      \"href\" : { }    }  },  \"eventType\" : { },  \"ackState\" : \"UNACKNOWLEDGED\",  \"perceivedSeverity\" : { },  \"probableCause\" : \"probableCause\",  \"vnfcInstanceIds\" : [ { }, { } ],  \"faultType\" : \"faultType\",  \"correlatedAlarmIds\" : [ null, null ],  \"faultDetails\" : [ \"faultDetails\", \"faultDetails\" ],  \"id\" : { }}", Alarm.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default AlarmsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 5.2 of ETSI GS NFV-SOL 013  for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 }
