@@ -30,6 +30,11 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class JsonFilter {
 
@@ -49,14 +54,14 @@ public class JsonFilter {
 	 * @return
 	 */
 	public boolean apply(@Nonnull final Object _object, @Nonnull final AstBuilder _astBuilder) {
-		final Node node = _astBuilder.getNodes().stream()
+		final Node<String> node = _astBuilder.getNodes().stream()
 				.filter(x -> !apply(_object, x))
 				.findFirst()
 				.orElse(null);
 		return (null != node) ? false : true;
 	}
 
-	private boolean apply(@Nonnull final Object _object, @Nonnull final Node _node) {
+	private boolean apply(@Nonnull final Object _object, @Nonnull final Node<String> _node) {
 		final Map<String, JsonBeanProperty> props = jsonBeanUtil.getProperties(_object);
 		final JsonBeanProperty realProperty = props.get(_node.getName());
 		if (realProperty == null) {
@@ -67,7 +72,7 @@ public class JsonFilter {
 		return documentStatus.getStatus() == DocumentStatus.Status.VALIDATED;
 	}
 
-	private static DocumentStatus invokeGetter(final Object _object, final JsonBeanProperty realProperty, final int index, final Node _node) {
+	private static DocumentStatus invokeGetter(final Object _object, final JsonBeanProperty realProperty, final int index, final Node<String> _node) {
 		final List<JsonBeanProperty> access = realProperty.getListAccessors();
 		Object temp = _object;
 		for (int i = index; i < access.size(); i++) {
@@ -99,7 +104,7 @@ public class JsonFilter {
 		return new DocumentStatus(DocumentStatus.Status.REFUSED);
 	}
 
-	private static DocumentStatus exploreList(final List<?> list, final JsonBeanProperty realProperty, final int index, final Node _node) {
+	private static DocumentStatus exploreList(final List<?> list, final JsonBeanProperty realProperty, final int index, final Node<String> _node) {
 		LOG.debug("Exploring sub list.");
 		for (final Object object : list) {
 			final DocumentStatus status = invokeGetter(object, realProperty, index + 1, _node);

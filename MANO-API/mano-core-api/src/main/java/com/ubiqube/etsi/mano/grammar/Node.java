@@ -21,7 +21,12 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 
-public class Node {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class Node<U> {
 
 	public enum Operand {
 		EQ("eq"),
@@ -34,6 +39,7 @@ public class Node {
 		NCONT("ncont"),
 		IN("in"),
 		NIN("nin");
+
 		public final String op;
 
 		private Operand(final String _op) {
@@ -43,7 +49,26 @@ public class Node {
 
 	private String name;
 	private Operand op;
-	private List<String> value = new ArrayList<>();
+	private List<U> value = new ArrayList<>();
+
+	public Node() {
+		// Nothing.
+	}
+
+	public Node(final String name, final Operand op, final List<U> value) {
+		super();
+		this.name = name;
+		this.op = op;
+		this.value = value;
+	}
+
+	public static <U> Node<U> of(final String name, final Operand op, final List<U> value) {
+		return new Node<>(name, op, value);
+	}
+
+	public static <U> Node<U> of(final String name, final Operand op, final U value) {
+		return new Node<>(name, op, List.of(value));
+	}
 
 	public String getName() {
 		return name;
@@ -61,7 +86,7 @@ public class Node {
 		this.op = op;
 	}
 
-	public String getValue() {
+	public U getValue() {
 		if (value.size() > 1) {
 			throw new GenericException("Calling a multivalue.");
 		}
@@ -71,15 +96,15 @@ public class Node {
 		return value.get(0);
 	}
 
-	public List<String> getValues() {
+	public List<U> getValues() {
 		return value;
 	}
 
-	public void setValue(final List<String> _value) {
+	public void setValue(final List<U> _value) {
 		this.value = _value;
 	}
 
-	public void addValue(final String _value) {
+	public void addValue(final U _value) {
 		value.add(_value);
 	}
 

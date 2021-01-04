@@ -22,9 +22,14 @@ import java.util.List;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class AstBuilder {
 	private final TreeBuilder treeBuilder;
-	private final List<Node> nodes;
+	private final List<Node<String>> nodes;
 
 	public AstBuilder(final String filter) {
 		treeBuilder = new TreeBuilder();
@@ -44,7 +49,7 @@ public class AstBuilder {
 		return treeBuilder;
 	}
 
-	public List<Node> getNodes() {
+	public List<Node<String>> getNodes() {
 		return nodes;
 	}
 

@@ -43,7 +43,7 @@ public class SearchQueryer {
 		this.entityManager = _entityManager;
 	}
 
-	public <T> List<T> getCriteria(final List<Node> nodes, final Class<T> clazz) {
+	public <T> List<T> getCriteria(final List<Node<?>> nodes, final Class<T> clazz) {
 		final SearchSession session = Search.session(entityManager);
 		final SearchQuerySelectStep<?, EntityReference, T, SearchLoadingOptionsStep, ?, ?> ss = session.search(clazz);
 		final SearchPredicateFactory pf = session.scope(clazz).predicate();
@@ -58,16 +58,16 @@ public class SearchQueryer {
 
 	public <T> List<T> getCriteria(final String filter, final Class<T> clazz) {
 		final AstBuilder astBuilder = new AstBuilder(filter);
-		return getCriteria(astBuilder.getNodes(), clazz);
+		return getCriteria((List<Node<?>>) (Object) astBuilder.getNodes(), clazz);
 	}
 
-	private static List<SearchPredicate> convertNodeList(final List<Node> nodes, final SearchPredicateFactory pf) {
+	private static List<SearchPredicate> convertNodeList(final List<Node<?>> nodes, final SearchPredicateFactory pf) {
 		return nodes.stream()
 				.map(x -> applyOp(x.getName(), x.getOp(), x.getValue(), pf))
 				.collect(Collectors.toList());
 	}
 
-	private static SearchPredicate applyOp(final String name, final Operand op, final String value, final SearchPredicateFactory pf) {
+	private static SearchPredicate applyOp(final String name, final Operand op, final Object value, final SearchPredicateFactory pf) {
 		switch (op) {
 		case EQ:
 			return pf.match().field(name).matching(value).toPredicate();

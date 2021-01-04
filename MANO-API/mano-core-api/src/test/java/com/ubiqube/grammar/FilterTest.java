@@ -43,7 +43,7 @@ public class FilterTest {
 		final TreeBuilder treeBuilder = new TreeBuilder();
 		parser.addParseListener(treeBuilder);
 		parser.filterExpr();
-		final List<Node> listNode = treeBuilder.getListNode();
+		final List<Node<String>> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
 		assertEquals(1, listNode.size());
 	}
@@ -58,7 +58,7 @@ public class FilterTest {
 		final TreeBuilder treeBuilder = new TreeBuilder();
 		parser.addParseListener(treeBuilder);
 		parser.filterExpr();
-		final List<Node> listNode = treeBuilder.getListNode();
+		final List<Node<String>> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
 		assertEquals(2, listNode.size());
 	}
@@ -73,7 +73,7 @@ public class FilterTest {
 		final TreeBuilder treeBuilder = new TreeBuilder();
 		parser.addParseListener(treeBuilder);
 		parser.filterExpr();
-		final List<Node> listNode = treeBuilder.getListNode();
+		final List<Node<String>> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
 		assertEquals(1, listNode.size());
 		final Node node = listNode.get(0);
