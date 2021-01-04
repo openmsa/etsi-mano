@@ -46,7 +46,7 @@ public class JpaQueryer {
 		this.em = em;
 	}
 
-	public Predicate getCriteria(final List<Node> nodes, final Class<?> clazz, final Map<String, From<?, ?>> joins) {
+	public <U> Predicate getCriteria(final List<Node<U>> nodes, final Class<?> clazz, final Map<String, From<?, ?>> joins) {
 		final CriteriaBuilder cb = em.getCriteriaBuilder();
 		final List<Predicate> predicates = new ArrayList<>();
 		for (final Node node : nodes) {
@@ -61,7 +61,7 @@ public class JpaQueryer {
 		return null;
 	}
 
-	private Optional<Predicate> applyOp(final String name, final Operand op, final String value, final Map<String, From<?, ?>> joins) {
+	private <U> Optional<Predicate> applyOp(final String name, final Operand op, final U value, final Map<String, From<?, ?>> joins) {
 		final CriteriaBuilder cb = em.getCriteriaBuilder();
 		final Attr attr = getParent(name, joins);
 		Predicate pred = null;
@@ -74,16 +74,16 @@ public class JpaQueryer {
 			pred = cb.notEqual(p.get(attr.name), value);
 			break;
 		case GT:
-			pred = cb.greaterThan(p.get(attr.name), value);
+			pred = cb.greaterThan(p.get(attr.name), value.toString());
 			break;
 		case GTE:
-			pred = cb.greaterThanOrEqualTo(p.get(attr.name), value);
+			pred = cb.greaterThanOrEqualTo(p.get(attr.name), value.toString());
 			break;
 		case LT:
-			pred = cb.lessThan(p.get(attr.name), value);
+			pred = cb.lessThan(p.get(attr.name), value.toString());
 			break;
 		case LTE:
-			pred = cb.lessThanOrEqualTo(p.get(attr.name), value);
+			pred = cb.lessThanOrEqualTo(p.get(attr.name), value.toString());
 			break;
 		case CONT:
 		case NCONT:

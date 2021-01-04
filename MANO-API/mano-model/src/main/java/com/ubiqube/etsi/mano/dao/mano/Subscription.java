@@ -27,11 +27,20 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @Indexed
 public class Subscription implements BaseEntity {
@@ -48,7 +57,13 @@ public class Subscription implements BaseEntity {
 
 	private String callbackUri;
 
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	@FullTextField
+	private SubscriptionType subscriptionType;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private List<FilterAttributes> filters;
 
 	@Override
@@ -90,6 +105,14 @@ public class Subscription implements BaseEntity {
 
 	public void setFilters(final List<FilterAttributes> filters) {
 		this.filters = filters;
+	}
+
+	public SubscriptionType getSubscriptionType() {
+		return subscriptionType;
+	}
+
+	public void setSubscriptionType(final SubscriptionType subscriptionType) {
+		this.subscriptionType = subscriptionType;
 	}
 
 }

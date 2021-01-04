@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
@@ -44,6 +45,8 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
@@ -74,6 +77,24 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
 				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
 				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(PkgmSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(NsdmSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(NsdmSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.byDefault()
 				.register();
 

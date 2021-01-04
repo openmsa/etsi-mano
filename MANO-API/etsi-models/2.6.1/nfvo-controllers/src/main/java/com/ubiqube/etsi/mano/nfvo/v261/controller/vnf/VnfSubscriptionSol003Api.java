@@ -34,6 +34,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotificat
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -66,7 +67,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 */
 	@Override
 	public List<PkgmSubscription> subscriptionsGet(final String filter) {
-		final List<Subscription> subs = vnfSubscriptionManagement.subscriptionsGet(filter);
+		final List<Subscription> subs = vnfSubscriptionManagement.subscriptionsGet(filter, SubscriptionType.VNF);
 		final List<PkgmSubscription> pkgms = mapper.mapAsList(subs, PkgmSubscription.class);
 		pkgms.stream()
 				.forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));

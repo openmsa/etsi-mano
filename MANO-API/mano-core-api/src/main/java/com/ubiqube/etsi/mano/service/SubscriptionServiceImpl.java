@@ -19,37 +19,56 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.Node;
+import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
-public class SubscriptionService {
+public class SubscriptionServiceImpl implements SubscriptionService {
+	private final EntityManager em;
+
 	private final SubscriptionJpa subscriptionJpa;
 
-	public SubscriptionService(final SubscriptionJpa repository) {
+	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager _em) {
 		super();
 		this.subscriptionJpa = repository;
+		em = _em;
 	}
 
-	public List<Subscription> query(final String filter) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public List<Subscription> query(final String filter, final SubscriptionType type) {
+		final SearchQueryer sq = new SearchQueryer(em);
+		final AstBuilder astBuilder = new AstBuilder(filter);
+		final List<Node<Object>> nodes = (List<Node<Object>>) (Object) astBuilder.getNodes();
+		nodes.add(Node.of("subscriptionType", Operand.EQ, type));
+		return sq.getCriteria((List<Node<?>>) (Object) nodes, Subscription.class);
 	}
 
-	public Subscription save(final Subscription subscription) {
+	@Override
+	public Subscription save(final Subscription subscription, final SubscriptionType type) {
+		subscription.setSubscriptionType(type);
 		return subscriptionJpa.save(subscription);
 	}
 
-	public void delete(final UUID subscriptionId) {
+	@Override
+	public void delete(final UUID subscriptionId, final SubscriptionType type) {
 		subscriptionJpa.deleteById(subscriptionId);
 	}
 
-	public Subscription findById(final UUID subscriptionId) {
+	@Override
+	public Subscription findById(final UUID subscriptionId, final SubscriptionType type) {
 		return subscriptionJpa.findById(subscriptionId).orElseThrow();
 	}
 
+	@Override
 	public List<Subscription> selectNotifications(final UUID vnfPkgId, final String event) {
 		return subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
 	}
