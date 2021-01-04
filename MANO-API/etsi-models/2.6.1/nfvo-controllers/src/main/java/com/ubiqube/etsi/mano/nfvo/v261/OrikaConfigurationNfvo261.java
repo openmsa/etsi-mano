@@ -49,6 +49,8 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
 
 import ma.glasnost.orika.MapperFactory;
@@ -72,6 +74,9 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("nsdInfoId", "nsdInfo.id")
 				.byDefault()
 				.register();
+		/*
+		 * Subscription.
+		 */
 		orikaMapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
@@ -79,7 +84,6 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("authentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
-
 		orikaMapperFactory.classMap(PkgmSubscription.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.byDefault()
@@ -92,8 +96,19 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("authentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
-
 		orikaMapperFactory.classMap(NsdmSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(LccnSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(LccnSubscription.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.byDefault()
 				.register();

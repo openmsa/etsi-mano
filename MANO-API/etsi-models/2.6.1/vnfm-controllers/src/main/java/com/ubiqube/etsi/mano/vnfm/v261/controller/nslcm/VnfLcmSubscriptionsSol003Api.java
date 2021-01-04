@@ -90,7 +90,7 @@ public class VnfLcmSubscriptionsSol003Api implements VnfLcmSubscriptionsSol003 {
 		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);
 	}
 
-	private LccnSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
+	private static LccnSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
 		final LccnSubscriptionLinks links = new LccnSubscriptionLinks();
 		final Link self = new Link();
 		self.setHref(linkTo(methodOn(VnflcmSubscriptions261Sol002Api.class).subscriptionsSubscriptionIdGet(id)).withSelfRel().getHref());

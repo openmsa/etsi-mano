@@ -17,21 +17,44 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
-import java.util.ArrayList;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.service.SubscriptionService;
+import com.ubiqube.etsi.mano.service.event.Notifications;
+
+import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
+	private final SubscriptionService subscriptionService;
+
+	private final MapperFacade mapper;
+
+	private final Notifications notifications;
+
+	public NsLcmSubscriptionsSol005Api(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
+		subscriptionService = _subscriptionService;
+		mapper = _mapper;
+		notifications = _notifications;
+	}
 
 	/**
 	 * Query multiple subscriptions.
@@ -42,8 +65,11 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<LccnSubscription>> subscriptionsGet(final String accept) {
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
+	public ResponseEntity<List<LccnSubscription>> subscriptionsGet(final String filter) {
+		final List<Subscription> list = subscriptionService.query(filter, SubscriptionType.NSLCM);
+		final List<LccnSubscription> pkgms = mapper.mapAsList(list, LccnSubscription.class);
+		pkgms.stream().forEach(x -> x.setLinks(createSubscriptionsLinks(x.getId())));
+		return ResponseEntity.ok(pkgms);
 	}
 
 	/**
@@ -65,9 +91,13 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<LccnSubscription> subscriptionsPost(final String accept, final String contentType, final LccnSubscriptionRequest body) {
-		// : Implement...
-		return null;
+	public ResponseEntity<LccnSubscription> subscriptionsPost(final LccnSubscriptionRequest lccnSubscriptionRequest) {
+		Subscription subscription = mapper.map(lccnSubscriptionRequest, Subscription.class);
+		notifications.check(subscription.getAuthentificationInformations(), subscription.getCallbackUri());
+		subscription = subscriptionService.save(subscription, SubscriptionType.NSLCM);
+		final LccnSubscription pkgmSubscription = mapper.map(subscription, LccnSubscription.class);
+		pkgmSubscription.setLinks(createSubscriptionsLinks(pkgmSubscription.getId()));
+		return new ResponseEntity<>(pkgmSubscription, HttpStatus.CREATED);
 	}
 
 	/**
@@ -79,8 +109,9 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public void subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		// : Implement...
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		subscriptionService.delete(UUID.fromString(subscriptionId), SubscriptionType.NSLCM);
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
@@ -93,9 +124,18 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<LccnSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
-		// : Implement...
-		return null;
+	public ResponseEntity<LccnSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		final Subscription subscription = subscriptionService.findById(UUID.fromString(subscriptionId), SubscriptionType.NSLCM);
+		final LccnSubscription pkgmSubscription = mapper.map(subscription, LccnSubscription.class);
+		pkgmSubscription.setLinks(createSubscriptionsLinks(subscriptionId));
+		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);
 	}
 
+	private static LccnSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
+		final LccnSubscriptionLinks links = new LccnSubscriptionLinks();
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(NsLcmSubscriptionsSol005.class).subscriptionsSubscriptionIdGet(id)).withSelfRel().getHref());
+		links.setSelf(self);
+		return links;
+	}
 }
