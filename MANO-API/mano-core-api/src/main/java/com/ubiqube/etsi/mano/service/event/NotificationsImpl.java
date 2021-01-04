@@ -171,7 +171,7 @@ public class NotificationsImpl implements Notifications {
 				final int status = response.getStatusLine().getStatusCode();
 				if (status != 204) {
 					LOG.error("Status response must be 204 by was: {} <=> {}", status, _uri);
-					throw new GenericException("HttpClient got an error: " + status);
+					throw new GenericException("HttpClient got an error: " + status + ", must be 204");
 				}
 			}
 		} catch (final IOException e) {

@@ -48,6 +48,8 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscription;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 import ma.glasnost.orika.CustomMapper;
@@ -191,11 +193,25 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("resource.resourceProviderId", "resourceProviderId")
 				.byDefault()
 				.register();
+		/*
+		 * Subscriptions.
+		 */
 		orikaMapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
 				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
 				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(LccnSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(LccnSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
