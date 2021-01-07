@@ -38,6 +38,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
  */
 public interface Vim {
 
+	Telemetry telemetry();
+
 	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
 
 	void freeResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
@@ -49,6 +51,7 @@ public interface Vim {
 
 	String createNetwork(final VimConnectionInformation vimConnectionInformation, final VlProtocolData vl, String name, String dnsDomain, String qosPolicyId);
 
+	// XXX: Packaging error, this method is only used by openstack.
 	String createSubnet(final VimConnectionInformation vimConnectionInformation, final L3Data l3ProtocolData, final IpPool ipAllocationPool, final String networkId);
 
 	void deleteSubnet(final VimConnectionInformation vimConnectionInformation, final String resourceId);

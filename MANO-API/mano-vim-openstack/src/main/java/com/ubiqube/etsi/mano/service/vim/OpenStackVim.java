@@ -663,4 +663,9 @@ public class OpenStackVim implements Vim {
 		}
 		return null;
 	}
+
+	@Override
+	public Telemetry telemetry() {
+		return new GnocchiTelemetry(null);
+	}
 }
