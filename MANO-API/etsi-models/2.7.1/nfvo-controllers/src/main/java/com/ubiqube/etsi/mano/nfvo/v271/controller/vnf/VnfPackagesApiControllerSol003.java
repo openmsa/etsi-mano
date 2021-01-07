@@ -93,7 +93,7 @@ public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(final String vnfPkgId, final String accept, final String version, final String authorization, @Valid final String includeSignatures) {
+	public ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(final String vnfPkgId, @Valid final String includeSignatures) {
 		return vnfManagement.getPackageManifest(UUID.fromString(vnfPkgId), includeSignatures);
 	}
 
@@ -103,7 +103,7 @@ public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept, final String version, @Valid final String includeSignatures) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignatures) {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId));
 	}
 

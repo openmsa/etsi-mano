@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -139,14 +138,8 @@ public interface VnfPackagesApiSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/manifest", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(@ApiParam(value = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Content-Types that are acceptable for the response. Permitted values: \"text/plain\" and/or \"application/zip\" Reference: IETF RFC 7231 ", required = true, allowableValues = "text/plain, application/zip, text/plain+application/zip") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "If this parameter is provided, the NFVO shall return the manifest and related security information (such as certificate) in a ZIP archive. If this parameter is not given, the NFVO shall provide only a copy of the manifest file. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(@ApiParam(value = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall return the manifest and related security information (such as certificate) in a ZIP archive. If this parameter is not given, the NFVO shall provide only a copy of the manifest file. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@ApiOperation(value = "", nickname = "vnfPackagesVnfPkgIdPackageContentGet", notes = "Fetch VNF Package. The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. The content of the package is provided as onboarded, i.e. depending on the security option used, the CSAR or the CSAR wrapped in a ZIP archive together with an external signature is returned, as defined in clause 5.1 of ETSI GS NFV-SOL 004. NOTE: Information about the applicable security option can be obtained by evaluating the \"packageSecurityOption\" attribute in the \"VnfPkgInfo\" structure. This method shall follow the provisions specified in the tables 10.4.5.3.2-1 and 10.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -183,7 +176,5 @@ public interface VnfPackagesApiSol003 {
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/vnfd", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@ApiParam(value = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
-			@ApiParam(value = "Content-Types that are acceptable for the response. Permitted values: \"text/plain\" and/or \"application/zip\" Reference: IETF RFC 7231 ", required = true, allowableValues = "text/plain, application/zip, text/plain+application/zip") @RequestHeader(value = "Accept", required = true) final String accept,
-			@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 }
