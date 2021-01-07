@@ -20,19 +20,25 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class PmJob {
 	@Id
@@ -40,26 +46,25 @@ public class PmJob {
 	private UUID id;
 
 	/**
-	 * Type of the measured object.  The applicable measured object type for a measurement is defined in clause 7.2 of ETSI GS NFV-IFA 027 [5]. 
+	 * Type of the measured object. The applicable measured object type for a measurement is defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
 	 */
-	private String objectType;
+	private PmType objectType;
 
 	/**
 	 * Identifiers of the measured object instances for which performance information is collected.
 	 */
 	@ElementCollection
-	private List<UUID> objectInstanceIds;
+	private List<String> objectInstanceIds;
 
 	/**
-	 * Identifiers of the sub-object instances of the measured object instance for which performance information is requested to be collected.
-	 * May be present if a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type If this attribute is present, the cardinality of the "objectInstanceIds" attribute shall be 1. 
-	 * If this attribute is absent and a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type, measurements will be taken for all sub-object instances of the measured object instance.
+	 * Identifiers of the sub-object instances of the measured object instance for which performance information is requested to be collected. May be present if a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type If this attribute is present, the cardinality of the "objectInstanceIds" attribute shall be 1. If this attribute is absent and a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type,
+	 * measurements will be taken for all sub-object instances of the measured object instance.
 	 */
 	@ElementCollection
-	private List<UUID> subObjectInstanceIds;
+	private List<String> subObjectInstanceIds;
 
 	/**
-	 * Criteria of the collection of performance information. 
+	 * Criteria of the collection of performance information.
 	 */
 	@Embedded
 	private PmJobCriteria criteria;
@@ -77,4 +82,7 @@ public class PmJob {
 
 	@Embedded
 	private AuthentificationInformations subscription;
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	private VimConnectionInformation vimConnectionInformation;
 }
