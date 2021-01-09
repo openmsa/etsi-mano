@@ -14,30 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.subs;
+package com.ubiqube.etsi.mano.model;
+
+import java.util.UUID;
+
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @param <T>
  */
-public enum SubscriptionType {
-	VNF("VNF"),
-	NSD("NSD"),
-	ALARM("ALARM"),
-	NSLCM("NSLCM"),
-	VNFLCM("VNFLCM"),
-	MEOPKG("MEOPKG"),
-	NSDVNF("NSDVNF");
+public class WebEntity<T extends RepresentationModel<? extends T>> extends RepresentationModel<T> {
+	private UUID id;
 
-	private String value;
-
-	SubscriptionType(final String string) {
-		value = string;
+	public final UUID getId() {
+		return id;
 	}
 
-	@Override
-	public String toString() {
-		return value;
+	public final void setId(final UUID id) {
+		this.id = id;
 	}
+
 }

@@ -37,8 +37,8 @@ public interface VnfSubscriptionManagement {
 
 	void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage);
 
-	void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId);
+	void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId, SubscriptionType type);
 
-	Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId);
+	Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId, SubscriptionType type);
 
 }

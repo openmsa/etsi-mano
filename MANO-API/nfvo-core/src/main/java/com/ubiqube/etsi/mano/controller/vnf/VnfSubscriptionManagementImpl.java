@@ -76,15 +76,15 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	}
 
 	@Override
-	public void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId) {
+	public void subscriptionsSubscriptionIdDelete(final String _subscriptionId, final SubscriptionType type) {
 		final UUID subscriptionId = UUID.fromString(_subscriptionId);
-		subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		subscriptionService.delete(subscriptionId, SubscriptionType.VNF);
+		subscriptionService.findById(subscriptionId, type);
+		subscriptionService.delete(subscriptionId, type);
 	}
 
 	@Override
-	public Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId) {
-		return subscriptionService.findById(_subscriptionId, SubscriptionType.VNF);
+	public Subscription subscriptionsSubscriptionIdGet(final UUID _subscriptionId, final SubscriptionType type) {
+		return subscriptionService.findById(_subscriptionId, type);
 	}
 
 }

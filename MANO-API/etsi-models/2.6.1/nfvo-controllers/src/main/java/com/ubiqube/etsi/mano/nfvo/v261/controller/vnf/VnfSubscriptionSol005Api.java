@@ -84,13 +84,13 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
+		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId, SubscriptionType.NSDVNF);
 		return ResponseEntity.noContent().build();
 	}
 
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final Subscription subscription = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId));
+		final Subscription subscription = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId), SubscriptionType.NSDVNF);
 		final PkgmSubscription pkgmSubscription = mapper.map(subscription, PkgmSubscription.class);
 		pkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscriptionId));
 		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);
