@@ -1,30 +1,19 @@
 package com.ubiqube.etsi.mec.meo.v211.controller.pkg;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+
+import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppPkgNotification;
+
 @Controller
 public class UserDefinedNotification211MepmApiController implements UserDefinedNotification211MepmApi {
 
-    private final ObjectMapper objectMapper;
-
-    private final HttpServletRequest request;
-
-    @org.springframework.beans.factory.annotation.Autowired
-    public UserDefinedNotification211MepmApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
-
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
-
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<Void> appPkgNotificationPOST(@Valid final AppPkgNotification body) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

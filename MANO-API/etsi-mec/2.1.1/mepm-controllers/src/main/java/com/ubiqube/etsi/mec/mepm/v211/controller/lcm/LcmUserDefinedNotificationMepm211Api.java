@@ -3,7 +3,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mec.meo.v211.controller.pkg;
+package com.ubiqube.etsi.mec.mepm.v211.controller.lcm;
 
 import javax.validation.Valid;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppPkgNotification;
-import com.ubiqube.etsi.mec.meo.v211.model.pkg.ProblemDetails;
+import com.ubiqube.etsi.mec.meo.v211.model.lcm.Body1;
+import com.ubiqube.etsi.mec.meo.v211.model.lcm.ProblemDetails;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,18 +21,24 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "user_defined_notification", description = "the user_defined_notification API")
-@RequestMapping("/meo/app_pkgm/v1/notification")
-public interface UserDefinedNotification211MepmApi {
+@RequestMapping("/mepm/app_lcm/v1/notifications")
+public interface LcmUserDefinedNotificationMepm211Api {
 
-	@ApiOperation(value = "Registers a notification endpoint to notify application package operations", nickname = "appPkgNotificationPOST", notes = "Registers a notification endpoint to notify application package operations", tags = { "app-pkgm-notifications", })
+	@ApiOperation(value = "Delivers a notification from the application lifecycle management resource to the subscriber.", nickname = "appInstNotificationPOST", notes = "Delivers a notification from the application lifecycle management resource to the subscriber.", tags = { "", })
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 401, message = "Unauthorized :  used when the client did not submit credentials.", response = ProblemDetails.class),
 			@ApiResponse(code = 403, message = "Forbidden :  operation is not allowed given the current status of the resource.", response = ProblemDetails.class),
 			@ApiResponse(code = 404, message = "Not Found :  used when a client provided a URI that cannot be mapped to a valid resource URI.", response = ProblemDetails.class),
+			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
 	@RequestMapping(value = "/user_defined_notification", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	ResponseEntity<Void> appPkgNotificationPOST(@ApiParam(value = "Notification endpoint to be created", required = true) @Valid @RequestBody AppPkgNotification body);
+	ResponseEntity<Void> appInstNotificationPOST(@ApiParam(value = "", required = true) @Valid @RequestBody Body1 body);
 
 }

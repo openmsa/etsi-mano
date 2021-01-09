@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mec.meo.v211.controller.lcm;
+package com.ubiqube.etsi.mec.mepm.v211.controller.lcm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import com.ubiqube.etsi.mec.meo.v211.model.lcm.SubscriptionLinkList;
 import com.ubiqube.etsi.mec.meo.v211.model.lcm.SubscriptionType;
 
 @Controller
-public class SubscriptionsApiController implements SubscriptionsApi {
+public class LcmSubscriptionsMepm211ApiController implements LcmSubscriptionsMepm211Api {
 
     @Override
     public ResponseEntity<SubscriptionLinkList> appLcmSubscriptionsGET(@Valid final String subscriptionType) {

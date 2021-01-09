@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mec.meo.v211.controller.lcm;
+package com.ubiqube.etsi.mec.mepm.v211.controller.lcm;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mec.meo.v211.model.pkg;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -32,7 +33,7 @@ public class CreateAppPkg {
 	private Checksum checksum = null;
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	public CreateAppPkg appPkgName(final String appPkgName) {
 		this.appPkgName = appPkgName;
@@ -82,8 +83,7 @@ public class CreateAppPkg {
 	}
 
 	/**
-	 * Version of the application package to be onboarded. The appPkgName with
-	 * appPkgVersion can be used to uniquely identify the application package.
+	 * Version of the application package to be onboarded. The appPkgName with appPkgVersion can be used to uniquely identify the application package.
 	 *
 	 * @return appPkgVersion
 	 **/
@@ -140,7 +140,7 @@ public class CreateAppPkg {
 		this.checksum = checksum;
 	}
 
-	public CreateAppPkg userDefinedData(final KeyValuePairs userDefinedData) {
+	public CreateAppPkg userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -153,11 +153,11 @@ public class CreateAppPkg {
 	@ApiModelProperty(value = "")
 
 	@Valid
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
@@ -199,8 +199,7 @@ public class CreateAppPkg {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
