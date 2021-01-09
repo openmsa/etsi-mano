@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +26,9 @@ import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +37,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,20 +64,49 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(schema = "mec_meo")
-public class AppPkg {
+@EntityListeners(AuditListener.class)
+@Indexed
+public class AppPkg implements BaseEntity, Auditable {
 	@Id
 	@DocumentId
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@FullTextField
 	private UUID id;
 
+	@FullTextField
 	private String appDId;
+
+	@FullTextField
+	private String appSoftwareVersion;
+
+	@Embedded
+	private Checksum checksum;
+
+	// AppPkgSWImageInfo
+
+	// additionalArtifacts
+
+	@Enumerated(EnumType.STRING)
+	private OnboardingStateType onboardingState = null;
+
+	@Enumerated(EnumType.STRING)
+	private OperationalStateType operationalState = null;
+
+	@Enumerated(EnumType.STRING)
+	private PackageUsageState usageState = null;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Map<String, String> userDefinedData = null;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<DNSRuleDescriptor> appDNSRule;
 
+	@FullTextField
 	private String appDVersion;
 
+	@FullTextField
 	private String appDescription;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -75,13 +121,16 @@ public class AppPkg {
 	@CollectionTable(schema = "mec_meo")
 	private Set<FeatureDependency> appFeatureRequired;
 
+	@FullTextField
 	private String appInfoName;
 
 	@Embedded
 	private LatencyDescriptor appLatency;
 
+	@FullTextField
 	private String appName;
 
+	@FullTextField
 	private String appProvider;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -96,30 +145,38 @@ public class AppPkg {
 	@CollectionTable(schema = "mec_meo")
 	private Set<ServiceDependency> appServiceRequired = new HashSet<>();
 
+	@FullTextField
 	private String appSoftVersion;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<TrafficRuleDescriptor> appTrafficRule = new HashSet<>();
 
+	@FullTextField
 	private String changeAppInstanceStateOpConfig;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(schema = "mec_meo")
 	private Set<String> mecVersion = new HashSet<>();
 
+	@FullTextField
 	private String swImageDescriptor;
 
+	@FullTextField
 	private String terminateAppInstanceOpConfig;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<TransportDependency> transportDependencies = new HashSet<>();
 
+	@FullTextField
 	private String virtualComputeDescriptor;
 
 	@ElementCollection
 	@CollectionTable(schema = "mec_meo")
 	private Set<String> virtualStorageDescriptor = new HashSet<>();
+
+	@Embedded
+	private Audit audit;
 
 }
