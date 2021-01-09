@@ -16,37 +16,41 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
-import java.util.Optional;
+import javax.validation.Valid;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:11:39.646+01:00")
 
 @Controller
 public class FaultMngtSubscriptions261Sol002ApiController implements FaultmngtSubscriptions261Sol002Api {
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public FaultMngtSubscriptions261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	@Override
+	public ResponseEntity<FmSubscription> subscriptionsGet(final String version, final String accept, final String contentType, final String authorization, @Valid final String filter, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<FmSubscription> subscriptionsPost(final String version, @Valid final FmSubscriptionRequest fmSubscriptionRequest, final String accept, final String contentType, final String authorization) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId, final String version, final String authorization) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String version, final String accept, final String contentType, final String authorization) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
