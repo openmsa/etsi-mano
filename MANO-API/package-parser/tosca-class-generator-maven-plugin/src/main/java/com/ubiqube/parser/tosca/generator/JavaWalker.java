@@ -294,6 +294,20 @@ public class JavaWalker extends AbstractWalker {
 		if (null != conv) {
 			return codeModel.ref(conv);
 		}
+		final Class<?> clazz = getExistingClass(valueObject.getType());
+		if (null != clazz) {
+			return codeModel.ref(clazz);
+		}
 		throw new ParseException("Bad type: " + valueObject.getType());
+	}
+
+	private Class<?> getExistingClass(final String type) {
+		try {
+			this.getClass();
+			return Class.forName(type);
+		} catch (final ClassNotFoundException e) {
+			LOG.trace("", e);
+		}
+		return null;
 	}
 }
