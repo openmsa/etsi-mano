@@ -273,8 +273,12 @@ public class ToscaWalker {
 			if (null != dType) {
 				generateClassFromDataType(subType, dType, listener);
 			} else {
+				final ToscaClass nt = root.getNodeType().get(subType);
+				if (null == nt) {
+					throw new IllegalArgumentException(subType + " is undefnied.");
+				}
 				generateToscaClass(subType,
-						root.getNodeType().get(subType), listener);
+						nt, listener);
 			}
 			return;
 		}
