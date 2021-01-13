@@ -57,11 +57,11 @@ data_types:
     properties:
       id:
         type: string
-      domainName:
+      domain_name:
         type: string
-      ipAddress:
+      ip_address:
         type: string
-      ipAddressType:
+      ip_address_type:
         type: string
         required: true
         constraints:
@@ -81,19 +81,19 @@ data_types:
   tosca.datatypes.mec.TrafficFilter:
     derived_from: tosca.nodes.Root
     properties:
-      srcAddress:
+      src_address:
         type: list
         entry_schema:
           type: string
-      dstAddress:
+      dst_address:
         type: list
         entry_schema:
           type: string
-      srcPort:
+      src_port:
         type: list
         entry_schema:
           type: string
-      dstPort:
+      dst_port:
         type: list
         entry_schema:
           type: string
@@ -105,71 +105,71 @@ data_types:
         type: list
         entry_schema:
           type: string
-      srcTunnelAddress:
+      src_tunnel_address:
         type: list
         entry_schema:
           type: string
-      dstTunnelAddress:
+      dst_tunnel_address:
         type: list
         entry_schema:
           type: string
-      srcTunnelPort:
+      src_tunnel_port:
         type: list
         entry_schema:
           type: string
-      dstTunnelPort:
+      dst_tunnel_port:
         type: list
         entry_schema:
           type: string
-      qCl:
+      q_cl:
         type: string
-      dSCP:
+      d_scp:
         type: string
-      tC:
+      t_c:
         type: string
 
   tosca.datatypes.mec.TunnelInfo:
     derived_from: tosca.nodes.Root
     properties:
-      tunnelType:
+      tunnel_type:
         type: string
         constraints:
           - valid_values: [ gtp-u, gre ]
-      tunnelDstAddress:
+      tunnel_dst_address:
         type: string
-      tunnelSrcAddress:
+      tunnel_src_address:
         type: string
-      tunnelSpecificData:
+      tunnel_specific_data:
         type: string
 
   tosca.datatypes.mec.InterfaceDescriptor:
     derived_from: tosca.nodes.Root
     properties:
-      interfaceType:
+      interface_type:
         type: string
         constraints:
           - valid_values: [ tunnel, mac, ip ]
-      tunnelInfo:
+      tunnel_info:
         type: tosca.datatypes.mec.TunnelInfo
-      srcMACAddress:
+      src_mac_address:
         type: string
-      dstMACAddress:
+      dst_mac_address:
         type: string
-      dstIPAddress:
+      dst_ip_address:
         type: string
 
   tosca.datatypes.mec.TrafficRuleDescriptor:
     derived_from: tosca.nodes.Root
     properties:
-      trafficRuleId:
+      traffic_rule_id:
         type: string
-      filterType:
+      filter_type:
         type: string
         constraints:
           - valid_values: [ flow, packet ]
       priority:
         type: integer
-      trafficFilter:
+      traffic_filter:
         type: list
         entry_schema:
           type: tosca.datatypes.mec.TrafficFilter
@@ -178,55 +178,90 @@ data_types:
         constraints:
           - valid_values: [  DROP, FORWARD_DECAPSULATED, FORWARD_AS_IS, PASSTHROUGH, DUPLICATED_DECAPSULATED, DUPLICATE_AS_IS ]
     requirements:
-      - dstInterface:
+      - dst_interface:
           capability: tosca.capabilities.mec.VirtualLinkable
           relationship: tosca.relationships.mec.VirtualLinksTo
           node: tosca.nodes.mec.VL
           occurrences: [ 0, 2 ]
 
+  tosca.datatypes.mec.VDU:
+    derived_from: tosca.nodes.Root
+    properties:
+      boot_order:
+        type: list # explicit index (boot index) not necessary, contrary to IFA011
+        description: References a node template name from which a valid boot device is created 
+        required: false
+        entry_schema:
+          type: string
+      nfvi_constraints:
+        type: list
+        description: Describes constraints on the NFVI for the VNFC instance(s) created from this VDU 
+        required: false
+        entry_schema:
+          type: string
+      monitoring_parameters:
+        type: list
+        description: Describes monitoring parameters applicable to a VNFC instantiated from this VDU
+        required: false
+        entry_schema: 
+          type: tosca.datatypes.nfv.VnfcMonitoringParameter
+      sw_image_data:
+        type: tosca.datatypes.nfv.SwImageData
+        description: Defines information related to a SwImage artifact used by this Vdu.Compute node 
+        required: false # property is required when the node template has an associated artifact of type tosca.artifacts.nfv.SwImage and not required otherwise
+      boot_data:
+        type: string
+        description: Contains a string or a URL to a file contained in the VNF package used to customize a virtualised compute resource at boot time. The bootData may contain variable parts that are replaced by deployment specific values before being sent to the VIM.
+        required: false
+
+
 node_types:
   tosca.nodes.mec.MEA:
     derived_from: tosca.nodes.Root   # Or should this be its own top - level type?
     properties:
-      appDId:
+      appd_id:
         type: string
         description: ID of this MEA
-      appProvider:
+      app_provider:
         type: string
         description: Provider of the application and of the AppD.
-      appName:
-        type: version
+      app_name:
+        type: string
         description: Name to identify the MEC application.
-      appSoftVersion:
+      app_soft_version:
         type: version
         description: Identifies the version of software of the MEC application.
-      appDVersion:
+      appd_version:
         type: version
         description: Identifies the version of the application descriptor.
-      mecVersion:
+      mec_version:
         type: list
         description: Identifies version(s) of MEC system compatible with the MEC application described in this version of the AppD.
         entry_schema:
           type: string
-      appInfoName:
+      app_info_name:
         type: string
         description: Human readable name for the MEC application.
-      appDescription:
+      app_description:
         type: string
         description: Human readable description of the MEC application.
-      virtualComputeDescriptor:
-        type: tosca.capabilities.nfv.VirtualCompute
-      swImageDescriptor:
-        type: tosca.datatypes.nfv.SwImageData
-      appLatency:
+      virtual_compute_descriptor:
+        type: tosca.datatypes.mec.VDU
+      app_latency:
         type: integer
-      terminateAppInstanceOpConfig:
+      terminate_app_instance_op_config:
         type: tosca.datatypes.nfv.VnfTerminateOperationConfiguration
-      changeAppInstanceStateOpConfig:
+      change_app_instance_state_op_config:
         type: tosca.datatypes.nfv.VnfOperateOperationConfiguration
-
+    capabilities:
+      virtual_compute:
+        type: tosca.capabilities.nfv.VirtualCompute
+        occurrences: [ 1, 1 ]
+      virtual_binding:
+        type: tosca.capabilities.nfv.VirtualBindable
+        occurrences: [ 1, UNBOUNDED ]
     requirements:
-      - virtualLink:
+      - virtual_link:
           capability: tosca.capabilities.mec.VirtualLinkable
           relationship: tosca.relationships.mec.VirtualLinksTo
           node: tosca.nodes.mec.VL
@@ -260,11 +295,11 @@ node_types:
         type: string
         required: false
     requirements:
-      - virtualLink:
+      - virtual_link:
           capability: tosca.capabilities.mec.VirtualLinkable
           relationship: tosca.relationships.mec.VirtualLinksTo
           node: tosca.nodes.mec.VL
-      - virtualBinding:
+      - virtual_binding:
           capability: tosca.capabilities.mec.VirtualBindable
           relationship: tosca.relationships.mec.VirtualBindsTo
           node: tosca.nodes.mec.VDU
@@ -368,32 +403,34 @@ policy_types:
   tosca.policies.mec.ServiceDescriptor:
     derived_from: tosca.policies.Root
     properties:
-      serName:
+      ser_name:
         type: string
-      serCategory:
+      ser_category:
         type: string # ???
       version:
         type: string
-      transportsSupported:
+      transports_supported:
         type: tosca.datatypes.mec.TransportsSupported
         
   tosca.policies.mec.ServiceDependency:
     derived_from: tosca.policies.Root
     properties:
-      serName:
+      ser_name:
         type: string
-      serCategory:
+      ser_category:
         type: string # ???
       version:
         type: string
-      serTransportDependencies:
+      ser_transport_dependencies:
         type: list
         entry_schema:
           type: tosca.datatypes.mec.TransportsDependency
-      requestedPermissions:
+      requested_permissions:
         type: list
         entry_schema:
           type: string # ???
+
+
 
 
 
