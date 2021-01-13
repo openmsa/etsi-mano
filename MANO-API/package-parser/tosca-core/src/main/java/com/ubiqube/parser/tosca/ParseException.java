@@ -13,4 +13,8 @@ public class ParseException extends RuntimeException {
 		super(e);
 	}
 
+	public ParseException(final String string, final Throwable e) {
+		super(string, e);
+	}
+
 }
