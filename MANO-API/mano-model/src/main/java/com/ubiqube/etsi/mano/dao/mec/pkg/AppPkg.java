@@ -48,7 +48,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
-import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
@@ -90,7 +90,7 @@ public class AppPkg implements BaseEntity, Auditable {
 	private OnboardingStateType onboardingState = null;
 
 	@Enumerated(EnumType.STRING)
-	private OperationalStateType operationalState = null;
+	private PackageOperationalState operationalState = null;
 
 	@Enumerated(EnumType.STRING)
 	private PackageUsageState usageState = null;
