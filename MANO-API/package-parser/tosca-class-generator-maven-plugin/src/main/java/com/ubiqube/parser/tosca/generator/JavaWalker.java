@@ -96,9 +96,12 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void startField(final String fieldName, final String type, final boolean multi) {
 		final Class<?> conv = Converters.convert(type);
-		JDefinedClass typ = null;
+		JClass typ = null;
 		if (null == conv) {
 			typ = cache.get(type);
+			if (null == typ) {
+				typ = codeModel.directClass(type);
+			}
 		}
 		LOG.debug("Starting field {} => {} r={}, multi={}", fieldName, type, typ, multi);
 		if (multi) {
@@ -109,7 +112,7 @@ public class JavaWalker extends AbstractWalker {
 		}
 	}
 
-	private void handleSingle(final Class<?> conv, final JDefinedClass typ, final String fieldName) {
+	private void handleSingle(final Class<?> conv, final JClass typ, final String fieldName) {
 		if (null != typ) {
 			currentField = currentClass.field(JMod.PRIVATE, typ, fieldName);
 		} else if (null != conv) {
@@ -120,7 +123,7 @@ public class JavaWalker extends AbstractWalker {
 		}
 	}
 
-	private void handleMulti(final Class<?> conv, final JDefinedClass typ, final String fieldName) {
+	private void handleMulti(final Class<?> conv, final JClass typ, final String fieldName) {
 		final JClass list = codeModel.ref(List.class);
 		if (null != typ) {
 			list.narrow(typ);
@@ -274,6 +277,8 @@ public class JavaWalker extends AbstractWalker {
 			final JDefinedClass cached = cache.get(subType);
 			if (null != cached) {
 				return codeModel.ref(List.class).narrow(cached);
+			} else {
+				return codeModel.ref(List.class).narrow(getClassOf(subType));
 			}
 		}
 		if ("map".equals(type)) {
@@ -298,7 +303,15 @@ public class JavaWalker extends AbstractWalker {
 		if (null != clazz) {
 			return codeModel.ref(clazz);
 		}
-		throw new ParseException("Bad type: " + valueObject.getType());
+		throw new ParseException("Bad tosca type: " + valueObject.getType());
+	}
+
+	private static Class<?> getClassOf(final String subType) {
+		try {
+			return Class.forName(subType);
+		} catch (final ClassNotFoundException e) {
+			throw new ParseException("Unknown subtype: " + subType, e);
+		}
 	}
 
 	private Class<?> getExistingClass(final String type) {
