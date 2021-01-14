@@ -16,12 +16,9 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca;
 
-import org.springframework.stereotype.Service;
-
 import com.ubiqube.etsi.mano.service.pkg.PackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
 
-@Service
 public class ToscaRegistry implements RegistryHandler {
 
 	@Override
