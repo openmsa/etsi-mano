@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppD;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppPkgInfo;
@@ -95,7 +96,7 @@ public interface AppPackages211MepmApi {
 			@ApiResponse(code = 404, message = "Not Found :  used when a client provided a URI that cannot be mapped to a valid resource URI.", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
-	@GetMapping(value = "/")
+	@GetMapping
 	ResponseEntity appPackagesGET(@ApiParam(value = "Attribute-based filtering parameters according to ETSI GS MEC 009") @Valid @RequestParam(value = "filter", required = false) String filter,
 			@ApiParam(value = "Include all complex attributes in the response.") @Valid @RequestParam(value = "all_fields", required = false) String allFields,
 			@ApiParam(value = "Complex attributes of AppPkgInfo to be included into the response") @Valid @RequestParam(value = "fields", required = false) String fields,
@@ -151,6 +152,6 @@ public interface AppPackages211MepmApi {
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 409, message = "Conflict : The operation cannot be executed currently, due to a conflict with the state of the resource", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
-	@PutMapping(value = "/{appPkgId}/package_content", consumes = { "application/zip" })
-	ResponseEntity<Void> appPkgPutContent(@ApiParam(value = "Identifier of an on-boarded individual application package", required = true) @PathVariable("appPkgId") String appPkgId, @ApiParam(value = "") @Valid @RequestBody Object body);
+	@PutMapping(value = "/{appPkgId}/package_content", consumes = { "multipart/form-data" })
+	ResponseEntity<Void> appPkgPutContent(@ApiParam(value = "Identifier of an on-boarded individual application package", required = true) @PathVariable("appPkgId") String appPkgId, @RequestParam("file") MultipartFile file);
 }

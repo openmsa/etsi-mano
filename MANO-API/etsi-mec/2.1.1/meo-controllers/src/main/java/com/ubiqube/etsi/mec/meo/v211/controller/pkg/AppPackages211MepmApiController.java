@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mec.meo.v211.controller.pkg;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -15,9 +16,11 @@ import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mec.controller.pkg.AppPackageMeoController;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppD;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppPkgInfo;
@@ -96,8 +99,12 @@ public class AppPackages211MepmApiController implements AppPackages211MepmApi {
 	}
 
 	@Override
-	public ResponseEntity<Void> appPkgPutContent(final String appPkgId, @Valid final Object body) {
-		// TODO Auto-generated method stub
+	public ResponseEntity<Void> appPkgPutContent(final String appPkgId, final MultipartFile file) {
+		try {
+			appPackageMeoController.store(UUID.fromString(appPkgId), file.getBytes());
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 		return ResponseEntity.noContent().build();
 	}
 
