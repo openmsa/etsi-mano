@@ -25,6 +25,11 @@ import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class DependencyBuilder {
 	private final List<ConnectivityEdge<Class<? extends Node>>> edges = new ArrayList<>();
 	private final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();

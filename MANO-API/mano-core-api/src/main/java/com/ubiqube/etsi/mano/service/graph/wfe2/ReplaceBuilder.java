@@ -23,6 +23,11 @@ import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ReplaceBuilder {
 	private final List<ConnectivityEdge<Class<? extends Node>>> edges = new ArrayList<>();
 	private final Class<? extends Node> contributor;
