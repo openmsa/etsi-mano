@@ -38,8 +38,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
  */
 public interface Vim {
 
-	Telemetry telemetry();
-
 	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
 
 	void freeResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
