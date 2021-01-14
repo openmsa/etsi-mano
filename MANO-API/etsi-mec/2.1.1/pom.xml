@@ -21,4 +21,15 @@
 		<module>meo-controllers</module>
 		<module>mepm-controllers</module>
 	</modules>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://nexus2.ubiqube.com:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://nexus2.ubiqube.com:8081/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
 </project>
