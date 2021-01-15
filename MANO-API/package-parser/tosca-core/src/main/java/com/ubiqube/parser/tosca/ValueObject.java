@@ -15,7 +15,7 @@ public class ValueObject {
 	private List<Constraint> constraints = new ArrayList<>();
 	private String status;
 
-	public static ValueObject createList(final String type) {
+	public static ValueObject listOf(final String type) {
 		final ValueObject vo = new ValueObject();
 		vo.setType("list");
 		final EntrySchema entrySchema = new EntrySchema();
