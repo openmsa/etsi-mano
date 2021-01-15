@@ -53,7 +53,7 @@ public class AppDefaultPackageProvider implements AppPackageProvider {
 	}
 
 	@Override
-	public Set<ServiceDescriptor> getServiceDescriptors(final Map<String, String> parameters) {
+	public Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters) {
 		return new HashSet<>();
 	}
 

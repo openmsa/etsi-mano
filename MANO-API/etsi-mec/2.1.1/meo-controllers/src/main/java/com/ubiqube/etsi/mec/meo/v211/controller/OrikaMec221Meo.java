@@ -16,14 +16,24 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.controller;
 
+import com.ubiqube.etsi.mec.meo.v211.model.pkg.FeatureDependency;
+
 import ma.glasnost.orika.MapperFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class OrikaMec221Meo implements OrikaMapperFactoryConfigurer {
 
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
-		//
+		orikaMapperFactory.classMap(FeatureDependency.class, com.ubiqube.etsi.mano.dao.mec.pkg.FeatureDependency.class)
+				.field("featureName", "name")
+				.byDefault()
+				.register();
 	}
 
 }

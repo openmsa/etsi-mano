@@ -34,6 +34,6 @@ public interface AppPackageProvider {
 
 	Set<ServiceDependency> getRequiredServiceDependency(final Map<String, String> parameters);
 
-	Set<ServiceDescriptor> getServiceDescriptors(final Map<String, String> parameters);
+	Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters);
 
 }

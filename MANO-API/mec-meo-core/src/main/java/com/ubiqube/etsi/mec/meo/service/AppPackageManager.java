@@ -92,7 +92,7 @@ public class AppPackageManager {
 		final Set<DNSRuleDescriptor> appDNSRule = provider.getDnsRuleDescriptors(new HashMap<>());
 		app.setAppDNSRule(appDNSRule);
 
-		final Set<ServiceDescriptor> appServiceProduced = provider.getServiceDescriptors(new HashMap<>());
+		final Set<ServiceDescriptor> appServiceProduced = provider.getServiceProduced(new HashMap<>());
 		app.setAppServiceProduced(appServiceProduced);
 
 		final Set<ServiceDependency> appServiceOptional = provider.getOptionalServiceDependency(new HashMap<>());
