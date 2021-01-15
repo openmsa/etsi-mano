@@ -338,10 +338,8 @@ public class ToscaWalker {
 	private void generateCaps(final ToscaListener listener, final Map<String, CapabilityDefinition> capabilities) {
 		capabilities.forEach((final String x, final CapabilityDefinition y) -> {
 			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
-			if (!cache.contains(y.getType())) {
-				if (!classExistOnClassPath(y.getType())) {
-					generateClass(y.getType(), caps, listener);
-				}
+			if (!cache.contains(y.getType()) && !classExistOnClassPath(y.getType())) {
+				generateClass(y.getType(), caps, listener);
 			}
 			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
 				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());
