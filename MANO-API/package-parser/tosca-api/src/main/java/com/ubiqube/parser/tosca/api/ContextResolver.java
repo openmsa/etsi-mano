@@ -436,7 +436,7 @@ public class ContextResolver {
 		try {
 			method.invoke(instance, paramter);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new ParseException(e);
+			throw new ParseException("Could not invoke: " + method + " with parameters of type :" + paramter.getClass(), e);
 		}
 	}
 

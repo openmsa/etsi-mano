@@ -379,6 +379,9 @@ public class ToscaWalker {
 					generateClassFromDataType(derivedFrom, dt, listener);
 					found = true;
 				}
+				if (!found && classExistOnClassPath(ClassUtils.toscaToJava(derivedFrom))) {
+					found = true;
+				}
 			}
 			if (!found) {
 				throw new ParseException("Could not find parent class: " + derivedFrom);
@@ -425,4 +428,5 @@ public class ToscaWalker {
 		}
 		return ret;
 	}
+
 }

@@ -89,7 +89,10 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void onDataTypeExtend(final String derivedFrom) {
-		final JClass superClass = cache.get(derivedFrom);
+		JClass superClass = cache.get(derivedFrom);
+		if (null == superClass) {
+			superClass = codeModel.ref(getClassOf(ClassUtils.toscaToJava(derivedFrom)));
+		}
 		currentClass._extends(superClass);
 	}
 
@@ -277,9 +280,8 @@ public class JavaWalker extends AbstractWalker {
 			final JDefinedClass cached = cache.get(subType);
 			if (null != cached) {
 				return codeModel.ref(List.class).narrow(cached);
-			} else {
-				return codeModel.ref(List.class).narrow(getClassOf(subType));
 			}
+			return codeModel.ref(List.class).narrow(getClassOf(subType));
 		}
 		if ("map".equals(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
@@ -314,9 +316,8 @@ public class JavaWalker extends AbstractWalker {
 		}
 	}
 
-	private Class<?> getExistingClass(final String type) {
+	private static Class<?> getExistingClass(final String type) {
 		try {
-			this.getClass();
 			return Class.forName(type);
 		} catch (final ClassNotFoundException e) {
 			LOG.trace("", e);
