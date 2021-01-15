@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  *
  */
 public enum IpAddressType {
-	V6("IP_V6"),
-	V4("IP_V4");
+	ipv6("ipv6"),
+	ipv4("ipv4");
 
 	private String value;
 

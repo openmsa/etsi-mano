@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.dao.mano.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mec.pkg.FeatureDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.LatencyDescriptor;
 
 import lombok.Getter;
@@ -56,4 +58,10 @@ public class AppPkgDto {
 	private final Set<String> mecVersion = new HashSet<>();
 
 	private String terminateAppInstanceOpConfig;
+
+	private VnfCompute virtualComputeDescriptor;
+
+	private Set<FeatureDependency> appFeatureOptional;
+
+	private Set<FeatureDependency> appFeatureRequired;
 }

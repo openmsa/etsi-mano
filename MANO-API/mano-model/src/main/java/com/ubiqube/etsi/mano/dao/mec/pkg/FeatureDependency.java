@@ -30,7 +30,7 @@ import lombok.Setter;
 @Setter
 @Embeddable
 public class FeatureDependency {
-	private String featureName = null;
+	private String name = null;
 
 	private String version = null;
 

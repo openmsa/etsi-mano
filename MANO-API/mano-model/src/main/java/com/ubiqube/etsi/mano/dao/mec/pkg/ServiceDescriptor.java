@@ -16,13 +16,17 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
+import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.Embedded;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
@@ -50,8 +54,9 @@ public class ServiceDescriptor {
 	// Object.
 	private String serCategory = null;
 
-	private String sdVersion = null;
+	private String version = null;
 
-	@Embedded
-	private TransportsSupported transportsSupported = null;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<TransportsSupported> transportsSupported = null;
 }

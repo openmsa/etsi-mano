@@ -35,6 +35,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -50,6 +51,7 @@ import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 import lombok.Getter;
@@ -160,17 +162,14 @@ public class AppPkg implements BaseEntity, Auditable {
 	private Set<String> mecVersion = new HashSet<>();
 
 	@FullTextField
-	private String swImageDescriptor;
-
-	@FullTextField
 	private String terminateAppInstanceOpConfig;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<TransportDependency> transportDependencies = new HashSet<>();
 
-	@FullTextField
-	private String virtualComputeDescriptor;
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private VnfCompute virtualComputeDescriptor;
 
 	@ElementCollection
 	@CollectionTable(schema = "mec_meo")

@@ -109,8 +109,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@Fetch(FetchMode.SELECT)
 	private Map<String, String> userDefinedData;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@IndexedEmbedded
 	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	private Set<VnfCompute> vnfCompute = new LinkedHashSet<>();
