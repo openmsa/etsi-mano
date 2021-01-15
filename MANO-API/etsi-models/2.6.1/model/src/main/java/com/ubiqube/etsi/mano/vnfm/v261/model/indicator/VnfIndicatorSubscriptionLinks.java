@@ -35,8 +35,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "Links for this resource. ")
 @Validated
-
-
 public class VnfIndicatorSubscriptionLinks {
 	@JsonProperty("self")
 	private Link self = null;

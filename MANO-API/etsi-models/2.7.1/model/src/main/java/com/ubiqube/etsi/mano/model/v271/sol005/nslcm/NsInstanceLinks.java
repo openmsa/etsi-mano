@@ -17,242 +17,251 @@
 
 package com.ubiqube.etsi.mano.model.v271.sol005.nslcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.Link;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Links to resources related to this resource.
  */
 @ApiModel(description = "Links to resources related to this resource.")
 @Validated
-public class NsInstanceLinks   {
-  @JsonProperty("self")
-  private Link self = null;
+public class NsInstanceLinks {
+	@JsonProperty("self")
+	private Link self = null;
 
-  @JsonProperty("nestedNsInstances")
-  @Valid
-  private List<Link> nestedNsInstances = null;
+	@JsonProperty("nestedNsInstances")
+	@Valid
+	private List<Link> nestedNsInstances = null;
 
-  @JsonProperty("instantiate")
-  private Link instantiate = null;
+	@JsonProperty("instantiate")
+	private Link instantiate = null;
 
-  @JsonProperty("terminate")
-  private Link terminate = null;
+	@JsonProperty("terminate")
+	private Link terminate = null;
 
-  @JsonProperty("update")
-  private Link update = null;
+	@JsonProperty("update")
+	private Link update = null;
 
-  @JsonProperty("scale")
-  private Link scale = null;
+	@JsonProperty("scale")
+	private Link scale = null;
 
-  @JsonProperty("heal")
-  private Link heal = null;
+	@JsonProperty("heal")
+	private Link heal = null;
 
-  public NsInstanceLinks self(Link self) {
-    this.self = self;
-    return this;
-  }
+	public NsInstanceLinks self(final Link self) {
+		this.self = self;
+		return this;
+	}
 
-  /**
-   * Get self
-   * @return self
-  **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
+	/**
+	 * Get self
+	 *
+	 * @return self
+	 **/
+	@ApiModelProperty(required = true, value = "")
+	@NotNull
 
-    @Valid
-    public Link getSelf() {
-    return self;
-  }
+	@Valid
+	public Link getSelf() {
+		return self;
+	}
 
-  public void setSelf(Link self) {
-    this.self = self;
-  }
+	public void setSelf(final Link self) {
+		this.self = self;
+	}
 
-  public NsInstanceLinks nestedNsInstances(List<Link> nestedNsInstances) {
-    this.nestedNsInstances = nestedNsInstances;
-    return this;
-  }
+	public NsInstanceLinks nestedNsInstances(final List<Link> nestedNsInstances) {
+		this.nestedNsInstances = nestedNsInstances;
+		return this;
+	}
 
-  public NsInstanceLinks addNestedNsInstancesItem(Link nestedNsInstancesItem) {
-    if (this.nestedNsInstances == null) {
-      this.nestedNsInstances = new ArrayList<>();
-    }
-    this.nestedNsInstances.add(nestedNsInstancesItem);
-    return this;
-  }
+	public NsInstanceLinks addNestedNsInstancesItem(final Link nestedNsInstancesItem) {
+		if (this.nestedNsInstances == null) {
+			this.nestedNsInstances = new ArrayList<>();
+		}
+		this.nestedNsInstances.add(nestedNsInstancesItem);
+		return this;
+	}
 
-  /**
-   * Links to resources related to this notification. 
-   * @return nestedNsInstances
-  **/
-  @ApiModelProperty(value = "Links to resources related to this notification. ")
-      @Valid
-    public List<Link> getNestedNsInstances() {
-    return nestedNsInstances;
-  }
+	/**
+	 * Links to resources related to this notification.
+	 *
+	 * @return nestedNsInstances
+	 **/
+	@ApiModelProperty(value = "Links to resources related to this notification. ")
+	@Valid
+	public List<Link> getNestedNsInstances() {
+		return nestedNsInstances;
+	}
 
-  public void setNestedNsInstances(List<Link> nestedNsInstances) {
-    this.nestedNsInstances = nestedNsInstances;
-  }
+	public void setNestedNsInstances(final List<Link> nestedNsInstances) {
+		this.nestedNsInstances = nestedNsInstances;
+	}
 
-  public NsInstanceLinks instantiate(Link instantiate) {
-    this.instantiate = instantiate;
-    return this;
-  }
+	public NsInstanceLinks instantiate(final Link instantiate) {
+		this.instantiate = instantiate;
+		return this;
+	}
 
-  /**
-   * Get instantiate
-   * @return instantiate
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public Link getInstantiate() {
-    return instantiate;
-  }
+	/**
+	 * Get instantiate
+	 *
+	 * @return instantiate
+	 **/
+	@ApiModelProperty(value = "")
 
-  public void setInstantiate(Link instantiate) {
-    this.instantiate = instantiate;
-  }
+	@Valid
+	public Link getInstantiate() {
+		return instantiate;
+	}
 
-  public NsInstanceLinks terminate(Link terminate) {
-    this.terminate = terminate;
-    return this;
-  }
+	public void setInstantiate(final Link instantiate) {
+		this.instantiate = instantiate;
+	}
 
-  /**
-   * Get terminate
-   * @return terminate
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public Link getTerminate() {
-    return terminate;
-  }
+	public NsInstanceLinks terminate(final Link terminate) {
+		this.terminate = terminate;
+		return this;
+	}
 
-  public void setTerminate(Link terminate) {
-    this.terminate = terminate;
-  }
+	/**
+	 * Get terminate
+	 *
+	 * @return terminate
+	 **/
+	@ApiModelProperty(value = "")
 
-  public NsInstanceLinks update(Link update) {
-    this.update = update;
-    return this;
-  }
+	@Valid
+	public Link getTerminate() {
+		return terminate;
+	}
 
-  /**
-   * Get update
-   * @return update
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public Link getUpdate() {
-    return update;
-  }
+	public void setTerminate(final Link terminate) {
+		this.terminate = terminate;
+	}
 
-  public void setUpdate(Link update) {
-    this.update = update;
-  }
+	public NsInstanceLinks update(final Link update) {
+		this.update = update;
+		return this;
+	}
 
-  public NsInstanceLinks scale(Link scale) {
-    this.scale = scale;
-    return this;
-  }
+	/**
+	 * Get update
+	 *
+	 * @return update
+	 **/
+	@ApiModelProperty(value = "")
 
-  /**
-   * Get scale
-   * @return scale
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public Link getScale() {
-    return scale;
-  }
+	@Valid
+	public Link getUpdate() {
+		return update;
+	}
 
-  public void setScale(Link scale) {
-    this.scale = scale;
-  }
+	public void setUpdate(final Link update) {
+		this.update = update;
+	}
 
-  public NsInstanceLinks heal(Link heal) {
-    this.heal = heal;
-    return this;
-  }
+	public NsInstanceLinks scale(final Link scale) {
+		this.scale = scale;
+		return this;
+	}
 
-  /**
-   * Get heal
-   * @return heal
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public Link getHeal() {
-    return heal;
-  }
+	/**
+	 * Get scale
+	 *
+	 * @return scale
+	 **/
+	@ApiModelProperty(value = "")
 
-  public void setHeal(Link heal) {
-    this.heal = heal;
-  }
+	@Valid
+	public Link getScale() {
+		return scale;
+	}
 
+	public void setScale(final Link scale) {
+		this.scale = scale;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    NsInstanceLinks nsInstanceLinks = (NsInstanceLinks) o;
-    return Objects.equals(this.self, nsInstanceLinks.self) &&
-        Objects.equals(this.nestedNsInstances, nsInstanceLinks.nestedNsInstances) &&
-        Objects.equals(this.instantiate, nsInstanceLinks.instantiate) &&
-        Objects.equals(this.terminate, nsInstanceLinks.terminate) &&
-        Objects.equals(this.update, nsInstanceLinks.update) &&
-        Objects.equals(this.scale, nsInstanceLinks.scale) &&
-        Objects.equals(this.heal, nsInstanceLinks.heal);
-  }
+	public NsInstanceLinks heal(final Link heal) {
+		this.heal = heal;
+		return this;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(self, nestedNsInstances, instantiate, terminate, update, scale, heal);
-  }
+	/**
+	 * Get heal
+	 *
+	 * @return heal
+	 **/
+	@ApiModelProperty(value = "")
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class NsInstanceLinks {\n");
-    
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    nestedNsInstances: ").append(toIndentedString(nestedNsInstances)).append("\n");
-    sb.append("    instantiate: ").append(toIndentedString(instantiate)).append("\n");
-    sb.append("    terminate: ").append(toIndentedString(terminate)).append("\n");
-    sb.append("    update: ").append(toIndentedString(update)).append("\n");
-    sb.append("    scale: ").append(toIndentedString(scale)).append("\n");
-    sb.append("    heal: ").append(toIndentedString(heal)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Valid
+	public Link getHeal() {
+		return heal;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public void setHeal(final Link heal) {
+		this.heal = heal;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final NsInstanceLinks nsInstanceLinks = (NsInstanceLinks) o;
+		return Objects.equals(this.self, nsInstanceLinks.self) &&
+				Objects.equals(this.nestedNsInstances, nsInstanceLinks.nestedNsInstances) &&
+				Objects.equals(this.instantiate, nsInstanceLinks.instantiate) &&
+				Objects.equals(this.terminate, nsInstanceLinks.terminate) &&
+				Objects.equals(this.update, nsInstanceLinks.update) &&
+				Objects.equals(this.scale, nsInstanceLinks.scale) &&
+				Objects.equals(this.heal, nsInstanceLinks.heal);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(self, nestedNsInstances, instantiate, terminate, update, scale, heal);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class NsInstanceLinks {\n");
+
+		sb.append("    self: ").append(toIndentedString(self)).append("\n");
+		sb.append("    nestedNsInstances: ").append(toIndentedString(nestedNsInstances)).append("\n");
+		sb.append("    instantiate: ").append(toIndentedString(instantiate)).append("\n");
+		sb.append("    terminate: ").append(toIndentedString(terminate)).append("\n");
+		sb.append("    update: ").append(toIndentedString(update)).append("\n");
+		sb.append("    scale: ").append(toIndentedString(scale)).append("\n");
+		sb.append("    heal: ").append(toIndentedString(heal)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

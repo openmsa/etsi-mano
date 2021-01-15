@@ -17,19 +17,40 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Profile;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
+import com.ubiqube.etsi.mano.controller.nspm.NfvoPmController;
+import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsCreatePmJobRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPmJob;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
 
-@Profile({ "!VNFM" })
+import ma.glasnost.orika.MapperFacade;
+
+@RolesAllowed({ "ROLE_OSSBSS" })
 public class PmJobsSol005Api implements PmJobsSol005 {
+	private final NfvoPmController nfvoPmController;
+
+	private final MapperFacade mapper;
+
+	public PmJobsSol005Api(final NfvoPmController _nfvoPmController, final MapperFacade _mapper) {
+		nfvoPmController = _nfvoPmController;
+		mapper = _mapper;
+	}
+
 	/**
 	 * Query PM jobs.
 	 *
@@ -38,8 +59,15 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> pmJobsGet(final String accept, final String contentType, final String filter, final String allFields, final String include, final String exclude, final String excludeDefault) {
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+	public ResponseEntity<String> pmJobsGet(final String filter, final String allFields, final String include, final String exclude, final String excludeDefault) {
+		final List<PmJob> lst = nfvoPmController.query(filter);
+		final List<PmJobsPmJob> list = lst.stream().map(x -> mapper.map(x, PmJobsPmJob.class)).collect(Collectors.toList());
+		final ObjectMapper objectMapper = MapperForView.getMapperForView(exclude, allFields, null, null);
+		try {
+			return new ResponseEntity<>(objectMapper.writeValueAsString(list), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	/**
@@ -47,10 +75,13 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 * This method terminates an individual PM job.
 	 *
+	 * @return
+	 *
 	 */
 	@Override
-	public void pmJobsPmJobIdDelete(final String pmJobId) {
-		// TODO: Implement...
+	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
+		nfvoPmController.deleteById(UUID.fromString(pmJobId));
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
@@ -60,10 +91,11 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPostResponse> pmJobsPmJobIdGet(final String pmJobId, final String accept) {
-		// TODO: Implement...
-
-		return null;
+	public ResponseEntity<PmJobsPostResponse> pmJobsPmJobIdGet(final String pmJobId) {
+		final PmJobsPostResponse response = new PmJobsPostResponse();
+		final PmJob entity = nfvoPmController.getById(UUID.fromString(pmJobId));
+		response.setPmJob(mapper.map(entity, PmJobsPmJob.class));
+		return ResponseEntity.ok(response);
 	}
 
 	/**
@@ -73,10 +105,10 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId, final String accept) {
-		// TODO: Implement...
-
-		return null;
+	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
+		final com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport report = nfvoPmController.getReportById(pmJobId, reportId);
+		final PerformanceReport mapped = mapper.map(report, PerformanceReport.class);
+		return ResponseEntity.ok(mapped);
 	}
 
 	/**
@@ -88,10 +120,13 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPostResponse> pmJobsPost(final CreatePmJobRequest createPmJobRequest, final String accept, final String contentType) {
-		// TODO: Implement...
-
-		return null;
+	public ResponseEntity<PmJobsPostResponse> pmJobsPost(final CreatePmJobRequest createPmJobRequest) {
+		final PmJobsCreatePmJobRequest pmJob = createPmJobRequest.getCreatePmJobRequest();
+		final PmJob req = mapper.map(pmJob, PmJob.class);
+		final PmJob res = nfvoPmController.save(req);
+		final PmJobsPostResponse response = new PmJobsPostResponse();
+		response.setPmJob(mapper.map(res, PmJobsPmJob.class));
+		return ResponseEntity.ok(response);
 	}
 
 }

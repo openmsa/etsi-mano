@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 
@@ -38,6 +37,6 @@ public interface NsBlueprintService {
 	@Nonnull
 	NsBlueprint save(NsBlueprint nsBlueprint);
 
-	List<NsLcmOpOccs> query(String filter);
+	List<NsBlueprint> query(String filter);
 
 }

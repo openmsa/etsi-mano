@@ -16,20 +16,20 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.service.graph.NodeNaming;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
 
 /**
  *
@@ -76,13 +76,24 @@ public class ComputeUow extends VnfAbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		vnfLinkPort.stream()
+	public List<WfDependency> getDependencies() {
+		final List<WfDependency> ret = new ArrayList<>();
+		final List<WfDependency> storages = vnfCompute.getStorages().stream()
+				.map(x -> new WfDependency(Storage.class, x))
+				.collect(Collectors.toList());
+		final List<WfDependency> networks = vnfLinkPort.stream()
+				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
-				.map(x -> cache.get(NodeNaming.subnetwork(x)))
-				.filter(Objects::nonNull)
-				.forEach(x -> g.addEdge(x, this));
-		task.getVnfCompute().getStorages().stream().forEach(x -> g.addEdge(cache.get(NodeNaming.storageName(task.getVnfCompute().getToscaName(), x)), this));
+				.map(x -> new WfDependency(Network.class, x))
+				.collect(Collectors.toList());
+		ret.addAll(networks);
+		ret.addAll(storages);
+		return ret;
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(Compute.class, task.getToscaName(), task.getId()));
 	}
 
 }

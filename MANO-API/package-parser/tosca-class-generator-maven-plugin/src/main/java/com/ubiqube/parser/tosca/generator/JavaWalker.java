@@ -89,16 +89,22 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void onDataTypeExtend(final String derivedFrom) {
-		final JClass superClass = cache.get(derivedFrom);
+		JClass superClass = cache.get(derivedFrom);
+		if (null == superClass) {
+			superClass = codeModel.ref(getClassOf(ClassUtils.toscaToJava(derivedFrom)));
+		}
 		currentClass._extends(superClass);
 	}
 
 	@Override
 	public void startField(final String fieldName, final String type, final boolean multi) {
 		final Class<?> conv = Converters.convert(type);
-		JDefinedClass typ = null;
+		JClass typ = null;
 		if (null == conv) {
 			typ = cache.get(type);
+			if (null == typ) {
+				typ = codeModel.directClass(type);
+			}
 		}
 		LOG.debug("Starting field {} => {} r={}, multi={}", fieldName, type, typ, multi);
 		if (multi) {
@@ -109,7 +115,7 @@ public class JavaWalker extends AbstractWalker {
 		}
 	}
 
-	private void handleSingle(final Class<?> conv, final JDefinedClass typ, final String fieldName) {
+	private void handleSingle(final Class<?> conv, final JClass typ, final String fieldName) {
 		if (null != typ) {
 			currentField = currentClass.field(JMod.PRIVATE, typ, fieldName);
 		} else if (null != conv) {
@@ -120,7 +126,7 @@ public class JavaWalker extends AbstractWalker {
 		}
 	}
 
-	private void handleMulti(final Class<?> conv, final JDefinedClass typ, final String fieldName) {
+	private void handleMulti(final Class<?> conv, final JClass typ, final String fieldName) {
 		final JClass list = codeModel.ref(List.class);
 		if (null != typ) {
 			list.narrow(typ);
@@ -275,6 +281,7 @@ public class JavaWalker extends AbstractWalker {
 			if (null != cached) {
 				return codeModel.ref(List.class).narrow(cached);
 			}
+			return codeModel.ref(List.class).narrow(getClassOf(subType));
 		}
 		if ("map".equals(type)) {
 			final String subType = valueObject.getEntrySchema().getType();
@@ -294,6 +301,27 @@ public class JavaWalker extends AbstractWalker {
 		if (null != conv) {
 			return codeModel.ref(conv);
 		}
-		throw new ParseException("Bad type: " + valueObject.getType());
+		final Class<?> clazz = getExistingClass(valueObject.getType());
+		if (null != clazz) {
+			return codeModel.ref(clazz);
+		}
+		throw new ParseException("Bad tosca type: " + valueObject.getType());
+	}
+
+	private static Class<?> getClassOf(final String subType) {
+		try {
+			return Class.forName(subType);
+		} catch (final ClassNotFoundException e) {
+			throw new ParseException("Unknown subtype: " + subType, e);
+		}
+	}
+
+	private static Class<?> getExistingClass(final String type) {
+		try {
+			return Class.forName(type);
+		} catch (final ClassNotFoundException e) {
+			LOG.trace("", e);
+		}
+		return null;
 	}
 }

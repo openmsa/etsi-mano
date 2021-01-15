@@ -273,8 +273,16 @@ public class ToscaWalker {
 			if (null != dType) {
 				generateClassFromDataType(subType, dType, listener);
 			} else {
+				if (classExistOnClassPath(subType)) {
+					cache.add(subType);
+					return;
+				}
+				final ToscaClass nt = root.getNodeType().get(subType);
+				if (null == nt) {
+					throw new IllegalArgumentException(subType + " is undefnied.");
+				}
 				generateToscaClass(subType,
-						root.getNodeType().get(subType), listener);
+						nt, listener);
 			}
 			return;
 		}
@@ -292,6 +300,16 @@ public class ToscaWalker {
 			}
 			generateClassFromDataType(valueObject.getType(), dType, listener);
 		}
+	}
+
+	private static boolean classExistOnClassPath(final String subType) {
+		try {
+			Class.forName(subType);
+			return true;
+		} catch (final ClassNotFoundException e) {
+			LOG.trace("", e);
+		}
+		return false;
 	}
 
 	private static void generateRequirements(final ToscaListener listener, final RequirementDefinition requirements) {
@@ -321,7 +339,9 @@ public class ToscaWalker {
 		capabilities.forEach((final String x, final CapabilityDefinition y) -> {
 			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 			if (!cache.contains(y.getType())) {
-				generateClass(y.getType(), caps, listener);
+				if (!classExistOnClassPath(y.getType())) {
+					generateClass(y.getType(), caps, listener);
+				}
 			}
 			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
 				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());
@@ -331,6 +351,7 @@ public class ToscaWalker {
 			}
 			final String fieldName = fieldCamelCase(x);
 			LOG.debug("CAPS: Start field {} of type {}", fieldName, y.getType());
+			// XXX: Add occurences.
 			listener.startField(fieldName, y.getType(), false);
 			listener.onFieldJavadoc("Caps.");
 			if (null != y.getDescription()) {
@@ -356,6 +377,9 @@ public class ToscaWalker {
 				final DataType dt = root.getDataTypes().get(derivedFrom);
 				if (null != dt) {
 					generateClassFromDataType(derivedFrom, dt, listener);
+					found = true;
+				}
+				if (!found && classExistOnClassPath(ClassUtils.toscaToJava(derivedFrom))) {
 					found = true;
 				}
 			}
@@ -404,4 +428,5 @@ public class ToscaWalker {
 		}
 		return ret;
 	}
+
 }

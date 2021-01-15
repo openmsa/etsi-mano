@@ -23,6 +23,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URI;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
 
+@RolesAllowed({ "ROLE_VNFM" })
 @Controller
 public class LcmGrantsSol005Api implements LcmGrants {
 	private final GrantManagement grantManagement;

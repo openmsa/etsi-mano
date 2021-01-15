@@ -25,9 +25,14 @@ import com.ubiqube.etsi.mano.grammar.EtsiFilter.SimpleFilterExprContext;
 import com.ubiqube.etsi.mano.grammar.EtsiFilter.ValueContext;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class TreeBuilder extends EtsiFilterBaseListener {
-	private Node currentNode;
-	private final List<Node> listNode = new ArrayList<>();
+	private Node<String> currentNode;
+	private final List<Node<String>> listNode = new ArrayList<>();
 
 	@Override
 	public void exitOp(final OpContext ctx) {
@@ -38,7 +43,7 @@ public class TreeBuilder extends EtsiFilterBaseListener {
 
 	@Override
 	public void enterSimpleFilterExpr(final SimpleFilterExprContext ctx) {
-		currentNode = new Node();
+		currentNode = new Node<>();
 		super.enterSimpleFilterExpr(ctx);
 	}
 
@@ -68,14 +73,14 @@ public class TreeBuilder extends EtsiFilterBaseListener {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("TreeBuilder [\n");
-		for (final Node node : listNode) {
+		for (final Node<String> node : listNode) {
 			sb.append("\t").append(node.toString()).append("\n");
 		}
 		sb.append("]\n");
 		return sb.toString();
 	}
 
-	public List<Node> getListNode() {
+	public List<Node<String>> getListNode() {
 		return listNode;
 	}
 

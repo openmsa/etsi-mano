@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * MSA V2.x configurations.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -27,10 +28,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "mano.msa-api")
 public class ManoMsaProperties {
-
+	/**
+	 * MSA V2 API url.
+	 */
 	private String url;
+	/**
+	 * MSA username.
+	 */
 	private String user;
+	/**
+	 * MSA password.
+	 */
 	private String password;
+	/**
+	 * @deprecated Only V2 is supported.
+	 */
+	@Deprecated
 	private String version;
 
 	public String getUrl() {

@@ -6,6 +6,11 @@
 	<artifactId>mano-pkg-tosca</artifactId>
 	<name>mano-pkg-tosca</name>
 	<description>ETSI MANO Tosca package implementation.</description>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>mano-super-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -23,35 +28,40 @@
 		</repository>
 	</distributionManagement>
 	<dependencies>
-	<dependency>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-model</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-pkg-api</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>tosca-nsd-class</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>tosca-vnfd-class</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>ma.glasnost.orika</groupId>
-		<artifactId>orika-core</artifactId>
-		<version>1.5.4</version>
-	</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mano-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mano-pkg-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>tosca-nsd-class</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>tosca-vnfd-class</artifactId>
+			<version>0.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
 </project>

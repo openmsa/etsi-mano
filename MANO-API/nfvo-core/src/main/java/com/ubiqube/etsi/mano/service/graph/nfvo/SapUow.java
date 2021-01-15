@@ -16,14 +16,15 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsVlNode;
+import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
 
 /**
  *
@@ -58,12 +59,18 @@ public class SapUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
-		final UnitOfWork<NsTask, NsParameters> extVl = cache.get(nsSapd.getNsSap().getExternalVirtualLink());
-		final UnitOfWork<NsTask, NsParameters> intVl = cache.get(nsSapd.getNsSap().getInternalVirtualLink());
-		if ((intVl != null) && (extVl != null)) {
-			g.addEdge(extVl, intVl);
-		}
+	public List<WfDependency> getDependencies() {
+		final WfDependency ext = new WfDependency(NsVlNode.class, nsSapd.getNsSap().getExternalVirtualLink());
+		final WfDependency inte = new WfDependency(NsVlNode.class, nsSapd.getNsSap().getInternalVirtualLink());
+		final List<WfDependency> arr = new ArrayList<>();
+		arr.add(inte);
+		arr.add(ext);
+		return arr;
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(SapNode.class, nsSapd.getToscaName(), nsSapd.getId()));
 	}
 
 }

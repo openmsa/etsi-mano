@@ -16,24 +16,33 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
+import java.util.Arrays;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.v2.MonitoringTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Monitoring;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class MonitoringUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	private final VnfCompute vnfCompute;
 
+	private final MonitoringTask task;
+
 	public MonitoringUow(final MonitoringTask monitoringTask, final VnfCompute _vnfCompute) {
 		super(monitoringTask);
 		vnfCompute = _vnfCompute;
+		task = monitoringTask;
 	}
 
 	@Override
@@ -53,9 +62,13 @@ public class MonitoringUow extends VnfAbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		// TODO Auto-generated method stub
+	public List<WfDependency> getDependencies() {
+		return Arrays.asList(new WfDependency(Compute.class, vnfCompute.getToscaName()));
+	}
 
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(Monitoring.class, task.getToscaName(), task.getId()));
 	}
 
 }

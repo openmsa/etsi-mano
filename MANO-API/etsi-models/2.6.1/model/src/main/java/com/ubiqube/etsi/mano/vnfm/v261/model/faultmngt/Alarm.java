@@ -47,6 +47,10 @@ public class Alarm {
 	@JsonProperty("managedObjectId")
 	private String managedObjectId = null;
 
+	@JsonProperty("vnfcInstanceIds")
+	@Valid
+	private List<String> vnfcInstanceIds = new ArrayList<>();
+
 	@JsonProperty("rootCauseFaultyResource")
 	private FaultyResourceInfo rootCauseFaultyResource = null;
 
@@ -163,6 +167,32 @@ public class Alarm {
 
 	public void setManagedObjectId(final String managedObjectId) {
 		this.managedObjectId = managedObjectId;
+	}
+
+	public Alarm vnfcInstanceIds(final List<String> vnfcInstanceIds) {
+		this.vnfcInstanceIds = vnfcInstanceIds;
+		return this;
+	}
+
+	public Alarm addVnfcInstanceIdsItem(final String vnfcInstanceIdsItem) {
+		this.vnfcInstanceIds.add(vnfcInstanceIdsItem);
+		return this;
+	}
+
+	/**
+	 * Identifiers of the affected VNFC instances.
+	 *
+	 * @return vnfcInstanceIds
+	 **/
+	@ApiModelProperty(required = true, value = "Identifiers of the affected VNFC instances. ")
+	@NotNull
+
+	public List<String> getVnfcInstanceIds() {
+		return vnfcInstanceIds;
+	}
+
+	public void setVnfcInstanceIds(final List<String> vnfcInstanceIds) {
+		this.vnfcInstanceIds = vnfcInstanceIds;
 	}
 
 	public Alarm rootCauseFaultyResource(final FaultyResourceInfo rootCauseFaultyResource) {
@@ -388,15 +418,15 @@ public class Alarm {
 
 	/**
 	 * Attribute indicating if this fault is the root for other correlated alarms.
-	 * If true, then the alarms listed in the attribute CorrelatedAlarmId are caused
+	 * If TRUE, then the alarms listed in the attribute CorrelatedAlarmId are caused
 	 * by this fault.
 	 * 
 	 * @return isRootCause
 	 **/
-	@ApiModelProperty(required = true, value = "Attribute indicating if this fault is the root for other correlated alarms. If true, then the alarms listed in the attribute CorrelatedAlarmId are caused by this fault. ")
+	@ApiModelProperty(required = true, value = "Attribute indicating if this fault is the root for other correlated alarms. If TRUE, then the alarms listed in the attribute CorrelatedAlarmId are caused by this fault. ")
 	@NotNull
 
-	public Boolean isIsRootCause() {
+	public Boolean getIsRootCause() {
 		return isRootCause;
 	}
 
@@ -494,6 +524,7 @@ public class Alarm {
 		final Alarm alarm = (Alarm) o;
 		return Objects.equals(this.id, alarm.id) &&
 				Objects.equals(this.managedObjectId, alarm.managedObjectId) &&
+				Objects.equals(this.vnfcInstanceIds, alarm.vnfcInstanceIds) &&
 				Objects.equals(this.rootCauseFaultyResource, alarm.rootCauseFaultyResource) &&
 				Objects.equals(this.alarmRaisedTime, alarm.alarmRaisedTime) &&
 				Objects.equals(this.alarmChangedTime, alarm.alarmChangedTime) &&
@@ -512,7 +543,7 @@ public class Alarm {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, managedObjectId, rootCauseFaultyResource, alarmRaisedTime, alarmChangedTime, alarmClearedTime, ackState, perceivedSeverity, eventTime, eventType, faultType, probableCause, isRootCause, correlatedAlarmIds, faultDetails, links);
+		return Objects.hash(id, managedObjectId, vnfcInstanceIds, rootCauseFaultyResource, alarmRaisedTime, alarmChangedTime, alarmClearedTime, ackState, perceivedSeverity, eventTime, eventType, faultType, probableCause, isRootCause, correlatedAlarmIds, faultDetails, links);
 	}
 
 	@Override
@@ -522,6 +553,7 @@ public class Alarm {
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    managedObjectId: ").append(toIndentedString(managedObjectId)).append("\n");
+		sb.append("    vnfcInstanceIds: ").append(toIndentedString(vnfcInstanceIds)).append("\n");
 		sb.append("    rootCauseFaultyResource: ").append(toIndentedString(rootCauseFaultyResource)).append("\n");
 		sb.append("    alarmRaisedTime: ").append(toIndentedString(alarmRaisedTime)).append("\n");
 		sb.append("    alarmChangedTime: ").append(toIndentedString(alarmChangedTime)).append("\n");

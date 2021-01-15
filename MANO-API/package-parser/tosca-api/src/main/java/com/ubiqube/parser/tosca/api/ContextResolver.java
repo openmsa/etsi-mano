@@ -35,9 +35,11 @@ import com.ubiqube.parser.tosca.convert.FloatConverter;
 import com.ubiqube.parser.tosca.convert.FrequencyConverter;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.convert.TimeConverter;
+import com.ubiqube.parser.tosca.convert.VersionConverter;
 import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Size;
 import com.ubiqube.parser.tosca.scalar.Time;
+import com.ubiqube.parser.tosca.scalar.Version;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ContextResolver {
@@ -58,6 +60,7 @@ public class ContextResolver {
 		conv.register(Double.class.getCanonicalName(), new FloatConverter());
 		conv.register(Float.class.getCanonicalName(), new FloatConverter());
 		conv.register(Frequency.class.getCanonicalName(), new FrequencyConverter());
+		conv.register(Version.class.getCanonicalName(), new VersionConverter());
 	}
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
@@ -138,7 +141,7 @@ public class ContextResolver {
 	private static Method findReadMethod(final PropertyDescriptor[] propsDescr, final String string) {
 		return Arrays.stream(propsDescr)
 				.filter(x -> x.getName().equals(string))
-				.map(x -> x.getWriteMethod())
+				.map(PropertyDescriptor::getWriteMethod)
 				.findFirst().orElseThrow(() -> new ParseException("Method: " + string + " doesn't have a write method."));
 	}
 
@@ -389,6 +392,12 @@ public class ContextResolver {
 		return readMethod.getReturnType();
 	}
 
+	/**
+	 * XXX This is very limited. If tosca use camel case, it's will fail. Maybe consider reading JSONProperty value.
+	 *
+	 * @param key
+	 * @return
+	 */
 	private static String camelCaseToUnderscore(final String key) {
 		final Matcher m = Pattern.compile("(?<=[a-z0-9])[A-Z]").matcher(key);
 
@@ -427,7 +436,7 @@ public class ContextResolver {
 		try {
 			method.invoke(instance, paramter);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new ParseException(e);
+			throw new ParseException("Could not invoke: " + method + " with parameters of type :" + paramter.getClass(), e);
 		}
 	}
 

@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
@@ -37,15 +38,23 @@ import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
+import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
+import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
 
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.converter.ConverterFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
 @Component
@@ -65,11 +74,42 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("nsdInfoId", "nsdInfo.id")
 				.byDefault()
 				.register();
+		/*
+		 * Subscription.
+		 */
 		orikaMapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
 				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
 				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(PkgmSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(NsdmSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(NsdmSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+
+		orikaMapperFactory.classMap(LccnSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(LccnSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
 				.byDefault()
 				.register();
 
@@ -133,5 +173,9 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfVirtualLinkDescId", "toscaName")
 				.byDefault()
 				.register();
+		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
+		converterFactory.registerConverter(new UuidConverter());
+		converterFactory.registerConverter(new OffsetDateTimeToDateConverter());
+		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
 	}
 }

@@ -17,7 +17,8 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
-import org.springframework.context.annotation.Profile;
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ import io.swagger.annotations.Api;
  * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 @RequestMapping("/sol005/nspm/v1")
 @Api(value = "/")

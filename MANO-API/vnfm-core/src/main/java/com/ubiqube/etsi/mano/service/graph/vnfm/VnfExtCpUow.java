@@ -16,14 +16,14 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
+import java.util.Arrays;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
@@ -58,10 +58,12 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		final UnitOfWork<VnfTask, VnfParameters> internal = cache.get("sub_" + extCp.getInternalVirtualLink());
-		if (null != internal) {
-			g.addEdge(internal, this);
-		}
+	public List<WfDependency> getDependencies() {
+		return Arrays.asList(new WfDependency(Network.class, extCp.getInternalVirtualLink()));
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(com.ubiqube.etsi.mano.service.vim.node.vnfm.VnfExtCp.class, task.getToscaName(), task.getId()));
 	}
 }

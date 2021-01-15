@@ -17,27 +17,48 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
-import java.util.ArrayList;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.SubscriptionsPostResponse;
+import com.ubiqube.etsi.mano.service.SubscriptionService;
 
-@Profile({ "!VNFM" })
+import ma.glasnost.orika.MapperFacade;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsdSubscriptionsSol005Api.class);
 
-	public NsdSubscriptionsSol005Api() {
+	private final SubscriptionService subscriptionService;
+
+	private final MapperFacade mapper;
+
+	public NsdSubscriptionsSol005Api(final SubscriptionService _subscriptionService, final MapperFacade _mapper) {
+		subscriptionService = _subscriptionService;
+		mapper = _mapper;
 		LOG.info("Starting NSD Subscription SOL005 Controller.");
 	}
 
@@ -53,9 +74,12 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<Object>> subscriptionsGet(final String accept, final String filter) {
-		// : Implement...
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_IMPLEMENTED);
+	public ResponseEntity<List<NsdmSubscription>> subscriptionsGet(final String accept, final String filter) {
+		final List<Subscription> subs = subscriptionService.query(filter, SubscriptionType.NSD);
+		final List<NsdmSubscription> pkgms = mapper.mapAsList(subs, NsdmSubscription.class);
+		pkgms.stream()
+				.forEach(x -> x.setLinks(createSubscriptionsLinks(x.getId())));
+		return ResponseEntity.ok(pkgms);
 	}
 
 	/**
@@ -80,8 +104,11 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 */
 	@Override
 	public ResponseEntity<NsdmSubscription> subscriptionsPost(final String accept, final String contentType, final NsdmSubscriptionRequest body) {
-		// : Implement...
-		return null;
+		final Subscription subs = mapper.map(body, Subscription.class);
+		final Subscription res = subscriptionService.save(subs, SubscriptionType.NSD);
+		final NsdmSubscription pkgm = mapper.map(res, NsdmSubscription.class);
+		pkgm.setLinks(createSubscriptionsLinks(pkgm.getId()));
+		return ResponseEntity.ok(pkgm);
 	}
 
 	/**
@@ -96,7 +123,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 */
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		// : Implement...
+		subscriptionService.delete(UUID.fromString(subscriptionId), SubscriptionType.NSD);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -112,9 +139,19 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<SubscriptionsPostResponse> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
-		// : Implement...
-		return null;
+	public ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
+		final Subscription res = subscriptionService.findById(UUID.fromString(subscriptionId), SubscriptionType.NSD);
+		final NsdmSubscription pkgm = mapper.map(res, NsdmSubscription.class);
+		pkgm.setLinks(createSubscriptionsLinks(pkgm.getId()));
+		return ResponseEntity.ok(pkgm);
+	}
+
+	private static NsdmSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
+		final NsdmSubscriptionLinks nsdmSubscriptionLinks = new NsdmSubscriptionLinks();
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(NsdSubscriptionsSol005.class).subscriptionsSubscriptionIdGet(id, null)).withSelfRel().getHref());
+		nsdmSubscriptionLinks.setSelf(self);
+		return nsdmSubscriptionLinks;
 	}
 
 }

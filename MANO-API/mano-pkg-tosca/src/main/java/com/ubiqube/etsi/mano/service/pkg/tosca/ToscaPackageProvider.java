@@ -228,7 +228,7 @@ public class ToscaPackageProvider implements PackageProvider {
 
 	@Override
 	public ProviderData getProviderPadata() {
-		final List<VNF> vnfs = toscaApi.getObjects(root, new HashMap<String, String>(), VNF.class);
+		final List<VNF> vnfs = toscaApi.getObjects(root, new HashMap<>(), VNF.class);
 		if (vnfs.isEmpty()) {
 			LOG.warn("No VNF node found in the package.");
 			return new ProviderData();

@@ -16,13 +16,12 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
-import org.jgrapht.ListenableGraph;
-
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.Start;
 
 public class NsStartUow extends AbstractNsUnitOfWork {
 	/** Serial. */
@@ -43,13 +42,18 @@ public class NsStartUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> g, final Map<String, UnitOfWork<NsTask, NsParameters>> cache) {
-		// Nothing.
+	protected String getPrefix() {
+		return "start";
 	}
 
 	@Override
-	protected String getPrefix() {
-		return "start";
+	public List<WfDependency> getDependencies() {
+		return null;
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(Start.class, "start", null));
 	}
 
 }

@@ -17,14 +17,20 @@
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
 import java.io.Serializable;
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ * @param <P>
+ */
 public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializable {
 
 	String exec(P params);
@@ -33,5 +39,7 @@ public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializa
 
 	String rollback(P params);
 
-	void connect(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, Map<String, UnitOfWork<U, P>> cache);
+	List<WfDependency> getDependencies();
+
+	List<WfProduce> getProduce();
 }

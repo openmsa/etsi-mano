@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.repository.jpa;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
@@ -57,8 +56,7 @@ public abstract class AbstractJpaOnly<U> implements CrudRepositoryNg<U> {
 	@Override
 	public @NotNull List<U> query(final String filter) {
 		final SearchQueryer sq = new SearchQueryer(em);
-		return (List<U>) sq.getCriteria(filter, getFrontClass())
-				.getResultStream().collect(Collectors.toList());
+		return sq.getCriteria(filter, getFrontClass());
 	}
 
 }

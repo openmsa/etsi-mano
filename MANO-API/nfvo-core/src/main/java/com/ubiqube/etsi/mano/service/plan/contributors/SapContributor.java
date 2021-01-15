@@ -86,8 +86,7 @@ public class SapContributor extends AbstractNsContributor {
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		// TODO Auto-generated method stub
-
+		// Nothing.
 	}
 
 }

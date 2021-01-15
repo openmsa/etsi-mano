@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 
@@ -43,22 +44,21 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	}
 
 	@Override
-	public List<Subscription> subscriptionsGet(final String filter) {
-		return subscriptionService.query(filter);
-
+	public List<Subscription> subscriptionsGet(final String filter, final SubscriptionType type) {
+		return subscriptionService.query(filter, type);
 	}
 
 	@Override
 	public Subscription subscriptionsPost(@Nonnull final Subscription subscription, final ApiTypesEnum api) {
 		subscription.setApi(api);
-		return subscriptionService.save(subscription);
+		return subscriptionService.save(subscription, SubscriptionType.VNF);
 	}
 
 	@Override
 	public void vnfPackageChangeNotificationPost(@Nonnull final VnfPackageChangeNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 
-		final Subscription subscriptionsRepository = subscriptionService.findById(subscriptionId);
+		final Subscription subscriptionsRepository = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
 		final AuthentificationInformations auth = subscriptionsRepository.getAuthentificationInformations();
 		final String callbackUri = subscriptionsRepository.getCallbackUri();
 		// There is a version, problem.
@@ -68,7 +68,7 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
-		final Subscription subscription = subscriptionService.findById(subscriptionId);
+		final Subscription subscription = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
 		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
 		final String cbUrl = subscription.getCallbackUri();
 		// Version problem.
@@ -76,15 +76,15 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	}
 
 	@Override
-	public void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId) {
+	public void subscriptionsSubscriptionIdDelete(final String _subscriptionId, final SubscriptionType type) {
 		final UUID subscriptionId = UUID.fromString(_subscriptionId);
-		subscriptionService.findById(subscriptionId);
-		subscriptionService.delete(subscriptionId);
+		subscriptionService.findById(subscriptionId, type);
+		subscriptionService.delete(subscriptionId, type);
 	}
 
 	@Override
-	public Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId) {
-		return subscriptionService.findById(_subscriptionId);
+	public Subscription subscriptionsSubscriptionIdGet(final UUID _subscriptionId, final SubscriptionType type) {
+		return subscriptionService.findById(_subscriptionId, type);
 	}
 
 }

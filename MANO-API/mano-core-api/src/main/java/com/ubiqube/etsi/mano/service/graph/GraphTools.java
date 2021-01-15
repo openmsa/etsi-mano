@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.graph.DefaultListenableGraph;
 import org.jgrapht.graph.DirectedAcyclicGraph;
@@ -75,7 +76,7 @@ public class GraphTools {
 	}
 
 	public static <U extends UnitOfWorkBase> void exportGraph(final ListenableGraph g, final String fileName) {
-		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_'));
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getName().replace('-', '_') + "_" + RandomStringUtils.random(5, true, true));
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {

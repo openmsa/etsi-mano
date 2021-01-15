@@ -16,123 +16,128 @@
  */
 package com.ubiqube.etsi.mano.model.v271.sol003.perfo;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.model.v271.sol003.perfo.Link;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Links for this resource. 
+ * Links for this resource.
  */
 @ApiModel(description = "Links for this resource. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:40:34.645+01:00")
 
-public class PmJobLinks   {
-  @JsonProperty("self")
-  private Link self = null;
+public class PmJobLinks {
+	@JsonProperty("self")
+	private Link self = null;
 
-  @JsonProperty("objects")
-  @Valid
-  private List<Link> objects = null;
+	@JsonProperty("objects")
+	@Valid
+	private List<Link> objects = null;
 
-  public PmJobLinks self(Link self) {
-    this.self = self;
-    return this;
-  }
+	public PmJobLinks self(final Link self) {
+		this.self = self;
+		return this;
+	}
 
-  /**
-   * URI of this resource. 
-   * @return self
-  **/
-  @ApiModelProperty(required = true, value = "URI of this resource. ")
-  @NotNull
+	/**
+	 * URI of this resource.
+	 *
+	 * @return self
+	 **/
+	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@NotNull
 
-  @Valid
+	@Valid
 
-  public Link getSelf() {
-    return self;
-  }
+	public Link getSelf() {
+		return self;
+	}
 
-  public void setSelf(Link self) {
-    this.self = self;
-  }
+	public void setSelf(final Link self) {
+		this.self = self;
+	}
 
-  public PmJobLinks objects(List<Link> objects) {
-    this.objects = objects;
-    return this;
-  }
+	public PmJobLinks objects(final List<Link> objects) {
+		this.objects = objects;
+		return this;
+	}
 
-  public PmJobLinks addObjectsItem(Link objectsItem) {
-    if (this.objects == null) {
-      this.objects = new ArrayList<>();
-    }
-    this.objects.add(objectsItem);
-    return this;
-  }
+	public PmJobLinks addObjectsItem(final Link objectsItem) {
+		if (this.objects == null) {
+			this.objects = new ArrayList<>();
+		}
+		this.objects.add(objectsItem);
+		return this;
+	}
 
-  /**
-   * Links to resources representing the measure object instances for which performance information is collected. Shall be present if the measured object instance information is accessible as a resource. 
-   * @return objects
-  **/
-  @ApiModelProperty(value = "Links to resources representing the measure object instances for which performance information is collected. Shall be present if the measured object instance information is accessible as a resource. ")
+	/**
+	 * Links to resources representing the measure object instances for which
+	 * performance information is collected. Shall be present if the measured object
+	 * instance information is accessible as a resource.
+	 *
+	 * @return objects
+	 **/
+	@ApiModelProperty(value = "Links to resources representing the measure object instances for which performance information is collected. Shall be present if the measured object instance information is accessible as a resource. ")
 
-  @Valid
+	@Valid
 
-  public List<Link> getObjects() {
-    return objects;
-  }
+	public List<Link> getObjects() {
+		return objects;
+	}
 
-  public void setObjects(List<Link> objects) {
-    this.objects = objects;
-  }
+	public void setObjects(final List<Link> objects) {
+		this.objects = objects;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final PmJobLinks pmJobLinks = (PmJobLinks) o;
+		return Objects.equals(this.self, pmJobLinks.self) &&
+				Objects.equals(this.objects, pmJobLinks.objects);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    PmJobLinks pmJobLinks = (PmJobLinks) o;
-    return Objects.equals(this.self, pmJobLinks.self) &&
-        Objects.equals(this.objects, pmJobLinks.objects);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(self, objects);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(self, objects);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class PmJobLinks {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class PmJobLinks {\n");
-    
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    objects: ").append(toIndentedString(objects)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    self: ").append(toIndentedString(self)).append("\n");
+		sb.append("    objects: ").append(toIndentedString(objects)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

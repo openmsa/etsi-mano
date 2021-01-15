@@ -21,6 +21,8 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 @Embeddable
@@ -28,6 +30,7 @@ public class AdditionalArtifact implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	@FullTextField
 	private String artifactPath;
 
 	@Embedded

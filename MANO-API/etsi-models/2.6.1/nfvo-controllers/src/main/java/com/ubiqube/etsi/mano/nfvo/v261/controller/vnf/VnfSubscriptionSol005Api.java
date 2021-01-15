@@ -20,9 +20,10 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,11 +37,12 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotificat
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
@@ -63,7 +65,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) final String filters) {
-		final List<Subscription> list = vnfSubscriptionManagement.subscriptionsGet(filters);
+		final List<Subscription> list = vnfSubscriptionManagement.subscriptionsGet(filters, SubscriptionType.VNF);
 		final List<PkgmSubscription> pkgms = mapper.mapAsList(list, PkgmSubscription.class);
 		pkgms.stream().forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
 		return ResponseEntity.ok(pkgms);
@@ -82,13 +84,13 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId);
+		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId, SubscriptionType.NSDVNF);
 		return ResponseEntity.noContent().build();
 	}
 
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final Subscription subscription = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId));
+		final Subscription subscription = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId), SubscriptionType.NSDVNF);
 		final PkgmSubscription pkgmSubscription = mapper.map(subscription, PkgmSubscription.class);
 		pkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscriptionId));
 		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);

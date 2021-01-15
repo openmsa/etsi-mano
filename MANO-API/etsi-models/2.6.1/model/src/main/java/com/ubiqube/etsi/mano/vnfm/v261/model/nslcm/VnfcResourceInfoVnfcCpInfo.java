@@ -31,8 +31,13 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CpProtocolInfo;
@@ -42,7 +47,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * VnfcResourceInfoVnfcCpInfo
  */
-
+@Validated
 public class VnfcResourceInfoVnfcCpInfo {
 	@JsonProperty("id")
 	private String id = null;
@@ -54,10 +59,14 @@ public class VnfcResourceInfoVnfcCpInfo {
 	private String vnfExtCpId = null;
 
 	@JsonProperty("cpProtocolInfo")
+	@Valid
 	private List<CpProtocolInfo> cpProtocolInfo = null;
 
 	@JsonProperty("vnfLinkPortId")
 	private String vnfLinkPortId = null;
+
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
 	public VnfcResourceInfoVnfcCpInfo id(final String id) {
 		this.id = id;
@@ -69,7 +78,6 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return id
 	 **/
-	@JsonProperty("id")
 	@ApiModelProperty(required = true, value = "Identifier of this VNFC CP instance and the associated array entry. ")
 	@NotNull
 	public String getId() {
@@ -90,7 +98,6 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return cpdId
 	 **/
-	@JsonProperty("cpdId")
 	@ApiModelProperty(required = true, value = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
 	@NotNull
 	public String getCpdId() {
@@ -112,7 +119,6 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return vnfExtCpId
 	 **/
-	@JsonProperty("vnfExtCpId")
 	@ApiModelProperty(value = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
 	public String getVnfExtCpId() {
 		return vnfExtCpId;
@@ -140,8 +146,8 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return cpProtocolInfo
 	 **/
-	@JsonProperty("cpProtocolInfo")
 	@ApiModelProperty(value = "Network protocol information for this CP. ")
+	@Valid
 	public List<CpProtocolInfo> getCpProtocolInfo() {
 		return cpProtocolInfo;
 	}
@@ -156,20 +162,64 @@ public class VnfcResourceInfoVnfcCpInfo {
 	}
 
 	/**
-	 * Identifier of the \&quot;vnfLinkPorts\&quot; structure in the
-	 * \&quot;vnfVirtualLinkResourceInfo\&quot; structure. Shall be present if the
-	 * CP is associated to a link port.
+	 * Identifier of the \"vnfLinkPorts\" structure in the
+	 * \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is
+	 * associated to a link port.
 	 *
 	 * @return vnfLinkPortId
 	 **/
-	@JsonProperty("vnfLinkPortId")
-	@ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"vnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
+	@ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
+
 	public String getVnfLinkPortId() {
 		return vnfLinkPortId;
 	}
 
 	public void setVnfLinkPortId(final String vnfLinkPortId) {
 		this.vnfLinkPortId = vnfLinkPortId;
+	}
+
+	public VnfcResourceInfoVnfcCpInfo metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
+
+	/**
+	 * Metadata about this CP.
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "Metadata about this CP. ")
+
+	@Valid
+
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final VnfcResourceInfoVnfcCpInfo vnfcResourceInfoVnfcCpInfo = (VnfcResourceInfoVnfcCpInfo) o;
+		return Objects.equals(this.id, vnfcResourceInfoVnfcCpInfo.id) &&
+				Objects.equals(this.cpdId, vnfcResourceInfoVnfcCpInfo.cpdId) &&
+				Objects.equals(this.vnfExtCpId, vnfcResourceInfoVnfcCpInfo.vnfExtCpId) &&
+				Objects.equals(this.cpProtocolInfo, vnfcResourceInfoVnfcCpInfo.cpProtocolInfo) &&
+				Objects.equals(this.vnfLinkPortId, vnfcResourceInfoVnfcCpInfo.vnfLinkPortId) &&
+				Objects.equals(this.metadata, vnfcResourceInfoVnfcCpInfo.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, cpdId, vnfExtCpId, cpProtocolInfo, vnfLinkPortId, metadata);
 	}
 
 	@Override

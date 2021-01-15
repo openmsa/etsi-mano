@@ -39,11 +39,12 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 @Entity
 @Indexed
@@ -54,74 +55,82 @@ public class VnfPackage implements BaseEntity, Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@DocumentId
 	private UUID id;
 
 	private String defaultInstantiationLevel;
 
-	@Field
+	@FullTextField
 	private String vnfdId;
 
-	@Field
+	@FullTextField
 	private String vnfProvider;
 
-	@Field
+	@FullTextField
 	private String vnfProductName;
 
-	@Field
+	@FullTextField
 	private String vnfSoftwareVersion;
 
-	@Field
+	@FullTextField
 	private String vnfdVersion;
 
+	@FullTextField
 	private String flavorId;
 
+	@FullTextField
 	private String descriptorId;
 
+	@FullTextField
 	private String descriptorVersion;
 
 	@Embedded
+	@IndexedEmbedded
 	private PkgChecksum checksum;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@IndexedEmbedded
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)
-	@Field
-	@FieldBridge(impl = EnumFieldBridge.class)
+	@FullTextField
 	private OnboardingStateType onboardingState;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private PackageOperationalState operationalState;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private PackageUsageState usageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private Map<String, String> userDefinedData;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	private Set<VnfCompute> vnfCompute = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfStorage> vnfStorage = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@IndexedEmbedded
 	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
+	@IndexedEmbedded
 	private Set<VnfExtCp> vnfExtCp = new LinkedHashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -131,6 +140,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 	private Audit audit;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@IndexedEmbedded
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
 	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")

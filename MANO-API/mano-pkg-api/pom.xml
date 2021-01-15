@@ -23,11 +23,11 @@
 		</repository>
 	</distributionManagement>
 	<dependencies>
-	<dependency>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-model</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mano-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>com.ubiqube.mano</groupId>

@@ -17,39 +17,65 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
-import java.util.Optional;
+import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
+import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 
-
+import ma.glasnost.orika.MapperFacade;
 
 @RestController
+@RolesAllowed({ "ROLE_EM" })
 @RequestMapping("/sol003/vnfpm/v1")
 public class PmJobsSol003Api implements PmJobsSol003 {
 
-	private final ObjectMapper objectMapper;
+	private final MapperFacade mapper;
 
-	private final HttpServletRequest request;
+	private final VnfmPmController vnfmPmController;
 
-	@org.springframework.beans.factory.annotation.Autowired
-	public PmJobsSol003Api(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public PmJobsSol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper) {
+		vnfmPmController = _vnfmPmController;
+		mapper = _mapper;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<String> pmJobsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
+		vnfmPmController.delete(UUID.fromString(pmJobId));
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobIdn) {
+		final com.ubiqube.etsi.mano.dao.mano.pm.PmJob pmJob = vnfmPmController.findById(UUID.fromString(pmJobIdn));
+		return ResponseEntity.ok(mapper.map(pmJob, PmJob.class));
+	}
+
+	@Override
+	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
+		final com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport pm = vnfmPmController.findReport(UUID.fromString(pmJobId), UUID.fromString(reportId));
+		return ResponseEntity.ok(mapper.map(pm, PerformanceReport.class));
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) {
+		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
+		res = vnfmPmController.save(res);
+		return ResponseEntity.ok(mapper.map(res, PmJob.class));
 	}
 
 }

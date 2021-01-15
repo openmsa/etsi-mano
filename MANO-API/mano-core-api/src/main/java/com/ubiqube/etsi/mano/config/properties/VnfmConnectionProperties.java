@@ -27,9 +27,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "mano.nfvo.vnfm")
 public class VnfmConnectionProperties {
+	/**
+	 * Vnfm URL.
+	 */
 	private String url;
+	/**
+	 * VNFM User name.
+	 */
 	private String username;
+	/**
+	 * VNFM password.
+	 */
 	private String password;
+	/**
+	 * VNFM version.
+	 */
 	private String version;
 
 	public String getUrl() {

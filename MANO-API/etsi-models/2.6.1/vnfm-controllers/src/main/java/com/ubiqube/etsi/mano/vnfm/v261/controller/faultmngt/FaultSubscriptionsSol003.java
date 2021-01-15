@@ -22,24 +22,15 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
@@ -50,24 +41,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
 @Api(value = "subscriptions", description = "the subscriptions API")
+@RequestMapping("/sol003/vnffm/v1/subscriptions")
 public interface FaultSubscriptionsSol003 {
-
-	Logger log = LoggerFactory.getLogger(FaultSubscriptionsSol003.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "Query Subscription Information  The client can use this method to retrieve the list of active subscriptions for VNF alarms subscribed by the client. It can be used e.g. for resynchronization after error situations. ", response = FmSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -83,24 +59,8 @@ public interface FaultSubscriptionsSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/subscriptions", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<FmSubscription> subscriptionsGet(@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  All attribute names that appear in the FmSubscription and in  data types referenced from it shall be supported by the VNFM  in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter, @ApiParam(value = "Marker to obtain the next page of a paged response. Shall be  supported by the VNFM if the VNFM supports alternative 2 (paging)  according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"filter\" : {    \"perceivedSeverities\" : [ { }, { } ],    \"faultyResourceTypes\" : [ { }, { } ],    \"probableCauses\" : [ \"probableCauses\", \"probableCauses\" ],    \"vnfInstanceSubscriptionFilter\" : {      \"vnfdIds\" : [ null, null ],      \"vnfProductsFromProviders\" : [ {        \"vnfProducts\" : [ {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        }, {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        } ],        \"vnfProvider\" : \"vnfProvider\"      }, {        \"vnfProducts\" : [ {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        }, {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        } ],        \"vnfProvider\" : \"vnfProvider\"      } ],      \"vnfInstanceNames\" : [ \"vnfInstanceNames\", \"vnfInstanceNames\" ],      \"vnfInstanceIds\" : [ null, null ]    },    \"notificationTypes\" : [ \"AlarmNotification\", \"AlarmNotification\" ],    \"eventTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : { }    }  },  \"callbackUri\" : { },  \"id\" : { }}",
-							FmSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<FmSubscription> subscriptionsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  All attribute names that appear in the FmSubscription and in  data types referenced from it shall be supported by the VNFM  in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be  supported by the VNFM if the VNFM supports alternative 2 (paging)  according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "", nickname = "subscriptionsPost", notes = "Subscribe. The POST method creates a new subscription. This method shall follow the provisions specified in the tables 7.4.4.3.1-1 and 7.4.4.3.1-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, a new \"Individual subscription\" resource as defined in clause 7.4.5 shall have been created. This method shall not trigger any notification. Creation of two \"Individual subscription\" resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the NFVO, and might make sense only in very rare use cases. Consequently, the VNFM may either allow creating a new \"Individual subscription\" resource if another \"Individual subscription\" resource with the same filter and callbackUri already exists (in which case it shall return the \"201 Created\" response code), or may decide to not create a duplicate \"Individual subscription\" resource (in which case it shall return a \"303 See Other\" response code referencing the existing \"Individual subscription\" resource with the same filter and callbackUri). ", response = FmSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -117,23 +77,8 @@ public interface FaultSubscriptionsSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/subscriptions", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<FmSubscription> subscriptionsPost(@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final FmSubscriptionRequest fmSubscriptionRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"filter\" : {    \"perceivedSeverities\" : [ { }, { } ],    \"faultyResourceTypes\" : [ { }, { } ],    \"probableCauses\" : [ \"probableCauses\", \"probableCauses\" ],    \"vnfInstanceSubscriptionFilter\" : {      \"vnfdIds\" : [ null, null ],      \"vnfProductsFromProviders\" : [ {        \"vnfProducts\" : [ {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        }, {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        } ],        \"vnfProvider\" : \"vnfProvider\"      }, {        \"vnfProducts\" : [ {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        }, {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        } ],        \"vnfProvider\" : \"vnfProvider\"      } ],      \"vnfInstanceNames\" : [ \"vnfInstanceNames\", \"vnfInstanceNames\" ],      \"vnfInstanceIds\" : [ null, null ]    },    \"notificationTypes\" : [ \"AlarmNotification\", \"AlarmNotification\" ],    \"eventTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : { }    }  },  \"callbackUri\" : { },  \"id\" : { }}",
-							FmSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<FmSubscription> subscriptionsPost(
+			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final FmSubscriptionRequest fmSubscriptionRequest);
 
 	@ApiOperation(value = "", nickname = "subscriptionsSubscriptionIdDelete", notes = "Terminate Subscription. This method terminates an individual subscription. This method shall follow the provisions specified in the tables 7.4.5.3.5-1 and 7.4.5.3.5-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, the \"Individual subscription\" resource shall not exist any longer. This means that no notifications for that subscription shall be sent to the formerly-subscribed API consumer.    NOTE: Due to race conditions, some notifications might still be received by the formerly-subscribed         API consumer for a certain time period after the deletion. ", tags = {})
 	@ApiResponses(value = {
@@ -148,14 +93,8 @@ public interface FaultSubscriptionsSol003 {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/subscriptions/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual subscription\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@RequestMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
+	ResponseEntity<Void> subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual subscription\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId);
 
 	@ApiOperation(value = "", nickname = "subscriptionsSubscriptionIdGet", notes = "Query Subscription Information. The client can use this method for reading an individual subscription for VNF alarms subscribed by the client. This method shall follow the provisions specified in the tables 7.4.5.3.2-1 and 7.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = FmSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -170,24 +109,7 @@ public interface FaultSubscriptionsSol003 {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/subscriptions/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual subscription\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version,
-			@ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"filter\" : {    \"perceivedSeverities\" : [ { }, { } ],    \"faultyResourceTypes\" : [ { }, { } ],    \"probableCauses\" : [ \"probableCauses\", \"probableCauses\" ],    \"vnfInstanceSubscriptionFilter\" : {      \"vnfdIds\" : [ null, null ],      \"vnfProductsFromProviders\" : [ {        \"vnfProducts\" : [ {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        }, {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        } ],        \"vnfProvider\" : \"vnfProvider\"      }, {        \"vnfProducts\" : [ {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        }, {          \"vnfProductName\" : \"vnfProductName\",          \"versions\" : [ {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          }, {            \"vnfSoftwareVersion\" : { },            \"vnfdVersions\" : [ null, null ]          } ]        } ],        \"vnfProvider\" : \"vnfProvider\"      } ],      \"vnfInstanceNames\" : [ \"vnfInstanceNames\", \"vnfInstanceNames\" ],      \"vnfInstanceIds\" : [ null, null ]    },    \"notificationTypes\" : [ \"AlarmNotification\", \"AlarmNotification\" ],    \"eventTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : { }    }  },  \"callbackUri\" : { },  \"id\" : { }}",
-							FmSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@RequestMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual subscription\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId);
 
 }

@@ -92,6 +92,7 @@ public class VnfManagement implements VnfPackageManagement {
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath, final String rangeHeader) {
+		vnfPackageRepository.get(vnfPkgId);
 		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
 
 		final InputStream bis = new ByteArrayInputStream(content);
@@ -128,13 +129,19 @@ public class VnfManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID _vnfPkgId, final String _range) {
+		vnfPackageRepository.get(_vnfPkgId);
 		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
 		return SpringUtil.handleBytes(bytes, _range);
 	}
 
 	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String _range) throws IOException {
 		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		return SpringUtil.handleBytes(zcontent, _range);
+		try {
+			return SpringUtil.handleBytes(zcontent, _range);
+		} catch (final IllegalArgumentException e) {
+			LOG.trace("", e);
+			return ResponseEntity.status(416).build();
+		}
 	}
 
 	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {

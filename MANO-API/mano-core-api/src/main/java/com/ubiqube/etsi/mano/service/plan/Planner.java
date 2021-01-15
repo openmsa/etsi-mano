@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.service.plan;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,8 +29,8 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
@@ -89,17 +88,9 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
 		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
-		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = GraphTools.createGraph();
-		list.forEach(g::addVertex);
-		final Map<String, UnitOfWork<U, PA>> cache = list.stream()
-				.collect(
-						Collectors.toMap(
-								x -> x.getTaskEntity().getAlias(), x -> x,
-								(x, y) -> {
-									LOG.warn("Duplicate key: {}", x.getName());
-									return x;
-								}));
-		list.forEach(x -> x.connect(g, cache));
+		final WfConfiguration wfConfiguration = new WfConfiguration((List<PlanContributor>) ((Object) planContributors));
+		wfConfiguration.getConfigurationGraph();
+		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = wfConfiguration.autoConnect(list);
 		// Add start
 		final UnitOfWork<U, PA> root = getStartNode();
 		g.addVertex(root);

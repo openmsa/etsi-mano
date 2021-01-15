@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletionService;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.codehaus.groovy.control.CompilationFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.config.properties.ManoElectionProperties;
@@ -42,10 +45,12 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
-import jline.internal.Log;
 
 @Service
 public class GroovyElection implements VimElection {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(GroovyElection.class);
+
 	private final VimManager vimManager;
 	private final ManoElectionProperties properties;
 
@@ -65,16 +70,22 @@ public class GroovyElection implements VimElection {
 			completionService.submit(() -> executueScripts(list, vimConnectionInformation));
 		}
 		int received = 0;
+		final List<VimConnectionInformation> vims = new ArrayList<>();
 		while (received < scripts.size()) {
 			try {
 				final Future<VoteStatus> resultFuture = completionService.take();
 				final VoteStatus result = resultFuture.get();
+				if (result == VoteStatus.DENIED) {
+					return null;
+				}
 				received++;
 			} catch (final Exception e) {
-				Log.error("", e);
-				received++;
+				LOG.error("", e);
+				executor.shutdownNow();
+				return null;
 			}
 		}
+		executor.shutdown();
 		return null;
 	}
 

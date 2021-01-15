@@ -36,8 +36,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a subscription request related to VNF indicator value change notifications. ")
 @Validated
-
-
 public class VnfIndicatorSubscriptionRequest {
 	@JsonProperty("filter")
 	private VnfIndicatorNotificationsFilter filter = null;

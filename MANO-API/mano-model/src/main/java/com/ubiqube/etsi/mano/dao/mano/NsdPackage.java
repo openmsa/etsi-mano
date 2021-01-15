@@ -34,15 +34,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
@@ -57,19 +60,19 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Embedded
 	private Audit audit;
 
-	@Field
+	@FullTextField
 	private String nsdId;
 
-	@Field
+	@FullTextField
 	private String nsdName;
 
-	@Field
+	@FullTextField
 	private String nsdVersion;
 
-	@Field
+	@FullTextField
 	private String nsdDesigner;
 
-	@Field
+	@FullTextField
 	private String nsdInvariantId;
 
 	private String instantiationLevel;
@@ -91,8 +94,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private Set<NsdPackageNsdPackage> nestedNsdInfoIds;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private OnboardingStateType nsdOnboardingState;
 
 	@IndexedEmbedded
@@ -100,13 +102,11 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private FailureDetails onboardingFailureDetails;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private PackageOperationalState nsdOperationalState;
 
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private PackageUsageState nsdUsageState;
 
 	@ElementCollection(fetch = FetchType.EAGER)

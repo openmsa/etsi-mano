@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
@@ -44,7 +43,7 @@ import com.ubiqube.etsi.mano.service.NsBlueprintService;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Profile({ "!VNFM" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
@@ -68,7 +67,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final String filter, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<NsLcmOpOccs> result = nsLcmOpOccsService.query(filter);
+		final List<NsBlueprint> result = nsLcmOpOccsService.query(filter);
 		final List<NsLcmOpOcc> list = result.stream()
 				.map(x -> {
 					final NsLcmOpOcc res = mapper.map(x, NsLcmOpOcc.class);

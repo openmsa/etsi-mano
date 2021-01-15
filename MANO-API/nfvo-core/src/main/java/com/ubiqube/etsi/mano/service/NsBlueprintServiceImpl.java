@@ -19,16 +19,18 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.jpa.NsBlueprintJpa;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 /**
  *
@@ -39,11 +41,15 @@ import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 public class NsBlueprintServiceImpl implements NsBlueprintService {
 
 	private final NsBlueprintJpa nsBlueprintJpa;
+
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa) {
+	private final EntityManager em;
+
+	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em) {
 		nsBlueprintJpa = _nsBlueprintJpa;
 		nsLiveInstanceJpa = _nsLiveInstanceJpa;
+		em = _em;
 	}
 
 	@Override
@@ -69,9 +75,9 @@ public class NsBlueprintServiceImpl implements NsBlueprintService {
 	}
 
 	@Override
-	public List<NsLcmOpOccs> query(final String filter) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<NsBlueprint> query(final String filter) {
+		final SearchQueryer sq = new SearchQueryer(em);
+		return sq.getCriteria(filter, NsBlueprint.class);
 	}
 
 }

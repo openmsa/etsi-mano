@@ -20,16 +20,17 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
-import com.ubiqube.etsi.mano.repository.jpa.EnumFieldBridge;
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Embeddable
 public class AuthentificationInformations {
 	@Enumerated(EnumType.STRING)
-	@FieldBridge(impl = EnumFieldBridge.class)
-	@Field
+	@FullTextField
 	private AuthType authType;
 
 	private AuthParamBasic authParamBasic;

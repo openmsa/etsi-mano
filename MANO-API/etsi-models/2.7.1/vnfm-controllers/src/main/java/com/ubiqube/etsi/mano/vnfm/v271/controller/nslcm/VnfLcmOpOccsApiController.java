@@ -16,33 +16,144 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVirtualStorage;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOccLinks;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOccResourceChanges;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+
+import ma.glasnost.orika.MapperFacade;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
 
 @Controller
 public class VnfLcmOpOccsApiController implements VnfLcmOpOccsApi {
+	private final MapperFacade mapper;
+	private final VnfLcmController vnfLcmController;
 
-    private final ObjectMapper objectMapper;
+	public VnfLcmOpOccsApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
+		super();
+		this.mapper = mapper;
+		this.vnfLcmController = vnfLcmController;
+	}
 
-    private final HttpServletRequest request;
+	@Override
+	public ResponseEntity<String> vnfLcmOpOccsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
+		final List<VnfBlueprint> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
+		final List<VnfLcmOpOcc> results = resultsDb.stream()
+				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
+				.collect(Collectors.toList());
+		results.forEach(x -> x.setLinks(makeLink(x)));
+		final ObjectMapper mapperForView = MapperForView.getMapperForView(excludeFields, fields, null, null);
+		try {
+			return new ResponseEntity<>(mapperForView.writeValueAsString(results), HttpStatus.OK);
+		} catch (final JsonProcessingException e) {
+			throw new GenericException(e);
+		}
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public VnfLcmOpOccsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@Override
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	@Override
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId) {
+		throw new GenericException("TODO");
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId) {
+		final VnfBlueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
+		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
+		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.VL)
+				.map(x -> mapper.map(x, AffectedVirtualLink.class))
+				.forEach(resourceChanged::addAffectedVirtualLinksItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.STORAGE)
+				.map(x -> mapper.map(x, AffectedVirtualStorage.class))
+				.forEach(resourceChanged::addAffectedVirtualStoragesItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.COMPUTE)
+				.map(x -> mapper.map(x, AffectedVnfc.class))
+				.forEach(resourceChanged::addAffectedVnfcsItem);
+		entity.setResourceChanges(resourceChanged);
+		entity.setLinks(makeLink(entity));
+		return new ResponseEntity<>(entity, HttpStatus.OK);
 
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
+		throw new GenericException("TODO");
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
+		throw new GenericException("TODO");
+	}
+
+	private static VnfLcmOpOccLinks makeLink(@NotNull final VnfLcmOpOcc vnfLcmOpOcc) {
+		@NotNull
+		final String id = vnfLcmOpOcc.getId();
+		final VnfLcmOpOccLinks link = new VnfLcmOpOccLinks();
+		final Link cancel = new Link();
+		cancel.setHref(linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id)).withSelfRel().getHref());
+		link.setCancel(cancel);
+
+		final Link fail = new Link();
+		fail.setHref(linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id)).withSelfRel().getHref());
+		link.setFail(fail);
+
+		// XXX We can't have this grant link directly.
+		// grant.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(),
+		// "")).withSelfRel().getHref());
+
+		final Link retry = new Link();
+		retry.setHref(linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		link.setRetry(retry);
+
+		final Link rollback = new Link();
+		rollback.setHref(linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		link.setRollback(rollback);
+
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
+		link.setSelf(self);
+
+		final Link vnfInstance = new Link();
+		vnfInstance.setHref(linkTo(methodOn(VnfInstancesApi.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
+		link.setVnfInstance(vnfInstance);
+
+		return link;
+	}
+
+	public static String getSelfLink(final String id) {
+		return linkTo(methodOn(VnfLcmOpOccsApi.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
+	}
 }

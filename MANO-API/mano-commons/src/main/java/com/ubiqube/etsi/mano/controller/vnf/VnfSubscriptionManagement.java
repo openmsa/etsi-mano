@@ -25,10 +25,11 @@ import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
 public interface VnfSubscriptionManagement {
 
-	List<Subscription> subscriptionsGet(final String filter);
+	List<Subscription> subscriptionsGet(final String filter, SubscriptionType type);
 
 	Subscription subscriptionsPost(@Nonnull final Subscription subscription, final ApiTypesEnum api);
 
@@ -36,8 +37,8 @@ public interface VnfSubscriptionManagement {
 
 	void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage);
 
-	void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId);
+	void subscriptionsSubscriptionIdDelete(@Nonnull final String _subscriptionId, SubscriptionType type);
 
-	Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId);
+	Subscription subscriptionsSubscriptionIdGet(@Nonnull final UUID _subscriptionId, SubscriptionType type);
 
 }

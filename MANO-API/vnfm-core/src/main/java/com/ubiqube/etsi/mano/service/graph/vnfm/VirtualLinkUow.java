@@ -16,17 +16,17 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.Map;
-import java.util.Optional;
-
-import org.jgrapht.ListenableGraph;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 
@@ -58,7 +58,7 @@ public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String toString() {
-		return "VirtualLinkUow [name=" + name + "]";
+		return "VirtualLinkUow(" + name + ")";
 	}
 
 	@Override
@@ -73,8 +73,14 @@ public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		Optional.ofNullable(cache.get(NodeNaming.dnsZone())).ifPresent(x -> g.addEdge(x, this));
+	public List<WfDependency> getDependencies() {
+		// May require a DNS zone.
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		return Arrays.asList(new WfProduce(Network.class, networkTask.getToscaName(), networkTask.getId()));
 	}
 
 }

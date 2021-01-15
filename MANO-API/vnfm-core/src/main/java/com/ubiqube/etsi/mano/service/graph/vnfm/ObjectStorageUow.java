@@ -16,14 +16,13 @@
  */
 package com.ubiqube.etsi.mano.service.graph.vnfm;
 
-import java.util.Map;
-
-import org.jgrapht.ListenableGraph;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.v2.ObjectStorageTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.graph.WfDependency;
+import com.ubiqube.etsi.mano.service.graph.WfProduce;
 
 public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 
@@ -54,8 +53,14 @@ public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 	}
 
 	@Override
-	public void connect(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> g, final Map<String, UnitOfWork<VnfTask, VnfParameters>> cache) {
-		// Nothing to do.
+	public List<WfDependency> getDependencies() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<WfProduce> getProduce() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

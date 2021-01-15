@@ -20,13 +20,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.BooleanJunction;
-import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.engine.search.predicate.SearchPredicate;
+import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
+import org.hibernate.search.engine.search.query.dsl.SearchQuerySelectStep;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.common.EntityReference;
+import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsStep;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
@@ -42,53 +43,48 @@ public class SearchQueryer {
 		this.entityManager = _entityManager;
 	}
 
-	public Query getCriteria(final List<Node> nodes, final Class<?> clazz) {
-		final FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		final QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
-				.buildQueryBuilder()
-				.forEntity(clazz)
-				.get();
-		final BooleanJunction<BooleanJunction> bj = queryBuilder.bool();
-		convertNodeList(nodes, queryBuilder, bj);
-		final FullTextQuery jpaQuery;
-		if (nodes.isEmpty()) {
-			jpaQuery = fullTextEntityManager.createFullTextQuery(queryBuilder.all().createQuery(), clazz);
-		} else {
-			jpaQuery = fullTextEntityManager.createFullTextQuery(bj.createQuery(), clazz);
-		}
-
-		return jpaQuery;
+	public <T> List<T> getCriteria(final List<Node<?>> nodes, final Class<T> clazz) {
+		final SearchSession session = Search.session(entityManager);
+		final SearchQuerySelectStep<?, EntityReference, T, SearchLoadingOptionsStep, ?, ?> ss = session.search(clazz);
+		final SearchPredicateFactory pf = session.scope(clazz).predicate();
+		final List<SearchPredicate> sp = convertNodeList(nodes, pf);
+		return ss.where(f -> f.bool(b -> {
+			b.must(f.matchAll());
+			for (final SearchPredicate predicate : sp) {
+				b.must(predicate);
+			}
+		})).fetchAllHits();
 	}
 
-	public Query getCriteria(final String filter, final Class<?> clazz) {
+	public <T> List<T> getCriteria(final String filter, final Class<T> clazz) {
 		final AstBuilder astBuilder = new AstBuilder(filter);
-		return getCriteria(astBuilder.getNodes(), clazz);
+		return getCriteria((List<Node<?>>) (Object) astBuilder.getNodes(), clazz);
 	}
 
-	private static List<BooleanJunction> convertNodeList(final List<Node> nodes, final QueryBuilder qb, final BooleanJunction bj) {
+	private static List<SearchPredicate> convertNodeList(final List<Node<?>> nodes, final SearchPredicateFactory pf) {
 		return nodes.stream()
-				.map(x -> applyOp(x.getName(), x.getOp(), x.getValue(), qb, bj))
+				.map(x -> applyOp(x.getName(), x.getOp(), x.getValue(), pf))
 				.collect(Collectors.toList());
 	}
 
-	private static BooleanJunction applyOp(final String name, final Operand op, final String value, final QueryBuilder qb, final BooleanJunction bj) {
+	private static SearchPredicate applyOp(final String name, final Operand op, final Object value, final SearchPredicateFactory pf) {
 		switch (op) {
 		case EQ:
-			return bj.must(qb.keyword().onField(name).matching(value).createQuery());
+			return pf.match().field(name).matching(value).toPredicate();
 		case NEQ:
-			return bj.must(qb.keyword().onField(name).matching(value).createQuery()).not();
+			return pf.matchAll().except(pf.match().field(name).matching(value)).toPredicate();
 		case GT:
-			return bj.must(qb.range().onField(name).above(value).createQuery());
+			return pf.range().field(name).greaterThan(value).toPredicate();
 		case GTE:
-			return bj.must(qb.range().onField(name).above(value).createQuery());
+			return pf.range().field(name).atLeast(value).toPredicate();
 		case LT:
-			return bj.must(qb.range().onField(name).below(value).createQuery());
+			return pf.range().field(name).lessThan(value).toPredicate();
 		case LTE:
-			return bj.must(qb.range().onField(name).below(value).createQuery());
+			return pf.range().field(name).atMost(value).toPredicate();
 		case CONT:
-			return bj.must(qb.keyword().onField(name).matching(value).createQuery());
+			return pf.match().field(name).matching(value).toPredicate();
 		case NCONT:
-			return bj.must(qb.keyword().onField(name).matching(value).createQuery()).not();
+			return pf.matchAll().except(pf.match().field(name).matching(value)).toPredicate();
 		case IN:
 		case NIN:
 		default:

@@ -24,6 +24,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractTask;
 
@@ -35,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.AbstractTask;
  */
 @Entity
 @EntityListeners(AuditListener.class)
+@Indexed
 public class NsTask extends AbstractTask {
 
 	/** Serial. */

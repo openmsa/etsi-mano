@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsdNode;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 /**
  *
@@ -91,8 +92,7 @@ public class NsdConributor extends AbstractNsContributor {
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		// TODO Auto-generated method stub
-
+		dependencyBuilder.connectionFrom(Network.class);
 	}
 
 }

@@ -19,12 +19,14 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.indicator;
 
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class IndicatorSubscriptionsSol003Api implements IndicatorSubscriptionsSol003 {
 

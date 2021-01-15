@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Connection parameters to the NFVO instance.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -27,9 +28,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "mano.vnfm.nfvo")
 public class NfvoConnectionProperties {
+	/**
+	 * NFVO url.
+	 */
 	private String url;
+	/**
+	 * NFVO user name.
+	 */
 	private String username;
+	/**
+	 * NFVO password.
+	 */
 	private String password;
+	/**
+	 * NFVO protocol version IE: 2.6.1
+	 */
 	private String version;
 
 	public String getUrl() {

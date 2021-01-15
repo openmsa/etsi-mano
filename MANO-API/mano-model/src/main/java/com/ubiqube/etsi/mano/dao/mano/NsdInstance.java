@@ -34,8 +34,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
@@ -50,16 +50,16 @@ public class NsdInstance implements BaseEntity, Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	@Field
+	@FullTextField
 	private String nsInstanceName = null;
 
-	@Field
+	@FullTextField
 	private String nsInstanceDescription = null;
 
 	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackage nsdInfo = null;
 
-	@Field
+	@FullTextField
 	private String flavourId = null;
 
 	private String nsInstantiationLevelId;
@@ -77,7 +77,7 @@ public class NsdInstance implements BaseEntity, Serializable {
 	private List<NsdInstance> nestedNsInstance = null;
 
 	@Enumerated(EnumType.STRING)
-	@Field
+	@FullTextField
 	private InstantiationState nsState = null;
 
 	// XXX Add nsScaleStatus
