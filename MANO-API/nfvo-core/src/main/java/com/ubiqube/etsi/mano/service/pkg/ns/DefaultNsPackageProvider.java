@@ -14,48 +14,50 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service;
+package com.ubiqube.etsi.mano.service.pkg.ns;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
-import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
-import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
-import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
+import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class AppDefaultPackageProvider implements AppPackageProvider {
-
+public class DefaultNsPackageProvider implements NsPackageProvider {
 	@Override
-	public AppPkgDto getMea() {
-		return new AppPkgDto();
+	public NsInformations getNsInformations(final Map<String, String> userData) {
+		return new NsInformations();
 	}
 
 	@Override
-	public Set<DNSRuleDescriptor> getDnsRuleDescriptors(final Map<String, String> parameters) {
+	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<ServiceDependency> getOptionalServiceDependency(final Map<String, String> parameters) {
+	public Set<NsSap> getNsSap(final Map<String, String> userData) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<ServiceDependency> getRequiredServiceDependency(final Map<String, String> parameters) {
+	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
 		return new HashSet<>();
 	}
 
 	@Override
-	public Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters) {
+	public Set<String> getNestedNsd(final Map<String, String> userData) {
 		return new HashSet<>();
 	}
 
+	@Override
+	public Set<String> getVnfd(final Map<String, String> userData) {
+		return new HashSet<>();
+	}
 }

@@ -14,12 +14,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +30,10 @@ import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.ToscaException;
+import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
+import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.SizeConverter;
 import com.ubiqube.etsi.mano.service.pkg.tosca.TimeConverter;
-import com.ubiqube.etsi.mec.meo.service.AppPackageProvider;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.api.ToscaApi;
@@ -67,7 +64,7 @@ public class AppToscaProvider implements AppPackageProvider {
 	private final ToscaParser toscaParser;
 
 	public AppToscaProvider(final byte[] data) {
-		final File tempFile = fetchData(data);
+		final File tempFile = PkgUtils.fetchData(data);
 		toscaParser = new ToscaParser(tempFile.getAbsolutePath());
 		root = toscaParser.getContext();
 		toscaApi = new ToscaApi();
@@ -88,21 +85,6 @@ public class AppToscaProvider implements AppPackageProvider {
 		converterFactory.registerConverter(new SizeConverter());
 		converterFactory.registerConverter(new TimeConverter());
 		mapper = mapperFactory.getMapperFacade();
-	}
-
-	private static File fetchData(final byte[] data) {
-		File tempFile;
-		try {
-			tempFile = File.createTempFile("tosca", ".zip");
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		try (final OutputStream os = new FileOutputStream(tempFile)) {
-			os.write(data);
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		return tempFile;
 	}
 
 	@Override

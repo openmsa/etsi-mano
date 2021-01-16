@@ -36,15 +36,15 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
-import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.vnf.ToscaVnfPackageProvider;
 import com.ubiqube.etsi.mano.test.TestTools;
 
 public class ToscaPackageProviderTest {
-	private final ToscaPackageProvider tpp;
+	private final ToscaVnfPackageProvider tpp;
 
 	public ToscaPackageProviderTest() throws IOException {
 		final byte[] data = TestTools.readFile("/ubi-tosca.csar");
-		tpp = new ToscaPackageProvider(data);
+		tpp = new ToscaVnfPackageProvider(data);
 	}
 
 	@Test

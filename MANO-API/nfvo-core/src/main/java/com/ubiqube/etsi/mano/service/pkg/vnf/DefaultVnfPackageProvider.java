@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,8 +39,14 @@ import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
 
-public class DefaultPackageProvider implements PackageProvider {
+/**
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class DefaultVnfPackageProvider implements VnfPackageProvider {
 	@Override
 	public ProviderData getProviderPadata() {
 		final ProviderData providerData = new ProviderData();
@@ -118,36 +124,6 @@ public class DefaultPackageProvider implements PackageProvider {
 	@Override
 	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
 		return new ArrayList<>();
-	}
-
-	@Override
-	public NsInformations getNsInformations(final Map<String, String> userData) {
-		return new NsInformations();
-	}
-
-	@Override
-	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
-		return new HashSet<>();
-	}
-
-	@Override
-	public Set<NsSap> getNsSap(final Map<String, String> userData) {
-		return new HashSet<>();
-	}
-
-	@Override
-	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
-		return new HashSet<>();
-	}
-
-	@Override
-	public Set<String> getNestedNsd(final Map<String, String> userData) {
-		return new HashSet<>();
-	}
-
-	@Override
-	public Set<String> getVnfd(final Map<String, String> userData) {
-		return new HashSet<>();
 	}
 
 }

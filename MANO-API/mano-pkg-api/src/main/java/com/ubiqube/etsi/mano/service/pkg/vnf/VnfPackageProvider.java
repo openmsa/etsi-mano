@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,6 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -31,17 +30,18 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
-import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
-import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
 
-public interface PackageProvider {
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface VnfPackageProvider {
 	@Nonnull
 	Set<SoftwareImage> getSoftwareImages(Map<String, String> parameters);
 
@@ -81,21 +81,4 @@ public interface PackageProvider {
 	@Nonnull
 	List<VduScalingAspectDeltas> getVduScalingAspectDeltas(Map<String, String> parameters);
 
-	@Nonnull
-	NsInformations getNsInformations(Map<String, String> userData);
-
-	@Nonnull
-	Set<NsVirtualLink> getNsVirtualLink(Map<String, String> userData);
-
-	@Nonnull
-	Set<NsSap> getNsSap(Map<String, String> userData);
-
-	@Nonnull
-	Set<SecurityGroupAdapter> getSecurityGroups(Map<String, String> userData);
-
-	@Nonnull
-	Set<String> getNestedNsd(final Map<String, String> userData);
-
-	@Nonnull
-	Set<String> getVnfd(final Map<String, String> userData);
 }

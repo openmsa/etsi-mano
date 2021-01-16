@@ -14,27 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg.tosca;
+package com.ubiqube.etsi.mano.service.pkg.ns;
 
-import com.ubiqube.etsi.mano.service.pkg.PackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import javax.annotation.Nullable;
 
-public class ToscaRegistry implements RegistryHandler {
+import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
-	@Override
-	public boolean isProcessable(final byte[] data) {
-		// P K x03 x04
-		return ((data.length > 10) && ((data[0] == 'P') && (data[1] == 'K')));
-	}
+public interface NsPackageManager {
 
-	@Override
-	public String getName() {
-		return "Ubiqube Tosca parser";
-	}
-
-	@Override
-	public PackageProvider getNewInstance(final byte[] data) {
-		return new ToscaPackageProvider(data);
-	}
+	@Nullable
+	NsPackageProvider getProviderFor(byte[] data);
 
 }

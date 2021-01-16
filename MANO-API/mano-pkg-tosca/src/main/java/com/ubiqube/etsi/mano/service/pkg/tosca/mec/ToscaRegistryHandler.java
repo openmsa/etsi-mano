@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +24,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,11 +31,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
-import com.ubiqube.etsi.mec.meo.service.AppPackageProvider;
-import com.ubiqube.etsi.mec.meo.service.AppRegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.mec.AppRegistryHandler;
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
-@Service
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ToscaRegistryHandler implements AppRegistryHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaRegistryHandler.class);

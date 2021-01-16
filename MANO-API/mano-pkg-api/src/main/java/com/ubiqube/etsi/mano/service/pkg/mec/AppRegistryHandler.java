@@ -14,26 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service;
+package com.ubiqube.etsi.mano.service.pkg.mec;
 
-import java.util.Map;
-import java.util.Set;
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface AppRegistryHandler {
 
-import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
-import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
-import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
-import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
+	String getName();
 
-public interface AppPackageProvider {
+	boolean isProcessable(byte[] data);
 
-	AppPkgDto getMea();
-
-	Set<DNSRuleDescriptor> getDnsRuleDescriptors(final Map<String, String> parameters);
-
-	Set<ServiceDependency> getOptionalServiceDependency(final Map<String, String> parameters);
-
-	Set<ServiceDependency> getRequiredServiceDependency(final Map<String, String> parameters);
-
-	Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters);
+	AppPackageProvider getNewInstance(byte[] data);
 
 }

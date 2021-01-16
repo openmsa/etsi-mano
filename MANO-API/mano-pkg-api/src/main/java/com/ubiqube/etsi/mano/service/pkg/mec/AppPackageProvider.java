@@ -14,9 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service;
+package com.ubiqube.etsi.mano.service.pkg.mec;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,38 +23,22 @@ import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class AppDefaultPackageProvider implements AppPackageProvider {
+public interface AppPackageProvider {
 
-	@Override
-	public AppPkgDto getMea() {
-		return new AppPkgDto();
-	}
+	AppPkgDto getMea();
 
-	@Override
-	public Set<DNSRuleDescriptor> getDnsRuleDescriptors(final Map<String, String> parameters) {
-		return new HashSet<>();
-	}
+	Set<DNSRuleDescriptor> getDnsRuleDescriptors(final Map<String, String> parameters);
 
-	@Override
-	public Set<ServiceDependency> getOptionalServiceDependency(final Map<String, String> parameters) {
-		return new HashSet<>();
-	}
+	Set<ServiceDependency> getOptionalServiceDependency(final Map<String, String> parameters);
 
-	@Override
-	public Set<ServiceDependency> getRequiredServiceDependency(final Map<String, String> parameters) {
-		return new HashSet<>();
-	}
+	Set<ServiceDependency> getRequiredServiceDependency(final Map<String, String> parameters);
 
-	@Override
-	public Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters) {
-		return new HashSet<>();
-	}
+	Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters);
 
 }

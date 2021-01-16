@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import java.util.List;
 
@@ -22,20 +22,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class NullPackageProvider implements PackageManager {
+public class VnfPackageManagerImpl implements VnfPackageManager {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NullPackageProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageManagerImpl.class);
 
-	private final List<RegistryHandler> providers;
+	private final List<RegistryHandler<VnfPackageProvider>> providers;
 
-	public NullPackageProvider(final List<RegistryHandler> _providers) {
+	public VnfPackageManagerImpl(final List<RegistryHandler<VnfPackageProvider>> _providers) {
 		providers = _providers;
 	}
 
 	@Override
-	public PackageProvider getProviderFor(final byte[] data) {
-		for (final RegistryHandler provider : providers) {
+	public VnfPackageProvider getProviderFor(final byte[] data) {
+		for (final RegistryHandler<VnfPackageProvider> provider : providers) {
 			LOG.info("Testing {} for package support.", provider.getName());
 			if (provider.isProcessable(data)) {
 				LOG.info("Using {} for package.", provider.getName());
@@ -43,7 +51,7 @@ public class NullPackageProvider implements PackageManager {
 			}
 		}
 		LOG.info("No package support, using default.");
-		return new DefaultPackageProvider();
+		return new DefaultVnfPackageProvider();
 	}
 
 }

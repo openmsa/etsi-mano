@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +23,6 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +30,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +37,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PkgChecksum;
@@ -56,19 +50,14 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
-import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
-import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduLevel;
@@ -76,33 +65,31 @@ import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
 
 import ma.glasnost.orika.MapperFacade;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class PackagingManager {
+public class VnfPackageOnboardingImpl {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PackagingManager.class);
-
-	private final VnfPackageRepository vnfPackageRepository;
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageOnboardingImpl.class);
 
 	private final EventManager eventManager;
 
-	private final PackageManager packageManager;
+	private final VnfPackageManager packageManager;
 
 	private final MapperFacade mapper;
 
 	private final VnfPackageService vnfPackageService;
 
-	private final NsdRepository nsdRepository;
+	private final VnfPackageRepository vnfPackageRepository;
 
-	private final NsdPackageJpa nsdPackageJpa;
-
-	public PackagingManager(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final PackageManager packageManager, final MapperFacade _mapper, final NsdRepository _nsdRepository, final NsdPackageJpa _nsdPackageJpa, final VnfPackageService _vnfPackageService) {
-		super();
+	public VnfPackageOnboardingImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final VnfPackageManager packageManager, final MapperFacade _mapper, final VnfPackageService _vnfPackageService) {
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
 		mapper = _mapper;
-		nsdRepository = _nsdRepository;
-		nsdPackageJpa = _nsdPackageJpa;
 		vnfPackageService = _vnfPackageService;
 	}
 
@@ -123,7 +110,7 @@ public class PackagingManager {
 	private void uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
 		vnfPackage.setChecksum(getChecksum(data));
 		vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
-		final PackageProvider packageProvider = packageManager.getProviderFor(data);
+		final VnfPackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			final ProviderData pd = packageProvider.getProviderPadata();
 			final Optional<VnfPackage> optPackage = getVnfPackage(pd);
@@ -274,58 +261,8 @@ public class PackagingManager {
 		vnfPackageService.save(vnfPackage);
 	}
 
-	public void nsOnboarding(@NotNull final UUID objectId) {
-		final NsdPackage nsPackage = nsdPackageJpa.findById(objectId).orElseThrow(() -> new NotFoundException("NS Package " + objectId + " Not found."));
-		final Map<String, String> userData = nsPackage.getUserDefinedData();
-		final byte[] data = nsdRepository.getBinary(objectId, "nsd");
-		final PackageProvider packageProvider = packageManager.getProviderFor(data);
-		if (null != packageProvider) {
-			final NsInformations nsInformations = packageProvider.getNsInformations(userData);
-			mapper.map(nsInformations, nsPackage);
-			final Set<NsSap> nsSap = packageProvider.getNsSap(userData);
-			nsPackage.setNsSaps(nsSap);
-			final Set<NsVirtualLink> nsVirtualLink = packageProvider.getNsVirtualLink(userData);
-			nsPackage.setNsVirtualLinks(nsVirtualLink);
-			final Set<SecurityGroupAdapter> sgAdapters = packageProvider.getSecurityGroups(userData);
-			sgAdapters.forEach(x -> nsPackage.getNsSaps().stream()
-					.filter(y -> x.getTargets().contains(y.getToscaName()))
-					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
-			final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
-					.map(x -> {
-						nsInformations.getFlavorId();
-						final Optional<VnfPackage> optPackage = getVnfPackage(x);
-						final VnfPackage vnfPackage = optPackage.orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
-						final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
-						nsdPackageVnfPackage.setNsdPackage(nsPackage);
-						nsdPackageVnfPackage.setToscaName(x);
-						nsdPackageVnfPackage.setVnfPackage(vnfPackage);
-						vnfPackage.addNsdPackage(nsdPackageVnfPackage);
-						vnfPackageService.save(vnfPackage);
-						return nsdPackageVnfPackage;
-					})
-					.collect(Collectors.toSet());
-			nsPackage.setVnfPkgIds(vnfds);
-			final Set<NsdPackageNsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
-					.map(x -> {
-						final NsdPackage nestedNsd = nsdPackageJpa.findByNsdInvariantId(x).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x));
-						final NsdPackageNsdPackage nsdnsd = new NsdPackageNsdPackage();
-						nsdnsd.setParent(nsPackage);
-						nsdnsd.setChild(nestedNsd);
-						nsdnsd.setToscaName(x);
-						return nsdnsd;
-					})
-					.collect(Collectors.toSet());
-			nsPackage.setNestedNsdInfoIds(nsds);
-		}
-		nsPackage.setNsdOnboardingState(OnboardingStateType.ONBOARDED);
-		nsPackage.setNsdOperationalState(PackageOperationalState.ENABLED);
-		nsdPackageJpa.save(nsPackage);
-		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());
-	}
-
-	private Optional<VnfPackage> getVnfPackage(final String x) {
-		final PackageVersion pv = new PackageVersion(x);
-		return getVnfPackage(pv.getFlavorId(), pv.getName(), pv.getVersion());
+	private Optional<VnfPackage> getVnfPackage(final ProviderData pd) {
+		return getVnfPackage(pd.getFlavorId(), pd.getDescriptorId(), pd.getVnfdVersion());
 	}
 
 	private Optional<VnfPackage> getVnfPackage(final String flavor, final String descriptorId, final String version) {
@@ -350,10 +287,6 @@ public class PackagingManager {
 			return vnfPackageService.findByDescriptorIdFlavorIdVnfdVersion(descriptorId, flavor, version);
 		}
 		throw new GenericException("Unknown version " + part);
-	}
-
-	private Optional<VnfPackage> getVnfPackage(final ProviderData pd) {
-		return getVnfPackage(pd.getFlavorId(), pd.getDescriptorId(), pd.getVnfdVersion());
 	}
 
 }

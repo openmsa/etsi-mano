@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service;
+package com.ubiqube.etsi.mano.service.pkg.ns;
 
 import java.util.List;
 
@@ -22,22 +22,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.mec.AppRegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class AppPackagingManager {
+public class NsPackageManagerImpl implements NsPackageManager {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AppPackagingManager.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NsPackageManagerImpl.class);
 
-	private final List<AppRegistryHandler> providers;
+	private final List<RegistryHandler<NsPackageProvider>> providers;
 
-	public AppPackagingManager(final List<AppRegistryHandler> _providers) {
+	public NsPackageManagerImpl(final List<RegistryHandler<NsPackageProvider>> _providers) {
 		providers = _providers;
 	}
 
-	public AppPackageProvider getProviderFor(final byte[] data) {
-		for (final AppRegistryHandler provider : providers) {
+	@Override
+	public NsPackageProvider getProviderFor(final byte[] data) {
+		for (final RegistryHandler<NsPackageProvider> provider : providers) {
 			LOG.info("Testing {} for package support.", provider.getName());
 			if (provider.isProcessable(data)) {
 				LOG.info("Using {} for package.", provider.getName());
@@ -45,7 +50,7 @@ public class AppPackagingManager {
 			}
 		}
 		LOG.info("No package support, using default.");
-		return new AppDefaultPackageProvider();
+		return new DefaultNsPackageProvider();
 	}
 
 }

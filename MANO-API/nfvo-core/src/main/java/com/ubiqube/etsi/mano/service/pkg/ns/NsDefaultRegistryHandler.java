@@ -14,19 +14,30 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.ns;
+
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
- * @param <U>
  */
-public interface RegistryHandler<U> {
+public class NsDefaultRegistryHandler implements RegistryHandler<NsPackageProvider> {
 
-	boolean isProcessable(final byte[] data);
+	@Override
+	public boolean isProcessable(final byte[] data) {
+		return false;
+	}
 
-	String getName();
+	@Override
+	public String getName() {
+		return "NSD default package processor.";
+	}
 
-	U getNewInstance(final byte[] data);
+	@Override
+	public NsPackageProvider getNewInstance(final byte[] data) {
+		return new DefaultNsPackageProvider();
+	}
+
 }

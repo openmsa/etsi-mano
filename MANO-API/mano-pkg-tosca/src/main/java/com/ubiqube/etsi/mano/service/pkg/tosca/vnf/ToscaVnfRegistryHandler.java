@@ -14,19 +14,34 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
+
+import org.springframework.stereotype.Service;
+
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
- * @param <U>
  */
-public interface RegistryHandler<U> {
+@Service
+public class ToscaVnfRegistryHandler implements RegistryHandler<ToscaVnfPackageProvider> {
 
-	boolean isProcessable(final byte[] data);
+	@Override
+	public boolean isProcessable(final byte[] data) {
+		// P K x03 x04
+		return ((data.length > 10) && ((data[0] == 'P') && (data[1] == 'K')));
+	}
 
-	String getName();
+	@Override
+	public String getName() {
+		return "Ubiqube Tosca VNF parser";
+	}
 
-	U getNewInstance(final byte[] data);
+	@Override
+	public ToscaVnfPackageProvider getNewInstance(final byte[] data) {
+		return new ToscaVnfPackageProvider(data);
+	}
+
 }

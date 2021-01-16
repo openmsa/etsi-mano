@@ -37,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManager;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManagerImpl;
 import com.ubiqube.etsi.mec.repositories.AppPackageRepository;

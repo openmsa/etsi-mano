@@ -14,14 +14,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.meo.service;
+package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
-public interface AppRegistryHandler {
+import org.springframework.stereotype.Service;
 
-	String getName();
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
-	boolean isProcessable(byte[] data);
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class ToscaNsRegistryHandler implements RegistryHandler<NsPackageProvider> {
 
-	AppPackageProvider getNewInstance(byte[] data);
+	@Override
+	public boolean isProcessable(final byte[] data) {
+		// P K x03 x04
+		return ((data.length > 10) && ((data[0] == 'P') && (data[1] == 'K')));
+	}
+
+	@Override
+	public String getName() {
+		return "Ubiqube Tosca parser";
+	}
+
+	@Override
+	public NsPackageProvider getNewInstance(final byte[] data) {
+		return new ToscaNsPackageProvider(data);
+	}
 
 }

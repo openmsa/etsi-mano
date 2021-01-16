@@ -14,26 +14,18 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
-import org.springframework.stereotype.Service;
+import javax.annotation.Nullable;
 
-@Service
-public class NullRegistry implements RegistryHandler {
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
 
-	@Override
-	public boolean isProcessable(final byte[] data) {
-		return false;
-	}
-
-	@Override
-	public String getName() {
-		return "Ubiqube default package provder.";
-	}
-
-	@Override
-	public PackageProvider getNewInstance(final byte[] data) {
-		return new DefaultPackageProvider();
-	}
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface VnfPackageManager {
+	@Nullable
+	VnfPackageProvider getProviderFor(byte[] data);
 }

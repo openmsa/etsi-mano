@@ -16,11 +16,34 @@
  */
 package com.ubiqube.etsi.mano.service.pkg;
 
-import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public interface PackageManager {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class PkgUtils {
+	private PkgUtils() {
+		// Nothing.
+	}
 
-	@Nullable
-	PackageProvider getProviderFor(byte[] data);
+	public static File fetchData(final byte[] data) {
+		File tempFile;
+		try {
+			tempFile = File.createTempFile("tosca", ".zip");
+		} catch (final IOException e) {
+			throw new ToscaException(e);
+		}
+		try (final OutputStream os = new FileOutputStream(tempFile)) {
+			os.write(data);
+		} catch (final IOException e) {
+			throw new ToscaException(e);
+		}
+		return tempFile;
+	}
 
 }
