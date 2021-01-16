@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,24 +35,16 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
-import com.ubiqube.etsi.mano.service.pkg.tosca.SizeConverter;
-import com.ubiqube.etsi.mano.service.pkg.tosca.TimeConverter;
+import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
-import com.ubiqube.parser.tosca.ToscaContext;
-import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
-import com.ubiqube.parser.tosca.api.ToscaApi;
 
-import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.converter.ConverterFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import tosca.datatypes.nfv.L3ProtocolData;
 import tosca.datatypes.nfv.VirtualLinkProtocolData;
 import tosca.nodes.nfv.VNF;
@@ -69,22 +60,16 @@ import tosca.policies.nfv.ScalingAspects;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ToscaVnfPackageProvider implements VnfPackageProvider {
+public class ToscaVnfPackageProvider extends AbstractPackageProvider implements VnfPackageProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfPackageProvider.class);
 
-	private final ToscaApi toscaApi;
-	private final ToscaContext root;
-	private final MapperFacade mapper;
-
-	private final ToscaParser toscaParser;
-
 	public ToscaVnfPackageProvider(final byte[] data) {
-		final File tempFile = PkgUtils.fetchData(data);
-		toscaParser = new ToscaParser(tempFile.getAbsolutePath());
-		root = toscaParser.getContext();
-		toscaApi = new ToscaApi();
-		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+		super(data);
+	}
+
+	@Override
+	protected void additionalMapping(final MapperFactory mapperFactory) {
 		mapperFactory.classMap(ProviderData.class, VNF.class)
 				.field("vnfProvider", "provider")
 				.field("vnfProductName", "productName")
@@ -151,88 +136,56 @@ public class ToscaVnfPackageProvider implements VnfPackageProvider {
 				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
-		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new SizeConverter());
-		converterFactory.registerConverter(new TimeConverter());
-		mapper = mapperFactory.getMapperFacade();
 	}
 
 	@Override
 	public ProviderData getProviderPadata() {
-		final List<VNF> vnfs = toscaApi.getObjects(root, new HashMap<>(), VNF.class);
+		final List<ProviderData> vnfs = getListOf(VNF.class, ProviderData.class, new HashMap<>());
 		if (vnfs.isEmpty()) {
 			LOG.warn("No VNF node found in the package.");
 			return new ProviderData();
 		}
-		return mapper.map(vnfs.get(0), ProviderData.class);
+		return vnfs.get(0);
 	}
 
 	@Override
 	public Set<AdditionalArtifact> getAdditionalArtefacts(final Map<String, String> parameters) {
-		final List<ArtefactInformations> files = toscaParser.getFiles();
-		return files.stream().map(x -> mapper.map(x, AdditionalArtifact.class)).collect(Collectors.toSet());
+		return getCsarFiles(AdditionalArtifact.class);
 	}
 
 	@Override
 	public Set<VnfCompute> getVnfComputeNodes(final Map<String, String> parameters) {
-		final List<Compute> list = toscaApi.getObjects(root, parameters, Compute.class);
-		LOG.debug("Found {} Compute node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, VnfCompute.class))
-				.collect(Collectors.toSet());
+		return this.getSetOf(Compute.class, VnfCompute.class, parameters);
 	}
 
 	@Override
 	public Set<VnfStorage> getVnfStorages(final Map<String, String> parameters) {
-		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
-		LOG.debug("Found {} Block Storage node in TOSCA model", list.size());
-		final Set<VnfStorage> res = list.stream()
-				.map(x -> mapper.map(x, VnfStorage.class))
-				.collect(Collectors.toSet());
-		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, parameters, VirtualObjectStorage.class);
-		LOG.debug("Found {} Object Storage node in TOSCA model", vos.size());
-		final Set<VnfStorage> resVos = vos.stream()
-				.map(x -> mapper.map(x, VnfStorage.class))
-				.collect(Collectors.toSet());
-		res.addAll(resVos);
-		return res;
+		return getSetOf(VnfStorage.class, parameters, VirtualBlockStorage.class, VirtualObjectStorage.class);
 	}
 
 	@Override
 	public Set<VnfVl> getVnfVirtualLinks(final Map<String, String> parameters) {
-		final List<VnfVirtualLink> list = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
-		LOG.debug("Found {} Vl node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, VnfVl.class))
-				.collect(Collectors.toSet());
+		return this.getSetOf(VnfVirtualLink.class, VnfVl.class, parameters);
 	}
 
 	@Override
 	public Set<VnfLinkPort> getVnfVduCp(final Map<String, String> parameters) {
-		final List<VduCp> list = toscaApi.getObjects(root, parameters, VduCp.class);
-		LOG.debug("Found {} VduCp node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, VnfLinkPort.class))
-				.collect(Collectors.toSet());
+		return this.getSetOf(VduCp.class, VnfLinkPort.class, parameters);
 	}
 
 	@Override
 	public Set<VnfExtCp> getVnfExtCp(final Map<String, String> parameters) {
-		final List<tosca.nodes.nfv.VnfExtCp> list = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.VnfExtCp.class);
-		LOG.debug("Found {} ExtCp node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, VnfExtCp.class))
-				.collect(Collectors.toSet());
+		return this.getSetOf(tosca.nodes.nfv.VnfExtCp.class, VnfExtCp.class, parameters);
 	}
 
 	@Override
 	public Set<ScalingAspect> getScalingAspects(final Map<String, String> parameters) {
-		final List<ScalingAspects> list = toscaApi.getObjects(root, parameters, ScalingAspects.class);
+		final List<ScalingAspects> list = getObjects(ScalingAspects.class, parameters);
 		final Set<ScalingAspect> ret = new HashSet<>();
 		for (final ScalingAspects scalingAspects : list) {
 			final Map<String, tosca.datatypes.nfv.ScalingAspect> sa = scalingAspects.getAspects();
 			final Set<ScalingAspect> tmp = sa.entrySet().stream().map(x -> {
-				final ScalingAspect scaleRet = mapper.map(x.getValue(), ScalingAspect.class);
+				final ScalingAspect scaleRet = getMapper().map(x.getValue(), ScalingAspect.class);
 				scaleRet.setName(x.getKey());
 				return scaleRet;
 			}).collect(Collectors.toSet());
@@ -243,26 +196,22 @@ public class ToscaVnfPackageProvider implements VnfPackageProvider {
 
 	@Override
 	public List<com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels> getInstatiationLevels(final Map<String, String> parameters) {
-		final List<InstantiationLevels> obj = toscaApi.getObjects(root, parameters, InstantiationLevels.class);
-		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels.class);
+		return getListOf(InstantiationLevels.class, com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels.class, parameters);
 	}
 
 	@Override
 	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels> getVduInstantiationLevels(final Map<String, String> parameters) {
-		final List<VduInstantiationLevels> obj = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
-		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels.class);
+		return getListOf(VduInstantiationLevels.class, com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels.class, parameters);
 	}
 
 	@Override
 	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta> getVduInitialDelta(final Map<String, String> parameters) {
-		final List<VduInitialDelta> obj = toscaApi.getObjects(root, parameters, VduInitialDelta.class);
-		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta.class);
+		return getListOf(VduInitialDelta.class, com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta.class, parameters);
 	}
 
 	@Override
 	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
-		final List<VduScalingAspectDeltas> obj = toscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
-		return mapper.mapAsList(obj, com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas.class);
+		return getListOf(VduScalingAspectDeltas.class, com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas.class, parameters);
 	}
 
 }

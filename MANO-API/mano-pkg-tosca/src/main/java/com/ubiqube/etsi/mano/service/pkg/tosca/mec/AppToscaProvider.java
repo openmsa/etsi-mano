@@ -16,12 +16,10 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,18 +28,10 @@ import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
 import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.tosca.SizeConverter;
-import com.ubiqube.etsi.mano.service.pkg.tosca.TimeConverter;
-import com.ubiqube.parser.tosca.ToscaContext;
-import com.ubiqube.parser.tosca.ToscaParser;
-import com.ubiqube.parser.tosca.api.ToscaApi;
+import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
 
-import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.converter.ConverterFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import tosca.nodes.mec.MEA;
 import tosca.policies.mec.AppServiceOptional;
 import tosca.policies.mec.AppServiceProduced;
@@ -53,23 +43,16 @@ import tosca.policies.mec.DnsRuleDescriptor;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class AppToscaProvider implements AppPackageProvider {
+public class AppToscaProvider extends AbstractPackageProvider implements AppPackageProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppToscaProvider.class);
 
-	private final ToscaApi toscaApi;
-	private final ToscaContext root;
-	private final MapperFacade mapper;
-
-	private final ToscaParser toscaParser;
-
 	public AppToscaProvider(final byte[] data) {
-		final File tempFile = PkgUtils.fetchData(data);
-		toscaParser = new ToscaParser(tempFile.getAbsolutePath());
-		root = toscaParser.getContext();
-		toscaApi = new ToscaApi();
+		super(data);
+	}
 
-		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+	@Override
+	protected void additionalMapping(final MapperFactory mapperFactory) {
 		mapperFactory.classMap(MEA.class, AppPkgDto.class)
 				.field("appdId", "appDId")
 				.field("appdVersion", "appDVersion")
@@ -81,56 +64,36 @@ public class AppToscaProvider implements AppPackageProvider {
 				.byDefault()
 				.register();
 
-		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new SizeConverter());
-		converterFactory.registerConverter(new TimeConverter());
-		mapper = mapperFactory.getMapperFacade();
 	}
 
 	@Override
 	public AppPkgDto getMea() {
-		final List<MEA> meas = toscaApi.getObjects(root, new HashMap<String, String>(), MEA.class);
+		final List<AppPkgDto> meas = getListOf(MEA.class, AppPkgDto.class, new HashMap<String, String>());
 		if (meas.isEmpty()) {
 			LOG.warn("No MEA node found in the package.");
 			return new AppPkgDto();
 		}
-		return mapper.map(meas.get(0), AppPkgDto.class);
+		return meas.get(0);
 	}
 
 	@Override
 	public Set<DNSRuleDescriptor> getDnsRuleDescriptors(final Map<String, String> parameters) {
-		final List<DnsRuleDescriptor> list = toscaApi.getObjects(root, parameters, DnsRuleDescriptor.class);
-		LOG.debug("Found {} DnsRuleDescriptors node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, DNSRuleDescriptor.class))
-				.collect(Collectors.toSet());
+		return getSetOf(DnsRuleDescriptor.class, DNSRuleDescriptor.class, parameters);
 	}
 
 	@Override
 	public Set<ServiceDependency> getOptionalServiceDependency(final Map<String, String> parameters) {
-		final List<AppServiceOptional> list = toscaApi.getObjects(root, parameters, AppServiceOptional.class);
-		LOG.debug("Found {} Optional dependency node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, ServiceDependency.class))
-				.collect(Collectors.toSet());
+		return getSetOf(AppServiceOptional.class, ServiceDependency.class, parameters);
 	}
 
 	@Override
 	public Set<ServiceDependency> getRequiredServiceDependency(final Map<String, String> parameters) {
-		final List<AppServiceRequired> list = toscaApi.getObjects(root, parameters, AppServiceRequired.class);
-		LOG.debug("Found {} dependency node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, ServiceDependency.class))
-				.collect(Collectors.toSet());
+		return getSetOf(AppServiceRequired.class, ServiceDependency.class, parameters);
 	}
 
 	@Override
 	public Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters) {
-		final List<AppServiceProduced> list = toscaApi.getObjects(root, parameters, AppServiceProduced.class);
-		LOG.debug("Found {} Service descriptor node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x, ServiceDescriptor.class))
-				.collect(Collectors.toSet());
+		return getSetOf(AppServiceProduced.class, ServiceDescriptor.class, parameters);
 	}
 
 }

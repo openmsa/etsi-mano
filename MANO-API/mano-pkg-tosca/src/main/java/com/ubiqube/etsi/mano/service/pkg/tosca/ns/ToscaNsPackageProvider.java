@@ -16,37 +16,22 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.NsAddressData;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVlProfile;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
-import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.tosca.SizeConverter;
-import com.ubiqube.etsi.mano.service.pkg.tosca.TimeConverter;
-import com.ubiqube.parser.tosca.ToscaContext;
-import com.ubiqube.parser.tosca.ToscaParser;
-import com.ubiqube.parser.tosca.api.ToscaApi;
+import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
 
-import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.converter.ConverterFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import tosca.datatypes.nfv.AddressData;
 import tosca.nodes.nfv.NS;
 import tosca.nodes.nfv.NsTopology;
@@ -58,23 +43,14 @@ import tosca.policies.nfv.SecurityGroupRule;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ToscaNsPackageProvider implements NsPackageProvider {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ToscaNsPackageProvider.class);
-
-	private final ToscaApi toscaApi;
-	private final ToscaContext root;
-	private final MapperFacade mapper;
-
-	private final ToscaParser toscaParser;
+public class ToscaNsPackageProvider extends AbstractPackageProvider implements NsPackageProvider {
 
 	public ToscaNsPackageProvider(final byte[] data) {
-		final File tempFile = fetchData(data);
-		toscaParser = new ToscaParser(tempFile.getAbsolutePath());
-		root = toscaParser.getContext();
-		toscaApi = new ToscaApi();
-		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+		super(data);
+	}
 
+	@Override
+	protected void additionalMapping(final MapperFactory mapperFactory) {
 		mapperFactory.classMap(tosca.nodes.nfv.NsVirtualLink.class, NsVirtualLink.class)
 				.field("vlProfile", "nsVlProfile")
 				.field("connectivityType", "vlConnectivityType")
@@ -110,54 +86,33 @@ public class ToscaNsPackageProvider implements NsPackageProvider {
 				.byDefault()
 				.register();
 
-		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new SizeConverter());
-		converterFactory.registerConverter(new TimeConverter());
-		mapper = mapperFactory.getMapperFacade();
-	}
-
-	private static File fetchData(final byte[] data) {
-		File tempFile;
-		try {
-			tempFile = File.createTempFile("tosca", ".zip");
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		try (final OutputStream os = new FileOutputStream(tempFile)) {
-			os.write(data);
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		return tempFile;
 	}
 
 	@Override
 	public NsInformations getNsInformations(final Map<String, String> userData) {
-		final List<NS> ns = toscaApi.getObjects(root, userData, tosca.nodes.nfv.NS.class);
-		return mapper.map(ns.get(0), NsInformations.class);
+		final List<NsInformations> nss = getListOf(NS.class, NsInformations.class, userData);
+		return nss.get(0);
 	}
 
 	@Override
 	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
-		final List<tosca.nodes.nfv.NsVirtualLink> nvl = toscaApi.getObjects(root, userData, tosca.nodes.nfv.NsVirtualLink.class);
-		return nvl.stream().map(x -> mapper.map(x, NsVirtualLink.class)).collect(Collectors.toSet());
+		return getSetOf(tosca.nodes.nfv.NsVirtualLink.class, NsVirtualLink.class, userData);
 	}
 
 	@Override
 	public Set<NsSap> getNsSap(final Map<String, String> userData) {
-		final List<Sap> saps = toscaApi.getObjects(root, userData, Sap.class);
-		return saps.stream().map(x -> mapper.map(x, NsSap.class)).collect(Collectors.toSet());
+		return getSetOf(Sap.class, NsSap.class, userData);
 	}
 
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
-		final List<SecurityGroupRule> sgr = toscaApi.getObjects(root, userData, SecurityGroupRule.class);
-		return sgr.stream().map(x -> new SecurityGroupAdapter(mapper.map(x, SecurityGroup.class), x.getTargets())).collect(Collectors.toSet());
+		final List<SecurityGroupRule> sgr = getObjects(SecurityGroupRule.class, userData);
+		return sgr.stream().map(x -> new SecurityGroupAdapter(getMapper().map(x, SecurityGroup.class), x.getTargets())).collect(Collectors.toSet());
 	}
 
 	@Override
 	public Set<String> getNestedNsd(final Map<String, String> userData) {
-		final List<NsTopology> sgr = toscaApi.getObjects(root, userData, NsTopology.class);
+		final List<NsTopology> sgr = getObjects(NsTopology.class, userData);
 		return sgr.stream()
 				.filter(x -> x.getNestedNsdInvariant() != null)
 				.flatMap(x -> x.getNestedNsdInvariant().stream())
@@ -166,7 +121,7 @@ public class ToscaNsPackageProvider implements NsPackageProvider {
 
 	@Override
 	public Set<String> getVnfd(final Map<String, String> userData) {
-		final List<NsTopology> sgr = toscaApi.getObjects(root, userData, NsTopology.class);
+		final List<NsTopology> sgr = getObjects(NsTopology.class, userData);
 		return sgr.stream()
 				.filter(x -> x.getVnfdInvariant() != null)
 				.flatMap(x -> x.getVnfdInvariant().stream()).collect(Collectors.toSet());
