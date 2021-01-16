@@ -23,26 +23,20 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
-import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
-import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
-import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
-import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
 
 /**
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -55,11 +49,6 @@ public class DefaultVnfPackageProvider implements VnfPackageProvider {
 		providerData.setVnfSoftwareVersion("0.0.1");
 		providerData.setVnfVersion("0.0.1");
 		return providerData;
-	}
-
-	@Override
-	public Set<SoftwareImage> getSoftwareImages(final Map<String, String> parameters) {
-		return new HashSet<>();
 	}
 
 	@Override

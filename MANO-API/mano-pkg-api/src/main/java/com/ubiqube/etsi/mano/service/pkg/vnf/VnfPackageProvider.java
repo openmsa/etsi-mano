@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
-import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -42,8 +41,6 @@ import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
  *
  */
 public interface VnfPackageProvider {
-	@Nonnull
-	Set<SoftwareImage> getSoftwareImages(Map<String, String> parameters);
 
 	@Nonnull
 	ProviderData getProviderPadata();

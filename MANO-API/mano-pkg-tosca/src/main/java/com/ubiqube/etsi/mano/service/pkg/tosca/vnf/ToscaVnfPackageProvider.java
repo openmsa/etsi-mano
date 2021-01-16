@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
-import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -156,15 +155,6 @@ public class ToscaVnfPackageProvider implements VnfPackageProvider {
 		converterFactory.registerConverter(new SizeConverter());
 		converterFactory.registerConverter(new TimeConverter());
 		mapper = mapperFactory.getMapperFacade();
-	}
-
-	@Override
-	public Set<SoftwareImage> getSoftwareImages(final Map<String, String> parameters) {
-		final List<Compute> list = toscaApi.getObjects(root, parameters, Compute.class);
-		LOG.debug("Found {} Compute node in TOSCA model", list.size());
-		return list.stream()
-				.map(x -> mapper.map(x.getSwImageData(), SoftwareImage.class))
-				.collect(Collectors.toSet());
 	}
 
 	@Override
