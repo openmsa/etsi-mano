@@ -27,15 +27,20 @@ import org.springframework.transaction.annotation.Propagation;
 
 import com.ubiqube.etsi.mano.service.event.NfvoActionController;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 @Transactional(TxType.NEVER)
-public class NfvoActionsController {
+public class NfvoActionsListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NfvoActionsController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NfvoActionsListener.class);
 
 	private final NfvoActionController actionController;
 
-	public NfvoActionsController(final NfvoActionController _actionController) {
+	public NfvoActionsListener(final NfvoActionController _actionController) {
 		super();
 		actionController = _actionController;
 	}
