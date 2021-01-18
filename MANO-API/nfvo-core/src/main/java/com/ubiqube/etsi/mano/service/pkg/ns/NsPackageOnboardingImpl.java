@@ -74,51 +74,55 @@ public class NsPackageOnboardingImpl {
 
 	public void nsOnboarding(@NotNull final UUID objectId) {
 		final NsdPackage nsPackage = nsdPackageJpa.findById(objectId).orElseThrow(() -> new NotFoundException("NS Package " + objectId + " Not found."));
-		final Map<String, String> userData = nsPackage.getUserDefinedData();
 		final byte[] data = nsdRepository.getBinary(objectId, "nsd");
 		final NsPackageProvider packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
-			final NsInformations nsInformations = packageProvider.getNsInformations(userData);
-			mapper.map(nsInformations, nsPackage);
-			final Set<NsSap> nsSap = packageProvider.getNsSap(userData);
-			nsPackage.setNsSaps(nsSap);
-			final Set<NsVirtualLink> nsVirtualLink = packageProvider.getNsVirtualLink(userData);
-			nsPackage.setNsVirtualLinks(nsVirtualLink);
-			final Set<SecurityGroupAdapter> sgAdapters = packageProvider.getSecurityGroups(userData);
-			sgAdapters.forEach(x -> nsPackage.getNsSaps().stream()
-					.filter(y -> x.getTargets().contains(y.getToscaName()))
-					.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
-			final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
-					.map(x -> {
-						nsInformations.getFlavorId();
-						final Optional<VnfPackage> optPackage = getVnfPackage(x);
-						final VnfPackage vnfPackage = optPackage.orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
-						final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
-						nsdPackageVnfPackage.setNsdPackage(nsPackage);
-						nsdPackageVnfPackage.setToscaName(x);
-						nsdPackageVnfPackage.setVnfPackage(vnfPackage);
-						vnfPackage.addNsdPackage(nsdPackageVnfPackage);
-						vnfPackageService.save(vnfPackage);
-						return nsdPackageVnfPackage;
-					})
-					.collect(Collectors.toSet());
-			nsPackage.setVnfPkgIds(vnfds);
-			final Set<NsdPackageNsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
-					.map(x -> {
-						final NsdPackage nestedNsd = nsdPackageJpa.findByNsdInvariantId(x).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x));
-						final NsdPackageNsdPackage nsdnsd = new NsdPackageNsdPackage();
-						nsdnsd.setParent(nsPackage);
-						nsdnsd.setChild(nestedNsd);
-						nsdnsd.setToscaName(x);
-						return nsdnsd;
-					})
-					.collect(Collectors.toSet());
-			nsPackage.setNestedNsdInfoIds(nsds);
+			mapNsPackage(packageProvider, nsPackage);
 		}
 		nsPackage.setNsdOnboardingState(OnboardingStateType.ONBOARDED);
 		nsPackage.setNsdOperationalState(PackageOperationalState.ENABLED);
 		nsdPackageJpa.save(nsPackage);
 		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());
+	}
+
+	private void mapNsPackage(final NsPackageProvider packageProvider, final NsdPackage nsPackage) {
+		final Map<String, String> userData = nsPackage.getUserDefinedData();
+		final NsInformations nsInformations = packageProvider.getNsInformations(userData);
+		mapper.map(nsInformations, nsPackage);
+		final Set<NsSap> nsSap = packageProvider.getNsSap(userData);
+		nsPackage.setNsSaps(nsSap);
+		final Set<NsVirtualLink> nsVirtualLink = packageProvider.getNsVirtualLink(userData);
+		nsPackage.setNsVirtualLinks(nsVirtualLink);
+		final Set<SecurityGroupAdapter> sgAdapters = packageProvider.getSecurityGroups(userData);
+		sgAdapters.forEach(x -> nsPackage.getNsSaps().stream()
+				.filter(y -> x.getTargets().contains(y.getToscaName()))
+				.forEach(y -> y.addSecurityGroups(x.getSecurityGroup())));
+		final Set<NsdPackageVnfPackage> vnfds = packageProvider.getVnfd(userData).stream()
+				.map(x -> {
+					nsInformations.getFlavorId();
+					final Optional<VnfPackage> optPackage = getVnfPackage(x);
+					final VnfPackage vnfPackage = optPackage.orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x));
+					final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
+					nsdPackageVnfPackage.setNsdPackage(nsPackage);
+					nsdPackageVnfPackage.setToscaName(x);
+					nsdPackageVnfPackage.setVnfPackage(vnfPackage);
+					vnfPackage.addNsdPackage(nsdPackageVnfPackage);
+					vnfPackageService.save(vnfPackage);
+					return nsdPackageVnfPackage;
+				})
+				.collect(Collectors.toSet());
+		nsPackage.setVnfPkgIds(vnfds);
+		final Set<NsdPackageNsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
+				.map(x -> {
+					final NsdPackage nestedNsd = nsdPackageJpa.findByNsdInvariantId(x).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x));
+					final NsdPackageNsdPackage nsdnsd = new NsdPackageNsdPackage();
+					nsdnsd.setParent(nsPackage);
+					nsdnsd.setChild(nestedNsd);
+					nsdnsd.setToscaName(x);
+					return nsdnsd;
+				})
+				.collect(Collectors.toSet());
+		nsPackage.setNestedNsdInfoIds(nsds);
 	}
 
 	private Optional<VnfPackage> getVnfPackage(final String flavor, final String descriptorId, final String version) {
