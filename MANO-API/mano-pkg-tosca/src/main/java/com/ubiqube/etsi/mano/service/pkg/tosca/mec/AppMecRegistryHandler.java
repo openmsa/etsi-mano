@@ -17,22 +17,20 @@
 package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.etsi.mano.service.pkg.ToscaException;
-import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.mec.AppRegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
 /**
@@ -40,9 +38,10 @@ import com.ubiqube.parser.tosca.csar.CsarParser;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ToscaRegistryHandler implements AppRegistryHandler {
+@Service
+public class AppMecRegistryHandler implements RegistryHandler<AppToscaProvider> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ToscaRegistryHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AppMecRegistryHandler.class);
 
 	@Override
 	public boolean isProcessable(final byte[] data) {
@@ -52,7 +51,7 @@ public class ToscaRegistryHandler implements AppRegistryHandler {
 				LOG.debug("Not a Zip File.");
 				return false;
 			}
-			final File filename = fetchData(data);
+			final File filename = PkgUtils.fetchData(data);
 			final CsarParser cp = new CsarParser(filename.toString());
 			final String ep = cp.getEntryDefinition();
 
@@ -85,11 +84,11 @@ public class ToscaRegistryHandler implements AppRegistryHandler {
 
 	@Override
 	public String getName() {
-		return "app-tosca-provider";
+		return "Ubique tosca for MEC.";
 	}
 
 	@Override
-	public AppPackageProvider getNewInstance(final byte[] data) {
+	public AppToscaProvider getNewInstance(final byte[] data) {
 		return new AppToscaProvider(data);
 	}
 
@@ -101,20 +100,4 @@ public class ToscaRegistryHandler implements AppRegistryHandler {
 
 		return mapper;
 	}
-
-	private static File fetchData(final byte[] data) {
-		File tempFile;
-		try {
-			tempFile = File.createTempFile("tosca", ".zip");
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		try (final OutputStream os = new FileOutputStream(tempFile)) {
-			os.write(data);
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		return tempFile;
-	}
-
 }
