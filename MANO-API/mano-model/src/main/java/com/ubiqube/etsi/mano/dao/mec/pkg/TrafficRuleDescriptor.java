@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +49,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(schema = "mec_meo")
-public class TrafficRuleDescriptor {
+public class TrafficRuleDescriptor implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@DocumentId
 	@GeneratedValue(strategy = GenerationType.AUTO)

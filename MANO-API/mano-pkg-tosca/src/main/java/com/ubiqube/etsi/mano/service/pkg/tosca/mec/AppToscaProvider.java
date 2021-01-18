@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppExternalCpd;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppNetworks;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
@@ -32,7 +37,13 @@ import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
 
 import ma.glasnost.orika.MapperFactory;
+import tosca.capabilities.nfv.VirtualCompute;
+import tosca.nodes.mec.CP;
 import tosca.nodes.mec.MEA;
+import tosca.nodes.mec.VL;
+import tosca.nodes.mec.vl.ELAN;
+import tosca.nodes.mec.vl.ELine;
+import tosca.nodes.mec.vl.ETree;
 import tosca.policies.mec.AppServiceOptional;
 import tosca.policies.mec.AppServiceProduced;
 import tosca.policies.mec.AppServiceRequired;
@@ -61,9 +72,16 @@ public class AppToscaProvider extends AbstractPackageProvider implements AppPack
 				.field("virtualCompute", "virtualComputeDescriptor")
 				.field("optionalFeatureDependencies", "appFeatureOptional")
 				.field("requiredFeatureDependencies", "appFeatureRequired")
+				.field("virtualComputeDescriptor.swImageData", "virtualComputeDescriptor.softwareImage")
 				.byDefault()
 				.register();
-
+		mapperFactory.classMap(VirtualCompute.class, VnfCompute.class)
+				.field("virtualCpu.numVirtualCpu", "numVcpu")
+				.field("virtualCpu.cpuArchitecture", "cpuArchitecture")
+				.field("virtualMemory.virtualMemSize", "virtualMemorySize")
+				.field("virtualLocalStorage[0].sizeOfStorage", "diskSize")
+				.byDefault()
+				.register();
 	}
 
 	@Override
@@ -94,6 +112,19 @@ public class AppToscaProvider extends AbstractPackageProvider implements AppPack
 	@Override
 	public Set<ServiceDescriptor> getServiceProduced(final Map<String, String> parameters) {
 		return getSetOf(AppServiceProduced.class, ServiceDescriptor.class, parameters);
+	}
+
+	@Override
+	public Set<AppNetworks> getVl(final Map<String, String> parameters) {
+		return getSetOf(AppNetworks.class, parameters, VL.class, ELine.class, ELAN.class, ETree.class);
+	}
+
+	@Override
+	public Set<AppExternalCpd> getExtCp(final Map<String, String> parameters) {
+		final Set<VnfExtCp> tmp = getSetOf(CP.class, VnfExtCp.class, parameters);
+		final AppExternalCpd appextCp = new AppExternalCpd();
+		appextCp.setExtCps(tmp);
+		return Collections.singleton(appextCp);
 	}
 
 }

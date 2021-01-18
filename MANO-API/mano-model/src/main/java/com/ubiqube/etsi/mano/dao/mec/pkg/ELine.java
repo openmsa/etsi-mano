@@ -16,37 +16,13 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
-import java.io.Serializable;
-
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
-@Getter
-@Embeddable
-public class InterfaceDescriptor implements Serializable {
+public class ELine extends AppNetworks {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-
-	private String dstIPAddress = null;
-
-	private String dstMACAddress = null;
-
-	@Enumerated(EnumType.STRING)
-	private InterfaceType interfaceType = null;
-
-	private String srcMACAddress = null;
-
-	@Embedded
-	private TunnelInfo tunnelInfo = null;
 }

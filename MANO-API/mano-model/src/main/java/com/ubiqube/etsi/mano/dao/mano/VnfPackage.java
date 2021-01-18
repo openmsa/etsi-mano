@@ -124,7 +124,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 	@IndexedEmbedded
 	private Set<VnfStorage> vnfStorage = new LinkedHashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfPackage")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@IndexedEmbedded
 	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 

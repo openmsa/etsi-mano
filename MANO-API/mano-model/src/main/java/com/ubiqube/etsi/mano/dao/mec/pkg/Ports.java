@@ -16,12 +16,20 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
-import java.io.Serializable;
+import java.util.UUID;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,22 +39,24 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Entity
 @Setter
 @Getter
-@Embeddable
-public class InterfaceDescriptor implements Serializable {
+@Table(schema = "mec_meo")
+@EntityListeners(AuditListener.class)
+public class Ports implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private String dstIPAddress = null;
+	private String toscaName;
 
-	private String dstMACAddress = null;
+	private String type;
 
-	@Enumerated(EnumType.STRING)
-	private InterfaceType interfaceType = null;
-
-	private String srcMACAddress = null;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
 	@Embedded
-	private TunnelInfo tunnelInfo = null;
+	private Audit audit;
+
 }

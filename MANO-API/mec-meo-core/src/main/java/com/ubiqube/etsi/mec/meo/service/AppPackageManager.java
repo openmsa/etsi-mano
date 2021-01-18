@@ -31,6 +31,8 @@ import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppExternalCpd;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppNetworks;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
@@ -101,6 +103,13 @@ public class AppPackageManager {
 
 		final Set<ServiceDependency> appServiceRequired = provider.getRequiredServiceDependency(new HashMap<>());
 		app.setAppServiceRequired(appServiceRequired);
+
+		final Set<AppExternalCpd> extCp = provider.getExtCp(new HashMap<>());
+		app.setAppExtCpd(extCp);
+
+		final Set<AppNetworks> vl = provider.getVl(new HashMap<>());
+		app.setVnfVl(vl);
+
 	}
 
 	private static Checksum getChecksum(final byte[] bytes) {

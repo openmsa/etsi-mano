@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,7 +44,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(schema = "mec_meo")
-public class ServiceDescriptor {
+public class ServiceDescriptor implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@DocumentId
 	@GeneratedValue(strategy = GenerationType.AUTO)

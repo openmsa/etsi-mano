@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 import lombok.Getter;
@@ -29,6 +31,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class LatencyDescriptor {
+public class LatencyDescriptor implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private Integer maxLatency;
 }

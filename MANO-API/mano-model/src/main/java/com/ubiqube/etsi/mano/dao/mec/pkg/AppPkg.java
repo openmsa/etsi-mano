@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -34,6 +35,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -52,6 +54,7 @@ import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 import lombok.Getter;
@@ -69,6 +72,9 @@ import lombok.Setter;
 @EntityListeners(AuditListener.class)
 @Indexed
 public class AppPkg implements BaseEntity, Auditable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@DocumentId
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -99,6 +105,7 @@ public class AppPkg implements BaseEntity, Auditable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@CollectionTable(schema = "mec_meo")
 	private Map<String, String> userDefinedData = null;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -114,6 +121,14 @@ public class AppPkg implements BaseEntity, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<AppExternalCpd> appExtCpd;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<AppNetworks> vnfVl = new LinkedHashSet<>();
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@CollectionTable(schema = "mec_meo")
+	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 
 	@ElementCollection
 	@CollectionTable(schema = "mec_meo")

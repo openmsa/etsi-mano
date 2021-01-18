@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 import lombok.Getter;
@@ -29,7 +31,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class FeatureDependency {
+public class FeatureDependency implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String name = null;
 
 	private String version = null;
