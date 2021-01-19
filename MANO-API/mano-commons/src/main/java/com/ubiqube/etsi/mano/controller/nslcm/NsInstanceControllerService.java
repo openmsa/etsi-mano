@@ -25,6 +25,12 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.model.NsInstantiate;
 
+/**
+ * Merge with {@link NsInstanceController}
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface NsInstanceControllerService {
 
 	NsdInstance createNsd(String _nsdId, String nsName, String nsDescription);

@@ -21,6 +21,12 @@ import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 
+/**
+ * Merge with {@link NsInstanceControllerService}
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface NsInstanceController {
 
 	List<NsdInstance> nsInstancesGet(String filter);
