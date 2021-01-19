@@ -62,6 +62,10 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	@JoinColumn
 	private VnfInstance vnfInstance;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfTask> tasks = new HashSet<>();
+
 	@Valid
 	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinColumn
@@ -77,10 +81,6 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 
 	@FullTextField
 	private String grantsRequestId;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Embedded
 	@IndexedEmbedded
