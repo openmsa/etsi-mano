@@ -38,8 +38,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.config.properties.ManoElectionProperties;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -48,8 +50,8 @@ import groovy.lang.GroovyShell;
 
 @Service
 public class GroovyElection implements VimElection {
-    
-    private static final Logger LOG = LoggerFactory.getLogger(GroovyElection.class);
+
+	private static final Logger LOG = LoggerFactory.getLogger(GroovyElection.class);
 
 	private final VimManager vimManager;
 	private final ManoElectionProperties properties;
@@ -60,7 +62,7 @@ public class GroovyElection implements VimElection {
 	}
 
 	@Override
-	public VimConnectionInformation doElection(final Set<GrantInformationExt> resources) {
+	public VimConnectionInformation doElection(final GrantResponse grant, final Set<VnfCompute> vnfcs, final Set<VnfStorage> storages) {
 		final ExecutorService executor = Executors.newFixedThreadPool(5);
 		final CompletionService<VoteStatus> completionService = new ExecutorCompletionService<>(executor);
 		final List<Path> scripts = findScript();

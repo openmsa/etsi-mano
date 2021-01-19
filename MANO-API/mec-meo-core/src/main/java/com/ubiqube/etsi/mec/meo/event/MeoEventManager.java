@@ -35,4 +35,6 @@ public interface MeoEventManager {
 	void sendMeoEvent(@NotNull ActionType event, @Nonnull UUID objectId, @Nonnull Map<String, Object> parameters);
 
 	void sendNotification(final NotificationEvent notificationEvent, final UUID objectId);
+
+	void sendGrant(@NotNull UUID id, @NotNull Map<String, Object> parameters);
 }

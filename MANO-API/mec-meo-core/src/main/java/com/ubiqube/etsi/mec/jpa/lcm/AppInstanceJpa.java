@@ -14,14 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.event.elect;
+package com.ubiqube.etsi.mec.jpa.lcm;
 
-import java.util.Set;
+import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface VimElection {
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 
-	VimConnectionInformation doElection(final Set<GrantInformationExt> resources);
+@Repository
+public interface AppInstanceJpa extends CrudRepository<AppInstance, UUID> {
+	// Nothing.
 }

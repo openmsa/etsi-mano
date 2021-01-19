@@ -14,31 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.service.event.elect;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import java.util.Set;
 
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 
-import lombok.Getter;
-import lombok.Setter;
+public interface VimElection {
 
-@Setter
-@Getter
-@Entity
-@Indexed
-@EntityListeners(AuditListener.class)
-public class VnfInstance extends Instance {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private VnfPackage vnfPkg = null;
-
-	private String vnfdId;
-
+	VimConnectionInformation doElection(GrantResponse grant, Set<VnfCompute> vnfcs, Set<VnfStorage> storages);
 }

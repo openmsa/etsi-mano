@@ -14,31 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mec.repository;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import java.util.UUID;
 
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.springframework.data.repository.CrudRepository;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 
-@Setter
-@Getter
-@Entity
-@Indexed
-@EntityListeners(AuditListener.class)
-public class VnfInstance extends Instance {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private VnfPackage vnfPkg = null;
-
-	private String vnfdId;
-
+/**
+ * Duplication of NFVO one.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface GrantsResponseJpa extends CrudRepository<GrantResponse, UUID> {
+	// Nothing.
 }

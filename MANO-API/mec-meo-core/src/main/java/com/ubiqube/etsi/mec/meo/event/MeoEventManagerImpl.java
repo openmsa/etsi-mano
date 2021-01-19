@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.jms.ActionMessage;
 import com.ubiqube.etsi.mano.service.event.jms.EventMessage;
+import com.ubiqube.etsi.mano.service.event.jms.GrantMessage;
 
 /**
  *
@@ -53,6 +54,12 @@ public class MeoEventManagerImpl implements MeoEventManager {
 	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId) {
 		final EventMessage msg = new EventMessage(notificationEvent, objectId);
 		jmsTemplate.convertAndSend("system.notifications", msg);
+	}
+
+	@Override
+	public void sendGrant(final UUID id, final Map<String, Object> parameters) {
+		final GrantMessage msg = new GrantMessage(id, parameters);
+		jmsTemplate.convertAndSend("system.actions.meo.grants", msg);
 	}
 
 }

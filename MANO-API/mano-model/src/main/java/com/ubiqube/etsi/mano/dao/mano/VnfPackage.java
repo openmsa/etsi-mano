@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
@@ -267,6 +268,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.descriptorVersion = descriptorVersion;
 	}
 
+	@Nonnull
 	public Set<VnfCompute> getVnfCompute() {
 		return vnfCompute;
 	}
@@ -283,6 +285,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.vnfVl = vnfVl;
 	}
 
+	@Nonnull
 	public Set<VnfStorage> getVnfStorage() {
 		return vnfStorage;
 	}
