@@ -14,30 +14,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.controller.lcm;
+package com.ubiqube.etsi.mec.mepm.repositories;
 
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
-import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 
-public interface MepmInstanceController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Repository
+public interface AppInstanceJpa extends CrudRepository<AppInstance, UUID> {
 
-	void delete(UUID fromString);
-
-	AppInstance findById(UUID fromString);
-
-	AppInstance createInstance(@NotNull String appDId, String appInstanceDescription, String appInstanceName);
-
-	AppBluePrint terminate(UUID fromString, @NotNull @Valid CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
-
-	AppBluePrint operate(UUID fromString, VnfOperateRequest req);
-
-	AppBluePrint instantiate(UUID fromString);
-
+	int countByAppPkgId(UUID id);
+	// Nothing.
 }

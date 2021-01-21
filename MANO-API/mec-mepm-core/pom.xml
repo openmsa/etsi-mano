@@ -154,5 +154,10 @@
 			<artifactId>mano-pkg-tosca</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mec-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -14,30 +14,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.controller.lcm;
+package com.ubiqube.etsi.mec.mepm.service;
 
-import java.util.UUID;
+import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
-import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
 
-public interface MepmInstanceController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class AppBlueprintService {
+	private final AppBluePrintJpa appBluePrintJpa;
 
-	void delete(UUID fromString);
+	public AppBlueprintService(final AppBluePrintJpa appBluePrintJpa) {
+		super();
+		this.appBluePrintJpa = appBluePrintJpa;
+	}
 
-	AppInstance findById(UUID fromString);
-
-	AppInstance createInstance(@NotNull String appDId, String appInstanceDescription, String appInstanceName);
-
-	AppBluePrint terminate(UUID fromString, @NotNull @Valid CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
-
-	AppBluePrint operate(UUID fromString, VnfOperateRequest req);
-
-	AppBluePrint instantiate(UUID fromString);
+	public AppBluePrint save(final AppBluePrint blueprint) {
+		return appBluePrintJpa.save(blueprint);
+	}
 
 }

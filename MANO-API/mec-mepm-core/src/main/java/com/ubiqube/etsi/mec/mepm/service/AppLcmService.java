@@ -14,30 +14,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.controller.lcm;
+package com.ubiqube.etsi.mec.mepm.service;
 
-import java.util.UUID;
+import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 
-public interface MepmInstanceController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class AppLcmService {
 
-	void delete(UUID fromString);
+	public AppBluePrint createTerminateOpOcc(final AppInstance vnfInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	AppInstance findById(UUID fromString);
+	public AppBluePrint createOperateOpOcc(final AppInstance vnfInstance, final VnfOperateRequest req) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	AppInstance createInstance(@NotNull String appDId, String appInstanceDescription, String appInstanceName);
-
-	AppBluePrint terminate(UUID fromString, @NotNull @Valid CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
-
-	AppBluePrint operate(UUID fromString, VnfOperateRequest req);
-
-	AppBluePrint instantiate(UUID fromString);
+	public AppBluePrint createIntatiateOpOcc(final AppInstance vnfInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

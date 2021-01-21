@@ -14,30 +14,44 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.controller.lcm;
+package com.ubiqube.etsi.mec.mepm.service;
 
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
-import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mec.mepm.repositories.AppInstanceJpa;
 
-public interface MepmInstanceController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class AppInstanceService {
 
-	void delete(UUID fromString);
+	private final AppInstanceJpa appInstanceJpa;
 
-	AppInstance findById(UUID fromString);
+	public AppInstanceService(final AppInstanceJpa appInstanceJpa) {
+		super();
+		this.appInstanceJpa = appInstanceJpa;
+	}
 
-	AppInstance createInstance(@NotNull String appDId, String appInstanceDescription, String appInstanceName);
+	public AppInstance findById(final UUID id) {
+		return appInstanceJpa.findById(id).orElseThrow();
+	}
 
-	AppBluePrint terminate(UUID fromString, @NotNull @Valid CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
+	public boolean isInstantiate(final UUID id) {
+		return 0 == appInstanceJpa.countByAppPkgId(id);
+	}
 
-	AppBluePrint operate(UUID fromString, VnfOperateRequest req);
+	public void delete(final UUID id) {
+		appInstanceJpa.deleteById(id);
+	}
 
-	AppBluePrint instantiate(UUID fromString);
+	public AppInstance save(final AppInstance vnfInstance) {
+		return appInstanceJpa.save(vnfInstance);
+	}
 
 }
