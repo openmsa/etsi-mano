@@ -50,7 +50,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfPackage implements BaseEntity, Auditable {
+public class VnfPackage implements PackageBase, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -212,6 +212,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.additionalArtifacts = additionalArtifacts;
 	}
 
+	@Override
 	public OnboardingStateType getOnboardingState() {
 		return onboardingState;
 	}
@@ -220,6 +221,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.onboardingState = onboardingState;
 	}
 
+	@Override
 	public PackageOperationalState getOperationalState() {
 		return operationalState;
 	}
@@ -228,6 +230,7 @@ public class VnfPackage implements BaseEntity, Auditable {
 		this.operationalState = operationalState;
 	}
 
+	@Override
 	public PackageUsageState getUsageState() {
 		return usageState;
 	}

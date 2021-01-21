@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
 
 /**
  *
@@ -29,20 +30,29 @@ import com.ubiqube.etsi.mano.model.VnfOperateRequest;
  */
 @Service
 public class AppLcmService {
+	private AppBluePrintJpa appBluePrintJpa;
+
+	public AppBluePrintJpa getAppBluePrintJpa() {
+		return appBluePrintJpa;
+	}
+
+	public void setAppBluePrintJpa(final AppBluePrintJpa appBluePrintJpa) {
+		this.appBluePrintJpa = appBluePrintJpa;
+	}
 
 	public AppBluePrint createTerminateOpOcc(final AppInstance vnfInstance) {
-		// TODO Auto-generated method stub
-		return null;
+		final AppBluePrint appBluePrint = new AppBluePrint();
+		return appBluePrintJpa.save(appBluePrint);
 	}
 
 	public AppBluePrint createOperateOpOcc(final AppInstance vnfInstance, final VnfOperateRequest req) {
-		// TODO Auto-generated method stub
-		return null;
+		final AppBluePrint appBluePrint = new AppBluePrint();
+		return appBluePrintJpa.save(appBluePrint);
 	}
 
 	public AppBluePrint createIntatiateOpOcc(final AppInstance vnfInstance) {
-		// TODO Auto-generated method stub
-		return null;
+		final AppBluePrint appBluePrint = new AppBluePrint();
+		return appBluePrintJpa.save(appBluePrint);
 	}
 
 }

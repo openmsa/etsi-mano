@@ -49,6 +49,8 @@ public class MeoActionContoller {
 		case MEO_ONBOARDING:
 			appPackageManager.onboardApp(objectId);
 			break;
+		case MEPM_INSTANTIATE:
+			//
 		default:
 			LOG.warn("Unknown event: {}", actionType);
 			break;

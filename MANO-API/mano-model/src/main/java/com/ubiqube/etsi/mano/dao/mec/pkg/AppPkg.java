@@ -49,8 +49,8 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
-import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -71,7 +71,7 @@ import lombok.Setter;
 @Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
 @Indexed
-public class AppPkg implements BaseEntity, Auditable {
+public class AppPkg implements PackageBase, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
