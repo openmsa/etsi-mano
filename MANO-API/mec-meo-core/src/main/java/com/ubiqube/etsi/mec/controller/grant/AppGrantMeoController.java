@@ -27,8 +27,8 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManager;
-import com.ubiqube.etsi.mec.repository.GrantsResponseJpa;
 
 import ma.glasnost.orika.MapperFacade;
 
