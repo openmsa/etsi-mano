@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mec.meo.v211.model.lcm.AppInstanceLcmOpOcc;
@@ -44,7 +44,7 @@ public class AppLcmOpOccsApiController implements AppLcmOpOccsApi {
 
 	@Override
 	public ResponseEntity<String> appLcmOpOccsGET(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault) {
-		final List<AppBluePrint> resultsDb = mepmLcmController.query(filter);
+		final List<AppBlueprint> resultsDb = mepmLcmController.query(filter);
 		final List<AppInstanceLcmOpOcc> results = resultsDb.stream()
 				.map(x -> mapper.map(x, AppInstanceLcmOpOcc.class))
 				.collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class AppLcmOpOccsApiController implements AppLcmOpOccsApi {
 
 	@Override
 	public ResponseEntity<AppInstanceLcmOpOcc> appLcmOpOccsbyIdGET(final String appLcmOpOccId) {
-		final AppBluePrint resultDb = mepmLcmController.findById(UUID.fromString(appLcmOpOccId));
+		final AppBlueprint resultDb = mepmLcmController.findById(UUID.fromString(appLcmOpOccId));
 		final AppInstanceLcmOpOcc entity = mapper.map(resultDb, AppInstanceLcmOpOcc.class);
 		return new ResponseEntity<>(entity, HttpStatus.OK);
 	}

@@ -14,19 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.repositories;
+package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.UUID;
+import java.util.Set;
 
-import org.springframework.data.repository.CrudRepository;
-
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppBluePrintJpa extends CrudRepository<AppBlueprint, UUID> {
-	// Nothing.
+public interface VimBlueprint<U extends VimTask> extends Blueprint<U> {
+
+	void setVimConnections(Set<VimConnectionInformation> vimConnections);
+	//
+
+	void setZoneGroups(Set<BlueZoneGroupInformation> mapAsSet);
+
+	void setZones(Set<ZoneInfoEntity> zones);
+
+	void setGrantsRequestId(String string);
+
+	void setExtManagedVirtualLinks(Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks);
 }

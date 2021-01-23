@@ -19,18 +19,41 @@ package com.ubiqube.etsi.mec.mepm.event;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.service.event.ActionType;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface MepmEventManager {
+@Service
+public class MepmActionController {
 
-	void sendNotification(NotificationEvent notificationEvent, UUID objectId);
+	private static final Logger LOG = LoggerFactory.getLogger(MepmActionController.class);
 
-	void sendActionMepm(ActionType actionType, UUID id, Map<String, Object> parameters);
+	private MepmActions mepmActions;
+
+	public void dispatch(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
+		switch (actionType) {
+		case MEPM_INSTANTIATE:
+			mepmActions.instantiate(objectId);
+			break;
+		case MEPM_TERMINATE:
+			mepmActions.terminate(objectId);
+			break;
+		case MEPM_OPERATE:
+			mepmActions.operate(objectId);
+			break;
+		default:
+			LOG.warn("Unknown event: {}", actionType);
+			break;
+		}
+	}
 
 }

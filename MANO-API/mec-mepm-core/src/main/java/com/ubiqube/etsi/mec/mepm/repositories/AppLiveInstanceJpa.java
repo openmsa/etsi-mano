@@ -19,14 +19,16 @@ package com.ubiqube.etsi.mec.mepm.repositories;
 import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppLiveInstance;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppBluePrintJpa extends CrudRepository<AppBlueprint, UUID> {
+@Repository
+public interface AppLiveInstanceJpa extends CrudRepository<AppLiveInstance, UUID> {
 	// Nothing.
 }

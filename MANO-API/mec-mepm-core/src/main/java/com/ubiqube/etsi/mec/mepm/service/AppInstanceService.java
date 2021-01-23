@@ -16,12 +16,16 @@
  */
 package com.ubiqube.etsi.mec.mepm.service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
-import com.ubiqube.etsi.mec.mepm.repositories.AppInstanceJpa;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppLiveInstance;
+import com.ubiqube.etsi.mec.repositories.AppInstanceJpa;
 
 /**
  *
@@ -52,6 +56,31 @@ public class AppInstanceService {
 
 	public AppInstance save(final AppInstance vnfInstance) {
 		return appInstanceJpa.save(vnfInstance);
+	}
+
+	public Optional<AppLiveInstance> findLiveInstanceById(final UUID id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void deleteLiveInstanceById(final UUID id) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void save(final AppLiveInstance vli) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public List<VnfLiveInstance> getLiveVirtualLinkInstanceOf(final AppInstance vnfInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<AppLiveInstance> getLiveComputeInstanceOf(final AppInstance vnfInstance) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

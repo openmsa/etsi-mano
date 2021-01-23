@@ -18,7 +18,7 @@ package com.ubiqube.etsi.mec.mepm.service;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
@@ -40,18 +40,18 @@ public class AppLcmService {
 		this.appBluePrintJpa = appBluePrintJpa;
 	}
 
-	public AppBluePrint createTerminateOpOcc(final AppInstance vnfInstance) {
-		final AppBluePrint appBluePrint = new AppBluePrint();
+	public AppBlueprint createTerminateOpOcc(final AppInstance vnfInstance) {
+		final AppBlueprint appBluePrint = new AppBlueprint();
 		return appBluePrintJpa.save(appBluePrint);
 	}
 
-	public AppBluePrint createOperateOpOcc(final AppInstance vnfInstance, final VnfOperateRequest req) {
-		final AppBluePrint appBluePrint = new AppBluePrint();
+	public AppBlueprint createOperateOpOcc(final AppInstance vnfInstance, final VnfOperateRequest req) {
+		final AppBlueprint appBluePrint = new AppBlueprint();
 		return appBluePrintJpa.save(appBluePrint);
 	}
 
-	public AppBluePrint createIntatiateOpOcc(final AppInstance vnfInstance) {
-		final AppBluePrint appBluePrint = new AppBluePrint();
+	public AppBlueprint createIntatiateOpOcc(final AppInstance vnfInstance) {
+		final AppBlueprint appBluePrint = new AppBlueprint();
 		return appBluePrintJpa.save(appBluePrint);
 	}
 

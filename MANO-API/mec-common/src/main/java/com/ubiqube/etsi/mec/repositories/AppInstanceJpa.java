@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.repositories;
+package com.ubiqube.etsi.mec.repositories;
 
 import java.util.UUID;
 
@@ -23,14 +23,8 @@ import org.springframework.stereotype.Repository;
 
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 @Repository
 public interface AppInstanceJpa extends CrudRepository<AppInstance, UUID> {
 
 	int countByAppPkgId(UUID id);
-	// Nothing.
 }

@@ -14,19 +14,38 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.repositories;
+package com.ubiqube.etsi.mano.dao.mec.tasks;
 
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.ManyToOne;
 
-import org.springframework.data.repository.CrudRepository;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppBluePrintJpa extends CrudRepository<AppBlueprint, UUID> {
-	// Nothing.
+@Entity
+@Setter
+@Getter
+@EntityListeners(AuditListener.class)
+public class AppComputeTask extends AppTask {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	@ManyToOne
+	private VnfCompute vnfCompute;
+
+	private String flavorId;
+
+	private String imageId;
+
 }

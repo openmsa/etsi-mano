@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 
 /**
  *
@@ -30,8 +30,8 @@ import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
  */
 public interface MepmLcmController {
 
-	AppBluePrint findById(UUID fromString);
+	AppBlueprint findById(UUID fromString);
 
-	List<AppBluePrint> query(@Valid String filter);
+	List<AppBlueprint> query(@Valid String filter);
 
 }

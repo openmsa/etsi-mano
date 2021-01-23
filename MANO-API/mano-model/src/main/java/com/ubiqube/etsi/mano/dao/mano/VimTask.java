@@ -14,19 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.repositories;
+package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.UUID;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 
-import org.springframework.data.repository.CrudRepository;
+public interface VimTask extends Task {
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+	void setVimReservationId(String reservationId);
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public interface AppBluePrintJpa extends CrudRepository<AppBlueprint, UUID> {
-	// Nothing.
+	void setResourceGroupId(String resourceGroupId);
+
+	void setZoneId(String zoneId);
+
+	void setResourceProviderId(String resourceProviderId);
+
+	void setVimConnectionId(String vimConnectionId);
+
 }

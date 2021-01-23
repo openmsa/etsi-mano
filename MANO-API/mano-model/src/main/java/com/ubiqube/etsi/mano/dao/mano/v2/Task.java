@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 
 public interface Task extends ToscaEntity, Auditable {
@@ -40,5 +41,7 @@ public interface Task extends ToscaEntity, Auditable {
 	void setVimResourceId(String res);
 
 	String getVimResourceId();
+
+	ResourceTypeEnum getType();
 
 }

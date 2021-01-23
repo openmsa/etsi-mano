@@ -30,13 +30,14 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VimBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimTask;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 
 import ma.glasnost.orika.MapperFacade;
@@ -52,6 +53,7 @@ import ma.glasnost.orika.MapperFacade;
 public class ManoGrantService implements VimResourceService {
 
 	private final MapperFacade mapper;
+
 	private final ResourceAllocate nfvo;
 
 	public ManoGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
@@ -60,15 +62,17 @@ public class ManoGrantService implements VimResourceService {
 	}
 
 	@Override
-	public void allocate(final VnfBlueprint plan) {
+	public void allocate(final VimBlueprint plan) {
 		final GrantsRequest grantRequest = mapper.map(plan, GrantsRequest.class);
-		final Predicate<? super VnfTask> isManoClass = x -> (x.getType() == ResourceTypeEnum.COMPUTE) ||
+		final Predicate<? super VimTask> isManoClass = x -> (x.getType() == ResourceTypeEnum.COMPUTE) ||
 				(x.getType() == ResourceTypeEnum.LINKPORT) ||
 				(x.getType() == ResourceTypeEnum.STORAGE) ||
 				(x.getType() == ResourceTypeEnum.VL);
+		plan.getTasks().iterator().next();
 		plan.getTasks().stream()
 				.filter(isManoClass)
-				.forEach(x -> {
+				.forEach(xx -> {
+					final VimTask x = (VimTask) xx;
 					if (x.getChangeType() == ChangeType.ADDED) {
 						x.getType();
 						grantRequest.getAddResources().add(mapper.map(x, GrantInformation.class));
@@ -81,7 +85,7 @@ public class ManoGrantService implements VimResourceService {
 		grantsResp.getAddResources().forEach(x -> {
 			// Get VNFM Grant Resource information ID.
 			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
-			final VnfTask task = findTask(plan, grantUuid);
+			final VimTask task = findTask(plan, grantUuid);
 			task.setVimReservationId(x.getReservationId());
 			task.setResourceGroupId(x.getResourceGroupId());
 			task.setZoneId(x.getZoneId());
@@ -91,16 +95,16 @@ public class ManoGrantService implements VimResourceService {
 		plan.setVimConnections(grantsResp.getVimConnections());
 		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
 		plan.setZones(grantsResp.getZones());
-		plan.getParameters().setExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
+		plan.setExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
 		plan.setGrantsRequestId(grantsResp.getId().toString());
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 	}
 
-	private static void mapVimAsset(final Set<VnfTask> tasks, final GrantVimAssetsEntity vimAssets) {
+	private static void mapVimAsset(final Set<VimTask> tasks, final GrantVimAssetsEntity vimAssets) {
 		tasks.stream()
 				.filter(x -> x instanceof ComputeTask)
 				.filter(x -> x.getChangeType() != ChangeType.REMOVED)
-				.map(x -> (ComputeTask) x)
+				.map(ComputeTask.class::cast)
 				.forEach(x -> {
 					x.setFlavorId(findFlavor(vimAssets, x.getVnfCompute().getId()));
 					x.setImageId(findImage(vimAssets, x.getVnfCompute().getId()));
@@ -124,7 +128,7 @@ public class ManoGrantService implements VimResourceService {
 				.orElseThrow(() -> new NotFoundException("Could not find flavor for vdu: " + vduId));
 	}
 
-	private static VnfTask findTask(final VnfBlueprint plan, final UUID grantUuid) {
+	private static VimTask findTask(final Blueprint<VimTask> plan, final UUID grantUuid) {
 		return plan.getTasks().stream()
 				.filter(x -> x.getId().compareTo(grantUuid) == 0)
 				.findFirst()

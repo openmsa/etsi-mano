@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.VimBlueprint;
 
 /**
  *
@@ -25,6 +25,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
  */
 public interface VimResourceService {
 
-	void allocate(VnfBlueprint plan);
+	void allocate(VimBlueprint plan);
 
 }

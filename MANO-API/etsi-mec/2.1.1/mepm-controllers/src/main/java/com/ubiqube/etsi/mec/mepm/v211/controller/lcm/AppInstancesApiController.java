@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mec.meo.v211.model.lcm.AppInstanceInfo;
@@ -73,7 +73,7 @@ public class AppInstancesApiController implements AppInstancesApi {
 
 	@Override
 	public ResponseEntity<Void> appLcmInstanciatePOST(@Valid final InstantiateAppRequest body, final String appInstanceId) {
-		final AppBluePrint lcm = instanceController.instantiate(UUID.fromString(appInstanceId));
+		final AppBlueprint lcm = instanceController.instantiate(UUID.fromString(appInstanceId));
 		final String link = makeSeflftLink(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
@@ -81,19 +81,19 @@ public class AppInstancesApiController implements AppInstancesApi {
 	@Override
 	public ResponseEntity<Void> appLcmOperatePOST(@Valid final OperateAppRequest body, final String appInstanceId) {
 		final VnfOperateRequest req = mapper.map(body, VnfOperateRequest.class);
-		final AppBluePrint lcm = instanceController.operate(UUID.fromString(appInstanceId), req);
+		final AppBlueprint lcm = instanceController.operate(UUID.fromString(appInstanceId), req);
 		final String link = makeSeflftLink(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
 	@Override
 	public ResponseEntity<Void> appLcmTerminatePOST(@Valid final TerminateAppRequest body, final String appInstanceId) {
-		final AppBluePrint appBluePrint = instanceController.terminate(UUID.fromString(appInstanceId), CancelModeTypeEnum.fromValue(body.getTerminationType().toString()), body.getGracefulTerminationTimeout());
+		final AppBlueprint appBluePrint = instanceController.terminate(UUID.fromString(appInstanceId), CancelModeTypeEnum.fromValue(body.getTerminationType().toString()), body.getGracefulTerminationTimeout());
 		final String link = makeSeflftLink(appBluePrint);
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 	}
 
-	private static String makeSeflftLink(final AppBluePrint appBluePrint) {
+	private static String makeSeflftLink(final AppBlueprint appBluePrint) {
 		return linkTo(methodOn(AppInstancesApi.class).appInstanceIdGET(appBluePrint.getId().toString())).withSelfRel().getHref();
 	}
 

@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
@@ -118,26 +118,26 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 	}
 
 	@Override
-	public AppBluePrint terminate(final UUID appInstanceId, @NotNull @Valid final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+	public AppBlueprint terminate(final UUID appInstanceId, @NotNull @Valid final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		final AppInstance appInstance = appInstanceService.findById(appInstanceId);
 		ensureInstantiated(appInstance);
-		final AppBluePrint blueprint = appLcmService.createTerminateOpOcc(appInstance);
+		final AppBlueprint blueprint = appLcmService.createTerminateOpOcc(appInstance);
 		eventManager.sendActionMepm(ActionType.VNF_TERMINATE, blueprint.getId(), new HashMap<>());
 		LOG.info("Terminate sent for instancce: {}", appInstanceId);
 		return blueprint;
 	}
 
 	@Override
-	public AppBluePrint operate(final UUID uuid, final VnfOperateRequest req) {
+	public AppBlueprint operate(final UUID uuid, final VnfOperateRequest req) {
 		final AppInstance appInstance = appInstanceService.findById(uuid);
 		ensureInstantiated(appInstance);
-		final AppBluePrint lcmOpOccs = appLcmService.createOperateOpOcc(appInstance, req);
+		final AppBlueprint lcmOpOccs = appLcmService.createOperateOpOcc(appInstance, req);
 		eventManager.sendActionMepm(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
 	}
 
 	@Override
-	public AppBluePrint instantiate(final UUID appInstanceId) {
+	public AppBlueprint instantiate(final UUID appInstanceId) {
 		final AppInstance appInstance = appInstanceService.findById(appInstanceId);
 		ensureNotInstantiated(appInstance);
 
@@ -145,7 +145,7 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		final AppPkg vnfPkg = appPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
 
-		AppBluePrint blueprint = appLcmService.createIntatiateOpOcc(appInstance);
+		AppBlueprint blueprint = appLcmService.createIntatiateOpOcc(appInstance);
 		// mapper.map(instantiateVnfRequest, blueprint);
 		blueprint = planService.save(blueprint);
 		eventManager.sendActionMepm(ActionType.VNF_INSTANTIATE, blueprint.getId(), new HashMap<>());

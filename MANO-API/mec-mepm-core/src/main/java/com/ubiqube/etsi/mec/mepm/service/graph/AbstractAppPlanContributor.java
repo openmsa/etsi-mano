@@ -14,19 +14,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.repositories;
+package com.ubiqube.etsi.mec.mepm.service.graph;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.function.Supplier;
 
-import org.springframework.data.repository.CrudRepository;
-
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppBluePrintJpa extends CrudRepository<AppBlueprint, UUID> {
-	// Nothing.
+public abstract class AbstractAppPlanContributor implements PlanContributor<AppPkg, AppBlueprint, AppTask, AppParameters> {
+	protected static <U> U createTask(final Supplier<VnfTask> newInstance) {
+		final VnfTask task = newInstance.get();
+		task.setStartDate(LocalDateTime.now());
+		task.setStatus(PlanStatusType.NOT_STARTED);
+		return (U) task;
+	}
 }

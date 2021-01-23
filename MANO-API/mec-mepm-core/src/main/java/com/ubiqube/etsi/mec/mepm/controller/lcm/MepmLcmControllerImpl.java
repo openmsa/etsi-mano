@@ -16,28 +16,40 @@
  */
 package com.ubiqube.etsi.mec.mepm.controller.lcm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
-import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
 
-public interface MepmInstanceController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class MepmLcmControllerImpl implements MepmLcmController {
 
-	void delete(UUID fromString);
+	private final AppBluePrintJpa appBluePrintJpa;
 
-	AppInstance findById(UUID fromString);
+	public MepmLcmControllerImpl(final AppBluePrintJpa _appBluePrintJpa) {
+		appBluePrintJpa = _appBluePrintJpa;
+	}
 
-	AppInstance createInstance(@NotNull String appDId, String appInstanceDescription, String appInstanceName);
+	@Override
+	public AppBlueprint findById(final UUID fromString) {
+		return appBluePrintJpa.findById(fromString).orElseThrow();
+	}
 
-	AppBlueprint terminate(UUID fromString, @NotNull @Valid CancelModeTypeEnum terminationType, Integer gracefulTerminationTimeout);
-
-	AppBlueprint operate(UUID fromString, VnfOperateRequest req);
-
-	AppBlueprint instantiate(UUID fromString);
+	@Override
+	public List<AppBlueprint> query(@Valid final String filter) {
+		// TODO
+		return new ArrayList<>();
+	}
 
 }

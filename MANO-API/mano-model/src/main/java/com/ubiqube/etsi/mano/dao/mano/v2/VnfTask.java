@@ -33,6 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VimTask;
 
 /**
  *
@@ -41,7 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
  */
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfTask extends AbstractTask {
+public class VnfTask extends AbstractTask implements VimTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -97,10 +98,12 @@ public class VnfTask extends AbstractTask {
 		return vimReservationId;
 	}
 
+	@Override
 	public void setVimReservationId(final String vimReservationId) {
 		this.vimReservationId = vimReservationId;
 	}
 
+	@Override
 	public ResourceTypeEnum getType() {
 		return type;
 	}
@@ -113,6 +116,7 @@ public class VnfTask extends AbstractTask {
 		return zoneId;
 	}
 
+	@Override
 	public void setZoneId(final String zoneId) {
 		this.zoneId = zoneId;
 	}
@@ -121,6 +125,7 @@ public class VnfTask extends AbstractTask {
 		return resourceGroupId;
 	}
 
+	@Override
 	public void setResourceGroupId(final String resourceGroupId) {
 		this.resourceGroupId = resourceGroupId;
 	}
@@ -153,6 +158,7 @@ public class VnfTask extends AbstractTask {
 		return resourceProviderId;
 	}
 
+	@Override
 	public void setResourceProviderId(final String resourceProviderId) {
 		this.resourceProviderId = resourceProviderId;
 	}
@@ -161,6 +167,7 @@ public class VnfTask extends AbstractTask {
 		return vimConnectionId;
 	}
 
+	@Override
 	public void setVimConnectionId(final String vimConnectionId) {
 		this.vimConnectionId = vimConnectionId;
 	}

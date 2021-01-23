@@ -16,16 +16,22 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.lcm;
 
+import java.util.UUID;
+
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
-
+import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
-import com.ubiqube.etsi.mano.dao.mano.Instance;
-import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,14 +44,45 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Indexed
 @Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
-public class AppInstance extends Instance {
+public class AppLiveInstance implements BaseEntity, Auditable {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+
 	@ManyToOne
-	private AppPkg appPkg;
+	private AppInstance vnfInstance;
+
+	private String instantiationLevel;
+
+	@ManyToOne
+	private AppTask task;
+
+	@ManyToOne
+	private AppBlueprint blueprint;
+
+	/**
+	 * VIM resourceId.
+	 */
+	private String resourceId;
+
+	@Embedded
+	private Audit audit;
+
+	public AppLiveInstance() {
+		// Nothing.
+	}
+
+	public AppLiveInstance(@NotNull final AppInstance vnfInstance, final String il, final AppTask appTask, @NotNull final AppBlueprint blueprint, final String vimResourceId) {
+		this.vnfInstance = vnfInstance;
+		this.task = appTask;
+		this.blueprint = blueprint;
+		this.resourceId = vimResourceId;
+	}
+
 }

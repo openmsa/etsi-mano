@@ -14,16 +14,17 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.jpa.lcm;
+package com.ubiqube.etsi.mec.mepm.service.graph.mepm;
 
-import java.util.UUID;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
-
-@Repository
-public interface AppInstanceJpa extends CrudRepository<AppInstance, UUID> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public abstract class AppAbstractUnitOfWork implements UnitOfWork<AppTask, AppParameters> {
 	// Nothing.
 }

@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -29,14 +31,15 @@ import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mec.jpa.lcm.AppInstanceJpa;
 import com.ubiqube.etsi.mec.jpa.pkg.AppPkgJpa;
+import com.ubiqube.etsi.mec.repositories.AppInstanceJpa;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class MeoGrantAction extends AbstractGrantAction {
 
 	private final GrantsResponseJpa grantJpa;

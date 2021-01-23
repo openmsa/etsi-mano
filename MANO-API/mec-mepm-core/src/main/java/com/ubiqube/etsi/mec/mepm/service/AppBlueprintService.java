@@ -16,9 +16,14 @@
  */
 package com.ubiqube.etsi.mec.mepm.service;
 
+import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBluePrint;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
 
 /**
@@ -35,8 +40,17 @@ public class AppBlueprintService {
 		this.appBluePrintJpa = appBluePrintJpa;
 	}
 
-	public AppBluePrint save(final AppBluePrint blueprint) {
+	public AppBlueprint save(final AppBlueprint blueprint) {
 		return appBluePrintJpa.save(blueprint);
+	}
+
+	public AppBlueprint findById(@NotNull final UUID blueprintId) {
+		return appBluePrintJpa.findById(blueprintId).orElseThrow();
+	}
+
+	public AppBlueprint updateState(final AppBlueprint localPlan, final OperationStatusType processing) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -28,13 +28,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VimTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,8 +43,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
-public class AppTask extends AbstractTask {
+public class AppTask extends AbstractTask implements VimTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +66,7 @@ public class AppTask extends AbstractTask {
 	private String resourceGroupId;
 
 	@ManyToOne
-	private VnfBlueprint blueprint;
+	private AppBlueprint blueprint;
 
 	private UUID removedVnfLiveInstance;
 

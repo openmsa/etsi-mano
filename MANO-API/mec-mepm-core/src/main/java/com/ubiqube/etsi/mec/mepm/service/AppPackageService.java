@@ -14,19 +14,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.repositories;
+package com.ubiqube.etsi.mec.mepm.service;
 
-import java.util.UUID;
+import org.springframework.stereotype.Service;
 
-import org.springframework.data.repository.CrudRepository;
-
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppBluePrintJpa extends CrudRepository<AppBlueprint, UUID> {
-	// Nothing.
+@Service
+public class AppPackageService {
+
+	/**
+	 * XXX: Could be generic with UUID.
+	 *
+	 * @param appPkg
+	 * @return
+	 */
+	public AppPkg findById(final AppPkg appPkg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
