@@ -30,15 +30,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.event.ActionType;
-import com.ubiqube.etsi.mec.jpa.pkg.AppPkgJpa;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManager;
 import com.ubiqube.etsi.mec.repositories.AppPackageRepository;
+import com.ubiqube.etsi.mec.repositories.AppPkgJpa;
 
 @Service
 public class AppPackageMeoControllerImpl implements AppPackageMeoController {
@@ -98,8 +99,10 @@ public class AppPackageMeoControllerImpl implements AppPackageMeoController {
 	@Override
 	public void store(final UUID fromString, final byte[] bytes) {
 		final ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-		appPkgJpa.findById(fromString).orElseThrow(() -> new NotFoundException("App package " + fromString + " could not be found."));
+		final AppPkg appPkg = appPkgJpa.findById(fromString).orElseThrow(() -> new NotFoundException("App package " + fromString + " could not be found."));
 		appPackageRepository.storeBinary(fromString, "appd", bais);
+		appPkg.setOnboardingState(OnboardingStateType.ONBOARDED);
+		appPackageRepository.save(appPkg);
 		eventManager.sendMeoEvent(ActionType.MEO_ONBOARDING, fromString, new HashMap<>());
 	}
 

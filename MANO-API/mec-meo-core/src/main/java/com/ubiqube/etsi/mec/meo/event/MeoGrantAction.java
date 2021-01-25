@@ -31,8 +31,8 @@ import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mec.jpa.pkg.AppPkgJpa;
 import com.ubiqube.etsi.mec.repositories.AppInstanceJpa;
+import com.ubiqube.etsi.mec.repositories.AppPkgJpa;
 
 /**
  *

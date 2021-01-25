@@ -14,8 +14,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.jpa.pkg;
+package com.ubiqube.etsi.mec.repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -23,7 +24,13 @@ import org.springframework.stereotype.Repository;
 
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Repository
 public interface AppPkgJpa extends PagingAndSortingRepository<AppPkg, UUID> {
-	// Nothing.
+
+	Optional<AppPkg> findByAppDId(String id);
 }

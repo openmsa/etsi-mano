@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mec.mepm.event.MepmEventManager;
 import com.ubiqube.etsi.mec.mepm.service.AppBlueprintService;
 import com.ubiqube.etsi.mec.mepm.service.AppInstanceService;
 import com.ubiqube.etsi.mec.mepm.service.AppLcmService;
+import com.ubiqube.etsi.mec.mepm.service.AppPackageService;
 import com.ubiqube.etsi.mec.repositories.AppPackageRepository;
 
 import ma.glasnost.orika.MapperFacade;
@@ -69,7 +70,9 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 
 	private final AppBlueprintService planService;
 
-	public MepmInstanceControllerImpl(final AppInstanceService appInstanceService, final AppPackageRepository appPackageRepository, final MapperFacade mapper, final MepmEventManager eventManager, final AppLcmService appLcmService, final AppBlueprintService planService) {
+	private final AppPackageService appPackageService;
+
+	public MepmInstanceControllerImpl(final AppInstanceService appInstanceService, final AppPackageRepository appPackageRepository, final MapperFacade mapper, final MepmEventManager eventManager, final AppLcmService appLcmService, final AppBlueprintService planService, final AppPackageService _appPackageService) {
 		super();
 		this.appInstanceService = appInstanceService;
 		this.appPackageRepository = appPackageRepository;
@@ -77,6 +80,7 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		this.eventManager = eventManager;
 		this.appLcmService = appLcmService;
 		this.planService = planService;
+		appPackageService = _appPackageService;
 	}
 
 	@Override
@@ -98,7 +102,7 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 
 	@Override
 	public AppInstance createInstance(@NotNull final String appDId, final String appInstanceDescription, final String appInstanceName) {
-		final AppPkg appPkgInfo = appPackageRepository.get(UUID.fromString(appDId));
+		final AppPkg appPkgInfo = appPackageService.findByAppdId(appDId);
 		ensureIsOnboarded(appPkgInfo);
 		ensureIsEnabled(appPkgInfo);
 		AppInstance appInstance = createAppInstance(appDId, appInstanceDescription, appInstanceName, appPkgInfo);

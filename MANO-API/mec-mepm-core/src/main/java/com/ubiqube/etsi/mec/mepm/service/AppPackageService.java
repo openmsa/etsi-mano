@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mec.mepm.service;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mec.repositories.AppPkgJpa;
 
 /**
  *
@@ -27,6 +28,11 @@ import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
  */
 @Service
 public class AppPackageService {
+	private final AppPkgJpa appPkgJpa;
+
+	public AppPackageService(final AppPkgJpa _appPkgJpa) {
+		appPkgJpa = _appPkgJpa;
+	}
 
 	/**
 	 * XXX: Could be generic with UUID.
@@ -35,8 +41,11 @@ public class AppPackageService {
 	 * @return
 	 */
 	public AppPkg findById(final AppPkg appPkg) {
-		// TODO Auto-generated method stub
-		return null;
+		return appPkgJpa.findById(appPkg.getId()).orElseThrow();
+	}
+
+	public AppPkg findByAppdId(final String id) {
+		return appPkgJpa.findByAppDId(id).orElseThrow();
 	}
 
 }
