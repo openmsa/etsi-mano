@@ -27,18 +27,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.search.mapper.pojo.bridge.builtin.annotation.GeoPointBinding;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
+import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
+@Indexed
 @EntityListeners(AuditListener.class)
 public class VimConnectionInformation implements Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	@DocumentId
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
+	@FullTextField
 	private String vimId = null;
 
+	@FullTextField
 	private String vimType = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -49,6 +65,9 @@ public class VimConnectionInformation implements Auditable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extra = null;
+
+	@GeoPointBinding
+	private GeoPoint geoloc;
 
 	private Audit audit;
 
@@ -98,6 +117,14 @@ public class VimConnectionInformation implements Auditable {
 
 	public void setVimId(final String vimId) {
 		this.vimId = vimId;
+	}
+
+	public GeoPoint getGeoloc() {
+		return geoloc;
+	}
+
+	public void setGeoloc(final GeoPoint geoloc) {
+		this.geoloc = geoloc;
 	}
 
 	@Override
