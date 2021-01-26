@@ -36,7 +36,6 @@ import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
@@ -55,6 +54,7 @@ import com.ubiqube.etsi.mec.mepm.repositories.AppLiveInstanceJpa;
 import com.ubiqube.etsi.mec.mepm.service.AppBlueprintService;
 import com.ubiqube.etsi.mec.mepm.service.AppInstanceService;
 import com.ubiqube.etsi.mec.mepm.service.AppPackageService;
+import com.ubiqube.etsi.mec.mepm.service.MeoGrantService;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppReport;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppWorkflow;
@@ -85,7 +85,7 @@ public class MepmActions {
 
 	private final AppLiveInstanceJpa appLiveInstanceJpa;
 
-	public MepmActions(final AppBlueprintService blueprintService, final AppInstanceService instanceService, final AppPackageService appPackageService, final AppWorkflow vnfWorkflow, final MepmEventManager eventManager, final VimManager vimManager, final VimResourceService vimResourceService, final AppLiveInstanceJpa appLiveInstanceJpa) {
+	public MepmActions(final AppBlueprintService blueprintService, final AppInstanceService instanceService, final AppPackageService appPackageService, final AppWorkflow vnfWorkflow, final MepmEventManager eventManager, final VimManager vimManager, final MeoGrantService vimResourceService, final AppLiveInstanceJpa appLiveInstanceJpa) {
 		super();
 		this.blueprintService = blueprintService;
 		this.instanceService = instanceService;
@@ -156,7 +156,7 @@ public class MepmActions {
 	}
 
 	private Map<String, String> getLiveVl(final AppInstance vnfInstance) {
-		final List<VnfLiveInstance> res = instanceService.getLiveVirtualLinkInstanceOf(vnfInstance);
+		final List<AppLiveInstance> res = instanceService.getLiveVirtualLinkInstanceOf(vnfInstance);
 		return res.stream()
 				.collect(Collectors.toMap(x -> x.getTask().getToscaName(), x -> x.getTask().getVimResourceId()));
 	}

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mec.mepm.service.graph.mepm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
@@ -32,44 +33,37 @@ public class MepmStartUow extends AppAbstractUnitOfWork {
 
 	@Override
 	public String exec(final AppParameters params) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public AppTask getTaskEntity() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String rollback(final AppParameters params) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WfDependency> getDependencies() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
 	public List<WfProduce> getProduce() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "mec-start";
 	}
 
 	@Override
 	public String getToscaName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "mec-start";
 	}
 
 }

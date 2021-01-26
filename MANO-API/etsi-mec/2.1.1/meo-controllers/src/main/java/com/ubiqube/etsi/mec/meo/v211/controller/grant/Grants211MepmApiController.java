@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mec.controller.grant.AppGrantController;
 import com.ubiqube.etsi.mec.meo.v211.model.grant.Grant;
 import com.ubiqube.etsi.mec.meo.v211.model.grant.GrantRequest;
@@ -47,7 +47,7 @@ public class Grants211MepmApiController implements Grants211MepmApi {
 
 	@Override
 	public ResponseEntity<Grant> grantPOST(@Valid final GrantRequest grantRequest) {
-		final GrantsRequest obj = mapper.map(grantRequest, GrantsRequest.class);
+		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
 		final GrantResponse resp = appGrantController.post(obj);
 		final URI location = linkTo(methodOn(Grants211MepmApi.class).grantGET(resp.getId().toString())).withSelfRel().toUri();
 		return ResponseEntity.created(location).build();

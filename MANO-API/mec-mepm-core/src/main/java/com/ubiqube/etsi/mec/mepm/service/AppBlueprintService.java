@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mec.mepm.service;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -49,8 +50,9 @@ public class AppBlueprintService {
 	}
 
 	public AppBlueprint updateState(final AppBlueprint localPlan, final OperationStatusType processing) {
-		// TODO Auto-generated method stub
-		return null;
+		localPlan.setOperationStatus(processing);
+		localPlan.setStateEnteredTime(new Date());
+		return appBluePrintJpa.save(localPlan);
 	}
 
 }

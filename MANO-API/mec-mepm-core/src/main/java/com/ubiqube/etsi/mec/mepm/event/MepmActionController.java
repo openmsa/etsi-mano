@@ -37,7 +37,11 @@ public class MepmActionController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MepmActionController.class);
 
-	private MepmActions mepmActions;
+	private final MepmActions mepmActions;
+
+	public MepmActionController(final MepmActions _mepmActions) {
+		mepmActions = _mepmActions;
+	}
 
 	public void dispatch(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
 		switch (actionType) {

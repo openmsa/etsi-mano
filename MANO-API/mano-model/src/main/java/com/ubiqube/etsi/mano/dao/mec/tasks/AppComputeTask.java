@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.dao.mec.tasks;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -35,6 +36,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
 public class AppComputeTask extends AppTask {
 

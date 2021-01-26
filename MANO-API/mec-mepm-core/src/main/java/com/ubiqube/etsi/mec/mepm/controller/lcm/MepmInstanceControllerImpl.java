@@ -151,8 +151,9 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 
 		AppBlueprint blueprint = appLcmService.createIntatiateOpOcc(appInstance);
 		// mapper.map(instantiateVnfRequest, blueprint);
+		blueprint.setAppInstance(appInstance);
 		blueprint = planService.save(blueprint);
-		eventManager.sendActionMepm(ActionType.VNF_INSTANTIATE, blueprint.getId(), new HashMap<>());
+		eventManager.sendActionMepm(ActionType.MEPM_INSTANTIATE, blueprint.getId(), new HashMap<>());
 		LOG.info("VNF Instantiation Event Sucessfully sent. {}", blueprint.getId());
 		return blueprint;
 	}

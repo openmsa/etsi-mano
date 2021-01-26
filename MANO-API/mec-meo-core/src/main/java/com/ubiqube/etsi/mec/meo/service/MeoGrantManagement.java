@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.controller.grant;
+package com.ubiqube.etsi.mec.meo.service;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -24,49 +24,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManager;
+import com.ubiqube.etsi.mec.service.AppGrantManagement;
 
 import ma.glasnost.orika.MapperFacade;
 
 /**
- * Duplicate of NFVO.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
-public class AppGrantMeoController implements AppGrantController {
+public class MeoGrantManagement implements AppGrantManagement {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AppGrantMeoController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MeoGrantManagement.class);
+
+	private final MapperFacade mapper;
 
 	private final GrantsResponseJpa grantsResponseJpa;
-	private final MapperFacade mapper;
+
 	private final MeoEventManager eventManager;
 
-	public AppGrantMeoController(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final MeoEventManager _eventManager) {
-		grantsResponseJpa = _grantsJpa;
-		mapper = _mapper;
-		eventManager = _eventManager;
+	public MeoGrantManagement(final MapperFacade mapper, final GrantsResponseJpa grantsResponseJpa, final MeoEventManager eventManager) {
+		super();
+		this.mapper = mapper;
+		this.grantsResponseJpa = grantsResponseJpa;
+		this.eventManager = eventManager;
 	}
 
 	@Override
-	public GrantResponse findById(final UUID grantId) {
+	public GrantResponse get(final UUID grantId) {
 		final Optional<GrantResponse> grantOpt = grantsResponseJpa.findById(grantId);
 		return grantOpt.orElseThrow(() -> new NotFoundException("Unable to find grant " + grantId));
+
 	}
 
 	@Override
-	public GrantResponse post(final VnfGrantsRequest grantRequest) {
+	public GrantResponse post(final GrantInterface grantRequest) {
 		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		grants.setAvailable(Boolean.FALSE);
 		final GrantResponse grantsDb = grantsResponseJpa.save(grants);
-		LOG.debug("MEO: Sending grants {}", grantsDb.getId());
+		LOG.debug("Sending grants {}", grantsDb.getId());
 		eventManager.sendGrant(grantsDb.getId(), new HashMap<>());
-		LOG.info("MEO: Grant request {} sent.", grantsDb.getId());
+		LOG.info("Grant request {} sent.", grantsDb.getId());
 		return grantsDb;
 	}
 

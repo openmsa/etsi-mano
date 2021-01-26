@@ -22,9 +22,12 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppLiveInstance;
+import com.ubiqube.etsi.mano.dao.mec.tasks.AppComputeTask;
+import com.ubiqube.etsi.mano.dao.mec.tasks.AppNetworkTask;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mec.mepm.repositories.AppLiveInstanceJpa;
 import com.ubiqube.etsi.mec.repositories.AppInstanceJpa;
 
 /**
@@ -37,13 +40,16 @@ public class AppInstanceService {
 
 	private final AppInstanceJpa appInstanceJpa;
 
-	public AppInstanceService(final AppInstanceJpa appInstanceJpa) {
+	private final AppLiveInstanceJpa apoAppLiveInstanceJpa;
+
+	public AppInstanceService(final AppInstanceJpa appInstanceJpa, final AppLiveInstanceJpa _apoAppLiveInstanceJpa) {
 		super();
 		this.appInstanceJpa = appInstanceJpa;
+		apoAppLiveInstanceJpa = _apoAppLiveInstanceJpa;
 	}
 
 	public AppInstance findById(final UUID id) {
-		return appInstanceJpa.findById(id).orElseThrow();
+		return appInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find appInstance with id: " + id));
 	}
 
 	public boolean isInstantiate(final UUID id) {
@@ -59,28 +65,24 @@ public class AppInstanceService {
 	}
 
 	public Optional<AppLiveInstance> findLiveInstanceById(final UUID id) {
-		// TODO Auto-generated method stub
-		return null;
+		return apoAppLiveInstanceJpa.findById(id);
 	}
 
 	public void deleteLiveInstanceById(final UUID id) {
-		// TODO Auto-generated method stub
+		appInstanceJpa.deleteById(id);
+	}
+
+	public AppLiveInstance save(final AppLiveInstance vli) {
+		return apoAppLiveInstanceJpa.save(vli);
 
 	}
 
-	public void save(final AppLiveInstance vli) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public List<VnfLiveInstance> getLiveVirtualLinkInstanceOf(final AppInstance vnfInstance) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AppLiveInstance> getLiveVirtualLinkInstanceOf(final AppInstance vnfInstance) {
+		return apoAppLiveInstanceJpa.findByAppInstanceAndClass(vnfInstance, AppNetworkTask.class.getSimpleName());
 	}
 
 	public List<AppLiveInstance> getLiveComputeInstanceOf(final AppInstance vnfInstance) {
-		// TODO Auto-generated method stub
-		return null;
+		return apoAppLiveInstanceJpa.findByAppInstanceAndClass(vnfInstance, AppComputeTask.class.getSimpleName());
 	}
 
 }

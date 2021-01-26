@@ -14,23 +14,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.controller.grant;
+package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.UUID;
+import java.util.Set;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 
 /**
- * Duplicate of NFVO.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppGrantController {
+public interface GrantInterface {
 
-	GrantResponse findById(UUID grantId);
+	Set<GrantInformation> getAddResources();
 
-	GrantResponse post(VnfGrantsRequest grantRequest);
+	void setAddResources(final Set<GrantInformation> addResources);
+
+	Set<GrantInformation> getTempResources();
+
+	void setTempResources(final Set<GrantInformation> tempResources);
+
+	Set<GrantInformation> getRemoveResources();
+
+	void setRemoveResources(final Set<GrantInformation> removeResources);
+
+	Set<GrantInformation> getUpdateResources();
+
+	void setUpdateResources(final Set<GrantInformation> updateResources);
+
+	GrantVimAssetsEntity getVimAssets();
 
 }

@@ -16,11 +16,14 @@
  */
 package com.ubiqube.etsi.mec.mepm.repositories;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppLiveInstance;
 
 /**
@@ -30,5 +33,8 @@ import com.ubiqube.etsi.mano.dao.mec.lcm.AppLiveInstance;
  */
 @Repository
 public interface AppLiveInstanceJpa extends CrudRepository<AppLiveInstance, UUID> {
-	// Nothing.
+
+	@Query("select ali, t from AppLiveInstance ali join AppTask t on t.id = ali.task where ali.appInstance = ?1 AND t.class = ?2")
+	List<AppLiveInstance> findByAppInstanceAndClass(AppInstance vnfInstance, String clazz);
+
 }

@@ -14,23 +14,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.controller.grant;
+package com.ubiqube.etsi.mec.mepm.service;
 
-import java.util.UUID;
+import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
+import com.ubiqube.etsi.mano.service.AbstractGrantService;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
- * Duplicate of NFVO.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppGrantController {
+@Service
+public class MeoGrantService extends AbstractGrantService {
 
-	GrantResponse findById(UUID grantId);
-
-	GrantResponse post(VnfGrantsRequest grantRequest);
+	public MeoGrantService(final MapperFacade _mapper, final AppResourceAllocate _nfvo) {
+		super(_mapper, _nfvo);
+	}
 
 }

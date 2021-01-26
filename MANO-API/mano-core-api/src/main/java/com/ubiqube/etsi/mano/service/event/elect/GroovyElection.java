@@ -47,6 +47,9 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Service
 public class GroovyElection implements VimElection {
@@ -64,21 +67,23 @@ public class GroovyElection implements VimElection {
 	@Override
 	public VimConnectionInformation doElection(final GrantResponse grant, final Set<VnfCompute> vnfcs, final Set<VnfStorage> storages) {
 		final ExecutorService executor = Executors.newFixedThreadPool(5);
-		final CompletionService<VoteStatus> completionService = new ExecutorCompletionService<>(executor);
+		final CompletionService<VoteResponse> completionService = new ExecutorCompletionService<>(executor);
 		final List<Path> scripts = findScript();
 		final List<String> list = scripts.stream().map(Path::toString).collect(Collectors.toList());
 		final Iterable<VimConnectionInformation> ite = vimManager.findAllVimconnections();
+		int numberOfVim = 0;
 		for (final VimConnectionInformation vimConnectionInformation : ite) {
 			completionService.submit(() -> executueScripts(list, vimConnectionInformation));
+			numberOfVim++;
 		}
 		int received = 0;
 		final List<VimConnectionInformation> vims = new ArrayList<>();
-		while (received < scripts.size()) {
+		while (received < numberOfVim) {
 			try {
-				final Future<VoteStatus> resultFuture = completionService.take();
-				final VoteStatus result = resultFuture.get();
-				if (result == VoteStatus.DENIED) {
-					return null;
+				final Future<VoteResponse> resultFuture = completionService.take();
+				final VoteResponse result = resultFuture.get();
+				if (result.getVoteStatus() == VoteStatus.GRANTED) {
+					vims.add(result.getVimConnectionInformation());
 				}
 				received++;
 			} catch (final Exception e) {
@@ -88,12 +93,15 @@ public class GroovyElection implements VimElection {
 			}
 		}
 		executor.shutdown();
-		return null;
+		return vims.get(0);
 	}
 
 	List<Path> findScript() {
 		final String scriPtath = properties.getScriptPath();
 		final Path path = Paths.get(scriPtath);
+		if (!path.toFile().exists()) {
+			return new ArrayList<>();
+		}
 		try (Stream<Path> stream = Files.walk(path)) {
 			return stream.filter(x -> x.toFile().isFile())
 					.filter(x -> x.getFileName().endsWith("elect"))
@@ -103,14 +111,17 @@ public class GroovyElection implements VimElection {
 		}
 	}
 
-	private static VoteStatus executueScripts(final List<String> list, final VimConnectionInformation vimConnectionInformation) {
+	private static VoteResponse executueScripts(final List<String> list, final VimConnectionInformation vimConnectionInformation) {
+		LOG.info("Running Groovy script against {}", vimConnectionInformation.getVimId());
+		final VoteResponse ret = new VoteResponse(VoteStatus.GRANTED, vimConnectionInformation);
 		for (final String string : list) {
 			final VoteStatus res = executueScript(string, vimConnectionInformation);
 			if (res == VoteStatus.DENIED) {
-				return res;
+				ret.setVoteStatus(VoteStatus.DENIED);
+				return ret;
 			}
 		}
-		return null;
+		return ret;
 	}
 
 	static VoteStatus executueScript(final String script, final VimConnectionInformation vimConnectionInformation) {
@@ -124,4 +135,12 @@ public class GroovyElection implements VimElection {
 		}
 	}
 
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	static class VoteResponse {
+		private VoteStatus voteStatus;
+
+		private VimConnectionInformation vimConnectionInformation;
+	}
 }

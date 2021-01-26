@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
@@ -128,7 +128,7 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 
-		orikaMapperFactory.classMap(GrantsRequest.class, GrantRequest.class)
+		orikaMapperFactory.classMap(VnfGrantsRequest.class, GrantRequest.class)
 				.field("vnfLcmOpOccs.vnfInstance.id", "vnfInstanceId")
 				.field("vnfLcmOpOccs.id", "vnfLcmOpOccId")
 				.field("vnfInstance.id", "vnfInstanceId")

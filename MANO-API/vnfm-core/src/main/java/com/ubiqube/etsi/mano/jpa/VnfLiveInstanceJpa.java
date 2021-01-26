@@ -25,6 +25,12 @@ import org.springframework.data.repository.CrudRepository;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 
+/**
+ * TODO: findByVnfInstanceIdAndClass is the same as *NotNull methods.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface VnfLiveInstanceJpa extends CrudRepository<VnfLiveInstance, UUID> {
 
 	int countByVnfInstanceAndTaskToscaName(VnfInstance vnfInstance, String id);

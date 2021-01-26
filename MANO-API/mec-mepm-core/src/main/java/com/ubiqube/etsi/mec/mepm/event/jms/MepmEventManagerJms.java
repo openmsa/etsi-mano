@@ -50,7 +50,7 @@ public class MepmEventManagerJms implements MepmEventManager {
 	@Override
 	public void sendActionMepm(final ActionType actionType, final UUID id, final Map<String, Object> parameters) {
 		final ActionMessage msg = new ActionMessage(actionType, id, parameters);
-		jmsTemplate.convertAndSend("system.actions.meo", msg);
+		jmsTemplate.convertAndSend("system.actions.mepm", msg);
 	}
 
 }

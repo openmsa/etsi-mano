@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mec.mepm.service;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mec.repositories.AppPkgJpa;
 
 /**
@@ -45,7 +46,7 @@ public class AppPackageService {
 	}
 
 	public AppPkg findByAppdId(final String id) {
-		return appPkgJpa.findByAppDId(id).orElseThrow();
+		return appPkgJpa.findByAppDId(id).orElseThrow(() -> new NotFoundException("Could not find AppPkg with id: " + id));
 	}
 
 }

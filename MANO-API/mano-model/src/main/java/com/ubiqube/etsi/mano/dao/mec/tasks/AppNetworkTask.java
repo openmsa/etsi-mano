@@ -14,24 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mec.lcm;
+package com.ubiqube.etsi.mano.dao.mec.tasks;
 
-import java.util.UUID;
-
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
-import com.ubiqube.etsi.mano.dao.mano.Auditable;
-import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,48 +33,16 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Entity
 @Setter
 @Getter
-@Entity
 @Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
-public class AppLiveInstance implements BaseEntity, Auditable {
-
+public class AppNetworkTask extends AppTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-
 	@ManyToOne
-	private AppInstance appInstance;
-
-	private String instantiationLevel;
-
-	@ManyToOne
-	private AppTask task;
-
-	@ManyToOne
-	private AppBlueprint blueprint;
-
-	/**
-	 * VIM resourceId.
-	 */
-	private String resourceId;
-
-	@Embedded
-	private Audit audit;
-
-	public AppLiveInstance() {
-		// Nothing.
-	}
-
-	public AppLiveInstance(@NotNull final AppInstance vnfInstance, final String il, final AppTask appTask, @NotNull final AppBlueprint blueprint, final String vimResourceId) {
-		this.appInstance = vnfInstance;
-		this.task = appTask;
-		this.blueprint = blueprint;
-		this.resourceId = vimResourceId;
-	}
+	private VnfVl vnfVl;
 
 }

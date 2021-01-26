@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
@@ -102,7 +102,7 @@ public class GrantTest {
 	void testGratRequest() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final GrantRequest reqJson = podam.manufacturePojo(GrantRequest.class);
-		final GrantsRequest req = mapper.map(reqJson, GrantsRequest.class);
+		final VnfGrantsRequest req = mapper.map(reqJson, VnfGrantsRequest.class);
 		assertNotNull(req.getVimConstraints());
 	}
 }

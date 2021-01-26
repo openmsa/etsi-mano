@@ -14,23 +14,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.controller.grant;
+package com.ubiqube.etsi.mec.service;
 
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 
 /**
- * Duplicate of NFVO.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface AppGrantController {
+public interface AppGrantManagement {
+	@Nonnull
+	GrantResponse get(UUID grantId);
 
-	GrantResponse findById(UUID grantId);
-
-	GrantResponse post(VnfGrantsRequest grantRequest);
-
+	@Nonnull
+	GrantResponse post(GrantInterface grant);
 }

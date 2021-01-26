@@ -14,41 +14,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mec.mepm.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.service.ResourceAllocate;
+import com.ubiqube.etsi.mec.service.AppGrantManagement;
 
 /**
- * Communication layer between VNFM -> NFVO from a NFVM point of view.
  *
- * @author ovi@ubiqube.com
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
-public class ResourceAllocateImpl implements ResourceAllocate {
+public class AppResourceAllocate implements ResourceAllocate {
+	private static final Logger LOG = LoggerFactory.getLogger(AppResourceAllocate.class);
 
-	private static final Logger LOG = LoggerFactory.getLogger(ResourceAllocateImpl.class);
+	private final AppGrantManagement grantManagement;
 
-	private final GrantManagement grantManagement;
-
-	public ResourceAllocateImpl(final GrantManagement _grantManagement) {
+	public AppResourceAllocate(final AppGrantManagement _grantManagement) {
 		grantManagement = _grantManagement;
 	}
 
 	@Override
-	public GrantResponse sendSyncGrantRequest(final GrantsRequest req) {
+	public GrantResponse sendSyncGrantRequest(final GrantInterface req) {
 		// final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
 		return sendAndWaitGrantRequest(req);
 	}
 
-	private GrantResponse sendAndWaitGrantRequest(final GrantsRequest grantRequest) {
+	private GrantResponse sendAndWaitGrantRequest(final GrantInterface grantRequest) {
 		final GrantResponse grants = grantManagement.post(grantRequest);
 		return pollGrants(grants);
 	}
@@ -71,4 +70,5 @@ public class ResourceAllocateImpl implements ResourceAllocate {
 		}
 		throw new GenericException("Unable to get grant ID " + grants.getId());
 	}
+
 }

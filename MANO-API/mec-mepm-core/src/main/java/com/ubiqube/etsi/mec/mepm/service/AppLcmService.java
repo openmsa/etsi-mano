@@ -32,8 +32,8 @@ import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
 public class AppLcmService {
 	private AppBluePrintJpa appBluePrintJpa;
 
-	public AppBluePrintJpa getAppBluePrintJpa() {
-		return appBluePrintJpa;
+	public AppLcmService(final AppBluePrintJpa _appBluePrintJpa) {
+		appBluePrintJpa = _appBluePrintJpa;
 	}
 
 	public void setAppBluePrintJpa(final AppBluePrintJpa appBluePrintJpa) {

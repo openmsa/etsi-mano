@@ -98,6 +98,9 @@ public abstract class AbstractGrantAction {
 		final GrantResponse grants = getGrant(objectId);
 		removeResources(grants);
 		final VimConnectionInformation vimInfo = vimElection.doElection(null, getVnfCompute(objectId), getVnfStorage(objectId));
+		if (vimInfo == null) {
+			throw new GenericException("No suitable VIM after election.");
+		}
 		getVimInformations(vimInfo, grants);
 		grants.setAvailable(Boolean.TRUE);
 
