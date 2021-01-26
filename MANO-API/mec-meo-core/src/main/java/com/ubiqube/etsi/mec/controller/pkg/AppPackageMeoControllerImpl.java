@@ -56,8 +56,8 @@ public class AppPackageMeoControllerImpl implements AppPackageMeoController {
 	}
 
 	@Override
-	public AppPkg findById(final UUID fromString) {
-		return appPkgJpa.findById(fromString).orElseThrow();
+	public AppPkg findById(final UUID id) {
+		return appPkgJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find AppPkg with id: " + id));
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class AppPackageMeoControllerImpl implements AppPackageMeoController {
 
 	@Override
 	public AppPkg getAppd(final UUID appPkgId) {
-		return appPkgJpa.findById(appPkgId).orElseThrow();
+		return appPkgJpa.findById(appPkgId).orElseThrow(() -> new NotFoundException("Could not find AppPkg with id: " + appPkgId));
 	}
 
 	@Override
