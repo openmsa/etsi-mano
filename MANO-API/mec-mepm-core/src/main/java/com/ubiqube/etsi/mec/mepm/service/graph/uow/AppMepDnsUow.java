@@ -16,51 +16,58 @@
  */
 package com.ubiqube.etsi.mec.mepm.service.graph.uow;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
+import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepDnsRulesTask;
+import com.ubiqube.etsi.mec.mepm.service.graph.nodes.MepDnsRulesNode;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class MepmStartUow extends AppAbstractUnitOfWork {
+public class AppMepDnsUow extends AppAbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public MepmStartUow() {
-		super("mec-start", new AppTask());
+	private final MepDnsRulesTask task;
+
+	public AppMepDnsUow(final MepDnsRulesTask x) {
+		super(x);
+		task = x;
 	}
 
 	@Override
 	public String exec(final AppParameters params) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String rollback(final AppParameters params) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WfDependency> getDependencies() {
-		return new ArrayList<>();
+		return Arrays.asList(new WfDependency(Compute.class, task.getToscaName()));
 	}
 
 	@Override
 	public List<WfProduce> getProduce() {
-		return new ArrayList<>();
+		return Arrays.asList(new WfProduce(MepDnsRulesNode.class, task.getToscaName(), task.getId()));
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "mec-start";
+		return "app-dns";
 	}
 
 }

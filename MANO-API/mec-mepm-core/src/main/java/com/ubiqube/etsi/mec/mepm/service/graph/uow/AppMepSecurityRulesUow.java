@@ -17,50 +17,64 @@
 package com.ubiqube.etsi.mec.mepm.service.graph.uow;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
+import com.ubiqube.etsi.mano.dao.mec.pkg.TrafficRuleDescriptor;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
+import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepSecurityRulesTask;
+import com.ubiqube.etsi.mec.mepm.service.graph.nodes.MepTrafficRulesNode;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class MepmStartUow extends AppAbstractUnitOfWork {
+public class AppMepSecurityRulesUow extends AppAbstractUnitOfWork {
+
+	private final MepSecurityRulesTask task;
+
+	public AppMepSecurityRulesUow(final MepSecurityRulesTask _computeTask) {
+		super(_computeTask);
+		task = _computeTask;
+	}
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public MepmStartUow() {
-		super("mec-start", new AppTask());
-	}
-
 	@Override
 	public String exec(final AppParameters params) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String rollback(final AppParameters params) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WfDependency> getDependencies() {
-		return new ArrayList<>();
+		final Set<TrafficRuleDescriptor> rules = task.getAppPkg().getAppTrafficRule();
+		if (rules.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return Arrays.asList(new WfDependency(Network.class, task.getToscaName()));
 	}
 
 	@Override
 	public List<WfProduce> getProduce() {
-		return new ArrayList<>();
+		return Arrays.asList(new WfProduce(MepTrafficRulesNode.class, task.getToscaName(), task.getId()));
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "mec-start";
+		return "app-trafrul";
 	}
 
 }

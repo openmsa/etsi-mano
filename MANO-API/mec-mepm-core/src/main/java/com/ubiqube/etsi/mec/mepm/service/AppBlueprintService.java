@@ -23,8 +23,10 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mec.mepm.repositories.AppBluePrintJpa;
 
 /**
@@ -53,6 +55,11 @@ public class AppBlueprintService {
 		localPlan.setOperationStatus(processing);
 		localPlan.setStateEnteredTime(new Date());
 		return appBluePrintJpa.save(localPlan);
+	}
+
+	public int getNumberOfLiveVl(final AppInstance appInstance, final VnfVl vnfVl) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

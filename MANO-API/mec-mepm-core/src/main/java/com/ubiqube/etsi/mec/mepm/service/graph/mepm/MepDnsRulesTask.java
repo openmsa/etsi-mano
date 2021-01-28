@@ -14,28 +14,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.service.graph;
+package com.ubiqube.etsi.mec.mepm.service.graph.mepm;
 
-import java.time.LocalDateTime;
-import java.util.function.Supplier;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
-import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractAppPlanContributor implements PlanContributor<AppPkg, AppBlueprint, AppTask, AppParameters> {
+@Entity
+@Setter
+@Getter
+@Table(schema = "mec_meo")
+@EntityListeners(AuditListener.class)
+public class MepDnsRulesTask extends AppTask {
 
-	protected static <U> U createTask(final Supplier<AppTask> newInstance) {
-		final AppTask task = newInstance.get();
-		task.setStartDate(LocalDateTime.now());
-		task.setStatus(PlanStatusType.NOT_STARTED);
-		return (U) task;
-	}
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	@ManyToOne
+	private AppPkg appdPkg;
 }

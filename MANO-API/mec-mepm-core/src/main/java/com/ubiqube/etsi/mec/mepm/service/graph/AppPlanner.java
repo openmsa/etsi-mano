@@ -26,7 +26,7 @@ import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.Planner;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
-import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepmStartUow;
+import com.ubiqube.etsi.mec.mepm.service.graph.uow.MepmStartUow;
 
 /**
  *

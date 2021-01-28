@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.service.graph.mepm;
+package com.ubiqube.etsi.mec.mepm.service.graph.uow;
 
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -26,5 +26,44 @@ import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
  *
  */
 public abstract class AppAbstractUnitOfWork implements UnitOfWork<AppTask, AppParameters> {
-	// Nothing.
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	private final String name;
+
+	private final AppTask task;
+
+	public AppAbstractUnitOfWork(final String name, final AppTask task) {
+		super();
+		this.name = name;
+		this.task = task;
+	}
+
+	public AppAbstractUnitOfWork(final AppTask _computeTask) {
+		task = _computeTask;
+		name = task.getToscaName();
+	}
+
+	@Override
+	public final AppTask getTaskEntity() {
+		return task;
+	}
+
+	@Override
+	public final String getName() {
+		return getPrefix() + "_" + name;
+	}
+
+	protected abstract String getPrefix();
+
+	@Override
+	public final String getToscaName() {
+		return name;
+	}
+
+	@Override
+	public String toString() {
+		return task.getClass().getSimpleName() + "(" + name + ")";
+	}
+
 }

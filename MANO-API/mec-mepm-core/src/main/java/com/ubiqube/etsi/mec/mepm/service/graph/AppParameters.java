@@ -31,15 +31,27 @@ import com.ubiqube.etsi.mec.mepm.repositories.AppLiveInstanceJpa;
 public class AppParameters extends GenericExecParams {
 	private final VimConnectionInformation vimConnectionInformation;
 	private final Vim vim;
-	private final AppLiveInstanceJpa vnfLiveInstanceJpa;
+	private final AppLiveInstanceJpa appLiveInstanceJpa;
 	private final Map<String, String> context;
 
 	public AppParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final AppLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context, final String _vimResourceId) {
 		super(context, _vimResourceId);
 		this.vimConnectionInformation = vimConnectionInformation;
 		this.vim = vim;
-		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+		this.appLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.context = context;
+	}
+
+	public VimConnectionInformation getVimConnectionInformation() {
+		return vimConnectionInformation;
+	}
+
+	public Vim getVim() {
+		return vim;
+	}
+
+	public AppLiveInstanceJpa getAppLiveInstanceJpa() {
+		return appLiveInstanceJpa;
 	}
 
 }

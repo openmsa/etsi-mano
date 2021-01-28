@@ -17,11 +17,15 @@
 package com.ubiqube.etsi.mec.mepm.service.graph.uow;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mec.tasks.AppNetworkTask;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 
 /**
@@ -29,38 +33,47 @@ import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class MepmStartUow extends AppAbstractUnitOfWork {
+public class AppVirtualLinkUow extends AppAbstractUnitOfWork {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public MepmStartUow() {
-		super("mec-start", new AppTask());
+	private final AppNetworkTask networkTask;
+
+	private final VlProtocolData vlProtocolData;
+
+	public AppVirtualLinkUow(final AppNetworkTask x, final VnfVl vnfVl) {
+		super(x);
+		networkTask = x;
+		vlProtocolData = vnfVl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next();
 	}
 
 	@Override
 	public String exec(final AppParameters params) {
-		return null;
+		final String domainName = null; // dnsZone
+		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
 	@Override
 	public String rollback(final AppParameters params) {
+		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), params.getVimResourceId());
 		return null;
 	}
 
 	@Override
 	public List<WfDependency> getDependencies() {
+		// May require a DNS zone.
 		return new ArrayList<>();
 	}
 
 	@Override
 	public List<WfProduce> getProduce() {
-		return new ArrayList<>();
+		return Arrays.asList(new WfProduce(Network.class, networkTask.getToscaName(), networkTask.getId()));
 	}
 
 	@Override
 	protected String getPrefix() {
-		return "mec-start";
+		return "vl";
 	}
 
 }
