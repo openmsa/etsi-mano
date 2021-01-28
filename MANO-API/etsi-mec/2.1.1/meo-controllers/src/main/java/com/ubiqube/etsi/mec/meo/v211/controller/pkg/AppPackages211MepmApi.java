@@ -113,7 +113,7 @@ public interface AppPackages211MepmApi {
 			@ApiResponse(code = 404, message = "Not Found :  used when a client provided a URI that cannot be mapped to a valid resource URI.", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
-	@PostMapping(value = "/")
+	@PostMapping
 	ResponseEntity<AppPkgInfo> appPackagesPOST(@ApiParam(value = "Resource to be created", required = true) @Valid @RequestBody CreateAppPkg body);
 
 	@ApiOperation(value = "Fetch the onboarded application package content identified by appPkgId or appDId.", nickname = "appPkgGET", notes = "Fetch the onboarded application package content identified by appPkgId or appDId.", tags = { "app-pkgm", })
