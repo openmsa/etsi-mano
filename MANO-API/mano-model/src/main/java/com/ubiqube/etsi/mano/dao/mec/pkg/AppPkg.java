@@ -55,6 +55,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 import lombok.Getter;
@@ -124,7 +125,7 @@ public class AppPkg implements PackageBase, Auditable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<AppNetworks> vnfVl = new LinkedHashSet<>();
+	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@CollectionTable(schema = "mec_meo")
