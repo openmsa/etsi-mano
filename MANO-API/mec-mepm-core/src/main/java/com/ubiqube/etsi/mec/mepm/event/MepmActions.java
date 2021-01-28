@@ -140,10 +140,10 @@ public class MepmActions {
 		// XXX ??? error duplicate key in NSD.
 		instance.setVimConnectionInfo(null);
 		instanceService.save(instance);
-		LOG.info("Saving VNF LCM OP OCCS.");
+		LOG.info("Saving APP LCM OP OCCS.");
 		localPlan = blueprintService.save(localPlan);
 		// XXX Send COMPLETED event.
-		LOG.info("VNF instance {} / LCM {} Finished.", instance.getId(), localPlan.getId());
+		LOG.info("APP instance {} / LCM {} Finished.", instance.getId(), localPlan.getId());
 
 	}
 
