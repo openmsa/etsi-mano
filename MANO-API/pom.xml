@@ -29,5 +29,8 @@
 		<module>mano-commons</module>
 		<module>mano-model</module>
 		<module>mano-pkg-tosca</module>
+		<module>mec-common</module>
+		<module>mec-meo-core</module>
+		<module>mec-mepm-core</module>
 	</modules>
 </project>
