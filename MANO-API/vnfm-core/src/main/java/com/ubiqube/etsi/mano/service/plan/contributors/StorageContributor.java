@@ -46,6 +46,11 @@ import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class StorageContributor extends AbstractVnfPlanContributor {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;

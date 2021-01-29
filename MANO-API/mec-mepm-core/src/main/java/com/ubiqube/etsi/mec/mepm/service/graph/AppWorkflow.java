@@ -58,7 +58,7 @@ public class AppWorkflow {
 	public void setWorkflowBlueprint(final PackageBase bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
 		final WfConfiguration wfc = new WfConfiguration((List<PlanContributor>) (Object) planContributors);
 		final List<ConnectivityEdge<Class<? extends Node>>> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
-		planner.doPlan(bundle, blueprint, scaling, (List<ConnectivityEdge<Node>>) (Object) conns);
+		planner.doPlan(bundle, blueprint, scaling, conns);
 	}
 
 	public AppReport execCreate(final AppBlueprint plan, final AppParameters params) {

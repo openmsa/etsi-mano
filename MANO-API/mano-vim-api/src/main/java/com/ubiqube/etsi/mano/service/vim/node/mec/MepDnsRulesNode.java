@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mec.mepm.service.graph.nodes;
+package com.ubiqube.etsi.mano.service.vim.node.mec;
 
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 

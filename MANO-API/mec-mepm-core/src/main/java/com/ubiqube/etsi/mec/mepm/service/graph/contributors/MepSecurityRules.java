@@ -16,10 +16,13 @@
  */
 package com.ubiqube.etsi.mec.mepm.service.graph.contributors;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -32,11 +35,11 @@ import com.ubiqube.etsi.mano.dao.mec.pkg.TrafficRuleDescriptor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.mec.MepTrafficRulesNode;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mec.mepm.service.graph.AbstractAppPlanContributor;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepSecurityRulesTask;
-import com.ubiqube.etsi.mec.mepm.service.graph.nodes.MepTrafficRulesNode;
 import com.ubiqube.etsi.mec.mepm.service.graph.uow.AppMepSecurityRulesUow;
 
 /**
@@ -44,6 +47,7 @@ import com.ubiqube.etsi.mec.mepm.service.graph.uow.AppMepSecurityRulesUow;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class MepSecurityRules extends AbstractAppPlanContributor {
 
 	@Override
@@ -55,10 +59,7 @@ public class MepSecurityRules extends AbstractAppPlanContributor {
 	public List<AppTask> contribute(final AppPkg bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
 		final Set<TrafficRuleDescriptor> rules = bundle.getAppTrafficRule();
 		if (rules.isEmpty()) {
-			return null;
-		}
-		if (!rules.isEmpty()) {
-			return null;
+			return new ArrayList<>();
 		}
 		final MepSecurityRulesTask task = new MepSecurityRulesTask();
 		task.setAlias(bundle.getAppName());

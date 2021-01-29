@@ -16,10 +16,13 @@
  */
 package com.ubiqube.etsi.mec.mepm.service.graph.contributors;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -32,11 +35,11 @@ import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.node.mec.MepDnsRulesNode;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 import com.ubiqube.etsi.mec.mepm.service.graph.AbstractAppPlanContributor;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepDnsRulesTask;
-import com.ubiqube.etsi.mec.mepm.service.graph.nodes.MepDnsRulesNode;
 import com.ubiqube.etsi.mec.mepm.service.graph.uow.AppMepDnsUow;
 
 /**
@@ -44,6 +47,7 @@ import com.ubiqube.etsi.mec.mepm.service.graph.uow.AppMepDnsUow;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class MepDnsRules extends AbstractAppPlanContributor {
 
 	@Override
@@ -54,8 +58,8 @@ public class MepDnsRules extends AbstractAppPlanContributor {
 	@Override
 	public List<AppTask> contribute(final AppPkg bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
 		final Set<DNSRuleDescriptor> rules = bundle.getAppDNSRule();
-		if (!rules.isEmpty()) {
-			return null;
+		if (rules.isEmpty()) {
+			return new ArrayList<>();
 		}
 		final MepDnsRulesTask task = new MepDnsRulesTask();
 		task.setAlias(bundle.getAppName());
