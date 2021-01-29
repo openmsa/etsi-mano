@@ -16,25 +16,36 @@
  */
 package com.ubiqube.etsi.mec.meo.service;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.service.pkg.DefaultPackageProxy;
+import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.mec.AppToscaProvider;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class AppPackagingManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppPackagingManager.class);
 
-	private final List<AppRegistryHandler> providers;
+	private final List<RegistryHandler<AppToscaProvider>> providers;
 
-	public AppPackagingManager(final List<AppRegistryHandler> _providers) {
+	public AppPackagingManager(final List<RegistryHandler<AppToscaProvider>> _providers) {
 		providers = _providers;
 	}
 
 	public AppPackageProvider getProviderFor(final byte[] data) {
-		for (final AppRegistryHandler provider : providers) {
+		for (final RegistryHandler<AppToscaProvider> provider : providers) {
 			LOG.info("Testing {} for package support.", provider.getName());
 			if (provider.isProcessable(data)) {
 				LOG.info("Using {} for package.", provider.getName());
@@ -45,4 +56,10 @@ public class AppPackagingManager {
 		return new AppDefaultPackageProvider();
 	}
 
+	private static AppPackageProvider createProxy() {
+		return (AppPackageProvider) Proxy.newProxyInstance(
+				DefaultPackageProxy.class.getClassLoader(),
+				new Class[] { AppPackageProvider.class },
+				new DefaultPackageProxy());
+	}
 }

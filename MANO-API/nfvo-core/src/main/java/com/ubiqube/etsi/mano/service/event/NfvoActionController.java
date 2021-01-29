@@ -26,7 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.PackagingManager;
+import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageOnboardingImpl;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageOnboardingImpl;
 
 @Service
 public class NfvoActionController {
@@ -35,25 +36,28 @@ public class NfvoActionController {
 
 	private final NfvoActions nfvoActions;
 
-	private final PackagingManager packagingManager;
+	private final NsPackageOnboardingImpl nsPackagingManager;
 
-	public NfvoActionController(final NfvoActions nfvoActions, final PackagingManager packagingManager) {
+	private final VnfPackageOnboardingImpl vnfPackageOnboarding;
+
+	public NfvoActionController(final NfvoActions nfvoActions, final NsPackageOnboardingImpl nsPackagingManager, final VnfPackageOnboardingImpl _vnfPackageOnboarding) {
 		super();
 		this.nfvoActions = nfvoActions;
-		this.packagingManager = packagingManager;
+		this.nsPackagingManager = nsPackagingManager;
+		vnfPackageOnboarding = _vnfPackageOnboarding;
 	}
 
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
 		switch (eventType) {
 		case VNF_PKG_ONBOARD_FROM_URI:
-			packagingManager.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("url"));
+			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("url"));
 			break;
 		case VNF_PKG_ONBOARD_FROM_BYTES:
 			final byte[] bytes = Base64.getDecoder().decode((String) parameters.get("data"));
-			packagingManager.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString(), bytes);
+			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString(), bytes);
 			break;
 		case NSD_PKG_ONBOARD_FROM_BYTES:
-			packagingManager.nsOnboarding(objectId);
+			nsPackagingManager.nsOnboarding(objectId);
 			break;
 		case NS_INSTANTIATE:
 			nfvoActions.nsInstantiate(objectId);

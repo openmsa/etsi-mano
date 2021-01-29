@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -65,7 +65,7 @@ public class GrantMngtSol005 implements GrantManagement {
 	}
 
 	@Override
-	public GrantResponse post(final GrantsRequest grantRequest) {
+	public GrantResponse post(final GrantInterface grantRequest) {
 		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		grants.setAvailable(Boolean.FALSE);
 		final GrantResponse grantsDb = grantsResponseJpa.save(grants);

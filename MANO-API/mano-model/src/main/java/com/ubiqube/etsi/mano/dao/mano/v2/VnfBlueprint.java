@@ -41,7 +41,9 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
+import com.ubiqube.etsi.mano.dao.mano.VimBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
@@ -49,7 +51,7 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
+public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements VimBlueprint<VnfTask> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -61,6 +63,10 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	@ManyToOne
 	@JoinColumn
 	private VnfInstance vnfInstance;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
@@ -78,10 +84,6 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	@FullTextField
 	private String grantsRequestId;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<VnfTask> tasks = new HashSet<>();
-
 	@Embedded
 	@IndexedEmbedded
 	private BlueprintParameters parameters = new BlueprintParameters();
@@ -89,6 +91,9 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	@Embedded
 	@IndexedEmbedded
 	private OperateChanges operateChanges = new OperateChanges();
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
 
 	@Override
 	public UUID getId() {
@@ -111,6 +116,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 		return grantsRequestId;
 	}
 
+	@Override
 	public void setGrantsRequestId(final String grantsRequestId) {
 		this.grantsRequestId = grantsRequestId;
 	}
@@ -119,6 +125,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 		return vimConnections;
 	}
 
+	@Override
 	public void setVimConnections(final Set<VimConnectionInformation> vimConnections) {
 		this.vimConnections = vimConnections;
 	}
@@ -127,6 +134,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 		return zones;
 	}
 
+	@Override
 	public void setZones(final Set<ZoneInfoEntity> zones) {
 		this.zones = zones;
 	}
@@ -135,6 +143,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 		return zoneGroups;
 	}
 
+	@Override
 	public void setZoneGroups(final Set<BlueZoneGroupInformation> zoneGroups) {
 		this.zoneGroups = zoneGroups;
 	}
@@ -172,4 +181,14 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> {
 	public void setTasks(final Set<VnfTask> _tasks) {
 		tasks = _tasks;
 	}
+
+	public Set<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
+		return extManagedVirtualLinks;
+	}
+
+	@Override
+	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		this.extManagedVirtualLinks = extManagedVirtualLinks;
+	}
+
 }

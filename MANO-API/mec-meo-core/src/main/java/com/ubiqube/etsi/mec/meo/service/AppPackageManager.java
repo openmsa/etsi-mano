@@ -29,14 +29,17 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppExternalCpd;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManager;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManagerImpl;
 import com.ubiqube.etsi.mec.repositories.AppPackageRepository;
@@ -100,6 +103,13 @@ public class AppPackageManager {
 
 		final Set<ServiceDependency> appServiceRequired = provider.getRequiredServiceDependency(new HashMap<>());
 		app.setAppServiceRequired(appServiceRequired);
+
+		final Set<AppExternalCpd> extCp = provider.getExtCp(new HashMap<>());
+		app.setAppExtCpd(extCp);
+
+		final Set<VnfVl> vl = provider.getVl(new HashMap<>());
+		app.setVnfVl(vl);
+
 	}
 
 	private static Checksum getChecksum(final byte[] bytes) {

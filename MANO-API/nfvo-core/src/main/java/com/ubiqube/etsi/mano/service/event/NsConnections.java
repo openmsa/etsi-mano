@@ -29,18 +29,18 @@ import com.ubiqube.etsi.mano.service.vim.node.nfvo.VnfNode;
 
 public class NsConnections {
 
-	private final List<ConnectivityEdge<Node>> connections;
+	private final List<ConnectivityEdge<Class<? extends Node>>> connections;
 
 	public NsConnections() {
 		connections = new ArrayList<>();
-		connections.add(new ConnectivityEdge<>(new Start(), new VnfNode()));
-		connections.add(new ConnectivityEdge<>(new Start(), new NsdNode()));
+		connections.add(new ConnectivityEdge<>(Start.class, VnfNode.class));
+		connections.add(new ConnectivityEdge<>(Start.class, NsdNode.class));
 
-		connections.add(new ConnectivityEdge<>(new VnfNode(), new SapNode()));
-		connections.add(new ConnectivityEdge<>(new NsdNode(), new SapNode()));
+		connections.add(new ConnectivityEdge<>(VnfNode.class, SapNode.class));
+		connections.add(new ConnectivityEdge<>(NsdNode.class, SapNode.class));
 	}
 
-	public List<ConnectivityEdge<Node>> getConnections() {
+	public List<ConnectivityEdge<Class<? extends Node>>> getConnections() {
 		return Collections.unmodifiableList(connections);
 	}
 }

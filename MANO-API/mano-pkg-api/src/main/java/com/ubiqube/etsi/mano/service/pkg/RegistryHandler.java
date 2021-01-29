@@ -16,11 +16,17 @@
  */
 package com.ubiqube.etsi.mano.service.pkg;
 
-public interface RegistryHandler {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ */
+public interface RegistryHandler<U> {
 
 	boolean isProcessable(final byte[] data);
 
 	String getName();
 
-	PackageProvider getNewInstance(final byte[] data);
+	U getNewInstance(final byte[] data);
 }

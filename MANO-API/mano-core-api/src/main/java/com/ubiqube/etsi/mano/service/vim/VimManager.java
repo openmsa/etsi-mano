@@ -24,11 +24,20 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.engine.search.predicate.SearchPredicate;
+import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
+import org.hibernate.search.engine.search.query.dsl.SearchQuerySelectStep;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.common.EntityReference;
+import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsStep;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 
@@ -41,13 +50,18 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 public class VimManager {
 
 	private final List<Vim> vims;
+
 	private final VimConnectionInformationJpa vimConnectionInformationJpa;
+
 	private final Map<UUID, Vim> vimAssociation;
 
-	public VimManager(final List<Vim> _vims, final VimConnectionInformationJpa _vimConnectionInformationJpa) {
+	private final EntityManager entityManager;
+
+	public VimManager(final List<Vim> _vims, final VimConnectionInformationJpa _vimConnectionInformationJpa, final EntityManager _entityManager) {
 		vims = _vims;
 		vimAssociation = new HashMap<>();
 		vimConnectionInformationJpa = _vimConnectionInformationJpa;
+		entityManager = _entityManager;
 		init();
 	}
 
@@ -94,6 +108,13 @@ public class VimManager {
 
 	public Iterable<VimConnectionInformation> findAllVimconnections() {
 		return vimConnectionInformationJpa.findAll();
+	}
 
+	public void getVimByDistance(final GeoPoint point) {
+		final SearchSession session = Search.session(entityManager);
+		final SearchQuerySelectStep<?, EntityReference, VimConnectionInformation, SearchLoadingOptionsStep, ?, ?> ss = session.search(VimConnectionInformation.class);
+		final SearchPredicateFactory pf = session.scope(VimConnectionInformation.class).predicate();
+		final SearchPredicate pr = pf.spatial().within().fields("").circle(point.getLat(), point.getLng(), 10000).toPredicate();
+		ss.where(pr);
 	}
 }

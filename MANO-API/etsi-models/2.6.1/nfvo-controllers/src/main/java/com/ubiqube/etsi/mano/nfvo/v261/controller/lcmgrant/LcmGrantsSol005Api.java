@@ -32,7 +32,7 @@ import org.springframework.stereotype.Controller;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
@@ -60,7 +60,7 @@ public class LcmGrantsSol005Api implements LcmGrants {
 
 	@Override
 	public ResponseEntity<Grant> grantsPost(@Valid final GrantRequest grantRequest, final String contentType, final String version) {
-		final GrantsRequest obj = mapper.map(grantRequest, GrantsRequest.class);
+		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
 		final GrantResponse resp = grantManagement.post(obj);
 		final URI location = linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(resp.getId().toString(), "2.6.1")).withSelfRel().toUri();
 		return ResponseEntity.created(location).build();

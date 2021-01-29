@@ -51,6 +51,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.service.ManoGrantService;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
@@ -84,7 +85,7 @@ public class VnfmActions {
 
 	private VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final VnfInstanceService _vnfInstancesService, final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final VimResourceService _vimResourceService) {
+	public VnfmActions(final VimManager _vimManager, final VnfPackageService _vnfPackageService, final EventManager _eventManager, final VnfInstanceService _vnfInstancesService, final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final ManoGrantService _vimResourceService) {
 		super();
 		vimManager = _vimManager;
 		vnfPackageService = _vnfPackageService;

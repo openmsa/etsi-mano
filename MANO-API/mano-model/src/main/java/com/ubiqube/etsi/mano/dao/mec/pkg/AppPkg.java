@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -34,6 +35,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -47,11 +49,13 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
-import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 
 import lombok.Getter;
@@ -68,7 +72,10 @@ import lombok.Setter;
 @Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
 @Indexed
-public class AppPkg implements BaseEntity, Auditable {
+public class AppPkg implements PackageBase, Auditable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@DocumentId
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -99,6 +106,7 @@ public class AppPkg implements BaseEntity, Auditable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@CollectionTable(schema = "mec_meo")
 	private Map<String, String> userDefinedData = null;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -114,6 +122,14 @@ public class AppPkg implements BaseEntity, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<AppExternalCpd> appExtCpd;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@CollectionTable(schema = "mec_meo")
+	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 
 	@ElementCollection
 	@CollectionTable(schema = "mec_meo")

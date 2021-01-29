@@ -46,21 +46,21 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 		planContributors = contributor;
 	}
 
-	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> conns) {
-		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(conns, Start.class);
+	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Class<? extends Node>>> conns) {
+		final List<ConnectivityEdge<Class<? extends Node>>> start = findSourceNodesByType(conns, Start.class);
 		final Set<String> cache = new HashSet<>();
-		start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget().getClass(), scaling, conns, cache));
+		start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget(), scaling, conns, cache));
 	}
 
-	private void doPlanInner(final P bundle, final B blueprint, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Node>> connections, final Set<String> cache) {
-		final List<ConnectivityEdge<Node>> start = findSourceNodesByType(connections, clazz);
+	private void doPlanInner(final P bundle, final B blueprint, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Class<? extends Node>>> connections, final Set<String> cache) {
+		final List<ConnectivityEdge<Class<? extends Node>>> start = findSourceNodesByType(connections, clazz);
 		if (!start.isEmpty()) {
-			final ConnectivityEdge<Node> edge = start.get(0);
+			final ConnectivityEdge<Class<? extends Node>> edge = start.get(0);
 			if (!cache.contains(edge.getSource().getClass().getName())) {
-				contribute(bundle, blueprint, scaling, edge.getSource().getClass());
+				contribute(bundle, blueprint, scaling, edge.getSource());
 				cache.add(edge.getSource().getClass().getName());
 			}
-			start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget().getClass(), scaling, connections, cache));
+			start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget(), scaling, connections, cache));
 		} else {
 			if (!cache.contains(clazz.getName())) {
 				contribute(bundle, blueprint, scaling, clazz);
@@ -81,8 +81,8 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 		return planContributors.stream().filter(x -> x.getContributionType() == node).collect(Collectors.toList());
 	}
 
-	private static List<ConnectivityEdge<Node>> findSourceNodesByType(final List<ConnectivityEdge<Node>> connections, final Class<? extends Node> class1) {
-		return connections.stream().filter(x -> x.getSource().getClass() == class1).collect(Collectors.toList());
+	private static List<ConnectivityEdge<Class<? extends Node>>> findSourceNodesByType(final List<ConnectivityEdge<Class<? extends Node>>> connections, final Class<? extends Node> class1) {
+		return connections.stream().filter(x -> x.getSource() == class1).collect(Collectors.toList());
 	}
 
 	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {

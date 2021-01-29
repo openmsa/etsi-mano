@@ -55,7 +55,7 @@ public class VnfWorkflow {
 	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling) {
 		final WfConfiguration wfc = new WfConfiguration((List<PlanContributor>) (Object) planContributors);
 		final List<ConnectivityEdge<Class<? extends Node>>> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
-		planner.doPlan(bundle, blueprint, scaling, (List<ConnectivityEdge<Node>>) (Object) conns);
+		planner.doPlan(bundle, blueprint, scaling, conns);
 	}
 
 	public VnfReport execCreate(final VnfBlueprint plan, final VnfParameters params) {

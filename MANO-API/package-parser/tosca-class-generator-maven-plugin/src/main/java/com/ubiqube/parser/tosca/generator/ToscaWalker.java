@@ -109,7 +109,7 @@ public class ToscaWalker {
 		Optional.ofNullable(toscaClass.getDescription()).ifPresent(listener::onClassDescription);
 		// Add members
 		// Description
-		final ValueObject vo = ValueObject.createList("string");
+		final ValueObject vo = ValueObject.listOf("string");
 		listener.startField("description", vo);
 		listener.onClassDescription("The optional description for the artifact definition.");
 		listener.onFieldTerminate();
@@ -137,14 +137,14 @@ public class ToscaWalker {
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		// add members
-		ValueObject vo = ValueObject.createList("string");
+		ValueObject vo = ValueObject.listOf("string");
 		listener.startField("targets", vo);
 		if (null != definition.getTargets()) {
 			definition.getTargets().forEach(listener::onClassDescription);
 		}
 		listener.onFieldTerminate();
 		// triggers
-		vo = ValueObject.createList("trigger");
+		vo = ValueObject.listOf("trigger");
 		listener.startField("triggers", vo);
 		listener.onFieldTerminate();
 		LOG.debug("generateClassPolicyType end {}", className);
@@ -159,7 +159,7 @@ public class ToscaWalker {
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		// add members
-		final ValueObject vo = ValueObject.createList("string");
+		final ValueObject vo = ValueObject.listOf("string");
 		listener.startField("members", vo);
 		if (null != definition.getMembers()) {
 			definition.getMembers().forEach(x -> listener.onFieldAnnotate(Members.class, x));
@@ -338,10 +338,8 @@ public class ToscaWalker {
 	private void generateCaps(final ToscaListener listener, final Map<String, CapabilityDefinition> capabilities) {
 		capabilities.forEach((final String x, final CapabilityDefinition y) -> {
 			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
-			if (!cache.contains(y.getType())) {
-				if (!classExistOnClassPath(y.getType())) {
-					generateClass(y.getType(), caps, listener);
-				}
+			if (!cache.contains(y.getType()) && !classExistOnClassPath(y.getType())) {
+				generateClass(y.getType(), caps, listener);
 			}
 			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
 				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());

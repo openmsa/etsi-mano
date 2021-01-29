@@ -16,9 +16,12 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -26,7 +29,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,15 +46,19 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(schema = "mec_meo")
-public class AppExternalCpd {
+public class AppExternalCpd implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	// Object.
-	private String inheritedAttributes = null;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@CollectionTable(schema = "mec_meo")
+	private Set<VnfExtCp> extCps = new HashSet<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(schema = "mec_meo")
-	private List<String> virtualNetworkInterfaceRequirements = null;
+	private Set<String> virtualNetworkInterfaceRequirements = new HashSet<>();
 }

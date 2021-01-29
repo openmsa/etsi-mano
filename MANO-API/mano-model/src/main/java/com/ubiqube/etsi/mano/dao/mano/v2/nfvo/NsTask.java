@@ -27,7 +27,11 @@ import javax.persistence.Id;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractTask;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This entity is the root of all NS*Tasks.
@@ -35,6 +39,8 @@ import com.ubiqube.etsi.mano.dao.mano.v2.AbstractTask;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditListener.class)
 @Indexed
@@ -47,14 +53,5 @@ public class NsTask extends AbstractTask {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
+	private ResourceTypeEnum type;
 }

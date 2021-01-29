@@ -32,7 +32,7 @@ public class VimConstraints implements Serializable {
 
 	private Set<ConstraintRef> resources;
 
-	private GrantsRequest grants;
+	private VnfGrantsRequest grants;
 
 	public UUID getId() {
 		return id;
@@ -58,11 +58,11 @@ public class VimConstraints implements Serializable {
 		this.resources = resources;
 	}
 
-	public GrantsRequest getGrants() {
+	public VnfGrantsRequest getGrants() {
 		return grants;
 	}
 
-	public void setGrants(final GrantsRequest grants) {
+	public void setGrants(final VnfGrantsRequest grants) {
 		this.grants = grants;
 	}
 

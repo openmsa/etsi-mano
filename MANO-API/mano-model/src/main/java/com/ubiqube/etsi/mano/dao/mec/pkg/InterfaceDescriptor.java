@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mec.pkg;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.EnumType;
@@ -32,7 +34,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @Embeddable
-public class InterfaceDescriptor {
+public class InterfaceDescriptor implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String dstIPAddress = null;
 
 	private String dstMACAddress = null;

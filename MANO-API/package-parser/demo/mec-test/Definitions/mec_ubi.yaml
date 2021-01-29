@@ -18,6 +18,71 @@ imports:
 topology_template:
   node_templates:
 
+    ext01:
+      type: tosca.nodes.nfv.VnfExtCp
+      properties:
+        virtual_network_interface_requirements:
+          - name: vl01
+            description: descr
+            support_mandatory: false
+            network_interface_requirements: # map
+            nic_io_requirements:
+              logical_node_requirements: #map
+      requirements:
+        - external_virtual_link: 
+            node: public
+        - internal_virtual_link: 
+            node: leftVl01
+
+    leftVl01:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type: # tosca.datatypes.nfv.ConnectivityType
+          layer_protocols:
+            - ipv4
+          flow_pattern: line
+        description: Description of VL 01
+        test_access:
+          - passive_monitoring
+        monitoring_parameters:
+          - name: Vcpu Peak Usage
+            collection_period: 60 s
+            performance_metric: v_cpu_usage_mean_vnf
+        vl_profile: # tosca.datatypes.nfv.VlProfile
+          max_bitrate_requirements:
+            root: 10
+            leaf: 15
+          min_bitrate_requirements:
+            root: 11
+            leaf: 16
+          virtual_link_protocol_data: # list tosca.datatypes.nfv.VirtualLinkProtocolData
+            - associated_layer_protocol: ipv4
+              l2_protocol_data: # tosca.datatypes.nfv.L2ProtocolData
+                name: vl01L2
+                vlan_transparent: true
+                #network_type: VXLAN
+                mtu: 1500
+              l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
+                dhcp_enabled: true
+                cidr: 192.168.0.0/24
+                gateway_ip: 192.168.0.12
+                ip_version: ipv4
+                name: vl01L3
+                ipv6_address_mode: dhcpv6-stateful
+                ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
+                  - start_ip_address: 192.168.0.100
+                    end_ip_address: 192.168.0.254
+          qos: # tosca.datatypes.nfv.Qos
+            latency: 5 ms
+            packet_delay_variation: 1 s
+            packet_loss_ratio: 0.01
+      capabilities:
+        # virtual_linkable: test
+
+
+
+
+
     mea01:
       type: tosca.nodes.mec.MEA
       properties: 
@@ -134,7 +199,30 @@ policies:
       ttl: 3600
 
 
-  
+  descriptor01:
+    type: tosca.policies.mec.TrafficRuleDescriptor
+    properties:
+      traffic_rule_id: str
+      filter_type: flow
+      priority: 1
+      traffic_filter: # tosca.datatypes.mec.TrafficFilter
+        src_address: [ "10.31.1.1" ]
+        dst_address: [ "10.31.1.1" ]
+        src_port: [ "123" ]
+        dst_port: [ "123" ]
+        ptotocol: [ "123" ]
+        tag: [ "tag" ]
+        src_tunnel_address: [ "10.31.1.1" ]
+        dst_tunnel_address: [ "10.31.1.1" ]
+        src_tunnel_port: [ "123" ]
+        dst_tunnel_port: [ "123" ]
+        q_cl: cl
+        d_scp: scp
+        t_c: tc
+      action: DROP
+    requirements:
+      - dst_interface: dest
+
 
 
 

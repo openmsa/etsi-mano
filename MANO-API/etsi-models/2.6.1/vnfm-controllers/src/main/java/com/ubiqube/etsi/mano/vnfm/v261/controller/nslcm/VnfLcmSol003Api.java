@@ -72,10 +72,11 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol003Api.class);
 	@Nonnull
 	private final LcmLinkable links = new Sol003LcmLinkable();
+	// XXX Duplicate service.
 	private final VnfInstanceService vnfInstancesService;
+	private final VnfInstanceService vnfInstanceService;
 	private final VnfInstanceLcm vnfInstanceLcm;
 	private final MapperFacade mapper;
-	private final VnfInstanceService vnfInstanceService;
 	private final VnfPackageService vnfPackageService;
 
 	public VnfLcmSol003Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {

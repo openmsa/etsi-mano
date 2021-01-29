@@ -16,14 +16,14 @@
  */
 package com.ubiqube.etsi.mano;
 
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
@@ -35,43 +35,43 @@ public final class Constants {
 
 	public static final String HASH_ALGORITHM = "SHA-512";
 
-	public static void ensureDisabled(final VnfPackage vnfPackage) {
+	public static void ensureDisabled(final PackageBase vnfPackage) {
 		if (PackageOperationalState.DISABLED != vnfPackage.getOperationalState()) {
 			throw new ConflictException("The VNF Package " + vnfPackage.getId() + " is ENABLED.");
 		}
 	}
 
-	public static void ensureIsEnabled(final VnfPackage vnfackage) {
+	public static void ensureIsEnabled(final PackageBase vnfackage) {
 		if (PackageOperationalState.ENABLED != vnfackage.getOperationalState()) {
 			throw new ConflictException("The VNF Package " + vnfackage.getId() + " is not in ENABLED state.");
 		}
 	}
 
-	public static void ensureNotInUse(final VnfPackage vnfPackqge) {
+	public static void ensureNotInUse(final PackageBase vnfPackqge) {
 		if (PackageUsageState.NOT_IN_USE != vnfPackqge.getUsageState()) {
 			throw new ConflictException("The VNF Package " + vnfPackqge.getId() + " is Not In Use State.");
 		}
 	}
 
-	public static void ensureIsOnboarded(final VnfPackage vnfPackqge) {
+	public static void ensureIsOnboarded(final PackageBase vnfPackqge) {
 		if (OnboardingStateType.ONBOARDED != vnfPackqge.getOnboardingState()) {
 			throw new ConflictException("The VNF Package " + vnfPackqge.getId() + " is not in ONBOARDED state.");
 		}
 	}
 
-	public static void ensureNotOnboarded(final VnfPackage vnfPackage) {
+	public static void ensureNotOnboarded(final PackageBase vnfPackage) {
 		if (OnboardingStateType.ONBOARDED == vnfPackage.getOnboardingState()) {
 			throw new ConflictException("The VNF Package " + vnfPackage.getId() + " is already ONBOARDED");
 		}
 	}
 
-	public static void ensureInstantiated(final VnfInstance vnfInstance) {
+	public static void ensureInstantiated(final Instance vnfInstance) {
 		if (InstantiationState.INSTANTIATED != vnfInstance.getInstantiationState()) {
 			throw new GenericException("The VNF Instance " + vnfInstance.getId() + " is not in INSTANTIATED state.");
 		}
 	}
 
-	public static void ensureNotInstantiated(final VnfInstance vnfInstance) {
+	public static void ensureNotInstantiated(final Instance vnfInstance) {
 		if (InstantiationState.INSTANTIATED == vnfInstance.getInstantiationState()) {
 			throw new GenericException("The VNF Instance " + vnfInstance.getId() + " is already in INSTANTIATED state.");
 		}

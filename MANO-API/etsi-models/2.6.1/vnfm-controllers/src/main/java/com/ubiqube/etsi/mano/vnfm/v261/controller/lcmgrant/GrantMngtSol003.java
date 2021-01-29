@@ -38,8 +38,8 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
@@ -84,7 +84,7 @@ public class GrantMngtSol003 implements GrantManagement {
 	}
 
 	@Override
-	public GrantResponse post(final GrantsRequest grant) {
+	public GrantResponse post(final GrantInterface grant) {
 		final URI uri = nfvoRest.uriBuilder()
 				.pathSegment("grant/v1/grants")
 				.build()

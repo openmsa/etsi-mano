@@ -28,15 +28,15 @@ import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
-import com.ubiqube.etsi.mano.service.pkg.tosca.ToscaPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.ns.ToscaNsPackageProvider;
 import com.ubiqube.etsi.mano.test.TestTools;
 
 public class ToscaNsdTest {
-	private final ToscaPackageProvider tpp;
+	private final ToscaNsPackageProvider tpp;
 
 	public ToscaNsdTest() throws IOException {
 		final byte[] data = TestTools.readFile("/ubi-nsd-tosca.csar");
-		tpp = new ToscaPackageProvider(data);
+		tpp = new ToscaNsPackageProvider(data);
 	}
 
 	@Test

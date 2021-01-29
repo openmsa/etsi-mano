@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
@@ -81,7 +81,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 
-		orikaMapperFactory.classMap(GrantResponse.class, GrantsRequest.class)
+		orikaMapperFactory.classMap(GrantResponse.class, VnfGrantsRequest.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
 				.byDefault()
@@ -101,7 +101,7 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vduId", "vnfStorage.id")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantsRequest.class, VnfBlueprint.class)
+		orikaMapperFactory.classMap(VnfGrantsRequest.class, VnfBlueprint.class)
 				.exclude("vnfInstance")
 				.field("vnfInstance.id", "vnfInstance.id")
 				.byDefault()
