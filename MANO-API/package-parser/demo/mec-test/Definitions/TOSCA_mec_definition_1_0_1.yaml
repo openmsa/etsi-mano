@@ -451,7 +451,8 @@ policy_types:
   tosca.policies.mec.AppServiceProduced:
     derived_from: tosca.datatypes.mec.ServiceDescriptor
 
-
+  tosca.policies.mec.TrafficRuleDescriptor:
+    derived_from: tosca.datatypes.mec.TrafficRuleDescriptor
 
 
 
