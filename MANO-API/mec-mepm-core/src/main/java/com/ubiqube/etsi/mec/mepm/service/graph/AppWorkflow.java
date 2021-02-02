@@ -32,7 +32,6 @@ import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
-import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
@@ -56,7 +55,7 @@ public class AppWorkflow {
 	}
 
 	public void setWorkflowBlueprint(final PackageBase bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
-		final WfConfiguration wfc = new WfConfiguration((List<PlanContributor>) (Object) planContributors);
+		final WfConfiguration wfc = new WfConfiguration(planContributors);
 		final List<ConnectivityEdge<Class<? extends Node>>> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
 		planner.doPlan(bundle, blueprint, scaling, conns);
 	}

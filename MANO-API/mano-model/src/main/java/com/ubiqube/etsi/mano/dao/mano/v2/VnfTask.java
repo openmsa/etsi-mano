@@ -35,12 +35,17 @@ import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VimTask;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Entity
+@Getter
+@Setter
 @EntityListeners(AuditListener.class)
 public class VnfTask extends AbstractTask implements VimTask {
 	/** Serial. */
@@ -75,101 +80,8 @@ public class VnfTask extends AbstractTask implements VimTask {
 	private String vimConnectionId;
 
 	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public ChangeType getChangeType() {
-		return changeType;
-	}
-
-	@Override
-	public void setChangeType(final ChangeType _changeType) {
-		changeType = _changeType;
-	}
-
-	public String getVimReservationId() {
-		return vimReservationId;
-	}
-
-	@Override
-	public void setVimReservationId(final String vimReservationId) {
-		this.vimReservationId = vimReservationId;
-	}
-
-	@Override
-	public ResourceTypeEnum getType() {
-		return type;
-	}
-
-	public void setType(final ResourceTypeEnum type) {
-		this.type = type;
-	}
-
-	public String getZoneId() {
-		return zoneId;
-	}
-
-	@Override
-	public void setZoneId(final String zoneId) {
-		this.zoneId = zoneId;
-	}
-
-	public String getResourceGroupId() {
-		return resourceGroupId;
-	}
-
-	@Override
-	public void setResourceGroupId(final String resourceGroupId) {
-		this.resourceGroupId = resourceGroupId;
-	}
-
-	public VnfBlueprint getBlueprint() {
-		return blueprint;
-	}
-
-	public void setBlueprint(final VnfBlueprint _blueprint) {
-		blueprint = _blueprint;
-	}
-
-	public UUID getRemovedVnfLiveInstance() {
+	public UUID getRemovedLiveInstance() {
 		return removedVnfLiveInstance;
-	}
-
-	public void setRemovedVnfLiveInstance(final UUID removedVnfLiveInstance) {
-		this.removedVnfLiveInstance = removedVnfLiveInstance;
-	}
-
-	public ScaleInfo getScaleInfo() {
-		return scaleInfo;
-	}
-
-	public void setScaleInfo(final ScaleInfo scaleInfo) {
-		this.scaleInfo = scaleInfo;
-	}
-
-	public String getResourceProviderId() {
-		return resourceProviderId;
-	}
-
-	@Override
-	public void setResourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getVimConnectionId() {
-		return vimConnectionId;
-	}
-
-	@Override
-	public void setVimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
 	}
 
 }

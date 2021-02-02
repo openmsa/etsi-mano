@@ -37,7 +37,7 @@ import com.ubiqube.etsi.mec.mepm.service.graph.uow.MepmStartUow;
 public class AppPlanner extends Planner<AppTask, PackageBase, AppParameters, Blueprint<AppTask>> {
 
 	public AppPlanner(final List<AbstractAppPlanContributor> _planContributors) {
-		super((List<PlanContributor<PackageBase, Blueprint<AppTask>, AppTask, AppParameters>>) ((Object) _planContributors));
+		super((List<? extends PlanContributor<PackageBase, Blueprint<AppTask>, AppTask, AppParameters>>) _planContributors);
 	}
 
 	@Override

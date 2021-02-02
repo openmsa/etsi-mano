@@ -40,9 +40,9 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
-	private final List<PlanContributor<P, B, U, PA>> planContributors;
+	private final List<? extends PlanContributor<P, B, U, PA>> planContributors;
 
-	public Planner(final List<PlanContributor<P, B, U, PA>> contributor) {
+	public Planner(final List<? extends PlanContributor<P, B, U, PA>> contributor) {
 		planContributors = contributor;
 	}
 
@@ -88,7 +88,7 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
 		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
-		final WfConfiguration wfConfiguration = new WfConfiguration((List<PlanContributor>) ((Object) planContributors));
+		final WfConfiguration wfConfiguration = new WfConfiguration(planContributors);
 		wfConfiguration.getConfigurationGraph();
 		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = wfConfiguration.autoConnect(list);
 		// Add start

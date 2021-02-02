@@ -61,7 +61,7 @@ public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v
 	@Override
 	public final String execute() {
 		RuntimeException eRoot = null;
-		final U resource = this.uaow.getTaskEntity();
+		final com.ubiqube.etsi.mano.dao.mano.v2.Task resource = this.uaow.getTaskEntity();
 		resource.setStartDate(LocalDateTime.now());
 		resource.setStatus(PlanStatusType.STARTED);
 		params.setVimResourceId(resource.getVimResourceId());

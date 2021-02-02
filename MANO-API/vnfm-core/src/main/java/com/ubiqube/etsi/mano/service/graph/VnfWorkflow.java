@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
@@ -36,12 +37,11 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
-import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 @Service
-public class VnfWorkflow {
+public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport> {
 	private final VnfPlanner planner;
 	private final VnfPlanExecutor executor;
 	private final List<AbstractVnfPlanContributor> planContributors;
@@ -52,23 +52,26 @@ public class VnfWorkflow {
 		planContributors = _planContributors;
 	}
 
+	@Override
 	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling) {
-		final WfConfiguration wfc = new WfConfiguration((List<PlanContributor>) (Object) planContributors);
+		final WfConfiguration wfc = new WfConfiguration(planContributors);
 		final List<ConnectivityEdge<Class<? extends Node>>> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
 		planner.doPlan(bundle, blueprint, scaling, conns);
 	}
 
-	public VnfReport execCreate(final VnfBlueprint plan, final VnfParameters params) {
+	@Override
+	public VnfReport execCreate(final VnfBlueprint plan, final GenericExecParams params) {
 		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> createPlan = planner.convertToExecution(plan, ChangeType.ADDED);
 		GraphTools.exportGraph(createPlan, "added.dot");
-		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider<>(params));
+		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider<>((VnfParameters) params));
 		return new VnfReport(createResults);
 	}
 
-	public VnfReport execDelete(final VnfBlueprint blueprint, final VnfParameters vparams) {
+	@Override
+	public VnfReport execDelete(final VnfBlueprint blueprint, final GenericExecParams vparams) {
 		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> graph = planner.convertToExecution(blueprint, ChangeType.REMOVED);
 		GraphTools.exportGraph(graph, "del.dot");
-		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>(vparams));
+		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>((VnfParameters) vparams));
 		return new VnfReport(removeResults);
 	}
 

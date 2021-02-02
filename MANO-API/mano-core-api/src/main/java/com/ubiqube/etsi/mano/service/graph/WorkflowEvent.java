@@ -14,27 +14,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
-
-import java.util.Set;
-
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+package com.ubiqube.etsi.mano.service.graph;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface VimBlueprint<U extends VimTask> extends Blueprint<U> {
+public enum WorkflowEvent {
+	INSTANTIATE_PROCESSING,
+	INSTANTIATE_SUCCESS,
 
-	void setVimConnections(Set<VimConnectionInformation> vimConnections);
-	//
+	SCALE_SUCCESS,
+	SCALE_FAILED,
 
-	void setZoneGroups(Set<BlueZoneGroupInformation> mapAsSet);
+	SCALETOLEVEL_FAILED,
+	SCALETOLEVEL_SUCCESS,
 
-	void setZones(Set<ZoneInfoEntity> zones);
+	TERMINATE_SUCCESS,
+	TERMINATE_FAILED
 
-	void setGrantsRequestId(String string);
-
-	void setExtManagedVirtualLinks(Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks);
 }

@@ -89,14 +89,17 @@ public abstract class AbstractBlueprint<U extends Task> implements Blueprint<U>,
 		return stateEnteredTime;
 	}
 
+	@Override
 	public void setStateEnteredTime(final Date stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
+	@Override
 	public OperationStatusType getOperationStatus() {
 		return operationStatus;
 	}
 
+	@Override
 	public void setOperationStatus(final OperationStatusType operationStatus) {
 		this.operationStatus = operationStatus;
 	}

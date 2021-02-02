@@ -52,9 +52,9 @@ public class WfConfiguration {
 	private static final Logger LOG = LoggerFactory.getLogger(WfConfiguration.class);
 
 	final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
-	private final List<PlanContributor> planContributors;
+	private final List<? extends PlanContributor> planContributors;
 
-	public WfConfiguration(final List<PlanContributor> _planContributors) {
+	public WfConfiguration(final List<? extends PlanContributor> _planContributors) {
 		planContributors = _planContributors;
 	}
 
@@ -176,8 +176,7 @@ public class WfConfiguration {
 	}
 
 	/**
-	 * The concept is an ending node is a node that doesn't appear in a source node.
-	 * for example : A -> B -> C
+	 * The concept is an ending node is a node that doesn't appear in a source node. for example : A -> B -> C
 	 *
 	 * @param repl A replace builder instance.
 	 * @return list of ending Nodes.

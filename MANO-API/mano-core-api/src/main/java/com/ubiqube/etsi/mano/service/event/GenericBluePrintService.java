@@ -14,32 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.graph.vnfm;
+package com.ubiqube.etsi.mano.service.event;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.service.graph.UnitOfWorkBase;
-import com.ubiqube.etsi.mano.service.graph.WfDependency;
-import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- * @param <U>
- * @param <P>
- */
-public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializable {
+public interface GenericBluePrintService {
 
-	String exec(P params);
+	VnfBlueprint findById(UUID blueprintId);
 
-	Task getTaskEntity();
+	void save(VnfBlueprint blueprint);
 
-	String rollback(P params);
-
-	List<WfDependency> getDependencies();
-
-	List<WfProduce> getProduce();
 }

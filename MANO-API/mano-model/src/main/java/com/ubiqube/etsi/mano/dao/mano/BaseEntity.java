@@ -18,9 +18,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface BaseEntity {
-	@Nonnull
 	UUID getId();
 }

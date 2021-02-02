@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -174,11 +175,11 @@ public class NfvoActions {
 
 	private void setLiveStatus(final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
 		results.getSuccess().forEach(x -> {
-			final NsTask rhe = x.getId().getTaskEntity();
+			final Task rhe = x.getId().getTaskEntity();
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
 				if (null != rhe.getId()) {
-					final NsLiveInstance vli = new NsLiveInstance(rhe.getVimResourceId(), rhe, blueprint, blueprint.getNsInstance());
+					final NsLiveInstance vli = new NsLiveInstance(rhe.getVimResourceId(), (NsTask) rhe, blueprint, blueprint.getNsInstance());
 					nsLiveInstanceJpa.save(vli);
 				} else {
 					LOG.warn("Could not store: {}", x.getId().getName());

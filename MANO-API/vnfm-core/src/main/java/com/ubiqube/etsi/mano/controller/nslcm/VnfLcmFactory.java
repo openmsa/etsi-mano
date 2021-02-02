@@ -26,11 +26,11 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
@@ -44,18 +44,18 @@ public class VnfLcmFactory {
 		vnfInstance.setVnfPkg(vnfPkgInfo);
 		vnfInstance.setVnfInstanceName(vnfInstanceName);
 		vnfInstance.setVnfInstanceDescription(vnfInstanceDescription);
-		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
-		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
+		final BlueprintParameters instantiatedVnfInfo = new BlueprintParameters();
+		instantiatedVnfInfo.setState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
-		final Set<VnfInstanceScaleInfo> scaleInfo = vnfPkgInfo.getVnfCompute().stream()
+		final Set<ScaleInfo> scaleInfo = vnfPkgInfo.getVnfCompute().stream()
 				.map(x -> x.getScalingAspectDeltas().stream()
 						.map(VnfComputeAspectDelta::getAspectName)
 						.distinct()
 						.collect(Collectors.toList()))
 				.flatMap(List::stream)
 				.distinct()
-				.map(x -> new VnfInstanceScaleInfo(x, Integer.valueOf(0)))
+				.map(x -> new ScaleInfo(x, Integer.valueOf(0)))
 				.collect(Collectors.toSet());
 		instantiatedVnfInfo.setScaleStatus(scaleInfo);
 		return vnfInstance;

@@ -38,7 +38,7 @@ import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 public class NsPlanner extends Planner<NsTask, NsdPackage, NsParameters, Blueprint<NsTask>> {
 
 	public NsPlanner(final List<AbstractNsContributor> _planContributors) {
-		super((List<PlanContributor<NsdPackage, Blueprint<NsTask>, NsTask, NsParameters>>) ((Object) _planContributors));
+		super((List<? extends PlanContributor<NsdPackage, Blueprint<NsTask>, NsTask, NsParameters>>) _planContributors);
 	}
 
 	@Override
