@@ -36,7 +36,7 @@ public class Time {
 		return mul.multiply(sizeBd);
 	}
 
-	public BigDecimal getMultiplier(final String unit2) {
+	public static BigDecimal getMultiplier(final String unit2) {
 		switch (unit2.toLowerCase()) {
 		case "d": // 3600000000000*24
 			return new BigDecimal("86400000000000");
