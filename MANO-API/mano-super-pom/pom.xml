@@ -15,7 +15,9 @@
 	<name>mano-super-pom</name>
 	<description>ETSI-MANO super pom</description>
 	<packaging>pom</packaging>
-
+	<scm>
+		<developerConnection>scm:git:ssh://git@ubibucket.ubiqube.com:7999/ubi/ubi-etsi-mano.git</developerConnection>
+	</scm>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
