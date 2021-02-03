@@ -29,6 +29,7 @@ public interface PlanContributor<P, B, U extends Task, PA> {
 
 	Class<? extends Node> getContributionType();
 
+	// XXX: Why do we have a scaleInfo here ???
 	List<U> contribute(P bundle, B blueprint, Set<ScaleInfo> scaling);
 
 	List<UnitOfWork<U, PA>> convertTasksToExecNode(Set<U> tasks, B blueprint);
