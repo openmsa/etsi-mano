@@ -89,7 +89,7 @@ public interface PkgSubscriptions211MepmApi {
 			@ApiResponse(code = 404, message = "Not Found :  used when a client provided a URI that cannot be mapped to a valid resource URI.", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
-	@RequestMapping(value = "/", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
+	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
 	ResponseEntity<AppPkgSubscriptionInfo> subscriptionsPost(@ApiParam(value = "The input parameters of subscribe operation to notifications", required = true) @Valid @RequestBody AppPkgSubscription body);
 
 }
