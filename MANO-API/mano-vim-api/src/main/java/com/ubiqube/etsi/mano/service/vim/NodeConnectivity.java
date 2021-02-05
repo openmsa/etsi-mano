@@ -23,6 +23,9 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NodeConnectivity extends ConnectivityEdge<Class<Node>> {
-	// Nothing.
+public class NodeConnectivity extends ConnectivityEdge<Class<? extends Node>> {
+
+	public NodeConnectivity(final Class<? extends Node> source, final Class<? extends Node> target) {
+		super(source, target);
+	}
 }

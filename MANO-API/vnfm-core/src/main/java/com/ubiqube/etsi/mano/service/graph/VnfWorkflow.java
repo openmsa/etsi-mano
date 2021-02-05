@@ -38,7 +38,7 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 
 @Service
 public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport> {
@@ -55,7 +55,7 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	@Override
 	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling) {
 		final WfConfiguration wfc = new WfConfiguration(planContributors);
-		final List<ConnectivityEdge<Class<? extends Node>>> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
+		final List<NodeConnectivity> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
 		planner.doPlan(bundle, blueprint, scaling, conns);
 	}
 

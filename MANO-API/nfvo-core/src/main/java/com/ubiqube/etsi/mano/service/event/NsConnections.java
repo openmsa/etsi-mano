@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsdNode;
 import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
@@ -29,18 +28,18 @@ import com.ubiqube.etsi.mano.service.vim.node.nfvo.VnfNode;
 
 public class NsConnections {
 
-	private final List<ConnectivityEdge<Class<? extends Node>>> connections;
+	private final List<NodeConnectivity> connections;
 
 	public NsConnections() {
 		connections = new ArrayList<>();
-		connections.add(new ConnectivityEdge<>(Start.class, VnfNode.class));
-		connections.add(new ConnectivityEdge<>(Start.class, NsdNode.class));
+		connections.add(new NodeConnectivity(Start.class, VnfNode.class));
+		connections.add(new NodeConnectivity(Start.class, NsdNode.class));
 
-		connections.add(new ConnectivityEdge<>(VnfNode.class, SapNode.class));
-		connections.add(new ConnectivityEdge<>(NsdNode.class, SapNode.class));
+		connections.add(new NodeConnectivity(VnfNode.class, SapNode.class));
+		connections.add(new NodeConnectivity(NsdNode.class, SapNode.class));
 	}
 
-	public List<ConnectivityEdge<Class<? extends Node>>> getConnections() {
+	public List<NodeConnectivity> getConnections() {
 		return Collections.unmodifiableList(connections);
 	}
 }

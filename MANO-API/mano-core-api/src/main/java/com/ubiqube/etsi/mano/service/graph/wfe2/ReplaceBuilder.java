@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.service.graph.wfe2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
  *
  */
 public class ReplaceBuilder {
-	private final List<ConnectivityEdge<Class<? extends Node>>> edges = new ArrayList<>();
+	private final List<NodeConnectivity> edges = new ArrayList<>();
 	private final Class<? extends Node> contributor;
 
 	public ReplaceBuilder(final Class<? extends Node> contributor2) {
@@ -37,16 +37,16 @@ public class ReplaceBuilder {
 	}
 
 	public ReplaceBuilder connectTo(final Class<? extends Node> class1) {
-		edges.add(new ConnectivityEdge<>(contributor, class1));
+		edges.add(new NodeConnectivity(contributor, class1));
 		return this;
 	}
 
-	public List<ConnectivityEdge<Class<? extends Node>>> getEdges() {
+	public List<NodeConnectivity> getEdges() {
 		return edges;
 	}
 
 	public ReplaceBuilder connectFrom(final Class<Network> class1) {
-		edges.add(new ConnectivityEdge<>(class1, contributor));
+		edges.add(new NodeConnectivity(class1, contributor));
 		return this;
 	}
 

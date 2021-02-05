@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 /**
@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.service.vim.node.Node;
  *
  */
 public class DependencyBuilder {
-	private final List<ConnectivityEdge<Class<? extends Node>>> edges = new ArrayList<>();
+	private final List<NodeConnectivity> edges = new ArrayList<>();
 	private final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
 	private final Class<? extends Node> contributor;
 
@@ -40,12 +40,12 @@ public class DependencyBuilder {
 	}
 
 	public DependencyBuilder connectionFrom(final Class<? extends Node> class1) {
-		edges.add(new ConnectivityEdge<>(class1, contributor));
+		edges.add(new NodeConnectivity(class1, contributor));
 		return this;
 	}
 
 	public DependencyBuilder connectTo(final Class<? extends Node> class1) {
-		edges.add(new ConnectivityEdge<>(contributor, class1));
+		edges.add(new NodeConnectivity(contributor, class1));
 		return this;
 	}
 
@@ -59,7 +59,7 @@ public class DependencyBuilder {
 		return replacements;
 	}
 
-	public List<ConnectivityEdge<Class<? extends Node>>> getEdges() {
+	public List<NodeConnectivity> getEdges() {
 		return edges;
 	}
 
