@@ -116,7 +116,6 @@ public class VnfPackage implements PackageBase, Auditable {
 	private Set<VnfCompute> vnfCompute = new LinkedHashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	@IndexedEmbedded
 	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
 
