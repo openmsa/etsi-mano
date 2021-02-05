@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
 
 /**
  *
@@ -43,6 +42,7 @@ public class VnfPackageManagerImpl implements VnfPackageManager {
 
 	@Override
 	public VnfPackageProvider getProviderFor(final byte[] data) {
+
 		for (final RegistryHandler<VnfPackageProvider> provider : providers) {
 			LOG.info("Testing {} for package support.", provider.getName());
 			if (provider.isProcessable(data)) {
