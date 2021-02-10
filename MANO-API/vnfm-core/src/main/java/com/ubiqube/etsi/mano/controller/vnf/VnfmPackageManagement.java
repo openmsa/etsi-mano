@@ -72,8 +72,7 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 		final UriComponentsBuilder builder = nfvoRest.uriBuilder()
 				.pathSegment("vnfpkgm/v1/vnf_packages");
 		/*
-		 * for (final Entry<String, String> entry : queryParameters.entrySet()) {
-		 * builder.queryParam(entry.getKey(), entry.getValue()); }
+		 * for (final Entry<String, String> entry : queryParameters.entrySet()) { builder.queryParam(entry.getKey(), entry.getValue()); }
 		 */
 		final URI uri = builder
 				.build()
@@ -144,6 +143,12 @@ public class VnfmPackageManagement implements VnfPackageManagement {
 
 	@Override
 	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final UUID vnfdId, @Valid final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <U> U onboardedVnfPackagesVnfdIdGet(final UUID vnfdId, final Class<U> clazz) {
 		// TODO Auto-generated method stub
 		return null;
 	}

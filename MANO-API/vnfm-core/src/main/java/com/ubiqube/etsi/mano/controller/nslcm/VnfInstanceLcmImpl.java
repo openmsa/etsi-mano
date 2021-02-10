@@ -20,10 +20,10 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +35,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
@@ -93,8 +94,9 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	}
 
 	@Override
-	public List<VnfInstance> get(final Map<String, String> queryParameters) {
-		final String filter = queryParameters.get("filter");
+	public List<VnfInstance> get(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
+		// XXX A little bit short !
 		return vnfInstanceService.query(filter);
 	}
 
