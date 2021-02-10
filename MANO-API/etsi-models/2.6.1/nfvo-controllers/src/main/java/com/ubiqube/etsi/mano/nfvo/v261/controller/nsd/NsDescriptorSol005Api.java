@@ -17,6 +17,7 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -38,6 +39,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,10 +95,11 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsDescriptorsGet(final String accept, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
+	public ResponseEntity<String> nsDescriptorsGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<NsdPackage> result = nsdController.nsDescriptorsGet(filter);
 		final Consumer<NsdInfo> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(fields, excludeFields, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, setLink);
+		return searchService.search(requestParams, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, setLink);
 	}
 
 	/**

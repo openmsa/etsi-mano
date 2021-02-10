@@ -20,6 +20,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 import javax.annotation.Nonnull;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,10 +51,7 @@ public interface NsInstancesSol005 {
 	/**
 	 * Query multiple NS instances.
 	 *
-	 * Query NS Instances. The GET method queries information about multiple NS
-	 * instances. This method shall support the URI query parameters, request and
-	 * response data structures, and response codes, as specified in the Tables
-	 * 6.4.2.3.2-1 and 6.4.2.3.2-2.
+	 * Query NS Instances. The GET method queries information about multiple NS instances. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.2.3.2-1 and 6.4.2.3.2-2.
 	 *
 	 */
 	@ApiOperation(value = "Query multiple NS instances.", tags = {})
@@ -62,11 +60,7 @@ public interface NsInstancesSol005 {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = ProblemDetails.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = ProblemDetails.class), @ApiResponse(code = 416, message = "Requested Range Not Satisfiable This code is returned if the requested byte range in the Range HTTP header is not present in the requested resource. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class), @ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<String> nsInstancesGet(@RequestParam(value = "filter", required = false) String filter,
-			@RequestParam(value = "all_fields", required = false) String allFields,
-			@RequestParam(value = "fields", required = false) String fields,
-			@RequestParam(value = "exclude_fields", required = false) String excludeFields,
-			@RequestParam(value = "exclude_default", required = false) String excludeDefault);
+	ResponseEntity<String> nsInstancesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	/**
 	 * Delete NS instance resource.
@@ -86,8 +80,7 @@ public interface NsInstancesSol005 {
 	/**
 	 * Read an individual NS instance resource.
 	 *
-	 * The GET method retrieves information about a NS instance by reading an
-	 * individual NS instance resource.
+	 * The GET method retrieves information about a NS instance by reading an individual NS instance resource.
 	 *
 	 */
 	@ApiOperation(value = "Read an individual NS instance resource.", tags = {})
@@ -101,10 +94,7 @@ public interface NsInstancesSol005 {
 	/**
 	 * Heal a NS instance.
 	 *
-	 * The POST method requests to heal a NS instance resource. This method shall
-	 * follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for
-	 * URI query parameters, request and response data structures, and response
-	 * codes.
+	 * The POST method requests to heal a NS instance resource. This method shall follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Heal a NS instance.", tags = {})
@@ -153,12 +143,7 @@ public interface NsInstancesSol005 {
 	/**
 	 * Terminate a NS instance.
 	 *
-	 * Terminate NS task. The POST method terminates a NS instance. This method can
-	 * only be used with a NS instance in the INSTANTIATED state. Terminating a NS
-	 * instance does not delete the NS instance identifier, but rather transitions
-	 * the NS into the NOT_INSTANTIATED state. This method shall support the URI
-	 * query parameters, request and response data structures, and response codes,
-	 * as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
+	 * Terminate NS task. The POST method terminates a NS instance. This method can only be used with a NS instance in the INSTANTIATED state. Terminating a NS instance does not delete the NS instance identifier, but rather transitions the NS into the NOT_INSTANTIATED state. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Terminate a NS instance.", tags = {})

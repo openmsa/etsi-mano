@@ -17,6 +17,7 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -35,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -89,10 +91,11 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsInstancesGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
+	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "field");
 		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
 		final Consumer<NsInstance> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(fields, excludeFields, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, setLink);
+		return searchService.search(requestParams, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, setLink);
 	}
 
 	/**

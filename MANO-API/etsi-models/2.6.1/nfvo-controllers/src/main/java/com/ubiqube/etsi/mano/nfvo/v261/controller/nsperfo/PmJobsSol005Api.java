@@ -17,6 +17,8 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.function.Consumer;
 import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.controller.nspm.NfvoPmController;
@@ -64,11 +67,12 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> pmJobsGet(final String filter, final String fields, final String include, final String excludeFields, final String excludeDefault) {
+	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<PmJob> result = nfvoPmController.query(filter);
 		final Consumer<PmJobsPmJob> setLink = x -> {
 			/* XXX Missing makeLinks. */};
-		return searchService.search(fields, excludeFields, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, result, PmJobsPmJob.class, setLink);
+		return searchService.search(requestParams, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, result, PmJobsPmJob.class, setLink);
 	}
 
 	/**

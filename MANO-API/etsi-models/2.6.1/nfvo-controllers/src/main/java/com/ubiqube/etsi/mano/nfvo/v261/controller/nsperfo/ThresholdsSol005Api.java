@@ -28,6 +28,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.nspm.NfvoThresholdController;
 import com.ubiqube.etsi.mano.dao.mano.pm.Threshold;
@@ -68,7 +69,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	public ResponseEntity<String> thresholdsGet(final String filter) {
 		final List<Threshold> result = nfvoThresholdController.query(filter);
 		final Consumer<com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(null, null, THR_SEARCH_DEFAULT_EXCLUDE_FIELDS, THR_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class, setLink);
+		return searchService.search(new LinkedMultiValueMap<>(), THR_SEARCH_DEFAULT_EXCLUDE_FIELDS, THR_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class, setLink);
 	}
 
 	private ThresholdLinks makeLinks(@NotNull final String id) {

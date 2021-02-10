@@ -18,7 +18,12 @@ package com.ubiqube.etsi.mano;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
+
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
@@ -42,6 +47,21 @@ public final class Constants {
 	public static final String VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS = "softwareImages,additionalArtifacts,userDefinedData,checksum";
 
 	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState"));
+
+	@Nullable
+	public static String getSingleField(final MultiValueMap<String, String> bag, final String parameter) {
+		final List<String> params = bag.get(parameter);
+		if (null == params) {
+			return null;
+		}
+		if (params.isEmpty()) {
+			return null;
+		}
+		if (params.size() > 1) {
+			throw new GenericException("Parameter: " + parameter + " could not have multiple occurences.");
+		}
+		return params.get(0);
+	}
 
 	public static void ensureDisabled(final PackageBase vnfPackage) {
 		if (PackageOperationalState.DISABLED != vnfPackage.getOperationalState()) {

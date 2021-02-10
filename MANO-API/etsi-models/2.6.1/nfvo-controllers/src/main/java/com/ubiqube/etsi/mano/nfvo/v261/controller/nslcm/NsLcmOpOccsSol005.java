@@ -17,7 +17,10 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,11 +43,7 @@ public interface NsLcmOpOccsSol005 {
 	/**
 	 * Query multiple NS LCM operation occurrences.
 	 *
-	 * Get Operation Status. The client can use this method to query status
-	 * information about multiple NS lifecycle management operation occurrences.
-	 * This method shall follow the provisions specified in the Tables 6.4.9.3.2-1
-	 * and 6.4.9.3.2-2 for URI query parameters, request and response data
-	 * structures, and response codes.
+	 * Get Operation Status. The client can use this method to query status information about multiple NS lifecycle management operation occurrences. This method shall follow the provisions specified in the Tables 6.4.9.3.2-1 and 6.4.9.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Query multiple NS LCM operation occurrences.", tags = {})
@@ -53,17 +52,12 @@ public interface NsLcmOpOccsSol005 {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = ProblemDetails.class), @ApiResponse(code = 409, message = "Conflict Another request is in progress that prohibits the fulfilment of the current request, or the current resource state is inconsistent with the request. ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<String> nsLcmOpOccsGet(@RequestParam(value = "filter", required = false) String filter, @RequestParam(value = "fields", required = false) String fields, @RequestParam(value = "exclude_fields", required = false) String excludeFields, @RequestParam(value = "exclude_default", required = false) String excludeDefault);
+	ResponseEntity<String> nsLcmOpOccsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	/**
 	 * Continue a NS lifecycle management operation occurrence.
 	 *
-	 * The POST method initiates continuing an NS lifecycle operation if that
-	 * operation has experienced a temporary failure, i.e. the related \&quot;NS LCM
-	 * operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This
-	 * method shall follow the provisions specified in the Tables 6.4.13.3.1-1 and
-	 * 6.4.13.3.1-2 for URI query parameters, request and response data structures,
-	 * and response codes.
+	 * The POST method initiates continuing an NS lifecycle operation if that operation has experienced a temporary failure, i.e. the related \&quot;NS LCM operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This method shall follow the provisions specified in the Tables 6.4.13.3.1-1 and 6.4.13.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Continue a NS lifecycle management operation occurrence.", tags = {})
@@ -77,11 +71,7 @@ public interface NsLcmOpOccsSol005 {
 	/**
 	 * Read an individual NS LCM operation occurrence resource.
 	 *
-	 * The client can use this method to retrieve status information about a NS
-	 * lifecycle management operation occurrence by reading an individual \&quot;NS
-	 * LCM operation occurrence\&quot; resource. This method shall follow the
-	 * provisions specified in the Tables 6.4.10.3.2-1 and 6.4.10.3.2-2 for URI
-	 * query parameters, request and response data structures, and response codes.
+	 * The client can use this method to retrieve status information about a NS lifecycle management operation occurrence by reading an individual \&quot;NS LCM operation occurrence\&quot; resource. This method shall follow the provisions specified in the Tables 6.4.10.3.2-1 and 6.4.10.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Read an individual NS LCM operation occurrence resource.", tags = {})
@@ -95,12 +85,7 @@ public interface NsLcmOpOccsSol005 {
 	/**
 	 * Retry a NS lifecycle management operation occurrence.
 	 *
-	 * The POST method initiates retrying a NS lifecycle management operation if
-	 * that operation has experienced a temporary failure, i.e. the related
-	 * \&quot;NS LCM operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot;
-	 * state. This method shall follow the provisions specified in the Tables
-	 * 6.4.11.3.1-1 and 6.4.11.3.1-2 for URI query parameters, request and response
-	 * data structures, and response codes.
+	 * The POST method initiates retrying a NS lifecycle management operation if that operation has experienced a temporary failure, i.e. the related \&quot;NS LCM operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This method shall follow the provisions specified in the Tables 6.4.11.3.1-1 and 6.4.11.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Retry a NS lifecycle management operation occurrence.", tags = {})
@@ -114,12 +99,7 @@ public interface NsLcmOpOccsSol005 {
 	/**
 	 * Rollback a NS lifecycle management operation occurrence.
 	 *
-	 * The POST method initiates rolling back a NS lifecycle operation if that
-	 * operation has experienced a temporary failure, i.e. the related \&quot;NS LCM
-	 * operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This
-	 * method shall follow the provisions specified in the Tables 6.4.12.3.1-1 and
-	 * 6.4.12.3.1-2 for URI query parameters, request and response data structures,
-	 * and response codes.
+	 * The POST method initiates rolling back a NS lifecycle operation if that operation has experienced a temporary failure, i.e. the related \&quot;NS LCM operation occurrence\&quot; is in \&quot;FAILED_TEMP\&quot; state. This method shall follow the provisions specified in the Tables 6.4.12.3.1-1 and 6.4.12.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Rollback a NS lifecycle management operation occurrence.", tags = {})

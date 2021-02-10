@@ -24,6 +24,7 @@ import javax.validation.Valid;
 
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -49,12 +50,7 @@ import io.swagger.annotations.ApiResponses;
  * SOL005 - NSD Management Interface
  *
  * <p>
- * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might
- * be not aligned to the current version of the ETSI Group Specification it
- * refers to and has not been approved by the ETSI NFV ISG. In case of
- * discrepancies the published ETSI Group Specification takes precedence. Please
- * report bugs to
- * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
+ * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
 @RequestMapping("/sol005/nsd/v1/ns_descriptors")
@@ -75,13 +71,7 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<String> nsDescriptorsGet(
-			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
-			@ApiParam(value = "\"Attribute-based filtering parameters according to clause 4.3.2. The NFVO shall support receiving filtering parameters as part of the URI query string. The OSS/BSS may supply filtering parameters. All attribute names that appear in the NsdInfo and in data types referenced from it shall be supported in attribute-based filtering parameters.\" ") @Valid @RequestParam(value = "filter", required = false) String filter,
-			@ApiParam(value = "\"Include all complex attributes in the response. See clause 4.3.3 for details.  The NFVO shall support this parameter.\" ") @Valid @RequestParam(value = "all_fields", required = false) String allFields,
-			@ApiParam(value = "\"Complex attributes to be included into the response. See clause 4.3.3 for details. The NFVO should support this parameter.\"           ") @Valid @RequestParam(value = "fields", required = false) String fields,
-			@ApiParam(value = "\"Complex attributes to be excluded from the response. See clause 4.3.3 for details. The NFVO should support this parameter.\" ") @Valid @RequestParam(value = "exclude_fields", required = false) String excludeFields,
-			@ApiParam(value = "\"Indicates to exclude the following complex attributes from the response. See clause 4.3.3 for details. The VNFM shall support this parameter. The following attributes shall be excluded from the NsdInfo structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided: userDefinedData.\" ") @Valid @RequestParam(value = "exclude_default", required = false) String excludeDefault);
+	ResponseEntity<String> nsDescriptorsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@ApiOperation(value = "Delete an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdDelete", notes = "The DELETE method deletes an individual NS descriptor resource. An individual NS descriptor resource can only be deleted when there is no NS instance using it (i.e. usageState = NOT_IN_USE) and has been disabled already (i.e. operationalState = DISABLED). Otherwise, the DELETE method shall fail. ", tags = {})
 	@ApiResponses(value = {

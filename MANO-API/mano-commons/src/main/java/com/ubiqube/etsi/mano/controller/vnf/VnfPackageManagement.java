@@ -33,7 +33,7 @@ public interface VnfPackageManagement {
 
 	<U> U vnfPackagesVnfPkgIdGet(@Nonnull UUID vnfPkgId, Class<U> u);
 
-	List<VnfPackage> vnfPackagesGet(@Nonnull String filter);
+	List<VnfPackage> vnfPackagesGet(String filter);
 
 	/**
 	 *

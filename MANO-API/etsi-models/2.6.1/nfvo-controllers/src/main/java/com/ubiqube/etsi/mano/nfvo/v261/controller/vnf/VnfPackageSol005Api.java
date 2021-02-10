@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 
 import java.io.IOException;
 import java.net.URI;
@@ -37,6 +38,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,14 +89,12 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) {
-		final String filter = requestParams.get("filter");
-		final String exclude = requestParams.get("exclude_fields");
-		final String fields = requestParams.get("fields");
+	public ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
 		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
 		requestParams.containsKey("exclude_default");
-		return searchService.search(fields, exclude, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
+		return searchService.search(requestParams, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
 	}
 
 	@Override

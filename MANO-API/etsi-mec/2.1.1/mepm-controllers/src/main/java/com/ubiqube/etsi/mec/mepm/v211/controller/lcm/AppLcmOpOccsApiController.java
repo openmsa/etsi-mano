@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mec.mepm.v211.controller.lcm;
 
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -24,11 +25,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.validation.Valid;
+import javax.annotation.Nonnull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -62,10 +65,11 @@ public class AppLcmOpOccsApiController implements AppLcmOpOccsApi {
 	}
 
 	@Override
-	public ResponseEntity<String> appLcmOpOccsGET(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault) {
+	public ResponseEntity<String> appLcmOpOccsGET(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<AppBlueprint> resultsDb = mepmLcmController.query(filter);
 		final Consumer<AppInstanceLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(fields, excludeFields, APP_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, resultsDb, AppInstanceLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, APP_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, resultsDb, AppInstanceLcmOpOcc.class, setLink);
 
 	}
 

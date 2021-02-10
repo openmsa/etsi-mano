@@ -17,11 +17,10 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -55,7 +54,7 @@ public interface VnfLcmSol002 {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<String> vnfInstancesGet(@ApiParam(value = "All resquest parameters.", required = true) @RequestParam Map<String, String> queryParameters);
+	ResponseEntity<String> vnfInstancesGet(@ApiParam(value = "All resquest parameters.", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Create VNF Identifier  The POST method creates a new VNF instance resource. ", response = VnfInstance.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {

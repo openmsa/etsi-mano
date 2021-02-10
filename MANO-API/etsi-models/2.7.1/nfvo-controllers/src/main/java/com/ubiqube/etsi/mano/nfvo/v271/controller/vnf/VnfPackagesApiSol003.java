@@ -17,10 +17,8 @@
 package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -82,7 +80,8 @@ public interface VnfPackagesApiSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @RequestParam Map<String, String> requestParams,
+	ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@ApiParam(value = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfPkgId") String vnfPkgId,
+			@ApiParam(value = "For an artifact contained as a file in the VNF package, this variable shall contain a sequence of one or path segments representing the path of the artifact within the VNF package, relative to the root of the package. See note 3. EXAMPLE: foo/bar/m%40ster.sh For an external artifact represented as a URI in the VNF package manifest, this variable shall contain a sequence of one or more path segments as synthesized by the NFVO (see clause 9.5.3.3), representing this artifact. See note 2 and note 3 ", required = true) @PathVariable("artifactPath") String artifactPath,
 			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the VNF package file. This can be used to continue an aborted transmission. If the \"Range\" header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead as defined below. ") @RequestHeader(value = "Range", required = false) final String range,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall return the artifact and related security information (such as signature and optional certificate) in a ZIP archive. If this parameter is not given, the NFVO shall provide only a copy of the artifact file. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 

@@ -17,11 +17,11 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.controller.lcm.LcmLinkable;
@@ -75,12 +76,11 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters);
-		final String exclude = queryParameters.get("exclude_fields");
-		final String fields = queryParameters.get("fields");
+	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
+		final List<VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(fields, exclude, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
+		return searchService.search(requestParams, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
 	}
 
 	@Override

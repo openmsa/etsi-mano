@@ -23,8 +23,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +49,11 @@ public class ManoSearchResponseService {
 		mapper = _mapper;
 	}
 
-	public <U> ResponseEntity<String> search(final String fields, final String excludeFields, final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
+	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> parameters, final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
+		final List<String> fields = parameters.get("fields");
+		final List<String> excludeFields = parameters.get("excluse_fields");
+		final boolean haveDefaultFields = parameters.containsKey("exclude_default");
+		final boolean allFields = parameters.containsKey("all_fields");
 		final List<U> vnfPkginfos = list.stream()
 				.map(x -> mapper.map(x, target))
 				.collect(Collectors.toList());
@@ -54,7 +61,10 @@ public class ManoSearchResponseService {
 
 		final Set<String> fieldsSet = getFields(fields, mandatoryFields);
 
-		final Set<String> excluded = getExcludedFields(excludeFields, excludeDefaults);
+		Set<String> excluded = getExcludedFields(excludeFields);
+		if (haveDefaultFields || (excluded.isEmpty() && fieldsSet.isEmpty() && !allFields)) {
+			excluded = applyDefault(excludeDefaults);
+		}
 		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(excluded, fieldsSet);
 
 		String resp = null;
@@ -67,24 +77,26 @@ public class ManoSearchResponseService {
 
 	}
 
-	private static Set<String> getExcludedFields(final String excludeFields, final String excludeDefaults) {
+	private static Set<String> applyDefault(final String excludeDefaults) {
+		return Arrays.stream(excludeDefaults.split(",")).collect(Collectors.toSet());
+	}
+
+	@NotNull
+	private static Set<String> getExcludedFields(final List<String> excludeFields) {
 		final Set<String> fieldsSet = new HashSet<>();
 		if (null == excludeFields) {
 			return fieldsSet;
 		}
-		Arrays.stream(excludeFields.split(",")).forEach(fieldsSet::add);
-		if (null != excludeDefaults) {
-			Arrays.stream(excludeDefaults.split(",")).forEach(fieldsSet::add);
-		}
-		return fieldsSet;
+		return excludeFields.stream().flatMap(x -> Arrays.stream(x.split(","))).collect(Collectors.toSet());
 	}
 
-	private static Set<String> getFields(final String fields, final Set<String> mandatoryFields) {
-		Set<String> fieldsSet = new HashSet<>();
-		if (null != fields) {
-			fieldsSet = Arrays.stream(fields.split(",")).collect(Collectors.toSet());
-			fieldsSet.addAll(mandatoryFields);
+	@NotNull
+	private static Set<String> getFields(final List<String> fields, final Set<String> mandatoryFields) {
+		if (null == fields) {
+			return new HashSet<>();
 		}
-		return fieldsSet;
+		final Set<String> allFields = fields.stream().flatMap(x -> Arrays.stream(x.split(","))).collect(Collectors.toSet());
+		allFields.addAll(mandatoryFields);
+		return allFields;
 	}
 }

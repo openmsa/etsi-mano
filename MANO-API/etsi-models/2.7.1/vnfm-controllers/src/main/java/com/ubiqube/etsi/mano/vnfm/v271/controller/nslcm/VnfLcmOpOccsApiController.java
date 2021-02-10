@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -26,12 +27,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -70,10 +71,11 @@ public class VnfLcmOpOccsApiController implements VnfLcmOpOccsApi {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfLcmOpOccsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String exclude, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
+	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(fields, exclude, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
 	}
 
 	@Override

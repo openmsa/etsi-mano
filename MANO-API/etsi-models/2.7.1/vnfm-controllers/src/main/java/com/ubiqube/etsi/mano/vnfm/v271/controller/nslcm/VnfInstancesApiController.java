@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -35,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
@@ -97,12 +97,10 @@ public class VnfInstancesApiController implements VnfInstancesApi {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<com.ubiqube.etsi.mano.dao.mano.VnfInstance> result = vnfInstanceLcm.get(queryParameters);
-		final String exclude = queryParameters.get("exclude_fields");
-		final String fields = queryParameters.get("fields");
+	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
+		final List<com.ubiqube.etsi.mano.dao.mano.VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(fields, exclude, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfInstance.class, setLink);
+		return searchService.search(requestParams, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfInstance.class, setLink);
 	}
 
 	@Override

@@ -18,7 +18,6 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -68,7 +68,7 @@ public interface VnfPackageSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam Map<String, String> requestParams);
+	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@ApiOperation(value = "Fetch individual VNF package artifact.", nickname = "vnfPackagesVnfPkgIdArtifactsArtifactPathGet", notes = "The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the  Tables 9.4.7.3.2-1 and 9.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", consumes = "application/json", tags = {})
 	@ApiResponses(value = {
@@ -172,10 +172,7 @@ public interface VnfPackageSol005 {
 	/**
 	 * Update information about an individual VNF package.
 	 *
-	 * \&quot;The PATCH method updates the information of a VNF package.\&quot;
-	 * \&quot;This method shall follow the provisions specified in the Tables
-	 * 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response
-	 * data structures, and response codes.\&quot;
+	 * \&quot;The PATCH method updates the information of a VNF package.\&quot; \&quot;This method shall follow the provisions specified in the Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\&quot;
 	 *
 	 */
 	@ApiOperation(value = "Update information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdPatch", notes = "\"The PATCH method updates the information of a VNF package.\" \"This method shall follow the provisions specified in the  Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\" ", response = Object.class, tags = {})
@@ -197,9 +194,7 @@ public interface VnfPackageSol005 {
 	/**
 	 * Upload a VNF package by providing the content of the VNF package.
 	 *
-	 * The PUT method uploads the content of a VNF package. This method shall follow
-	 * the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI
-	 * query parameters, request and response data structures, and response codes.
+	 * The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Upload a VNF package by providing the content of the VNF package.", nickname = "vnfPackagesVnfPkgIdPackageContentPut", notes = "The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
@@ -220,10 +215,7 @@ public interface VnfPackageSol005 {
 	/**
 	 * Upload a VNF package by providing the address information of the VNF package.
 	 *
-	 * The POST method provides the information for the NFVO to get the content of a
-	 * VNF package. This method shall follow the provisions specified in the Tables
-	 * 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response
-	 * data structures, and response codes.
+	 * The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Upload a VNF package by providing the address information of the VNF package.", nickname = "vnfPackagesVnfPkgIdPackageContentUploadFromUriPost", notes = "The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.         ", tags = {})

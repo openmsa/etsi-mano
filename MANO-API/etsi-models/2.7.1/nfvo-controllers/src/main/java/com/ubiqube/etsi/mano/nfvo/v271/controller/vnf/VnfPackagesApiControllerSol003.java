@@ -16,13 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
-import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
-
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,10 +26,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
@@ -61,13 +54,9 @@ public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@RequestParam final Map<String, String> requestParams, final String range, @Valid final String includeSignatures) {
-		final String filter = requestParams.get("filter");
-		final String exclude = requestParams.get("exclude_fields");
-		final String fields = requestParams.get("fields");
-		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
-		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
-		return searchService.search(fields, exclude, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
+	public ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String range, @Valid final String includeSignatures) {
+		// TODO.
+		return ResponseEntity.ok().build();
 	}
 
 	@Override

@@ -17,6 +17,7 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -32,6 +33,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -70,10 +72,11 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> nsLcmOpOccsGet(final String filter, final String fields, final String excludeFields, final String excludeDefault) {
+	public ResponseEntity<String> nsLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<NsBlueprint> result = nsLcmOpOccsService.query(filter);
 		final Consumer<NsLcmOpOcc> setLink = x -> x.setLinks(makeLinks(x));
-		return searchService.search(fields, excludeFields, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, setLink);
 	}
 
 	/**
@@ -137,7 +140,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		nsLcmOpOccLinks.setContinue(_continue);
 
 		final Link nsInstance = new Link();
-		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesGet(nsLcmOpOccs.getNsInstanceId(), null, null, null, null)).withSelfRel().getHref());
+		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId())).withSelfRel().getHref());
 		nsLcmOpOccLinks.setNsInstance(nsInstance);
 
 		final Link retry = new Link();

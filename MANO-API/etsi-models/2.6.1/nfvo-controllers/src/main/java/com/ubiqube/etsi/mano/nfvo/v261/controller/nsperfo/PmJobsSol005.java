@@ -17,9 +17,11 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,8 +42,7 @@ public interface PmJobsSol005 {
 	/**
 	 * Query PM jobs.
 	 *
-	 * \&quot;The client can use this method to retrieve information about PM
-	 * jobs\&quot;
+	 * \&quot;The client can use this method to retrieve information about PM jobs\&quot;
 	 *
 	 */
 	@ApiOperation(value = "Query PM jobs.", tags = {})
@@ -52,7 +53,7 @@ public interface PmJobsSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/pm_jobs", consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<String> pmJobsGet(@RequestParam("filter") String filter, @RequestParam("all_fields") String allFields, @RequestParam("include") String include, @RequestParam("exclude") String exclude, @RequestParam("exclude_default") String excludeDefault);
+	ResponseEntity<String> pmJobsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	/**
 	 * Delete a PM job.
@@ -105,9 +106,7 @@ public interface PmJobsSol005 {
 	/**
 	 * Create a PM job.
 	 *
-	 * The POST method creates a PM job. This method shall follow the provisions
-	 * specified in the Tables 7.4.2.3.1-1 and 7.4.2.3.1-2 for URI query parameters,
-	 * request and response data structures, and response codes.
+	 * The POST method creates a PM job. This method shall follow the provisions specified in the Tables 7.4.2.3.1-1 and 7.4.2.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Create a PM job.", tags = {})

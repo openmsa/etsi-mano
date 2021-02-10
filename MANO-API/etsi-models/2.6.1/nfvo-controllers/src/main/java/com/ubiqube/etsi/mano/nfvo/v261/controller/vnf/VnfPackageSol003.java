@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -49,7 +49,7 @@ public interface VnfPackageSol003 {
 	 *
 	 */
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam Map<String, String> requestParams);
+	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	/**
 	 * Fetch individual VNF package artifact.
