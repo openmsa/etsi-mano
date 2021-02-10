@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -105,6 +106,7 @@ public class NsdControllerImpl implements NsdController {
 		nsdPackage.setUserDefinedData(userDefinedData);
 		nsdPackage.setNsdOnboardingState(OnboardingStateType.CREATED);
 		nsdPackage.setNsdOperationalState(PackageOperationalState.DISABLED);
+		nsdPackage.setNsdUsageState(PackageUsageState.NOT_IN_USE);
 		return nsdRepository.save(nsdPackage);
 	}
 }
