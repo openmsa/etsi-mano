@@ -20,9 +20,12 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -32,17 +35,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nsd.PnfdController;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoModifications;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -51,48 +51,42 @@ import ma.glasnost.orika.MapperFacade;
 public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptorsSol005Api.class);
+
+	private static final Set<String> PNFD_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
+	private static final String PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS = "userDefinedData";
+
 	private final PnfdController pnfdController;
+
 	private final MapperFacade mapper;
 
-	public PnfDescriptorsSol005Api(final PnfdController _pnfdController, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public PnfDescriptorsSol005Api(final PnfdController _pnfdController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		pnfdController = _pnfdController;
 		mapper = _mapper;
+		searchService = _searchService;
 		LOG.info("Starting PNF Management SOL005 Controller.");
 	}
 
 	/**
 	 * Query information about multiple PNF descriptor resources.
 	 *
-	 * \&quot;The GET method queries information about multiple PNF descriptor
-	 * resources.\&quot;
+	 * \&quot;The GET method queries information about multiple PNF descriptor resources.\&quot;
 	 *
 	 */
 	@Override
 	public ResponseEntity<String> pnfDescriptorsGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
-		final List<PnfDescriptor> pnfs = pnfdController.pnfDescriptorsGet(filter);
-		final List<PnfdInfo> pnfds = pnfs.stream()
-				.map(x -> mapper.map(x, PnfdInfo.class))
-				.collect(Collectors.toList());
-		pnfds.forEach(x -> x.setLinks(makeLinks(x)));
-		final ObjectMapper mapperFv = MapperForView.getMapperForView(excludeFields, fields, null, null);
-		try {
-			return new ResponseEntity<>(mapperFv.writeValueAsString(pnfds), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+		final List<PnfDescriptor> result = pnfdController.pnfDescriptorsGet(filter);
+		final Consumer<PnfdInfo> setLink = x -> x.setLinks(makeLinks(x));
+		return searchService.search(fields, excludeFields, PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS, PNFD_SEARCH_MANDATORY_FIELDS, result, PnfdInfo.class, setLink);
 	}
 
 	/**
 	 * Delete an individual PNF descriptor resource.
 	 *
-	 * The DELETE method deletes an individual PNF descriptor resource. An
-	 * individual PNF descriptor resource can only be deleted when there is no NS
-	 * instance using it or there is NSD referencing it. To delete all PNFD versions
-	 * identified by a particular value of the \&quot;pnfdInvariantId\&quot;
-	 * attribute, the procedure is to first use the GET method with filter
-	 * \&quot;pnfdInvariantId\&quot; towards the PNF descriptors resource to find
-	 * all versions of the PNFD. Then, the client uses the DELETE method described
-	 * in this clause to delete each PNFD version individually.
+	 * The DELETE method deletes an individual PNF descriptor resource. An individual PNF descriptor resource can only be deleted when there is no NS instance using it or there is NSD referencing it. To delete all PNFD versions identified by a particular value of the \&quot;pnfdInvariantId\&quot; attribute, the procedure is to first use the GET method with filter \&quot;pnfdInvariantId\&quot; towards the PNF descriptors resource to find all versions of the PNFD. Then, the client uses the DELETE
+	 * method described in this clause to delete each PNFD version individually.
 	 *
 	 */
 	@Override
@@ -104,10 +98,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	/**
 	 * Read an individual PNFD resource.
 	 *
-	 * The GET method reads information about an individual PNF descriptor. This
-	 * method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and
-	 * 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response
-	 * data structures, and response codes.
+	 * The GET method reads information about an individual PNF descriptor. This method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -121,8 +112,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	/**
 	 * Modify the user defined data of an individual PNF descriptor resource.
 	 *
-	 * The PATCH method modifies the user defined data of an individual PNF
-	 * descriptor resource.
+	 * The PATCH method modifies the user defined data of an individual PNF descriptor resource.
 	 *
 	 */
 	@Override
@@ -135,9 +125,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	/**
 	 * Fetch the content of a PNFD.
 	 *
-	 * The GET method fetches the content of the PNFD. This method shall follow the
-	 * provisions specified in the Table 5.4.7.3.2-2 for URI query parameters,
-	 * request and response data structures, and response codes.
+	 * The GET method fetches the content of the PNFD. This method shall follow the provisions specified in the Table 5.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -149,10 +137,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	/**
 	 * Upload the content of a PNFD.
 	 *
-	 * The PUT method is used to upload the content of a PNFD. This resource
-	 * represents the content of the individual PNF descriptor, i.e. PNFD content.
-	 * The client can use this resource to upload and download the content of the
-	 * PNFD.
+	 * The PUT method is used to upload the content of a PNFD. This resource represents the content of the individual PNF descriptor, i.e. PNFD content. The client can use this resource to upload and download the content of the PNFD.
 	 *
 	 */
 	@Override

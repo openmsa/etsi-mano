@@ -21,9 +21,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -34,8 +37,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceController;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
@@ -43,7 +44,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.HealNsRequest;
@@ -53,6 +53,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstanceLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ScaleNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.UpdateNsRequest;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -61,41 +62,37 @@ import ma.glasnost.orika.MapperFacade;
 public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);
 
+	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
+	private static final String NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS = "vnfInstances,pnfInfo,virtualLinkInfo,vnffgInfo,sapInfo,,nsScaleStatus,additionalAffinityOrAntiAffinityRules";
+
 	private final MapperFacade mapper;
 
 	private final NsInstanceControllerService nsInstanceControllerService;
+
 	private final NsInstanceController nsLcmController;
 
-	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
+	private final ManoSearchResponseService searchService;
+
+	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController, final ManoSearchResponseService _searchService) {
 		mapper = _mapper;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmController = _nsLcmController;
+		searchService = _searchService;
 		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
 	/**
 	 * Query multiple NS instances.
 	 *
-	 * Query NS Instances. The GET method queries information about multiple NS
-	 * instances. This method shall support the URI query parameters, request and
-	 * response data structures, and response codes, as specified in the Tables
-	 * 6.4.2.3.2-1 and 6.4.2.3.2-2.
+	 * Query NS Instances. The GET method queries information about multiple NS instances. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.2.3.2-1 and 6.4.2.3.2-2.
 	 *
 	 */
 	@Override
 	public ResponseEntity<String> nsInstancesGet(final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault) {
 		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
-		final List<NsInstance> list = result.stream().map(x -> {
-			final NsInstance nsi = mapper.map(x, NsInstance.class);
-			nsi.setLinks(makeLink(x.getId().toString()));
-			return nsi;
-		}).collect(Collectors.toList());
-		final ObjectMapper objectMapper = MapperForView.getMapperForView(excludeFields, fields, null, null);
-		try {
-			return new ResponseEntity<>(objectMapper.writeValueAsString(list), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+		final Consumer<NsInstance> setLink = x -> x.setLinks(makeLinks(x.getId()));
+		return searchService.search(fields, excludeFields, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, setLink);
 	}
 
 	/**
@@ -114,8 +111,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	/**
 	 * Read an individual NS instance resource.
 	 *
-	 * The GET method retrieves information about a NS instance by reading an
-	 * individual NS instance resource.
+	 * The GET method retrieves information about a NS instance by reading an individual NS instance resource.
 	 *
 	 */
 	@Override
@@ -123,17 +119,14 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
-		nsInstance.setLinks(makeLink(nsInstanceId));
+		nsInstance.setLinks(makeLinks(nsInstanceId));
 		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
 	}
 
 	/**
 	 * Heal a NS instance.
 	 *
-	 * The POST method requests to heal a NS instance resource. This method shall
-	 * follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for
-	 * URI query parameters, request and response data structures, and response
-	 * codes.
+	 * The POST method requests to heal a NS instance resource. This method shall follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -175,12 +168,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	/**
 	 * Terminate a NS instance.
 	 *
-	 * Terminate NS task. The POST method terminates a NS instance. This method can
-	 * only be used with a NS instance in the INSTANTIATED state. Terminating a NS
-	 * instance does not delete the NS instance identifier, but rather transitions
-	 * the NS into the NOT_INSTANTIATED state. This method shall support the URI
-	 * query parameters, request and response data structures, and response codes,
-	 * as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
+	 * Terminate NS task. The POST method terminates a NS instance. This method can only be used with a NS instance in the INSTANTIATED state. Terminating a NS instance does not delete the NS instance identifier, but rather transitions the NS into the NOT_INSTANTIATED state. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
 	 *
 	 */
 	@Override
@@ -220,11 +208,11 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req.getNsdId(), req.getNsName(), req.getNsDescription());
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
 
-		nsInstanceWeb.setLinks(makeLink(nsInstance.getId().toString()));
+		nsInstanceWeb.setLinks(makeLinks(nsInstance.getId().toString()));
 		return ResponseEntity.created(URI.create(nsInstanceWeb.getLinks().getSelf().getHref())).body(nsInstanceWeb);
 	}
 
-	private static NsInstanceLinks makeLink(@Nonnull final String id) {
+	private static NsInstanceLinks makeLinks(@Nonnull final String id) {
 		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
 		final Link heal = new Link();
 		heal.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());

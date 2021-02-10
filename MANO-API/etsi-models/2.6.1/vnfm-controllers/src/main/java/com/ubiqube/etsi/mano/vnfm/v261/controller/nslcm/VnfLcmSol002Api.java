@@ -17,10 +17,13 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -31,8 +34,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.controller.lcm.LcmLinkable;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
@@ -40,8 +41,8 @@ import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
@@ -53,37 +54,33 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 public class VnfLcmSol002Api implements VnfLcmSol002 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);
+
 	@Nonnull
 	private final LcmLinkable links = new Sol002LcmLinkable();
+
 	private final VnfInstanceService vnfInstancesService;
+
 	private final VnfInstanceLcm vnfInstanceLcm;
+
 	private final MapperFacade mapper;
 
-	public VnfLcmSol002Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public VnfLcmSol002Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
+		searchService = _searchService;
 		LOG.info("Starting Ns Instance SOL002 Controller.");
 	}
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
-				.map(x -> {
-					final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance v = mapper.map(x, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
-					v.setLinks(links.getLinks(x.getId().toString()));
-					return v;
-				})
-				.collect(Collectors.toList());
+		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters);
 		final String exclude = queryParameters.get("exclude_fields");
 		final String fields = queryParameters.get("fields");
-
-		final ObjectMapper localMapper = MapperForView.getMapperForView(exclude, fields, null, null);
-		try {
-			return new ResponseEntity<>(localMapper.writeValueAsString(result), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+		final Consumer<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
+		return searchService.search(fields, exclude, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
 	}
 
 	@Override

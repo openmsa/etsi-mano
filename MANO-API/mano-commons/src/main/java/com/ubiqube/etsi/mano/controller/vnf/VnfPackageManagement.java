@@ -58,4 +58,6 @@ public interface VnfPackageManagement {
 
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(UUID vnfdId, @Valid String includeSignatures);
 
+	<U> U onboardedVnfPackagesVnfdIdGet(UUID vnfdId, Class<U> clazz);
+
 }

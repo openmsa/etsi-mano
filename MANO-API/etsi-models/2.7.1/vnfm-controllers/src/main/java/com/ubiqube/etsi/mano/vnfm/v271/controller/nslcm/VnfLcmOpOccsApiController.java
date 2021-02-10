@@ -19,9 +19,12 @@ package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -30,13 +33,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVirtualStorage;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVnfc;
@@ -44,6 +44,7 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOccLinks;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -51,28 +52,28 @@ import ma.glasnost.orika.MapperFacade;
 
 @Controller
 public class VnfLcmOpOccsApiController implements VnfLcmOpOccsApi {
+	public static final Set<String> VNFLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
+	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "vnfConfigurableProperties,vimConnectionInfo,instantiatedVnfInfo,metadata,extensions";
+
 	private final MapperFacade mapper;
+
 	private final VnfLcmController vnfLcmController;
 
-	public VnfLcmOpOccsApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
+	private final ManoSearchResponseService searchService;
+
+	public VnfLcmOpOccsApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController, final ManoSearchResponseService _searchService) {
 		super();
 		this.mapper = mapper;
 		this.vnfLcmController = vnfLcmController;
+		searchService = _searchService;
 	}
 
 	@Override
-	public ResponseEntity<String> vnfLcmOpOccsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
-		final List<VnfBlueprint> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
-		final List<VnfLcmOpOcc> results = resultsDb.stream()
-				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
-				.collect(Collectors.toList());
-		results.forEach(x -> x.setLinks(makeLink(x)));
-		final ObjectMapper mapperForView = MapperForView.getMapperForView(excludeFields, fields, null, null);
-		try {
-			return new ResponseEntity<>(mapperForView.writeValueAsString(results), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+	public ResponseEntity<String> vnfLcmOpOccsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String exclude, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
+		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
+		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
+		return searchService.search(fields, exclude, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
 	}
 
 	@Override

@@ -161,8 +161,8 @@ public class VnfManagement implements VnfPackageManagement {
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(final UUID fromString, final String artifactPath, final String range) {
-		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(fromString);
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(final UUID vnfdId, final String artifactPath, final String range) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
 		return vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPackage.getId(), artifactPath, range);
 	}
 
@@ -182,6 +182,12 @@ public class VnfManagement implements VnfPackageManagement {
 	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final UUID vnfdId, @Valid final String includeSignatures) {
 		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
 		return vnfPackagesVnfPkgIdVnfdGet(vnfPackage.getId());
+	}
+
+	@Override
+	public <U> U onboardedVnfPackagesVnfdIdGet(final UUID vnfdId, final Class<U> clazz) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
+		return mapper.map(vnfPackage, clazz);
 	}
 
 }

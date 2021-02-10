@@ -19,6 +19,10 @@ package com.ubiqube.etsi.mano.filter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,9 +35,9 @@ public class MapperForViewTest {
 	void simpleExcludeTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
-		final String exclude = "_links";
+		final HashSet<String> exclude = new HashSet<>(Arrays.asList("_links"));
 		final String fields = null;
-		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, new HashSet<>());
 		final String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vnfPkgInfo);
 		assertEquals(-1, res.indexOf("_links"), "_links should not been found");
 	}
@@ -42,9 +46,9 @@ public class MapperForViewTest {
 	void multiExcludeTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
-		final String exclude = "_links,checksum.algorithm";
-		final String fields = null;
-		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		final HashSet<String> exclude = new HashSet<>(Arrays.asList("_links", "checksum.algorithm"));
+
+		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, new HashSet<>());
 		final String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vnfPkgInfo);
 		assertEquals(-1, res.indexOf("_links"), "_links should not been found");
 		assertEquals(-1, res.indexOf("algorithm"), "algorithm should not been found");
@@ -54,9 +58,9 @@ public class MapperForViewTest {
 	void simpleFieldsTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
-		final String exclude = null;
+		final Set<String> exclude = null;
 		final String fields = "id";
-		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, new HashSet<>());
 		final String res = mapper.writerFor(vnfPkgInfo.getClass()).writeValueAsString(vnfPkgInfo);
 		System.out.println(res);
 		assertEquals(-1, res.indexOf("_links"), "_links should not been found");
@@ -67,9 +71,8 @@ public class MapperForViewTest {
 	void multipleFieldsTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
-		final String exclude = null;
-		final String fields = "id,checksum.algorithm";
-		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, fields, null, null);
+		final HashSet<String> fieldsSet = new HashSet<>(Arrays.asList("_links", "checksum.algorithm"));
+		final ObjectMapper mapper = MapperForView.getMapperForView(new HashSet<>(), fieldsSet);
 		final String res = mapper.writerFor(vnfPkgInfo.getClass()).writeValueAsString(vnfPkgInfo);
 		assertEquals(-1, res.indexOf("_links"), "_links should not been found");
 		assertTrue(res.indexOf("\"id\"") > -1, "Could not find id field.");

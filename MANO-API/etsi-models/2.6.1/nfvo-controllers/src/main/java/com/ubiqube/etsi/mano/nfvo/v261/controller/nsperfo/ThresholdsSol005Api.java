@@ -17,37 +17,45 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.nspm.NfvoThresholdController;
 import com.ubiqube.etsi.mano.dao.mano.pm.Threshold;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsCreateThresholdRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsPostResponse;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsThreshold;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 public class ThresholdsSol005Api implements ThresholdsSol005 {
+	private static final Set<String> THR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
+	private static final String THR_SEARCH_DEFAULT_EXCLUDE_FIELDS = "";
+
 	private final NfvoThresholdController nfvoThresholdController;
 
 	private final MapperFacade mapper;
 
-	public ThresholdsSol005Api(final NfvoThresholdController _nfvoThresholdController, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public ThresholdsSol005Api(final NfvoThresholdController _nfvoThresholdController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		nfvoThresholdController = _nfvoThresholdController;
 		mapper = _mapper;
+		searchService = _searchService;
 	}
 
 	/**
@@ -58,22 +66,20 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> thresholdsGet(final String filter) {
-		final List<Threshold> lst = nfvoThresholdController.query(filter);
-		final List<com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold> list = lst.stream().map(x -> mapper.map(x, com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class)).collect(Collectors.toList());
-		final ObjectMapper objectMapper = MapperForView.getMapperForView(null, null, null, null);
-		try {
-			return new ResponseEntity<>(objectMapper.writeValueAsString(list), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+		final List<Threshold> result = nfvoThresholdController.query(filter);
+		final Consumer<com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold> setLink = x -> x.setLinks(makeLinks(x.getId()));
+		return searchService.search(null, null, THR_SEARCH_DEFAULT_EXCLUDE_FIELDS, THR_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class, setLink);
+	}
+
+	private ThresholdLinks makeLinks(@NotNull final String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
 	 * Create a threshold.
 	 *
-	 * The POST method can be used by the client to create a threshold. This method
-	 * shall follow the provisions specified in the table 7.4.5.3.1-2 for URI query
-	 * parameters, request and response data structures, and response codes.
+	 * The POST method can be used by the client to create a threshold. This method shall follow the provisions specified in the table 7.4.5.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -100,10 +106,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	/**
 	 * Query a single threshold.
 	 *
-	 * The client can use this method for reading an individual threshold. This
-	 * method shall follow the provisions specified in the Tables 7.4.6.3.2-1 and
-	 * 7.4.6.3.2-2 for URI query parameters, request and response data structures,
-	 * and response codes.
+	 * The client can use this method for reading an individual threshold. This method shall follow the provisions specified in the Tables 7.4.6.3.2-1 and 7.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override

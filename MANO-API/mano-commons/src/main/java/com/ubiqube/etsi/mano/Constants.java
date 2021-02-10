@@ -16,6 +16,10 @@
  */
 package com.ubiqube.etsi.mano;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -34,6 +38,10 @@ public final class Constants {
 	}
 
 	public static final String HASH_ALGORITHM = "SHA-512";
+
+	public static final String VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS = "softwareImages,additionalArtifacts,userDefinedData,checksum";
+
+	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState"));
 
 	public static void ensureDisabled(final PackageBase vnfPackage) {
 		if (PackageOperationalState.DISABLED != vnfPackage.getOperationalState()) {

@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +28,22 @@ import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
-import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.utils.SpringUtils;
 
-@Controller("OnboardedVnfPackagesApiController271")
-public class OnboardedVnfPackagesApiControllerSol003 implements OnboardedVnfPackagesApiSol003 {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Controller
+public class OnboardedVnfPackages261ApiControllerSol003 implements OnboardedVnfPackages261ApiSol003 {
 	private final Linkable links = new Sol003Linkable();
 	private final VnfPackageManagement vnfManagement;
 
-	public OnboardedVnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement) {
+	public OnboardedVnfPackages261ApiControllerSol003(final VnfPackageManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
 
@@ -46,27 +53,16 @@ public class OnboardedVnfPackagesApiControllerSol003 implements OnboardedVnfPack
 	}
 
 	@Override
-	public final ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final String artifactPath, final String vnfdId, final String range, @Valid final String includeSignatures) {
+	public final ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfdId, final String range, @Valid final String includeSignatures) {
+		final String artifactPath = SpringUtils.extractParams(request);
 		return vnfManagement.vnfPackagesVnfdIdArtifactsArtifactPathGet(UUID.fromString(vnfdId), artifactPath, range);
 	}
 
 	@Override
-	public final ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final HttpServletRequest request, final String range) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfdId), VnfPkgInfo.class);
-		setLinks(vnfPkgInfo);
-		return ResponseEntity.ok(vnfPkgInfo);
-	}
-
-	@Override
 	public final ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdGet(final String vnfdId) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfdId), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.onboardedVnfPackagesVnfdIdGet(UUID.fromString(vnfdId), VnfPkgInfo.class);
 		setLinks(vnfPkgInfo);
 		return ResponseEntity.ok(vnfPkgInfo);
-	}
-
-	@Override
-	public final ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(final String vnfdId, @Valid final String includeSignatures) {
-		return vnfManagement.onboardedVnfPackagesVnfdIdManifestGet(UUID.fromString(vnfdId), includeSignatures);
 	}
 
 	@Override
@@ -79,7 +75,7 @@ public class OnboardedVnfPackagesApiControllerSol003 implements OnboardedVnfPack
 		return vnfManagement.onboardedVnfPackagesVnfdIdVnfdGet(UUID.fromString(vnfdId), includeSignatures);
 	}
 
-	private void setLinks(final VnfPkgInfo vnfPkgInfo) {
+	protected void setLinks(final VnfPkgInfo vnfPkgInfo) {
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
 	}
 }
