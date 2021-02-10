@@ -73,7 +73,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private static final String NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS = "userDefinedData";
 
-	private static final Set<String> NSD_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+	private static final Set<String> NSD_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsdOnboardingState", "nsdOperationalState", "nsdUsageState", "_links", "_links.self.href", "_links.nsd_content.href"));
 
 	private final MapperFacade mapper;
 
