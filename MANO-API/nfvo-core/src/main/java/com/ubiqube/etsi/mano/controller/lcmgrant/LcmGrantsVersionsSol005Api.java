@@ -42,6 +42,7 @@ public class LcmGrantsVersionsSol005Api implements LcmGrantsVersions {
 	public ResponseEntity<ApiVersionInformation> apiVersionsGet(final String version) {
 		final ApiVersionInformation apiVersionInformation = new ApiVersionInformation();
 		apiVersionInformation.setApiVersions(mapper.mapAsList(implementations, ApiVersionInformationApiVersions.class));
+		apiVersionInformation.setUriPrefix("v1");
 		return ResponseEntity.ok(apiVersionInformation);
 	}
 
@@ -49,6 +50,7 @@ public class LcmGrantsVersionsSol005Api implements LcmGrantsVersions {
 	public ResponseEntity<ApiVersionInformation> apiVersionsV1Get(final String version) {
 		final ApiVersionInformation apiVersionInformation = new ApiVersionInformation();
 		apiVersionInformation.setApiVersions(mapper.mapAsList(implementations, ApiVersionInformationApiVersions.class));
+		apiVersionInformation.setUriPrefix("v1");
 		return ResponseEntity.ok(apiVersionInformation);
 	}
 
