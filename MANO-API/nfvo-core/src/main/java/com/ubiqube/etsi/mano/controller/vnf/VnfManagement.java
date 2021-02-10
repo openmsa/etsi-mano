@@ -136,12 +136,7 @@ public class VnfManagement implements VnfPackageManagement {
 
 	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String _range) throws IOException {
 		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		try {
-			return SpringUtil.handleBytes(zcontent, _range);
-		} catch (final IllegalArgumentException e) {
-			LOG.trace("", e);
-			return ResponseEntity.status(416).build();
-		}
+		return SpringUtil.handleBytes(zcontent, _range);
 	}
 
 	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {
