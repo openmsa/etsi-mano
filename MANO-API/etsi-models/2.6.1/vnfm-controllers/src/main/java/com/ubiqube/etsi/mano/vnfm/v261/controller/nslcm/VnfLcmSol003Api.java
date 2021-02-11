@@ -21,6 +21,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -40,6 +41,7 @@ import com.ubiqube.etsi.mano.common.v261.controller.lcm.LcmLinkable;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VirtualStorageResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
@@ -108,8 +110,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstanceLcm.post(createVnfRequest.getVnfdId(), createVnfRequest.getVnfInstanceName(), createVnfRequest.getVnfInstanceDescription());
 		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance inst = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
-		inst.setLinks(links.getLinks(vnfInstance.getId().toString()));
-		return ResponseEntity.accepted().body(inst);
+		final VnfInstanceLinks location = links.getLinks(vnfInstance.getId().toString());
+		inst.setLinks(location);
+		return ResponseEntity.created(URI.create(location.getSelf().getHref())).body(inst);
 	}
 
 	@Override

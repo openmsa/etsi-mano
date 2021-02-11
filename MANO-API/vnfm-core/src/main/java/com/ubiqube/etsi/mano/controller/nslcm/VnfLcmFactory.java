@@ -44,7 +44,12 @@ public class VnfLcmFactory {
 		vnfInstance.setVnfPkg(vnfPkgInfo);
 		vnfInstance.setVnfInstanceName(vnfInstanceName);
 		vnfInstance.setVnfInstanceDescription(vnfInstanceDescription);
+		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
+		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
+		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
+		vnfInstance.setVnfdVersion(vnfPkgInfo.getVnfdVersion());
 		final BlueprintParameters instantiatedVnfInfo = new BlueprintParameters();
+		instantiatedVnfInfo.setFlavourId(vnfPkgInfo.getFlavorId());
 		instantiatedVnfInfo.setState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
