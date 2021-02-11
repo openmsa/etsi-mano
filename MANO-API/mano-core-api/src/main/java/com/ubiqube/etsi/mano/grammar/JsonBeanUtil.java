@@ -68,6 +68,22 @@ public class JsonBeanUtil {
 		simpleTypes.add("java.time.OffsetDateTime");
 	}
 
+	public Map<String, JsonBeanProperty> getPropertiesFromClass(@Nonnull final Class<?> _object) {
+		Map<String, JsonBeanProperty> cached = cache.get(_object.getName());
+		if (cached != null) {
+			return cached;
+		}
+		Map<String, JsonBeanProperty> res;
+		try {
+			res = buildCache(_object);
+		} catch (final IntrospectionException e) {
+			throw new GenericException(e);
+		}
+		cached = rebuildProperties(res);
+		cache.put(_object.getName(), cached);
+		return cached;
+	}
+
 	public Map<String, JsonBeanProperty> getProperties(@Nonnull final Object _object) {
 		Map<String, JsonBeanProperty> cached = cache.get(_object.getClass().getName());
 		if (cached != null) {
@@ -173,8 +189,8 @@ public class JsonBeanUtil {
 				return ann;
 			}
 		}
+		method = propertyDescriptor.getReadMethod();
 		if (method != null) {
-			method = propertyDescriptor.getReadMethod();
 			final JsonProperty ann = method.getAnnotation(JsonProperty.class);
 			if (ann != null) {
 				return ann;

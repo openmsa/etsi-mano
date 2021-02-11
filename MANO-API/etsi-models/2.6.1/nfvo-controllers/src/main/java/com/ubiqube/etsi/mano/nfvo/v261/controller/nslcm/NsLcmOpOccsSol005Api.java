@@ -76,7 +76,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<NsBlueprint> result = nsLcmOpOccsService.query(filter);
 		final Consumer<NsLcmOpOcc> setLink = x -> x.setLinks(makeLinks(x));
-		return searchService.search(requestParams, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, setLink);
 	}
 
 	/**

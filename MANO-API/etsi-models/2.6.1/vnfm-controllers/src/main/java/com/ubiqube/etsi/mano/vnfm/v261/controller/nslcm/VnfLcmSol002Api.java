@@ -81,7 +81,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(requestParams, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
+		return searchService.search(requestParams, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
 	}
 
 	@Override

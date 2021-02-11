@@ -100,7 +100,7 @@ public class VnfInstancesApiController implements VnfInstancesApi {
 	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
 		final List<com.ubiqube.etsi.mano.dao.mano.VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(requestParams, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfInstance.class, setLink);
+		return searchService.search(requestParams, VnfInstance.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfInstance.class, setLink);
 	}
 
 	@Override

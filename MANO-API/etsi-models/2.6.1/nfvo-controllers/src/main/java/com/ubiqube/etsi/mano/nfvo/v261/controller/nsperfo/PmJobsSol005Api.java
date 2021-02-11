@@ -72,7 +72,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 		final List<PmJob> result = nfvoPmController.query(filter);
 		final Consumer<PmJobsPmJob> setLink = x -> {
 			/* XXX Missing makeLinks. */};
-		return searchService.search(requestParams, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, result, PmJobsPmJob.class, setLink);
+		return searchService.search(requestParams, PmJobsPmJob.class, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, result, PmJobsPmJob.class, setLink);
 	}
 
 	/**

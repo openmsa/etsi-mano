@@ -90,7 +90,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfPackage> vnfPackageInfos = vnfManagement.vnfPackagesGet(filter);
 		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
-		return searchService.search(requestParams, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, vnfPackageInfos, VnfPkgInfo.class, setLink);
+		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, vnfPackageInfos, VnfPkgInfo.class, setLink);
 	}
 
 	/**

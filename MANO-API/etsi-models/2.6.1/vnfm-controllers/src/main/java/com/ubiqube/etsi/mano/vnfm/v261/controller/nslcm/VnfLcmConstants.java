@@ -31,8 +31,8 @@ public class VnfLcmConstants {
 		// Nothing.
 	}
 
-	public static final Set<String> VNFLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "vnfdId", "vnfProvider", "vnfProductName", "vnfSoftwareVersion", "vnfdVersion", "instantiationState"));
+	public static final Set<String> VNFLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "operationState", "stateEnteredTime", "isAutomaticInvocation", "operationParams", "isCancelPending"));
 
-	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "vnfConfigurableProperties,vimConnectionInfo,instantiatedVnfInfo,metadata,extensions";
+	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "operationParams,error,resourceChanges,changedInfo,changedExtConnectivity";
 
 }

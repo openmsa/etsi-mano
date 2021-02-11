@@ -99,7 +99,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<NsdPackage> result = nsdController.nsDescriptorsGet(filter);
 		final Consumer<NsdInfo> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(requestParams, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, setLink);
+		return searchService.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, setLink);
 	}
 
 	/**

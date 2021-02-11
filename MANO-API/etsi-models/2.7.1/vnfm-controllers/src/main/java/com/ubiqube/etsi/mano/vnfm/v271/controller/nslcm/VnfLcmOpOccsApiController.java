@@ -75,7 +75,7 @@ public class VnfLcmOpOccsApiController implements VnfLcmOpOccsApi {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
 	}
 
 	@Override

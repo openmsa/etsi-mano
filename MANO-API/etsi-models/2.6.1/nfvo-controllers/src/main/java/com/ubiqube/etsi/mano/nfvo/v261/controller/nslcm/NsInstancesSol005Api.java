@@ -95,7 +95,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final String filter = getSingleField(requestParams, "field");
 		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
 		final Consumer<NsInstance> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(requestParams, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, setLink);
+		return searchService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, setLink);
 	}
 
 	/**

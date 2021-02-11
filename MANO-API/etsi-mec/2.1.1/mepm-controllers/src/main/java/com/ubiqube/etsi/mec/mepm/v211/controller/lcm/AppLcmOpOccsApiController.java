@@ -69,7 +69,7 @@ public class AppLcmOpOccsApiController implements AppLcmOpOccsApi {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<AppBlueprint> resultsDb = mepmLcmController.query(filter);
 		final Consumer<AppInstanceLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, APP_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, resultsDb, AppInstanceLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, AppInstanceLcmOpOcc.class, APP_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, resultsDb, AppInstanceLcmOpOcc.class, setLink);
 
 	}
 

@@ -84,7 +84,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<PnfDescriptor> result = pnfdController.pnfDescriptorsGet(filter);
 		final Consumer<PnfdInfo> setLink = x -> x.setLinks(makeLinks(x));
-		return searchService.search(requestParams, PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS, PNFD_SEARCH_MANDATORY_FIELDS, result, PnfdInfo.class, setLink);
+		return searchService.search(requestParams, PnfdInfo.class, PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS, PNFD_SEARCH_MANDATORY_FIELDS, result, PnfdInfo.class, setLink);
 	}
 
 	/**

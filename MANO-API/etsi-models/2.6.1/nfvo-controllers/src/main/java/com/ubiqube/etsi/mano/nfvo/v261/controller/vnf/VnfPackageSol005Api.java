@@ -94,7 +94,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
 		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
 		requestParams.containsKey("exclude_default");
-		return searchService.search(requestParams, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
+		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
 	}
 
 	@Override
