@@ -59,8 +59,10 @@ public class JsonBeanUtil {
 
 	public JsonBeanUtil() {
 		simpleTypes.add("java.lang.String");
+		simpleTypes.add("java.lang.Boolean");
 		simpleTypes.add("java.lang.Class");
 		simpleTypes.add("java.lang.Integer");
+		simpleTypes.add("boolean");
 		simpleTypes.add("int");
 		simpleTypes.add("long");
 		simpleTypes.add("float");
@@ -116,20 +118,33 @@ public class JsonBeanUtil {
 			stackName.push(key);
 			stackObject.push(jsonBeanProperty);
 			if (right != null) {
+				final String newKey = createKey(stackName);
+				final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
+				jsonBeanProperty.setAccessorsList(listAccessor);
+				ret.put(newKey, jsonBeanProperty);
 				rebuildPropertiesInner(right, stackName, stackObject, ret);
 			} else {
-				final StringJoiner sj = new StringJoiner(".");
-				stackName.descendingIterator().forEachRemaining(sj::add);
-				final String newKey = sj.toString();
-				final Queue<JsonBeanProperty> rev = Collections.asLifoQueue(stackObject);
-				final List<JsonBeanProperty> listObject = new ArrayList<>(rev);
-				Collections.reverse(listObject);
-				jsonBeanProperty.setAccessorsList(listObject);
+				final String newKey = createKey(stackName);
+				final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
+				jsonBeanProperty.setAccessorsList(listAccessor);
 				ret.put(newKey, jsonBeanProperty);
 			}
 			stackName.pop();
 			stackObject.pop();
 		}
+	}
+
+	private static List<JsonBeanProperty> getAccessorList(final Deque<JsonBeanProperty> stackObject) {
+		final Queue<JsonBeanProperty> rev = Collections.asLifoQueue(stackObject);
+		final List<JsonBeanProperty> listObject = new ArrayList<>(rev);
+		Collections.reverse(listObject);
+		return listObject;
+	}
+
+	private static String createKey(final Deque<String> stackName) {
+		final StringJoiner sj = new StringJoiner(".");
+		stackName.descendingIterator().forEachRemaining(sj::add);
+		return sj.toString();
 	}
 
 	private Map<String, JsonBeanProperty> buildCache(final Class<?> clazz) throws IntrospectionException {
