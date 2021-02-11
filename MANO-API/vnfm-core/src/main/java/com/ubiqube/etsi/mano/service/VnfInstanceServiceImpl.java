@@ -104,7 +104,7 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	@Override
 	public VnfInstance findById(final UUID id) {
-		final VnfInstance inst = vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
+		final VnfInstance inst = vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find VNF instance: " + id));
 		inst.setInstantiationState(isLive(id));
 		return inst;
 	}
