@@ -172,6 +172,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("operationState", "operationStatus")
 				.field("isAutomaticInvocation", "automaticInvocation")
 				.field("isCancelPending", "cancelPending")
+				.field("operationParams", "parameters")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantRequest.class, VnfGrantsRequest.class)

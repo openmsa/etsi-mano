@@ -33,6 +33,6 @@ public class VnfLcmConstants {
 
 	public static final Set<String> VNFLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "operationState", "stateEnteredTime", "isAutomaticInvocation", "operationParams", "isCancelPending"));
 
-	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "operationParams,error,resourceChanges,changedInfo,changedExtConnectivity";
+	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "error,resourceChanges,changedInfo,changedExtConnectivity";
 
 }
