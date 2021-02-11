@@ -16,6 +16,10 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -93,10 +97,20 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 	private void checkAllFields(final Set<String> fieldsSet, final Class<?> clazz) {
 		final Map<String, JsonBeanProperty> res = jsonBeanUtil.getPropertiesFromClass(clazz);
 		fieldsSet.forEach(x -> {
-			if (!res.containsKey(x)) {
+			if (!res.containsKey(x) && !innerClass(x, clazz)) {
 				throw new BadRequestException(x + " is not a valid field.");
 			}
 		});
+	}
+
+	private static boolean innerClass(final String x, final Class<?> clazz) {
+		try {
+			final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+			final PropertyDescriptor[] propDescs = beanInfo.getPropertyDescriptors();
+			return Arrays.stream(propDescs).anyMatch(y -> y.getName().equals(x));
+		} catch (final IntrospectionException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	private void checkParameters(final MultiValueMap<String, String> parameters) {
