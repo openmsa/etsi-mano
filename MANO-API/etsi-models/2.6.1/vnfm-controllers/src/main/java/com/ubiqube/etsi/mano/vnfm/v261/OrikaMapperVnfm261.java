@@ -169,6 +169,9 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("resourceChanges", "tasks")
 				.field("grantId", "grantsRequestId")
+				.field("operationState", "operationStatus")
+				.field("isAutomaticInvocation", "automaticInvocation")
+				.field("isCancelPending", "cancelPending")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantRequest.class, VnfGrantsRequest.class)

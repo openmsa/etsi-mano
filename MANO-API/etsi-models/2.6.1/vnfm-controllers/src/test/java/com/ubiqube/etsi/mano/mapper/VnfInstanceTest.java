@@ -97,7 +97,7 @@ public class VnfInstanceTest {
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		vnfInstance.setInstantiationState(InstantiationState.INSTANTIATED);
 		final NsdInstance nsInstance = new NsdInstance();
-		nsInstance.setFlavourId("flavor");
+		instantiatedVnfInfo.setFlavourId("flavor");
 		final NsdPackage nsdInfoId = new NsdPackage();
 		nsdInfoId.setId(UUID.randomUUID());
 		nsInstance.setNsdInfo(nsdInfoId);

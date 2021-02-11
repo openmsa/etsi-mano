@@ -66,7 +66,7 @@ public class MepmActions extends AbstractGenericAction {
 
 	private final AppLiveInstanceJpa appLiveInstanceJpa;
 
-	protected MepmActions(final VimManager _vimManager, final Workflow vnfWorkflow, final MeoGrantService vimResourceService, final OrchestrationAdapter<?> orchestrationAdapter,
+	protected MepmActions(final VimManager _vimManager, final Workflow vnfWorkflow, final MeoGrantService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter,
 			final AppInstanceService _instanceService, final AppBlueprintService _blueprintService, final AppLiveInstanceJpa _appLiveInstanceJpa) {
 		super(_vimManager, vnfWorkflow, vimResourceService, orchestrationAdapter);
 		vimManager = _vimManager;

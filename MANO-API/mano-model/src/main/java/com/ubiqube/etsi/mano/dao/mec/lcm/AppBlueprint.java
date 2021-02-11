@@ -64,7 +64,7 @@ import lombok.Setter;
 @Indexed
 @Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
-public class AppBlueprint extends AbstractBlueprint<AppTask> implements Blueprint<AppTask> {
+public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implements Blueprint<AppTask, AppInstance> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -114,6 +114,11 @@ public class AppBlueprint extends AbstractBlueprint<AppTask> implements Blueprin
 			tasks = new HashSet<>();
 		}
 		tasks.add(task);
+	}
+
+	@Override
+	public AppInstance getInstance() {
+		return appInstance;
 	}
 
 }

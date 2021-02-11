@@ -50,7 +50,7 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements Blueprint<VnfTask> {
+public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implements Blueprint<VnfTask, VnfInstance> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -93,6 +93,10 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements Blueprin
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
+
+	private boolean automaticInvocation = false;
+
+	private boolean cancelPending = false;
 
 	@Override
 	public UUID getId() {
@@ -190,6 +194,27 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements Blueprin
 	@Override
 	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
+	}
+
+	public boolean isAutomaticInvocation() {
+		return automaticInvocation;
+	}
+
+	public void setAutomaticInvocation(final boolean automaticInvocation) {
+		this.automaticInvocation = automaticInvocation;
+	}
+
+	public boolean isCancelPending() {
+		return cancelPending;
+	}
+
+	public void setCancelPending(final boolean cancelPending) {
+		this.cancelPending = cancelPending;
+	}
+
+	@Override
+	public VnfInstance getInstance() {
+		return vnfInstance;
 	}
 
 }

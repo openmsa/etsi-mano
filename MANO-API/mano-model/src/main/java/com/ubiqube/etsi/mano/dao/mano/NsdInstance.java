@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +41,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
 @Entity
 @Indexed
-public class NsdInstance implements BaseEntity, Serializable {
+public class NsdInstance extends Instance {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -58,9 +57,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackage nsdInfo = null;
-
-	@FullTextField
-	private String flavourId = null;
 
 	private String nsInstantiationLevelId;
 
@@ -100,6 +96,7 @@ public class NsdInstance implements BaseEntity, Serializable {
 		return id;
 	}
 
+	@Override
 	public void setId(final UUID id) {
 		this.id = id;
 	}
@@ -126,14 +123,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	public void setNsdInfo(final NsdPackage nsdInfoId) {
 		this.nsdInfo = nsdInfoId;
-	}
-
-	public String getFlavourId() {
-		return flavourId;
-	}
-
-	public void setFlavourId(final String flavourId) {
-		this.flavourId = flavourId;
 	}
 
 	public List<NsVnfInstance> getVnfInstance() {

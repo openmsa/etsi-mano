@@ -52,11 +52,12 @@ public abstract class AbstractGenericAction {
 	private final VimManager vimManager;
 
 	private final Workflow vnfWorkflow;
+
 	private final VimResourceService vimResourceService;
 
-	OrchestrationAdapter<?> orchestrationAdapter;
+	OrchestrationAdapter<?, ?> orchestrationAdapter;
 
-	protected AbstractGenericAction(final VimManager vimManager, final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?> orchestrationAdapter) {
+	protected AbstractGenericAction(final VimManager vimManager, final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
 		super();
 		this.vimManager = vimManager;
 		this.vnfWorkflow = vnfWorkflow;
@@ -66,7 +67,7 @@ public abstract class AbstractGenericAction {
 
 	public final void instantiate(@Nonnull final UUID blueprintId) {
 		final Blueprint blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprintId);
+		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
 			LOG.info("Instantiate {} Success...", blueprintId);
@@ -88,7 +89,7 @@ public abstract class AbstractGenericAction {
 		final PackageBase vnfPkg = orchestrationAdapter.getPackage(vnfInstance);
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
 		vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint, newScale);
-		Blueprint<?> localPlan = orchestrationAdapter.save(blueprint);
+		Blueprint<?, ?> localPlan = orchestrationAdapter.save(blueprint);
 		orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_PROCESSING, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
 		localPlan = orchestrationAdapter.updateState(localPlan, OperationStatusType.PROCESSING);
@@ -151,7 +152,7 @@ public abstract class AbstractGenericAction {
 		return scaleInfos.stream().noneMatch(x -> x.getAspectId().equals(aspectId));
 	}
 
-	private static void setResultLcmInstance(@NotNull final Blueprint<?> blueprint, final Report createResults) {
+	private static void setResultLcmInstance(@NotNull final Blueprint<?, ?> blueprint, final Report createResults) {
 		if (createResults.getErrored().isEmpty()) {
 			blueprint.setOperationStatus(OperationStatusType.COMPLETED);
 		} else {
@@ -161,7 +162,7 @@ public abstract class AbstractGenericAction {
 	}
 
 	public final void terminate(@Nonnull final UUID blueprintId) {
-		final Blueprint<?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
+		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
 		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
@@ -179,7 +180,7 @@ public abstract class AbstractGenericAction {
 	}
 
 	public final void scaleToLevel(@NotNull final UUID blueprintId) {
-		final Blueprint<?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
+		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
 		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
@@ -196,7 +197,7 @@ public abstract class AbstractGenericAction {
 	}
 
 	public final void scale(@NotNull final UUID blueprintId) {
-		final Blueprint<?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
+		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
 		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
@@ -212,7 +213,7 @@ public abstract class AbstractGenericAction {
 		}
 	}
 
-	private void setLiveSatus(@NotNull final Blueprint<? extends Task> blueprint, @NotNull final Instance vnfInstance, final Report createResults) {
+	private void setLiveSatus(@NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, @NotNull final Instance vnfInstance, final Report createResults) {
 		LOG.info("Creating / deleting live instances.");
 		createResults.getSuccess().forEach(x -> {
 			final Task rhe = x.getTask();

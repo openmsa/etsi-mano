@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
@@ -37,7 +38,7 @@ import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
-public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
+public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? extends Instance>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 

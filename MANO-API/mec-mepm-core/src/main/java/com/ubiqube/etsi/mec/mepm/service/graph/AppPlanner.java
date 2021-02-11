@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.Planner;
@@ -34,10 +35,10 @@ import com.ubiqube.etsi.mec.mepm.service.graph.uow.MepmStartUow;
  *
  */
 @Service
-public class AppPlanner extends Planner<AppTask, PackageBase, AppParameters, Blueprint<AppTask>> {
+public class AppPlanner extends Planner<AppTask, PackageBase, AppParameters, Blueprint<AppTask, AppInstance>> {
 
 	public AppPlanner(final List<AbstractAppPlanContributor> _planContributors) {
-		super((List<? extends PlanContributor<PackageBase, Blueprint<AppTask>, AppTask, AppParameters>>) ((Object) _planContributors));
+		super((List<? extends PlanContributor<PackageBase, Blueprint<AppTask, AppInstance>, AppTask, AppParameters>>) (_planContributors));
 	}
 
 	@Override

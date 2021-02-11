@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
@@ -32,27 +33,27 @@ import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public interface OrchestrationAdapter<B extends Task> {
+public interface OrchestrationAdapter<B extends Task, V extends VnfInstance> {
 
-	void createLiveInstance(@NotNull Instance vnfInstance, String il, Task task, @NotNull Blueprint<? extends Task> blueprint, String vimResourceId);
+	void createLiveInstance(@NotNull Instance vnfInstance, String il, Task task, @NotNull Blueprint<? extends Task, ? extends Instance> blueprint, String vimResourceId);
 
 	void deleteLiveInstance(UUID removedLiveInstance);
 
-	Blueprint<B> getBluePrint(UUID blueprintId);
+	Blueprint<B, V> getBluePrint(UUID blueprintId);
 
 	Instance getInstance(UUID blueprintId);
 
 	PackageBase getPackage(Instance vnfInstance);
 
-	Instance getInstance(Blueprint<B> blueprint);
+	Instance getInstance(Blueprint<B, V> blueprint);
 
-	Blueprint<B> save(Blueprint blueprint);
+	Blueprint<B, V> save(Blueprint blueprint);
 
 	Instance save(Instance vnfInstance);
 
 	GenericExecParams createParameter(VimConnectionInformation vimConnection, Vim vim, HashMap<String, String> hashMap, Object object);
 
-	Blueprint<B> updateState(Blueprint localPlan, OperationStatusType processing);
+	Blueprint<B, V> updateState(Blueprint localPlan, OperationStatusType processing);
 
 	void fireEvent(WorkflowEvent instantiateProcessing, @Nonnull UUID id);
 

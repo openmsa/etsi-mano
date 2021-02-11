@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimTask;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
@@ -118,7 +119,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 				.orElseThrow(() -> new NotFoundException("Could not find flavor for vdu: " + vduId));
 	}
 
-	private static VimTask findTask(final Blueprint<VimTask> plan, final UUID grantUuid) {
+	private static VimTask findTask(final Blueprint<VimTask, VnfInstance> plan, final UUID grantUuid) {
 		return plan.getTasks().stream()
 				.filter(x -> x.getId().compareTo(grantUuid) == 0)
 				.findFirst()

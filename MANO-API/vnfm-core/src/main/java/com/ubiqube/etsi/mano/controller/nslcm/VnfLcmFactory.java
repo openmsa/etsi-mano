@@ -66,6 +66,7 @@ public class VnfLcmFactory {
 		return vnfInstance;
 	}
 
+	// TODO: remove one method createVnfLcmOpOccs or createVnfBlueprint.
 	@Nonnull
 	public static VnfBlueprint createVnfLcmOpOccs(final PlanOperationType operation, final UUID vnfInstanceId) {
 		final VnfBlueprint vnfLcmOpOcc = new VnfBlueprint();
@@ -76,6 +77,9 @@ public class VnfLcmFactory {
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
 		vnfLcmOpOcc.setOperationStatus(OperationStatusType.STARTING);
+		final BlueprintParameters parameters = new BlueprintParameters();
+		parameters.setState(OperationalStateType.STOPPED);
+		vnfLcmOpOcc.setParameters(parameters);
 		return vnfLcmOpOcc;
 	}
 
@@ -86,7 +90,11 @@ public class VnfLcmFactory {
 		vnfInstance.setId(vnfInstanceId);
 		blueprint.setVnfInstance(vnfInstance);
 		blueprint.setStartTime(new Date());
+		blueprint.setStateEnteredTime(new Date());
 		blueprint.setOperationStatus(OperationStatusType.NOT_STARTED);
+		final BlueprintParameters parameters = new BlueprintParameters();
+		parameters.setState(OperationalStateType.STOPPED);
+		blueprint.setParameters(parameters);
 		return blueprint;
 	}
 

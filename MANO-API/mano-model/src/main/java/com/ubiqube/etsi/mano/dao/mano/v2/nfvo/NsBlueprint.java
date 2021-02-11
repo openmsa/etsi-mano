@@ -51,7 +51,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
  */
 @Entity
 @Indexed
-public class NsBlueprint extends AbstractBlueprint<NsTask> {
+public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -145,6 +145,11 @@ public class NsBlueprint extends AbstractBlueprint<NsTask> {
 	public Set<VimConnectionInformation> getVimConnections() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public NsdInstance getInstance() {
+		return nsInstance;
 	}
 
 }

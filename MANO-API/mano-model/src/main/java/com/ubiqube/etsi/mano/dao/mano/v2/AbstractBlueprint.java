@@ -26,10 +26,11 @@ import javax.persistence.MappedSuperclass;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 
 @MappedSuperclass
-public abstract class AbstractBlueprint<U extends Task> implements Blueprint<U>, Auditable {
+public abstract class AbstractBlueprint<U extends Task, V extends Instance> implements Blueprint<U, V>, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

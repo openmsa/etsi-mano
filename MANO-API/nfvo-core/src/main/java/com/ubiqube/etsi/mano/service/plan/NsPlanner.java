@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
@@ -35,10 +36,10 @@ import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
  *
  */
 @Service
-public class NsPlanner extends Planner<NsTask, NsdPackage, NsParameters, Blueprint<NsTask>> {
+public class NsPlanner extends Planner<NsTask, NsdPackage, NsParameters, Blueprint<NsTask, NsdInstance>> {
 
 	public NsPlanner(final List<AbstractNsContributor> _planContributors) {
-		super((List<? extends PlanContributor<NsdPackage, Blueprint<NsTask>, NsTask, NsParameters>>) ((Object) _planContributors));
+		super((List<? extends PlanContributor<NsdPackage, Blueprint<NsTask, NsdInstance>, NsTask, NsParameters>>) (_planContributors));
 	}
 
 	@Override

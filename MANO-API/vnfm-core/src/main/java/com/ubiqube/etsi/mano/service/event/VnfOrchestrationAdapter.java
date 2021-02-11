@@ -49,14 +49,22 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  *
  */
 @Service
-public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask> {
-	private VnfInstanceService vnfInstancesService;
-	private VnfBlueprintService blueprintService;
-	private VnfLiveInstanceJpa vnfLiveInstanceJpa;
-	private EventManager eventManager;
+public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, VnfInstance> {
+	private final VnfInstanceService vnfInstancesService;
+	private final VnfBlueprintService blueprintService;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+	private final EventManager eventManager;
+
+	public VnfOrchestrationAdapter(final VnfInstanceService vnfInstancesService, final VnfBlueprintService blueprintService, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final EventManager eventManager) {
+		super();
+		this.vnfInstancesService = vnfInstancesService;
+		this.blueprintService = blueprintService;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+		this.eventManager = eventManager;
+	}
 
 	@Override
-	public void createLiveInstance(@NotNull final Instance vnfInstance, final String il, final Task task, @NotNull final Blueprint<? extends Task> blueprint, final String vimResourceId) {
+	public void createLiveInstance(@NotNull final Instance vnfInstance, final String il, final Task task, @NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, final String vimResourceId) {
 		final VnfLiveInstance vli = new VnfLiveInstance((VnfInstance) vnfInstance, il, (VnfTask) task, (VnfBlueprint) blueprint, task.getVimResourceId());
 		vnfInstancesService.save(vli);
 	}
@@ -68,7 +76,7 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask> {
 	}
 
 	@Override
-	public Blueprint<VnfTask> getBluePrint(final UUID blueprintId) {
+	public Blueprint<VnfTask, VnfInstance> getBluePrint(final UUID blueprintId) {
 		return blueprintService.findById(blueprintId);
 	}
 
@@ -84,13 +92,13 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask> {
 	}
 
 	@Override
-	public Instance getInstance(final Blueprint<VnfTask> blueprint) {
+	public Instance getInstance(final Blueprint<VnfTask, VnfInstance> blueprint) {
 		final VnfBlueprint vb = (VnfBlueprint) blueprint;
 		return vb.getVnfInstance();
 	}
 
 	@Override
-	public Blueprint<VnfTask> save(final Blueprint blueprint) {
+	public Blueprint<VnfTask, VnfInstance> save(final Blueprint blueprint) {
 		return blueprintService.save((VnfBlueprint) blueprint);
 	}
 
@@ -105,7 +113,7 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask> {
 	}
 
 	@Override
-	public Blueprint<VnfTask> updateState(final Blueprint localPlan, final OperationStatusType processing) {
+	public Blueprint<VnfTask, VnfInstance> updateState(final Blueprint localPlan, final OperationStatusType processing) {
 		return blueprintService.updateState((VnfBlueprint) localPlan, OperationStatusType.PROCESSING);
 	}
 
