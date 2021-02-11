@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.jpa.NsdPackageNsdPackageJpa;
@@ -61,7 +62,7 @@ public class NsdPackageService {
 	}
 
 	public NsdPackage findByNsdId(final String _nsdId) {
-		return nsdPackageJpa.findByNsdId(_nsdId).orElseThrow();
+		return nsdPackageJpa.findByNsdId(_nsdId).orElseThrow(() -> new GenericException("Could not find nsdId: " + _nsdId));
 	}
 
 }
