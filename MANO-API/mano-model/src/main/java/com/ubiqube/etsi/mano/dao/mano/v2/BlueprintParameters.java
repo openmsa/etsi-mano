@@ -21,6 +21,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -64,5 +66,6 @@ public class BlueprintParameters implements Serializable {
 
 	private String flavourId;
 
+	@Enumerated(EnumType.STRING)
 	private OperationalStateType state;
 }
