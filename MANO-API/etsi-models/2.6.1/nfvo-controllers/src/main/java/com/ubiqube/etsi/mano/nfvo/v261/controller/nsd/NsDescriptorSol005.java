@@ -17,6 +17,7 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -178,6 +179,6 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<NsdInfo> nsDescriptorsPost(@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @Nonnull @ApiParam(value = "Request body", required = true) @Valid @RequestBody CreateNsdInfoRequest body);
+	ResponseEntity<NsdInfo> nsDescriptorsPost(@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @Nonnull @ApiParam(value = "Request body", required = true) @Valid @RequestBody CreateNsdInfoRequest body) throws URISyntaxException;
 
 }

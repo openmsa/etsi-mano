@@ -23,6 +23,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -183,15 +185,18 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 * The POST method is used to create a new NS descriptor resource or a new version of an on-boarded NS descriptor.
 	 *
+	 * @throws URISyntaxException
+	 *
 	 */
 	@Override
-	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) {
+	public ResponseEntity<NsdInfo> nsDescriptorsPost(final String contentType, final CreateNsdInfoRequest nsDescriptorsPostQuery) throws URISyntaxException {
 		final Map<String, String> userDefinedData = nsDescriptorsPostQuery.getUserDefinedData();
 		final NsdPackage nsdPackage = nsdController.nsDescriptorsPost(userDefinedData);
 
 		final NsdInfo nsdDescriptor = mapper.map(nsdPackage, NsdInfo.class);
 		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
-		return new ResponseEntity<>(nsdDescriptor, HttpStatus.OK);
+		final URI location = new URI(makeLinks(nsdDescriptor.getId()).getSelf().getHref());
+		return ResponseEntity.created(location).body(nsdDescriptor);
 	}
 
 	private static NsdInfoLinks makeLinks(@Nonnull final String id) {
