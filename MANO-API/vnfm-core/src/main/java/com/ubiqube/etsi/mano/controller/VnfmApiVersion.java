@@ -115,9 +115,18 @@ public class VnfmApiVersion {
 	}
 
 	@GetMapping(value = "/{module}/v1/api_versions", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<ApiVersionInformation> apiMajorVersionsV1Get(@PathVariable("module") final String module) {
+		return handleQuery(module, "v1");
+	}
+
+	@GetMapping(value = "/{module}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<ApiVersionInformation> apiMajorVersionsGet(@PathVariable("module") final String module) {
+		return handleQuery(module, "");
+	}
+
+	private ResponseEntity<ApiVersionInformation> handleQuery(final String module, final String subVersion) {
 		final ApiVersionInformation apiVersion = new ApiVersionInformation();
-		apiVersion.setUriPrefix("/sol003/" + module + "/v1/");
+		apiVersion.setUriPrefix("/sol003/" + module + "/" + subVersion);
 
 		final List<String> versions = dedupe.get(module);
 		if (null == versions) {
