@@ -30,8 +30,6 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
 
 import ma.glasnost.orika.MapperFacade;
 
-
-
 @Controller
 public class ApiVersionsApiController implements ApiVersionsApi {
 
@@ -64,6 +62,7 @@ public class ApiVersionsApiController implements ApiVersionsApi {
 	public ResponseEntity<ApiVersionInformation> apiVersionsGet(final String version) {
 		final ApiVersionInformation apiVersionInformation = new ApiVersionInformation();
 		apiVersionInformation.setApiVersions(mapper.mapAsList(implementations, ApiVersionInformationApiVersions.class));
+		apiVersionInformation.setUriPrefix("v1/");
 		return ResponseEntity.ok(apiVersionInformation);
 	}
 
