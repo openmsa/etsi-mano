@@ -77,6 +77,7 @@ public class MapperForView {
 	private static ObjectMapper getMapperInstance() {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS);
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.registerModule(new JavaTimeModule());
 		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
