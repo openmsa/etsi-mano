@@ -16,27 +16,31 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.controller.pkg;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mec.controller.pkg.AppPackageMeoController;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppD;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.AppPkgInfo;
@@ -48,16 +52,23 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 @ExposesResourceFor(AppPkgInfo.class)
 public class AppPackages211MepmApiController implements AppPackages211MepmApi {
+	private static final String APP_SEARCH_DEFAULT_EXCLUDE_FIELDS = "checksum,softwareImages,additionalArtifacts,userDefinedData";
+
+	private static final Set<String> APP_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
 	private final AppPackageMeoController appPackageMeoController;
 
 	private final MapperFacade mapper;
 
 	private final EntityLinks entityLinks;
 
-	public AppPackages211MepmApiController(final AppPackageMeoController _appPackageMeoController, final MapperFacade _mapper, final EntityLinks _entityLinks) {
+	private final ManoSearchResponseService searchService;
+
+	public AppPackages211MepmApiController(final AppPackageMeoController _appPackageMeoController, final MapperFacade _mapper, final EntityLinks _entityLinks, final ManoSearchResponseService _searchService) {
 		appPackageMeoController = _appPackageMeoController;
 		mapper = _mapper;
 		entityLinks = _entityLinks;
+		searchService = _searchService;
 	}
 
 	@Override
@@ -86,12 +97,10 @@ public class AppPackages211MepmApiController implements AppPackages211MepmApi {
 	}
 
 	@Override
-	public ResponseEntity appPackagesGET(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, final Pageable pageable) {
+	public ResponseEntity appPackagesGET(final MultiValueMap<String, String> requestParams, final Pageable pageable) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<AppPkg> list = appPackageMeoController.query(filter);
-		final List<AppPkgInfo> ret = list.stream().map(x -> mapper.map(x, AppPkgInfo.class)).collect(Collectors.toList());
-		ret.forEach(this::createSelfLink);
-		final CollectionModel<EntityModel<AppPkgInfo>> cm = CollectionModel.wrap(ret);
-		return ResponseEntity.ok(cm);
+		return searchService.search(requestParams, AppPkgInfo.class, APP_SEARCH_DEFAULT_EXCLUDE_FIELDS, APP_SEARCH_MANDATORY_FIELDS, list, AppPkgInfo.class, this::createSelfLink);
 	}
 
 	@Override
