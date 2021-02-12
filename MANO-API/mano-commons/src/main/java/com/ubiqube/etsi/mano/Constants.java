@@ -136,13 +136,13 @@ public final class Constants {
 	}
 
 	public static void ensureNotInstantiated(final NsdInstance nsInstance) {
-		if (InstantiationState.INSTANTIATED == nsInstance.getNsState()) {
+		if (InstantiationState.INSTANTIATED == nsInstance.getInstantiationState()) {
 			throw new ConflictException("The Ns instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
 
 	public static void ensureInstantiated(final NsdInstance nsInstance) {
-		if (InstantiationState.INSTANTIATED != nsInstance.getNsState()) {
+		if (InstantiationState.INSTANTIATED != nsInstance.getInstantiationState()) {
 			throw new GenericException("The Ns Instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}

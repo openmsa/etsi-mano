@@ -72,6 +72,7 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("nestedNsInstanceId{}", "nestedNsInstance{id}")
 				.field("nsdId", "nsdInfo.nsdId")
 				.field("nsdInfoId", "nsdInfo.id")
+				.field("nsState", "instantiationState")
 				.byDefault()
 				.register();
 		/*

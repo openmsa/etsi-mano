@@ -78,7 +78,7 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 		nsInstance.setNsInstanceName(nsName);
 		nsInstance.setNsInstanceDescription(nsDescription);
 		nsInstance.setNsdInfo(nsd);
-		nsInstance.setNsState(InstantiationState.NOT_INSTANTIATED);
+		nsInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
 		final List<NsVnfInstance> vnfInstances = new ArrayList<>();
