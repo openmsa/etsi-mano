@@ -17,14 +17,12 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
@@ -54,10 +52,8 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public List<VnfInstance> get(final Map<String, String> queryParameters) {
-		final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		queryParameters.entrySet().forEach(x -> params.add(x.getKey(), x.getValue()));
-		return versionService.vnfInstanceGet(params);
+	public List<VnfInstance> get(final MultiValueMap<String, String> requestParams) {
+		return versionService.vnfInstanceGet(requestParams);
 	}
 
 	@Override

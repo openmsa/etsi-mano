@@ -42,9 +42,9 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedInfo;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
@@ -81,9 +81,9 @@ public class VnfInstanceTest {
 		nsInstancesNsInstanceVnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance o = mapper.map(nsInstancesNsInstanceVnfInstance, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class);
-		final VnfInstanceStatus ivi = o.getInstantiatedVnfInfo();
+		final BlueprintParameters ivi = o.getInstantiatedVnfInfo();
 		assertNotNull(ivi);
-		assertEquals("STARTED", ivi.getVnfState().toString());
+		assertEquals("STARTED", ivi.getState().toString());
 		assertNotNull(o.getVnfPkg());
 		assertNotNull(o.getVnfPkg().getId());
 		assertEquals("3bba2147-147a-41ab-a3ec-1a39e1b6d922", o.getVnfPkg().getId().toString());
@@ -93,11 +93,11 @@ public class VnfInstanceTest {
 	void testDaoToJson() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance = new com.ubiqube.etsi.mano.dao.mano.VnfInstance();
-		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
+		final BlueprintParameters instantiatedVnfInfo = new BlueprintParameters();
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		vnfInstance.setInstantiationState(InstantiationState.INSTANTIATED);
 		final NsdInstance nsInstance = new NsdInstance();
-		nsInstance.setFlavourId("flavor");
+		instantiatedVnfInfo.setFlavourId("flavor");
 		final NsdPackage nsdInfoId = new NsdPackage();
 		nsdInfoId.setId(UUID.randomUUID());
 		nsInstance.setNsdInfo(nsdInfoId);

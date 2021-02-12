@@ -22,13 +22,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.bootstrap.config.PropertySourceLocator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 
-import com.ubiqube.etsi.mano.exception.GenericException;
-
 public class UbiqubeSourceLocator implements PropertySourceLocator {
+
+	private static final Logger LOG = LoggerFactory.getLogger(UbiqubeSourceLocator.class);
 
 	@Override
 	public PropertySource<?> locate(final Environment environment) {
@@ -39,7 +41,7 @@ public class UbiqubeSourceLocator implements PropertySourceLocator {
 		try (InputStream inStream = new FileInputStream(filename);) {
 			props.load(inStream);
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			LOG.warn("Unable to find $HOME/.mano/configuration.properties", e);
 		}
 		return new UbiqubePropertySource("ubiqube", props);
 	}

@@ -21,15 +21,28 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Embeddable
 public class BlueprintParameters implements Serializable {
 	/** Serial. */
@@ -53,60 +66,6 @@ public class BlueprintParameters implements Serializable {
 
 	private String flavourId;
 
-	public String getInstantiationLevelId() {
-		return instantiationLevelId;
-	}
-
-	public void setInstantiationLevelId(final String instantiationLevelId) {
-		this.instantiationLevelId = instantiationLevelId;
-	}
-
-	public Set<ScaleInfo> getScaleStatus() {
-		return scaleStatus;
-	}
-
-	public void setScaleStatus(final Set<ScaleInfo> scaleStatus) {
-		this.scaleStatus = scaleStatus;
-	}
-
-	public Set<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
-		return extManagedVirtualLinks;
-	}
-
-	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
-		this.extManagedVirtualLinks = extManagedVirtualLinks;
-	}
-
-	public Integer getNumberOfSteps() {
-		return numberOfSteps;
-	}
-
-	public void setNumberOfSteps(final Integer numberOfSteps) {
-		this.numberOfSteps = numberOfSteps;
-	}
-
-	public ScaleTypeEnum getScaleType() {
-		return scaleType;
-	}
-
-	public void setScaleType(final ScaleTypeEnum scaleType) {
-		this.scaleType = scaleType;
-	}
-
-	public String getAspectId() {
-		return aspectId;
-	}
-
-	public void setAspectId(final String aspectId) {
-		this.aspectId = aspectId;
-	}
-
-	public String getFlavourId() {
-		return flavourId;
-	}
-
-	public void setFlavourId(final String flavourId) {
-		this.flavourId = flavourId;
-	}
-
+	@Enumerated(EnumType.STRING)
+	private OperationalStateType state;
 }

@@ -34,9 +34,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
-@Api(value = "api-versions")
+@Api(value = "api_versions")
 public interface LcmGrantsVersions {
 
 	@ApiOperation(value = "Retrieve API version information", nickname = "apiVersionsGet", notes = "The GET method reads API version information. This method shall follow the provisions specified in table 4.6.3.3.3.2-1 for request and response data structures, and response codes. URI query parameters are not supported. ", response = ApiVersionInformation.class, tags = {})
@@ -56,7 +54,7 @@ public interface LcmGrantsVersions {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/sol003/grant/api-versions", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/sol003/grant/api_versions", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<ApiVersionInformation> apiVersionsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ") @RequestHeader(value = "Version", required = false) String version);
 
 	@ApiOperation(value = "Retrieve API version information", nickname = "apiVersionsGet", notes = "The GET method reads API version information. This method shall follow the provisions specified in table 4.6.3.3.3.2-1 for request and response data structures, and response codes. URI query parameters are not supported. ", response = ApiVersionInformation.class, tags = {})
@@ -76,7 +74,7 @@ public interface LcmGrantsVersions {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/sol003/grant/v1/api-versions", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/sol003/grant/v1/api_versions", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<ApiVersionInformation> apiVersionsV1Get(@ApiParam(value = "Version of the API requested to use when responding to this request. ") @RequestHeader(value = "Version", required = false) String version);
 
 }

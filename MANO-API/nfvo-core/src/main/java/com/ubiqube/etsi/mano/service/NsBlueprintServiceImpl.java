@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsBlueprintJpa;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
@@ -66,7 +67,7 @@ public class NsBlueprintServiceImpl implements NsBlueprintService {
 
 	@Override
 	public NsBlueprint findById(final UUID blueprintId) {
-		return nsBlueprintJpa.findById(blueprintId).orElseThrow();
+		return nsBlueprintJpa.findById(blueprintId).orElseThrow(() -> new NotFoundException("Could not find Ns Lcm: " + blueprintId));
 	}
 
 	@Override

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,51 +31,55 @@ import org.springframework.stereotype.Controller;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 
-@javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
-
 @Controller("OnboardedVnfPackagesApiController271")
 public class OnboardedVnfPackagesApiControllerSol003 implements OnboardedVnfPackagesApiSol003 {
-
-	private VnfPackageManagement vnfManagement;
 	private final Linkable links = new Sol003Linkable();
+	private final VnfPackageManagement vnfManagement;
 
-	@Override
-	public ResponseEntity<List<VnfPkgInfo>> onboardedVnfPackagesGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
-		return OnboardedVnfPackagesApiSol003.super.onboardedVnfPackagesGet(filter, allFields, fields, excludeFields, excludeDefault, nextpageOpaqueMarker);
+	public OnboardedVnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement) {
+		vnfManagement = _vnfManagement;
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final String artifactPath, final String vnfdId, final String range, @Valid final String includeSignatures) {
+	public final ResponseEntity<List<VnfPkgInfo>> onboardedVnfPackagesGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
+		return ResponseEntity.ok(new ArrayList<>());
+	}
+
+	@Override
+	public final ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final String artifactPath, final String vnfdId, final String range, @Valid final String includeSignatures) {
 		return vnfManagement.vnfPackagesVnfdIdArtifactsArtifactPathGet(UUID.fromString(vnfdId), artifactPath, range);
 	}
 
 	@Override
-	public ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final HttpServletRequest request, final String range) {
+	public final ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final HttpServletRequest request, final String range) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfdId), VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
+		setLinks(vnfPkgInfo);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
 	@Override
-	public ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdGet(final String vnfdId) {
+	public final ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdGet(final String vnfdId) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfdId), VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
+		setLinks(vnfPkgInfo);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
 	@Override
-	public ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(final String vnfdId, @Valid final String includeSignatures) {
+	public final ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(final String vnfdId, @Valid final String includeSignatures) {
 		return vnfManagement.onboardedVnfPackagesVnfdIdManifestGet(UUID.fromString(vnfdId), includeSignatures);
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String range) {
+	public final ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String range) {
 		return vnfManagement.onboardedVnfPackagesVnfdIdPackageContentGet(UUID.fromString(vnfdId), range);
 	}
 
 	@Override
-	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final String vnfdId, @Valid final String includeSignatures) {
+	public final ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final String vnfdId, @Valid final String includeSignatures) {
 		return vnfManagement.onboardedVnfPackagesVnfdIdVnfdGet(UUID.fromString(vnfdId), includeSignatures);
 	}
 
+	private void setLinks(final VnfPkgInfo vnfPkgInfo) {
+		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
+	}
 }

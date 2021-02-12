@@ -16,14 +16,15 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
@@ -33,16 +34,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -63,6 +62,7 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfcResourceInfo;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 
@@ -84,35 +84,23 @@ public class VnfInstancesApiController implements VnfInstancesApi {
 	private final MapperFacade mapper;
 	private final VnfInstanceService vnfInstanceService;
 	private final VnfPackageService vnfPackageService;
+	private final ManoSearchResponseService searchService;
 
-	public VnfInstancesApiController(final VnfInstanceService vnfInstancesService, final VnfInstanceLcm vnfInstanceLcm, final MapperFacade mapper, final VnfInstanceService vnfInstanceService, final VnfPackageService vnfPackageService) {
+	public VnfInstancesApiController(final VnfInstanceService vnfInstancesService, final VnfInstanceLcm vnfInstanceLcm, final MapperFacade mapper, final VnfInstanceService vnfInstanceService, final VnfPackageService vnfPackageService, final ManoSearchResponseService _searchService) {
 		super();
 		this.vnfInstancesService = vnfInstancesService;
 		this.vnfInstanceLcm = vnfInstanceLcm;
 		this.mapper = mapper;
 		this.vnfInstanceService = vnfInstanceService;
 		this.vnfPackageService = vnfPackageService;
+		searchService = _searchService;
 	}
 
 	@Override
-	public ResponseEntity<String> vnfInstancesGet(final Map<String, String> queryParameters) {
-		final List<VnfInstance> result = vnfInstanceLcm.get(queryParameters).stream()
-				.map(x -> {
-					final VnfInstance v = mapper.map(x, VnfInstance.class);
-					v.setLinks(links.getLinks(x.getId().toString()));
-					return v;
-				})
-				.collect(Collectors.toList());
-
-		final String exclude = queryParameters.get("exclude_fields");
-		final String fields = queryParameters.get("fields");
-
-		final ObjectMapper mapperForView = MapperForView.getMapperForView(exclude, fields, null, null);
-		try {
-			return new ResponseEntity<>(mapperForView.writeValueAsString(result), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
+		final List<com.ubiqube.etsi.mano.dao.mano.VnfInstance> result = vnfInstanceLcm.get(requestParams);
+		final Consumer<VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
+		return searchService.search(requestParams, VnfInstance.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfInstance.class, setLink);
 	}
 
 	@Override

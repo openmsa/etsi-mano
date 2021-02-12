@@ -43,7 +43,6 @@ import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
-import com.ubiqube.etsi.mano.dao.mano.VimBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
@@ -51,7 +50,7 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements VimBlueprint<VnfTask> {
+public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implements Blueprint<VnfTask, VnfInstance> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -121,6 +120,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements VimBluep
 		this.grantsRequestId = grantsRequestId;
 	}
 
+	@Override
 	public Set<VimConnectionInformation> getVimConnections() {
 		return vimConnections;
 	}
@@ -148,6 +148,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements VimBluep
 		this.zoneGroups = zoneGroups;
 	}
 
+	@Override
 	public BlueprintParameters getParameters() {
 		return parameters;
 	}
@@ -189,6 +190,11 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask> implements VimBluep
 	@Override
 	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
+	}
+
+	@Override
+	public VnfInstance getInstance() {
+		return vnfInstance;
 	}
 
 }

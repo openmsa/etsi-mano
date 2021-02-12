@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
@@ -33,29 +34,30 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
-public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
+public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? extends Instance>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
-	private final List<PlanContributor<P, B, U, PA>> planContributors;
+	private final List<? extends PlanContributor<P, B, U, PA>> planContributors;
 
-	public Planner(final List<PlanContributor<P, B, U, PA>> contributor) {
+	public Planner(final List<? extends PlanContributor<P, B, U, PA>> contributor) {
 		planContributors = contributor;
 	}
 
-	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Class<? extends Node>>> conns) {
-		final List<ConnectivityEdge<Class<? extends Node>>> start = findSourceNodesByType(conns, Start.class);
+	public void doPlan(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final List<NodeConnectivity> conns) {
+		final List<NodeConnectivity> start = findSourceNodesByType(conns, Start.class);
 		final Set<String> cache = new HashSet<>();
 		start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget(), scaling, conns, cache));
 	}
 
-	private void doPlanInner(final P bundle, final B blueprint, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<ConnectivityEdge<Class<? extends Node>>> connections, final Set<String> cache) {
-		final List<ConnectivityEdge<Class<? extends Node>>> start = findSourceNodesByType(connections, clazz);
+	private void doPlanInner(final P bundle, final B blueprint, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<NodeConnectivity> connections, final Set<String> cache) {
+		final List<NodeConnectivity> start = findSourceNodesByType(connections, clazz);
 		if (!start.isEmpty()) {
-			final ConnectivityEdge<Class<? extends Node>> edge = start.get(0);
+			final NodeConnectivity edge = start.get(0);
 			if (!cache.contains(edge.getSource().getClass().getName())) {
 				contribute(bundle, blueprint, scaling, edge.getSource());
 				cache.add(edge.getSource().getClass().getName());
@@ -81,14 +83,14 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U>> {
 		return planContributors.stream().filter(x -> x.getContributionType() == node).collect(Collectors.toList());
 	}
 
-	private static List<ConnectivityEdge<Class<? extends Node>>> findSourceNodesByType(final List<ConnectivityEdge<Class<? extends Node>>> connections, final Class<? extends Node> class1) {
+	private static List<NodeConnectivity> findSourceNodesByType(final List<NodeConnectivity> connections, final Class<? extends Node> class1) {
 		return connections.stream().filter(x -> x.getSource() == class1).collect(Collectors.toList());
 	}
 
 	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
 		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
-		final WfConfiguration wfConfiguration = new WfConfiguration((List<PlanContributor>) ((Object) planContributors));
+		final WfConfiguration wfConfiguration = new WfConfiguration(planContributors);
 		wfConfiguration.getConfigurationGraph();
 		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = wfConfiguration.autoConnect(list);
 		// Add start

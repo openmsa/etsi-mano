@@ -17,6 +17,7 @@
 package com.ubiqube.mano.mapping;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -73,8 +74,8 @@ public class TaskToGrantTest {
 	private static void setBase(final VnfTask task) {
 		task.setAlias("alias");
 		final Audit audit = new Audit();
-		audit.setCreatedOn(LocalDateTime.now());
-		audit.setUpdatedOn(LocalDateTime.now());
+		audit.setCreatedOn(OffsetDateTime.now());
+		audit.setUpdatedOn(OffsetDateTime.now());
 		task.setAudit(audit);
 		// task.setBlueprint(_blueprint);
 		task.setChangeType(ChangeType.ADDED);

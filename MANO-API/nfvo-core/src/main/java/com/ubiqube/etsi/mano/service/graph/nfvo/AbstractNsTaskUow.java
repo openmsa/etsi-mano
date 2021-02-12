@@ -64,7 +64,7 @@ public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParame
 	@Override
 	public final String execute() {
 		RuntimeException eRoot = null;
-		final NsTask resource = this.uaow.getTaskEntity();
+		final com.ubiqube.etsi.mano.dao.mano.v2.Task resource = this.uaow.getTaskEntity();
 		resource.setStartDate(LocalDateTime.now());
 		resource.setStatus(PlanStatusType.STARTED);
 		try {

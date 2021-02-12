@@ -21,15 +21,15 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.controller.pkg;
 
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -59,8 +59,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "app_packages", description = "the app_packages API")
-@RequestMapping(value = "/meo/app_pkgm/v1/app_packages", produces = { MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE })
-@ExposesResourceFor(AppPkgInfo.class)
+@RequestMapping(value = "/meo/app_pkgm/v1/app_packages", produces = { MediaType.APPLICATION_JSON_VALUE })
 public interface AppPackages211MepmApi {
 
 	int DEFAULT_PAGE_SIZE = 10;
@@ -113,11 +112,7 @@ public interface AppPackages211MepmApi {
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
 	@GetMapping
-	ResponseEntity appPackagesGET(@ApiParam(value = "Attribute-based filtering parameters according to ETSI GS MEC 009") @Valid @RequestParam(value = "filter", required = false) String filter,
-			@ApiParam(value = "Include all complex attributes in the response.") @Valid @RequestParam(value = "all_fields", required = false) String allFields,
-			@ApiParam(value = "Complex attributes of AppPkgInfo to be included into the response") @Valid @RequestParam(value = "fields", required = false) String fields,
-			@ApiParam(value = "Complex attributes of AppPkgInfo to be excluded from the response.") @Valid @RequestParam(value = "exclude_fields", required = false) String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes of AppPkgInfo from the response.") @Valid @RequestParam(value = "exclude_default", required = false) String excludeDefault,
+	ResponseEntity appPackagesGET(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams,
 			@PageableDefault(page = DEFAULT_PAGE_NUMBER, size = DEFAULT_PAGE_SIZE) Pageable pageable);
 
 	@ApiOperation(value = "Create a resource for on-boarding an application package to a MEO", nickname = "appPackagesPOST", notes = "Create a resource for on-boarding an application package to a MEO", response = AppPkgInfo.class, responseContainer = "List", tags = { "app-pkgm", })

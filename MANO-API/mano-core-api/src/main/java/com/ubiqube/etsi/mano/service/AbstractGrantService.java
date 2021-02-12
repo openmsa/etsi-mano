@@ -25,10 +25,10 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.VimBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimTask;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
@@ -54,7 +54,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 	}
 
 	@Override
-	public final void allocate(final VimBlueprint plan) {
+	public final void allocate(final Blueprint plan) {
 		final VnfGrantsRequest grantRequest = mapper.map(plan, VnfGrantsRequest.class);
 		final Predicate<? super VimTask> isManoClass = x -> (x.getType() == ResourceTypeEnum.COMPUTE) ||
 				(x.getType() == ResourceTypeEnum.LINKPORT) ||
@@ -119,7 +119,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 				.orElseThrow(() -> new NotFoundException("Could not find flavor for vdu: " + vduId));
 	}
 
-	private static VimTask findTask(final Blueprint<VimTask> plan, final UUID grantUuid) {
+	private static VimTask findTask(final Blueprint<VimTask, VnfInstance> plan, final UUID grantUuid) {
 		return plan.getTasks().stream()
 				.filter(x -> x.getId().compareTo(grantUuid) == 0)
 				.findFirst()

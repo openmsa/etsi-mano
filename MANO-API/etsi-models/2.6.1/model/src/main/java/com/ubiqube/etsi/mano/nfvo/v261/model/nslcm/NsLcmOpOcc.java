@@ -34,12 +34,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a request a NS lifecycle operation occurrence. It shall
- * comply with the provisions defined in Table 6.5.2.3-1.
+ * This type represents a request a NS lifecycle operation occurrence. It shall comply with the provisions defined in Table 6.5.2.3-1.
  */
 @ApiModel(description = "This type represents a request a NS lifecycle operation occurrence. It shall comply with the provisions defined in Table 6.5.2.3-1. ")
 @Validated
-
 
 public class NsLcmOpOcc {
 	@JsonProperty("id")
@@ -48,8 +46,8 @@ public class NsLcmOpOcc {
 	@JsonProperty("operationState")
 	private LcmOperationStateType operationState = null;
 
-	@JsonProperty("stateEnteredTime")
-	private OffsetDateTime stateEnteredTime = null;
+	@JsonProperty("statusEnteredTime")
+	private OffsetDateTime statusEnteredTime = null;
 
 	@JsonProperty("nsInstanceId")
 	private String nsInstanceId = null;
@@ -76,7 +74,7 @@ public class NsLcmOpOcc {
 	private ProblemDetails error = null;
 
 	@JsonProperty("resourceChanges")
-	private NsLcmOpOccResourceChanges resourceChanges = new NsLcmOpOccResourceChanges();
+	private NsLcmOpOccResourceChanges resourceChanges;
 
 	@JsonProperty("_links")
 	private NsLcmOpOccLinks links = null;
@@ -125,27 +123,24 @@ public class NsLcmOpOcc {
 		this.operationState = operationState;
 	}
 
-	public NsLcmOpOcc stateEnteredTime(final OffsetDateTime stateEnteredTime) {
-		this.stateEnteredTime = stateEnteredTime;
-		return this;
+  public NsLcmOpOcc statusEnteredTime(OffsetDateTime statusEnteredTime) {
+    this.statusEnteredTime = statusEnteredTime;
+    return this;
+  }
+
+  /**
+   * Date-time when the current state has been entered. 
+   * @return statusEnteredTime
+  **/
+  @ApiModelProperty(value = "Date-time when the current state has been entered. ")
+  
+    @Valid
+	public OffsetDateTime getStatusEnteredTime() {
+		return statusEnteredTime;
 	}
 
-	/**
-	 * Date-time when the current state has been entered.
-	 *
-	 * @return stateEnteredTime
-	 **/
-	@ApiModelProperty(required = true, value = "Date-time when the current state has been entered. ")
-	@NotNull
-
-	@Valid
-
-	public OffsetDateTime getStateEnteredTime() {
-		return stateEnteredTime;
-	}
-
-	public void setStateEnteredTime(final OffsetDateTime stateEnteredTime) {
-		this.stateEnteredTime = stateEnteredTime;
+	public void setStatusEnteredTime(final OffsetDateTime statusEnteredTime) {
+		this.statusEnteredTime = statusEnteredTime;
 	}
 
 	public NsLcmOpOcc nsInstanceId(final String nsInstanceId) {
@@ -175,8 +170,7 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * Type of the actual LCM operation represented by this lcm operation
-	 * occurrence.
+	 * Type of the actual LCM operation represented by this lcm operation occurrence.
 	 *
 	 * @return lcmOperationType
 	 **/
@@ -184,7 +178,6 @@ public class NsLcmOpOcc {
 	@NotNull
 
 	@Valid
-
 	public NsLcmOpType getLcmOperationType() {
 		return lcmOperationType;
 	}
@@ -207,7 +200,6 @@ public class NsLcmOpOcc {
 	@NotNull
 
 	@Valid
-
 	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
@@ -222,10 +214,7 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * Set to true if this NS LCM operation occurrence has been automatically
-	 * triggered by the NFVO. This occurs in the case of auto-scaling, auto-healing
-	 * and when a nested NS is modified as a result of an operation on its composite
-	 * NS. Set to false otherwise.
+	 * Set to true if this NS LCM operation occurrence has been automatically triggered by the NFVO. This occurs in the case of auto-scaling, auto-healing and when a nested NS is modified as a result of an operation on its composite NS. Set to false otherwise.
 	 *
 	 * @return isAutomaticInvocation
 	 **/
@@ -246,15 +235,8 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * Input parameters of the LCM operation. This attribute shall be formatted
-	 * according to the request data type of the related LCM operation. The
-	 * following mapping between lcmOperationType and the data type of this
-	 * attribute shall apply: - INSTANTIATE: InstantiateNsRequest - SCALE:
-	 * ScaleNsRequest - UPDATE: UpdateNsRequest - HEAL: HealNsRequest - TERMINATE:
-	 * TerminateNsRequest This attribute shall be present if this data type is
-	 * returned in a response to reading an individual resource, and may be present
-	 * according to the chosen attribute selector parameter if this data type is
-	 * returned in a response to a query of a container resource.
+	 * Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between lcmOperationType and the data type of this attribute shall apply: - INSTANTIATE: InstantiateNsRequest - SCALE: ScaleNsRequest - UPDATE: UpdateNsRequest - HEAL: HealNsRequest - TERMINATE: TerminateNsRequest This attribute shall be present if this data type is returned in a response to reading an individual resource, and may be
+	 * present according to the chosen attribute selector parameter if this data type is returned in a response to a query of a container resource.
 	 *
 	 * @return operationParams
 	 **/
@@ -274,9 +256,7 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * If the LCM operation occurrence is in \"PROCESSING\" or \"ROLLING_BACK\"
-	 * state and the operation is being cancelled, this attribute shall be set to
-	 * true. Otherwise, it shall be set to false.
+	 * If the LCM operation occurrence is in \"PROCESSING\" or \"ROLLING_BACK\" state and the operation is being cancelled, this attribute shall be set to true. Otherwise, it shall be set to false.
 	 *
 	 * @return isCancelPending
 	 **/
@@ -297,15 +277,13 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * The mode of an ongoing cancellation. Shall be present when
-	 * isCancelPending=true, and shall be absent otherwise.
+	 * The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise.
 	 *
 	 * @return cancelMode
 	 **/
 	@ApiModelProperty(value = "The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise. ")
 
 	@Valid
-
 	public CancelModeType getCancelMode() {
 		return cancelMode;
 	}
@@ -320,18 +298,13 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\"
-	 * is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of
-	 * \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and
-	 * contain error information, unless it has been requested to be excluded via an
-	 * attribute selector.
+	 * If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector.
 	 *
 	 * @return error
 	 **/
 	@ApiModelProperty(value = "If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector. ")
 
 	@Valid
-
 	public ProblemDetails getError() {
 		return error;
 	}
@@ -353,7 +326,6 @@ public class NsLcmOpOcc {
 	@ApiModelProperty(value = "")
 
 	@Valid
-
 	public NsLcmOpOccResourceChanges getResourceChanges() {
 		return resourceChanges;
 	}
@@ -396,7 +368,7 @@ public class NsLcmOpOcc {
 		final NsLcmOpOcc nsLcmOpOcc = (NsLcmOpOcc) o;
 		return Objects.equals(this.id, nsLcmOpOcc.id) &&
 				Objects.equals(this.operationState, nsLcmOpOcc.operationState) &&
-				Objects.equals(this.stateEnteredTime, nsLcmOpOcc.stateEnteredTime) &&
+				Objects.equals(this.statusEnteredTime, nsLcmOpOcc.statusEnteredTime) &&
 				Objects.equals(this.nsInstanceId, nsLcmOpOcc.nsInstanceId) &&
 				Objects.equals(this.lcmOperationType, nsLcmOpOcc.lcmOperationType) &&
 				Objects.equals(this.startTime, nsLcmOpOcc.startTime) &&
@@ -411,7 +383,7 @@ public class NsLcmOpOcc {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, operationState, stateEnteredTime, nsInstanceId, lcmOperationType, startTime, isAutomaticInvocation, operationParams, isCancelPending, cancelMode, error, resourceChanges, links);
+		return Objects.hash(id, operationState, statusEnteredTime, nsInstanceId, lcmOperationType, startTime, isAutomaticInvocation, operationParams, isCancelPending, cancelMode, error, resourceChanges, links);
 	}
 
 	@Override
@@ -421,7 +393,7 @@ public class NsLcmOpOcc {
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    operationState: ").append(toIndentedString(operationState)).append("\n");
-		sb.append("    stateEnteredTime: ").append(toIndentedString(stateEnteredTime)).append("\n");
+		sb.append("    statusEnteredTime: ").append(toIndentedString(statusEnteredTime)).append("\n");
 		sb.append("    nsInstanceId: ").append(toIndentedString(nsInstanceId)).append("\n");
 		sb.append("    lcmOperationType: ").append(toIndentedString(lcmOperationType)).append("\n");
 		sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
@@ -437,8 +409,7 @@ public class NsLcmOpOcc {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

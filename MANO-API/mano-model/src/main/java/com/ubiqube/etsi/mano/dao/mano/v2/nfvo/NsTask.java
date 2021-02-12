@@ -28,6 +28,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractTask;
 
 import lombok.Getter;
@@ -54,4 +55,16 @@ public class NsTask extends AbstractTask {
 	private UUID id;
 
 	private ResourceTypeEnum type;
+
+	@Override
+	public ScaleInfo getScaleInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UUID getRemovedLiveInstance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

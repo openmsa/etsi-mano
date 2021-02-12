@@ -16,24 +16,25 @@
  */
 package com.ubiqube.etsi.mec.mepm.v211.controller.lcm;
 
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
-import javax.validation.Valid;
+import javax.annotation.Nonnull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mec.meo.v211.model.lcm.AppInstanceLcmOpOcc;
 import com.ubiqube.etsi.mec.meo.v211.model.lcm.AppInstanceLcmOpOccLinks;
 import com.ubiqube.etsi.mec.meo.v211.model.lcm.LinkType;
@@ -49,28 +50,27 @@ import ma.glasnost.orika.MapperFacade;
 @Controller
 public class AppLcmOpOccsApiController implements AppLcmOpOccsApi {
 
+	public static final String APP_SEARCH_DEFAULT_EXCLUDE_FIELDS = "virtualComputeDescriptor,swImageDescriptor,virtualStorageDescriptor,appExtCpd,terminateAppInstanceOpConfig,changeAppInstanceStateOpConfig";
+
 	private final MepmLcmController mepmLcmController;
 
 	private final MapperFacade mapper;
 
-	public AppLcmOpOccsApiController(final MepmLcmController _mepmLcmController, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public AppLcmOpOccsApiController(final MepmLcmController _mepmLcmController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		mepmLcmController = _mepmLcmController;
 		mapper = _mapper;
+		searchService = _searchService;
 	}
 
 	@Override
-	public ResponseEntity<String> appLcmOpOccsGET(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault) {
+	public ResponseEntity<String> appLcmOpOccsGET(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
 		final List<AppBlueprint> resultsDb = mepmLcmController.query(filter);
-		final List<AppInstanceLcmOpOcc> results = resultsDb.stream()
-				.map(x -> mapper.map(x, AppInstanceLcmOpOcc.class))
-				.collect(Collectors.toList());
-		results.forEach(x -> x.setLinks(makeLink(x)));
-		final ObjectMapper mapperForView = MapperForView.getMapperForView(excludeFields, fields, null, null);
-		try {
-			return new ResponseEntity<>(mapperForView.writeValueAsString(results), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+		final Consumer<AppInstanceLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
+		return searchService.search(requestParams, AppInstanceLcmOpOcc.class, APP_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, resultsDb, AppInstanceLcmOpOcc.class, setLink);
+
 	}
 
 	private static AppInstanceLcmOpOccLinks makeLink(final AppInstanceLcmOpOcc x) {

@@ -297,10 +297,20 @@ public class ToscaContext {
 			final NodeTemplate nodeTmpl = entry.getValue();
 			final String type = nodeTmpl.getType();
 			final ToscaClassHolder tch = classHierarchy.get(type);
-			if (null == tch) {
+			if ((null == tch) && !onClassPath(type)) {
 				throw new ParseException("Unable to find implementation of: " + type + " in: " + entry.getKey());
 			}
 		}
+	}
+
+	private static boolean onClassPath(final String type) {
+		try {
+			Class.forName(type);
+			return true;
+		} catch (final ClassNotFoundException e) {
+			LOG.trace("", e);
+		}
+		return false;
 	}
 
 	private ToscaClassHolder resolvDerived(final String derived) {

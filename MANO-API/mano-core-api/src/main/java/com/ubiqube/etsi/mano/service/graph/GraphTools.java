@@ -55,7 +55,7 @@ public class GraphTools {
 		return g;
 	}
 
-	public static <V, U extends UnitOfWorkBase> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final List<U> right) {
+	public static <U extends UnitOfWorkBase> void addEdge(final ListenableGraph<U, ConnectivityEdge<U>> g, final List<U> left, final List<U> right) {
 		if ((null == left) || (null == right)) {
 			LOG.debug("One or more end point are not in the plan {} <-> {}", left, right);
 			return;

@@ -124,7 +124,6 @@ public class AppPkg implements PackageBase, Auditable {
 	private Set<AppExternalCpd> appExtCpd;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<VnfVl> vnfVl = new LinkedHashSet<>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

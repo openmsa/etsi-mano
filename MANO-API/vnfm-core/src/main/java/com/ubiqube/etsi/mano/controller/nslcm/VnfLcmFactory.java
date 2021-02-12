@@ -26,11 +26,11 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstanceScaleInfo;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstanceStatus;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
@@ -44,23 +44,29 @@ public class VnfLcmFactory {
 		vnfInstance.setVnfPkg(vnfPkgInfo);
 		vnfInstance.setVnfInstanceName(vnfInstanceName);
 		vnfInstance.setVnfInstanceDescription(vnfInstanceDescription);
-		final VnfInstanceStatus instantiatedVnfInfo = new VnfInstanceStatus();
-		instantiatedVnfInfo.setVnfState(OperationalStateType.STOPPED);
+		vnfInstance.setVnfProvider(vnfPkgInfo.getVnfProvider());
+		vnfInstance.setVnfProductName(vnfPkgInfo.getVnfProductName());
+		vnfInstance.setVnfSoftwareVersion(vnfPkgInfo.getVnfSoftwareVersion());
+		vnfInstance.setVnfdVersion(vnfPkgInfo.getVnfdVersion());
+		final BlueprintParameters instantiatedVnfInfo = new BlueprintParameters();
+		instantiatedVnfInfo.setFlavourId(vnfPkgInfo.getFlavorId());
+		instantiatedVnfInfo.setState(OperationalStateType.STOPPED);
 		vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		vnfInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
-		final Set<VnfInstanceScaleInfo> scaleInfo = vnfPkgInfo.getVnfCompute().stream()
+		final Set<ScaleInfo> scaleInfo = vnfPkgInfo.getVnfCompute().stream()
 				.map(x -> x.getScalingAspectDeltas().stream()
 						.map(VnfComputeAspectDelta::getAspectName)
 						.distinct()
 						.collect(Collectors.toList()))
 				.flatMap(List::stream)
 				.distinct()
-				.map(x -> new VnfInstanceScaleInfo(x, Integer.valueOf(0)))
+				.map(x -> new ScaleInfo(x, Integer.valueOf(0)))
 				.collect(Collectors.toSet());
 		instantiatedVnfInfo.setScaleStatus(scaleInfo);
 		return vnfInstance;
 	}
 
+	// TODO: remove one method createVnfLcmOpOccs or createVnfBlueprint.
 	@Nonnull
 	public static VnfBlueprint createVnfLcmOpOccs(final PlanOperationType operation, final UUID vnfInstanceId) {
 		final VnfBlueprint vnfLcmOpOcc = new VnfBlueprint();
@@ -71,6 +77,9 @@ public class VnfLcmFactory {
 		vnfLcmOpOcc.setStateEnteredTime(new Date());
 		vnfLcmOpOcc.setStartTime(new Date());
 		vnfLcmOpOcc.setOperationStatus(OperationStatusType.STARTING);
+		final BlueprintParameters parameters = new BlueprintParameters();
+		parameters.setState(OperationalStateType.STOPPED);
+		vnfLcmOpOcc.setParameters(parameters);
 		return vnfLcmOpOcc;
 	}
 
@@ -81,7 +90,11 @@ public class VnfLcmFactory {
 		vnfInstance.setId(vnfInstanceId);
 		blueprint.setVnfInstance(vnfInstance);
 		blueprint.setStartTime(new Date());
+		blueprint.setStateEnteredTime(new Date());
 		blueprint.setOperationStatus(OperationStatusType.NOT_STARTED);
+		final BlueprintParameters parameters = new BlueprintParameters();
+		parameters.setState(OperationalStateType.STOPPED);
+		blueprint.setParameters(parameters);
 		return blueprint;
 	}
 

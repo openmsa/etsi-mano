@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,8 +37,14 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 
 /**
  *
@@ -46,7 +53,8 @@ import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
  */
 @Entity
 @Indexed
-public class NsBlueprint extends AbstractBlueprint<NsTask> {
+@EntityListeners(AuditListener.class)
+public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -98,6 +106,53 @@ public class NsBlueprint extends AbstractBlueprint<NsTask> {
 	@Override
 	public void setTasks(final Set<NsTask> _tasks) {
 		tasks = _tasks;
+	}
+
+	@Override
+	public BlueprintParameters getParameters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setVimConnections(final Set<VimConnectionInformation> vimConnections) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setZoneGroups(final Set<BlueZoneGroupInformation> mapAsSet) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setZones(final Set<ZoneInfoEntity> zones) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setGrantsRequestId(final String string) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Set<VimConnectionInformation> getVimConnections() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NsdInstance getInstance() {
+		return nsInstance;
 	}
 
 }

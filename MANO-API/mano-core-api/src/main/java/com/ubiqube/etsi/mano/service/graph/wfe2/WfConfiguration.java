@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.service.graph.WfProduce;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
@@ -52,14 +53,14 @@ public class WfConfiguration {
 	private static final Logger LOG = LoggerFactory.getLogger(WfConfiguration.class);
 
 	final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
-	private final List<PlanContributor> planContributors;
+	private final List<? extends PlanContributor> planContributors;
 
-	public WfConfiguration(final List<PlanContributor> _planContributors) {
+	public WfConfiguration(final List<? extends PlanContributor> _planContributors) {
 		planContributors = _planContributors;
 	}
 
-	public ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> getConfigurationGraph() {
-		final List<ConnectivityEdge<Class<? extends Node>>> edges = new ArrayList<>();
+	public ListenableGraph<Class<? extends Node>, NodeConnectivity> getConfigurationGraph() {
+		final List<NodeConnectivity> edges = new ArrayList<>();
 		planContributors.forEach(x -> {
 			LOG.debug("Getting contributor: {}.", x.getContributionType());
 			final DependencyBuilder dependencyBuilder = new DependencyBuilder(x);
@@ -74,7 +75,7 @@ public class WfConfiguration {
 			});
 			edges.addAll(dependencyBuilder.getEdges());
 		});
-		final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g = (ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>>) (Object) GraphTools.createGraph();
+		final ListenableGraph<Class<? extends Node>, NodeConnectivity> g = (ListenableGraph<Class<? extends Node>, NodeConnectivity>) (Object) GraphTools.createGraph();
 		createVertex(g, edges);
 		replacements.entrySet().stream()
 				.flatMap(x -> x.getValue().getEdges().stream())
@@ -99,7 +100,7 @@ public class WfConfiguration {
 		return g;
 	}
 
-	private void createVertex(final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g, final List<ConnectivityEdge<Class<? extends Node>>> edges) {
+	private void createVertex(final ListenableGraph<Class<? extends Node>, NodeConnectivity> g, final List<NodeConnectivity> edges) {
 		final Set<Class<? extends Node>> vertex = new HashSet<>();
 		edges.forEach(x -> vertexAdd(vertex, x));
 		replacements.entrySet().stream()
@@ -109,7 +110,7 @@ public class WfConfiguration {
 		vertex.stream().forEach(g::addVertex);
 	}
 
-	private static void vertexAdd(final Set<Class<? extends Node>> vertex, final ConnectivityEdge<Class<? extends Node>> x) {
+	private static void vertexAdd(final Set<Class<? extends Node>> vertex, final NodeConnectivity x) {
 		vertex.add(x.getSource());
 		vertex.add(x.getTarget());
 	}
@@ -176,8 +177,7 @@ public class WfConfiguration {
 	}
 
 	/**
-	 * The concept is an ending node is a node that doesn't appear in a source node.
-	 * for example : A -> B -> C
+	 * The concept is an ending node is a node that doesn't appear in a source node. for example : A -> B -> C
 	 *
 	 * @param repl A replace builder instance.
 	 * @return list of ending Nodes.
@@ -193,8 +193,8 @@ public class WfConfiguration {
 	}
 
 	private static <U extends Task, P> boolean isInReplacementFunction(final ReplaceBuilder repl, final DeferedConnection<U, P> defered) {
-		final List<ConnectivityEdge<Class<? extends Node>>> edges = repl.getEdges();
-		for (final ConnectivityEdge<Class<? extends Node>> connectivityEdge : edges) {
+		final List<NodeConnectivity> edges = repl.getEdges();
+		for (final NodeConnectivity connectivityEdge : edges) {
 			// Net -> sub
 			if (connectivityEdge.getSource() != defered.getNode()) {
 				continue;
@@ -277,11 +277,11 @@ public class WfConfiguration {
 		return ret;
 	}
 
-	private static void optimze(final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g) {
-		final AllDirectedPaths<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> dp = new AllDirectedPaths<>(g);
+	private static void optimze(final ListenableGraph<Class<? extends Node>, NodeConnectivity> g) {
+		final AllDirectedPaths<Class<? extends Node>, NodeConnectivity> dp = new AllDirectedPaths<>(g);
 		g.vertexSet().forEach(x -> g.edgesOf(x).stream().forEach(y -> {
 			if (x != y.getTarget()) {
-				final List<GraphPath<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>>> paths = dp.getAllPaths(x, y.getTarget(), false, 5);
+				final List<GraphPath<Class<? extends Node>, NodeConnectivity>> paths = dp.getAllPaths(x, y.getTarget(), false, 5);
 				if (paths.size() > 1) {
 					paths.forEach(z -> {
 						if (z.getLength() == 1) {
@@ -294,14 +294,14 @@ public class WfConfiguration {
 		}));
 	}
 
-	private static void complexLink(final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g, final Class<? extends Node> source, final ReplaceBuilder replaceBuilder) {
+	private static void complexLink(final ListenableGraph<Class<? extends Node>, NodeConnectivity> g, final Class<? extends Node> source, final ReplaceBuilder replaceBuilder) {
 		replaceBuilder.getEdges().forEach(x -> {
 			LOG.debug("CPLX SRC Link: {} -> {}", source, x.getSource());
 			g.addEdge(source, x.getSource());
 		});
 	}
 
-	private static void complexLink(final ListenableGraph<Class<? extends Node>, ConnectivityEdge<Class<? extends Node>>> g, final ReplaceBuilder replaceBuilder, final Class<? extends Node> target) {
+	private static void complexLink(final ListenableGraph<Class<? extends Node>, NodeConnectivity> g, final ReplaceBuilder replaceBuilder, final Class<? extends Node> target) {
 		replaceBuilder.getEdges().forEach(x -> {
 			LOG.debug("CPLX TGT Link: {} -> {}", x.getTarget(), target);
 			g.addEdge(x.getTarget(), target);

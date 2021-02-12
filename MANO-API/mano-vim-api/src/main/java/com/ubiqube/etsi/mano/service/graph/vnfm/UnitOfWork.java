@@ -35,7 +35,7 @@ public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializa
 
 	String exec(P params);
 
-	U getTaskEntity();
+	Task getTaskEntity();
 
 	String rollback(P params);
 

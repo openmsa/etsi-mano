@@ -17,14 +17,18 @@
 package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.service.event.Report;
+import com.ubiqube.etsi.mano.service.event.ReportItem;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 
-public class VnfReport {
+public class VnfReport implements Report {
 
 	private final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> results;
 
@@ -36,16 +40,22 @@ public class VnfReport {
 		return results.getSkipped();
 	}
 
-	public List<ExecutionResult<UnitOfWork<VnfTask, VnfParameters>, String>> getSuccess() {
-		return results.getSuccess();
+	@Override
+	public List<ReportItem> getSuccess() {
+		return results.getSuccess().stream().map(this::map).collect(Collectors.toList());
 	}
 
-	public List<ExecutionResult<UnitOfWork<VnfTask, VnfParameters>, String>> getErrored() {
-		return results.getErrored();
+	@Override
+	public List<ReportItem> getErrored() {
+		return results.getErrored().stream().map(this::map).collect(Collectors.toList());
 	}
 
 	public List<ExecutionResult<UnitOfWork<VnfTask, VnfParameters>, String>> getAll() {
 		return results.getAll();
 	}
 
+	private ReportItem map(final ExecutionResult<UnitOfWork<VnfTask, VnfParameters>, String> er) {
+		final Task part = er.getId().getTaskEntity();
+		return new ReportItem(part);
+	}
 }

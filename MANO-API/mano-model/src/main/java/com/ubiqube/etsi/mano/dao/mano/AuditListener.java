@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -31,13 +31,13 @@ public class AuditListener {
 			auditable.setAudit(audit);
 		}
 
-		audit.setCreatedOn(LocalDateTime.now());
+		audit.setCreatedOn(OffsetDateTime.now());
 	}
 
 	@PreUpdate
 	public void setUpdatedOn(final Auditable auditable) {
 		final Audit audit = auditable.getAudit();
 
-		audit.setUpdatedOn(LocalDateTime.now());
+		audit.setUpdatedOn(OffsetDateTime.now());
 	}
 }

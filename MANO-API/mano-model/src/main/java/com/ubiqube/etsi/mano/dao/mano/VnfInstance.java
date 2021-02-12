@@ -41,4 +41,12 @@ public class VnfInstance extends Instance {
 
 	private String vnfdId;
 
+	private String vnfProvider;
+
+	private String vnfProductName;
+
+	private String vnfSoftwareVersion;
+
+	private String vnfdVersion;
+
 }

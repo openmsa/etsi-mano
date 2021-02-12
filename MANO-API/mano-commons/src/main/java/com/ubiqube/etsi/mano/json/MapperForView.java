@@ -17,8 +17,8 @@
 package com.ubiqube.etsi.mano.json;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -30,17 +30,18 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class MapperForView {
 	private MapperForView() {
 		// Nothing.
 	}
 
-	public static ObjectMapper getMapperForView(@Nullable final String exclude, @Nullable final String fields, @Nullable final String excludeDefault, @Nullable final String excludeFields) {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		mapper.setSerializationInclusion(Include.NON_NULL);
-		mapper.registerModule(new JavaTimeModule());
-		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
+	public static ObjectMapper getMapperForView(@Nullable final Set<String> exclude, @Nullable final Set<String> fields) {
+		final ObjectMapper mapper = getMapperInstance();
 		if ((null != exclude) && !exclude.isEmpty()) {
 			final List<ViewHolder> excludeList = buildViewList(exclude);
 			mapper.registerModule(new SimpleModule() {
@@ -53,14 +54,13 @@ public class MapperForView {
 				}
 			});
 		} else if ((null != fields) && !fields.isEmpty()) {
-			final List<String> wantedList = Arrays.asList(fields.split(","));
 			mapper.registerModule(new SimpleModule() {
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void setupModule(final SetupContext context) {
 					super.setupModule(context);
-					context.addBeanSerializerModifier(new WantedSerializer(wantedList));
+					context.addBeanSerializerModifier(new WantedSerializer(fields));
 				}
 			});
 		}
@@ -68,11 +68,19 @@ public class MapperForView {
 	}
 
 	@Nonnull
-	private static List<ViewHolder> buildViewList(@Nonnull final String fields) {
-		final List<String> fieldArray = Arrays.asList(fields.split(","));
-		return fieldArray.stream()
+	private static List<ViewHolder> buildViewList(@Nonnull final Set<String> exclude) {
+		return exclude.stream()
 				.map(ViewHolder::new)
 				.collect(Collectors.toList());
 	}
 
+	private static ObjectMapper getMapperInstance() {
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.disable(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		mapper.registerModule(new JavaTimeModule());
+		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
+		return mapper;
+	}
 }

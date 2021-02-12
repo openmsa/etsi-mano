@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.7.RELEASE</version>
+		<version>2.4.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ubiqube.mano</groupId>
@@ -15,7 +15,9 @@
 	<name>mano-super-pom</name>
 	<description>ETSI-MANO super pom</description>
 	<packaging>pom</packaging>
-
+	<scm>
+		<developerConnection>scm:git:ssh://git@ubibucket.ubiqube.com:7999/ubi/ubi-etsi-mano.git</developerConnection>
+	</scm>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>

@@ -44,10 +44,10 @@ import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
-import com.ubiqube.etsi.mano.dao.mano.VimBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 
 import lombok.Getter;
@@ -64,7 +64,7 @@ import lombok.Setter;
 @Indexed
 @Table(schema = "mec_meo")
 @EntityListeners(AuditListener.class)
-public class AppBlueprint extends AbstractBlueprint<AppTask> implements VimBlueprint<AppTask> {
+public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implements Blueprint<AppTask, AppInstance> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -114,6 +114,11 @@ public class AppBlueprint extends AbstractBlueprint<AppTask> implements VimBluep
 			tasks = new HashSet<>();
 		}
 		tasks.add(task);
+	}
+
+	@Override
+	public AppInstance getInstance() {
+		return appInstance;
 	}
 
 }

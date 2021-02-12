@@ -33,7 +33,7 @@ public interface VnfPackageManagement {
 
 	<U> U vnfPackagesVnfPkgIdGet(@Nonnull UUID vnfPkgId, Class<U> u);
 
-	List<VnfPackage> vnfPackagesGet(@Nonnull String filter);
+	List<VnfPackage> vnfPackagesGet(String filter);
 
 	/**
 	 *
@@ -57,5 +57,7 @@ public interface VnfPackageManagement {
 	ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(UUID vnfdId, String range);
 
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(UUID vnfdId, @Valid String includeSignatures);
+
+	<U> U onboardedVnfPackagesVnfdIdGet(UUID vnfdId, Class<U> clazz);
 
 }

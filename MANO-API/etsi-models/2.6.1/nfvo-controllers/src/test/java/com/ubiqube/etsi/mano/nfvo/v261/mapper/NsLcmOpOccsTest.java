@@ -49,7 +49,7 @@ public class NsLcmOpOccsTest {
 		final NsLcmOpOcc nsLcmOpOcc = new NsLcmOpOcc();
 		nsLcmOpOcc.setError(TestFactory.createProblemDetails());
 		nsLcmOpOcc.setStartTime(OffsetDateTime.now());
-		nsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
+		nsLcmOpOcc.setStatusEnteredTime(OffsetDateTime.now());
 		final AffectedVnf affectedVnf = new AffectedVnf();
 		affectedVnf.setChangeResult(ChangeResultEnum.COMPLETED);
 		affectedVnf.setChangeType(ChangeTypeEnum.CHANGE_EXTERNAL_VNF_CONNECTIVITY);

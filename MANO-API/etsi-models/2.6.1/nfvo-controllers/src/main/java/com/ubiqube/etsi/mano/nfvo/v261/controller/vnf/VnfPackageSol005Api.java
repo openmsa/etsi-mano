@@ -17,12 +17,16 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -34,20 +38,19 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageController;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.UploadVnfPkgFromUriRequest;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 import ma.glasnost.orika.MapperFacade;
@@ -56,64 +59,48 @@ import ma.glasnost.orika.MapperFacade;
  * SOL005 - VNF Package Management Interface
  *
  * <p>
- * SOL005 - VNF Package Management Interface IMPORTANT: Please note that this
- * file might be not aligned to the current version of the ETSI Group
- * Specification it refers to and has not been approved by the ETSI NFV ISG. In
- * case of discrepancies the published ETSI Group Specification takes
- * precedence. Please report bugs to
- * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
+ * SOL005 - VNF Package Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
- * NOTE: Normaly we should receive object in methods but Genson seems to be on
- * the classpath and is unable to unserialize objects. So we use a string2Object
- * to do So. Note same problems occurred when returning object some times genson
- * could be here and not Jackson, in this case you can use object2String.
+ * NOTE: Normaly we should receive object in methods but Genson seems to be on the classpath and is unable to unserialize objects. So we use a string2Object to do So. Note same problems occurred when returning object some times genson could be here and not Jackson, in this case you can use object2String.
  *
  */
 @RestController
 @RolesAllowed({ "ROLE_OSSBSS" })
 public class VnfPackageSol005Api implements VnfPackageSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
+
 	@Nonnull
 	private final Linkable links = new Sol005Linkable();
+
 	private final VnfPackageManagement vnfManagement;
+
 	private final MapperFacade mapper;
+
 	private final VnfPackageController vnfPackageController;
 
-	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController) {
+	private final ManoSearchResponseService searchService;
+
+	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController, final ManoSearchResponseService _searchService) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
 		vnfPackageController = _vnfPackageController;
+		searchService = _searchService;
 		LOG.info("Starting VNF Package SOL005 Controller.");
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesGet(final Map<String, String> requestParams) {
-		final String filter = requestParams.get("filter");
-		final List<VnfPackage> vnfPackageInfos = vnfManagement.vnfPackagesGet(filter);
-		final List<VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
-				.map(x -> mapper.map(x, VnfPkgInfo.class))
-				.collect(Collectors.toList());
-
-		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
-
-		final String exclude = requestParams.get("exclude_fields");
-		final String fields = requestParams.get("fields");
-
-		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(exclude, fields, null, null);
-
-		String resp = null;
-		try {
-			resp = mapperForQuery.writeValueAsString(vnfPkginfos);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
-		return ResponseEntity.ok(resp);
+	public ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
+		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
+		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
+		requestParams.containsKey("exclude_default");
+		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, final String accept, final String range) {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfdId, final HttpServletRequest request, final String accept, final String range) {
 		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfdId), artifactPath, range);
 	}
 
 	@Override
@@ -146,7 +133,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final VnfPackage vnfPackage = vnfPackageController.vnfPackagesPost(userData);
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
 		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPackage.getId().toString()));
-		return ResponseEntity.created(URI.create(vnfPkgInfo.getLinks().getSelf().getHref())).build();
+		return ResponseEntity.created(URI.create(vnfPkgInfo.getLinks().getSelf().getHref())).body(vnfPkgInfo);
 	}
 
 	/**
@@ -165,10 +152,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	/**
 	 * Update information about an individual VNF package.
 	 *
-	 * \&quot;The PATCH method updates the information of a VNF package.\&quot;
-	 * \&quot;This method shall follow the provisions specified in the Tables
-	 * 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response
-	 * data structures, and response codes.\&quot;
+	 * \&quot;The PATCH method updates the information of a VNF package.\&quot; \&quot;This method shall follow the provisions specified in the Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\&quot;
 	 *
 	 */
 	@Override
@@ -184,9 +168,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	/**
 	 * Upload a VNF package by providing the content of the VNF package.
 	 *
-	 * The PUT method uploads the content of a VNF package. This method shall follow
-	 * the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI
-	 * query parameters, request and response data structures, and response codes.
+	 * The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -203,10 +185,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	/**
 	 * Upload a VNF package by providing the address information of the VNF package.
 	 *
-	 * The POST method provides the information for the NFVO to get the content of a
-	 * VNF package. This method shall follow the provisions specified in the Tables
-	 * 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response
-	 * data structures, and response codes.
+	 * The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override

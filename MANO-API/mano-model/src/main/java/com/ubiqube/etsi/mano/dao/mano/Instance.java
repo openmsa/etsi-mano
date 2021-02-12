@@ -38,6 +38,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 import lombok.Getter;
@@ -62,7 +63,7 @@ public class Instance implements BaseEntity, Auditable {
 	private UUID id = null;
 
 	@Embedded
-	private VnfInstanceStatus instantiatedVnfInfo = null;
+	private BlueprintParameters instantiatedVnfInfo = null;
 
 	@Enumerated(EnumType.STRING)
 	@FullTextField

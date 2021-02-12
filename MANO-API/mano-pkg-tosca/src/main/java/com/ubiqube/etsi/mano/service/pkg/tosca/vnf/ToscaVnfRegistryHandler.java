@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
 
 /**
  *
@@ -26,7 +27,7 @@ import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
  *
  */
 @Service
-public class ToscaVnfRegistryHandler implements RegistryHandler<ToscaVnfPackageProvider> {
+public class ToscaVnfRegistryHandler implements RegistryHandler<VnfPackageProvider> {
 
 	@Override
 	public boolean isProcessable(final byte[] data) {
@@ -40,7 +41,7 @@ public class ToscaVnfRegistryHandler implements RegistryHandler<ToscaVnfPackageP
 	}
 
 	@Override
-	public ToscaVnfPackageProvider getNewInstance(final byte[] data) {
+	public VnfPackageProvider getNewInstance(final byte[] data) {
 		return new ToscaVnfPackageProvider(data);
 	}
 

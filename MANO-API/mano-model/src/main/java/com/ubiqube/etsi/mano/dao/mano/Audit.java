@@ -17,7 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Embeddable;
 
@@ -27,23 +27,23 @@ public class Audit implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private LocalDateTime createdOn;
+	private OffsetDateTime createdOn;
 
-	private LocalDateTime updatedOn;
+	private OffsetDateTime updatedOn;
 
-	public LocalDateTime getCreatedOn() {
+	public OffsetDateTime getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(final LocalDateTime createdOn) {
+	public void setCreatedOn(final OffsetDateTime createdOn) {
 		this.createdOn = createdOn;
 	}
 
-	public LocalDateTime getUpdatedOn() {
+	public OffsetDateTime getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(final LocalDateTime updatedOn) {
+	public void setUpdatedOn(final OffsetDateTime updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 

@@ -17,9 +17,7 @@
 package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,15 +26,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 import ma.glasnost.orika.MapperFacade;
@@ -47,36 +40,23 @@ import ma.glasnost.orika.MapperFacade;
 public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 
 	private final VnfPackageManagement vnfManagement;
+
 	private final Linkable links = new Sol003Linkable();
+
 	private final MapperFacade mapper;
 
-	public VnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public VnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
+		searchService = _searchService;
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@RequestParam final Map<String, String> requestParams, final String range, @Valid final String includeSignatures) {
-		final String filter = requestParams.get("filter");
-		final List<VnfPackage> vnfPackageInfos = vnfManagement.vnfPackagesGet(filter);
-		final List<VnfPkgInfo> vnfPkginfos = vnfPackageInfos.stream()
-				.map(x -> mapper.map(x, VnfPkgInfo.class))
-				.collect(Collectors.toList());
-
-		vnfPkginfos.forEach(x -> x.setLinks(links.getVnfLinks(x.getId())));
-
-		final String exclude = requestParams.get("exclude_fields");
-		final String fields = requestParams.get("fields");
-
-		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(exclude, fields, null, null);
-
-		String resp = null;
-		try {
-			resp = mapperForQuery.writeValueAsString(vnfPkginfos);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
-		return ResponseEntity.ok(resp);
+	public ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String range, @Valid final String includeSignatures) {
+		// TODO.
+		return ResponseEntity.ok().build();
 	}
 
 	@Override

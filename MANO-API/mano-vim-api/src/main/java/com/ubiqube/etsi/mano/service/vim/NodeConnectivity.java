@@ -14,27 +14,18 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.service.vim;
 
-import java.util.Set;
-
-import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface VimBlueprint<U extends VimTask> extends Blueprint<U> {
+public class NodeConnectivity extends ConnectivityEdge<Class<? extends Node>> {
 
-	void setVimConnections(Set<VimConnectionInformation> vimConnections);
-	//
-
-	void setZoneGroups(Set<BlueZoneGroupInformation> mapAsSet);
-
-	void setZones(Set<ZoneInfoEntity> zones);
-
-	void setGrantsRequestId(String string);
-
-	void setExtManagedVirtualLinks(Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks);
+	public NodeConnectivity(final Class<? extends Node> source, final Class<? extends Node> target) {
+		super(source, target);
+	}
 }

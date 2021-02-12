@@ -59,13 +59,31 @@ public class JsonBeanUtil {
 
 	public JsonBeanUtil() {
 		simpleTypes.add("java.lang.String");
+		simpleTypes.add("java.lang.Boolean");
 		simpleTypes.add("java.lang.Class");
 		simpleTypes.add("java.lang.Integer");
+		simpleTypes.add("boolean");
 		simpleTypes.add("int");
 		simpleTypes.add("long");
 		simpleTypes.add("float");
 		simpleTypes.add("java.util.Date");
 		simpleTypes.add("java.time.OffsetDateTime");
+	}
+
+	public Map<String, JsonBeanProperty> getPropertiesFromClass(@Nonnull final Class<?> _object) {
+		Map<String, JsonBeanProperty> cached = cache.get(_object.getName());
+		if (cached != null) {
+			return cached;
+		}
+		Map<String, JsonBeanProperty> res;
+		try {
+			res = buildCache(_object);
+		} catch (final IntrospectionException e) {
+			throw new GenericException(e);
+		}
+		cached = rebuildProperties(res);
+		cache.put(_object.getName(), cached);
+		return cached;
 	}
 
 	public Map<String, JsonBeanProperty> getProperties(@Nonnull final Object _object) {
@@ -100,20 +118,33 @@ public class JsonBeanUtil {
 			stackName.push(key);
 			stackObject.push(jsonBeanProperty);
 			if (right != null) {
+				final String newKey = createKey(stackName);
+				final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
+				jsonBeanProperty.setAccessorsList(listAccessor);
+				ret.put(newKey, jsonBeanProperty);
 				rebuildPropertiesInner(right, stackName, stackObject, ret);
 			} else {
-				final StringJoiner sj = new StringJoiner(".");
-				stackName.descendingIterator().forEachRemaining(sj::add);
-				final String newKey = sj.toString();
-				final Queue<JsonBeanProperty> rev = Collections.asLifoQueue(stackObject);
-				final List<JsonBeanProperty> listObject = new ArrayList<>(rev);
-				Collections.reverse(listObject);
-				jsonBeanProperty.setAccessorsList(listObject);
+				final String newKey = createKey(stackName);
+				final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
+				jsonBeanProperty.setAccessorsList(listAccessor);
 				ret.put(newKey, jsonBeanProperty);
 			}
 			stackName.pop();
 			stackObject.pop();
 		}
+	}
+
+	private static List<JsonBeanProperty> getAccessorList(final Deque<JsonBeanProperty> stackObject) {
+		final Queue<JsonBeanProperty> rev = Collections.asLifoQueue(stackObject);
+		final List<JsonBeanProperty> listObject = new ArrayList<>(rev);
+		Collections.reverse(listObject);
+		return listObject;
+	}
+
+	private static String createKey(final Deque<String> stackName) {
+		final StringJoiner sj = new StringJoiner(".");
+		stackName.descendingIterator().forEachRemaining(sj::add);
+		return sj.toString();
 	}
 
 	private Map<String, JsonBeanProperty> buildCache(final Class<?> clazz) throws IntrospectionException {
@@ -173,8 +204,8 @@ public class JsonBeanUtil {
 				return ann;
 			}
 		}
+		method = propertyDescriptor.getReadMethod();
 		if (method != null) {
-			method = propertyDescriptor.getReadMethod();
 			final JsonProperty ann = method.getAnnotation(JsonProperty.class);
 			if (ann != null) {
 				return ann;

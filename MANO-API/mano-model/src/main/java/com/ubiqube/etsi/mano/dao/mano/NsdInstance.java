@@ -16,20 +16,13 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -42,13 +35,9 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
 @Entity
 @Indexed
-public class NsdInstance implements BaseEntity, Serializable {
+public class NsdInstance extends Instance {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
 
 	@FullTextField
 	private String nsInstanceName = null;
@@ -58,9 +47,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	@ManyToOne(cascade = CascadeType.DETACH)
 	private NsdPackage nsdInfo = null;
-
-	@FullTextField
-	private String flavourId = null;
 
 	private String nsInstantiationLevelId;
 
@@ -76,10 +62,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 	@OneToMany
 	private List<NsdInstance> nestedNsInstance = null;
 
-	@Enumerated(EnumType.STRING)
-	@FullTextField
-	private InstantiationState nsState = null;
-
 	// XXX Add nsScaleStatus
 
 	// XXX Add additionalAffinityOrAntiAffinityRule
@@ -94,15 +76,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
 	private Set<NsBlueprint> blueprint;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
 
 	public String getNsInstanceName() {
 		return nsInstanceName;
@@ -128,14 +101,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 		this.nsdInfo = nsdInfoId;
 	}
 
-	public String getFlavourId() {
-		return flavourId;
-	}
-
-	public void setFlavourId(final String flavourId) {
-		this.flavourId = flavourId;
-	}
-
 	public List<NsVnfInstance> getVnfInstance() {
 		return vnfInstance;
 	}
@@ -150,14 +115,6 @@ public class NsdInstance implements BaseEntity, Serializable {
 
 	public void setNestedNsInstance(final List<NsdInstance> nestedNsInstanceId) {
 		this.nestedNsInstance = nestedNsInstanceId;
-	}
-
-	public InstantiationState getNsState() {
-		return nsState;
-	}
-
-	public void setNsState(final InstantiationState nsState) {
-		this.nsState = nsState;
 	}
 
 	public String getNsInstantiationLevelId() {

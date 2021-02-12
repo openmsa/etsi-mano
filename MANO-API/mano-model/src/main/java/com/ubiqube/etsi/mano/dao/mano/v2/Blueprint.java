@@ -16,14 +16,26 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
+import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.Instance;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 
-public interface Blueprint<U extends Task> extends BaseEntity {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ */
+public interface Blueprint<U extends Task, V extends Instance> extends BaseEntity {
 
 	@ManyToOne
 	Set<U> getTasks();
@@ -34,4 +46,27 @@ public interface Blueprint<U extends Task> extends BaseEntity {
 
 	void setError(FailureDetails failureDetails);
 
+	BlueprintParameters getParameters();
+
+	void setOperationStatus(OperationStatusType failed);
+
+	OperationStatusType getOperationStatus();
+
+	void setStateEnteredTime(Date date);
+
+	// Below VimBluePrint
+	void setVimConnections(Set<VimConnectionInformation> vimConnections);
+	//
+
+	void setZoneGroups(Set<BlueZoneGroupInformation> mapAsSet);
+
+	void setZones(Set<ZoneInfoEntity> zones);
+
+	void setGrantsRequestId(String string);
+
+	void setExtManagedVirtualLinks(Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks);
+
+	Set<VimConnectionInformation> getVimConnections();
+
+	V getInstance();
 }

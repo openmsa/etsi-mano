@@ -17,57 +17,62 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.controller.nspm.NfvoPmController;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsCreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPmJob;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 public class PmJobsSol005Api implements PmJobsSol005 {
+	private static final String PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS = "";
+
+	private static final Set<String> PMJ_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
 	private final NfvoPmController nfvoPmController;
 
 	private final MapperFacade mapper;
 
-	public PmJobsSol005Api(final NfvoPmController _nfvoPmController, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public PmJobsSol005Api(final NfvoPmController _nfvoPmController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		nfvoPmController = _nfvoPmController;
 		mapper = _mapper;
+		searchService = _searchService;
 	}
 
 	/**
 	 * Query PM jobs.
 	 *
-	 * \&quot;The client can use this method to retrieve information about PM
-	 * jobs\&quot;
+	 * \&quot;The client can use this method to retrieve information about PM jobs\&quot;
 	 *
 	 */
 	@Override
-	public ResponseEntity<String> pmJobsGet(final String filter, final String allFields, final String include, final String exclude, final String excludeDefault) {
-		final List<PmJob> lst = nfvoPmController.query(filter);
-		final List<PmJobsPmJob> list = lst.stream().map(x -> mapper.map(x, PmJobsPmJob.class)).collect(Collectors.toList());
-		final ObjectMapper objectMapper = MapperForView.getMapperForView(exclude, allFields, null, null);
-		try {
-			return new ResponseEntity<>(objectMapper.writeValueAsString(list), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
+		final List<PmJob> result = nfvoPmController.query(filter);
+		final Consumer<PmJobsPmJob> setLink = x -> {
+			/* XXX Missing makeLinks. */};
+		return searchService.search(requestParams, PmJobsPmJob.class, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, result, PmJobsPmJob.class, setLink);
 	}
 
 	/**
@@ -114,9 +119,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	/**
 	 * Create a PM job.
 	 *
-	 * The POST method creates a PM job. This method shall follow the provisions
-	 * specified in the Tables 7.4.2.3.1-1 and 7.4.2.3.1-2 for URI query parameters,
-	 * request and response data structures, and response codes.
+	 * The POST method creates a PM job. This method shall follow the provisions specified in the Tables 7.4.2.3.1-1 and 7.4.2.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override

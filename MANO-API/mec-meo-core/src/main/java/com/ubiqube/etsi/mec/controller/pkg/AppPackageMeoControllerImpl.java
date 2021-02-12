@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mec.controller.pkg;
 
+import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
+
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +95,9 @@ public class AppPackageMeoControllerImpl implements AppPackageMeoController {
 
 	@Override
 	public void deleteById(final UUID fromString) {
-		appPkgJpa.deleteById(fromString);
+		final AppPkg appPkg = appPkgJpa.findById(fromString).orElseThrow(() -> new NotFoundException("App package " + fromString + " could not be found."));
+		ensureDisabled(appPkg);
+		appPkgJpa.delete(appPkg);
 	}
 
 	@Override

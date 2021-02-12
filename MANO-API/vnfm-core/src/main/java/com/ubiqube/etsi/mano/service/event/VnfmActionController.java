@@ -43,10 +43,10 @@ public class VnfmActionController {
 			vnfmActions.scaleToLevel(objectId);
 			break;
 		case VNF_INSTANTIATE:
-			vnfmActions.vnfInstantiate(objectId);
+			vnfmActions.instantiate(objectId);
 			break;
 		case VNF_TERMINATE:
-			vnfmActions.vnfTerminate(objectId);
+			vnfmActions.terminate(objectId);
 			break;
 		case VNF_OPERATE:
 			vnfmActions.vnfOperate(objectId);

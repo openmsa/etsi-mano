@@ -22,6 +22,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
@@ -41,6 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -75,7 +77,10 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("extensions{value}", "extensions{value}")
 				.byDefault()
 				.register();
-
+		orikaMapperFactory.classMap(VnfInstanceInstantiatedVnfInfo.class, BlueprintParameters.class)
+				.field("vnfState", "state")
+				.byDefault()
+				.register();
 		orikaMapperFactory.classMap(VnfPackage.class, VnfPkgInfo.class)
 				.byDefault()
 				.customize(new CustomMapper<VnfPackage, VnfPkgInfo>() {
@@ -124,6 +129,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 						ret.setSize(img.getSize());
 						// ret.setUserMetadata(img.get);
 						ret.setVersion(img.getVersion());
+						ret.setCreatedAt(img.getAudit().getCreatedOn());
 						return ret;
 					}
 
@@ -162,6 +168,10 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("resourceChanges", "tasks")
 				.field("grantId", "grantsRequestId")
+				.field("operationState", "operationStatus")
+				.field("isAutomaticInvocation", "automaticInvocation")
+				.field("isCancelPending", "cancelPending")
+				.field("operationParams", "parameters")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantRequest.class, VnfGrantsRequest.class)

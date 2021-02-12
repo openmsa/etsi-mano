@@ -17,11 +17,12 @@
 package com.ubiqube.etsi.mano.controller.lcmgrant;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -39,7 +40,7 @@ import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
  */
 public interface VnfInstanceLcm {
 
-	List<VnfInstance> get(final Map<String, String> queryParameters);
+	List<VnfInstance> get(final MultiValueMap<String, String> queryParameters);
 
 	VnfInstance post(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription);
 

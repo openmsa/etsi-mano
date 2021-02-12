@@ -21,11 +21,11 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 
-import java.util.Map;
-
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +72,7 @@ public interface VnfInstancesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<String> vnfInstancesGet(@RequestParam @ApiParam(value = "All query parameters. ", required = true) final Map<String, String> queryParameters);
+	ResponseEntity<String> vnfInstancesGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@ApiOperation(value = "", nickname = "vnfInstancesPost", notes = "Create VNF Identifier. The POST method creates a new VNF instance resource. This method shall follow the provisions specified in the tables 5.4.2.3.1-1 and 5.4.2.3.1-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, a new \"Individual VNF instance\" resource as defined in clause 5.4.3 shall have been created, and the value of the \"instantiationState\" attribute in the representation of that resource shall be \"NOT_INSTANTIATED\". A notification of type VnfIdentifierCreationNotification shall be triggered as part of successfully executing this method as defined in clause 5.5.2.18. ", response = VnfInstance.class, tags = {})
 	@ApiResponses(value = {

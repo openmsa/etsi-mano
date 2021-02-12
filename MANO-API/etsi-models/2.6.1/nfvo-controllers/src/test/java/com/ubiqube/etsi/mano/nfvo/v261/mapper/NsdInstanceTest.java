@@ -67,7 +67,7 @@ public class NsdInstanceTest {
 		final NsdInstance nsdi = new NsdInstance();
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		mapper.map(req, nsdi);
-		assertEquals("flav", nsdi.getFlavourId());
+		assertEquals("flav", nsdi.getInstantiatedVnfInfo().getFlavourId());
 		assertEquals("instlvl", nsdi.getNsInstantiationLevelId());
 	}
 }

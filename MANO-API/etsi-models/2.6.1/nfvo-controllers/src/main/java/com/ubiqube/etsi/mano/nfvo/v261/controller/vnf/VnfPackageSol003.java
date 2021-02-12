@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -45,22 +45,16 @@ public interface VnfPackageSol003 {
 	/**
 	 * Query VNF packages information.
 	 *
-	 * The GET method queries the information of the VNF packages matching the
-	 * filter. This method shall follow the provisions specified in the Tables
-	 * 9.4.2.3.2-1 and 9.4.2.3.2-2 for URI query parameters, request and response
-	 * data structures, and response codes.
+	 * The GET method queries the information of the VNF packages matching the filter. This method shall follow the provisions specified in the Tables 9.4.2.3.2-1 and 9.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam Map<String, String> requestParams);
+	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	/**
 	 * Fetch individual VNF package artifact.
 	 *
-	 * The GET method fetches the content of an artifact within a VNF package. This
-	 * method shall follow the provisions specified in the Tables 9.4.7.3.2-1 and
-	 * 9.4.7.3.2-2 for URI query parameters, request and response data structures,
-	 * and response codes.
+	 * The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the Tables 9.4.7.3.2-1 and 9.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "", nickname = "vnfPackagesVnfPkgIdArtifactsArtifactPathGet", notes = "Fetch VNF Package Artifacts. The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the tables 10.4.6.3.2-1 and 10.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
@@ -106,10 +100,7 @@ public interface VnfPackageSol003 {
 	/**
 	 * Fetch an on-boarded VNF package.
 	 *
-	 * The GET method fetches the content of a VNF package identified by the VNF
-	 * package identifier allocated by the NFVO. This method shall follow the
-	 * provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query
-	 * parameters, request and response data structures, and response codes.
+	 * The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. This method shall follow the provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 * @throws IOException
 	 *
@@ -129,34 +120,16 @@ public interface VnfPackageSol003 {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "application/zip", "application/text" }, consumes = { "application/json" })
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, @Nullable @RequestHeader(value = "Range", required = false) String range);
 
 	/**
 	 * Read VNFD of an on-boarded VNF package.
 	 *
-	 * The GET method reads the content of the VNFD within a VNF package. The VNFD
-	 * can be implemented as a single file or as a collection of multiple files. If
-	 * the VNFD is implemented in the form of multiple files, a ZIP file embedding
-	 * these files shall be returned. If the VNFD is implemented as a single file,
-	 * either that file or a ZIP file embedding that file shall be returned. The
-	 * selection of the format is controlled by the \&quot;Accept\&quot; HTTP header
-	 * passed in the GET request. • If the \&quot;Accept\&quot; header contains only
-	 * \&quot;text/plain\&quot; and the VNFD is implemented as a single file, the
-	 * file shall be returned; otherwise, an error message shall be returned. • If
-	 * the \&quot;Accept\&quot; header contains only \&quot;application/zip\&quot;,
-	 * the single file or the multiple files that make up the VNFD shall be returned
-	 * embedded in a ZIP file. • If the \&quot;Accept\&quot; header contains both
-	 * \&quot;text/plain\&quot; and \&quot;application/zip\&quot;, it is up to the
-	 * NFVO to choose the format to return for a single-file VNFD; for a multi-file
-	 * VNFD, a ZIP file shall be returned. The default format of the ZIP file shall
-	 * be the one specified in ETSI GS NFV-SOL 004 [5] where only the YAML files
-	 * representing the VNFD, and information necessary to navigate the ZIP file and
-	 * to identify the file that is the entry point for parsing the VNFD (such as
-	 * TOSCA-meta or manifest files or naming conventions) are included. This method
-	 * shall follow the provisions specified in the Tables 9.4.4.3.2-1 and
-	 * 9.4.4.3.2-2 for URI query parameters, request and response data structures,
-	 * and response codes.
+	 * The GET method reads the content of the VNFD within a VNF package. The VNFD can be implemented as a single file or as a collection of multiple files. If the VNFD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the VNFD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \&quot;Accept\&quot; HTTP header passed in the GET request. • If the
+	 * \&quot;Accept\&quot; header contains only \&quot;text/plain\&quot; and the VNFD is implemented as a single file, the file shall be returned; otherwise, an error message shall be returned. • If the \&quot;Accept\&quot; header contains only \&quot;application/zip\&quot;, the single file or the multiple files that make up the VNFD shall be returned embedded in a ZIP file. • If the \&quot;Accept\&quot; header contains both \&quot;text/plain\&quot; and \&quot;application/zip\&quot;, it is up to
+	 * the NFVO to choose the format to return for a single-file VNFD; for a multi-file VNFD, a ZIP file shall be returned. The default format of the ZIP file shall be the one specified in ETSI GS NFV-SOL 004 [5] where only the YAML files representing the VNFD, and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the VNFD (such as TOSCA-meta or manifest files or naming conventions) are included. This method shall follow the provisions
+	 * specified in the Tables 9.4.4.3.2-1 and 9.4.4.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "", nickname = "vnfPackagesVnfPkgIdVnfdGet", notes = "Query VNF Package Info  The GET method reads the content of the VNFD within a VNF package. The VNFD can be implemented as a single file or as a collection of multiple files. If the VNFD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the VNFD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \"Accept\" HTTP header passed in the GET request. * If the \"Accept\" header contains only \"text/plain\" and the VNFD is   implemented as a single file, the file shall be returned;   otherwise, an error message shall be returned. * If the \"Accept\" header contains only \"application/zip\", the single   file or the multiple files that make up the VNFD shall be returned   embedded in a ZIP file. * If the \"Accept\" header contains both \"text/plain\" and   \"application/zip\", it is up to the NFVO to choose the format to   return for a single-file VNFD; for a multi-file VNFD, a ZIP file   shall be returned. The default format of the ZIP file shall be the one specified in ETSI GS NFV-SOL 004 where only the YAML files representing the VNFD, and information needed to navigate the ZIP file and to identify the file that is the entry point for parsing the VNFD (such as TOSCA-meta or manifest files or naming conventions) are included. ", tags = {})

@@ -17,12 +17,15 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
@@ -31,16 +34,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.json.MapperForView;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualStorage;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
@@ -56,27 +58,24 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
 
 	private final MapperFacade mapper;
+
 	private final VnfLcmController vnfLcmController;
 
-	public VnfLcmOpOccsSol003Api(final MapperFacade _mapper, final VnfLcmController _vnfLcmController) {
+	private final ManoSearchResponseService searchService;
+
+	public VnfLcmOpOccsSol003Api(final MapperFacade _mapper, final VnfLcmController _vnfLcmController, final ManoSearchResponseService _searchService) {
 		mapper = _mapper;
 		vnfLcmController = _vnfLcmController;
+		searchService = _searchService;
 		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");
 	}
 
 	@Override
-	public ResponseEntity<String> vnfLcmOpOccsGet(final String version, final String filter, final String allFields, final String fields, final String excludeFields, final String excludeDefault, final String nextpageOpaqueMarker) {
-		final List<VnfBlueprint> resultsDb = vnfLcmController.vnfLcmOpOccsGet(filter);
-		final List<VnfLcmOpOcc> results = resultsDb.stream()
-				.map(x -> mapper.map(x, VnfLcmOpOcc.class))
-				.collect(Collectors.toList());
-		results.forEach(x -> x.setLinks(makeLink(x)));
-		final ObjectMapper mapperForView = MapperForView.getMapperForView(excludeFields, fields, null, null);
-		try {
-			return new ResponseEntity<>(mapperForView.writeValueAsString(results), HttpStatus.OK);
-		} catch (final JsonProcessingException e) {
-			throw new GenericException(e);
-		}
+	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
+		final String filter = getSingleField(requestParams, "filter");
+		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
+		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
+		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
 	}
 
 	@Override

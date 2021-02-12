@@ -77,4 +77,9 @@ public class AppTask extends AbstractTask implements VimTask {
 
 	private String vimConnectionId;
 
+	@Override
+	public UUID getRemovedLiveInstance() {
+		return removedVnfLiveInstance;
+	}
+
 }

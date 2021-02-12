@@ -17,6 +17,7 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -49,12 +51,7 @@ import io.swagger.annotations.ApiResponses;
  * SOL005 - NSD Management Interface
  *
  * <p>
- * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might
- * be not aligned to the current version of the ETSI Group Specification it
- * refers to and has not been approved by the ETSI NFV ISG. In case of
- * discrepancies the published ETSI Group Specification takes precedence. Please
- * report bugs to
- * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
+ * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
 @RequestMapping("/sol005/nsd/v1/ns_descriptors")
@@ -75,13 +72,7 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<String> nsDescriptorsGet(
-			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) String accept,
-			@ApiParam(value = "\"Attribute-based filtering parameters according to clause 4.3.2. The NFVO shall support receiving filtering parameters as part of the URI query string. The OSS/BSS may supply filtering parameters. All attribute names that appear in the NsdInfo and in data types referenced from it shall be supported in attribute-based filtering parameters.\" ") @Valid @RequestParam(value = "filter", required = false) String filter,
-			@ApiParam(value = "\"Include all complex attributes in the response. See clause 4.3.3 for details.  The NFVO shall support this parameter.\" ") @Valid @RequestParam(value = "all_fields", required = false) String allFields,
-			@ApiParam(value = "\"Complex attributes to be included into the response. See clause 4.3.3 for details. The NFVO should support this parameter.\"           ") @Valid @RequestParam(value = "fields", required = false) String fields,
-			@ApiParam(value = "\"Complex attributes to be excluded from the response. See clause 4.3.3 for details. The NFVO should support this parameter.\" ") @Valid @RequestParam(value = "exclude_fields", required = false) String excludeFields,
-			@ApiParam(value = "\"Indicates to exclude the following complex attributes from the response. See clause 4.3.3 for details. The VNFM shall support this parameter. The following attributes shall be excluded from the NsdInfo structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided: userDefinedData.\" ") @Valid @RequestParam(value = "exclude_default", required = false) String excludeDefault);
+	ResponseEntity<String> nsDescriptorsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@ApiOperation(value = "Delete an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdDelete", notes = "The DELETE method deletes an individual NS descriptor resource. An individual NS descriptor resource can only be deleted when there is no NS instance using it (i.e. usageState = NOT_IN_USE) and has been disabled already (i.e. operationalState = DISABLED). Otherwise, the DELETE method shall fail. ", tags = {})
 	@ApiResponses(value = {
@@ -132,7 +123,7 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 416, message = "The byte range passed in the \"Range\" header did not match any available byte range in the NSD file (e.g. access after end of file). The response body may contain a ProblemDetails structure. ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/{nsdInfoId}/nsd_content", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/{nsdInfoId}/nsd_content", produces = { "application/json", "application/zip", "text/plain" }, consumes = { "application/json" })
 	ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(@Nonnull @ApiParam(value = "NSD Info ID", required = true) @PathVariable("nsdInfoId") String nsdInfoId, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) String accept, @ApiParam(value = "\"The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD file. This can be used to continue an aborted transmission.If the NFVO does not support range requests, the NFVO shall ignore the 'Range\" header, process the GET request, and return the whole NSD file with a 200 OK response (rather than returning a 4xx error status code).\" ") @RequestHeader(value = "Range", required = false) String range);
 
 	@ApiOperation(value = "Upload the content of a NSD.", nickname = "nsDescriptorsNsdInfoIdNsdContentPut", notes = "\"The PUT method is used to upload the content of a NSD. The NSD to be uploaded can be implemented as a single file or as a collection of multiple files, as defined in clause 5.4.4.3.2 of GS NFV-SOL 005.  If the NSD is implemented in the form of multiple files, a ZIP file embedding these files shall be uploaded.  If the NSD is implemented as a single file, either that file or a ZIP file  embedding that file shall be uploaded. The \"Content-Type\" HTTP header in the PUT request shall be set accordingly based on the format selection of the NSD.  If the NSD to be uploaded is a text file, the \"Content-Type\" header is set to \"text/plain\".  If the NSD to be uploaded is a zip file, the \"Content-Type\" header is set to \"application/zip\".  This method shall follow the provisions specified in the Tables 5.4.4.3.3-1 and 5.4.4.3.3-2 of GS-NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.\" ", tags = {})
@@ -188,6 +179,6 @@ public interface NsDescriptorSol005 {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<NsdInfo> nsDescriptorsPost(@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @Nonnull @ApiParam(value = "Request body", required = true) @Valid @RequestBody CreateNsdInfoRequest body);
+	ResponseEntity<NsdInfo> nsDescriptorsPost(@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @Nonnull @ApiParam(value = "Request body", required = true) @Valid @RequestBody CreateNsdInfoRequest body) throws URISyntaxException;
 
 }

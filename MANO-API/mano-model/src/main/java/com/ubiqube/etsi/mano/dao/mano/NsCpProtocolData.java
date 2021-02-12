@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -27,6 +27,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditListener.class)
@@ -40,7 +41,7 @@ public class NsCpProtocolData implements BaseEntity, Auditable {
 
 	private String associatedLayerProtocol;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<NsAddressData> addressData;
 
 	@Embedded
