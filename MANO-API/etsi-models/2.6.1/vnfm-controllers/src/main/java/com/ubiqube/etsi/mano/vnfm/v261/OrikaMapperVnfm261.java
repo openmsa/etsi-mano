@@ -17,7 +17,6 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261;
 
-import java.time.ZoneOffset;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -130,7 +129,7 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 						ret.setSize(img.getSize());
 						// ret.setUserMetadata(img.get);
 						ret.setVersion(img.getVersion());
-						ret.setCreatedAt(img.getAudit().getCreatedOn().atOffset(ZoneOffset.UTC));
+						ret.setCreatedAt(img.getAudit().getCreatedOn());
 						return ret;
 					}
 

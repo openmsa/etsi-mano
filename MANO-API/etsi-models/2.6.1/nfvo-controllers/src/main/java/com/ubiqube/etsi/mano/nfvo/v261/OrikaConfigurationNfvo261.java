@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -52,6 +53,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -172,6 +174,16 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("networkResource.resourceProviderId", "resourceProviderId")
 				.field("networkResource.vimConnectionId", "vimConnectionInformation.vimId")
 				.field("vnfVirtualLinkDescId", "toscaName")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(NsLcmOpOcc.class, NsBlueprint.class)
+				.field("lcmOperationType", "operation")
+				.field("operationState", "operationStatus")
+				.field("statusEnteredTime", "stateEnteredTime")
+				.field("nsInstanceId", "nsInstance.id")
+				.field("isAutomaticInvocation", "automaticInvocation")
+				.field("isCancelPending", "cancelPending")
+				.field("startTime", "audit.createdOn")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

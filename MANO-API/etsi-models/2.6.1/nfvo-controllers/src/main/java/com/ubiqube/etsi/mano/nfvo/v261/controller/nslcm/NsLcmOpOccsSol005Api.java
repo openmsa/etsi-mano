@@ -51,7 +51,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
 	private static final String NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "operationParams,changedVnfInfo,error,resourceChanges";
 
-	private static final Set<String> NSLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+	private static final Set<String> NSLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "startTime", "operationState", "statusEnteredTime", "nsInstanceId", "lcmOperationType", "isAutomaticInvocation", "isCancelPending", "_links.continue.href", "_links.self.href", "_links.nsInstance.href", "_links.retry.href", "_links.rollback.href"));
 
 	private final NsBlueprintService nsLcmOpOccsService;
 

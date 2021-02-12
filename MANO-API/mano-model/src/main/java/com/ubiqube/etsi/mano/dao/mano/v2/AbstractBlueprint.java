@@ -38,6 +38,7 @@ public abstract class AbstractBlueprint<U extends Task, V extends Instance> impl
 
 	@Embedded
 	private FailureDetails error;
+
 	@Embedded
 	private Audit audit;
 
@@ -47,6 +48,10 @@ public abstract class AbstractBlueprint<U extends Task, V extends Instance> impl
 	private Date stateEnteredTime;
 	@Enumerated(EnumType.STRING)
 	private OperationStatusType operationStatus;
+
+	private boolean automaticInvocation = false;
+
+	private boolean cancelPending = false;
 
 	@Override
 	public Audit getAudit() {
@@ -103,6 +108,22 @@ public abstract class AbstractBlueprint<U extends Task, V extends Instance> impl
 	@Override
 	public void setOperationStatus(final OperationStatusType operationStatus) {
 		this.operationStatus = operationStatus;
+	}
+
+	public boolean isAutomaticInvocation() {
+		return automaticInvocation;
+	}
+
+	public void setAutomaticInvocation(final boolean automaticInvocation) {
+		this.automaticInvocation = automaticInvocation;
+	}
+
+	public boolean isCancelPending() {
+		return cancelPending;
+	}
+
+	public void setCancelPending(final boolean cancelPending) {
+		this.cancelPending = cancelPending;
 	}
 
 }
