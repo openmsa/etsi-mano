@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -100,8 +99,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	public ResponseEntity<String> nsDescriptorsGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<NsdPackage> result = nsdController.nsDescriptorsGet(filter);
-		final Consumer<NsdInfo> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, setLink);
+		return searchService.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, NsDescriptorSol005Api::makeLinks);
 	}
 
 	/**
@@ -127,7 +125,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId) {
 		final NsdPackage nsdPackage = nsdController.nsDescriptorsNsdInfoIdGet(UUID.fromString(nsdInfoId));
 		final NsdInfo nsdInfo = mapper.map(nsdPackage, NsdInfo.class);
-		nsdInfo.setLinks(makeLinks(nsdInfoId));
+		makeLinks(nsdInfo);
 		return new ResponseEntity<>(nsdInfo, HttpStatus.OK);
 	}
 
@@ -176,7 +174,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final String body, final String contentType) {
 		final NsdPackage nsdPkgInfo = nsdController.nsDescriptorsNsdInfoIdPatch(UUID.fromString(nsdInfoId), body);
 		final NsdInfo ret = mapper.map(nsdPkgInfo, NsdInfo.class);
-		ret.setLinks(makeLinks(nsdInfoId));
+		makeLinks(ret);
 		return new ResponseEntity<>(ret, HttpStatus.OK);
 	}
 
@@ -194,15 +192,20 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final NsdPackage nsdPackage = nsdController.nsDescriptorsPost(userDefinedData);
 
 		final NsdInfo nsdDescriptor = mapper.map(nsdPackage, NsdInfo.class);
-		nsdDescriptor.setLinks(makeLinks(nsdDescriptor.getId()));
-		final URI location = new URI(makeLinks(nsdDescriptor.getId()).getSelf().getHref());
+		makeLinks(nsdDescriptor);
+		final URI location = new URI(makeSelfLink(nsdDescriptor));
 		return ResponseEntity.created(location).body(nsdDescriptor);
 	}
 
-	private static NsdInfoLinks makeLinks(@Nonnull final String id) {
+	private static String makeSelfLink(final NsdInfo nsdInfo) {
+		return linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
+	}
+
+	private static void makeLinks(@Nonnull final NsdInfo nsdInfo) {
+		final String id = nsdInfo.getId();
 		final NsdInfoLinks ret = new NsdInfoLinks();
 		final Link nsdSelf = new Link();
-		final String _self = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(id)).withSelfRel().getHref();
+		final String _self = makeSelfLink(nsdInfo);
 		nsdSelf.setHref(_self);
 		ret.setSelf(nsdSelf);
 
@@ -211,7 +214,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdContent.setHref(_nsdContent);
 		ret.setNsdContent(nsdContent);
 
-		return ret;
+		nsdInfo.setLinks(ret);
 	}
 
 }

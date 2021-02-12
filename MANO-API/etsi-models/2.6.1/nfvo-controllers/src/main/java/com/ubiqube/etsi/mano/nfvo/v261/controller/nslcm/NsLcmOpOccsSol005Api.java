@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
@@ -75,8 +74,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	public ResponseEntity<String> nsLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<NsBlueprint> result = nsLcmOpOccsService.query(filter);
-		final Consumer<NsLcmOpOcc> setLink = x -> x.setLinks(makeLinks(x));
-		return searchService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, NsLcmOpOccsSol005Api::makeLinks);
 	}
 
 	/**
@@ -101,7 +99,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId, final String contentType) {
 		final NsBlueprint nsLcmOpOccs = nsLcmOpOccsService.findById(UUID.fromString(nsLcmOpOccId));
 		final NsLcmOpOcc res = mapper.map(nsLcmOpOccs, NsLcmOpOcc.class);
-		res.setLinks(makeLinks(res));
+		makeLinks(res);
 
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
@@ -130,7 +128,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
-	public static NsLcmOpOccLinks makeLinks(@NotNull final NsLcmOpOcc nsLcmOpOccs) {
+	public static void makeLinks(@NotNull final NsLcmOpOcc nsLcmOpOccs) {
 		@NotNull
 		final String id = nsLcmOpOccs.getId().toString();
 		final NsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccLinks();
@@ -154,7 +152,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		final Link self = new Link();
 		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setSelf(self);
-		return nsLcmOpOccLinks;
+		nsLcmOpOccs.setLinks(nsLcmOpOccLinks);
 	}
 
 	public static String makeSelfLink(final NsBlueprint nsLcmOpOccs) {

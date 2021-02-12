@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -94,8 +93,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "field");
 		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
-		final Consumer<NsInstance> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, setLink);
+		return searchService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, NsInstancesSol005Api::makeLinks);
 	}
 
 	/**
@@ -122,7 +120,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
 		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
-		nsInstance.setLinks(makeLinks(nsInstanceId));
+		makeLinks(nsInstance);
 		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
 	}
 
@@ -207,15 +205,14 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
 		}
-
 		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req.getNsdId(), req.getNsName(), req.getNsDescription());
 		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
-
-		nsInstanceWeb.setLinks(makeLinks(nsInstance.getId().toString()));
+		makeLinks(nsInstanceWeb);
 		return ResponseEntity.created(URI.create(nsInstanceWeb.getLinks().getSelf().getHref())).body(nsInstanceWeb);
 	}
 
-	private static NsInstanceLinks makeLinks(@Nonnull final String id) {
+	private static void makeLinks(@Nonnull final NsInstance nsdInfo) {
+		final String id = nsdInfo.getId();
 		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
 		final Link heal = new Link();
 		heal.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
@@ -240,7 +237,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final Link update = new Link();
 		update.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdUpdatePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
-		return nsInstanceLinks;
+		nsdInfo.setLinks(nsInstanceLinks);
 	}
 
 }
