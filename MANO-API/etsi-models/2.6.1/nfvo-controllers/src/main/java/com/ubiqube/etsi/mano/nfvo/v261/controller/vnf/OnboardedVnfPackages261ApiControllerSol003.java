@@ -61,7 +61,7 @@ public class OnboardedVnfPackages261ApiControllerSol003 implements OnboardedVnfP
 	@Override
 	public final ResponseEntity<VnfPkgInfo> onboardedVnfPackagesVnfdIdGet(final String vnfdId) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.onboardedVnfPackagesVnfdIdGet(UUID.fromString(vnfdId), VnfPkgInfo.class);
-		setLinks(vnfPkgInfo);
+		links.makeLinks(vnfPkgInfo);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
@@ -75,7 +75,4 @@ public class OnboardedVnfPackages261ApiControllerSol003 implements OnboardedVnfP
 		return vnfManagement.onboardedVnfPackagesVnfdIdVnfdGet(UUID.fromString(vnfdId), includeSignatures);
 	}
 
-	protected void setLinks(final VnfPkgInfo vnfPkgInfo) {
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgInfo.getId()));
-	}
 }

@@ -26,7 +26,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -92,9 +91,8 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	public ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
-		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
 		requestParams.containsKey("exclude_default");
-		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, setLink);
+		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, links::makeLinks);
 	}
 
 	@Override
@@ -107,7 +105,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	// TODO: Same as SOL003 ?
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		links.makeLinks(vnfPkgInfo);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
@@ -132,7 +130,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final Map<String, String> userData = vnfPackagePostQuery.getUserDefinedData();
 		final VnfPackage vnfPackage = vnfPackageController.vnfPackagesPost(userData);
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPackage.getId().toString()));
+		links.makeLinks(vnfPkgInfo);
 		return ResponseEntity.created(URI.create(vnfPkgInfo.getLinks().getSelf().getHref())).body(vnfPkgInfo);
 	}
 
@@ -161,7 +159,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 		final VnfPackage vnfPackage = vnfPackageController.vnfPackagesVnfPkgIdPatch(vnfPkgUuid, body);
 
 		final VnfPkgInfo vnfPkgInfo = mapper.map(vnfPackage, VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgUuid.toString()));
+		links.makeLinks(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 

@@ -24,7 +24,6 @@ import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -89,8 +88,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	public ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfPackage> vnfPackageInfos = vnfManagement.vnfPackagesGet(filter);
-		final Consumer<VnfPkgInfo> setLink = x -> x.setLinks(links.getVnfLinks(x.getId()));
-		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, vnfPackageInfos, VnfPkgInfo.class, setLink);
+		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, vnfPackageInfos, VnfPkgInfo.class, links::makeLinks);
 	}
 
 	/**
@@ -114,7 +112,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId) {
 		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
+		links.makeLinks(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 

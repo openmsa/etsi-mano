@@ -26,13 +26,13 @@ import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
 
 public class Sol003Linkable implements Linkable {
 
-	@Override
-	public VnfPkgInfoLinks getVnfLinks(final String vnfPkgId) {
+	public static VnfPkgInfoLinks getVnfLinks(final String vnfPkgId) {
 		final VnfPkgInfoLinks links = new VnfPkgInfoLinks();
 
 		final Link self = new Link();
@@ -94,5 +94,10 @@ public class Sol003Linkable implements Linkable {
 	@Override
 	public FrontApiTypesEnum getApi() {
 		return FrontApiTypesEnum.SOL003;
+	}
+
+	@Override
+	public void makeLinks(final VnfPkgInfo _vnfPkgInfo) {
+		_vnfPkgInfo.setLinks(getVnfLinks(_vnfPkgInfo.getId()));
 	}
 }
