@@ -39,16 +39,16 @@ import com.ubiqube.etsi.mano.dao.mec.lcm.AppLiveInstance;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.dao.mec.tasks.AppComputeTask;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
-import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
-import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
+import com.ubiqube.etsi.mec.mepm.controller.lcm.AppOrchestrationAdapter;
 import com.ubiqube.etsi.mec.mepm.repositories.AppLiveInstanceJpa;
 import com.ubiqube.etsi.mec.mepm.service.AppBlueprintService;
 import com.ubiqube.etsi.mec.mepm.service.AppInstanceService;
 import com.ubiqube.etsi.mec.mepm.service.MeoGrantService;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
+import com.ubiqube.etsi.mec.mepm.service.graph.AppWorkflow;
 
 /**
  *
@@ -66,7 +66,7 @@ public class MepmActions extends AbstractGenericAction {
 
 	private final AppLiveInstanceJpa appLiveInstanceJpa;
 
-	protected MepmActions(final VimManager _vimManager, final Workflow vnfWorkflow, final MeoGrantService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter,
+	protected MepmActions(final VimManager _vimManager, final AppWorkflow vnfWorkflow, final MeoGrantService vimResourceService, final AppOrchestrationAdapter orchestrationAdapter,
 			final AppInstanceService _instanceService, final AppBlueprintService _blueprintService, final AppLiveInstanceJpa _appLiveInstanceJpa) {
 		super(_vimManager, vnfWorkflow, vimResourceService, orchestrationAdapter);
 		vimManager = _vimManager;
