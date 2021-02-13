@@ -21,11 +21,11 @@
  */
 package com.ubiqube.etsi.mec.mepm.v211.controller.lcm;
 
-import java.util.List;
-
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +64,7 @@ public interface AppInstancesApi {
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
 	@RequestMapping(value = "/", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<AppInstanceInfo>> appInstanceGET(@ApiParam(value = "Attribute-based filtering parameters according to ETSI GS MEC 009") @Valid @RequestParam(value = "filter", required = false) String filter, @ApiParam(value = "Include all complex attributes in the response.") @Valid @RequestParam(value = "all_fields", required = false) String allFields, @ApiParam(value = "Complex attributes of AppPkgInfo to be included into the response") @Valid @RequestParam(value = "fields", required = false) String fields, @ApiParam(value = "Complex attributes of AppPkgInfo to be excluded from the response.") @Valid @RequestParam(value = "exclude_fields", required = false) String excludeFields, @ApiParam(value = "Indicates to exclude the following complex attributes of AppPkgInfo from the response.") @Valid @RequestParam(value = "exclude_default", required = false) String excludeDefault);
+	ResponseEntity<String> appInstanceGET(@ApiParam(value = "All resquest parameters.", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@ApiOperation(value = "Deletes an  individual application instance resource.", nickname = "appInstanceIdDELETE", notes = "Deletes an  individual application instance resource.", tags = { "", })
 	@ApiResponses(value = {
