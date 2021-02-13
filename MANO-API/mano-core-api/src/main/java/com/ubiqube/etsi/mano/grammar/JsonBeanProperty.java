@@ -22,21 +22,24 @@ import java.util.Map;
 
 /**
  *
- * @author olivier
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 public class JsonBeanProperty {
 
 	private PropertyDescriptor propertyDescriptor;
+
 	private String jsonName;
+
 	private Map<String, JsonBeanProperty> right;
+
 	private List<JsonBeanProperty> listAccessors;
 
 	public JsonBeanProperty() {
 		// Nothing.
 	}
 
-	public JsonBeanProperty(PropertyDescriptor propertyDescriptor, String _jsonName) {
+	public JsonBeanProperty(final PropertyDescriptor propertyDescriptor, final String _jsonName) {
 		super();
 		this.propertyDescriptor = propertyDescriptor;
 		jsonName = _jsonName;
@@ -46,7 +49,7 @@ public class JsonBeanProperty {
 		return propertyDescriptor;
 	}
 
-	public void setPropertyDescriptor(PropertyDescriptor propertyDescriptor) {
+	public void setPropertyDescriptor(final PropertyDescriptor propertyDescriptor) {
 		this.propertyDescriptor = propertyDescriptor;
 	}
 
@@ -54,32 +57,39 @@ public class JsonBeanProperty {
 		return jsonName;
 	}
 
-	public void setJsonName(String _jsonName) {
+	public void setJsonName(final String _jsonName) {
 		jsonName = _jsonName;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("JsonBeanProperty [\n");
-		sb.append("\t, jsonName=").append(jsonName).append("\n");
+		final StringBuilder sb = new StringBuilder(" [ ");
+		sb.append(" jsonName=").append(toIndentedString(jsonName)).append("\n");
 		if (right == null) {
-			sb.append("\tpropertyDescriptor=").append(propertyDescriptor.getPropertyType()).append("\n");
+			sb.append("    propertyDescriptor=").append(toIndentedString(propertyDescriptor.getPropertyType())).append("\n");
 		} else {
-			sb.append("\tright=").append(right).append("\n");
+			sb.append("    right=").append(toIndentedString(right)).append("\n");
 		}
 		sb.append("]\n");
 		return sb.toString();
+	}
+
+	private static String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
 	}
 
 	public Map<String, JsonBeanProperty> getRight() {
 		return right;
 	}
 
-	public void setRight(Map<String, JsonBeanProperty> res) {
+	public void setRight(final Map<String, JsonBeanProperty> res) {
 		right = res;
 	}
 
-	public void setAccessorsList(List<JsonBeanProperty> listObject) {
+	public void setAccessorsList(final List<JsonBeanProperty> listObject) {
 		listAccessors = listObject;
 	}
 
