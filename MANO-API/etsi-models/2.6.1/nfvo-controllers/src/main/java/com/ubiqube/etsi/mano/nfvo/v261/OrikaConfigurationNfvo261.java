@@ -135,6 +135,8 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfLcmOpOccs.vnfInstance.id", "vnfInstanceId")
 				.field("vnfLcmOpOccs.id", "vnfLcmOpOccId")
 				.field("vnfInstance.id", "vnfInstanceId")
+				.field("instanceLink", "links.vnfInstance.href")
+				.field("lcmLink", "links.vnfLcmOpOcc.href")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(InstantiateNsRequest.class, NsdInstance.class)
@@ -153,6 +155,8 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantRequest.class, GrantResponse.class)
 				.field("vimConstraints[0].resource", "vimConnections")
+				.field("links.vnfInstance.href", "instanceLink")
+				.field("links.vnfLcmOpOcc.href", "lcmLink")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ConstraintResourceRef.class, VimConnectionInformation.class)

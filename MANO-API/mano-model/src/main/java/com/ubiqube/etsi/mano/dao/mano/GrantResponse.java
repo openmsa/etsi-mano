@@ -114,6 +114,10 @@ public class GrantResponse implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> additionalParams = null;
 
+	private String instanceLink;
+
+	private String lcmLink;
+
 	/**
 	 * Flag to say if grants have been, inspected.
 	 */
@@ -312,6 +316,22 @@ public class GrantResponse implements BaseEntity, Auditable {
 
 	public void setAvailable(final Boolean available) {
 		this.available = available;
+	}
+
+	public String getInstanceLink() {
+		return instanceLink;
+	}
+
+	public void setInstanceLink(final String instanceLink) {
+		this.instanceLink = instanceLink;
+	}
+
+	public String getLcmLink() {
+		return lcmLink;
+	}
+
+	public void setLcmLink(final String lcmLink) {
+		this.lcmLink = lcmLink;
 	}
 
 	public void addExtManagedVl(final ExtManagedVirtualLinkDataEntity extVl) {

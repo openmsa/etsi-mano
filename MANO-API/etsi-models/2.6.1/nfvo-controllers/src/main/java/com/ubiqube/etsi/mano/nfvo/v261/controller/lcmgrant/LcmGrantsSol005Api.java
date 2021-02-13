@@ -29,7 +29,9 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.GrantLinks;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
@@ -55,7 +57,15 @@ public class LcmGrantsSol005Api implements LcmGrants {
 			return ResponseEntity.accepted().build();
 		}
 		final Grant jsonGrant = mapper.map(grants, Grant.class);
+		makeSelfLinks(jsonGrant);
 		return ResponseEntity.ok(jsonGrant);
+	}
+
+	private static void makeSelfLinks(final Grant jsonGrant) {
+		final GrantLinks links = new GrantLinks();
+		final Link link = new Link();
+		link.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(jsonGrant.getId(), null)).withSelfRel().getHref());
+		links.setSelf(link);
 	}
 
 	@Override
