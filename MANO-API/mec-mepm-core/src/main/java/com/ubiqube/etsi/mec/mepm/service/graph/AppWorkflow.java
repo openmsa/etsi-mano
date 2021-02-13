@@ -25,10 +25,12 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
+import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.service.event.Workflow;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
@@ -41,7 +43,7 @@ import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
  *
  */
 @Service
-public class AppWorkflow {
+public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport> {
 	private final AppPlanner planner;
 
 	private final AppPlanExecutor executor;
@@ -54,23 +56,26 @@ public class AppWorkflow {
 		planContributors = _planContributors;
 	}
 
-	public void setWorkflowBlueprint(final PackageBase bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
+	@Override
+	public void setWorkflowBlueprint(final AppPkg bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
 		final WfConfiguration wfc = new WfConfiguration(planContributors);
 		final List<NodeConnectivity> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
 		planner.doPlan(bundle, blueprint, scaling, conns);
 	}
 
-	public AppReport execCreate(final AppBlueprint plan, final AppParameters params) {
+	@Override
+	public AppReport execCreate(final AppBlueprint plan, final GenericExecParams params) {
 		final ListenableGraph<UnitOfWork<AppTask, AppParameters>, ConnectivityEdge<UnitOfWork<AppTask, AppParameters>>> createPlan = planner.convertToExecution(plan, ChangeType.ADDED);
-		GraphTools.exportGraph(createPlan, "added.dot");
-		final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider<>(params));
+		GraphTools.exportGraph(createPlan, "app-added.dot");
+		final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider<>((AppParameters) params));
 		return new AppReport(createResults);
 	}
 
-	public AppReport execDelete(final AppBlueprint blueprint, final AppParameters vparams) {
+	@Override
+	public AppReport execDelete(final AppBlueprint blueprint, final GenericExecParams params) {
 		final ListenableGraph<UnitOfWork<AppTask, AppParameters>, ConnectivityEdge<UnitOfWork<AppTask, AppParameters>>> graph = planner.convertToExecution(blueprint, ChangeType.REMOVED);
-		GraphTools.exportGraph(graph, "del.dot");
-		final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>(vparams));
+		GraphTools.exportGraph(graph, "app-del.dot");
+		final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>((AppParameters) params));
 		return new AppReport(removeResults);
 	}
 
