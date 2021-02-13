@@ -32,9 +32,9 @@ import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
  */
 public interface Workflow<P extends PackageBase, B extends Blueprint, R extends Report> {
 
-	void setWorkflowBlueprint(P vnfPkg, B blueprint, Set<ScaleInfo> newScale);
+	void setWorkflowBlueprint(P bundle, B blueprint, Set<ScaleInfo> newScale);
 
-	R execDelete(B localPlan, GenericExecParams vparams);
+	R execDelete(B localPlan, GenericExecParams params);
 
 	R execCreate(B localPlan, GenericExecParams params);
 
