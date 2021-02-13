@@ -22,8 +22,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URI;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,7 +60,7 @@ public class Grants211MepmApiController implements Grants211MepmApi {
 	}
 
 	@Override
-	public ResponseEntity<Grant> grantPOST(@Valid final GrantRequest grantRequest) {
+	public ResponseEntity<Grant> grantPOST(final GrantRequest grantRequest) {
 		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
 		final GrantResponse resp = appGrantController.post(obj);
 		final URI location = linkTo(methodOn(Grants211MepmApi.class).grantGET(resp.getId().toString())).withSelfRel().toUri();

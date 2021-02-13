@@ -16,6 +16,10 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.controller;
 
+import org.springframework.stereotype.Service;
+
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
+import com.ubiqube.etsi.mec.meo.v211.model.grant.GrantRequest;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.FeatureDependency;
 
 import ma.glasnost.orika.MapperFactory;
@@ -26,12 +30,19 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class OrikaMec221Meo implements OrikaMapperFactoryConfigurer {
 
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
 		orikaMapperFactory.classMap(FeatureDependency.class, com.ubiqube.etsi.mano.dao.mec.pkg.FeatureDependency.class)
 				.field("featureName", "name")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantRequest.class, VnfGrantsRequest.class)
+				.field("appInstanceId", "vnfInstance.id")
+				.field("appLcmOpOccId", "vnfLcmOpOccs.id")
+				.field("appDId", "vnfdId")
 				.byDefault()
 				.register();
 	}

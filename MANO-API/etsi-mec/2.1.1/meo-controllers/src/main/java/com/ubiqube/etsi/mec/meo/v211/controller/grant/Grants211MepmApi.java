@@ -21,13 +21,12 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.controller.grant;
 
-import javax.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ubiqube.etsi.mec.meo.v211.model.grant.Grant;
 import com.ubiqube.etsi.mec.meo.v211.model.grant.GrantRequest;
@@ -58,7 +57,7 @@ public interface Grants211MepmApi {
 			@ApiResponse(code = 404, message = "Not Found :  used when a client provided a URI that cannot be mapped to a valid resource URI.", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
-	@RequestMapping(value = "/{grantId}", produces = { "application/json" }, method = RequestMethod.GET)
+	@GetMapping(value = "/{grantId}", produces = { "application/json" })
 	ResponseEntity<Grant> grantGET(@ApiParam(value = "Identifier of the individual grant.", required = true) @PathVariable("grantId") String grantId);
 
 	@ApiOperation(value = "requests a grant for a particular application lifecycle operation", nickname = "grantPOST", notes = "requests a grant for a particular application lifecycle operation", response = Grant.class, tags = { "granting", })
@@ -71,6 +70,6 @@ public interface Grants211MepmApi {
 			@ApiResponse(code = 404, message = "Not Found :  used when a client provided a URI that cannot be mapped to a valid resource URI.", response = ProblemDetails.class),
 			@ApiResponse(code = 406, message = "Not Acceptable : used to indicate that the server cannot provide the any of the content formats supported by the client.", response = ProblemDetails.class),
 			@ApiResponse(code = 429, message = "Too Many Requests : used when a rate limiter has triggered.", response = ProblemDetails.class) })
-	@RequestMapping(value = "/", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	ResponseEntity<Grant> grantPOST(@ApiParam(value = "", required = true) @Valid @RequestBody GrantRequest body);
+	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<Grant> grantPOST(@ApiParam(value = "", required = true) @RequestBody GrantRequest body);
 }
