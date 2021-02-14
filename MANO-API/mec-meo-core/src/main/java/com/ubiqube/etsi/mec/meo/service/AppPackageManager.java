@@ -92,6 +92,8 @@ public class AppPackageManager {
 	private void map(final AppPackageProvider provider, final AppPkg app) {
 		final AppPkgDto meaPkg = provider.getMea();
 		mapper.map(meaPkg, app);
+		app.getVirtualComputeDescriptor().setName(app.getAppName());
+		app.getVirtualComputeDescriptor().setToscaName(app.getAppName());
 		final Set<DNSRuleDescriptor> appDNSRule = provider.getDnsRuleDescriptors(new HashMap<>());
 		app.setAppDNSRule(appDNSRule);
 
