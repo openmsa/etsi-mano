@@ -14,22 +14,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim;
+package com.ubiqube.etsi.mano.service.graph;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultListenableGraph;
+
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.vim.node.Node;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public class NodeConnectivity extends ConnectivityEdge<Class<? extends Node>> {
+public class GraphNode extends DefaultListenableGraph<Class<? extends Node>, NodeConnectivity> {
 
-	public NodeConnectivity() {
-		super();
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	public GraphNode(final Graph<Class<? extends Node>, NodeConnectivity> g) {
+		super(g);
 	}
 
-	public NodeConnectivity(final Class<? extends Node> source, final Class<? extends Node> target) {
-		super(source, target);
-	}
 }

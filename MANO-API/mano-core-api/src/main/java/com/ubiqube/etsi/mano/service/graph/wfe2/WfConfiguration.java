@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.jgrapht.GraphPath;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.graph.DefaultListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
@@ -75,7 +76,7 @@ public class WfConfiguration {
 			});
 			edges.addAll(dependencyBuilder.getEdges());
 		});
-		final ListenableGraph<Class<? extends Node>, NodeConnectivity> g = (ListenableGraph<Class<? extends Node>, NodeConnectivity>) (Object) GraphTools.createGraph();
+		final DefaultListenableGraph<Class<? extends Node>, NodeConnectivity> g = GraphTools.createNodeGraph();
 		createVertex(g, edges);
 		replacements.entrySet().stream()
 				.flatMap(x -> x.getValue().getEdges().stream())
