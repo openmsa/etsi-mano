@@ -63,7 +63,7 @@ public class WfConfiguration {
 	public ListenableGraph<Class<? extends Node>, NodeConnectivity> getConfigurationGraph() {
 		final List<NodeConnectivity> edges = new ArrayList<>();
 		planContributors.forEach(x -> {
-			LOG.debug("Getting contributor: {}.", x.getContributionType());
+			LOG.debug("Getting contributor: {} => {}", x.getContributionType(), x.getClass());
 			final DependencyBuilder dependencyBuilder = new DependencyBuilder(x);
 			x.getDependencies(dependencyBuilder);
 			final Map<Class<? extends Node>, ReplaceBuilder> replacement = dependencyBuilder.getReplacement();

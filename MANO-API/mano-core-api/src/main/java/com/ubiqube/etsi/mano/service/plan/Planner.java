@@ -57,11 +57,13 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 	private void doPlanInner(final P bundle, final B blueprint, final Class<? extends Node> clazz, final Set<ScaleInfo> scaling, final List<NodeConnectivity> connections, final Set<String> cache) {
 		final List<NodeConnectivity> start = findSourceNodesByType(connections, clazz);
 		if (!start.isEmpty()) {
-			final NodeConnectivity edge = start.get(0);
-			if (!cache.contains(edge.getSource().getClass().getName())) {
-				contribute(bundle, blueprint, scaling, edge.getSource());
-				cache.add(edge.getSource().getClass().getName());
-			}
+			start.forEach(edge -> {
+				LOG.debug(" - {} ", edge.getSource());
+				if (!cache.contains(edge.getSource().getName())) {
+					contribute(bundle, blueprint, scaling, edge.getSource());
+					cache.add(edge.getSource().getName());
+				}
+			});
 			start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget(), scaling, connections, cache));
 		} else {
 			if (!cache.contains(clazz.getName())) {
