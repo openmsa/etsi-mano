@@ -157,6 +157,7 @@ public abstract class AbstractGrantAction {
 		grants.setVimConnections(Collections.singleton(vimInfo));
 
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
+		grants.setVimAssets(grantVimAssetsEntity);
 		// XXX Push only needed ones. ( in case of terminate no need to push assets.)
 		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vimInfo, vim, grants.getId()));
 		executorService.submit(getSoftwareImages);
@@ -167,6 +168,7 @@ public abstract class AbstractGrantAction {
 			} catch (final RuntimeException e) {
 				LOG.error("", e);
 			}
+			LOG.debug("           {}", grantVimAssetsEntity.getComputeResourceFlavours());
 		};
 		executorService.submit(getComputeResourceFlavours);
 
