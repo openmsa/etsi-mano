@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
 
 import static com.ubiqube.etsi.mano.Constants.getSingleField;
-import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -75,7 +75,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
+		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
 	}
 
 	@Override
