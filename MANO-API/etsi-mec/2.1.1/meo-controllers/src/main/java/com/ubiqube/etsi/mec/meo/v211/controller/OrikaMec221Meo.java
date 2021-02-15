@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mec.meo.v211.controller;
 
 import java.util.Iterator;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -67,7 +66,6 @@ public class OrikaMec221Meo implements OrikaMapperFactoryConfigurer {
 
 		@Override
 		public void mapAtoB(final Grant a, final GrantResponse b, final MappingContext context) {
-			final Set<VimComputeResourceFlavourEntity> flavors = b.getVimAssets().getComputeResourceFlavours();
 			final VimComputeResourceFlavourEntity vimFlavor = new VimComputeResourceFlavourEntity();
 			vimFlavor.setVimFlavourId(a.getVimAssets().getVimFlavourId());
 			super.mapAtoB(a, b, context);
