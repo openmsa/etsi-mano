@@ -18,12 +18,14 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -61,12 +63,7 @@ public interface OnboardedVnfPackages261ApiSol003 {
 			@ApiResponse(code = 503, message = ""),
 			@ApiResponse(code = 504, message = "") })
 	@GetMapping(produces = { "application/json" })
-	ResponseEntity<List<VnfPkgInfo>> onboardedVnfPackagesGet(
-			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  All attribute names that appear in the VnfPkgInfo and in data  types referenced from it shall be supported by the VNFM in the  filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The VNFM shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields,
-			@ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The VNFM should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields,
-			@ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The VNFM should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The VNFM shall support this parameter. The following attributes shall be excluded from the VnfPkgInfo structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - softwareImages - additionalArtifacts - userDefinedData. ") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault,
+	ResponseEntity<String> onboardedVnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the  NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "", nickname = "onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet", notes = "Fetch VNF Package Artifacts. The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the tables 10.4.6.3.2-1 and 10.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
@@ -142,7 +139,7 @@ public interface OnboardedVnfPackages261ApiSol003 {
 			@ApiResponse(code = 500, message = ""),
 			@ApiResponse(code = 503, message = ""),
 			@ApiResponse(code = 504, message = "") })
-	@GetMapping(value = "/onboarded_vnf_packages/{vnfdId}/vnfd")
+	@GetMapping(value = "/{vnfdId}/vnfd")
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(@ApiParam(value = "Identifier of the VNFD and the VNF package. The identifier is allocated by the VNF provider. This identifier can be retrieved from the \"vnfdId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfdId") final String vnfdId,
 			@Valid final String includeSignatures);
 

@@ -16,8 +16,12 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
-import java.util.ArrayList;
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +31,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 /**
@@ -42,14 +49,23 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
 public class OnboardedVnfPackages261ApiControllerSol003 implements OnboardedVnfPackages261ApiSol003 {
 	private final Linkable links = new Sol003Linkable();
 	private final VnfPackageManagement vnfManagement;
+	private final ManoSearchResponseService searchService;
 
-	public OnboardedVnfPackages261ApiControllerSol003(final VnfPackageManagement _vnfManagement) {
+	public OnboardedVnfPackages261ApiControllerSol003(final VnfPackageManagement _vnfManagement, final ManoSearchResponseService _searchService) {
 		vnfManagement = _vnfManagement;
+		searchService = _searchService;
 	}
 
 	@Override
-	public final ResponseEntity<List<VnfPkgInfo>> onboardedVnfPackagesGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
-		return ResponseEntity.ok(new ArrayList<>());
+	public final ResponseEntity<String> onboardedVnfPackagesGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		String filter = Optional.ofNullable(getSingleField(requestParams, "filter"))
+				.filter(x -> !x.isEmpty())
+				.map(x -> x + "&")
+				.orElse("");
+		filter += "onboardingState.eq=ONBOARDED";
+		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
+		requestParams.containsKey("exclude_default");
+		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, links::makeLinks);
 	}
 
 	@Override
