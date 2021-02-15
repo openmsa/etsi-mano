@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.search.engine.search.common.ValueConvert;
 import org.hibernate.search.engine.search.predicate.SearchPredicate;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQuerySelectStep;
@@ -70,7 +71,7 @@ public class SearchQueryer {
 	private static SearchPredicate applyOp(final String name, final Operand op, final Object value, final SearchPredicateFactory pf) {
 		switch (op) {
 		case EQ:
-			return pf.match().field(name).matching(value).toPredicate();
+			return pf.match().field(name).matching(value, ValueConvert.NO).toPredicate();
 		case NEQ:
 			return pf.matchAll().except(pf.match().field(name).matching(value)).toPredicate();
 		case GT:
