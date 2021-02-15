@@ -71,7 +71,7 @@ public class MapperForViewTest {
 	void multipleFieldsTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
-		final HashSet<String> fieldsSet = new HashSet<>(Arrays.asList("_links", "checksum.algorithm"));
+		final HashSet<String> fieldsSet = new HashSet<>(Arrays.asList("_links", "id", "checksum.algorithm"));
 		final ObjectMapper mapper = MapperForView.getMapperForView(new HashSet<>(), fieldsSet);
 		final String res = mapper.writerFor(vnfPkgInfo.getClass()).writeValueAsString(vnfPkgInfo);
 		assertEquals(-1, res.indexOf("_links"), "_links should not been found");
