@@ -42,7 +42,7 @@ public class Node<U> {
 
 		public final String op;
 
-		private Operand(final String _op) {
+		Operand(final String _op) {
 			op = _op;
 		}
 	}
@@ -59,7 +59,7 @@ public class Node<U> {
 		super();
 		this.name = name;
 		this.op = op;
-		this.value = value;
+		this.value = new ArrayList<>(value);
 	}
 
 	public static <U> Node<U> of(final String name, final Operand op, final List<U> value) {

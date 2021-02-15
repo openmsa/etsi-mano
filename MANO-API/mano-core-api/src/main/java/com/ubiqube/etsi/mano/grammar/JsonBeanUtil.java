@@ -57,7 +57,7 @@ public class JsonBeanUtil {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(JsonBeanUtil.class);
 	private final Set<String> simpleTypes = new HashSet<>();
-	private final Map<String, Map<String, JsonBeanProperty>> cache = new ConcurrentHashMap<>();
+	private static final Map<String, Map<String, JsonBeanProperty>> CACHE = new ConcurrentHashMap<>();
 
 	public JsonBeanUtil() {
 		simpleTypes.add("java.lang.String");
@@ -74,7 +74,7 @@ public class JsonBeanUtil {
 	}
 
 	public Map<String, JsonBeanProperty> getPropertiesFromClass(@Nonnull final Class<?> _object) {
-		Map<String, JsonBeanProperty> cached = cache.get(_object.getName());
+		Map<String, JsonBeanProperty> cached = CACHE.get(_object.getName());
 		if (cached != null) {
 			return cached;
 		}
@@ -85,7 +85,7 @@ public class JsonBeanUtil {
 			throw new GenericException(e);
 		}
 		cached = rebuildProperties(res);
-		cache.put(_object.getName(), cached);
+		CACHE.put(_object.getName(), cached);
 		return cached;
 	}
 
