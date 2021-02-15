@@ -46,7 +46,7 @@ public final class Constants {
 
 	public static final String VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS = "softwareImages,additionalArtifacts,userDefinedData,checksum";
 
-	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState"));
+	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState", "_links.self.href", "_links.vnfd.href", "_links.packageContent.href"));
 
 	@Nullable
 	public static String getSingleField(final MultiValueMap<String, String> bag, final String parameter) {
