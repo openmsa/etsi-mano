@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mec.mepm.service.graph;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport> {
 	public AppWorkflow(final AppPlanner planner, final AppPlanExecutor executor, final List<AbstractAppPlanContributor> _planContributors) {
 		this.planner = planner;
 		this.executor = executor;
-		planContributors = _planContributors;
+		planContributors = new ArrayList<>(_planContributors);
 	}
 
 	@Override
