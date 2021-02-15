@@ -33,7 +33,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfComputeAspectDeltaJpa;
 import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
@@ -160,7 +159,7 @@ public class VnfPackageServiceImpl implements VnfPackageService {
 
 	@Override
 	public VnfPackage findByVnfdId(final UUID id) {
-		return vnfPackageJpa.findByVnfdIdAndOnboardingState(id.toString(), OnboardingStateType.ONBOARDED).orElseThrow(() -> new GenericException("Could not find vnfdId: " + id + ", or it is not ONBOARDED."));
+		return vnfPackageJpa.findByVnfdIdAndOnboardingState(id.toString(), OnboardingStateType.ONBOARDED).orElseThrow(() -> new NotFoundException("Could not find vnfdId: " + id + ", or it is not ONBOARDED."));
 	}
 
 }
