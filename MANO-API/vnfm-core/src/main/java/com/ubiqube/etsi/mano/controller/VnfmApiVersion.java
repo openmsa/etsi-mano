@@ -41,7 +41,7 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformation;
 import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
 
 @RestController
-@RequestMapping(value = "/sol003")
+@RequestMapping(value = { "sol002", "/sol003" })
 @Lazy
 public class VnfmApiVersion {
 	private final MultiValueMap<String, String> dedupe = new LinkedMultiValueMap<>();
