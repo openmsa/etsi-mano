@@ -40,6 +40,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
 public class NsdControllerImpl implements NsdController {
@@ -95,8 +96,9 @@ public class NsdControllerImpl implements NsdController {
 	@Override
 	public NsdPackage nsDescriptorsNsdInfoIdPatch(final UUID id, final String body) {
 		final NsdPackage nsdPkgInfo = nsdRepository.get(id);
+		ensureIsOnboarded(nsdPkgInfo);
 		patcher.patch(body, nsdPkgInfo);
-		// NsdChangeNotification OSS/BSS
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONCHANGE, id);
 		return nsdRepository.save(nsdPkgInfo);
 	}
 
