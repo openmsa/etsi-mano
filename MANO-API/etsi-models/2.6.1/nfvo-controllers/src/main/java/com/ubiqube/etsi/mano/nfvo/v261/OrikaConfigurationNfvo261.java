@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v261;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
@@ -155,6 +156,11 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantRequest.class, GrantResponse.class)
 				.field("vimConstraints[0].resource", "vimConnections")
+				.field("links.vnfInstance.href", "instanceLink")
+				.field("links.vnfLcmOpOcc.href", "lcmLink")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(Grant.class, GrantResponse.class)
 				.field("links.vnfInstance.href", "instanceLink")
 				.field("links.vnfLcmOpOcc.href", "lcmLink")
 				.byDefault()
