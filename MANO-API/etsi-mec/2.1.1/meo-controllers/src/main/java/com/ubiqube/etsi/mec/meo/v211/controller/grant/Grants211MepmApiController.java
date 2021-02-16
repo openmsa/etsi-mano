@@ -67,7 +67,7 @@ public class Grants211MepmApiController implements Grants211MepmApi {
 		checkGrant(obj);
 		final GrantResponse resp = appGrantController.post(obj);
 		final URI location = linkTo(methodOn(Grants211MepmApi.class).grantGET(resp.getId().toString())).withSelfRel().toUri();
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.accepted().location(location).build();
 	}
 
 	private static void checkGrant(final VnfGrantsRequest obj) {
