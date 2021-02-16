@@ -63,7 +63,7 @@ import ma.glasnost.orika.MapperFacade;
 public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);
 
-	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsInstanceDescription", "nsdId", "nsdInfoId", "nsState"));
+	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsInstanceDescription", "nsdId", "nsdInfoId", "nsState", "nsInstanceName"));
 
 	private static final String NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS = "vnfInstances,pnfInfo,virtualLinkInfo,vnffgInfo,sapInfo,,nsScaleStatus,additionalAffinityOrAntiAffinityRules";
 
