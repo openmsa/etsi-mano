@@ -110,14 +110,10 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
 				.field("vimConnectionInfo", "vimConnections")
-				.field("instantiationLevelId", "parameters.instantiationLevelId")
-				.field("flavourId", "parameters.flavourId")
 				.byDefault()
 				.register();
 		/*
-		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.
-		 * class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}")
-		 * .byDefault() .register();
+		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance. class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}") .byDefault() .register();
 		 */
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());
