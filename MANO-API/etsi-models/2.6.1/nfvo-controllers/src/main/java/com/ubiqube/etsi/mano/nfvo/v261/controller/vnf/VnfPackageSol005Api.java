@@ -189,8 +189,8 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 	@Override
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final String accept, final String contentType, final String vnfPkgId, final UploadVnfPkgFromUriRequest contentUploadFromUriPostRequest) {
 		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
-
-		return ResponseEntity.noContent().build();
+		vnfPackageController.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(vnfPkgUuid, contentType, contentUploadFromUriPostRequest.getAddressInformation());
+		return ResponseEntity.accepted().build();
 	}
 
 }
