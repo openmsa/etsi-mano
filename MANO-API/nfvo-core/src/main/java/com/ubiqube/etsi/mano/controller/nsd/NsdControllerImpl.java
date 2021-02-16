@@ -70,7 +70,7 @@ public class NsdControllerImpl implements NsdController {
 		ensureDisabled(nsdPackage);
 		ensureNotInUse(nsdPackage);
 		nsdRepository.delete(id);
-		// NsdDeletionNotification OSS/BSS
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONDELETION, id);
 	}
 
 	@Override
