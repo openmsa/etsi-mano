@@ -81,7 +81,7 @@ public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implem
 	@CollectionTable(schema = "mec_meo")
 	private Set<VimConnectionInformation> vimConnections = null;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
 	private Set<ZoneInfoEntity> zones = null;
 
 	@Valid
@@ -104,7 +104,7 @@ public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implem
 	@CollectionTable(schema = "mec_meo")
 	private Set<AppTask> tasks;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@CollectionTable(schema = "mec_meo")
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
 
