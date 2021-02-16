@@ -29,16 +29,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents an externally-managed internal VL. It shall comply with
- * the provisions defined in Table 6.5.3.27-1.
+ * This type represents an externally-managed internal VL. It shall comply with the provisions defined in Table 6.5.3.27-1.
  */
 @ApiModel(description = "This type represents an externally-managed internal VL. It shall comply with the provisions defined in Table 6.5.3.27-1. ")
 @Validated
 public class ExtManagedVirtualLinkData {
+
+	private String id;
+
 	@JsonProperty("extManagedVirtualLinkId")
 	private String extManagedVirtualLinkId = null;
 
-	@JsonProperty("vmfVirtualLinkDescId")
+	@JsonProperty("vnfVirtualLinkDescId")
 	private String vmfVirtualLinkDescId = null;
 
 	@JsonProperty("vimId")
@@ -75,6 +77,14 @@ public class ExtManagedVirtualLinkData {
 		return this;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
+	}
+
 	/**
 	 * The identifier of the VLD in the VNFD for this VL.
 	 *
@@ -96,9 +106,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Identifier of the VIM that manage this resource. This attribute shall only be
-	 * supported and present if VNFrelated resource management in direct mode is
-	 * applicable.
+	 * Identifier of the VIM that manage this resource. This attribute shall only be supported and present if VNFrelated resource management in direct mode is applicable.
 	 *
 	 * @return vimId
 	 **/
@@ -118,10 +126,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Identifies the entity responsible for the management of this resource. This
-	 * attribute shall only be supported and present if VNF-related resource
-	 * management in indirect mode is applicable. The identification scheme is
-	 * outside the scope of the present document.
+	 * Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document.
 	 *
 	 * @return resourceProviderId
 	 **/
@@ -141,8 +146,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * The identifier of the resource in the scope of the VIM or the resource
-	 * provider.
+	 * The identifier of the resource in the scope of the VIM or the resource provider.
 	 *
 	 * @return resourceId
 	 **/
@@ -166,7 +170,8 @@ public class ExtManagedVirtualLinkData {
 			return false;
 		}
 		final ExtManagedVirtualLinkData extManagedVirtualLinkData = (ExtManagedVirtualLinkData) o;
-		return Objects.equals(this.extManagedVirtualLinkId, extManagedVirtualLinkData.extManagedVirtualLinkId) &&
+		return Objects.equals(this.id, extManagedVirtualLinkData.id) &&
+				Objects.equals(this.extManagedVirtualLinkId, extManagedVirtualLinkData.extManagedVirtualLinkId) &&
 				Objects.equals(this.vmfVirtualLinkDescId, extManagedVirtualLinkData.vmfVirtualLinkDescId) &&
 				Objects.equals(this.vimId, extManagedVirtualLinkData.vimId) &&
 				Objects.equals(this.resourceProviderId, extManagedVirtualLinkData.resourceProviderId) &&
@@ -183,6 +188,7 @@ public class ExtManagedVirtualLinkData {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("class ExtManagedVirtualLinkData {\n");
 
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    extManagedVirtualLinkId: ").append(toIndentedString(extManagedVirtualLinkId)).append("\n");
 		sb.append("    vmfVirtualLinkDescId: ").append(toIndentedString(vmfVirtualLinkDescId)).append("\n");
 		sb.append("    vimId: ").append(toIndentedString(vimId)).append("\n");
@@ -193,8 +199,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
