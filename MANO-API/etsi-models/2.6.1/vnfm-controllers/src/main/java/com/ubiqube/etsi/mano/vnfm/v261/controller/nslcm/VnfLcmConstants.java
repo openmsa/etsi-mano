@@ -31,7 +31,8 @@ public class VnfLcmConstants {
 		// Nothing.
 	}
 
-	public static final Set<String> VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "operationState", "stateEnteredTime", "isAutomaticInvocation", "operationParams", "isCancelPending"));
+	public static final Set<String> VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "operationState", "stateEnteredTime",
+			"isAutomaticInvocation", "operationParams", "isCancelPending", "startTime", "vnfInstanceId", "operation"));
 
 	public static final String VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS = "error,resourceChanges,changedInfo,changedExtConnectivity";
 
