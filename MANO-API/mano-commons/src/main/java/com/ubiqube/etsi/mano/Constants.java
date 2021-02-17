@@ -95,13 +95,13 @@ public final class Constants {
 
 	public static void ensureInstantiated(final Instance vnfInstance) {
 		if (InstantiationState.INSTANTIATED != vnfInstance.getInstantiationState()) {
-			throw new GenericException("The VNF Instance " + vnfInstance.getId() + " is not in INSTANTIATED state.");
+			throw new ConflictException("The VNF Instance " + vnfInstance.getId() + " is not in INSTANTIATED state.");
 		}
 	}
 
 	public static void ensureNotInstantiated(final Instance vnfInstance) {
 		if (InstantiationState.INSTANTIATED == vnfInstance.getInstantiationState()) {
-			throw new GenericException("The VNF Instance " + vnfInstance.getId() + " is already in INSTANTIATED state.");
+			throw new ConflictException("The VNF Instance " + vnfInstance.getId() + " is already in INSTANTIATED state.");
 		}
 	}
 
@@ -143,7 +143,7 @@ public final class Constants {
 
 	public static void ensureInstantiated(final NsdInstance nsInstance) {
 		if (InstantiationState.INSTANTIATED != nsInstance.getInstantiationState()) {
-			throw new GenericException("The Ns Instance " + nsInstance.getId() + " is instantiated.");
+			throw new ConflictException("The Ns Instance " + nsInstance.getId() + " is instantiated.");
 		}
 	}
 
