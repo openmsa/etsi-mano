@@ -46,6 +46,8 @@ import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
 public class VnfInstanceServiceImpl implements VnfInstanceService {
@@ -59,11 +61,17 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	private final EntityManager entityManager;
 
-	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance, final EntityManager _entityManager) {
+	private final Patcher patcher;
+
+	private final EventManager eventManager;
+
+	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance, final EntityManager _entityManager, final Patcher _patcher, final EventManager _eventManager) {
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstanceJpa = _vnfInstanceJpa;
 		vnfLiveInstanceJpa = _vnfLiveInstance;
 		entityManager = _entityManager;
+		patcher = _patcher;
+		eventManager = _eventManager;
 	}
 
 	@Override
@@ -182,6 +190,13 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 	@Override
 	public boolean isInstantiate(final UUID id) {
 		return 0 == vnfInstanceJpa.countByVnfPkgId(id);
+	}
+
+	@Override
+	public VnfInstance vnfLcmPatch(final VnfInstance vnfInstance, final String body) {
+		patcher.patch(body, vnfInstance);
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CHANGED, vnfInstance.getId());
+		return vnfInstanceJpa.save(vnfInstance);
 	}
 
 }
