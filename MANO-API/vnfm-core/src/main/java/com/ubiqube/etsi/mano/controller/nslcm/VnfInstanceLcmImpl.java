@@ -118,7 +118,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
-		if (vnfInstanceService.isInstantiate(vnfInstance.getVnfPkg().getId())) {
+		if (!vnfInstanceService.isInstantiate(vnfInstance.getVnfPkg().getId())) {
 			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId());
 			vnfPkg.setUsageState(PackageUsageState.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
