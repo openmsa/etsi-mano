@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
@@ -78,12 +79,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	public void delete(final UUID subscriptionId, final SubscriptionType type) {
+		findById(subscriptionId, type);
 		subscriptionJpa.deleteById(subscriptionId);
 	}
 
 	@Override
 	public Subscription findById(final UUID subscriptionId, final SubscriptionType type) {
-		return subscriptionJpa.findById(subscriptionId).orElseThrow();
+		return subscriptionJpa.findById(subscriptionId).orElseThrow(() -> new NotFoundException("Could not find subscription id: " + subscriptionId));
 	}
 
 	@Override

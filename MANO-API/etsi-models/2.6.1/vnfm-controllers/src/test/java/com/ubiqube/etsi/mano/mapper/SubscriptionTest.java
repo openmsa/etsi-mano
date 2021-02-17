@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class SubscriptionTest {
 		final PkgmSubscription subsJson = new PkgmSubscription();
 		subsJson.setCallbackUri("http://callbackUri/");
 		final PkgmNotificationsFilter filter = new PkgmNotificationsFilter();
-		filter.setNotificationTypes(NotificationTypesEnum.VnfPackageChangeNotification);
+		filter.setNotificationTypes(Arrays.asList(NotificationTypesEnum.VnfPackageChangeNotification));
 		final List<PkgmNotificationsFilterVnfProductsFromProviders> vnfProductsFromProviders = new ArrayList<>();
 		final PkgmNotificationsFilterVnfProductsFromProviders subProv = new PkgmNotificationsFilterVnfProductsFromProviders();
 		subProv.addOperationalStateItem(PackageOperationalStateType.DISABLED);

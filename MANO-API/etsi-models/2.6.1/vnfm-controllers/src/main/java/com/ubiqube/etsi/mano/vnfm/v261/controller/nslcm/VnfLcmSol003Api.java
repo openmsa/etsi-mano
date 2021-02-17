@@ -22,6 +22,7 @@ import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.V
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -207,13 +208,12 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
-		throw new GenericException("TODO");
-		// after return.
-		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
-		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
-		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId, final String body) throws URISyntaxException {
+		VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body);
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfPkgInfo = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
+		vnfPkgInfo.setLinks(links.getLinks(vnfPkgInfo.getId()));
+		return ResponseEntity.accepted().location(new URI(vnfPkgInfo.getLinks().getSelf().getHref())).build();
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	}
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId, final String version) {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId) {
 		final VnfBlueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
@@ -153,7 +153,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		link.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, "")).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
 		link.setSelf(self);
 
 		final Link vnfInstance = new Link();
@@ -164,7 +164,7 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 	}
 
 	public static String getSelfLink(final String id) {
-		return linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id, null)).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
 	}
 
 }

@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 
 import io.swagger.annotations.ApiParam;
 
-@RequestMapping("/sol003/vnflcm/v1/subscriptions")
+@RequestMapping(value = { "/sol003/vnflcm/v1/subscriptions", "/sol002/vnflcm/v1/subscriptions" })
 public interface VnfLcmSubscriptionsSol003 {
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query Subscription Information  The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. ", response = LccnSubscription.class, tags = {})

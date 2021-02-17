@@ -17,15 +17,15 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
+import java.net.URISyntaxException;
 import java.util.List;
-
-import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -45,9 +45,7 @@ public interface NsLcmSubscriptionsSol005 {
 	/**
 	 * Query multiple subscriptions.
 	 *
-	 * Query Subscription Information. The GET method queries the list of active
-	 * subscriptions of the functional block that invokes the method. It can be used
-	 * e.g. for resynchronization after error situations.
+	 * Query Subscription Information. The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations.
 	 *
 	 */
 	@ApiOperation(value = "Query multiple subscriptions.", tags = {})
@@ -61,19 +59,8 @@ public interface NsLcmSubscriptionsSol005 {
 	/**
 	 * Subscribe to NS lifecycle change notifications.
 	 *
-	 * The POST method creates a new subscription. This method shall support the URI
-	 * query parameters, request and response data structures, and response codes,
-	 * as specified in the Tables 6.4.16.3.1-1 and 6.4.16.3.1-2. Creation of two
-	 * subscription resources with the same callbackURI and the same filter can
-	 * result in performance degradation and will provide duplicates of
-	 * notifications to the OSS, and might make sense only in very rare use cases.
-	 * Consequently, the NFVO may either allow creating a subscription resource if
-	 * another subscription resource with the same filter and callbackUri already
-	 * exists (in which case it shall return the \&quot;201 Created\&quot; response
-	 * code), or may decide to not create a duplicate subscription resource (in
-	 * which case it shall return a \&quot;303 See Other\&quot; response code
-	 * referencing the existing subscription resource with the same filter and
-	 * callbackUri).
+	 * The POST method creates a new subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.16.3.1-1 and 6.4.16.3.1-2. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow creating a
+	 * subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri).
 	 *
 	 */
 	@ApiOperation(value = "Subscribe to NS lifecycle change notifications.", tags = {})
@@ -83,14 +70,12 @@ public interface NsLcmSubscriptionsSol005 {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<LccnSubscription> subscriptionsPost(@Valid LccnSubscriptionRequest body);
+	ResponseEntity<LccnSubscription> subscriptionsPost(@RequestBody LccnSubscriptionRequest body) throws URISyntaxException;
 
 	/**
 	 * Terminate a subscription.
 	 *
-	 * The DELETE method terminates an individual subscription. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Tables 6.4.17.3.5-1 and 6.4.17.3.5-2.
+	 * The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.17.3.5-1 and 6.4.17.3.5-2.
 	 *
 	 */
 	@ApiOperation(value = "Terminate a subscription.", tags = {})
@@ -103,10 +88,7 @@ public interface NsLcmSubscriptionsSol005 {
 	/**
 	 * Read an individual subscription resource.
 	 *
-	 * The GET method retrieves information about a subscription by reading an
-	 * individual subscription resource. This method shall support the URI query
-	 * parameters, request and response data structures, and response codes, as
-	 * specified in the Tables 6.4.17.3.2-1 and 6.4.17.3.2-2
+	 * The GET method retrieves information about a subscription by reading an individual subscription resource. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.17.3.2-1 and 6.4.17.3.2-2
 	 *
 	 */
 	@ApiOperation(value = "Read an individual subscription resource.", tags = {})

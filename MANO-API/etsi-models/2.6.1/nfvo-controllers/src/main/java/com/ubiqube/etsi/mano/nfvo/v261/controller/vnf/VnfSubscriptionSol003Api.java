@@ -17,6 +17,8 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +26,7 @@ import javax.annotation.security.RolesAllowed;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
@@ -76,14 +79,16 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 * The POST method creates a new subscription. This method shall follow the provisions specified in the Tables 9.4.8.3.1-1 and 9.4.8.3.1-2 for URI query parameters, request and response data structures, and response codes. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow
 	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri).
 	 *
+	 * @throws URISyntaxException
+	 *
 	 */
 	@Override
-	public PkgmSubscription subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
+	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) throws URISyntaxException {
 		final Subscription subs = mapper.map(subscriptionsPostQuery, Subscription.class);
 		final Subscription res = vnfSubscriptionManagement.subscriptionsPost(subs, ApiTypesEnum.SOL003);
 		final PkgmSubscription pkgm = mapper.map(res, PkgmSubscription.class);
 		pkgm.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgm.getId()));
-		return pkgm;
+		return ResponseEntity.created(new URI(pkgm.getLinks().getSelf().getHref())).body(pkgm);
 	}
 
 	/**
@@ -93,8 +98,9 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 	 *
 	 */
 	@Override
-	public void subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
 		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId, SubscriptionType.VNF);
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
