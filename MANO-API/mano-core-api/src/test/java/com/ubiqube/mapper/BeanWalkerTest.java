@@ -78,7 +78,7 @@ public class BeanWalkerTest {
 		assertEquals("callbackUri", swElem.getAttribute());
 		assertEquals("http://callbackUri/", swElem.getValue());
 		swElem = swRes.get(1);
-		assertEquals("filter.notificationTypes", swElem.getAttribute());
+		assertEquals("filter.notificationTypes[0]", swElem.getAttribute());
 		assertEquals("VnfPackageChangeNotification", swElem.getValue());
 		swElem = swRes.get(2);
 		assertEquals("filter.vnfProductsFromProviders[0].operationalState[0]", swElem.getAttribute());
