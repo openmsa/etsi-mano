@@ -22,6 +22,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "thresholds", description = "the thresholds API")
+@RequestMapping("/sol003/vnfpm/v1")
 public interface ThresholdsSol003 {
 
 	Logger log = LoggerFactory.getLogger(ThresholdsSol003.class);
@@ -96,7 +98,7 @@ public interface ThresholdsSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/thresholds", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	ResponseEntity<Threshold> thresholdsPost(@ApiParam(value = "Request parameters to create a threshold resource. ", required = true) @Valid @RequestBody final CreateThresholdRequest createThresholdRequest);
+	ResponseEntity<Threshold> thresholdsPost(@ApiParam(value = "Request parameters to create a threshold resource. ", required = true) @Valid @RequestBody final CreateThresholdRequest createThresholdRequest) throws URISyntaxException;
 
 	@ApiOperation(value = "", nickname = "thresholdsThresholdIdDelete", notes = "Delete Threshold. This method allows to delete a threshold. This method shall follow the provisions specified in the tables 6.4.6.3.5-1 and 6.4.6.3.5-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, the \"Individual threshold\" resource shall not exist any longer. ", tags = {})
 	@ApiResponses(value = {

@@ -20,6 +20,8 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +29,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -40,7 +41,6 @@ import ma.glasnost.orika.MapperFacade;
 
 @RestController
 @RolesAllowed({ "ROLE_NFVO" })
-@RequestMapping("/sol003/vnfpm/v1")
 public class ThresholdsSol003Api implements ThresholdsSol003 {
 	private final VnfmThresholdController vnfmThresholdController;
 
@@ -52,12 +52,12 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Threshold> thresholdsPost(@Valid final CreateThresholdRequest createThresholdRequest) {
+	public ResponseEntity<Threshold> thresholdsPost(@Valid final CreateThresholdRequest createThresholdRequest) throws URISyntaxException {
 		com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = mapper.map(createThresholdRequest, com.ubiqube.etsi.mano.dao.mano.pm.Threshold.class);
 		res = vnfmThresholdController.save(res);
 		final Threshold ret = mapper.map(res, Threshold.class);
 		ret.setLinks(createLink(res.getId()));
-		return ResponseEntity.ok(ret);
+		return ResponseEntity.created(new URI(ret.getLinks().getSelf().getHref())).body(ret);
 	}
 
 	private static ThresholdLinks createLink(final UUID id) {

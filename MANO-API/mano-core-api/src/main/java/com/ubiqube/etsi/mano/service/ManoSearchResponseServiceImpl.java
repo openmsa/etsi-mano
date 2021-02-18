@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
@@ -64,7 +65,7 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 	}
 
 	@Override
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> parameters, final Class<?> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
+	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> parameters, final Class<?> clazz, @Nullable final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
 		checkParameters(parameters);
 		final List<String> fields = parameters.get("fields");
 		final List<String> excludeFields = parameters.get("excluse_fields");
@@ -122,6 +123,9 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 	}
 
 	private static Set<String> applyDefault(final String excludeDefaults) {
+		if (null == excludeDefaults) {
+			return new HashSet<>();
+		}
 		return Arrays.stream(excludeDefaults.split(",")).collect(Collectors.toSet());
 	}
 

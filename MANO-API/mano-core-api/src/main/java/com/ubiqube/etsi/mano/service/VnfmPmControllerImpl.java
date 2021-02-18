@@ -16,14 +16,21 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 /**
  *
@@ -32,20 +39,24 @@ import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
  */
 @Service
 public class VnfmPmControllerImpl implements VnfmPmController {
+	private final EntityManager em;
+
 	private final PmJobsJpa pmJobsJpa;
 
-	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa) {
+	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa, final EntityManager _em) {
 		pmJobsJpa = _pmJobsJpa;
+		em = _em;
 	}
 
 	@Override
-	public void delete(final UUID fromString) {
-		pmJobsJpa.deleteById(fromString);
+	public void delete(final UUID id) {
+		findById(id);
+		pmJobsJpa.deleteById(id);
 	}
 
 	@Override
-	public PmJob findById(final UUID fromString) {
-		return pmJobsJpa.findById(fromString).orElseThrow();
+	public PmJob findById(final UUID id) {
+		return pmJobsJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find PM Job: " + id));
 	}
 
 	@Override
@@ -57,6 +68,14 @@ public class VnfmPmControllerImpl implements VnfmPmController {
 	@Override
 	public PmJob save(final PmJob res) {
 		return pmJobsJpa.save(res);
+	}
+
+	@Override
+	public List<PmJob> query(final String filter) {
+		final SearchQueryer sq = new SearchQueryer(em);
+		final AstBuilder astBuilder = new AstBuilder(filter);
+		final List<Node<String>> nodes = astBuilder.getNodes();
+		return sq.getCriteria((List<Node<?>>) (Object) nodes, PmJob.class);
 	}
 
 }

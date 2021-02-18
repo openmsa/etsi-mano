@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.controller.vnfpm;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
@@ -30,5 +31,7 @@ public interface VnfmPmController {
 	PerformanceReport findReport(UUID fromString, UUID fromString2);
 
 	PmJob save(PmJob res);
+
+	List<PmJob> query(String filter);
 
 }

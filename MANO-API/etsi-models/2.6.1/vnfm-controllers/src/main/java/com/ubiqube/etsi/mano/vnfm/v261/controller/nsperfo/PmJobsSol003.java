@@ -22,14 +22,17 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
+import java.net.URISyntaxException;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,12 +82,8 @@ public interface PmJobsSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<String> pmJobsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  All attribute names that appear in the PmJob and in data  types referenced from it shall be supported by the VNFM in the  filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields,
-			@ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields,
-			@ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM shall support this parameter. The following attributes shall be excluded from the PmJob structure in the response body if this parameter is provided, or none of the parameters \"all_fields\", \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - Reports ") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the  VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
+	ResponseEntity<String> pmJobsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the  VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "", nickname = "pmJobsPmJobIdDelete", notes = "Delete PM Job. This method terminates an individual PM job. This method shall follow the provisions specified in the tables 6.4.3.3.5-1 and 6.4.3.3.5-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, the \"Individual PM job\" resource shall not exist any longer. ", tags = {})
 	@ApiResponses(value = {
@@ -149,6 +148,6 @@ public interface PmJobsSol003 {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	ResponseEntity<PmJob> pmJobsPost(@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest);
+	ResponseEntity<PmJob> pmJobsPost(@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest) throws URISyntaxException;
 
 }

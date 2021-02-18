@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmThresholdController;
 import com.ubiqube.etsi.mano.dao.mano.pm.Threshold;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.jpa.ThresholdJpa;
@@ -52,13 +53,14 @@ public class VnfmThresholdControllerImpl implements VnfmThresholdController {
 	}
 
 	@Override
-	public void delete(final UUID fromString) {
-		thresholdJpa.deleteById(fromString);
+	public void delete(final UUID id) {
+		findById(id);
+		thresholdJpa.deleteById(id);
 	}
 
 	@Override
-	public Threshold findById(final UUID fromString) {
-		return thresholdJpa.findById(fromString).orElseThrow();
+	public Threshold findById(final UUID id) {
+		return thresholdJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find Threshold: " + id));
 	}
 
 	@Override

@@ -17,19 +17,34 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -38,19 +53,42 @@ import ma.glasnost.orika.MapperFacade;
 @RequestMapping("/sol003/vnfpm/v1")
 public class PmJobsSol003Api implements PmJobsSol003 {
 
+	private static final String VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS = "reports";
+
+	private static final Set<String> VNFPMJOB_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "criteria.collectionPeriod", "criteria.reportingPeriod"));
+
 	private final MapperFacade mapper;
 
 	private final VnfmPmController vnfmPmController;
 
-	public PmJobsSol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper) {
+	private final ManoSearchResponseService searchService;
+
+	public PmJobsSol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
 		vnfmPmController = _vnfmPmController;
 		mapper = _mapper;
+		searchService = _searchService;
 	}
 
 	@Override
-	public ResponseEntity<String> pmJobsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		final String filter = getSingleField(requestParams, "filter");
+		final List<com.ubiqube.etsi.mano.dao.mano.pm.PmJob> result = vnfmPmController.query(filter);
+		final Consumer<PmJob> setLink = x -> x.setLinks(makeLink(x));
+		return searchService.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, result, PmJob.class, setLink);
+	}
+
+	private static PmJobLinks makeLink(final PmJob x) {
+		final PmJobLinks links = new PmJobLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(PmJobsSol003.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+
+		link = new Link();
+		link.setHref("");
+		// links.setObjects(link);
+
+		x.setLinks(links);
+		return links;
 	}
 
 	@Override
@@ -72,10 +110,12 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 	}
 
 	@Override
-	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) {
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) throws URISyntaxException {
 		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
 		res = vnfmPmController.save(res);
-		return ResponseEntity.ok(mapper.map(res, PmJob.class));
+		final PmJob obj = mapper.map(res, PmJob.class);
+		makeLink(obj);
+		return ResponseEntity.created(new URI(obj.getLinks().getSelf().getHref())).body(obj);
 	}
 
 }

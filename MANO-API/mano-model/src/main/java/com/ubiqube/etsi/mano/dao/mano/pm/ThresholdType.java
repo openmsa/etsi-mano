@@ -16,6 +16,36 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.pm;
 
-public enum ThresholdType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public enum ThresholdType {
+	SIMPLE("SIMPLE");
+
+	private final String value;
+
+	ThresholdType(final String value) {
+		this.value = value;
+	}
+
+	@Override
+	@JsonValue
+	public String toString() {
+		return String.valueOf(value);
+	}
+
+	@JsonCreator
+	public static ThresholdType fromValue(final String text) {
+		for (final ThresholdType b : ThresholdType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }
