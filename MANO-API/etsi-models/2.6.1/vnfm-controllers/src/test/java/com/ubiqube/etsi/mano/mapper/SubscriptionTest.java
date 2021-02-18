@@ -74,7 +74,7 @@ public class SubscriptionTest {
 		final Subscription subsDb = mapper.map(so, Subscription.class);
 		final List<FilterAttributes> filters = subsDb.getFilters();
 		assertEquals(2, filters.size()); // Should be 2
-		checkFilter(filters.get(0), "notificationTypes", "VnfPackageChangeNotification");
+		checkFilter(filters.get(0), "notificationTypes[0]", "VnfPackageChangeNotification");
 		checkFilter(filters.get(1), "vnfProductsFromProviders[0].operationalState[0]", "DISABLED");
 	}
 

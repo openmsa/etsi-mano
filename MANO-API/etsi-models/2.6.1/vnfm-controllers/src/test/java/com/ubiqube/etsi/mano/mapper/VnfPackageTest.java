@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.common.v261.VnfPackageFactory;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.PkgChecksum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -103,7 +104,7 @@ public class VnfPackageTest {
 		final Checksum checksum = new Checksum();
 		checksum.setAlgorithm("SHA-512");
 		checksum.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
+		softwareImage1.setAudit(new Audit());
 		softwareImage1.setChecksum(checksum);
 		softwareImage1.setContainerFormat("BARE");
 		softwareImage1.setChecksum(checksum);
@@ -114,7 +115,7 @@ public class VnfPackageTest {
 		final Set<VnfStorage> vnfStorage = new HashSet<>();
 		final VnfStorage vnfStorage1 = new VnfStorage();
 		final SoftwareImage softwareImage2 = new SoftwareImage();
-
+		softwareImage2.setAudit(new Audit());
 		final Checksum checksum2 = new Checksum();
 		checksum2.setAlgorithm("SHA-512");
 		checksum2.setHash("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
