@@ -15,11 +15,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
 import static com.ubiqube.etsi.mano.Constants.getSingleField;
-import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 

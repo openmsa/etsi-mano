@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.controller.nslcm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -35,7 +35,6 @@ import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
 import com.ubiqube.etsi.mano.service.event.Notifications;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnflcmSubscriptions261Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
