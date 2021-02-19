@@ -21,25 +21,22 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.net.URISyntaxException;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
@@ -51,25 +48,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:14:16.145+01:00")
-
 @Api(value = "pm_jobs", description = "the pm_jobs API")
 @RequestMapping("/sol002/vnfpm/v1")
 public interface PmJobs261Sol002Api {
-
-	Logger log = LoggerFactory.getLogger(PmJobs261Sol002Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "", nickname = "pmJobsGet", notes = "The client can use this method to retrieve information about PM jobs. ", response = PmJob.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -86,27 +67,9 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<PmJob>> pmJobsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM may supply this parameter. All attribute names that appear in the PmJob and in data types referenced from it shall be supported by the VNFM in attribute-based filtering expression. EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details.  The VNFM shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields, @ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details.  The VNFM should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields, @ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details.  The VNFM should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details.  The VNFM shall support this parameter. The following attributes shall be excluded from the PmJob structure in the response body if this parameter is provided, or none of the parameters \"all_fields\", \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - reports ") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault, @ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"[ {  \"reports\" : {    \"fileSize\" : 1,    \"href\" : \"http://example.com/aeiou\"  },  \"_links\" : {    \"objects\" : {      \"objects\" : [ {        \"href\" : { }      }, {        \"href\" : { }      } ],      \"self\" : {        \"href\" : { }      }    },    \"self\" : {      \"href\" : { }    }  },  \"objectInstanceIds\" : [ null, null ],  \"criteria\" : {    \"collectionPeriod\" : 0,    \"reportingPeriod\" : 6,    \"reportingBoundary\" : { },    \"performanceMetricGroup\" : [ \"performanceMetricGroup\", \"performanceMetricGroup\" ],    \"performanceMetric\" : [ \"performanceMetric\", \"performanceMetric\" ]  },  \"id\" : { }}, {  \"reports\" : {    \"fileSize\" : 1,    \"href\" : \"http://example.com/aeiou\"  },  \"_links\" : {    \"objects\" : {      \"objects\" : [ {        \"href\" : { }      }, {        \"href\" : { }      } ],      \"self\" : {        \"href\" : { }      }    },    \"self\" : {      \"href\" : { }    }  },  \"objectInstanceIds\" : [ null, null ],  \"criteria\" : {    \"collectionPeriod\" : 0,    \"reportingPeriod\" : 6,    \"reportingBoundary\" : { },    \"performanceMetricGroup\" : [ \"performanceMetricGroup\", \"performanceMetricGroup\" ],    \"performanceMetric\" : [ \"performanceMetric\", \"performanceMetric\" ]  },  \"id\" : { }} ]",
-							List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PmJobsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@GetMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<String> pmJobsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "", nickname = "pmJobsPmJobIdDelete", notes = "This method terminates an individual PM job. As the result of successfully executing this method, the \"Individual PM job\"  resource shall not exist any longer. ", tags = {})
 	@ApiResponses(value = {
@@ -123,14 +86,8 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/pm_jobs/{pmJobId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> pmJobsPmJobIdDelete(@ApiParam(value = "Identifier of the PM job. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PM job resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pmJobId") final String pmJobId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PmJobsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@DeleteMapping(value = "/pm_jobs/{pmJobId}", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<Void> pmJobsPmJobIdDelete(@ApiParam(value = "Identifier of the PM job. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PM job resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pmJobId") final String pmJobId);
 
 	@ApiOperation(value = "", nickname = "pmJobsPmJobIdGet", notes = "The client can use this method for reading an individual PM job. ", response = PmJob.class, tags = {})
 	@ApiResponses(value = {
@@ -148,21 +105,7 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/pm_jobs/{pmJobId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<PmJob> pmJobsPmJobIdGet(@ApiParam(value = "Identifier of the PM job. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PM job resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pmJobId") final String pmJobId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"reports\" : {    \"fileSize\" : 1,    \"href\" : \"http://example.com/aeiou\"  },  \"_links\" : {    \"objects\" : {      \"objects\" : [ {        \"href\" : { }      }, {        \"href\" : { }      } ],      \"self\" : {        \"href\" : { }      }    },    \"self\" : {      \"href\" : { }    }  },  \"objectInstanceIds\" : [ null, null ],  \"criteria\" : {    \"collectionPeriod\" : 0,    \"reportingPeriod\" : 6,    \"reportingBoundary\" : { },    \"performanceMetricGroup\" : [ \"performanceMetricGroup\", \"performanceMetricGroup\" ],    \"performanceMetric\" : [ \"performanceMetric\", \"performanceMetric\" ]  },  \"id\" : { }}", PmJob.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PmJobsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<PmJob> pmJobsPmJobIdGet(@ApiParam(value = "Identifier of the PM job. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PM job resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pmJobId") final String pmJobId);
 
 	@ApiOperation(value = "", nickname = "pmJobsPmJobIdReportsReportIdGet", notes = "The client can use this method for reading an individual performance report. ", response = PerformanceReport.class, tags = {})
 	@ApiResponses(value = {
@@ -179,22 +122,8 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/pm_jobs/{pmJobId}/reports/{reportId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(@ApiParam(value = "Identifier of the PM job. ", required = true) @PathVariable("pmJobId") final String pmJobId, @ApiParam(value = "Identifier of the performance report. ", required = true) @PathVariable("reportId") final String reportId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"entries\" : [ {    \"objectInstanceId\" : { },    \"performanceMetric\" : \"performanceMetric\",    \"performanceValues\" : [ {      \"timeStamp\" : { },      \"value\" : \"{}\"    }, {      \"timeStamp\" : { },      \"value\" : \"{}\"    } ],    \"objectType\" : \"objectType\",    \"subObjectInstanceId\" : { }  }, {    \"objectInstanceId\" : { },    \"performanceMetric\" : \"performanceMetric\",    \"performanceValues\" : [ {      \"timeStamp\" : { },      \"value\" : \"{}\"    }, {      \"timeStamp\" : { },      \"value\" : \"{}\"    } ],    \"objectType\" : \"objectType\",    \"subObjectInstanceId\" : { }  } ]}", PerformanceReport.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PmJobsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@GetMapping(value = "/pm_jobs/{pmJobId}/reports/{reportId}", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(@ApiParam(value = "Identifier of the PM job. ", required = true) @PathVariable("pmJobId") final String pmJobId, @ApiParam(value = "Identifier of the performance report. ", required = true) @PathVariable("reportId") final String reportId);
 
 	@ApiOperation(value = "", nickname = "pmJobsPost", notes = "The POST method creates a PM job. As the result of successful executing this method, a new  \"Individual PM job\" resource as defined in clause 6.4.3 shall  have been created. ", response = PmJob.class, tags = {})
 	@ApiResponses(value = {
@@ -211,21 +140,8 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<PmJob> pmJobsPost(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"reports\" : {    \"fileSize\" : 1,    \"href\" : \"http://example.com/aeiou\"  },  \"_links\" : {    \"objects\" : {      \"objects\" : [ {        \"href\" : { }      }, {        \"href\" : { }      } ],      \"self\" : {        \"href\" : { }      }    },    \"self\" : {      \"href\" : { }    }  },  \"objectInstanceIds\" : [ null, null ],  \"criteria\" : {    \"collectionPeriod\" : 0,    \"reportingPeriod\" : 6,    \"reportingBoundary\" : { },    \"performanceMetricGroup\" : [ \"performanceMetricGroup\", \"performanceMetricGroup\" ],    \"performanceMetric\" : [ \"performanceMetric\", \"performanceMetric\" ]  },  \"id\" : { }}", PmJob.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PmJobsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@PostMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<PmJob> pmJobsPost(
+			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest) throws URISyntaxException;
 
 }

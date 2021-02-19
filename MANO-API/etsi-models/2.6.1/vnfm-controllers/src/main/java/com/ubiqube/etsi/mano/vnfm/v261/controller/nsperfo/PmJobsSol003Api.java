@@ -17,16 +17,15 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
+import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -52,10 +51,6 @@ import ma.glasnost.orika.MapperFacade;
 @RolesAllowed({ "ROLE_EM" })
 @RequestMapping("/sol003/vnfpm/v1")
 public class PmJobsSol003Api implements PmJobsSol003 {
-
-	private static final String VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS = "reports";
-
-	private static final Set<String> VNFPMJOB_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "criteria.collectionPeriod", "criteria.reportingPeriod"));
 
 	private final MapperFacade mapper;
 

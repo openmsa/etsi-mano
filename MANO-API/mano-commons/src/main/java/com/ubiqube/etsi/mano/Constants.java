@@ -38,15 +38,19 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 
 public final class Constants {
 
-	private Constants() {
-		// Nothing.
-	}
-
 	public static final String HASH_ALGORITHM = "SHA-512";
 
 	public static final String VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS = "softwareImages,additionalArtifacts,userDefinedData,checksum";
 
 	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState", "_links.self.href", "_links.vnfd.href", "_links.packageContent.href"));
+
+	public static final String VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS = "reports";
+
+	public static final Set<String> VNFPMJOB_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "criteria.collectionPeriod", "criteria.reportingPeriod", "objectInstanceIds"));
+
+	private Constants() {
+		// Nothing.
+	}
 
 	@Nullable
 	public static String getSingleField(final MultiValueMap<String, String> bag, final String parameter) {
