@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.nslcm;
+package com.ubiqube.etsi.mano.controller.vnflcm;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +22,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 

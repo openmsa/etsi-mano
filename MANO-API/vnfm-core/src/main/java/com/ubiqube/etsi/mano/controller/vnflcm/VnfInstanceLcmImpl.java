@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.nslcm;
+package com.ubiqube.etsi.mano.controller.vnflcm;
 
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
