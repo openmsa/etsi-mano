@@ -30,18 +30,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import lombok.Data;
 
 @Data
 @Entity
-public class Alarm {
+@Indexed
+public class Alarms{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@DocumentId
+	@FullTextField
 	private UUID id;
 
 	/**
 	 * Identifier of the affected VNF instance.
 	 */
+	@FullTextField
 	private UUID managedObjectId;
 
 	/**
@@ -102,17 +110,19 @@ public class Alarm {
 	/**
 	 * Additional information to clarify the type of the fault.
 	 */
+	@FullTextField
 	private String faultType;
 
 	/**
 	 * Information about the probable cause of the fault.
 	 */
+	@FullTextField
 	private String probableCause;
 
 	/**
 	 * Attribute indicating if this fault is the root for other correlated alarms. If true, then the alarms listed in the attribute "correlatedAlarmIds" are caused by this fault. 
 	 */
-	private boolean isRootCause;
+	private boolean rootCause;
 
 	/**
 	 * List of identifiers of other alarms correlated to this fault.

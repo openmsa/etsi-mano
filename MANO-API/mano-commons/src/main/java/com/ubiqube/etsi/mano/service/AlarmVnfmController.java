@@ -16,21 +16,33 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+
+import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
+import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
+import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface ManoSearchResponseService {
+public interface AlarmVnfmController {
 
-	<U> ResponseEntity<String> search(@Nullable final MultiValueMap<String, String> parameters, final Class<?> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink);
+	Alarms findById(UUID id);
+
+	void escalate(UUID id, @NotNull @Valid PerceivedSeverityType proposedPerceivedSeverity);
+
+	Alarms modify(UUID id, AckState acknowledged);
+
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
+
 }

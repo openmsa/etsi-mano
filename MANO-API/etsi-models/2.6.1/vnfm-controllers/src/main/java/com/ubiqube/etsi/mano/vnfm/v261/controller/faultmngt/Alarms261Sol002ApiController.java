@@ -16,41 +16,91 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
+import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
+import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
+import com.ubiqube.etsi.mano.service.AlarmVnfmController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.PerceivedSeverityRequest;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:11:39.646+01:00")
+import ma.glasnost.orika.MapperFacade;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Controller
 public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
+	private static final String ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
+
+	private static final Set<String> ALARM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "managedObjectId", "rootCauseFaultyResource", "alarmRaisedTime", "ackState",
+			"perceivedSeverity", "eventTime", "eventType", "probableCause", "isRootCause", "_links.self.href"));
+
+	private final MapperFacade mapper;
+
+	private final AlarmVnfmController alarmVnfmController;
+
+	public Alarms261Sol002ApiController(final MapperFacade mapper, final AlarmVnfmController alarmVnfmController) {
+		super();
+		this.mapper = mapper;
+		this.alarmVnfmController = alarmVnfmController;
+	}
 
 	@Override
 	public ResponseEntity<Void> alarmsAlarmIdEscalatePost(final String alarmId, @Valid final PerceivedSeverityRequest perceivedSeverityRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		alarmVnfmController.escalate(UUID.fromString(alarmId), PerceivedSeverityType.valueOf(perceivedSeverityRequest.getProposedPerceivedSeverity().toString()));
+		return ResponseEntity.noContent().build();
 	}
 
 	@Override
 	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
-		// TODO Auto-generated method stub
-		return null;
+		final Alarms alarm = alarmVnfmController.findById(UUID.fromString(alarmId));
+		final Alarm ret = mapper.map(alarm, Alarm.class);
+		makeLinks(ret);
+		return ResponseEntity.ok(ret);
 	}
 
 	@Override
-	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId, final AlarmModifications alarmModifications) {
+		final Alarms alarm = alarmVnfmController.modify(UUID.fromString(alarmId), AckState.valueOf(alarmModifications.getAckState().toString()));
+		return ResponseEntity.ok(mapper.map(alarm, AlarmModifications.class));
 	}
 
 	@Override
-	public ResponseEntity<Alarm> alarmsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		final Consumer<Alarm> setLink = Alarms261Sol002ApiController::makeLinks;
+		return alarmVnfmController.search(requestParams, Alarm.class, ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS, ALARM_SEARCH_MANDATORY_FIELDS, setLink);
+	}
+
+	private static void makeLinks(final Alarm alarm) {
+		final AlarmLinks links = new AlarmLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(Alarms261Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+
+		link = new Link();
+		link.setHref(linkTo(methodOn(Alarms261Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		links.setObjectInstance(link);
+
+		alarm.setLinks(links);
 	}
 }

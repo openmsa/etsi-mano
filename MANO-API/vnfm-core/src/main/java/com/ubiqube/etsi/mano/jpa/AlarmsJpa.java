@@ -14,23 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.alarm;
+package com.ubiqube.etsi.mano.jpa;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import lombok.Data;
+import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 
-@Data
-@Embeddable
-public class FaultyResourceInfo {
-	@Embedded
-	private ResourceHandle faultyResource;
-
-	@Enumerated(EnumType.STRING)
-	private ResourceTypeEnum faultyResourceType;
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface AlarmsJpa extends JpaRepository<Alarms, UUID> {
+	// Nothing.
 }

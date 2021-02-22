@@ -54,6 +54,9 @@ public final class Constants {
 
 	@Nullable
 	public static String getSingleField(final MultiValueMap<String, String> bag, final String parameter) {
+		if (null == bag) {
+			return null;
+		}
 		final List<String> params = bag.get(parameter);
 		if (null == params) {
 			return null;
