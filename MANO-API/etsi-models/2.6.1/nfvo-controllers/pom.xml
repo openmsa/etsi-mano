@@ -135,6 +135,10 @@
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>com.ubiqube.mano</groupId>

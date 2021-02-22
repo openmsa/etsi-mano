@@ -34,9 +34,10 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<com.ubiqube.hibernate-search.version>5.7.2.Final</com.ubiqube.hibernate-search.version>
-		<com.ubiqube.hibernate-search6.version>6.0.0.Final</com.ubiqube.hibernate-search6.version>
+		<com.ubiqube.hibernate-search6.version>6.0.1.Final</com.ubiqube.hibernate-search6.version>
 		<com.ubiqube.springfox-swagger.version>3.0.0-SNAPSHOT</com.ubiqube.springfox-swagger.version>
 		<com.ubiqube.openstack4j.version>3.9-SNAPSHOT</com.ubiqube.openstack4j.version>
+		<com.ubiqube.swagger3>2.1.6</com.ubiqube.swagger3>
 	</properties>
 	<build>
 		<plugins>
@@ -311,6 +312,11 @@
 				<groupId>org.jgrapht</groupId>
 				<artifactId>jgrapht-core</artifactId>
 				<version>1.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${com.ubiqube.swagger3}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

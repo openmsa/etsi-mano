@@ -1,0 +1,158 @@
+package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.StopType;
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfOperationalStateType;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * This type represents request parameters for the \&quot;Operate VNF\&quot; operation. 
+ */
+@Schema(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
+@Validated
+
+
+public class OperateVnfRequest   {
+  @JsonProperty("changeStateTo")
+  private VnfOperationalStateType changeStateTo = null;
+
+  @JsonProperty("stopType")
+  private StopType stopType = null;
+
+  @JsonProperty("gracefulStopTimeout")
+  private Integer gracefulStopTimeout = null;
+
+  @JsonProperty("additionalParams")
+  private KeyValuePairs additionalParams = null;
+
+  public OperateVnfRequest changeStateTo(VnfOperationalStateType changeStateTo) {
+    this.changeStateTo = changeStateTo;
+    return this;
+  }
+
+  /**
+   * Get changeStateTo
+   * @return changeStateTo
+   **/
+  @Schema(required = true, description = "")
+      @NotNull
+
+    @Valid
+    public VnfOperationalStateType getChangeStateTo() {
+    return changeStateTo;
+  }
+
+  public void setChangeStateTo(VnfOperationalStateType changeStateTo) {
+    this.changeStateTo = changeStateTo;
+  }
+
+  public OperateVnfRequest stopType(StopType stopType) {
+    this.stopType = stopType;
+    return this;
+  }
+
+  /**
+   * Get stopType
+   * @return stopType
+   **/
+  @Schema(description = "")
+  
+    @Valid
+    public StopType getStopType() {
+    return stopType;
+  }
+
+  public void setStopType(StopType stopType) {
+    this.stopType = stopType;
+  }
+
+  public OperateVnfRequest gracefulStopTimeout(Integer gracefulStopTimeout) {
+    this.gracefulStopTimeout = gracefulStopTimeout;
+    return this;
+  }
+
+  /**
+   * The time interval (in seconds) to wait for the VNF to be taken out of service during graceful stop, before stopping the VNF. The “stopType” and “gracefulStopTimeout” attributes shall be absent, when the “changeStateTo” attribute is equal to “STARTED”. The “gracefulStopTimeout” attribute shall be present, when the “changeStateTo” is equal to “STOPPED” and the “stopType” attribute is equal to “GRACEFUL”. The “gracefulStopTimeout” attribute shall be absent, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is absent. 
+   * @return gracefulStopTimeout
+   **/
+  @Schema(description = "The time interval (in seconds) to wait for the VNF to be taken out of service during graceful stop, before stopping the VNF. The “stopType” and “gracefulStopTimeout” attributes shall be absent, when the “changeStateTo” attribute is equal to “STARTED”. The “gracefulStopTimeout” attribute shall be present, when the “changeStateTo” is equal to “STOPPED” and the “stopType” attribute is equal to “GRACEFUL”. The “gracefulStopTimeout” attribute shall be absent, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is absent. ")
+  
+    public Integer getGracefulStopTimeout() {
+    return gracefulStopTimeout;
+  }
+
+  public void setGracefulStopTimeout(Integer gracefulStopTimeout) {
+    this.gracefulStopTimeout = gracefulStopTimeout;
+  }
+
+  public OperateVnfRequest additionalParams(KeyValuePairs additionalParams) {
+    this.additionalParams = additionalParams;
+    return this;
+  }
+
+  /**
+   * Get additionalParams
+   * @return additionalParams
+   **/
+  @Schema(description = "")
+  
+    @Valid
+    public KeyValuePairs getAdditionalParams() {
+    return additionalParams;
+  }
+
+  public void setAdditionalParams(KeyValuePairs additionalParams) {
+    this.additionalParams = additionalParams;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OperateVnfRequest operateVnfRequest = (OperateVnfRequest) o;
+    return Objects.equals(this.changeStateTo, operateVnfRequest.changeStateTo) &&
+        Objects.equals(this.stopType, operateVnfRequest.stopType) &&
+        Objects.equals(this.gracefulStopTimeout, operateVnfRequest.gracefulStopTimeout) &&
+        Objects.equals(this.additionalParams, operateVnfRequest.additionalParams);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(changeStateTo, stopType, gracefulStopTimeout, additionalParams);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class OperateVnfRequest {\n");
+    
+    sb.append("    changeStateTo: ").append(toIndentedString(changeStateTo)).append("\n");
+    sb.append("    stopType: ").append(toIndentedString(stopType)).append("\n");
+    sb.append("    gracefulStopTimeout: ").append(toIndentedString(gracefulStopTimeout)).append("\n");
+    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
