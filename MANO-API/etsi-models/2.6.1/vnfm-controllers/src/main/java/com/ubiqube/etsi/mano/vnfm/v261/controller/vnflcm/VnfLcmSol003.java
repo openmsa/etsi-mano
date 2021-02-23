@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -207,7 +209,9 @@ public interface VnfLcmSol003 {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PatchMapping(value = "/{vnfInstanceId}", consumes = { "application/json", "application/merge-patch+json" }, produces = { "application/json" })
-	ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(@Nonnull @ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId, @Nullable @RequestBody String body) throws URISyntaxException;
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(@Nonnull @ApiParam(value = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId,
+			@Nullable @RequestBody String body,
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch) throws URISyntaxException;
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Scale VNF  The POST method requests to scale a VNF instance resource incrementally. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {

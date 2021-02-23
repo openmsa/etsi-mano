@@ -32,7 +32,6 @@ import javax.annotation.security.RolesAllowed;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -171,7 +170,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 		instantiatedVnfInfo.setVirtualLinkResourceInfo(virtualLinkResourceInfo);
 
 		vnfInstance.setLinks(links.getLinks(vnfInstanceId));
-		return new ResponseEntity<>(vnfInstance, HttpStatus.OK);
+		return ResponseEntity.ok().eTag("" + vnfInstanceDb.getVersion()).body(vnfInstance);
 	}
 
 	@Override
@@ -208,9 +207,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId, final String body) throws URISyntaxException {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId, final String body, final String ifMatch) throws URISyntaxException {
 		VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
-		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body);
+		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body, ifMatch);
 		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance finalInstance = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 		finalInstance.setLinks(links.getLinks(finalInstance.getId()));
 		return ResponseEntity.accepted().location(new URI(finalInstance.getLinks().getSelf().getHref())).build();
