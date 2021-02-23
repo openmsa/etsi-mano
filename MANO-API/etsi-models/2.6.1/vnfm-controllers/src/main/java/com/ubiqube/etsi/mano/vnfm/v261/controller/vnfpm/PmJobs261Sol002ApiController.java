@@ -18,13 +18,11 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
 
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -37,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
@@ -55,21 +52,16 @@ public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
 
 	private final VnfmPmController vnfmPmController;
 
-	private final ManoSearchResponseService searchService;
-
-	public PmJobs261Sol002ApiController(final MapperFacade mapper, final VnfmPmController vnfmPmController, final ManoSearchResponseService searchService) {
+	public PmJobs261Sol002ApiController(final MapperFacade mapper, final VnfmPmController vnfmPmController) {
 		super();
 		this.mapper = mapper;
 		this.vnfmPmController = vnfmPmController;
-		this.searchService = searchService;
 	}
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<com.ubiqube.etsi.mano.dao.mano.pm.PmJob> result = vnfmPmController.query(filter);
 		final Consumer<PmJob> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, result, PmJob.class, setLink);
+		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override

@@ -19,7 +19,12 @@ package com.ubiqube.etsi.mano.service;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -76,4 +81,6 @@ public interface VnfInstanceService {
 	boolean isInstantiate(UUID id);
 
 	VnfInstance vnfLcmPatch(VnfInstance vnfInstance, String body, String ifMatch);
+
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 }

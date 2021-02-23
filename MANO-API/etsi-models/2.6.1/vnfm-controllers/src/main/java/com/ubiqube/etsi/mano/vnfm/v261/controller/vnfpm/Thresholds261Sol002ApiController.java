@@ -16,16 +16,13 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
+import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -37,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmThresholdController;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
@@ -51,29 +47,21 @@ import ma.glasnost.orika.MapperFacade;
  */
 @RestController
 public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api {
-	private static final Set<String> VNFTHR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
-
-	private static final String VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
 
 	private final MapperFacade mapper;
 
 	private final VnfmThresholdController vnfmThresholdController;
 
-	private final ManoSearchResponseService searchService;
-
-	public Thresholds261Sol002ApiController(final MapperFacade mapper, final ManoSearchResponseService searchService, final VnfmThresholdController _vnfmThresholdController) {
+	public Thresholds261Sol002ApiController(final MapperFacade mapper, final VnfmThresholdController _vnfmThresholdController) {
 		super();
 		this.mapper = mapper;
-		this.searchService = searchService;
 		vnfmThresholdController = _vnfmThresholdController;
 	}
 
 	@Override
 	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<com.ubiqube.etsi.mano.dao.mano.pm.Threshold> result = vnfmThresholdController.query(filter);
 		final Consumer<Threshold> setLink = x -> x.setLinks(makeLinks(x));
-		return searchService.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, result, Threshold.class, setLink);
+		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override

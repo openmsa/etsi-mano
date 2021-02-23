@@ -55,7 +55,6 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
@@ -87,23 +86,19 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	private final VnfPackageService vnfPackageService;
 
-	private final ManoSearchResponseService searchService;
-
-	public VnfLcmSol003Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final ManoSearchResponseService _searchService) {
+	public VnfLcmSol003Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
 		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
 		vnfInstanceService = _vnfInstanceService;
 		vnfPackageService = _vnfPackageService;
-		searchService = _searchService;
 		LOG.debug("Starting Ns Instance SOL003 Controller.");
 	}
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
-		final List<VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(requestParams, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
+		return vnfPackageService.search(requestParams, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override

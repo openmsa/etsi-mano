@@ -17,13 +17,11 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -42,7 +40,6 @@ import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualStorage;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
@@ -61,21 +58,16 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 
 	private final VnfLcmController vnfLcmController;
 
-	private final ManoSearchResponseService searchService;
-
-	public VnfLcmOpOccsSol003Api(final MapperFacade _mapper, final VnfLcmController _vnfLcmController, final ManoSearchResponseService _searchService) {
+	public VnfLcmOpOccsSol003Api(final MapperFacade _mapper, final VnfLcmController _vnfLcmController) {
 		mapper = _mapper;
 		vnfLcmController = _vnfLcmController;
-		searchService = _searchService;
 		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");
 	}
 
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
+		return vnfLcmController.search(requestParams, VnfLcmOpOcc.class, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override

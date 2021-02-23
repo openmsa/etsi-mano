@@ -19,13 +19,11 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -66,10 +64,8 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<com.ubiqube.etsi.mano.dao.mano.pm.PmJob> result = vnfmPmController.query(filter);
 		final Consumer<PmJob> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, result, PmJob.class, setLink);
+		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	private static PmJobLinks makeLink(final PmJob x) {

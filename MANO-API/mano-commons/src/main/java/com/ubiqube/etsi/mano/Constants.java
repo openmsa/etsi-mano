@@ -48,6 +48,10 @@ public final class Constants {
 
 	public static final Set<String> VNFPMJOB_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "criteria.collectionPeriod", "criteria.reportingPeriod", "objectInstanceIds"));
 
+	public static final Set<String> VNFTHR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+
+	public static final String VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
+
 	private Constants() {
 		// Nothing.
 	}

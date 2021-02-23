@@ -16,33 +16,24 @@
  */
 package com.ubiqube.etsi.mano.controller.vnfpm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
-
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
 import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
-import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.jpa.AlarmsJpa;
-import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.AlarmVnfmController;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 
 /**
  *
@@ -50,18 +41,13 @@ import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
  *
  */
 @Service
-public class AlarmVnfmControllerImpl implements AlarmVnfmController {
-	private final EntityManager em;
+public class AlarmVnfmControllerImpl extends SearchableService implements AlarmVnfmController {
 
 	private final AlarmsJpa alarmsJpa;
 
-	private final ManoSearchResponseService searchService;
-
 	public AlarmVnfmControllerImpl(final EntityManager em, final AlarmsJpa alarmsJpa, final ManoSearchResponseService searchService) {
-		super();
-		this.em = em;
+		super(searchService, em, Alarms.class);
 		this.alarmsJpa = alarmsJpa;
-		this.searchService = searchService;
 	}
 
 	@Override
@@ -85,20 +71,6 @@ public class AlarmVnfmControllerImpl implements AlarmVnfmController {
 		alarm.setAckState(acknowledged);
 		alarm.setAlarmAcknowledgedTime(LocalDateTime.now());
 		return alarmsJpa.save(alarm);
-	}
-
-	@Override
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<Alarms> result = queryDb(filter);
-		return searchService.search(requestParams, clazz, excludeDefaults, mandatoryFields, result, clazz, makeLink);
-	}
-
-	private List<Alarms> queryDb(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<Node<String>> nodes = astBuilder.getNodes();
-		return sq.getCriteria((List<Node<?>>) (Object) nodes, Alarms.class);
 	}
 
 }

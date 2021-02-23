@@ -17,18 +17,21 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
 
+import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -56,15 +59,16 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 		com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = mapper.map(createThresholdRequest, com.ubiqube.etsi.mano.dao.mano.pm.Threshold.class);
 		res = vnfmThresholdController.save(res);
 		final Threshold ret = mapper.map(res, Threshold.class);
-		ret.setLinks(createLink(res.getId()));
+		ret.setLinks(makeLinks(ret));
 		return ResponseEntity.created(new URI(ret.getLinks().getSelf().getHref())).body(ret);
 	}
 
-	private static ThresholdLinks createLink(final UUID id) {
+	private static ThresholdLinks makeLinks(final Threshold threshold) {
 		final ThresholdLinks thresholdLinks = new ThresholdLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(ThresholdsSol003.class).thresholdsThresholdIdGet(id.toString())).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(ThresholdsSol003.class).thresholdsThresholdIdGet(threshold.getId().toString())).withSelfRel().getHref());
 		thresholdLinks.setSelf(self);
+		threshold.setLinks(thresholdLinks);
 		return thresholdLinks;
 	}
 
@@ -78,16 +82,14 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 	public ResponseEntity<Threshold> thresholdsThresholdIdGet(final String thresholdId) {
 		final com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = vnfmThresholdController.findById(UUID.fromString(thresholdId));
 		final Threshold ret = mapper.map(res, Threshold.class);
-		ret.setLinks(createLink(res.getId()));
+		ret.setLinks(makeLinks(ret));
 		return ResponseEntity.ok(ret);
 	}
 
 	@Override
-	public ResponseEntity<List<Threshold>> thresholdsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
-		final List<com.ubiqube.etsi.mano.dao.mano.pm.Threshold> res = vnfmThresholdController.query(filter);
-		final List<Threshold> lst = mapper.mapAsList(res, Threshold.class);
-		lst.forEach(x -> x.setLinks(createLink(UUID.fromString(x.getId()))));
-		return ResponseEntity.ok(lst);
+	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		final Consumer<Threshold> setLink = x -> x.setLinks(makeLinks(x));
+		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 }

@@ -17,13 +17,11 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -44,7 +42,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
@@ -66,22 +63,17 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	private final MapperFacade mapper;
 
-	private final ManoSearchResponseService searchService;
-
-	public VnfLcmSol002Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public VnfLcmSol002Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
 		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
-		searchService = _searchService;
 		LOG.info("Starting Ns Instance SOL002 Controller.");
 	}
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(requestParams, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, setLink);
+		return vnfInstancesService.search(requestParams, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override
