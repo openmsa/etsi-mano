@@ -42,6 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
@@ -193,7 +194,10 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 	}
 
 	@Override
-	public VnfInstance vnfLcmPatch(final VnfInstance vnfInstance, final String body) {
+	public VnfInstance vnfLcmPatch(final VnfInstance vnfInstance, final String body, final String ifMatch) {
+		if ((ifMatch != null) && !ifMatch.equals(vnfInstance.getVersion() + "")) {
+			throw new PreConditionException(ifMatch + " does not match " + vnfInstance.getVersion());
+		}
 		patcher.patch(body, vnfInstance);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CHANGED, vnfInstance.getId());
 		return vnfInstanceJpa.save(vnfInstance);
