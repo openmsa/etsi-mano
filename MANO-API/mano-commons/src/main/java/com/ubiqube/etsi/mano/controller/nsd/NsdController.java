@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 
 public interface NsdController {
@@ -35,7 +37,7 @@ public interface NsdController {
 
 	void nsDescriptorsNsdInfoIdNsdContentPut(UUID id, InputStream is);
 
-	NsdPackage nsDescriptorsNsdInfoIdPatch(UUID id, String body);
+	NsdPackage nsDescriptorsNsdInfoIdPatch(UUID id, String body, @Nullable String ifMatch);
 
 	NsdPackage nsDescriptorsPost(Map<String, String> userDefinedData);
 

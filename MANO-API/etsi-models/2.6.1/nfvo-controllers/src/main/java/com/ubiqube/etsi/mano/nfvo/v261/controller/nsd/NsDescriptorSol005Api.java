@@ -126,7 +126,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		final NsdPackage nsdPackage = nsdController.nsDescriptorsNsdInfoIdGet(UUID.fromString(nsdInfoId));
 		final NsdInfo nsdInfo = mapper.map(nsdPackage, NsdInfo.class);
 		makeLinks(nsdInfo);
-		return new ResponseEntity<>(nsdInfo, HttpStatus.OK);
+		return ResponseEntity.ok().eTag("" + nsdPackage.getVersion()).body(nsdInfo);
 	}
 
 	/**
@@ -171,8 +171,8 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final String body, final String contentType) {
-		final NsdPackage nsdPkgInfo = nsdController.nsDescriptorsNsdInfoIdPatch(UUID.fromString(nsdInfoId), body);
+	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, final String body, final String ifMatch) {
+		final NsdPackage nsdPkgInfo = nsdController.nsDescriptorsNsdInfoIdPatch(UUID.fromString(nsdInfoId), body, ifMatch);
 		final NsdInfo ret = mapper.map(nsdPkgInfo, NsdInfo.class);
 		makeLinks(ret);
 		return new ResponseEntity<>(ret, HttpStatus.OK);

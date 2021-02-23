@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -94,9 +95,12 @@ public class NsdControllerImpl implements NsdController {
 	}
 
 	@Override
-	public NsdPackage nsDescriptorsNsdInfoIdPatch(final UUID id, final String body) {
+	public NsdPackage nsDescriptorsNsdInfoIdPatch(final UUID id, final String body, final String ifMatch) {
 		final NsdPackage nsdPkgInfo = nsdRepository.get(id);
 		ensureIsOnboarded(nsdPkgInfo);
+		if ((ifMatch != null) && !ifMatch.equals(nsdPkgInfo.getVersion() + "")) {
+			throw new PreConditionException(ifMatch + " does not match " + nsdPkgInfo.getVersion());
+		}
 		patcher.patch(body, nsdPkgInfo);
 		eventManager.sendNotification(NotificationEvent.NS_PKG_ONCHANGE, id);
 		return nsdRepository.save(nsdPkgInfo);

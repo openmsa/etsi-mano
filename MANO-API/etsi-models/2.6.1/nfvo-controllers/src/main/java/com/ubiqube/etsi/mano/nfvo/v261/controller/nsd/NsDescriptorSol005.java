@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -162,7 +163,7 @@ public interface NsDescriptorSol005 {
 	@PatchMapping(value = "/{nsdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") @Nonnull String nsdInfoId,
 			@Nonnull @ApiParam(value = "The body", required = true) @Valid @RequestBody String body,
-			@ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType);
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
 
 	@ApiOperation(value = "Create a new NS descriptor resource.", nickname = "nsDescriptorsPost", notes = "The POST method is used to create a new NS descriptor resource or a new version of an on-boarded NS descriptor. ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {
