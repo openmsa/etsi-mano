@@ -16,37 +16,142 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
-import java.util.Optional;
+import static com.ubiqube.etsi.mano.Constants.getSingleField;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualStorage;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccLinks;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccResourceChanges;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
+import ma.glasnost.orika.MapperFacade;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Controller
 public class VnfLcmOpOccs261Sol002ApiController implements VnfLcmOpOccs261Sol002Api {
 
-	private final ObjectMapper objectMapper;
+	private final MapperFacade mapper;
 
-	private final HttpServletRequest request;
+	private final VnfLcmController vnfLcmController;
 
-	@org.springframework.beans.factory.annotation.Autowired
-	public VnfLcmOpOccs261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	private final ManoSearchResponseService searchService;
+
+	public VnfLcmOpOccs261Sol002ApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController, final ManoSearchResponseService searchService) {
+		super();
+		this.mapper = mapper;
+		this.vnfLcmController = vnfLcmController;
+		this.searchService = searchService;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		final String filter = getSingleField(requestParams, "filter");
+		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
+		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
+		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	@Override
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	@Override
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId) {
+		final VnfBlueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
+		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
+		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.VL)
+				.map(x -> mapper.map(x, AffectedVirtualLink.class))
+				.forEach(resourceChanged::addAffectedVirtualLinksItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.STORAGE)
+				.map(x -> mapper.map(x, AffectedVirtualStorage.class))
+				.forEach(resourceChanged::addAffectedVirtualStoragesItem);
+		resultDb.getTasks().stream()
+				.filter(x -> x.getType() == ResourceTypeEnum.COMPUTE)
+				.map(x -> mapper.map(x, AffectedVnfc.class))
+				.forEach(resourceChanged::addAffectedVnfcsItem);
+		entity.setResourceChanges(resourceChanged);
+		entity.setLinks(makeLink(entity));
+		return new ResponseEntity<>(entity, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	@Override
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+	}
+
+	private static VnfLcmOpOccLinks makeLink(@NotNull final VnfLcmOpOcc vnfLcmOpOcc) {
+		@NotNull
+		final String id = vnfLcmOpOcc.getId();
+		final VnfLcmOpOccLinks link = new VnfLcmOpOccLinks();
+		final Link cancel = new Link();
+		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
+		link.setCancel(cancel);
+
+		final Link fail = new Link();
+		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id)).withSelfRel().getHref());
+		link.setFail(fail);
+
+		// XXX We can't have this grant link directly.
+		// grant.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(),
+		// "")).withSelfRel().getHref());
+
+		final Link retry = new Link();
+		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		link.setRetry(retry);
+
+		final Link rollback = new Link();
+		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		link.setRollback(rollback);
+
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
+		link.setSelf(self);
+
+		final Link vnfInstance = new Link();
+		vnfInstance.setHref(linkTo(methodOn(VnfLcmSol002.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
+		link.setVnfInstance(vnfInstance);
+
+		return link;
 	}
 
 }

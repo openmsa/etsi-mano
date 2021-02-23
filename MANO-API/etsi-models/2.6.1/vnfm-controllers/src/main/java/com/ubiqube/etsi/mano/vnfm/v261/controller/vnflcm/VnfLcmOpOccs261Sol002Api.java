@@ -21,23 +21,16 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
@@ -52,20 +45,6 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "vnf_lcm_op_occs", description = "the vnf_lcm_op_occs API")
 @RequestMapping("/sol002/vnflcm/v1")
 public interface VnfLcmOpOccs261Sol002Api {
-
-	Logger log = LoggerFactory.getLogger(VnfLcmOpOccs261Sol002Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsGet", notes = "The client can use this method to query status information about multiple VNF lifecycle management operation occurrences. ", response = VnfLcmOpOcc.class, tags = {})
 	@ApiResponses(value = {
@@ -83,26 +62,8 @@ public interface VnfLcmOpOccs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_lcm_op_occs", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM/VNF may supply this parameter. All attribute names that appear in the VnfLcmOpOcc and in data types referenced from it shall be supported by the VNFM in the filter expression. EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields, @ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields, @ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The VNFM shall support this parameter. The following attributes shall be excluded from the VnfLcmOpOcc structure in the response body if this parameter is provided, or none of the parameters \"all_fields\", \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - operationParams - error - resourceChanges - changedInfo - changedExtConnectivity ") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault, @ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports  alternative 2 (paging) according to clause 5.4.2.1  of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"_links\" : {    \"cancel\" : {      \"href\" : { }    },    \"rollback\" : {      \"href\" : { }    },    \"fail\" : {      \"href\" : { }    },    \"self\" : {      \"href\" : { }    },    \"grant\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    },    \"retry\" : {      \"href\" : { }    }  },  \"operationState\" : { },  \"error\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"resourceChanges\" : {    \"affectedVirtualLinks\" : [ {      \"networkResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"changeType\" : \"ADDED\"    }, {      \"networkResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"changeType\" : \"ADDED\"    } ],    \"affectedVirtualStorages\" : [ {      \"changeType\" : \"ADDED\",      \"storageResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"changeType\" : \"ADDED\",      \"storageResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ],    \"affectedVnfcs\" : [ {      \"addedStorageResourceIds\" : [ null, null ],      \"metadata\" : { },      \"changeType\" : \"ADDED\",      \"affectedVnfcCpIds\" : [ null, null ],      \"id\" : { },      \"vduId\" : { },      \"computeResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"removedStorageResourceIds\" : [ null, null ]    }, {      \"addedStorageResourceIds\" : [ null, null ],      \"metadata\" : { },      \"changeType\" : \"ADDED\",      \"affectedVnfcCpIds\" : [ null, null ],      \"id\" : { },      \"vduId\" : { },      \"computeResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"removedStorageResourceIds\" : [ null, null ]    } ]  },  \"cancelMode\" : { },  \"operationParams\" : \"{}\",  \"stateEnteredTime\" : { },  \"changedInfo\" : {    \"vnfProductName\" : \"vnfProductName\",    \"vnfProvider\" : \"vnfProvider\",    \"vnfInstanceName\" : \"vnfInstanceName\",    \"vnfInstanceDescription\" : \"vnfInstanceDescription\",    \"vnfSoftwareVersion\" : { }  },  \"changedExtConnectivity\" : [ {    \"resourceHandle\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"extLinkPorts\" : [ {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ]  }, {    \"resourceHandle\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"extLinkPorts\" : [ {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ]  } ],  \"id\" : { },  \"isAutomaticInvocation\" : { },  \"operation\" : { }}",
-							VnfLcmOpOcc.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfLcmOpOccsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<String> vnfLcmOpOccsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports  alternative 2 (paging) according to clause 5.4.2.1  of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdCancelPost", notes = "The POST method initiates cancelling an ongoing VNF lifecycle operation while it is being executed or rolled back, i.e. the related \"Individual VNF LCM operation occurrence\" is either in \"PROCESSING\" or \"ROLLING_BACK\" state. ", tags = {})
 	@ApiResponses(value = {
@@ -121,13 +82,7 @@ public interface VnfLcmOpOccs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_lcm_op_occs/{vnfLcmOpOccId}/cancel", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be cancelled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfLcmOpOccsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be cancelled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdFailPost", notes = "The POST method marks a VNF lifecycle management operation occurrence as \"finally failed\" if that operation occurrence is in \"FAILED_TEMP\" state. ", response = VnfLcmOpOcc.class, tags = {})
 	@ApiResponses(value = {
@@ -146,23 +101,7 @@ public interface VnfLcmOpOccs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_lcm_op_occs/{vnfLcmOpOccId}/fail", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be marked as \"failed\". This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"_links\" : {    \"cancel\" : {      \"href\" : { }    },    \"rollback\" : {      \"href\" : { }    },    \"fail\" : {      \"href\" : { }    },    \"self\" : {      \"href\" : { }    },    \"grant\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    },    \"retry\" : {      \"href\" : { }    }  },  \"operationState\" : { },  \"error\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"resourceChanges\" : {    \"affectedVirtualLinks\" : [ {      \"networkResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"changeType\" : \"ADDED\"    }, {      \"networkResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"changeType\" : \"ADDED\"    } ],    \"affectedVirtualStorages\" : [ {      \"changeType\" : \"ADDED\",      \"storageResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"changeType\" : \"ADDED\",      \"storageResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ],    \"affectedVnfcs\" : [ {      \"addedStorageResourceIds\" : [ null, null ],      \"metadata\" : { },      \"changeType\" : \"ADDED\",      \"affectedVnfcCpIds\" : [ null, null ],      \"id\" : { },      \"vduId\" : { },      \"computeResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"removedStorageResourceIds\" : [ null, null ]    }, {      \"addedStorageResourceIds\" : [ null, null ],      \"metadata\" : { },      \"changeType\" : \"ADDED\",      \"affectedVnfcCpIds\" : [ null, null ],      \"id\" : { },      \"vduId\" : { },      \"computeResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"removedStorageResourceIds\" : [ null, null ]    } ]  },  \"cancelMode\" : { },  \"operationParams\" : \"{}\",  \"stateEnteredTime\" : { },  \"changedInfo\" : {    \"vnfProductName\" : \"vnfProductName\",    \"vnfProvider\" : \"vnfProvider\",    \"vnfInstanceName\" : \"vnfInstanceName\",    \"vnfInstanceDescription\" : \"vnfInstanceDescription\",    \"vnfSoftwareVersion\" : { }  },  \"changedExtConnectivity\" : [ {    \"resourceHandle\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"extLinkPorts\" : [ {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ]  }, {    \"resourceHandle\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"extLinkPorts\" : [ {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ]  } ],  \"id\" : { },  \"isAutomaticInvocation\" : { },  \"operation\" : { }}",
-							VnfLcmOpOcc.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfLcmOpOccsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be marked as \"failed\". This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdGet", notes = "The client can use this method to retrieve status information about a VNF lifecycle management operation occurrence by reading an \"Individual VNF LCM operation occurrence\" resource. ", response = VnfLcmOpOcc.class, tags = {})
 	@ApiResponses(value = {
@@ -180,23 +119,7 @@ public interface VnfLcmOpOccs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_lcm_op_occs/{vnfLcmOpOccId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{  \"_links\" : {    \"cancel\" : {      \"href\" : { }    },    \"rollback\" : {      \"href\" : { }    },    \"fail\" : {      \"href\" : { }    },    \"self\" : {      \"href\" : { }    },    \"grant\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    },    \"retry\" : {      \"href\" : { }    }  },  \"operationState\" : { },  \"error\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"resourceChanges\" : {    \"affectedVirtualLinks\" : [ {      \"networkResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"changeType\" : \"ADDED\"    }, {      \"networkResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"changeType\" : \"ADDED\"    } ],    \"affectedVirtualStorages\" : [ {      \"changeType\" : \"ADDED\",      \"storageResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"changeType\" : \"ADDED\",      \"storageResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ],    \"affectedVnfcs\" : [ {      \"addedStorageResourceIds\" : [ null, null ],      \"metadata\" : { },      \"changeType\" : \"ADDED\",      \"affectedVnfcCpIds\" : [ null, null ],      \"id\" : { },      \"vduId\" : { },      \"computeResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"removedStorageResourceIds\" : [ null, null ]    }, {      \"addedStorageResourceIds\" : [ null, null ],      \"metadata\" : { },      \"changeType\" : \"ADDED\",      \"affectedVnfcCpIds\" : [ null, null ],      \"id\" : { },      \"vduId\" : { },      \"computeResource\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      },      \"removedStorageResourceIds\" : [ null, null ]    } ]  },  \"cancelMode\" : { },  \"operationParams\" : \"{}\",  \"stateEnteredTime\" : { },  \"changedInfo\" : {    \"vnfProductName\" : \"vnfProductName\",    \"vnfProvider\" : \"vnfProvider\",    \"vnfInstanceName\" : \"vnfInstanceName\",    \"vnfInstanceDescription\" : \"vnfInstanceDescription\",    \"vnfSoftwareVersion\" : { }  },  \"changedExtConnectivity\" : [ {    \"resourceHandle\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"extLinkPorts\" : [ {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ]  }, {    \"resourceHandle\" : {      \"resourceId\" : { },      \"vimLevelResourceType\" : \"vimLevelResourceType\"    },    \"extLinkPorts\" : [ {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    }, {      \"resourceHandle\" : {        \"resourceId\" : { },        \"vimLevelResourceType\" : \"vimLevelResourceType\"      }    } ]  } ],  \"id\" : { },  \"isAutomaticInvocation\" : { },  \"operation\" : { }}",
-							VnfLcmOpOcc.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfLcmOpOccsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdRetryPost", notes = "The POST method initiates retrying a VNF lifecycle operation if that operation has experienced a temporary failure, i.e. the related \"Individual VNF LCM operation occurrence\" resource is in \"FAILED_TEMP\"  state. ", tags = {})
 	@ApiResponses(value = {
@@ -215,13 +138,7 @@ public interface VnfLcmOpOccs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_lcm_op_occs/{vnfLcmOpOccId}/retry", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be retried. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfLcmOpOccsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be retried. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdRollbackPost", notes = "The POST method initiates rolling back a VNF lifecycle operation if that operation has experienced a temporary failure, i.e. the related \"Individual VNF LCM operation occurrence\" resource is in \"FAILED_TEMP\"  state. ", tags = {})
 	@ApiResponses(value = {
@@ -240,12 +157,6 @@ public interface VnfLcmOpOccs261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_lcm_op_occs/{vnfLcmOpOccId}/rollback", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be rolled back. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfLcmOpOccsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be rolled back. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 }

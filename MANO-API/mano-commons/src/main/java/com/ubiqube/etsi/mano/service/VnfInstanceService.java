@@ -75,5 +75,5 @@ public interface VnfInstanceService {
 
 	boolean isInstantiate(UUID id);
 
-	VnfInstance vnfLcmPatch(VnfInstance vnfInstance, String body);
+	VnfInstance vnfLcmPatch(VnfInstance vnfInstance, String body, String ifMatch);
 }
