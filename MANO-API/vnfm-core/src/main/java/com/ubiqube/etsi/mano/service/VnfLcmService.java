@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmFactory;
+import com.ubiqube.etsi.mano.controller.vnflcm.VnfLcmFactory;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
