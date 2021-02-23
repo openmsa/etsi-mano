@@ -211,9 +211,9 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId, final String body) throws URISyntaxException {
 		VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
 		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body);
-		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfPkgInfo = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
-		vnfPkgInfo.setLinks(links.getLinks(vnfPkgInfo.getId()));
-		return ResponseEntity.accepted().location(new URI(vnfPkgInfo.getLinks().getSelf().getHref())).build();
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance finalInstance = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
+		finalInstance.setLinks(links.getLinks(finalInstance.getId()));
+		return ResponseEntity.accepted().location(new URI(finalInstance.getLinks().getSelf().getHref())).build();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -137,8 +138,12 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId) {
-		throw new GenericException("TODO");
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(final String vnfInstanceId, final String body) throws URISyntaxException {
+		VnfInstance vnfInstance = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
+		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body);
+		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance finalInstance = mapper.map(vnfInstance, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
+		finalInstance.setLinks(links.getLinks(finalInstance.getId()));
+		return ResponseEntity.accepted().location(new URI(finalInstance.getLinks().getSelf().getHref())).build();
 	}
 
 	@Override
