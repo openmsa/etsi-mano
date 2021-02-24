@@ -22,7 +22,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.validation.Valid;
 
@@ -82,8 +81,7 @@ public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
 
 	@Override
 	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final Consumer<Alarm> setLink = Alarms261Sol002ApiController::makeLinks;
-		return alarmVnfmController.search(requestParams, Alarm.class, ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS, ALARM_SEARCH_MANDATORY_FIELDS, setLink);
+		return alarmVnfmController.search(requestParams, Alarm.class, ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS, ALARM_SEARCH_MANDATORY_FIELDS, Alarms261Sol002ApiController::makeLinks);
 	}
 
 	private static void makeLinks(final Alarm alarm) {

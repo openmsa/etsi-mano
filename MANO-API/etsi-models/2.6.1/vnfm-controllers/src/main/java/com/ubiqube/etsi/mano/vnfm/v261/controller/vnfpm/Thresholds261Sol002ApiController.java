@@ -24,7 +24,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.validation.Valid;
 
@@ -60,8 +59,7 @@ public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api 
 
 	@Override
 	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final Consumer<Threshold> setLink = x -> x.setLinks(makeLinks(x));
-		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, setLink);
+		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, Thresholds261Sol002ApiController::makeLinks);
 	}
 
 	@Override
@@ -69,7 +67,7 @@ public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api 
 		com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = mapper.map(createThresholdRequest, com.ubiqube.etsi.mano.dao.mano.pm.Threshold.class);
 		res = vnfmThresholdController.save(res);
 		final Threshold ret = mapper.map(res, Threshold.class);
-		ret.setLinks(makeLinks(ret));
+		makeLinks(ret);
 		return ResponseEntity.created(new URI(ret.getLinks().getSelf().getHref())).body(ret);
 	}
 
@@ -83,11 +81,11 @@ public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api 
 	public ResponseEntity<Threshold> thresholdsThresholdIdGet(final String thresholdId) {
 		final com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = vnfmThresholdController.findById(UUID.fromString(thresholdId));
 		final Threshold ret = mapper.map(res, Threshold.class);
-		ret.setLinks(makeLinks(ret));
+		makeLinks(ret);
 		return ResponseEntity.ok(ret);
 	}
 
-	private static ThresholdLinks makeLinks(final Threshold x) {
+	private static void makeLinks(final Threshold x) {
 		final ThresholdLinks links = new ThresholdLinks();
 		Link link = new Link();
 		link.setHref(linkTo(methodOn(Thresholds261Sol002Api.class).thresholdsThresholdIdGet(x.getId())).withSelfRel().getHref());
@@ -98,7 +96,6 @@ public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api 
 		// links.setObjects(link);
 
 		x.setLinks(links);
-		return links;
 	}
 
 }

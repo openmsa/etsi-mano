@@ -25,7 +25,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -59,17 +58,16 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 		com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = mapper.map(createThresholdRequest, com.ubiqube.etsi.mano.dao.mano.pm.Threshold.class);
 		res = vnfmThresholdController.save(res);
 		final Threshold ret = mapper.map(res, Threshold.class);
-		ret.setLinks(makeLinks(ret));
+		makeLinks(ret);
 		return ResponseEntity.created(new URI(ret.getLinks().getSelf().getHref())).body(ret);
 	}
 
-	private static ThresholdLinks makeLinks(final Threshold threshold) {
+	private static void makeLinks(final Threshold threshold) {
 		final ThresholdLinks thresholdLinks = new ThresholdLinks();
 		final Link self = new Link();
 		self.setHref(linkTo(methodOn(ThresholdsSol003.class).thresholdsThresholdIdGet(threshold.getId().toString())).withSelfRel().getHref());
 		thresholdLinks.setSelf(self);
 		threshold.setLinks(thresholdLinks);
-		return thresholdLinks;
 	}
 
 	@Override
@@ -82,14 +80,13 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 	public ResponseEntity<Threshold> thresholdsThresholdIdGet(final String thresholdId) {
 		final com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = vnfmThresholdController.findById(UUID.fromString(thresholdId));
 		final Threshold ret = mapper.map(res, Threshold.class);
-		ret.setLinks(makeLinks(ret));
+		makeLinks(ret);
 		return ResponseEntity.ok(ret);
 	}
 
 	@Override
 	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		final Consumer<Threshold> setLink = x -> x.setLinks(makeLinks(x));
-		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, setLink);
+		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, ThresholdsSol003Api::makeLinks);
 	}
 
 }

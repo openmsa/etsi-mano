@@ -25,7 +25,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -60,11 +59,10 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		final Consumer<PmJob> setLink = x -> x.setLinks(makeLink(x));
-		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, setLink);
+		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobsSol003Api::makeLinks);
 	}
 
-	private static PmJobLinks makeLink(final PmJob x) {
+	private static void makeLinks(final PmJob x) {
 		final PmJobLinks links = new PmJobLinks();
 		Link link = new Link();
 		link.setHref(linkTo(methodOn(PmJobsSol003.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
@@ -75,7 +73,6 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 		// links.setObjects(link);
 
 		x.setLinks(links);
-		return links;
 	}
 
 	@Override
@@ -87,7 +84,9 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 	@Override
 	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobIdn) {
 		final com.ubiqube.etsi.mano.dao.mano.pm.PmJob pmJob = vnfmPmController.findById(UUID.fromString(pmJobIdn));
-		return ResponseEntity.ok(mapper.map(pmJob, PmJob.class));
+		final PmJob ret = mapper.map(pmJob, PmJob.class);
+		makeLinks(ret);
+		return ResponseEntity.ok(ret);
 	}
 
 	@Override
@@ -101,7 +100,7 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
 		res = vnfmPmController.save(res);
 		final PmJob obj = mapper.map(res, PmJob.class);
-		makeLink(obj);
+		makeLinks(obj);
 		return ResponseEntity.created(new URI(obj.getLinks().getSelf().getHref())).body(obj);
 	}
 

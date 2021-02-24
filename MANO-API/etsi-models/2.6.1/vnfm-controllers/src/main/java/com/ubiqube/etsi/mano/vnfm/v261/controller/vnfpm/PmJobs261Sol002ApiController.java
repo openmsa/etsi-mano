@@ -24,7 +24,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.validation.Valid;
 
@@ -60,8 +59,7 @@ public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final Consumer<PmJob> setLink = x -> x.setLinks(makeLink(x));
-		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, setLink);
+		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobs261Sol002ApiController::makeLinks);
 	}
 
 	@Override
@@ -73,7 +71,9 @@ public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
 	@Override
 	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobId) {
 		final com.ubiqube.etsi.mano.dao.mano.pm.PmJob pmJob = vnfmPmController.findById(UUID.fromString(pmJobId));
-		return ResponseEntity.ok(mapper.map(pmJob, PmJob.class));
+		final PmJob ret = mapper.map(pmJob, PmJob.class);
+		makeLinks(ret);
+		return ResponseEntity.ok(ret);
 	}
 
 	@Override
@@ -87,11 +87,11 @@ public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
 		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
 		res = vnfmPmController.save(res);
 		final PmJob obj = mapper.map(res, PmJob.class);
-		makeLink(obj);
+		makeLinks(obj);
 		return ResponseEntity.created(new URI(obj.getLinks().getSelf().getHref())).body(obj);
 	}
 
-	private static PmJobLinks makeLink(final PmJob x) {
+	private static void makeLinks(final PmJob x) {
 		final PmJobLinks links = new PmJobLinks();
 		Link link = new Link();
 		link.setHref(linkTo(methodOn(PmJobs261Sol002Api.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
@@ -102,7 +102,6 @@ public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
 		// links.setObjects(link);
 
 		x.setLinks(links);
-		return links;
 	}
 
 }
