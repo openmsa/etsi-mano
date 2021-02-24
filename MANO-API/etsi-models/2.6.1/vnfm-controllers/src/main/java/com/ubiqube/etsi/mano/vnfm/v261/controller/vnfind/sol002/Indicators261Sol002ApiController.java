@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol002;
 
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:19:34.580+01:00")
 
+@RolesAllowed({ "ROLE_EM" })
 @Controller
 public class Indicators261Sol002ApiController implements Indicators261Sol002Api {
 
