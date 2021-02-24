@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003;
 
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;

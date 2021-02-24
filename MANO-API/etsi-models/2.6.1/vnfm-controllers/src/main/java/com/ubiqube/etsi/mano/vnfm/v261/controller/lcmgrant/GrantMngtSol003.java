@@ -48,8 +48,8 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmOpOccs261Sol003Controller;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcm261Sol003Api;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Api;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcmOpOccs261Sol003Controller;
 
 import ma.glasnost.orika.MapperFacade;
 

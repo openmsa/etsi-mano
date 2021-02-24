@@ -14,7 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
+
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -22,12 +23,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
@@ -40,10 +41,9 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 
 import ma.glasnost.orika.MapperFacade;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
-
-@Controller
-public class VnflcmSubscriptions261Sol002Controller implements VnflcmSubscriptions261Sol002Api {
+@RolesAllowed({ "ROLE_NFVO" })
+@RestController
+public class VnfLcmSubscriptions261Sol003Controller implements VnfLcmSubscriptions261Sol003Api {
 
 	private final SubscriptionService subscriptionService;
 
@@ -51,14 +51,14 @@ public class VnflcmSubscriptions261Sol002Controller implements VnflcmSubscriptio
 
 	private final Notifications notifications;
 
-	public VnflcmSubscriptions261Sol002Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
+	public VnfLcmSubscriptions261Sol003Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
 		subscriptionService = _subscriptionService;
 		mapper = _mapper;
 		notifications = _notifications;
 	}
 
 	@Override
-	public ResponseEntity<List<LccnSubscription>> subscriptionsGet(@Valid final String filter) {
+	public ResponseEntity<List<LccnSubscription>> subscriptionsGet(final String filter) {
 		final List<Subscription> list = subscriptionService.query(filter, SubscriptionType.VNFLCM);
 		final List<LccnSubscription> pkgms = mapper.mapAsList(list, LccnSubscription.class);
 		pkgms.stream().forEach(x -> x.setLinks(createSubscriptionsLinks(x.getId())));
@@ -66,7 +66,7 @@ public class VnflcmSubscriptions261Sol002Controller implements VnflcmSubscriptio
 	}
 
 	@Override
-	public ResponseEntity<LccnSubscription> subscriptionsPost(@Valid final LccnSubscriptionRequest lccnSubscriptionRequest) {
+	public ResponseEntity<LccnSubscription> subscriptionsPost(final LccnSubscriptionRequest lccnSubscriptionRequest) {
 		Subscription subscription = mapper.map(lccnSubscriptionRequest, Subscription.class);
 		notifications.check(subscription.getAuthentificationInformations(), subscription.getCallbackUri());
 		subscription = subscriptionService.save(subscription, SubscriptionType.VNFLCM);
@@ -92,7 +92,7 @@ public class VnflcmSubscriptions261Sol002Controller implements VnflcmSubscriptio
 	private static LccnSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
 		final LccnSubscriptionLinks links = new LccnSubscriptionLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnflcmSubscriptions261Sol002Api.class).subscriptionsSubscriptionIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfLcmSubscriptions261Sol003Api.class).subscriptionsSubscriptionIdGet(id)).withSelfRel().getHref());
 		links.setSelf(self);
 		return links;
 	}

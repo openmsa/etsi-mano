@@ -19,7 +19,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002;
 
 import java.util.List;
 

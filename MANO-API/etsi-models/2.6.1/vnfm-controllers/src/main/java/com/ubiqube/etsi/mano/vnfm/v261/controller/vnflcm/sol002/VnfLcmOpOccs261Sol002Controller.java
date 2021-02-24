@@ -14,8 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002;
 
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
@@ -25,21 +24,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualStorage;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
@@ -49,35 +45,38 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 
-@RolesAllowed({ "ROLE_NFVO" })
-@RestController
-public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccs261Sol003Controller.class);
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Controller
+public class VnfLcmOpOccs261Sol002Controller implements VnfLcmOpOccs261Sol002Api {
 
 	private final MapperFacade mapper;
 
 	private final VnfLcmController vnfLcmController;
 
-	public VnfLcmOpOccs261Sol003Controller(final MapperFacade _mapper, final VnfLcmController _vnfLcmController) {
-		mapper = _mapper;
-		vnfLcmController = _vnfLcmController;
-		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");
+	public VnfLcmOpOccs261Sol002Controller(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
+		super();
+		this.mapper = mapper;
+		this.vnfLcmController = vnfLcmController;
 	}
 
 	@Override
-	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
+	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
 		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
 		return vnfLcmController.search(requestParams, VnfLcmOpOcc.class, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId, final String version) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
 		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String version) {
-		throw new GenericException("TODO");
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override
@@ -103,21 +102,13 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId, final String version) {
-		throw new GenericException("TODO");
-		// after return.
-		// VnfLcmOperationOccurenceNotification(STARTING, CHANGES) NFVO
-		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
-		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId, final String version) {
-		throw new GenericException("TODO");
-		// after return.
-		// VnfLcmOperationOccurenceNotification(STARTING, ROLLBACK) NFVO
-		// VnfLcmOperationOccurenceNotification(PROCESSING) NFVO
-		// VnfLcmOperationOccurenceNotification(COMPLETED) NFVO
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
+		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	private static VnfLcmOpOccLinks makeLink(@NotNull final VnfLcmOpOcc vnfLcmOpOcc) {
@@ -125,11 +116,11 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 		final String id = vnfLcmOpOcc.getId();
 		final VnfLcmOpOccLinks link = new VnfLcmOpOccLinks();
 		final Link cancel = new Link();
-		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id, "")).withSelfRel().getHref());
+		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
 		link.setCancel(cancel);
 
 		final Link fail = new Link();
-		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id, "")).withSelfRel().getHref());
+		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id)).withSelfRel().getHref());
 		link.setFail(fail);
 
 		// XXX We can't have this grant link directly.
@@ -137,26 +128,22 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 		// "")).withSelfRel().getHref());
 
 		final Link retry = new Link();
-		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id, "")).withSelfRel().getHref());
+		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
 		link.setRetry(retry);
 
 		final Link rollback = new Link();
-		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id, "")).withSelfRel().getHref());
+		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
 		link.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
 		link.setSelf(self);
 
 		final Link vnfInstance = new Link();
-		vnfInstance.setHref(linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
+		vnfInstance.setHref(linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
 		link.setVnfInstance(vnfInstance);
 
 		return link;
-	}
-
-	public static String getSelfLink(final String id) {
-		return linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
 	}
 
 }

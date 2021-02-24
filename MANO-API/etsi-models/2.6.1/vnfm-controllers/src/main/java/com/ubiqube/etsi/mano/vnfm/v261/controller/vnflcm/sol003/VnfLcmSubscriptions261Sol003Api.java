@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003;
 
 import java.util.List;
 
