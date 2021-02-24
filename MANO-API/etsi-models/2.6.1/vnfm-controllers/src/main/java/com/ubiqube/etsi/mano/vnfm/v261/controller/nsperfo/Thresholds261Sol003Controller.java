@@ -43,12 +43,12 @@ import ma.glasnost.orika.MapperFacade;
 
 @RestController
 @RolesAllowed({ "ROLE_NFVO" })
-public class ThresholdsSol003Api implements ThresholdsSol003 {
+public class Thresholds261Sol003Controller implements Thresholds261Sol003Api {
 	private final VnfmThresholdController vnfmThresholdController;
 
 	private final MapperFacade mapper;
 
-	public ThresholdsSol003Api(final VnfmThresholdController _vnfmThresholdController, final MapperFacade _mapper) {
+	public Thresholds261Sol003Controller(final VnfmThresholdController _vnfmThresholdController, final MapperFacade _mapper) {
 		vnfmThresholdController = _vnfmThresholdController;
 		mapper = _mapper;
 	}
@@ -65,7 +65,7 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 	private static void makeLinks(final Threshold threshold) {
 		final ThresholdLinks thresholdLinks = new ThresholdLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(ThresholdsSol003.class).thresholdsThresholdIdGet(threshold.getId().toString())).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(Thresholds261Sol003Api.class).thresholdsThresholdIdGet(threshold.getId().toString())).withSelfRel().getHref());
 		thresholdLinks.setSelf(self);
 		threshold.setLinks(thresholdLinks);
 	}
@@ -86,7 +86,7 @@ public class ThresholdsSol003Api implements ThresholdsSol003 {
 
 	@Override
 	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, ThresholdsSol003Api::makeLinks);
+		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, Thresholds261Sol003Controller::makeLinks);
 	}
 
 }

@@ -46,26 +46,26 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 @RolesAllowed({ "ROLE_EM" })
 @RequestMapping("/sol003/vnffm/v1")
-public class PmJobsSol003Api implements PmJobsSol003 {
+public class PmJobs261Sol003Api implements PmJobs261Sol003Controller {
 
 	private final MapperFacade mapper;
 
 	private final VnfmPmController vnfmPmController;
 
-	public PmJobsSol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper) {
+	public PmJobs261Sol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper) {
 		vnfmPmController = _vnfmPmController;
 		mapper = _mapper;
 	}
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobsSol003Api::makeLinks);
+		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobs261Sol003Api::makeLinks);
 	}
 
 	private static void makeLinks(final PmJob x) {
 		final PmJobLinks links = new PmJobLinks();
 		Link link = new Link();
-		link.setHref(linkTo(methodOn(PmJobsSol003.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(PmJobs261Sol003Controller.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 
 		link = new Link();

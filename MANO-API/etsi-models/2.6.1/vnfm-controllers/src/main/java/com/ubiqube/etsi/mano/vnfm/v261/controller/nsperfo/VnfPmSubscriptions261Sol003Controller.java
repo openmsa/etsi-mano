@@ -28,14 +28,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
-public class NsPerfoSubscriptionsSol003Api implements NsPerfoSubscriptionsSol003 {
+public class VnfPmSubscriptions261Sol003Controller implements VnfPmSubscriptions261Sol003Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public NsPerfoSubscriptionsSol003Api(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public VnfPmSubscriptions261Sol003Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
