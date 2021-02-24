@@ -43,7 +43,7 @@ import ma.glasnost.orika.MapperFacade;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 @Controller
-public class VnflcmSubscriptions261Sol002ApiController implements VnflcmSubscriptions261Sol002Api {
+public class VnflcmSubscriptions261Sol002Controller implements VnflcmSubscriptions261Sol002Api {
 
 	private final SubscriptionService subscriptionService;
 
@@ -51,7 +51,7 @@ public class VnflcmSubscriptions261Sol002ApiController implements VnflcmSubscrip
 
 	private final Notifications notifications;
 
-	public VnflcmSubscriptions261Sol002ApiController(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
+	public VnflcmSubscriptions261Sol002Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
 		subscriptionService = _subscriptionService;
 		mapper = _mapper;
 		notifications = _notifications;

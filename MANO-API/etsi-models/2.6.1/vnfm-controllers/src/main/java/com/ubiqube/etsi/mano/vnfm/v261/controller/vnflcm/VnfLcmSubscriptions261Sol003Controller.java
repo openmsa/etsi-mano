@@ -43,7 +43,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
-public class VnfLcmSubscriptionsSol003Api implements VnfLcmSubscriptionsSol003 {
+public class VnfLcmSubscriptions261Sol003Controller implements VnfLcmSubscriptions261Sol003Api {
 
 	private final SubscriptionService subscriptionService;
 
@@ -51,7 +51,7 @@ public class VnfLcmSubscriptionsSol003Api implements VnfLcmSubscriptionsSol003 {
 
 	private final Notifications notifications;
 
-	public VnfLcmSubscriptionsSol003Api(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
+	public VnfLcmSubscriptions261Sol003Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
 		subscriptionService = _subscriptionService;
 		mapper = _mapper;
 		notifications = _notifications;

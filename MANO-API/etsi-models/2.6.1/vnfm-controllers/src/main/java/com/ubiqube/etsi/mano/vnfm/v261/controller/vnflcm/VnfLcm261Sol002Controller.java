@@ -51,8 +51,8 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_EM" })
 @RestController
-public class VnfLcmSol002Api implements VnfLcmSol002 {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol002Api.class);
+public class VnfLcm261Sol002Controller implements VnfLcm261Sol002Api {
+	private static final Logger LOG = LoggerFactory.getLogger(VnfLcm261Sol002Controller.class);
 
 	@Nonnull
 	private final LcmLinkable links = new Sol002LcmLinkable();
@@ -63,7 +63,7 @@ public class VnfLcmSol002Api implements VnfLcmSol002 {
 
 	private final MapperFacade mapper;
 
-	public VnfLcmSol002Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
+	public VnfLcm261Sol002Controller(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper) {
 		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;

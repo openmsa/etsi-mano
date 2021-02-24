@@ -48,8 +48,8 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmOpOccsSol003Api;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmSol003;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmOpOccs261Sol003Controller;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcm261Sol003Api;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -120,11 +120,11 @@ public class GrantMngtSol003 implements GrantManagement {
 	private static void makeLinks(final GrantRequest manoGrant) {
 		final GrantRequestLinks links = new GrantRequestLinks();
 		Link link = new Link();
-		link.setHref(VnfLcmOpOccsSol003Api.getSelfLink(manoGrant.getVnfInstanceId()));
+		link.setHref(VnfLcmOpOccs261Sol003Controller.getSelfLink(manoGrant.getVnfInstanceId()));
 		links.setVnfInstance(link);
 
 		link = new Link();
-		link.setHref(linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdGet(manoGrant.getVnfLcmOpOccId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(manoGrant.getVnfLcmOpOccId())).withSelfRel().getHref());
 		links.setVnfLcmOpOcc(link);
 	}
 

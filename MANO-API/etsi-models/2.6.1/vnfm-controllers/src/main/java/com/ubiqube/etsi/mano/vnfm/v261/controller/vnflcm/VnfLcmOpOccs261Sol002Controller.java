@@ -51,13 +51,13 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @Controller
-public class VnfLcmOpOccs261Sol002ApiController implements VnfLcmOpOccs261Sol002Api {
+public class VnfLcmOpOccs261Sol002Controller implements VnfLcmOpOccs261Sol002Api {
 
 	private final MapperFacade mapper;
 
 	private final VnfLcmController vnfLcmController;
 
-	public VnfLcmOpOccs261Sol002ApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
+	public VnfLcmOpOccs261Sol002Controller(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
 		super();
 		this.mapper = mapper;
 		this.vnfLcmController = vnfLcmController;
@@ -140,7 +140,7 @@ public class VnfLcmOpOccs261Sol002ApiController implements VnfLcmOpOccs261Sol002
 		link.setSelf(self);
 
 		final Link vnfInstance = new Link();
-		vnfInstance.setHref(linkTo(methodOn(VnfLcmSol002.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
+		vnfInstance.setHref(linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
 		link.setVnfInstance(vnfInstance);
 
 		return link;

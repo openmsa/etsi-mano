@@ -51,14 +51,14 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
-public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccsSol003Api.class);
+public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api {
+	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccs261Sol003Controller.class);
 
 	private final MapperFacade mapper;
 
 	private final VnfLcmController vnfLcmController;
 
-	public VnfLcmOpOccsSol003Api(final MapperFacade _mapper, final VnfLcmController _vnfLcmController) {
+	public VnfLcmOpOccs261Sol003Controller(final MapperFacade _mapper, final VnfLcmController _vnfLcmController) {
 		mapper = _mapper;
 		vnfLcmController = _vnfLcmController;
 		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");
@@ -125,11 +125,11 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		final String id = vnfLcmOpOcc.getId();
 		final VnfLcmOpOccLinks link = new VnfLcmOpOccLinks();
 		final Link cancel = new Link();
-		cancel.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id, "")).withSelfRel().getHref());
+		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id, "")).withSelfRel().getHref());
 		link.setCancel(cancel);
 
 		final Link fail = new Link();
-		fail.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id, "")).withSelfRel().getHref());
+		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id, "")).withSelfRel().getHref());
 		link.setFail(fail);
 
 		// XXX We can't have this grant link directly.
@@ -137,26 +137,26 @@ public class VnfLcmOpOccsSol003Api implements VnfLcmOpOccsSol003 {
 		// "")).withSelfRel().getHref());
 
 		final Link retry = new Link();
-		retry.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id, "")).withSelfRel().getHref());
+		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id, "")).withSelfRel().getHref());
 		link.setRetry(retry);
 
 		final Link rollback = new Link();
-		rollback.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id, "")).withSelfRel().getHref());
+		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id, "")).withSelfRel().getHref());
 		link.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
 		link.setSelf(self);
 
 		final Link vnfInstance = new Link();
-		vnfInstance.setHref(linkTo(methodOn(VnfLcmSol003.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
+		vnfInstance.setHref(linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
 		link.setVnfInstance(vnfInstance);
 
 		return link;
 	}
 
 	public static String getSelfLink(final String id) {
-		return linkTo(methodOn(VnfLcmOpOccsSol003.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
 	}
 
 }

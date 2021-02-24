@@ -69,10 +69,10 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
-public class VnfLcmSol003Api implements VnfLcmSol003 {
+public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	private static final String LOCATION = "Location";
 
-	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmSol003Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfLcm261Sol003Controller.class);
 	@Nonnull
 	private final LcmLinkable links = new Sol003LcmLinkable();
 	// XXX Duplicate service.
@@ -86,7 +86,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 
 	private final VnfPackageService vnfPackageService;
 
-	public VnfLcmSol003Api(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
+	public VnfLcm261Sol003Controller(final VnfInstanceService _vnfInstancesRepository, final VnfInstanceLcm _vnfInstanceLcm, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService) {
 		vnfInstancesService = _vnfInstancesRepository;
 		vnfInstanceLcm = _vnfInstanceLcm;
 		mapper = _mapper;
@@ -185,7 +185,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
 		final VnfInstantiate req = mapper.map(instantiateVnfRequest, VnfInstantiate.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
@@ -193,7 +193,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
 		final VnfOperateRequest req = mapper.map(operateVnfRequest, VnfOperateRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -214,7 +214,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId, final ScaleVnfRequest scaleVnfRequest) {
 		final VnfScaleRequest req = mapper.map(scaleVnfRequest, VnfScaleRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.scale(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -226,7 +226,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
 		final VnfScaleToLevelRequest req = mapper.map(scaleVnfToLevelRequest, VnfScaleToLevelRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -237,7 +237,7 @@ public class VnfLcmSol003Api implements VnfLcmSol003 {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		final VnfBlueprint lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), CancelModeTypeEnum.fromValue(terminateVnfRequest.toString()), terminateVnfRequest.getGracefulTerminationTimeout());
-		final String link = VnfLcmOpOccsSol003Api.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 	}
 
