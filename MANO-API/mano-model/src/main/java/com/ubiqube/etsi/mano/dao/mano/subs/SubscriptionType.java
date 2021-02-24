@@ -28,8 +28,11 @@ public enum SubscriptionType {
 	NSLCM("NSLCM"),
 	VNFLCM("VNFLCM"),
 	VNFPM("VNFPM"),
+	VNFIND("VNFIND"),
+	VRQAN("VRQAN"),
 	MEOPKG("MEOPKG"),
-	NSDVNF("NSDVNF");
+	NSDVNF("NSDVNF"),
+	;
 
 	private String value;
 
