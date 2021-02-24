@@ -17,9 +17,14 @@
 package com.ubiqube.etsi.mano.controller.nslcm;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
@@ -39,4 +44,5 @@ public interface NsInstanceControllerService {
 
 	NsBlueprint terminate(UUID nsInstanceUuid, @Nullable OffsetDateTime terminationTime);
 
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 }

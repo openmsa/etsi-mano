@@ -16,27 +16,31 @@
  */
 package com.ubiqube.etsi.mano.controller.nsd;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.factory.PnfFactory;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class PnfdControllerImpl implements PnfdController {
+public class PnfdControllerImpl extends SearchableService implements PnfdController {
 	private final PnfdInfoRepository pnfdInfoRepository;
 
-	public PnfdControllerImpl(final PnfdInfoRepository _pnfdInfoRepository) {
+	public PnfdControllerImpl(final PnfdInfoRepository _pnfdInfoRepository, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, PnfDescriptor.class);
 		pnfdInfoRepository = _pnfdInfoRepository;
-	}
-
-	@Override
-	public List<PnfDescriptor> pnfDescriptorsGet(final String filter) {
-		return pnfdInfoRepository.query(filter);
 	}
 
 	@Override

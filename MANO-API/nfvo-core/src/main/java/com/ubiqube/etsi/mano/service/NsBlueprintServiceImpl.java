@@ -26,12 +26,12 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.NsBlueprintJpa;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 /**
  *
@@ -39,18 +39,16 @@ import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
  *
  */
 @Service
-public class NsBlueprintServiceImpl implements NsBlueprintService {
+public class NsBlueprintServiceImpl extends SearchableService implements NsBlueprintService {
 
 	private final NsBlueprintJpa nsBlueprintJpa;
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	private final EntityManager em;
-
-	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em) {
+	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, PnfDescriptor.class);
 		nsBlueprintJpa = _nsBlueprintJpa;
 		nsLiveInstanceJpa = _nsLiveInstanceJpa;
-		em = _em;
 	}
 
 	@Override
@@ -73,12 +71,6 @@ public class NsBlueprintServiceImpl implements NsBlueprintService {
 	@Override
 	public NsBlueprint save(final NsBlueprint nsBlueprint) {
 		return nsBlueprintJpa.save(nsBlueprint);
-	}
-
-	@Override
-	public List<NsBlueprint> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
-		return sq.getCriteria(filter, NsBlueprint.class);
 	}
 
 }

@@ -54,7 +54,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstanceLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ScaleNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.UpdateNsRequest;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -73,13 +72,10 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final NsInstanceController nsLcmController;
 
-	private final ManoSearchResponseService searchService;
-
-	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController, final ManoSearchResponseService _searchService) {
+	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
 		mapper = _mapper;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmController = _nsLcmController;
-		searchService = _searchService;
 		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
@@ -93,7 +89,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "field");
 		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
-		return searchService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, result, NsInstance.class, NsInstancesSol005Api::makeLinks);
+		return nsInstanceControllerService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, NsInstancesSol005Api::makeLinks);
 	}
 
 	/**

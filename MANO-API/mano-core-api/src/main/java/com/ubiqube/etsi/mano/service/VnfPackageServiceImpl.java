@@ -21,6 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
@@ -33,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfComputeAspectDeltaJpa;
 import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
@@ -49,7 +52,7 @@ import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
  *
  */
 @Service
-public class VnfPackageServiceImpl implements VnfPackageService {
+public class VnfPackageServiceImpl extends SearchableService implements VnfPackageService {
 	private final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa;
 
 	private final VnfStorageJpa vnfStorageJpa;
@@ -66,7 +69,8 @@ public class VnfPackageServiceImpl implements VnfPackageService {
 
 	private final VnfLinkPortJpa vnfLinkPortJpa;
 
-	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa, final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa) {
+	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa, final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, PmJob.class);
 		vnfComputeAspectDeltaJpa = _vnfComputeAspectDeltaJpa;
 		vnfStorageJpa = _vnfStorageJpa;
 		vnfVl = _vnfVl;

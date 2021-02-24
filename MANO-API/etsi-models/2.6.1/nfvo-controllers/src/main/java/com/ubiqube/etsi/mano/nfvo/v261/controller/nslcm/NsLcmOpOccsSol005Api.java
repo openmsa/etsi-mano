@@ -17,13 +17,11 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,7 +37,6 @@ import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOccLinks;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 
 import ma.glasnost.orika.MapperFacade;
@@ -56,12 +53,9 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
 	private final MapperFacade mapper;
 
-	private final ManoSearchResponseService searchService;
-
-	public NsLcmOpOccsSol005Api(final NsBlueprintService _nsLcmOpOccsRepository, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public NsLcmOpOccsSol005Api(final NsBlueprintService _nsLcmOpOccsRepository, final MapperFacade _mapper) {
 		nsLcmOpOccsService = _nsLcmOpOccsRepository;
 		mapper = _mapper;
-		searchService = _searchService;
 	}
 
 	/**
@@ -72,9 +66,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<NsBlueprint> result = nsLcmOpOccsService.query(filter);
-		return searchService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, result, NsLcmOpOcc.class, NsLcmOpOccsSol005Api::makeLinks);
+		return nsLcmOpOccsService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, NsLcmOpOccsSol005Api::makeLinks);
 	}
 
 	/**

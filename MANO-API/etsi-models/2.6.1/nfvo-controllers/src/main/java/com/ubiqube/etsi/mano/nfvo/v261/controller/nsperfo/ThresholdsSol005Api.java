@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -36,7 +35,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsCreateThresholdRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsPostResponse;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdsThreshold;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
 
 import ma.glasnost.orika.MapperFacade;
@@ -51,12 +49,9 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 
 	private final MapperFacade mapper;
 
-	private final ManoSearchResponseService searchService;
-
-	public ThresholdsSol005Api(final NfvoThresholdController _nfvoThresholdController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public ThresholdsSol005Api(final NfvoThresholdController _nfvoThresholdController, final MapperFacade _mapper) {
 		nfvoThresholdController = _nfvoThresholdController;
 		mapper = _mapper;
-		searchService = _searchService;
 	}
 
 	/**
@@ -67,9 +62,8 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> thresholdsGet(final String filter) {
-		final List<Threshold> result = nfvoThresholdController.query(filter);
 		final Consumer<com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold> setLink = x -> x.setLinks(makeLinks(x.getId()));
-		return searchService.search(new LinkedMultiValueMap<>(), com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class, THR_SEARCH_DEFAULT_EXCLUDE_FIELDS, THR_SEARCH_MANDATORY_FIELDS, result, com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class, setLink);
+		return nfvoThresholdController.search(new LinkedMultiValueMap<>(), com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold.class, THR_SEARCH_DEFAULT_EXCLUDE_FIELDS, THR_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	private ThresholdLinks makeLinks(@NotNull final String id) {

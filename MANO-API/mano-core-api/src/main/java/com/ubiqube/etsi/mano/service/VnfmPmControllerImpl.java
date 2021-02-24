@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -27,10 +26,7 @@ import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
-import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
-import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 /**
  *
@@ -38,14 +34,12 @@ import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
  *
  */
 @Service
-public class VnfmPmControllerImpl implements VnfmPmController {
-	private final EntityManager em;
-
+public class VnfmPmControllerImpl extends SearchableService implements VnfmPmController {
 	private final PmJobsJpa pmJobsJpa;
 
-	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa, final EntityManager _em) {
+	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, PmJob.class);
 		pmJobsJpa = _pmJobsJpa;
-		em = _em;
 	}
 
 	@Override
@@ -68,14 +62,6 @@ public class VnfmPmControllerImpl implements VnfmPmController {
 	@Override
 	public PmJob save(final PmJob res) {
 		return pmJobsJpa.save(res);
-	}
-
-	@Override
-	public List<PmJob> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<Node<String>> nodes = astBuilder.getNodes();
-		return sq.getCriteria((List<Node<?>>) (Object) nodes, PmJob.class);
 	}
 
 }

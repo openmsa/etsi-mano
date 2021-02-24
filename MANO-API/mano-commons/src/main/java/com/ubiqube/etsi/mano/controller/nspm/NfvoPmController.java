@@ -16,15 +16,19 @@
  */
 package com.ubiqube.etsi.mano.controller.nspm;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 
 public interface NfvoPmController {
 
-	List<PmJob> query(String filter);
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 
 	void deleteById(UUID fromString);
 

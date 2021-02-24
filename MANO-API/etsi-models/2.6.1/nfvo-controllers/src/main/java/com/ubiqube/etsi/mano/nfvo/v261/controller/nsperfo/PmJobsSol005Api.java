@@ -17,11 +17,8 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
-
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -38,7 +35,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsCreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPmJob;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -52,12 +48,9 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 
 	private final MapperFacade mapper;
 
-	private final ManoSearchResponseService searchService;
-
-	public PmJobsSol005Api(final NfvoPmController _nfvoPmController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public PmJobsSol005Api(final NfvoPmController _nfvoPmController, final MapperFacade _mapper) {
 		nfvoPmController = _nfvoPmController;
 		mapper = _mapper;
-		searchService = _searchService;
 	}
 
 	/**
@@ -68,11 +61,9 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<PmJob> result = nfvoPmController.query(filter);
 		final Consumer<PmJobsPmJob> setLink = x -> {
 			/* XXX Missing makeLinks. */};
-		return searchService.search(requestParams, PmJobsPmJob.class, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, result, PmJobsPmJob.class, setLink);
+		return nfvoPmController.search(requestParams, PmJobsPmJob.class, PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS, PMJ_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	/**

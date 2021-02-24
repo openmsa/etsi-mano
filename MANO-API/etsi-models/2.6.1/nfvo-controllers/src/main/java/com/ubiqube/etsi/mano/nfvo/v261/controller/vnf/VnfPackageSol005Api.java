@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 
 import java.io.IOException;
 import java.net.URI;
@@ -49,7 +48,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.UploadVnfPkgFromUriRequest;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 import ma.glasnost.orika.MapperFacade;
@@ -77,22 +75,16 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	private final VnfPackageController vnfPackageController;
 
-	private final ManoSearchResponseService searchService;
-
-	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController, final ManoSearchResponseService _searchService) {
+	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
 		vnfPackageController = _vnfPackageController;
-		searchService = _searchService;
 		LOG.info("Starting VNF Package SOL005 Controller.");
 	}
 
 	@Override
 	public ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<VnfPackage> result = vnfManagement.vnfPackagesGet(filter);
-		requestParams.containsKey("exclude_default");
-		return searchService.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfPkgInfo.class, links::makeLinks);
+		return vnfManagement.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, links::makeLinks);
 	}
 
 	@Override

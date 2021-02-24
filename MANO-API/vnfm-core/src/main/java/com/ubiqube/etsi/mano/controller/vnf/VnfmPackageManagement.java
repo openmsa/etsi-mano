@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -35,6 +36,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 /**
@@ -45,12 +48,13 @@ import com.ubiqube.etsi.mano.service.rest.NfvoRest;
  */
 @ConditionalOnMissingBean(VnfPackageManagement.class)
 @Service
-public class VnfmPackageManagement implements VnfPackageManagement {
+public class VnfmPackageManagement extends SearchableService implements VnfPackageManagement {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfmPackageManagement.class);
 	private final NfvoRest nfvoRest;
 
-	public VnfmPackageManagement(final NfvoRest _nfvoRest) {
+	public VnfmPackageManagement(final NfvoRest _nfvoRest, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, VnfPackage.class);
 		LOG.info("Starting VNF Package Management in a VNFM Only mode.");
 		nfvoRest = _nfvoRest;
 	}

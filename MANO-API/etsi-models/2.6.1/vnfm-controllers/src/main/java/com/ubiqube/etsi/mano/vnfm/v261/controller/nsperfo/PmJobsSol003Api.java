@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
@@ -54,12 +53,9 @@ public class PmJobsSol003Api implements PmJobsSol003 {
 
 	private final VnfmPmController vnfmPmController;
 
-	private final ManoSearchResponseService searchService;
-
-	public PmJobsSol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public PmJobsSol003Api(final VnfmPmController _vnfmPmController, final MapperFacade _mapper) {
 		vnfmPmController = _vnfmPmController;
 		mapper = _mapper;
-		searchService = _searchService;
 	}
 
 	@Override

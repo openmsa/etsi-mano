@@ -16,29 +16,30 @@
  */
 package com.ubiqube.etsi.mano.controller.vnflcm;
 
-import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class VnfLcmControllerImpl implements VnfLcmController {
+public class VnfLcmControllerImpl extends SearchableService implements VnfLcmController {
 	private final VnfLcmService vnfLcmOpOccsRepository;
-	private final VnfInstanceLcm vnfInstanceLcm;
 
-	public VnfLcmControllerImpl(final VnfLcmService _vnfLcmOpOccsRepository, final VnfInstanceLcm _vnfInstanceLcm) {
+	public VnfLcmControllerImpl(final VnfLcmService _vnfLcmOpOccsRepository, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, VnfBlueprint.class);
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
-		vnfInstanceLcm = _vnfInstanceLcm;
-	}
-
-	@Override
-	public List<VnfBlueprint> vnfLcmOpOccsGet(final String filter) {
-		return vnfLcmOpOccsRepository.query(filter);
 	}
 
 	@Override

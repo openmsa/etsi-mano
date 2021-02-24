@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.utils.MimeType;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
@@ -54,7 +57,7 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @Service
-public class VnfManagement implements VnfPackageManagement {
+public class VnfManagement extends SearchableService implements VnfPackageManagement {
 	private static final String APPLICATION_ZIP = "application/zip";
 	private static final Logger LOG = LoggerFactory.getLogger(VnfManagement.class);
 
@@ -62,8 +65,8 @@ public class VnfManagement implements VnfPackageManagement {
 	private final VnfPackageService vnfPackageService;
 	private final MapperFacade mapper;
 
-	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final MapperFacade _mapper, final VnfPackageService _vnfPackageService) {
-		super();
+	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final MapperFacade _mapper, final VnfPackageService _vnfPackageService, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, VnfPackage.class);
 		vnfPackageRepository = _vnfPackageRepository;
 		mapper = _mapper;
 		vnfPackageService = _vnfPackageService;

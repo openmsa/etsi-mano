@@ -17,7 +17,6 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -52,7 +51,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 import io.swagger.annotations.Api;
@@ -80,12 +78,9 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private final NsdController nsdController;
 
-	private final ManoSearchResponseService searchService;
-
-	public NsDescriptorSol005Api(final MapperFacade _mapper, final NsdController _nsdController, final ManoSearchResponseService _searchService) {
+	public NsDescriptorSol005Api(final MapperFacade _mapper, final NsdController _nsdController) {
 		mapper = _mapper;
 		nsdController = _nsdController;
-		searchService = _searchService;
 		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
@@ -97,9 +92,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsDescriptorsGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<NsdPackage> result = nsdController.nsDescriptorsGet(filter);
-		return searchService.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, result, NsdInfo.class, NsDescriptorSol005Api::makeLinks);
+		return nsdController.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, NsDescriptorSol005Api::makeLinks);
 	}
 
 	/**

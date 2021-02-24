@@ -17,13 +17,11 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -46,7 +44,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoModifications;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -64,12 +61,9 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 
 	private final MapperFacade mapper;
 
-	private final ManoSearchResponseService searchService;
-
-	public PnfDescriptorsSol005Api(final PnfdController _pnfdController, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public PnfDescriptorsSol005Api(final PnfdController _pnfdController, final MapperFacade _mapper) {
 		pnfdController = _pnfdController;
 		mapper = _mapper;
-		searchService = _searchService;
 		LOG.info("Starting PNF Management SOL005 Controller.");
 	}
 
@@ -81,10 +75,8 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> pnfDescriptorsGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<PnfDescriptor> result = pnfdController.pnfDescriptorsGet(filter);
 		final Consumer<PnfdInfo> setLink = x -> x.setLinks(makeLinks(x));
-		return searchService.search(requestParams, PnfdInfo.class, PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS, PNFD_SEARCH_MANDATORY_FIELDS, result, PnfdInfo.class, setLink);
+		return pnfdController.search(requestParams, PnfdInfo.class, PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS, PNFD_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	/**
