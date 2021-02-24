@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol002;
 
 import java.util.Optional;
 
