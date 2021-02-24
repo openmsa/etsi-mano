@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -46,23 +46,23 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionRequest;
  *
  */
 @Controller
-public class VnfPmSubscriptions261Sol002ApiController implements VnfPmSubscriptions261Sol002Api {
+public class VnfPmSubscriptions261Sol002Controller implements VnfPmSubscriptions261Sol002Api {
 	private final SubscriptionServiceV2 subscriptionService;
 
-	public VnfPmSubscriptions261Sol002ApiController(final SubscriptionServiceV2 subscriptionService) {
+	public VnfPmSubscriptions261Sol002Controller(final SubscriptionServiceV2 subscriptionService) {
 		super();
 		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
 	public ResponseEntity<List<PmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final List<PmSubscription> ret = subscriptionService.query(requestParams, PmSubscription.class, VnfPmSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.VNFPM);
+		final List<PmSubscription> ret = subscriptionService.query(requestParams, PmSubscription.class, VnfPmSubscriptions261Sol002Controller::makeLinks, SubscriptionType.VNFPM);
 		return ResponseEntity.ok(ret);
 	}
 
 	@Override
 	public ResponseEntity<PmSubscription> subscriptionsPost(@Valid final PmSubscriptionRequest pmSubscriptionRequest) throws URISyntaxException {
-		final PmSubscription res = subscriptionService.create(pmSubscriptionRequest, PmSubscription.class, VnfPmSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.VNFPM);
+		final PmSubscription res = subscriptionService.create(pmSubscriptionRequest, PmSubscription.class, VnfPmSubscriptions261Sol002Controller::makeLinks, SubscriptionType.VNFPM);
 		final URI location = new URI(res.getLinks().getSelf().getHref());
 		return ResponseEntity.created(location).body(res);
 	}
@@ -75,7 +75,7 @@ public class VnfPmSubscriptions261Sol002ApiController implements VnfPmSubscripti
 
 	@Override
 	public ResponseEntity<PmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, VnfPmSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.ALARM);
+		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, VnfPmSubscriptions261Sol002Controller::makeLinks, SubscriptionType.ALARM);
 		return ResponseEntity.ok(res);
 	}
 

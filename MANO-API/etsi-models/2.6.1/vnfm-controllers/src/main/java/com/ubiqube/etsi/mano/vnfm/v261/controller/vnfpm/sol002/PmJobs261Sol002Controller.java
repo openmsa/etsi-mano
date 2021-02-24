@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
@@ -46,12 +46,12 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @RestController
-public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
+public class PmJobs261Sol002Controller implements PmJobs261Sol002Api {
 	private final MapperFacade mapper;
 
 	private final VnfmPmController vnfmPmController;
 
-	public PmJobs261Sol002ApiController(final MapperFacade mapper, final VnfmPmController vnfmPmController) {
+	public PmJobs261Sol002Controller(final MapperFacade mapper, final VnfmPmController vnfmPmController) {
 		super();
 		this.mapper = mapper;
 		this.vnfmPmController = vnfmPmController;
@@ -59,7 +59,7 @@ public class PmJobs261Sol002ApiController implements PmJobs261Sol002Api {
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobs261Sol002ApiController::makeLinks);
+		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobs261Sol002Controller::makeLinks);
 	}
 
 	@Override

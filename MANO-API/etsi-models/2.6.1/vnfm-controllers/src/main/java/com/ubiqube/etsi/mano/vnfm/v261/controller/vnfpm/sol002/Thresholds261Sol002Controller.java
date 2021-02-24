@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
 import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_MANDATORY_FIELDS;
@@ -45,13 +45,13 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @RestController
-public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api {
+public class Thresholds261Sol002Controller implements Thresholds261Sol002Api {
 
 	private final MapperFacade mapper;
 
 	private final VnfmThresholdController vnfmThresholdController;
 
-	public Thresholds261Sol002ApiController(final MapperFacade mapper, final VnfmThresholdController _vnfmThresholdController) {
+	public Thresholds261Sol002Controller(final MapperFacade mapper, final VnfmThresholdController _vnfmThresholdController) {
 		super();
 		this.mapper = mapper;
 		vnfmThresholdController = _vnfmThresholdController;
@@ -59,7 +59,7 @@ public class Thresholds261Sol002ApiController implements Thresholds261Sol002Api 
 
 	@Override
 	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, Thresholds261Sol002ApiController::makeLinks);
+		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, Thresholds261Sol002Controller::makeLinks);
 	}
 
 	@Override

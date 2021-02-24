@@ -19,7 +19,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
 import java.net.URISyntaxException;
 import java.util.List;

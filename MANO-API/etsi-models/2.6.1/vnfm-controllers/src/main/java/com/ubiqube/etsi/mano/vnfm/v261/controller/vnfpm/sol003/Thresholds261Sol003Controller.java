@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.controller.nsperfo;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol003;
 
 import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_MANDATORY_FIELDS;
