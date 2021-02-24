@@ -20,7 +20,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm;
 
 import javax.validation.Valid;
 
