@@ -27,6 +27,7 @@ public enum SubscriptionType {
 	ALARM("ALARM"),
 	NSLCM("NSLCM"),
 	VNFLCM("VNFLCM"),
+	VNFPM("VNFPM"),
 	MEOPKG("MEOPKG"),
 	NSDVNF("NSDVNF");
 

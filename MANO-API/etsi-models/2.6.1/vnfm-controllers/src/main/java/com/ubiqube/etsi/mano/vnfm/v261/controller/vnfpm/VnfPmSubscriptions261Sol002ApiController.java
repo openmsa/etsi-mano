@@ -16,37 +16,75 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm;
 
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.UUID;
 
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt.FaultmngtSubscriptions261Sol002Api;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscription;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionLinks;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionRequest;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:14:16.145+01:00")
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Controller
 public class VnfPmSubscriptions261Sol002ApiController implements VnfPmSubscriptions261Sol002Api {
+	private final SubscriptionServiceV2 subscriptionService;
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public VnfPmSubscriptions261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public VnfPmSubscriptions261Sol002ApiController(final SubscriptionServiceV2 subscriptionService) {
+		super();
+		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<List<PmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		final List<PmSubscription> ret = subscriptionService.query(requestParams, PmSubscription.class, VnfPmSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.VNFPM);
+		return ResponseEntity.ok(ret);
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<PmSubscription> subscriptionsPost(@Valid final PmSubscriptionRequest pmSubscriptionRequest) throws URISyntaxException {
+		final PmSubscription res = subscriptionService.create(pmSubscriptionRequest, PmSubscription.class, VnfPmSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.VNFPM);
+		final URI location = new URI(res.getLinks().getSelf().getHref());
+		return ResponseEntity.created(location).body(res);
+	}
+
+	@Override
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		subscriptionService.deleteById(UUID.fromString(subscriptionId), SubscriptionType.VNFPM);
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<PmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, VnfPmSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.ALARM);
+		return ResponseEntity.ok(res);
+	}
+
+	private static void makeLinks(final PmSubscription subscription) {
+		final PmSubscriptionLinks links = new PmSubscriptionLinks();
+		final Link link = new Link();
+		link.setHref(linkTo(methodOn(FaultmngtSubscriptions261Sol002Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+		subscription.setLinks(links);
 	}
 
 }
