@@ -52,6 +52,11 @@ public final class Constants {
 
 	public static final String VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
 
+	public static final String ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
+
+	public static final Set<String> ALARM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "managedObjectId", "rootCauseFaultyResource", "alarmRaisedTime", "ackState",
+			"perceivedSeverity", "eventTime", "eventType", "probableCause", "isRootCause", "_links.self.href"));
+
 	private Constants() {
 		// Nothing.
 	}

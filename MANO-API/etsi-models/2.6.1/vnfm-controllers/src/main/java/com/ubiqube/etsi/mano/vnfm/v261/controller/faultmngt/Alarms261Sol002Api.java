@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -106,7 +108,8 @@ public interface Alarms261Sol002Api {
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PatchMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json", "application/merge-patch+json" })
 	ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId,
-			@RequestBody AlarmModifications alarmModifications);
+			@RequestBody AlarmModifications alarmModifications,
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
 
 	@ApiOperation(value = "", nickname = "alarmsGet", notes = "The client can use this method to retrieve information about the alarm list. ", response = Alarm.class, tags = {})
 	@ApiResponses(value = {

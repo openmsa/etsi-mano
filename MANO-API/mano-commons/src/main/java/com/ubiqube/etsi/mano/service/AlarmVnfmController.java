@@ -41,7 +41,7 @@ public interface AlarmVnfmController {
 
 	void escalate(UUID id, @NotNull @Valid PerceivedSeverityType proposedPerceivedSeverity);
 
-	Alarms modify(UUID id, AckState acknowledged);
+	Alarms modify(UUID id, AckState acknowledged, String ifMatch);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 

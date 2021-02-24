@@ -16,12 +16,11 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
+import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -50,10 +49,6 @@ import ma.glasnost.orika.MapperFacade;
  */
 @Controller
 public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
-	private static final String ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
-
-	private static final Set<String> ALARM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "managedObjectId", "rootCauseFaultyResource", "alarmRaisedTime", "ackState",
-			"perceivedSeverity", "eventTime", "eventType", "probableCause", "isRootCause", "_links.self.href"));
 
 	private final MapperFacade mapper;
 
@@ -80,8 +75,8 @@ public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
 	}
 
 	@Override
-	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId, final AlarmModifications alarmModifications) {
-		final Alarms alarm = alarmVnfmController.modify(UUID.fromString(alarmId), AckState.valueOf(alarmModifications.getAckState().toString()));
+	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId, final AlarmModifications alarmModifications, final String ifMatch) {
+		final Alarms alarm = alarmVnfmController.modify(UUID.fromString(alarmId), AckState.valueOf(alarmModifications.getAckState().toString()), ifMatch);
 		return ResponseEntity.ok(mapper.map(alarm, AlarmModifications.class));
 	}
 

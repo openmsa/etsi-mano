@@ -24,11 +24,15 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.faultmngt;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
@@ -58,7 +62,7 @@ public interface FaultAlarmsSol003 {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	@GetMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<Alarm> alarmsAlarmIdGet(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId);
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdPatch", notes = "Acknowledge Alarm. This method modifies an individual alarm resource. This method shall follow the provisions specified in the tables 7.4.3.3.4-1 and 7.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes. ", response = AlarmModifications.class, tags = {})
@@ -76,9 +80,10 @@ public interface FaultAlarmsSol003 {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
+	@PatchMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json", "application/merge-patch+json" })
 	ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") final String alarmId,
-			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final AlarmModifications alarmModifications);
+			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final AlarmModifications alarmModifications,
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
 
 	@ApiOperation(value = "", nickname = "alarmsGet", notes = "Get Alarm List. The client can use this method to retrieve information about the alarm list. This method shall follow the provisions specified in the tables 7.4.2.3.2-1 and 7.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Alarm.class, tags = {})
 	@ApiResponses(value = {
@@ -93,8 +98,8 @@ public interface FaultAlarmsSol003 {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<Alarm> alarmsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  The following attribute names shall be supported by the VNFM in the attribute-based filtering expression: id, managedObjectId,  rootCauseFaultyResource/faultyResourceType, eventType,  perceivedSeverity, probableCause. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
+	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	ResponseEntity<String> alarmsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  The following attribute names shall be supported by the VNFM in the attribute-based filtering expression: id, managedObjectId,  rootCauseFaultyResource/faultyResourceType, eventType,  perceivedSeverity, probableCause. ") @Valid @RequestParam MultiValueMap<String, String> requestParams,
 			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the  VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 }

@@ -29,6 +29,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
@@ -39,7 +40,7 @@ import lombok.Data;
 @Data
 @Entity
 @Indexed
-public class Alarms{
+public class Alarms {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@DocumentId
@@ -136,4 +137,6 @@ public class Alarms{
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> faultDetails;
 
+	@Version
+	private long version;
 }

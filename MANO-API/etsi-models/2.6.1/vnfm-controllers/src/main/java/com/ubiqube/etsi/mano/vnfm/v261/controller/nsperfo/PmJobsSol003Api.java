@@ -46,7 +46,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @RestController
 @RolesAllowed({ "ROLE_EM" })
-@RequestMapping("/sol003/vnfpm/v1")
+@RequestMapping("/sol003/vnffm/v1")
 public class PmJobsSol003Api implements PmJobsSol003 {
 
 	private final MapperFacade mapper;

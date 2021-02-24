@@ -30,6 +30,7 @@ import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.jpa.AlarmsJpa;
 import com.ubiqube.etsi.mano.service.AlarmVnfmController;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -63,8 +64,11 @@ public class AlarmVnfmControllerImpl extends SearchableService implements AlarmV
 	}
 
 	@Override
-	public Alarms modify(final UUID id, final AckState acknowledged) {
+	public Alarms modify(final UUID id, final AckState acknowledged, final String ifMatch) {
 		final Alarms alarm = findById(id);
+		if ((ifMatch != null) && !ifMatch.equals(alarm.getVersion() + "")) {
+			throw new PreConditionException(ifMatch + " does not match " + alarm.getVersion());
+		}
 		if (alarm.getAckState() == acknowledged) {
 			throw new ConflictException("State is already " + acknowledged);
 		}
