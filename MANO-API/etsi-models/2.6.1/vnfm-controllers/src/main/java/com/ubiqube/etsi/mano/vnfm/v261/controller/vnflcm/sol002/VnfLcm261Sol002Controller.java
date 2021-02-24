@@ -17,8 +17,8 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002;
 
-import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.VnfLcmConstants.VNFLCM_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 
 import java.net.URI;
 import java.net.URISyntaxException;
