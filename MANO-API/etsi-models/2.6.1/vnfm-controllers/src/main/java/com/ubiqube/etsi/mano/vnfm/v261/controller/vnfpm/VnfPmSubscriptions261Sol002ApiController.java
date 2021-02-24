@@ -33,7 +33,7 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.FaultmngtSubscriptions261Sol002Api;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002.FaultmngtSubscriptions261Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionRequest;

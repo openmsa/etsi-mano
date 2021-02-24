@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm;
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol003;
 
 import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_MANDATORY_FIELDS;
@@ -34,6 +34,7 @@ import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
 import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 import com.ubiqube.etsi.mano.service.AlarmVnfmController;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002.Alarms261Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;

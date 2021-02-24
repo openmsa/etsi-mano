@@ -14,7 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm;
+
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol003;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -24,15 +25,17 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002.FaultmngtSubscriptions261Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
@@ -42,24 +45,25 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Controller
-public class FaultMngtSubscriptions261Sol002ApiController implements FaultmngtSubscriptions261Sol002Api {
+@RolesAllowed({ "ROLE_NFVO" })
+@RestController
+public class FaultSubscriptionsSol003Api implements FaultSubscriptionsSol003 {
 	private final SubscriptionServiceV2 subscriptionService;
 
-	public FaultMngtSubscriptions261Sol002ApiController(final SubscriptionServiceV2 subscriptionService) {
+	public FaultSubscriptionsSol003Api(final SubscriptionServiceV2 subscriptionService) {
 		super();
 		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
-	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final List<FmSubscription> res = subscriptionService.query(requestParams, FmSubscription.class, FaultMngtSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.ALARM);
-		return ResponseEntity.ok(res);
+	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		final List<FmSubscription> ret = subscriptionService.query(requestParams, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, SubscriptionType.ALARM);
+		return ResponseEntity.ok(ret);
 	}
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) throws URISyntaxException {
-		final FmSubscription res = subscriptionService.create(fmSubscriptionRequest, FmSubscription.class, FaultMngtSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.ALARM);
+		final FmSubscription res = subscriptionService.create(fmSubscriptionRequest, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, SubscriptionType.ALARM);
 		final URI location = new URI(res.getLinks().getSelf().getHref());
 		return ResponseEntity.created(location).body(res);
 	}
@@ -72,7 +76,7 @@ public class FaultMngtSubscriptions261Sol002ApiController implements FaultmngtSu
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final FmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), FmSubscription.class, FaultMngtSubscriptions261Sol002ApiController::makeLinks, SubscriptionType.ALARM);
+		final FmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, SubscriptionType.ALARM);
 		return ResponseEntity.ok(res);
 	}
 
