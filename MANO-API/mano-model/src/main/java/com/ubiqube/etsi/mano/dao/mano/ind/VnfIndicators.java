@@ -27,7 +27,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class VnfIndicator {
+public class VnfIndicators {
 	/**
 	 * Identifier of this VNF indicator.
 	 */
