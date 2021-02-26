@@ -43,9 +43,9 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_VNFM" })
 @RestController
-public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
+public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol003Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscriptionSol003Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscription261Sol003Controller.class);
 
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
 
@@ -53,7 +53,7 @@ public class VnfSubscriptionSol003Api implements VnfSubscriptionSol003 {
 
 	private final MapperFacade mapper;
 
-	public VnfSubscriptionSol003Api(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper) {
+	public VnfSubscription261Sol003Controller(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 		mapper = _mapper;
 		LOG.info("Starting VNF Subscription Package SOL003 Controller.");

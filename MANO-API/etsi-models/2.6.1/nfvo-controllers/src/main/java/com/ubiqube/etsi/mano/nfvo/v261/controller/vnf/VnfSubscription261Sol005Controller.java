@@ -44,9 +44,9 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
+public class VnfSubscription261Sol005Controller implements VnfSubscription262Sol005Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscriptionSol005Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscription261Sol005Controller.class);
 
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
 
@@ -56,7 +56,7 @@ public class VnfSubscriptionSol005Api implements VnfSubscriptionSol005 {
 
 	private final Notifications notifications;
 
-	public VnfSubscriptionSol005Api(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final Notifications _notifications) {
+	public VnfSubscription261Sol005Controller(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final Notifications _notifications) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 		mapper = _mapper;
 		notifications = _notifications;

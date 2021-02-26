@@ -56,8 +56,8 @@ import ma.glasnost.orika.MapperFacade;
 @RolesAllowed({ "ROLE_VNFM" })
 @RestController
 @RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
-public class VnfPackageSol003Api implements VnfPackageSol003 {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol003Api.class);
+public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPackage261Sol003Controller.class);
 
 	private final VnfPackageManagement vnfManagement;
 
@@ -66,7 +66,7 @@ public class VnfPackageSol003Api implements VnfPackageSol003 {
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	public VnfPackageSol003Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
+	public VnfPackage261Sol003Controller(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
 		LOG.debug("Starting VNF Package SOL003 Controller.");

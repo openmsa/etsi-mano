@@ -53,7 +53,7 @@ import io.swagger.annotations.Authorization;
 
 @Api(value = "vnf_packages", authorizations = { @Authorization(value = "basicAuth") }, produces = "application/json", consumes = "application/json")
 @RequestMapping("/sol005/vnfpkgm/v1/vnf_packages")
-public interface VnfPackageSol005 {
+public interface VnfPackage261Sol005Api {
 
 	@ApiOperation(value = "Query VNF packages information.", nickname = "vnfPackagesGet", notes = "The GET method queries the information of the VNF packages matching the filter. This method shall follow the provisions specified in the  Tables 9.4.2.3.2-1 and 9.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Object.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {

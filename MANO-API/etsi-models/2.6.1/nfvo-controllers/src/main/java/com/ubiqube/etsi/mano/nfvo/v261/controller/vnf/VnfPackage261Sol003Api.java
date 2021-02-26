@@ -40,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-public interface VnfPackageSol003 {
+public interface VnfPackage261Sol003Api {
 
 	/**
 	 * Query VNF packages information.

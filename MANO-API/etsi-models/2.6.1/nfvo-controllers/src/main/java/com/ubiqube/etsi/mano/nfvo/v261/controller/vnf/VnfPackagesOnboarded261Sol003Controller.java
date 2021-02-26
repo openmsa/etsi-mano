@@ -42,12 +42,12 @@ import com.ubiqube.etsi.mano.utils.SpringUtils;
  *
  */
 @Controller
-public class OnboardedVnfPackages261ApiControllerSol003 implements OnboardedVnfPackages261ApiSol003 {
+public class VnfPackagesOnboarded261Sol003Controller implements VnfPackagesOnboarded261Sol003Api {
 	private final Linkable links = new Sol003Linkable();
 
 	private final VnfPackageManagement vnfManagement;
 
-	public OnboardedVnfPackages261ApiControllerSol003(final VnfPackageManagement _vnfManagement) {
+	public VnfPackagesOnboarded261Sol003Controller(final VnfPackageManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
 

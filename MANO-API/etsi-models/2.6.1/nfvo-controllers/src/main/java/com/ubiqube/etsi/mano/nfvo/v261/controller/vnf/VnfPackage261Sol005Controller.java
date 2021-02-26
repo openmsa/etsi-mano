@@ -63,8 +63,8 @@ import ma.glasnost.orika.MapperFacade;
  */
 @RestController
 @RolesAllowed({ "ROLE_OSSBSS" })
-public class VnfPackageSol005Api implements VnfPackageSol005 {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageSol005Api.class);
+public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPackage261Sol005Controller.class);
 
 	@Nonnull
 	private final Linkable links = new Sol005Linkable();
@@ -75,7 +75,7 @@ public class VnfPackageSol005Api implements VnfPackageSol005 {
 
 	private final VnfPackageController vnfPackageController;
 
-	public VnfPackageSol005Api(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController) {
+	public VnfPackage261Sol005Controller(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final VnfPackageController _vnfPackageController) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
 		vnfPackageController = _vnfPackageController;
