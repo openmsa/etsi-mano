@@ -71,7 +71,7 @@ public class VnfPmSubscriptions261Sol003Controller implements VnfPmSubscriptions
 
 	@Override
 	public ResponseEntity<PmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, VnfPmSubscriptions261Sol003Controller::makeLinks, SubscriptionType.ALARM);
+		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, VnfPmSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VNFPM);
 		return ResponseEntity.ok(res);
 	}
 
