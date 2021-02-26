@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -136,6 +139,12 @@ public class NfvoVnfPackageService implements VnfPackageService {
 
 	@Override
 	public VnfPackage findByVnfdId(final UUID id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
 		// TODO Auto-generated method stub
 		return null;
 	}

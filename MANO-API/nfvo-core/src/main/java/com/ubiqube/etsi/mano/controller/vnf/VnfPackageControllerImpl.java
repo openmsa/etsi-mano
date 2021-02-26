@@ -78,11 +78,11 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	}
 
 	@Override
-	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final UUID id) {
+	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final UUID id, final String contentType, final String uri) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureNotOnboarded(vnfPackage);
-		// TODO
-		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, null);
+		final Map<String, Object> params = Map.of("contentType", contentType, "uri", uri);
+		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, params);
 
 	}
 }

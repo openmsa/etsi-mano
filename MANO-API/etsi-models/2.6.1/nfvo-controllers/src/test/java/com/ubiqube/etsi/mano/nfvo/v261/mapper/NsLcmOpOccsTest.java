@@ -30,6 +30,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeResultEnum;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.AffectedVnf.ChangeTypeEnum;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -57,6 +58,7 @@ public class NsLcmOpOccsTest {
 		affectedVnf.setVnfInstanceId("1c3e8d3d-5224-4fa9-8a23-0be83b66b9bf");
 		affectedVnf.setVnfName("name");
 		affectedVnf.setVnfProfileId("profile_id");
+		nsLcmOpOcc.setResourceChanges(new NsLcmOpOccResourceChanges());
 		nsLcmOpOcc.getResourceChanges().getAffectedVnfs().add(affectedVnf);
 
 		final NsLcmOpOccs nloo = mapper.map(nsLcmOpOcc, NsLcmOpOccs.class);

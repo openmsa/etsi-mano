@@ -18,11 +18,14 @@ package com.ubiqube.etsi.mano.service;
 
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
 
 /**
@@ -31,21 +34,23 @@ import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
  *
  */
 @Service
-public class VnfmPmControllerImpl implements VnfmPmController {
+public class VnfmPmControllerImpl extends SearchableService implements VnfmPmController {
 	private final PmJobsJpa pmJobsJpa;
 
-	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa) {
+	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, PmJob.class);
 		pmJobsJpa = _pmJobsJpa;
 	}
 
 	@Override
-	public void delete(final UUID fromString) {
-		pmJobsJpa.deleteById(fromString);
+	public void delete(final UUID id) {
+		findById(id);
+		pmJobsJpa.deleteById(id);
 	}
 
 	@Override
-	public PmJob findById(final UUID fromString) {
-		return pmJobsJpa.findById(fromString).orElseThrow();
+	public PmJob findById(final UUID id) {
+		return pmJobsJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find PM Job: " + id));
 	}
 
 	@Override

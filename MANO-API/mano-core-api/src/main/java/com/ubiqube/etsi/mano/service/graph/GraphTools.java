@@ -38,6 +38,8 @@ import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
+import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
+import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 public class GraphTools {
 
@@ -45,6 +47,12 @@ public class GraphTools {
 
 	private GraphTools() {
 		// Nothing.
+	}
+
+	public static DefaultListenableGraph<Class<? extends Node>, NodeConnectivity> createNodeGraph() {
+		final DefaultListenableGraph<Class<? extends Node>, NodeConnectivity> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(NodeConnectivity.class));
+		g.addGraphListener(new NodeEdgeListener());
+		return g;
 	}
 
 	public static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
@@ -80,7 +88,7 @@ public class GraphTools {
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			LOG.trace("Error in graph export", e);
 		}
 	}
 

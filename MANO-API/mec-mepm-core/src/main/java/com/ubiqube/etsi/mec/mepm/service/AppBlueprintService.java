@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mec.mepm.service;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class AppBlueprintService {
 		return appBluePrintJpa.save(blueprint);
 	}
 
+	@Nonnull
 	public AppBlueprint findById(@NotNull final UUID blueprintId) {
 		return appBluePrintJpa.findById(blueprintId).orElseThrow();
 	}

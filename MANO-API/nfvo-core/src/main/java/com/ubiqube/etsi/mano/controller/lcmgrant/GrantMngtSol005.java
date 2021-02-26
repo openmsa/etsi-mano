@@ -68,6 +68,8 @@ public class GrantMngtSol005 implements GrantManagement {
 	public GrantResponse post(final GrantInterface grantRequest) {
 		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		grants.setAvailable(Boolean.FALSE);
+		grants.setLcmLink("http://");
+		grants.setInstanceLink("http://");
 		final GrantResponse grantsDb = grantsResponseJpa.save(grants);
 		LOG.debug("Sending grants {}", grantsDb.getId());
 		eventManager.sendGrant(grantsDb.getId(), new HashMap<>());

@@ -83,6 +83,10 @@ public class VnfGrantsRequest implements GrantInterface, BaseEntity {
 
 	private VnfInstance vnfInstance;
 
+	private String instanceLink;
+
+	private String lcmLink;
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -132,38 +136,47 @@ public class VnfGrantsRequest implements GrantInterface, BaseEntity {
 		this.storageReservationId = storageReservationId;
 	}
 
+	@Override
 	public Set<GrantInformation> getAddResources() {
 		return addResources;
 	}
 
+	@Override
 	public void setAddResources(final Set<GrantInformation> addResources) {
 		this.addResources = addResources;
 	}
 
+	@Override
 	public Set<GrantInformation> getTempResources() {
 		return tempResources;
 	}
 
+	@Override
 	public void setTempResources(final Set<GrantInformation> tempResources) {
 		this.tempResources = tempResources;
 	}
 
+	@Override
 	public Set<GrantInformation> getRemoveResources() {
 		return removeResources;
 	}
 
+	@Override
 	public void setRemoveResources(final Set<GrantInformation> removeResources) {
 		this.removeResources = removeResources;
 	}
 
+	@Override
 	public Set<GrantInformation> getUpdateResources() {
 		return updateResources;
 	}
 
+	@Override
 	public void setUpdateResources(final Set<GrantInformation> updateResources) {
 		this.updateResources = updateResources;
 	}
 
+	@Override
 	public GrantVimAssetsEntity getVimAssets() {
 		return vimAssets;
 	}
@@ -270,6 +283,22 @@ public class VnfGrantsRequest implements GrantInterface, BaseEntity {
 
 	public void setVnfInstance(final VnfInstance _vnfInstance) {
 		vnfInstance = _vnfInstance;
+	}
+
+	public String getInstanceLink() {
+		return instanceLink;
+	}
+
+	public void setInstanceLink(final String instanceLink) {
+		this.instanceLink = instanceLink;
+	}
+
+	public String getLcmLink() {
+		return lcmLink;
+	}
+
+	public void setLcmLink(final String lcmLink) {
+		this.lcmLink = lcmLink;
 	}
 
 }

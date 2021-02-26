@@ -56,15 +56,15 @@ import com.ubiqube.etsi.mec.mepm.service.graph.uow.AppComputeUow;
  */
 @Service
 public class AppVdu extends AbstractAppPlanContributor {
-	private final AppInstanceService vnfInstanceService;
-	private final AppPackageService vnfPackageService;
-	private final AppLiveInstanceJpa vnfLiveInstanceJpa;
+	private final AppInstanceService instanceService;
+	private final AppPackageService packageService;
+	private final AppLiveInstanceJpa liveInstanceJpa;
 
-	public AppVdu(final AppInstanceService vnfInstanceService, final AppPackageService vnfPackageService, final AppLiveInstanceJpa vnfLiveInstanceJpa) {
+	public AppVdu(final AppInstanceService appInstanceService, final AppPackageService appPackageService, final AppLiveInstanceJpa appLiveInstanceJpa) {
 		super();
-		this.vnfInstanceService = vnfInstanceService;
-		this.vnfPackageService = vnfPackageService;
-		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+		this.instanceService = appInstanceService;
+		this.packageService = appPackageService;
+		this.liveInstanceJpa = appLiveInstanceJpa;
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class AppVdu extends AbstractAppPlanContributor {
 			return doTerminatePlan(plan.getAppInstance());
 		}
 		final List<AppTask> ret = new ArrayList<>();
-		final int currentInst = vnfLiveInstanceJpa.findByAppInstanceAndClass(plan.getAppInstance(), AppComputeTask.class.getSimpleName()).size();
+		final int currentInst = liveInstanceJpa.findByAppInstanceAndClass(plan.getAppInstance(), AppComputeTask.class.getSimpleName()).size();
 		final VnfCompute compute = bundle.getVirtualComputeDescriptor();
 		if (currentInst < 1) {
 			ret.addAll(addInstance(compute));
@@ -88,8 +88,8 @@ public class AppVdu extends AbstractAppPlanContributor {
 		return ret;
 	}
 
-	private List<AppTask> doTerminatePlan(final AppInstance vnfInstance) {
-		final List<AppLiveInstance> instances = vnfLiveInstanceJpa.findByAppInstanceAndClass(vnfInstance, AppComputeTask.class.getSimpleName());
+	private List<AppTask> doTerminatePlan(final AppInstance appInstance) {
+		final List<AppLiveInstance> instances = liveInstanceJpa.findByAppInstanceAndClass(appInstance, AppComputeTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final AppComputeTask computeTask = new AppComputeTask();
 			computeTask.setChangeType(ChangeType.REMOVED);
@@ -105,7 +105,7 @@ public class AppVdu extends AbstractAppPlanContributor {
 	}
 
 	private List<AppTask> removeInstance(final VnfCompute vnfCompute, final AppBlueprint plan) {
-		final List<AppLiveInstance> instantiated = vnfInstanceService.getLiveComputeInstanceOf(plan.getAppInstance());
+		final List<AppLiveInstance> instantiated = instanceService.getLiveComputeInstanceOf(plan.getAppInstance());
 		final List<AppTask> ret = new ArrayList<>();
 		instantiated.forEach(x -> {
 			final AppComputeTask computeTask = new AppComputeTask();
@@ -135,14 +135,14 @@ public class AppVdu extends AbstractAppPlanContributor {
 
 	@Override
 	public List<UnitOfWork<AppTask, AppParameters>> convertTasksToExecNode(final Set<AppTask> tasks, final AppBlueprint plan) {
-		final AppInstance vnfInstance = vnfInstanceService.findById(plan.getAppInstance().getId());
-		final AppPkg vnfPackage = vnfPackageService.findById(vnfInstance.getAppPkg());
+		final AppInstance vnfInstance = instanceService.findById(plan.getAppInstance().getId());
+		final AppPkg appPackage = packageService.findById(vnfInstance.getAppPkg());
 		return tasks.stream()
 				.filter(x -> x instanceof AppComputeTask)
 				.map(AppComputeTask.class::cast)
 				.map(x -> {
-					final VnfCompute vnfCompute = vnfPackage.getVirtualComputeDescriptor();
-					final Set<VnfLinkPort> linkPort = vnfPackage.getVnfLinkPort();
+					final VnfCompute vnfCompute = appPackage.getVirtualComputeDescriptor();
+					final Set<VnfLinkPort> linkPort = appPackage.getVnfLinkPort();
 					return new AppComputeUow(x, vnfCompute, linkPort);
 				})
 				.collect(Collectors.toList());

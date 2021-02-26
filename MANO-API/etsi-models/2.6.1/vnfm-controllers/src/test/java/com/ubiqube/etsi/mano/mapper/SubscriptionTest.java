@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class SubscriptionTest {
 		final PkgmSubscription subsJson = new PkgmSubscription();
 		subsJson.setCallbackUri("http://callbackUri/");
 		final PkgmNotificationsFilter filter = new PkgmNotificationsFilter();
-		filter.setNotificationTypes(NotificationTypesEnum.VnfPackageChangeNotification);
+		filter.setNotificationTypes(Arrays.asList(NotificationTypesEnum.VnfPackageChangeNotification));
 		final List<PkgmNotificationsFilterVnfProductsFromProviders> vnfProductsFromProviders = new ArrayList<>();
 		final PkgmNotificationsFilterVnfProductsFromProviders subProv = new PkgmNotificationsFilterVnfProductsFromProviders();
 		subProv.addOperationalStateItem(PackageOperationalStateType.DISABLED);
@@ -73,7 +74,7 @@ public class SubscriptionTest {
 		final Subscription subsDb = mapper.map(so, Subscription.class);
 		final List<FilterAttributes> filters = subsDb.getFilters();
 		assertEquals(2, filters.size()); // Should be 2
-		checkFilter(filters.get(0), "notificationTypes", "VnfPackageChangeNotification");
+		checkFilter(filters.get(0), "notificationTypes[0]", "VnfPackageChangeNotification");
 		checkFilter(filters.get(1), "vnfProductsFromProviders[0].operationalState[0]", "DISABLED");
 	}
 

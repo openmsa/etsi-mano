@@ -3,14 +3,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>mano-super-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 	<artifactId>mano-commons</artifactId>
 	<name>mano-commons</name>
 	<description>ETSI MANO commons interface.</description>
-
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -22,6 +22,12 @@
 			<url>http://nexus2.ubiqube.com:8081/repository/maven-releases/</url>
 		</repository>
 	</distributionManagement>
+
+	<properties>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -74,12 +80,6 @@
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-annotations</artifactId>
 		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -93,9 +93,4 @@
 			<artifactId>spring-hateoas</artifactId>
 		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
 </project>

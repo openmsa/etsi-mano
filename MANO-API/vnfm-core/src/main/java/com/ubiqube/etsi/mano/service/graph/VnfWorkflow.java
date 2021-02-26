@@ -62,7 +62,7 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	@Override
 	public VnfReport execCreate(final VnfBlueprint plan, final GenericExecParams params) {
 		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> createPlan = planner.convertToExecution(plan, ChangeType.ADDED);
-		GraphTools.exportGraph(createPlan, "added.dot");
+		GraphTools.exportGraph(createPlan, "vnf-added.dot");
 		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> createResults = executor.execCreate(createPlan, () -> new UowTaskCreateProvider<>((VnfParameters) params));
 		return new VnfReport(createResults);
 	}
@@ -70,7 +70,7 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	@Override
 	public VnfReport execDelete(final VnfBlueprint blueprint, final GenericExecParams vparams) {
 		final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> graph = planner.convertToExecution(blueprint, ChangeType.REMOVED);
-		GraphTools.exportGraph(graph, "del.dot");
+		GraphTools.exportGraph(graph, "vnf-del.dot");
 		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>((VnfParameters) vparams));
 		return new VnfReport(removeResults);
 	}

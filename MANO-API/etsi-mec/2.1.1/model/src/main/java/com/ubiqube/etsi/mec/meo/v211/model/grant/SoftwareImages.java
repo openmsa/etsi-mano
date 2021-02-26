@@ -16,50 +16,60 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.model.grant;
 
-import java.util.Objects;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * SoftwareImages
  */
 @Validated
-public class SoftwareImages   {
+public class SoftwareImages {
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    return true;
-  }
+	private String vimConnectionId;
 
-  @Override
-  public int hashCode() {
-    return Objects.hash();
-  }
+	private String appDSoftwareImageId;
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SoftwareImages {\n");
-    
-    sb.append("}");
-    return sb.toString();
-  }
+	private String vimSoftwareImageId;
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public String getVimConnectionId() {
+		return vimConnectionId;
+	}
+
+	public void setVimConnectionId(final String vimConnectionId) {
+		this.vimConnectionId = vimConnectionId;
+	}
+
+	public String getAppDSoftwareImageId() {
+		return appDSoftwareImageId;
+	}
+
+	public void setAppDSoftwareImageId(final String appDSoftwareImageId) {
+		this.appDSoftwareImageId = appDSoftwareImageId;
+	}
+
+	public String getVimSoftwareImageId() {
+		return vimSoftwareImageId;
+	}
+
+	public void setVimSoftwareImageId(final String vimSoftwareImageId) {
+		this.vimSoftwareImageId = vimSoftwareImageId;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class SoftwareImages {\n");
+
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

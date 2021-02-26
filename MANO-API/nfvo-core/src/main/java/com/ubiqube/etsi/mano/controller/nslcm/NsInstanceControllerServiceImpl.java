@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
@@ -34,20 +36,23 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
 import com.ubiqube.etsi.mano.model.NsInstantiate;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
 
 @Service
-public class NsInstanceControllerServiceImpl implements NsInstanceControllerService {
+public class NsInstanceControllerServiceImpl extends SearchableService implements NsInstanceControllerService {
 
 	private final NsdPackageService nsdPackageService;
 
@@ -58,7 +63,8 @@ public class NsInstanceControllerServiceImpl implements NsInstanceControllerServ
 	private final MapperFacade mapper;
 	private final NsBlueprintService nsBlueprintService;
 
-	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager _eventManager, final MapperFacade _mapper, final NsBlueprintService _nsBlueprintService) {
+	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager _eventManager, final MapperFacade _mapper, final NsBlueprintService _nsBlueprintService, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, PmJob.class);
 		this.nsdPackageService = nsdPackageService;
 		this.nsInstanceService = nsInstanceService;
 		eventManager = _eventManager;

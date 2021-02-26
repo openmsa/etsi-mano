@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v261;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
@@ -34,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
@@ -135,6 +137,8 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfLcmOpOccs.vnfInstance.id", "vnfInstanceId")
 				.field("vnfLcmOpOccs.id", "vnfLcmOpOccId")
 				.field("vnfInstance.id", "vnfInstanceId")
+				.field("instanceLink", "links.vnfInstance.href")
+				.field("lcmLink", "links.vnfLcmOpOcc.href")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(InstantiateNsRequest.class, NsdInstance.class)
@@ -153,6 +157,13 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantRequest.class, GrantResponse.class)
 				.field("vimConstraints[0].resource", "vimConnections")
+				.field("links.vnfInstance.href", "instanceLink")
+				.field("links.vnfLcmOpOcc.href", "lcmLink")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(Grant.class, GrantResponse.class)
+				.field("links.vnfInstance.href", "instanceLink")
+				.field("links.vnfLcmOpOcc.href", "lcmLink")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ConstraintResourceRef.class, VimConnectionInformation.class)
@@ -184,6 +195,10 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("isAutomaticInvocation", "automaticInvocation")
 				.field("isCancelPending", "cancelPending")
 				.field("startTime", "audit.createdOn")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(NsLcmOpOccs.class, NsLcmOpOcc.class)
+				.field("stateEnteredTime", "statusEnteredTime")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

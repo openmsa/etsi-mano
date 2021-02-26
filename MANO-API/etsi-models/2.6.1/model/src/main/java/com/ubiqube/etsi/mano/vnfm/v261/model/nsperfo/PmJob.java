@@ -37,7 +37,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "This type represents a PM job. ")
 @Validated
 
-
 public class PmJob {
 	@JsonProperty("id")
 	private String id = null;
@@ -50,7 +49,7 @@ public class PmJob {
 	private PmJobCriteria criteria = null;
 
 	@JsonProperty("reports")
-	private PmJobReports reports = null;
+	private List<PmJobReports> reports = null;
 
 	@JsonProperty("_links")
 	private PmJobLinks links = null;
@@ -62,7 +61,7 @@ public class PmJob {
 
 	/**
 	 * Identifier of this PM job.
-	 * 
+	 *
 	 * @return id
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of this PM job. ")
@@ -87,9 +86,8 @@ public class PmJob {
 	}
 
 	/**
-	 * Identifiers of the VNF instances for which performance information is
-	 * collected.
-	 * 
+	 * Identifiers of the VNF instances for which performance information is collected.
+	 *
 	 * @return objectInstanceIds
 	 **/
 	@ApiModelProperty(required = true, value = "Identifiers of the VNF instances for which performance information is collected. ")
@@ -110,7 +108,7 @@ public class PmJob {
 
 	/**
 	 * Criteria of the collection of performance information.
-	 * 
+	 *
 	 * @return criteria
 	 **/
 	@ApiModelProperty(required = true, value = "Criteria of the collection of performance information. ")
@@ -126,25 +124,25 @@ public class PmJob {
 		this.criteria = criteria;
 	}
 
-	public PmJob reports(final PmJobReports reports) {
+	public PmJob reports(final List<PmJobReports> reports) {
 		this.reports = reports;
 		return this;
 	}
 
 	/**
 	 * Get reports
-	 * 
+	 *
 	 * @return reports
 	 **/
 	@ApiModelProperty(value = "")
 
 	@Valid
 
-	public PmJobReports getReports() {
+	public List<PmJobReports> getReports() {
 		return reports;
 	}
 
-	public void setReports(final PmJobReports reports) {
+	public void setReports(final List<PmJobReports> reports) {
 		this.reports = reports;
 	}
 
@@ -155,7 +153,7 @@ public class PmJob {
 
 	/**
 	 * Get links
-	 * 
+	 *
 	 * @return links
 	 **/
 	@ApiModelProperty(value = "")
@@ -206,8 +204,7 @@ public class PmJob {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

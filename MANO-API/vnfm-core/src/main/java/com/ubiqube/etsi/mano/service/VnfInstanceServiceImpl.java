@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
@@ -42,14 +40,16 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
-public class VnfInstanceServiceImpl implements VnfInstanceService {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfInstanceServiceImpl.class);
+public class VnfInstanceServiceImpl extends SearchableService implements VnfInstanceService {
 
 	private final ExtVirtualLinkDataEntityJpa extVirtualLinkDataEntityJpa;
 
@@ -59,11 +59,18 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 
 	private final EntityManager entityManager;
 
-	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance, final EntityManager _entityManager) {
+	private final Patcher patcher;
+
+	private final EventManager eventManager;
+
+	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance, final EntityManager _entityManager, final Patcher _patcher, final EventManager _eventManager, final ManoSearchResponseService _searchService) {
+		super(_searchService, _entityManager, VnfInstance.class);
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstanceJpa = _vnfInstanceJpa;
 		vnfLiveInstanceJpa = _vnfLiveInstance;
 		entityManager = _entityManager;
+		patcher = _patcher;
+		eventManager = _eventManager;
 	}
 
 	@Override
@@ -121,8 +128,7 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 	@Override
 	@Transactional
 	public void delete(final UUID vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstanceJpa.findById(vnfInstanceId).orElseThrow(() -> new NotFoundException("Vnf Instance " + vnfInstanceId + " not found."));
-
+		vnfInstanceJpa.findById(vnfInstanceId).orElseThrow(() -> new NotFoundException("Vnf Instance " + vnfInstanceId + " not found."));
 		vnfInstanceJpa.deleteById(vnfInstanceId);
 	}
 
@@ -182,6 +188,16 @@ public class VnfInstanceServiceImpl implements VnfInstanceService {
 	@Override
 	public boolean isInstantiate(final UUID id) {
 		return 0 == vnfInstanceJpa.countByVnfPkgId(id);
+	}
+
+	@Override
+	public VnfInstance vnfLcmPatch(final VnfInstance vnfInstance, final String body, final String ifMatch) {
+		if ((ifMatch != null) && !ifMatch.equals(vnfInstance.getVersion() + "")) {
+			throw new PreConditionException(ifMatch + " does not match " + vnfInstance.getVersion());
+		}
+		patcher.patch(body, vnfInstance);
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CHANGED, vnfInstance.getId());
+		return vnfInstanceJpa.save(vnfInstance);
 	}
 
 }

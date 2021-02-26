@@ -50,7 +50,7 @@ public class NfvoActionController {
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
 		switch (eventType) {
 		case VNF_PKG_ONBOARD_FROM_URI:
-			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("url"));
+			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("uri"));
 			break;
 		case VNF_PKG_ONBOARD_FROM_BYTES:
 			final byte[] bytes = Base64.getDecoder().decode((String) parameters.get("data"));

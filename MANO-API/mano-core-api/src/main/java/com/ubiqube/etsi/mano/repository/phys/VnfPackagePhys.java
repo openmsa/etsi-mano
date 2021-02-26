@@ -30,7 +30,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 @Profile("phys")
 @Service
-public class VnfPackagePhys extends GenericBinaryRepository<VnfPackage> implements VnfPackageRepository {
+public class VnfPackagePhys extends AbstractGenericBinaryRepository<VnfPackage> implements VnfPackageRepository {
 
 	public VnfPackagePhys(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low, final NamingStrategy _namingStrategy) {
 		super(objectMapper, jsonFilter, low, _namingStrategy);

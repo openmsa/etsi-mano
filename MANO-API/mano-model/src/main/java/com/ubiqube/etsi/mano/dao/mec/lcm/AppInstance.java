@@ -48,4 +48,15 @@ public class AppInstance extends Instance {
 
 	@ManyToOne
 	private AppPkg appPkg;
+
+	private String appdId;
+
+	private String appProvider;
+
+	private String appProductName;
+
+	private String appSoftwareVersion;
+
+	private String appdVersion;
+
 }

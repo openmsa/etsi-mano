@@ -35,10 +35,11 @@ public class DataPoller {
 
 	private final PmJobsJpa pmJobsJpa;
 
-	private MonitoringEventManager monitoringEventManager;
+	private final MonitoringEventManager monitoringEventManager;
 
 	public DataPoller(final PmJobsJpa _pmJobsJpa, final MonitoringEventManager _monitoringEventManager) {
 		pmJobsJpa = _pmJobsJpa;
+		monitoringEventManager = _monitoringEventManager;
 	}
 
 	@Scheduled(fixedRate = 60000)

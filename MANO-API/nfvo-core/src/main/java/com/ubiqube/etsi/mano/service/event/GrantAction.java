@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -59,25 +60,28 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final VnfInstanceService vnfInstanceService;
 
-	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfInstanceService _vnfInstancesRepository, final VimElection _vimElection) {
+	private final VnfPackageService vnfPackageService;
+
+	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfInstanceService _vnfInstancesRepository, final VimElection _vimElection, final VnfPackageService _vnfPackageService) {
 		super(_grantJpa, _vimManager, _vimElection);
 		grantJpa = _grantJpa;
 		vimManager = _vimManager;
 		vnfInstanceService = _vnfInstancesRepository;
+		vnfPackageService = _vnfPackageService;
 	}
 
 	@Override
 	protected Set<VnfCompute> getVnfCompute(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
 		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfInstance.getVnfPkg().getVnfCompute();
+		return vnfPackageService.findById(vnfInstance.getVnfPkg().getId()).getVnfCompute();
 	}
 
 	@Override
 	protected Set<VnfStorage> getVnfStorage(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
 		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfInstance.getVnfPkg().getVnfStorage();
+		return vnfPackageService.findById(vnfInstance.getVnfPkg().getId()).getVnfStorage();
 	}
 
 	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse, final VnfPackage vnfPackage) {
@@ -150,41 +154,4 @@ public class GrantAction extends AbstractGrantAction {
 				.orElseThrow(() -> new NotFoundException("VduId not found " + vduId));
 	}
 
-	class QuotaNeeded {
-		private int disk = 0;
-		private int vcpu = 0;
-		private int ram = 0;
-
-		public int getDisk() {
-			return disk;
-		}
-
-		public void setDisk(final int disk) {
-			this.disk = disk;
-		}
-
-		public int getVcpu() {
-			return vcpu;
-		}
-
-		public void setVcpu(final int vcpu) {
-			this.vcpu = vcpu;
-		}
-
-		public int getRam() {
-			return ram;
-		}
-
-		public void setRam(final int ram) {
-			this.ram = ram;
-		}
-
-		public QuotaNeeded(final int disk, final int vcpu, final int ram) {
-			super();
-			this.disk = disk;
-			this.vcpu = vcpu;
-			this.ram = ram;
-		}
-
-	}
 }

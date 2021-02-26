@@ -19,7 +19,8 @@ package com.ubiqube.etsi.mano.service.event;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Optional;
+
+import javax.validation.constraints.NotNull;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -104,37 +105,40 @@ public class NotificationsImpl implements Notifications {
 	}
 
 	private static HttpClientContext createContext(final AuthentificationInformations auth, final String _uri) throws MalformedURLException {
-		final AuthType authType = auth.getAuthType();
 		final URL url = new URL(_uri);
 		final HttpHost targetHost = new HttpHost(url.getHost(), url.getPort(), url.getProtocol());
 
-		final HttpClientContext context = Optional.ofNullable(createContext(authType, auth, targetHost))
-				.orElse(new HttpClientContext());
+		final HttpClientContext context = createContext(auth, targetHost);
 		context.setTargetHost(targetHost);
 		return context;
 	}
 
-	private static HttpClientContext createContext(final AuthType authType, final AuthentificationInformations auth, final HttpHost targetHost) {
+	private static @NotNull HttpClientContext createContext(final AuthentificationInformations auth, final HttpHost targetHost) {
+		if (null == auth) {
+			return new HttpClientContext();
+		}
+		final AuthType authType = auth.getAuthType();
 		if (authType == AuthType.BASIC) {
 			return createBasicContext(auth.getAuthParamBasic(), targetHost);
 		} else if (authType == AuthType.OAUTH2_CLIENT_CREDENTIALS) {
 			return createOAuth2Context(auth.getAuthParamOath2(), targetHost);
 		} else if (authType == AuthType.TLS_CERT) {
 			return createTlsCertContext(targetHost);
+		} else {
+			return new HttpClientContext();
 		}
-		throw new GenericException("Unknown Auth type.");
 	}
 
-	private static HttpClientContext createTlsCertContext(final HttpHost _targetHost) {
+	private static @NotNull HttpClientContext createTlsCertContext(final HttpHost _targetHost) {
 		// http://svn.apache.org/viewvc/httpcomponents/oac.hc3x/trunk/src/contrib/org/apache/commons/httpclient/contrib/ssl/AuthSSLProtocolSocketFactory.java?view=markup
 		return new HttpClientContext();
 	}
 
-	private static HttpClientContext createOAuth2Context(final AuthParamOath2 authParamOath2, final HttpHost _targetHost) {
+	private static @NotNull HttpClientContext createOAuth2Context(final AuthParamOath2 authParamOath2, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 
-	private static HttpClientContext createBasicContext(final AuthParamBasic authParamBasic, final HttpHost _targetHost) {
+	private static @NotNull HttpClientContext createBasicContext(final AuthParamBasic authParamBasic, final HttpHost _targetHost) {
 
 		final CredentialsProvider credsProvider = new BasicCredentialsProvider();
 		final String _username = authParamBasic.getUserName();

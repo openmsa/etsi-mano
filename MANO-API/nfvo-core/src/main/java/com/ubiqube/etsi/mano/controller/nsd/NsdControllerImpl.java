@@ -23,9 +23,10 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,32 +36,29 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.Patcher;
+import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
-public class NsdControllerImpl implements NsdController {
+public class NsdControllerImpl extends SearchableService implements NsdController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsdController.class);
 	private final NsdRepository nsdRepository;
 	private final Patcher patcher;
-	private final VnfPackageRepository vnfPackageRepository;
 	private final EventManager eventManager;
 
-	public NsdControllerImpl(final NsdRepository _nsdRepository, final VnfPackageRepository _vnfPackageRepository, final Patcher _patcher, final EventManager _eventManager) {
+	public NsdControllerImpl(final NsdRepository _nsdRepository, final Patcher _patcher, final EventManager _eventManager, final EntityManager _em, final ManoSearchResponseService searchService) {
+		super(searchService, _em, NsdPackage.class);
 		nsdRepository = _nsdRepository;
-		vnfPackageRepository = _vnfPackageRepository;
 		patcher = _patcher;
 		eventManager = _eventManager;
 		LOG.info("Starting NSD Management SOL005 Controller.");
-	}
-
-	@Override
-	public List<NsdPackage> nsDescriptorsGet(final String filter) {
-		return nsdRepository.query(filter);
 	}
 
 	@Override
@@ -69,7 +67,7 @@ public class NsdControllerImpl implements NsdController {
 		ensureDisabled(nsdPackage);
 		ensureNotInUse(nsdPackage);
 		nsdRepository.delete(id);
-		// NsdDeletionNotification OSS/BSS
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONDELETION, id);
 	}
 
 	@Override
@@ -93,10 +91,14 @@ public class NsdControllerImpl implements NsdController {
 	}
 
 	@Override
-	public NsdPackage nsDescriptorsNsdInfoIdPatch(final UUID id, final String body) {
+	public NsdPackage nsDescriptorsNsdInfoIdPatch(final UUID id, final String body, final String ifMatch) {
 		final NsdPackage nsdPkgInfo = nsdRepository.get(id);
+		ensureIsOnboarded(nsdPkgInfo);
+		if ((ifMatch != null) && !ifMatch.equals(nsdPkgInfo.getVersion() + "")) {
+			throw new PreConditionException(ifMatch + " does not match " + nsdPkgInfo.getVersion());
+		}
 		patcher.patch(body, nsdPkgInfo);
-		// NsdChangeNotification OSS/BSS
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONCHANGE, id);
 		return nsdRepository.save(nsdPkgInfo);
 	}
 

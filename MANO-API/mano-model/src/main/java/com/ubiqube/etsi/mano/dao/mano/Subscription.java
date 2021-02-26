@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
@@ -46,6 +47,8 @@ import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 public class Subscription implements BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@DocumentId
+	@FullTextField
 	private UUID id;
 
 	// Used for rebuilding links.

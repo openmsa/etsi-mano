@@ -31,6 +31,6 @@ public interface VnfPackageController {
 
 	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, byte[] data);
 
-	void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(UUID id);
+	void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(UUID id, String contentType, String uri);
 
 }

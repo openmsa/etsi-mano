@@ -62,7 +62,6 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfcResourceInfo;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 
@@ -84,23 +83,20 @@ public class VnfInstancesApiController implements VnfInstancesApi {
 	private final MapperFacade mapper;
 	private final VnfInstanceService vnfInstanceService;
 	private final VnfPackageService vnfPackageService;
-	private final ManoSearchResponseService searchService;
 
-	public VnfInstancesApiController(final VnfInstanceService vnfInstancesService, final VnfInstanceLcm vnfInstanceLcm, final MapperFacade mapper, final VnfInstanceService vnfInstanceService, final VnfPackageService vnfPackageService, final ManoSearchResponseService _searchService) {
+	public VnfInstancesApiController(final VnfInstanceService vnfInstancesService, final VnfInstanceLcm vnfInstanceLcm, final MapperFacade mapper, final VnfInstanceService vnfInstanceService, final VnfPackageService vnfPackageService) {
 		super();
 		this.vnfInstancesService = vnfInstancesService;
 		this.vnfInstanceLcm = vnfInstanceLcm;
 		this.mapper = mapper;
 		this.vnfInstanceService = vnfInstanceService;
 		this.vnfPackageService = vnfPackageService;
-		searchService = _searchService;
 	}
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
-		final List<com.ubiqube.etsi.mano.dao.mano.VnfInstance> result = vnfInstanceLcm.get(requestParams);
 		final Consumer<VnfInstance> setLink = x -> x.setLinks(links.getLinks(x.getId()));
-		return searchService.search(requestParams, VnfInstance.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, result, VnfInstance.class, setLink);
+		return vnfInstancesService.search(requestParams, VnfInstance.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override

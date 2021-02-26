@@ -16,13 +16,11 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.nslcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -45,7 +43,6 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOccLinks;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -61,21 +58,16 @@ public class VnfLcmOpOccsApiController implements VnfLcmOpOccsApi {
 
 	private final VnfLcmController vnfLcmController;
 
-	private final ManoSearchResponseService searchService;
-
-	public VnfLcmOpOccsApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController, final ManoSearchResponseService _searchService) {
+	public VnfLcmOpOccsApiController(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
 		super();
 		this.mapper = mapper;
 		this.vnfLcmController = vnfLcmController;
-		searchService = _searchService;
 	}
 
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "filter");
-		final List<VnfBlueprint> result = vnfLcmController.vnfLcmOpOccsGet(filter);
 		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return searchService.search(requestParams, VnfLcmOpOcc.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, result, VnfLcmOpOcc.class, setLink);
+		return vnfLcmController.search(requestParams, VnfLcmOpOcc.class, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, setLink);
 	}
 
 	@Override

@@ -20,15 +20,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
+import com.ubiqube.etsi.mano.exception.BadRequestException;
 import com.ubiqube.etsi.mec.controller.grant.AppGrantController;
 import com.ubiqube.etsi.mec.meo.v211.model.grant.Grant;
 import com.ubiqube.etsi.mec.meo.v211.model.grant.GrantRequest;
@@ -62,11 +62,18 @@ public class Grants211MepmApiController implements Grants211MepmApi {
 	}
 
 	@Override
-	public ResponseEntity<Grant> grantPOST(@Valid final GrantRequest grantRequest) {
+	public ResponseEntity<Grant> grantPOST(final GrantRequest grantRequest) {
 		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
+		checkGrant(obj);
 		final GrantResponse resp = appGrantController.post(obj);
 		final URI location = linkTo(methodOn(Grants211MepmApi.class).grantGET(resp.getId().toString())).withSelfRel().toUri();
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.accepted().location(location).build();
+	}
+
+	private static void checkGrant(final VnfGrantsRequest obj) {
+		Optional.ofNullable(obj.getVnfInstance()).orElseThrow(() -> new BadRequestException("Unable to find App instance: " + obj.getVnfInstance()));
+		Optional.ofNullable(obj.getVnfdId()).orElseThrow(() -> new BadRequestException("Unable to find Appd Id: " + obj.getVnfdId()));
+		Optional.ofNullable(obj.getVnfLcmOpOccs()).orElseThrow(() -> new BadRequestException("Unable to find App LCM OP OCC: " + obj.getVnfLcmOpOccs()));
 	}
 
 }

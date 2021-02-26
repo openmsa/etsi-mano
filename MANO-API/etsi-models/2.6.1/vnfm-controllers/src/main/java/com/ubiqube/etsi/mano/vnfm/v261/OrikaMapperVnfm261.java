@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
@@ -48,6 +49,9 @@ import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
+import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVnfc;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscription;
@@ -220,8 +224,26 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("authentication.authType[0]", "authentificationInformations.authType")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(FmSubscriptionRequest.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
+				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(FmSubscription.class, Subscription.class)
+				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
 		orikaMapperFactory.classMap(LccnSubscription.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+		/*
+		 * Fault management.
+		 */
+		orikaMapperFactory.classMap(Alarm.class, Alarms.class)
+				.field("isRootCause", "rootCause")
 				.byDefault()
 				.register();
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();

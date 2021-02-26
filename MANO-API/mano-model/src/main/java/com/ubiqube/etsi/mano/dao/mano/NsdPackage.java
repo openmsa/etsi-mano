@@ -60,6 +60,9 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Embedded
 	private Audit audit;
 
+	// OVI removed just for plugtest => @Version
+	private long version;
+
 	@FullTextField
 	private String nsdId;
 
@@ -141,6 +144,14 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@Override
 	public void setAudit(final Audit audit) {
 		this.audit = audit;
+	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(final long version) {
+		this.version = version;
 	}
 
 	public String getNsdId() {

@@ -22,8 +22,10 @@ import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -32,11 +34,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
+import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mec.mepm.event.MepmEventManager;
@@ -72,7 +76,9 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 
 	private final AppPackageService appPackageService;
 
-	public MepmInstanceControllerImpl(final AppInstanceService appInstanceService, final AppPackageRepository appPackageRepository, final MapperFacade mapper, final MepmEventManager eventManager, final AppLcmService appLcmService, final AppBlueprintService planService, final AppPackageService _appPackageService) {
+	private final EntityManager entityManager;
+
+	public MepmInstanceControllerImpl(final AppInstanceService appInstanceService, final AppPackageRepository appPackageRepository, final MapperFacade mapper, final MepmEventManager eventManager, final AppLcmService appLcmService, final AppBlueprintService planService, final AppPackageService _appPackageService, final EntityManager _entityManager) {
 		super();
 		this.appInstanceService = appInstanceService;
 		this.appPackageRepository = appPackageRepository;
@@ -81,6 +87,7 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		this.appLcmService = appLcmService;
 		this.planService = planService;
 		appPackageService = _appPackageService;
+		entityManager = _entityManager;
 	}
 
 	@Override
@@ -105,7 +112,7 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		final AppPkg appPkgInfo = appPackageService.findByAppdId(appDId);
 		ensureIsOnboarded(appPkgInfo);
 		ensureIsEnabled(appPkgInfo);
-		AppInstance appInstance = createAppInstance(appDId, appInstanceDescription, appInstanceName, appPkgInfo);
+		AppInstance appInstance = createAppInstance(appInstanceDescription, appInstanceName, appPkgInfo);
 		mapper.map(appPkgInfo, appInstance);
 		// VnfIdentifierCreationNotification NFVO + EM
 		appInstance = appInstanceService.save(appInstance);
@@ -113,11 +120,17 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		return appInstance;
 	}
 
-	private static AppInstance createAppInstance(@NotNull final String appDId, final String appInstanceDescription, final String appInstanceName, final AppPkg appPkgInfo) {
+	private static AppInstance createAppInstance(final String appInstanceDescription, final String appInstanceName, final AppPkg appPkgInfo) {
 		final AppInstance appInstance = new AppInstance();
+		appInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		appInstance.setAppPkg(appPkgInfo);
 		appInstance.setVnfInstanceName(appInstanceName);
 		appInstance.setVnfInstanceDescription(appInstanceDescription);
+		appInstance.setAppdId(appPkgInfo.getAppDId());
+		appInstance.setAppdVersion(appPkgInfo.getAppDVersion());
+		appInstance.setAppProductName(appPkgInfo.getAppName());
+		appInstance.setAppProvider(appPkgInfo.getAppProvider());
+		appInstance.setAppSoftwareVersion(appPkgInfo.getAppSoftwareVersion());
 		return appInstance;
 	}
 
@@ -156,6 +169,12 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		eventManager.sendActionMepm(ActionType.MEPM_INSTANTIATE, blueprint.getId(), new HashMap<>());
 		LOG.info("VNF Instantiation Event Sucessfully sent. {}", blueprint.getId());
 		return blueprint;
+	}
+
+	@Override
+	public List<AppInstance> query(final String filter) {
+		final SearchQueryer sq = new SearchQueryer(entityManager);
+		return sq.getCriteria(filter, AppInstance.class);
 	}
 
 }

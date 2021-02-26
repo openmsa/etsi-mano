@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mec.meo.service;
 
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class AppPackagingManager {
 	private final List<RegistryHandler<AppToscaProvider>> providers;
 
 	public AppPackagingManager(final List<RegistryHandler<AppToscaProvider>> _providers) {
-		providers = _providers;
+		providers = new ArrayList<>(_providers);
 	}
 
 	public AppPackageProvider getProviderFor(final byte[] data) {

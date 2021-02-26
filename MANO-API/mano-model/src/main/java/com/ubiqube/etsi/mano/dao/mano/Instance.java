@@ -34,6 +34,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
@@ -97,6 +98,8 @@ public class Instance implements BaseEntity, Auditable {
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
 	// private Set<VnfInstantiatedBase> extManagedVirtualLinks;
+	@Version
+	private long version;
 
 	private Audit audit = new Audit();
 

@@ -93,6 +93,9 @@ public class GroovyElection implements VimElection {
 			}
 		}
 		executor.shutdown();
+		if (vims.isEmpty()) {
+			return null;
+		}
 		return vims.get(0);
 	}
 

@@ -24,9 +24,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class PmReport {
 	@Id
@@ -36,12 +38,12 @@ public class PmReport {
 	/**
 	 * The time when the report was made available.
 	 */
-	private LocalDateTime readyTime ;
+	private LocalDateTime readyTime;
 
 	/**
 	 * The time when the report will expire.
 	 */
-	private LocalDateTime expiryTime ;
+	private LocalDateTime expiryTime;
 
 	/**
 	 * The size of the report file in bytes, if known.

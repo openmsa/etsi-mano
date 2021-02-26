@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -67,4 +71,5 @@ public interface VnfPackageService {
 
 	VnfPackage findByVnfdId(final UUID id);
 
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 }

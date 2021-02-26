@@ -16,9 +16,20 @@
  */
 package com.ubiqube.etsi.mec.meo.v211.controller;
 
+import java.util.Iterator;
+
+import org.springframework.stereotype.Service;
+
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
+import com.ubiqube.etsi.mec.meo.v211.model.grant.Grant;
+import com.ubiqube.etsi.mec.meo.v211.model.grant.SoftwareImages;
 import com.ubiqube.etsi.mec.meo.v211.model.pkg.FeatureDependency;
 
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MappingContext;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
 /**
@@ -26,6 +37,7 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class OrikaMec221Meo implements OrikaMapperFactoryConfigurer {
 
 	@Override
@@ -34,6 +46,41 @@ public class OrikaMec221Meo implements OrikaMapperFactoryConfigurer {
 				.field("featureName", "name")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(Grant.class, GrantResponse.class)
+				.field("appInstanceId", "vnfInstanceId")
+				.field("appLcmOpOccId", "vnfLcmOpOccId")
+				.field("links.appLcmOpOcc.href", "lcmLink")
+				.field("links.appInstance.href", "instanceLink")
+				.field("vimAssets.vimFlavourId", "vimAssets.computeResourceFlavours").customize(new FlavourMapper())
+				.field("vimAssets.softwareImages", "vimAssets.computeResourceFlavours")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(SoftwareImages.class, VimSoftwareImageEntity.class)
+				.field("appDSoftwareImageId", "vnfdSoftwareImageId")
+				.field("vimSoftwareImageId", "vimSoftwareImageId")
+				.byDefault()
+				.register();
 	}
 
+	public class FlavourMapper extends CustomMapper<Grant, GrantResponse> {
+
+		@Override
+		public void mapAtoB(final Grant a, final GrantResponse b, final MappingContext context) {
+			final VimComputeResourceFlavourEntity vimFlavor = new VimComputeResourceFlavourEntity();
+			vimFlavor.setVimFlavourId(a.getVimAssets().getVimFlavourId());
+			super.mapAtoB(a, b, context);
+		}
+
+		@Override
+		public void mapBtoA(final GrantResponse b, final Grant a, final MappingContext context) {
+			String ret = null;
+			final Iterator<VimComputeResourceFlavourEntity> ite = b.getVimAssets().getComputeResourceFlavours().iterator();
+			if (ite.hasNext()) {
+				ret = ite.next().getVimFlavourId();
+			}
+			a.getVimAssets().setVimFlavourId(ret);
+			super.mapBtoA(b, a, context);
+		}
+
+	}
 }

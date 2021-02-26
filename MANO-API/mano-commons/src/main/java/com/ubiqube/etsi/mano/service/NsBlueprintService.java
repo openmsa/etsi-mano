@@ -16,10 +16,14 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -37,6 +41,6 @@ public interface NsBlueprintService {
 	@Nonnull
 	NsBlueprint save(NsBlueprint nsBlueprint);
 
-	List<NsBlueprint> query(String filter);
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 
 }

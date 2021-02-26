@@ -72,11 +72,11 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	@JoinColumn
 	private Set<VimConnectionInformation> vimConnections = null;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
 	private Set<ZoneInfoEntity> zones = null;
 
 	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private Set<BlueZoneGroupInformation> zoneGroups = null;
 
@@ -91,7 +91,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	@IndexedEmbedded
 	private OperateChanges operateChanges = new OperateChanges();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
 
 	@Override

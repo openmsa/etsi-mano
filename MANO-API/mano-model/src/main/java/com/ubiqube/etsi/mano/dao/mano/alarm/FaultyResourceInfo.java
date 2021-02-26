@@ -18,6 +18,8 @@ package com.ubiqube.etsi.mano.dao.mano.alarm;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 
@@ -28,5 +30,7 @@ import lombok.Data;
 public class FaultyResourceInfo {
 	@Embedded
 	private ResourceHandle faultyResource;
+
+	@Enumerated(EnumType.STRING)
 	private ResourceTypeEnum faultyResourceType;
 }

@@ -22,6 +22,8 @@ import java.util.List;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import com.ubiqube.etsi.mano.exception.BadRequestException;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -40,9 +42,18 @@ public class AstBuilder {
 			parser.addParseListener(treeBuilder);
 			parser.filterExpr();
 			nodes = treeBuilder.getListNode();
+			checkNodes();
 		} else {
 			nodes = new ArrayList<>();
 		}
+	}
+
+	private void checkNodes() {
+		nodes.forEach(x -> {
+			if (null == x.getOp()) {
+				throw new BadRequestException("Bad filter: " + x);
+			}
+		});
 	}
 
 	public TreeBuilder getTreeBuilder() {

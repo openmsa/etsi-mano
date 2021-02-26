@@ -19,6 +19,7 @@ package com.ubiqube.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class BeanWalkerTest {
 		final PkgmSubscription subsJson = new PkgmSubscription();
 		subsJson.setCallbackUri("http://callbackUri/");
 		final PkgmNotificationsFilter filter = new PkgmNotificationsFilter();
-		filter.setNotificationTypes(NotificationTypesEnum.VnfPackageChangeNotification);
+		filter.setNotificationTypes(Arrays.asList(NotificationTypesEnum.VnfPackageChangeNotification));
 		final List<PkgmNotificationsFilterVnfProductsFromProviders> vnfProductsFromProviders = new ArrayList<>();
 		final PkgmNotificationsFilterVnfProductsFromProviders subProv = new PkgmNotificationsFilterVnfProductsFromProviders();
 		subProv.addOperationalStateItem(PackageOperationalStateType.DISABLED);
@@ -77,7 +78,7 @@ public class BeanWalkerTest {
 		assertEquals("callbackUri", swElem.getAttribute());
 		assertEquals("http://callbackUri/", swElem.getValue());
 		swElem = swRes.get(1);
-		assertEquals("filter.notificationTypes", swElem.getAttribute());
+		assertEquals("filter.notificationTypes[0]", swElem.getAttribute());
 		assertEquals("VnfPackageChangeNotification", swElem.getValue());
 		swElem = swRes.get(2);
 		assertEquals("filter.vnfProductsFromProviders[0].operationalState[0]", swElem.getAttribute());

@@ -29,7 +29,6 @@ import org.springframework.stereotype.Controller;
 
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 import ma.glasnost.orika.MapperFacade;
@@ -45,12 +44,9 @@ public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 
 	private final MapperFacade mapper;
 
-	private final ManoSearchResponseService searchService;
-
-	public VnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper, final ManoSearchResponseService _searchService) {
+	public VnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
-		searchService = _searchService;
 	}
 
 	@Override

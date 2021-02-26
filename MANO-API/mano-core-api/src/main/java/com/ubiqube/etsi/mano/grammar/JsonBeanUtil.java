@@ -32,9 +32,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nonnull;
 
@@ -47,7 +49,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 
 /**
  *
- * @author olivier
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
@@ -55,13 +57,14 @@ public class JsonBeanUtil {
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(JsonBeanUtil.class);
 	private final Set<String> simpleTypes = new HashSet<>();
-	private final Map<String, Map<String, JsonBeanProperty>> cache = new HashMap<>();
+	private static final Map<String, Map<String, JsonBeanProperty>> CACHE = new ConcurrentHashMap<>();
 
 	public JsonBeanUtil() {
 		simpleTypes.add("java.lang.String");
 		simpleTypes.add("java.lang.Boolean");
 		simpleTypes.add("java.lang.Class");
 		simpleTypes.add("java.lang.Integer");
+		simpleTypes.add("java.lang.Long");
 		simpleTypes.add("boolean");
 		simpleTypes.add("int");
 		simpleTypes.add("long");
@@ -71,7 +74,7 @@ public class JsonBeanUtil {
 	}
 
 	public Map<String, JsonBeanProperty> getPropertiesFromClass(@Nonnull final Class<?> _object) {
-		Map<String, JsonBeanProperty> cached = cache.get(_object.getName());
+		Map<String, JsonBeanProperty> cached = CACHE.get(_object.getName());
 		if (cached != null) {
 			return cached;
 		}
@@ -82,24 +85,12 @@ public class JsonBeanUtil {
 			throw new GenericException(e);
 		}
 		cached = rebuildProperties(res);
-		cache.put(_object.getName(), cached);
+		CACHE.put(_object.getName(), cached);
 		return cached;
 	}
 
 	public Map<String, JsonBeanProperty> getProperties(@Nonnull final Object _object) {
-		Map<String, JsonBeanProperty> cached = cache.get(_object.getClass().getName());
-		if (cached != null) {
-			return cached;
-		}
-		Map<String, JsonBeanProperty> res;
-		try {
-			res = buildCache(_object.getClass());
-		} catch (final IntrospectionException e) {
-			throw new GenericException(e);
-		}
-		cached = rebuildProperties(res);
-		cache.put(_object.getClass().getName(), cached);
-		return cached;
+		return getPropertiesFromClass(_object.getClass());
 	}
 
 	private Map<String, JsonBeanProperty> rebuildProperties(final Map<String, JsonBeanProperty> res) {
@@ -118,17 +109,12 @@ public class JsonBeanUtil {
 			stackName.push(key);
 			stackObject.push(jsonBeanProperty);
 			if (right != null) {
-				final String newKey = createKey(stackName);
-				final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
-				jsonBeanProperty.setAccessorsList(listAccessor);
-				ret.put(newKey, jsonBeanProperty);
 				rebuildPropertiesInner(right, stackName, stackObject, ret);
-			} else {
-				final String newKey = createKey(stackName);
-				final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
-				jsonBeanProperty.setAccessorsList(listAccessor);
-				ret.put(newKey, jsonBeanProperty);
 			}
+			final String newKey = createKey(stackName);
+			final List<JsonBeanProperty> listAccessor = getAccessorList(stackObject);
+			jsonBeanProperty.setAccessorsList(listAccessor);
+			ret.put(newKey, jsonBeanProperty);
 			stackName.pop();
 			stackObject.pop();
 		}
@@ -148,55 +134,48 @@ public class JsonBeanUtil {
 	}
 
 	private Map<String, JsonBeanProperty> buildCache(final Class<?> clazz) throws IntrospectionException {
-		final LinkedList<JsonBeanProperty> stack = new LinkedList<>();
-		return buildCacheInner(clazz, stack);
-	}
-
-	private Map<String, JsonBeanProperty> buildCacheInner(final Class<?> clazz, final Deque<JsonBeanProperty> stack) throws IntrospectionException {
 		final Map<String, JsonBeanProperty> properties = new HashMap<>();
-		LOG.info("Building AST of a {}", clazz.getName());
+		LOG.debug("Building AST of a {}", clazz.getName());
 		final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 		final PropertyDescriptor[] propDescs = beanInfo.getPropertyDescriptors();
 
 		for (final PropertyDescriptor propertyDescriptor : propDescs) {
-			if ("class".equals(propertyDescriptor.getName())
-					|| "declaringClass".equals(propertyDescriptor.getName())
-					|| "java.lang.ClassLoader".equals(propertyDescriptor.getName())) {
+			if (isJavaInnerClass(propertyDescriptor.getName())) {
 				continue;
 			}
-			LOG.info("Handling property: {}", propertyDescriptor.getName());
-			if ("links".equals(propertyDescriptor.getName())) {
-				LOG.debug("");
-			}
-			final JsonProperty jsonProperty = findNamedAnnotaion(propertyDescriptor, clazz);
-			String jsonName = propertyDescriptor.getName();
-			if (null != jsonProperty) {
-				jsonName = jsonProperty.value();
-			}
+			LOG.debug("Handling property: {}", propertyDescriptor.getName());
+			final String jsonName = getPropertyName(clazz, propertyDescriptor);
 			final JsonBeanProperty jsonBeanProperty = new JsonBeanProperty(propertyDescriptor, jsonName);
 			final Class<?> propertyType = propertyDescriptor.getPropertyType();
-			if (haveInnerType(propertyType)) {
+			if (isContainer(propertyType)) {
 				final Class<?> clazzRet = extractInnerListType(propertyDescriptor);
 				if (isComplex(clazzRet)) {
-					stack.push(jsonBeanProperty);
-					final Map<String, JsonBeanProperty> res = buildCacheInner(clazzRet, stack);
+					final Map<String, JsonBeanProperty> res = buildCache(clazzRet);
 					jsonBeanProperty.setRight(res);
 				}
 			} else if (isComplex(propertyType)) {
-				stack.push(jsonBeanProperty);
-				final Map<String, JsonBeanProperty> res = buildCacheInner(propertyType, stack);
+				final Map<String, JsonBeanProperty> res = buildCache(propertyType);
 				jsonBeanProperty.setRight(res);
 			}
 			properties.put(jsonName, jsonBeanProperty);
 		}
-		LOG.info("AST of a {} is Done...", clazz.getName());
+		LOG.debug("AST of a {} is Done...", clazz.getName());
 		return properties;
 	}
 
+	private static String getPropertyName(final Class<?> clazz, final PropertyDescriptor propertyDescriptor) {
+		return Optional.ofNullable(findNamedAnnotaion(propertyDescriptor, clazz))
+				.map(JsonProperty::value)
+				.orElse(propertyDescriptor.getName());
+	}
+
+	private static boolean isJavaInnerClass(final String name) {
+		return "class".equals(name)
+				|| "declaringClass".equals(name)
+				|| "java.lang.ClassLoader".equals(name);
+	}
+
 	private static JsonProperty findNamedAnnotaion(final PropertyDescriptor propertyDescriptor, final Class<?> clazz) {
-		if (propertyDescriptor.getName().equals("links")) {
-			LOG.debug("");
-		}
 		Method method = propertyDescriptor.getWriteMethod();
 		if (method != null) {
 			final JsonProperty ann = method.getAnnotation(JsonProperty.class);
@@ -222,14 +201,20 @@ public class JsonBeanUtil {
 		return null;
 	}
 
-	private boolean haveInnerType(final Class<?> clazz) {
+	private boolean isContainer(final Class<?> clazz) {
 		if (clazz.getName().contentEquals("java.util.List")) {
+			return true;
+		}
+		if (clazz.getName().contentEquals("java.util.Map")) {
 			return true;
 		}
 		if (simpleTypes.contains(clazz.getName())) {
 			return false;
 		}
-		LOG.debug("not in List/Map => {}", clazz.getName());
+		if (clazz.isEnum()) {
+			return false;
+		}
+		LOG.warn("not in List/Map => {}", clazz.getName());
 		return false;
 	}
 

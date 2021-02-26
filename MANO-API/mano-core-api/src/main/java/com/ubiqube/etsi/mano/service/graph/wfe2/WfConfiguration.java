@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.jgrapht.GraphPath;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.graph.DefaultListenableGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
@@ -52,7 +53,7 @@ public class WfConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WfConfiguration.class);
 
-	final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
+	private final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
 	private final List<? extends PlanContributor> planContributors;
 
 	public WfConfiguration(final List<? extends PlanContributor> _planContributors) {
@@ -62,7 +63,7 @@ public class WfConfiguration {
 	public ListenableGraph<Class<? extends Node>, NodeConnectivity> getConfigurationGraph() {
 		final List<NodeConnectivity> edges = new ArrayList<>();
 		planContributors.forEach(x -> {
-			LOG.debug("Getting contributor: {}.", x.getContributionType());
+			LOG.debug("Getting contributor: {} => {}", x.getContributionType(), x.getClass());
 			final DependencyBuilder dependencyBuilder = new DependencyBuilder(x);
 			x.getDependencies(dependencyBuilder);
 			final Map<Class<? extends Node>, ReplaceBuilder> replacement = dependencyBuilder.getReplacement();
@@ -75,7 +76,7 @@ public class WfConfiguration {
 			});
 			edges.addAll(dependencyBuilder.getEdges());
 		});
-		final ListenableGraph<Class<? extends Node>, NodeConnectivity> g = (ListenableGraph<Class<? extends Node>, NodeConnectivity>) (Object) GraphTools.createGraph();
+		final DefaultListenableGraph<Class<? extends Node>, NodeConnectivity> g = GraphTools.createNodeGraph();
 		createVertex(g, edges);
 		replacements.entrySet().stream()
 				.flatMap(x -> x.getValue().getEdges().stream())

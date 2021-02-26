@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mec.mepm.controller.lcm;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -26,6 +27,11 @@ import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface MepmInstanceController {
 
 	void delete(UUID fromString);
@@ -39,5 +45,7 @@ public interface MepmInstanceController {
 	AppBlueprint operate(UUID fromString, VnfOperateRequest req);
 
 	AppBlueprint instantiate(UUID fromString);
+
+	List<AppInstance> query(String filter);
 
 }

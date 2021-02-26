@@ -17,10 +17,14 @@
 package com.ubiqube.etsi.mec.mepm.service.graph;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
+import com.ubiqube.etsi.mano.service.event.Report;
+import com.ubiqube.etsi.mano.service.event.ReportItem;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
 /**
@@ -28,7 +32,7 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class AppReport {
+public class AppReport implements Report {
 	private final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> results;
 
 	public AppReport(final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> _results) {
@@ -39,16 +43,23 @@ public class AppReport {
 		return results.getSkipped();
 	}
 
-	public List<ExecutionResult<UnitOfWork<AppTask, AppParameters>, String>> getSuccess() {
-		return results.getSuccess();
+	@Override
+	public List<ReportItem> getSuccess() {
+		return results.getSuccess().stream().map(this::map).collect(Collectors.toList());
 	}
 
-	public List<ExecutionResult<UnitOfWork<AppTask, AppParameters>, String>> getErrored() {
-		return results.getErrored();
+	@Override
+	public List<ReportItem> getErrored() {
+		return results.getErrored().stream().map(this::map).collect(Collectors.toList());
 	}
 
 	public List<ExecutionResult<UnitOfWork<AppTask, AppParameters>, String>> getAll() {
 		return results.getAll();
+	}
+
+	private ReportItem map(final ExecutionResult<UnitOfWork<AppTask, AppParameters>, String> er) {
+		final Task part = er.getId().getTaskEntity();
+		return new ReportItem(part);
 	}
 
 }

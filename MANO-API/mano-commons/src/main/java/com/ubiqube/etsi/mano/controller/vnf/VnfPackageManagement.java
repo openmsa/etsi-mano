@@ -17,7 +17,9 @@
 package com.ubiqube.etsi.mano.controller.vnf;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,6 +28,7 @@ import javax.validation.Valid;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
@@ -60,4 +63,5 @@ public interface VnfPackageManagement {
 
 	<U> U onboardedVnfPackagesVnfdIdGet(UUID vnfdId, Class<U> clazz);
 
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 }

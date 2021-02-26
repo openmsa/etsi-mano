@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
@@ -58,7 +59,7 @@ public class MeoGrantAction extends AbstractGrantAction {
 	@Override
 	protected Set<VnfCompute> getVnfCompute(final UUID id) {
 		final GrantResponse grant = grantJpa.findById(id).orElseThrow();
-		final AppInstance appInstance = appInstanceJpa.findById(UUID.fromString(grant.getVnfInstanceId())).orElseThrow();
+		final AppInstance appInstance = appInstanceJpa.findById(UUID.fromString(grant.getVnfInstanceId())).orElseThrow(() -> new NotFoundException("Could not find App Instance: " + grant.getVnfInstanceId()));
 		return Collections.singleton(appInstance.getAppPkg().getVirtualComputeDescriptor());
 	}
 

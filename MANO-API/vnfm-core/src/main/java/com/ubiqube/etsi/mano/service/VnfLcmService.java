@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmFactory;
+import com.ubiqube.etsi.mano.controller.vnflcm.VnfLcmFactory;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfBlueprintJpa;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -120,6 +121,6 @@ public class VnfLcmService {
 	}
 
 	public VnfBlueprint findById(final UUID id) {
-		return planJpa.findById(id).orElseThrow();
+		return planJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find VNF LCM operation: " + id));
 	}
 }

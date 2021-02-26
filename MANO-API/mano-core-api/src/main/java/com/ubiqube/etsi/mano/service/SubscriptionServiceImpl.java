@@ -16,15 +16,21 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.AstBuilder;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
@@ -33,6 +39,9 @@ import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
+
 	private final EntityManager em;
 
 	private final SubscriptionJpa subscriptionJpa;
@@ -48,24 +57,35 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		final SearchQueryer sq = new SearchQueryer(em);
 		final AstBuilder astBuilder = new AstBuilder(filter);
 		final List<Node<Object>> nodes = (List<Node<Object>>) (Object) astBuilder.getNodes();
-		nodes.add(Node.of("subscriptionType", Operand.EQ, type));
+		nodes.add(Node.of("subscriptionType", Operand.EQ, type.toString()));
 		return sq.getCriteria((List<Node<?>>) (Object) nodes, Subscription.class);
 	}
 
 	@Override
 	public Subscription save(final Subscription subscription, final SubscriptionType type) {
 		subscription.setSubscriptionType(type);
+		testSubscription(subscription);
 		return subscriptionJpa.save(subscription);
+	}
+
+	private static void testSubscription(final Subscription subscription) {
+		try {
+			final URL url = new URL(subscription.getCallbackUri());
+			url.openConnection();
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	@Override
 	public void delete(final UUID subscriptionId, final SubscriptionType type) {
+		findById(subscriptionId, type);
 		subscriptionJpa.deleteById(subscriptionId);
 	}
 
 	@Override
 	public Subscription findById(final UUID subscriptionId, final SubscriptionType type) {
-		return subscriptionJpa.findById(subscriptionId).orElseThrow();
+		return subscriptionJpa.findById(subscriptionId).orElseThrow(() -> new NotFoundException("Could not find subscription id: " + subscriptionId));
 	}
 
 	@Override

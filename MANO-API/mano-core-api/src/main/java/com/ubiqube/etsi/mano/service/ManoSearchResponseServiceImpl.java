@@ -24,14 +24,17 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -64,12 +67,13 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 	}
 
 	@Override
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> parameters, final Class<?> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
-		checkParameters(parameters);
-		final List<String> fields = parameters.get("fields");
-		final List<String> excludeFields = parameters.get("excluse_fields");
-		final boolean haveDefaultFields = parameters.containsKey("exclude_default");
-		final boolean allFields = parameters.containsKey("all_fields");
+	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> parameters, final Class<?> clazz, @Nullable final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
+		final MultiValueMap<String, String> params = Optional.ofNullable(parameters).orElse(new LinkedMultiValueMap<>());
+		checkParameters(params);
+		final List<String> fields = params.get("fields");
+		final List<String> excludeFields = params.get("excluse_fields");
+		final boolean haveDefaultFields = params.containsKey("exclude_default");
+		final boolean allFields = params.containsKey("all_fields");
 		final List<U> vnfPkginfos = list.stream()
 				.map(x -> mapper.map(x, target))
 				.collect(Collectors.toList());
@@ -94,7 +98,7 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 
 	}
 
-	private void checkAllFields(final Set<String> fieldsSet, final Class<?> clazz) {
+	private void checkAllFields(final Set<String> fieldsSet, @NotNull final Class<?> clazz) {
 		final Map<String, JsonBeanProperty> res = jsonBeanUtil.getPropertiesFromClass(clazz);
 		fieldsSet.forEach(x -> {
 			if (!res.containsKey(x) && !innerClass(x, clazz)) {
@@ -113,7 +117,7 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 		}
 	}
 
-	private void checkParameters(final MultiValueMap<String, String> parameters) {
+	private void checkParameters(@NotNull final MultiValueMap<String, String> parameters) {
 		final HashSet<String> section = new HashSet<>(parameters.keySet());
 		section.removeAll(officialParameters);
 		if (!section.isEmpty()) {
@@ -122,6 +126,9 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 	}
 
 	private static Set<String> applyDefault(final String excludeDefaults) {
+		if (null == excludeDefaults) {
+			return new HashSet<>();
+		}
 		return Arrays.stream(excludeDefaults.split(",")).collect(Collectors.toSet());
 	}
 

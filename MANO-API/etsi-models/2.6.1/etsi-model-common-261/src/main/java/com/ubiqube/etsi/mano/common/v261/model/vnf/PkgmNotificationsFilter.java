@@ -33,20 +33,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a subscription filter related to notifications related
- * to VNF package management. At a particular nesting level in the filter
- * structure, the following applies: All attributes shall match in order for the
- * filter to match (logical \&quot;and\&quot; between different filter
- * attributes). If an attribute is an array, the attribute shall match if at
- * least one of the values in the array matches (logical \&quot;or\&quot;
- * between the values of one filter attribute).
+ * This type represents a subscription filter related to notifications related to VNF package management. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \&quot;and\&quot; between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \&quot;or\&quot; between the values of one filter attribute).
  */
 @ApiModel(description = "This type represents a subscription filter related to notifications related to VNF package management. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 @Validated
 public class PkgmNotificationsFilter {
 	/**
-	 * Match particular notification types. Permitted values: -
-	 * VnfPackageOnboardingNotification - VnfPackageChangeNotification
+	 * Match particular notification types. Permitted values: - VnfPackageOnboardingNotification - VnfPackageChangeNotification
 	 */
 	public enum NotificationTypesEnum {
 		VnfPackageOnboardingNotification("VnfPackageOnboardingNotification"),
@@ -77,30 +70,29 @@ public class PkgmNotificationsFilter {
 	}
 
 	@JsonProperty("notificationTypes")
-	private NotificationTypesEnum notificationTypes = null;
+	private List<NotificationTypesEnum> notificationTypes = null;
 
 	@JsonProperty("vnfProductsFromProviders")
 	@Valid
 	private List<PkgmNotificationsFilterVnfProductsFromProviders> vnfProductsFromProviders = null;
 
-	public PkgmNotificationsFilter notificationTypes(final NotificationTypesEnum notificationTypes) {
+	public PkgmNotificationsFilter notificationTypes(final List<NotificationTypesEnum> notificationTypes) {
 		this.notificationTypes = notificationTypes;
 		return this;
 	}
 
 	/**
-	 * Match particular notification types. Permitted values: -
-	 * VnfPackageOnboardingNotification - VnfPackageChangeNotification
+	 * Match particular notification types. Permitted values: - VnfPackageOnboardingNotification - VnfPackageChangeNotification
 	 *
 	 * @return notificationTypes
 	 **/
 	@ApiModelProperty(value = "Match particular notification types. Permitted values: - VnfPackageOnboardingNotification - VnfPackageChangeNotification ")
 
-	public NotificationTypesEnum getNotificationTypes() {
+	public List<NotificationTypesEnum> getNotificationTypes() {
 		return notificationTypes;
 	}
 
-	public void setNotificationTypes(final NotificationTypesEnum notificationTypes) {
+	public void setNotificationTypes(final List<NotificationTypesEnum> notificationTypes) {
 		this.notificationTypes = notificationTypes;
 	}
 
@@ -118,8 +110,7 @@ public class PkgmNotificationsFilter {
 	}
 
 	/**
-	 * If present, match VNF packages that contain VNF products from certain
-	 * providers.
+	 * If present, match VNF packages that contain VNF products from certain providers.
 	 *
 	 * @return vnfProductsFromProviders
 	 **/
@@ -165,8 +156,7 @@ public class PkgmNotificationsFilter {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
