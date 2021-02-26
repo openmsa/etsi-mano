@@ -16,18 +16,22 @@
  */
 package com.ubiqube.parser.tosca.scalar;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ubiqube.parser.tosca.ParseException;
 
 public class Frequency {
+	private static final Pattern FREQUENCY_PATTERN = Pattern.compile("(?<freq>[0-9]+(\\.[0-9]+)?)\\s*(?<unit>[a-zA-Z]+)");
+
 	private final double freq;
+
 	private final String unit;
 
 	public Frequency(final String value) {
-		final Pattern p = Pattern.compile("(?<freq>[0-9]+(\\.[0-9]+)?)\\s*(?<unit>[a-zA-Z]+)");
-		final Matcher m = p.matcher(value);
+
+		final Matcher m = FREQUENCY_PATTERN.matcher(value);
 		if (!m.find()) {
 			throw new ParseException("Size scalr: Unable to find a match for: " + value);
 		}
@@ -43,16 +47,16 @@ public class Frequency {
 		return freq * getMultiplier(unit);
 	}
 
-	public double getMultiplier(final String unit2) {
-		switch (unit2.toLowerCase()) {
+	public static double getMultiplier(final String unit2) {
+		switch (unit2.toLowerCase(Locale.ROOT)) {
 		case "hz":
-			return 1d;
+			return 1D;
 		case "khz": // (1000 bytes)
-			return 1000d;
+			return 1_000D;
 		case "mhz":// (1024 bytes)
-			return 1000000d;
+			return 1_000_000D;
 		case "ghz": // (1000000 bytes)
-			return 1000000000d;
+			return 1_000_000_000D;
 		default:
 			throw new ParseException("Unknown scalar unit " + unit2);
 		}
