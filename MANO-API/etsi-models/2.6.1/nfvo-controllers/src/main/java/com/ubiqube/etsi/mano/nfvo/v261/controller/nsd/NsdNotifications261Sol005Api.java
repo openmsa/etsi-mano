@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nsd/v1")
-public interface NsNotificationsSol005 {
+public interface NsdNotifications261Sol005Api {
 
 	/**
 	 * Notify about NSD and PNFD changes

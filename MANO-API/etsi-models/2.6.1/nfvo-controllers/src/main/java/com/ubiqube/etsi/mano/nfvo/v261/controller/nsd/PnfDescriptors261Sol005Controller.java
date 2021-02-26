@@ -49,9 +49,9 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
+public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol005Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptorsSol005Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptors261Sol005Controller.class);
 
 	private static final Set<String> PNFD_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
 
@@ -61,7 +61,7 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 
 	private final MapperFacade mapper;
 
-	public PnfDescriptorsSol005Api(final PnfdController _pnfdController, final MapperFacade _mapper) {
+	public PnfDescriptors261Sol005Controller(final PnfdController _pnfdController, final MapperFacade _mapper) {
 		pnfdController = _pnfdController;
 		mapper = _mapper;
 		LOG.info("Starting PNF Management SOL005 Controller.");
@@ -160,10 +160,10 @@ public class PnfDescriptorsSol005Api implements PnfDescriptorsSol005 {
 	private static PnfdInfoLinks makeLinks(final PnfdInfo x) {
 		final PnfdInfoLinks links = new PnfdInfoLinks();
 		final Link pnfdContent = new Link();
-		pnfdContent.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdPnfdContentGet(x.getId(), "")).withSelfRel().getHref());
+		pnfdContent.setHref(linkTo(methodOn(PnfDescriptors261Sol005Api.class).pnfDescriptorsPnfdInfoIdPnfdContentGet(x.getId(), "")).withSelfRel().getHref());
 		links.setPnfdContent(pnfdContent);
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(PnfDescriptorsSol005.class).pnfDescriptorsPnfdInfoIdGet(x.getId())).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(PnfDescriptors261Sol005Api.class).pnfDescriptorsPnfdInfoIdGet(x.getId())).withSelfRel().getHref());
 		links.setSelf(self);
 
 		return null;

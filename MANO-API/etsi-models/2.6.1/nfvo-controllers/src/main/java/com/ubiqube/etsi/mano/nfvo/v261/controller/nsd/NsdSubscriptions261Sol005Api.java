@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nsd/v1/subscriptions")
 @Api(value = "subscriptions")
-public interface NsdSubscriptionsSol005 {
+public interface NsdSubscriptions261Sol005Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall support the URI query parameters, request and response data structures, and response codes. This resource represents subscriptions.  The client can use this resource to subscribe to notifications related to NSD management and to query its subscriptions. ", response = Object.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {

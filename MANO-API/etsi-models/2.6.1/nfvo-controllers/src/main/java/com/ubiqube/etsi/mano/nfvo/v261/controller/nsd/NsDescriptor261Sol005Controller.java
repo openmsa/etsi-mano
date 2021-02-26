@@ -66,9 +66,9 @@ import ma.glasnost.orika.MapperFacade;
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 @Api(value = "/sol005/nsd/v1/ns_descriptors")
-public class NsDescriptorSol005Api implements NsDescriptorSol005 {
+public class NsDescriptor261Sol005Controller implements NsDescriptor261Sol005Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptorSol005Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NsDescriptor261Sol005Controller.class);
 
 	private static final String NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS = "userDefinedData";
 
@@ -78,7 +78,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 
 	private final NsdController nsdController;
 
-	public NsDescriptorSol005Api(final MapperFacade _mapper, final NsdController _nsdController) {
+	public NsDescriptor261Sol005Controller(final MapperFacade _mapper, final NsdController _nsdController) {
 		mapper = _mapper;
 		nsdController = _nsdController;
 		LOG.info("Starting NSD Management SOL005 Controller.");
@@ -92,7 +92,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsDescriptorsGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
-		return nsdController.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, NsDescriptorSol005Api::makeLinks);
+		return nsdController.search(requestParams, NsdInfo.class, NSD_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSD_SEARCH_MANDATORY_FIELDS, NsDescriptor261Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 	}
 
 	private static String makeSelfLink(final NsdInfo nsdInfo) {
-		return linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(NsDescriptor261Sol005Api.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
 	}
 
 	private static void makeLinks(@Nonnull final NsdInfo nsdInfo) {
@@ -202,7 +202,7 @@ public class NsDescriptorSol005Api implements NsDescriptorSol005 {
 		nsdSelf.setHref(_self);
 		ret.setSelf(nsdSelf);
 
-		final String _nsdContent = linkTo(methodOn(NsDescriptorSol005.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
+		final String _nsdContent = linkTo(methodOn(NsDescriptor261Sol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
 		final Link nsdContent = new Link();
 		nsdContent.setHref(_nsdContent);
 		ret.setNsdContent(nsdContent);

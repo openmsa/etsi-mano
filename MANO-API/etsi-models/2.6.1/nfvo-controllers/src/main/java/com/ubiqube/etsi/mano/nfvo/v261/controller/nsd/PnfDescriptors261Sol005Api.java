@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nsd/v1/pnf_descriptors")
 @Api(value = "pnf_descriptors")
-public interface PnfDescriptorsSol005 {
+public interface PnfDescriptors261Sol005Api {
 
 	@ApiOperation(value = "Query information about multiple PNF descriptor resources.", nickname = "pnfDescriptorsGet", notes = "\"The GET method queries information about multiple PNF descriptor resources.\" ", response = Object.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {

@@ -56,7 +56,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RequestMapping("/sol005/nsd/v1/ns_descriptors")
-public interface NsDescriptorSol005 {
+public interface NsDescriptor261Sol005Api {
 
 	@ApiOperation(value = "Query information about multiple NS descriptor resources.", nickname = "nsDescriptorsGet", notes = "\"The GET method queries information about multiple NS descriptor resources. This method shall follow the provisions specified in the  Tables 5.4.2.3.2-1 and 5.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes.\" ", response = Object.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {

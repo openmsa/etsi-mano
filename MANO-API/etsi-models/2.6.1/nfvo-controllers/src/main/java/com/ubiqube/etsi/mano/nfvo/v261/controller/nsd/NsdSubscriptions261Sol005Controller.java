@@ -50,15 +50,15 @@ import ma.glasnost.orika.MapperFacade;
  */
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
+public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261Sol005Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsdSubscriptionsSol005Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NsdSubscriptions261Sol005Controller.class);
 
 	private final SubscriptionService subscriptionService;
 
 	private final MapperFacade mapper;
 
-	public NsdSubscriptionsSol005Api(final SubscriptionService _subscriptionService, final MapperFacade _mapper) {
+	public NsdSubscriptions261Sol005Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper) {
 		subscriptionService = _subscriptionService;
 		mapper = _mapper;
 		LOG.info("Starting NSD Subscription SOL005 Controller.");
@@ -127,7 +127,7 @@ public class NsdSubscriptionsSol005Api implements NsdSubscriptionsSol005 {
 	private static NsdmSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
 		final NsdmSubscriptionLinks nsdmSubscriptionLinks = new NsdmSubscriptionLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsdSubscriptionsSol005.class).subscriptionsSubscriptionIdGet(id, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsdSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(id, null)).withSelfRel().getHref());
 		nsdmSubscriptionLinks.setSelf(self);
 		return nsdmSubscriptionLinks;
 	}

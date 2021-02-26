@@ -33,11 +33,11 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdOnBoard
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class NsNotificationsSol005Api implements NsNotificationsSol005 {
+public class NsdNotifications261Sol005Controller implements NsdNotifications261Sol005Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsNotificationsSol005Api.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NsdNotifications261Sol005Controller.class);
 
-	public NsNotificationsSol005Api() {
+	public NsdNotifications261Sol005Controller() {
 		LOG.info("Starting NSD Notification SOL005 Controller.");
 	}
 
