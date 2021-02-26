@@ -39,7 +39,7 @@ import ma.glasnost.orika.MapperFacade;
  *
  * @param <U>
  */
-public abstract class SubscriptionAbstractApi<U extends WebEntity<? extends U>> {
+public abstract class AbstractSubscriptionApi<U extends WebEntity<? extends U>> {
 	private final VnfSubscriptionManagement vnfSubscriptionManagement;
 
 	private final MapperFacade mapper;
@@ -50,7 +50,7 @@ public abstract class SubscriptionAbstractApi<U extends WebEntity<? extends U>> 
 
 	private final SubscriptionType subscriptionType;
 
-	public SubscriptionAbstractApi(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final EntityLinks _entityLinks, final Class<U> _clazz, final SubscriptionType _subscriptionType) {
+	public AbstractSubscriptionApi(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final EntityLinks _entityLinks, final Class<U> _clazz, final SubscriptionType _subscriptionType) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 		mapper = _mapper;
 		entityLinks = _entityLinks;
