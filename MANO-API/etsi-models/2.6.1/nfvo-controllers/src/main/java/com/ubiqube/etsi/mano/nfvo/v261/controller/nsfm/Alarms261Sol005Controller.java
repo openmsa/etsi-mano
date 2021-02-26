@@ -23,8 +23,8 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.FmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.FmSubscriptionRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.AlarmModifications;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.InlineResponse200;
 
 /**
  *
@@ -32,28 +32,22 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.FmSubscriptionRequest;
  *
  */
 @Controller
-public class Subscriptions261Sol005ApiController implements Subscriptions261Sol005Api {
+public class Alarms261Sol005Controller implements Alarms261Sol005Api {
 
 	@Override
-	public ResponseEntity<List<FmSubscription>> subscriptionsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
+	public ResponseEntity<Object> alarmsAlarmIdGet(final String alarmId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest body) {
+	public ResponseEntity<Object> alarmsAlarmIdPatch(@Valid final AlarmModifications body, final String alarmId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+	public ResponseEntity<List<InlineResponse200>> alarmsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
 		// TODO Auto-generated method stub
 		return null;
 	}
