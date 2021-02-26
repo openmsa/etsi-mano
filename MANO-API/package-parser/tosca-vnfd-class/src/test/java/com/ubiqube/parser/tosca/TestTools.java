@@ -14,15 +14,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca.constraints;
+package com.ubiqube.parser.tosca;
 
-import com.ubiqube.parser.tosca.ParseException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-public class LessThan extends SimpleValue implements Constraint {
+public class TestTools {
 
-	public LessThan(final String key) {
-		super(null);
-		throw new ParseException("key=" + key);
+	public static byte[] readFile(final String path) throws IOException {
+		final URL url = TestTools.class.getResource(path);
+		if (null == url) {
+			throw new RuntimeException("Could not find path: " + path);
+		}
+		try (InputStream is = url.openStream()) {
+			return is.readAllBytes();
+		}
 	}
-
 }
