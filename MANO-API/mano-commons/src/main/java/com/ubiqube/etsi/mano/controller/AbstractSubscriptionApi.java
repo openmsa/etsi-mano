@@ -50,7 +50,7 @@ public abstract class AbstractSubscriptionApi<U extends WebEntity<? extends U>> 
 
 	private final SubscriptionType subscriptionType;
 
-	public AbstractSubscriptionApi(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final EntityLinks _entityLinks, final Class<U> _clazz, final SubscriptionType _subscriptionType) {
+	protected AbstractSubscriptionApi(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final EntityLinks _entityLinks, final Class<U> _clazz, final SubscriptionType _subscriptionType) {
 		vnfSubscriptionManagement = _vnfSubscriptionManagement;
 		mapper = _mapper;
 		entityLinks = _entityLinks;

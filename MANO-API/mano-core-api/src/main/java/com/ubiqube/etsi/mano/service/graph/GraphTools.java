@@ -88,7 +88,7 @@ public class GraphTools {
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			LOG.trace("Error in graph export", e);
 		}
 	}
 
