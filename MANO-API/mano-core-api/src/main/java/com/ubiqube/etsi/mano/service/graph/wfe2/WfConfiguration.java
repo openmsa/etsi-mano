@@ -53,7 +53,7 @@ public class WfConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WfConfiguration.class);
 
-	final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
+	private final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
 	private final List<? extends PlanContributor> planContributors;
 
 	public WfConfiguration(final List<? extends PlanContributor> _planContributors) {
