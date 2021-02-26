@@ -40,7 +40,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
 import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
-public class ThresholdsSol005Api implements ThresholdsSol005 {
+public class Thresholds261Sol005Controller implements Thresholds261Sol005Api {
 	private static final Set<String> THR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
 
 	private static final String THR_SEARCH_DEFAULT_EXCLUDE_FIELDS = "";
@@ -49,7 +49,7 @@ public class ThresholdsSol005Api implements ThresholdsSol005 {
 
 	private final MapperFacade mapper;
 
-	public ThresholdsSol005Api(final NfvoThresholdController _nfvoThresholdController, final MapperFacade _mapper) {
+	public Thresholds261Sol005Controller(final NfvoThresholdController _nfvoThresholdController, final MapperFacade _mapper) {
 		nfvoThresholdController = _nfvoThresholdController;
 		mapper = _mapper;
 	}

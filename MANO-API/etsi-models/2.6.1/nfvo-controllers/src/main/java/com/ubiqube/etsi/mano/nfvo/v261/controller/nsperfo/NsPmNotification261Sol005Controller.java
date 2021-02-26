@@ -43,7 +43,7 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("/sol005/nspm/v1")
 @Api(value = "/")
-public class NsPerfoSol005Api implements NsPerfoSol005 {
+public class NsPmNotification261Sol005Controller implements NsPmNotification261Sol005Api {
 
 	/**
 	 * Notify about PM related events

@@ -17,6 +17,9 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,19 +30,22 @@ import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.controller.nspm.NfvoPmController;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsCreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPmJob;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PmJobsPostResponse;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
-public class PmJobsSol005Api implements PmJobsSol005 {
+@RestController
+public class PmJobs261Sol005Controller implements PmJobs261Sol005Api {
 	private static final String PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS = "";
 
 	private static final Set<String> PMJ_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
@@ -48,7 +54,7 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 
 	private final MapperFacade mapper;
 
-	public PmJobsSol005Api(final NfvoPmController _nfvoPmController, final MapperFacade _mapper) {
+	public PmJobs261Sol005Controller(final NfvoPmController _nfvoPmController, final MapperFacade _mapper) {
 		nfvoPmController = _nfvoPmController;
 		mapper = _mapper;
 	}
@@ -87,11 +93,10 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPostResponse> pmJobsPmJobIdGet(final String pmJobId) {
-		final PmJobsPostResponse response = new PmJobsPostResponse();
+	public ResponseEntity<PmJobsPmJob> pmJobsPmJobIdGet(final String pmJobId) {
 		final PmJob entity = nfvoPmController.getById(UUID.fromString(pmJobId));
-		response.setPmJob(mapper.map(entity, PmJobsPmJob.class));
-		return ResponseEntity.ok(response);
+		final PmJobsPmJob res = mapper.map(entity, PmJobsPmJob.class);
+		return ResponseEntity.ok(res);
 	}
 
 	/**
@@ -114,13 +119,26 @@ public class PmJobsSol005Api implements PmJobsSol005 {
 	 *
 	 */
 	@Override
-	public ResponseEntity<PmJobsPostResponse> pmJobsPost(final CreatePmJobRequest createPmJobRequest) {
+	public ResponseEntity<PmJobsPmJob> pmJobsPost(final CreatePmJobRequest createPmJobRequest) {
 		final PmJobsCreatePmJobRequest pmJob = createPmJobRequest.getCreatePmJobRequest();
 		final PmJob req = mapper.map(pmJob, PmJob.class);
 		final PmJob res = nfvoPmController.save(req);
-		final PmJobsPostResponse response = new PmJobsPostResponse();
-		response.setPmJob(mapper.map(res, PmJobsPmJob.class));
-		return ResponseEntity.ok(response);
+		final PmJobsPmJob ret = mapper.map(res, PmJobsPmJob.class);
+		makeLinks(ret);
+		return ResponseEntity.ok(ret);
+	}
+
+	private static void makeLinks(final PmJobsPmJob x) {
+		final PmJobLinks links = new PmJobLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(PmJobs261Sol005Api.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+
+		link = new Link();
+		link.setHref("");
+		// links.setObjects(link);
+
+		x.setLinks(links);
 	}
 
 }

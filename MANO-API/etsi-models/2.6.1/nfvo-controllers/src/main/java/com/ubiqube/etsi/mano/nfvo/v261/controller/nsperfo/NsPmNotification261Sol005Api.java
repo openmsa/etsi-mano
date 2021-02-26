@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping("/sol005/vnfpm/v1/")
-public interface NsPerfoSol005 {
+public interface NsPmNotification261Sol005Api {
 
 	/**
 	 * Notify about PM related events
