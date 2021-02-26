@@ -42,14 +42,14 @@ import com.ubiqube.etsi.mano.repository.NamingStrategy;
  * @author Olivier
  *
  */
-public abstract class GenericBinaryRepository<T> implements CrudRepository<T>, BinaryRepository {
+public abstract class AbstractGenericBinaryRepository<T> implements CrudRepository<T>, BinaryRepository {
 
 	private final ObjectMapper objectMapper;
 	private final JsonFilter jsonFilter;
 	private final Low lowDriver;
 	private final NamingStrategy namingStrategy;
 
-	public GenericBinaryRepository(final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low _lowDriver, final NamingStrategy _namingStrategy) {
+	public AbstractGenericBinaryRepository(final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low _lowDriver, final NamingStrategy _namingStrategy) {
 		objectMapper = _objectMapper;
 		jsonFilter = _jsonFilter;
 		lowDriver = _lowDriver;
