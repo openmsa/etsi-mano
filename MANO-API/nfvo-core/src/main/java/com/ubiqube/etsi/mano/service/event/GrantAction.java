@@ -154,41 +154,4 @@ public class GrantAction extends AbstractGrantAction {
 				.orElseThrow(() -> new NotFoundException("VduId not found " + vduId));
 	}
 
-	class QuotaNeeded {
-		private int disk = 0;
-		private int vcpu = 0;
-		private int ram = 0;
-
-		public int getDisk() {
-			return disk;
-		}
-
-		public void setDisk(final int disk) {
-			this.disk = disk;
-		}
-
-		public int getVcpu() {
-			return vcpu;
-		}
-
-		public void setVcpu(final int vcpu) {
-			this.vcpu = vcpu;
-		}
-
-		public int getRam() {
-			return ram;
-		}
-
-		public void setRam(final int ram) {
-			this.ram = ram;
-		}
-
-		public QuotaNeeded(final int disk, final int vcpu, final int ram) {
-			super();
-			this.disk = disk;
-			this.vcpu = vcpu;
-			this.ram = ram;
-		}
-
-	}
 }
