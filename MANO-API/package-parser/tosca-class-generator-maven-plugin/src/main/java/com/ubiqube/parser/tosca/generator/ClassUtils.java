@@ -16,6 +16,7 @@
  */
 package com.ubiqube.parser.tosca.generator;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,9 @@ import java.util.regex.Pattern;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ClassUtils {
+public final class ClassUtils {
+	private final static Pattern PACKAGE_PATTERN = Pattern.compile("(?<package>.*)(?=\\.)\\.(?<clazz>.*)");
+
 	private ClassUtils() {
 		// Nothing.
 	}
@@ -46,10 +49,9 @@ public class ClassUtils {
 	}
 
 	public static String toscaToJava(final String derivedFrom) {
-		final Pattern p = Pattern.compile("(?<package>.*)(?=\\.)\\.(?<clazz>.*)");
-		final Matcher m = p.matcher(derivedFrom);
+		final Matcher m = PACKAGE_PATTERN.matcher(derivedFrom);
 		if (m.matches()) {
-			return m.group("package").toLowerCase() + "." + m.group("clazz");
+			return m.group("package").toLowerCase(Locale.ROOT) + "." + m.group("clazz");
 		}
 		return derivedFrom;
 	}
