@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nslcm/v1/ns_lcm_op_occs")
 @Api(value = "/sol005/nslcm/v1/ns_lcm_op_occs")
-public interface NsLcmOpOccsSol005 {
+public interface NsLcmOpOccs262Sol005Api {
 
 	/**
 	 * Query multiple NS LCM operation occurrences.

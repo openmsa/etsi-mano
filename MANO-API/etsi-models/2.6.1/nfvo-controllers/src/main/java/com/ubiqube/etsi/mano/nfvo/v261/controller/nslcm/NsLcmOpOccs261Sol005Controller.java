@@ -43,7 +43,7 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
+public class NsLcmOpOccs261Sol005Controller implements NsLcmOpOccs262Sol005Api {
 
 	private static final String NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "operationParams,changedVnfInfo,error,resourceChanges";
 
@@ -53,7 +53,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 
 	private final MapperFacade mapper;
 
-	public NsLcmOpOccsSol005Api(final NsBlueprintService _nsLcmOpOccsRepository, final MapperFacade _mapper) {
+	public NsLcmOpOccs261Sol005Controller(final NsBlueprintService _nsLcmOpOccsRepository, final MapperFacade _mapper) {
 		nsLcmOpOccsService = _nsLcmOpOccsRepository;
 		mapper = _mapper;
 	}
@@ -66,7 +66,7 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 	 */
 	@Override
 	public ResponseEntity<String> nsLcmOpOccsGet(final MultiValueMap<String, String> requestParams) {
-		return nsLcmOpOccsService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, NsLcmOpOccsSol005Api::makeLinks);
+		return nsLcmOpOccsService.search(requestParams, NsLcmOpOcc.class, NSLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSLCM_SEARCH_MANDATORY_FIELDS, NsLcmOpOccs261Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -126,30 +126,30 @@ public class NsLcmOpOccsSol005Api implements NsLcmOpOccsSol005 {
 		final NsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccLinks();
 
 		final Link _continue = new Link();
-		_continue.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
+		_continue.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setContinue(_continue);
 
 		final Link nsInstance = new Link();
-		nsInstance.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId())).withSelfRel().getHref());
+		nsInstance.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId())).withSelfRel().getHref());
 		nsLcmOpOccLinks.setNsInstance(nsInstance);
 
 		final Link retry = new Link();
-		retry.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		retry.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setRetry(retry);
 
 		final Link rollback = new Link();
-		rollback.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		rollback.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setSelf(self);
 		nsLcmOpOccs.setLinks(nsLcmOpOccLinks);
 	}
 
 	public static String makeSelfLink(final NsBlueprint nsLcmOpOccs) {
 		final String id = nsLcmOpOccs.getId().toString();
-		return linkTo(methodOn(NsLcmOpOccsSol005.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref();
+		return linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref();
 	}
 
 }

@@ -45,14 +45,14 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
+public class NsLcmSubscriptions261Sol005Controller implements NsLcmSubscriptions261Sol005Api {
 	private final SubscriptionService subscriptionService;
 
 	private final MapperFacade mapper;
 
 	private final Notifications notifications;
 
-	public NsLcmSubscriptionsSol005Api(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
+	public NsLcmSubscriptions261Sol005Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications) {
 		subscriptionService = _subscriptionService;
 		mapper = _mapper;
 		notifications = _notifications;
@@ -120,7 +120,7 @@ public class NsLcmSubscriptionsSol005Api implements NsLcmSubscriptionsSol005 {
 	private static LccnSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
 		final LccnSubscriptionLinks links = new LccnSubscriptionLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsLcmSubscriptionsSol005.class).subscriptionsSubscriptionIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsLcmSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(id)).withSelfRel().getHref());
 		links.setSelf(self);
 		return links;
 	}

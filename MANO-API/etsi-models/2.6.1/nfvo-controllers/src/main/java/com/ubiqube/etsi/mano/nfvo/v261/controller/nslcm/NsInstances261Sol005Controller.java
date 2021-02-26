@@ -59,8 +59,8 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public final class NsInstancesSol005Api implements NsInstancesSol005 {
-	private static final Logger LOG = LoggerFactory.getLogger(NsInstancesSol005Api.class);
+public final class NsInstances261Sol005Controller implements NsInstances262Sol005Api {
+	private static final Logger LOG = LoggerFactory.getLogger(NsInstances261Sol005Controller.class);
 
 	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsInstanceDescription", "nsdId", "nsdInfoId", "nsState", "nsInstanceName"));
 
@@ -72,7 +72,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 
 	private final NsInstanceController nsLcmController;
 
-	public NsInstancesSol005Api(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
+	public NsInstances261Sol005Controller(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
 		mapper = _mapper;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmController = _nsLcmController;
@@ -89,7 +89,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams) {
 		final String filter = getSingleField(requestParams, "field");
 		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
-		return nsInstanceControllerService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, NsInstancesSol005Api::makeLinks);
+		return nsInstanceControllerService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, NsInstances261Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final NsInstantiate nsInst = mapper.map(body, NsInstantiate.class);
 		final NsBlueprint nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, nsInst);
 
-		final String link = NsLcmOpOccsSol005Api.makeSelfLink(nsLcm);
+		final String link = NsLcmOpOccs261Sol005Controller.makeSelfLink(nsLcm);
 		return ResponseEntity.accepted().header("Location", link).build();
 	}
 
@@ -173,7 +173,7 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsBlueprint lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request.getTerminationTime());
 
-		final String link = NsLcmOpOccsSol005Api.makeSelfLink(lcm);
+		final String link = NsLcmOpOccs261Sol005Controller.makeSelfLink(lcm);
 		return ResponseEntity.accepted().header("Location", link).build();
 	}
 
@@ -211,27 +211,27 @@ public final class NsInstancesSol005Api implements NsInstancesSol005 {
 		final String id = nsdInfo.getId();
 		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
 		final Link heal = new Link();
-		heal.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
+		heal.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setHeal(heal);
 
 		final Link instantiate = new Link();
-		instantiate.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
+		instantiate.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setInstantiate(instantiate);
 		// nsInstanceLinks.setNestedNsInstances(nestedNsInstances);
 		final Link scale = new Link();
-		scale.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdScalePost(id, null, null)).withSelfRel().getHref());
+		scale.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdScalePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setScale(scale);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
 		nsInstanceLinks.setSelf(self);
 
 		final Link terminate = new Link();
-		terminate.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdTerminatePost(id, null, null)).withSelfRel().getHref());
+		terminate.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setTerminate(terminate);
 
 		final Link update = new Link();
-		update.setHref(linkTo(methodOn(NsInstancesSol005.class).nsInstancesNsInstanceIdUpdatePost(id, null, null)).withSelfRel().getHref());
+		update.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
 		nsdInfo.setLinks(nsInstanceLinks);
 	}

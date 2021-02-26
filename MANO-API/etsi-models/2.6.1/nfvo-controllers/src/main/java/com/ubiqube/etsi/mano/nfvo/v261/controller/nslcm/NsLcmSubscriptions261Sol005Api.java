@@ -40,7 +40,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nslcm/v1/subscriptions")
 @Api(value = "/sol005/nslcm/v1/subscriptions")
-public interface NsLcmSubscriptionsSol005 {
+public interface NsLcmSubscriptions261Sol005Api {
 
 	/**
 	 * Query multiple subscriptions.
