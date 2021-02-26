@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 
 	@Override
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> parameters, final Class<?> clazz, @Nullable final String excludeDefaults, final Set<String> mandatoryFields, final List<?> list, final Class<U> target, final Consumer<U> makeLink) {
-		final MultiValueMap<String, String> params = (parameters == null) ? new LinkedMultiValueMap<>() : parameters;
+		final MultiValueMap<String, String> params = Optional.ofNullable(parameters).orElse(new LinkedMultiValueMap<>());
 		checkParameters(params);
 		final List<String> fields = params.get("fields");
 		final List<String> excludeFields = params.get("excluse_fields");
