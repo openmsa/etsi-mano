@@ -40,11 +40,11 @@ import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_VNFM" })
 @Controller
-public class LcmGrantsSol005Api implements LcmGrants {
+public class LcmGrants261Sol003Controller implements LcmGrants261Sol003Api {
 	private final GrantManagement grantManagement;
 	private final MapperFacade mapper;
 
-	public LcmGrantsSol005Api(final GrantManagement _grantManagement, final MapperFacade _mapper) {
+	public LcmGrants261Sol003Controller(final GrantManagement _grantManagement, final MapperFacade _mapper) {
 		grantManagement = _grantManagement;
 		mapper = _mapper;
 	}
@@ -62,7 +62,7 @@ public class LcmGrantsSol005Api implements LcmGrants {
 
 	private static void makeSelfLinks(final Grant jsonGrant) {
 		final Link link = new Link();
-		link.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(jsonGrant.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(LcmGrants261Sol003Api.class).grantsGrantIdGet(jsonGrant.getId())).withSelfRel().getHref());
 		jsonGrant.getLinks().setSelf(link);
 	}
 
@@ -70,7 +70,7 @@ public class LcmGrantsSol005Api implements LcmGrants {
 	public ResponseEntity<Grant> grantsPost(@Valid final GrantRequest grantRequest, final String contentType, final String version) {
 		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
 		final GrantResponse resp = grantManagement.post(obj);
-		final URI location = linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(resp.getId().toString())).withSelfRel().toUri();
+		final URI location = linkTo(methodOn(LcmGrants261Sol003Api.class).grantsGrantIdGet(resp.getId().toString())).withSelfRel().toUri();
 		return ResponseEntity.created(location).build();
 	}
 
