@@ -54,7 +54,7 @@ public class Resolver implements IResolver {
 
 	private static void saveContent(final File cacheFile, final String content) {
 		try {
-			Files.write(cacheFile.toPath(), content.getBytes());
+			Files.write(cacheFile.toPath(), content.getBytes(Charset.defaultCharset()));
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
@@ -81,7 +81,7 @@ public class Resolver implements IResolver {
 	private static String getCacheName(final String url) {
 		try {
 			final MessageDigest md = MessageDigest.getInstance("SHA-1");
-			final byte[] messageDigest = md.digest(url.getBytes());
+			final byte[] messageDigest = md.digest(url.getBytes(Charset.defaultCharset()));
 			final BigInteger no = new BigInteger(1, messageDigest);
 			String hashtext = no.toString(16);
 			while (hashtext.length() < 32) {
