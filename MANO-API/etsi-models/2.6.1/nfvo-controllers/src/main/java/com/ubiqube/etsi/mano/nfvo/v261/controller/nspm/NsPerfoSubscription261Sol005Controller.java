@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.nspm;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -41,10 +41,10 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionLinks;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
+public class NsPerfoSubscription261Sol005Controller implements NsPerfoSubscription261Sol005Api {
 	private final SubscriptionServiceV2 subscriptionService;
 
-	public NsPerfoSubscriptionSol005Api(final SubscriptionServiceV2 subscriptionService) {
+	public NsPerfoSubscription261Sol005Controller(final SubscriptionServiceV2 subscriptionService) {
 		super();
 		this.subscriptionService = subscriptionService;
 	}
@@ -57,7 +57,7 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 */
 	@Override
 	public ResponseEntity<List<PmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final List<PmSubscription> ret = subscriptionService.query(requestParams, PmSubscription.class, NsPerfoSubscriptionSol005Api::makeLinks, SubscriptionType.VNFPM);
+		final List<PmSubscription> ret = subscriptionService.query(requestParams, PmSubscription.class, NsPerfoSubscription261Sol005Controller::makeLinks, SubscriptionType.VNFPM);
 		return ResponseEntity.ok(ret);
 	}
 
@@ -72,7 +72,7 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 */
 	@Override
 	public ResponseEntity<PmSubscription> subscriptionsPost(final SubscriptionsPmSubscriptionRequest pmSubscriptionRequest) throws URISyntaxException {
-		final PmSubscription res = subscriptionService.create(pmSubscriptionRequest, PmSubscription.class, NsPerfoSubscriptionSol005Api::makeLinks, SubscriptionType.VNFPM);
+		final PmSubscription res = subscriptionService.create(pmSubscriptionRequest, PmSubscription.class, NsPerfoSubscription261Sol005Controller::makeLinks, SubscriptionType.VNFPM);
 		final URI location = new URI(res.getLinks().getSelf().getHref());
 		return ResponseEntity.created(location).body(res);
 	}
@@ -97,14 +97,14 @@ public class NsPerfoSubscriptionSol005Api implements NsPerfoSubscriptionSol005 {
 	 */
 	@Override
 	public ResponseEntity<PmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, NsPerfoSubscriptionSol005Api::makeLinks, SubscriptionType.ALARM);
+		final PmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), PmSubscription.class, NsPerfoSubscription261Sol005Controller::makeLinks, SubscriptionType.ALARM);
 		return ResponseEntity.ok(res);
 	}
 
 	private static void makeLinks(final PmSubscription subscription) {
 		final PmSubscriptionLinks links = new PmSubscriptionLinks();
 		final Link link = new Link();
-		link.setHref(linkTo(methodOn(NsPerfoSubscriptionSol005.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(NsPerfoSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 		subscription.setLinks(links);
 	}

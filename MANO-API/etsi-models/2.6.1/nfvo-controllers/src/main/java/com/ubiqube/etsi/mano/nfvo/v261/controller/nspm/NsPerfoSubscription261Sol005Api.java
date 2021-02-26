@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.nspm;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nspm/v1/subscriptions")
-public interface NsPerfoSubscriptionSol005 {
+public interface NsPerfoSubscription261Sol005Api {
 
 	/**
 	 * Query PM related subscriptions.

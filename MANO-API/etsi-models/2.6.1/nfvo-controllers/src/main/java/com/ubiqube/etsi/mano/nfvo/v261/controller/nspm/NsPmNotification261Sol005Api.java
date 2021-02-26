@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.nfvo.v261.controller.nsperfo;
+package com.ubiqube.etsi.mano.nfvo.v261.controller.nspm;
 
 import javax.validation.Valid;
 
