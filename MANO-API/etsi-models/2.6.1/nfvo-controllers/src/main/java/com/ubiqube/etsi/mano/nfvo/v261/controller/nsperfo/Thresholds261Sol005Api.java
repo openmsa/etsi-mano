@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
@@ -34,6 +35,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+@RequestMapping("/sol005/nspm/v1/thresholds")
 public interface Thresholds261Sol005Api {
 
 	/**
@@ -49,15 +51,13 @@ public interface Thresholds261Sol005Api {
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/thresholds", consumes = { "application/json" }, produces = { "application/json" })
+	@GetMapping(consumes = { "application/json" }, produces = { "application/json" })
 	ResponseEntity<String> thresholdsGet(@RequestParam("filter") String filter);
 
 	/**
 	 * Create a threshold.
 	 *
-	 * The POST method can be used by the client to create a threshold. This method
-	 * shall follow the provisions specified in the table 7.4.5.3.1-2 for URI query
-	 * parameters, request and response data structures, and response codes.
+	 * The POST method can be used by the client to create a threshold. This method shall follow the provisions specified in the table 7.4.5.3.1-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Create a threshold.", tags = {})
@@ -67,7 +67,7 @@ public interface Thresholds261Sol005Api {
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@PostMapping(value = "/thresholds", consumes = { "application/json" }, produces = { "application/json" })
+	@PostMapping(consumes = { "application/json" }, produces = { "application/json" })
 	ResponseEntity<ThresholdsPostResponse> thresholdsPost(@Valid CreateThresholdRequest createThresholdRequest);
 
 	/**
@@ -83,16 +83,13 @@ public interface Thresholds261Sol005Api {
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@DeleteMapping(value = "/thresholds/{thresholdId}", consumes = { "application/json" }, produces = { "application/json" })
+	@DeleteMapping(value = "/{thresholdId}", consumes = { "application/json" }, produces = { "application/json" })
 	void thresholdsThresholdIdDelete(@PathVariable("thresholdId") String thresholdId);
 
 	/**
 	 * Query a single threshold.
 	 *
-	 * The client can use this method for reading an individual threshold. This
-	 * method shall follow the provisions specified in the Tables 7.4.6.3.2-1 and
-	 * 7.4.6.3.2-2 for URI query parameters, request and response data structures,
-	 * and response codes.
+	 * The client can use this method for reading an individual threshold. This method shall follow the provisions specified in the Tables 7.4.6.3.2-1 and 7.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Query a single threshold.", tags = {})
@@ -102,7 +99,7 @@ public interface Thresholds261Sol005Api {
 			@ApiResponse(code = 406, message = "If the \"Accept\" header does not contain at least one name of a content type for which the NFVO can provide a representation of the VNFD, the NFVO shall respond with this response code.         ", response = ProblemDetails.class),
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
-	@GetMapping(value = "/thresholds/{thresholdId}", consumes = { "application/json" }, produces = { "application/json" })
+	@GetMapping(value = "/{thresholdId}", consumes = { "application/json" }, produces = { "application/json" })
 	ResponseEntity<ThresholdsPostResponse> thresholdsThresholdIdGet(@PathVariable("thresholdId") String thresholdId);
 
 }

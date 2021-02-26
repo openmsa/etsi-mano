@@ -30,9 +30,9 @@ public interface NfvoPmController {
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 
-	void deleteById(UUID fromString);
+	void deleteById(UUID id);
 
-	PmJob getById(UUID fromString);
+	PmJob getById(UUID id);
 
 	PerformanceReport getReportById(String pmJobId, String reportId);
 

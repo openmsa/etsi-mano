@@ -17,61 +17,62 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
-  * Details of the subscription to be created.             
+ *
+ * TODO DELETE this. Details of the subscription to be created.
  **/
-@ApiModel(description="Details of the subscription to be created.             ")
-public class SubscriptionsPostQuery  {
-  
-  @ApiModelProperty(required = true, value = "")
-  @Valid
-  private SubscriptionsPmSubscriptionRequest pmSubscriptionRequest = null;
- /**
-   * Get pmSubscriptionRequest
-   * @return pmSubscriptionRequest
-  **/
-  @JsonProperty("PmSubscriptionRequest")
-  @NotNull
-  public SubscriptionsPmSubscriptionRequest getPmSubscriptionRequest() {
-    return pmSubscriptionRequest;
-  }
+@ApiModel(description = "Details of the subscription to be created.             ")
+public class SubscriptionsPostQuery {
 
-  public void setPmSubscriptionRequest(SubscriptionsPmSubscriptionRequest pmSubscriptionRequest) {
-    this.pmSubscriptionRequest = pmSubscriptionRequest;
-  }
+	@ApiModelProperty(required = true, value = "")
+	@Valid
+	private SubscriptionsPmSubscriptionRequest pmSubscriptionRequest = null;
 
-  public SubscriptionsPostQuery pmSubscriptionRequest(SubscriptionsPmSubscriptionRequest pmSubscriptionRequest) {
-    this.pmSubscriptionRequest = pmSubscriptionRequest;
-    return this;
-  }
+	/**
+	 * Get pmSubscriptionRequest
+	 *
+	 * @return pmSubscriptionRequest
+	 **/
+	@JsonProperty("PmSubscriptionRequest")
+	@NotNull
+	public SubscriptionsPmSubscriptionRequest getPmSubscriptionRequest() {
+		return pmSubscriptionRequest;
+	}
 
+	public void setPmSubscriptionRequest(final SubscriptionsPmSubscriptionRequest pmSubscriptionRequest) {
+		this.pmSubscriptionRequest = pmSubscriptionRequest;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfPackagePostQuery {\n");
-    
-    sb.append("    pmSubscriptionRequest: ").append(toIndentedString(pmSubscriptionRequest)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public SubscriptionsPostQuery pmSubscriptionRequest(final SubscriptionsPmSubscriptionRequest pmSubscriptionRequest) {
+		this.pmSubscriptionRequest = pmSubscriptionRequest;
+		return this;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private static String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfPackagePostQuery {\n");
+
+		sb.append("    pmSubscriptionRequest: ").append(toIndentedString(pmSubscriptionRequest)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private static String toIndentedString(final Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

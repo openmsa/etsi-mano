@@ -33,6 +33,6 @@ public interface NfvoThresholdController {
 
 	void delete(UUID id);
 
-	Threshold getById(UUID fromString);
+	Threshold findById(UUID id);
 
 }

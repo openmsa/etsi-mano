@@ -28,6 +28,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nspm.NfvoThresholdController;
 import com.ubiqube.etsi.mano.dao.mano.pm.Threshold;
@@ -40,6 +41,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
 import ma.glasnost.orika.MapperFacade;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
+@RestController
 public class Thresholds261Sol005Controller implements Thresholds261Sol005Api {
 	private static final Set<String> THR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
 
@@ -106,7 +108,7 @@ public class Thresholds261Sol005Controller implements Thresholds261Sol005Api {
 	 */
 	@Override
 	public ResponseEntity<ThresholdsPostResponse> thresholdsThresholdIdGet(final String thresholdId) {
-		final Threshold threshold = nfvoThresholdController.getById(UUID.fromString(thresholdId));
+		final Threshold threshold = nfvoThresholdController.findById(UUID.fromString(thresholdId));
 		final ThresholdsPostResponse resp = new ThresholdsPostResponse();
 		resp.setThreshold(mapper.map(threshold, ThresholdsThreshold.class));
 		return ResponseEntity.ok(resp);
