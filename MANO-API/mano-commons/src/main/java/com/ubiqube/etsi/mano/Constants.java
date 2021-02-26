@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,27 +43,28 @@ public final class Constants {
 
 	public static final String VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS = "softwareImages,additionalArtifacts,userDefinedData,checksum";
 
-	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState", "_links.self.href", "_links.vnfd.href", "_links.packageContent.href"));
+	public static final Set<String> VNF_SEARCH_MANDATORY_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "onboardingState", "operationalState", "usageState", "_links.self.href", "_links.vnfd.href", "_links.packageContent.href")));
 
 	public static final String VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS = "reports";
 
-	public static final Set<String> VNFPMJOB_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "criteria.collectionPeriod", "criteria.reportingPeriod", "objectInstanceIds"));
+	public static final Set<String> VNFPMJOB_SEARCH_MANDATORY_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "criteria.collectionPeriod", "criteria.reportingPeriod", "objectInstanceIds")));
 
-	public static final Set<String> VNFTHR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
+	public static final Set<String> VNFTHR_SEARCH_MANDATORY_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id")));
 
 	public static final String VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
 
 	public static final String ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS = null;
 
-	public static final Set<String> ALARM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "managedObjectId", "rootCauseFaultyResource", "alarmRaisedTime", "ackState",
-			"perceivedSeverity", "eventTime", "eventType", "probableCause", "isRootCause", "_links.self.href"));
+	public static final Set<String> ALARM_SEARCH_MANDATORY_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "managedObjectId", "rootCauseFaultyResource", "alarmRaisedTime", "ackState",
+			"perceivedSeverity", "eventTime", "eventType", "probableCause", "isRootCause", "_links.self.href")));
 
-	public static final Set<String> VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "operationState", "stateEnteredTime",
-			"isAutomaticInvocation", "operationParams", "isCancelPending", "startTime", "vnfInstanceId", "operation"));
+	public static final Set<String> VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "operationState", "stateEnteredTime",
+			"isAutomaticInvocation", "operationParams", "isCancelPending", "startTime", "vnfInstanceId", "operation")));
 
 	public static final String VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS = "error,resourceChanges,changedInfo,changedExtConnectivity";
 
-	public static final Set<String> VNFLCM_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "vnfProvider", "vnfProductName", "vnfSoftwareVersion", "vnfdVersion", "instantiationState", "vnfdId"));
+	public static final Set<String> VNFLCM_SEARCH_MANDATORY_FIELDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "vnfProvider", "vnfProductName",
+			"vnfSoftwareVersion", "vnfdVersion", "instantiationState", "vnfdId")));
 
 	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "error,resourceChanges,changedInfo,changedExtConnectivity";
 
