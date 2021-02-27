@@ -51,9 +51,9 @@ public interface VnfPackageManagement {
 
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID _vnfPkgId, @Nullable String range);
 
-	ResponseEntity<Void> getPackageManifest(UUID fromString, @Valid String includeSignatures);
+	ResponseEntity<Void> getPackageManifest(UUID vnfPkgId, @Valid String includeSignatures);
 
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(UUID fromString, String artifactPath, String range);
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(UUID vnfPkgId, String artifactPath, String range);
 
 	ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(UUID vnfdId, @Valid String includeSignatures);
 
@@ -64,4 +64,8 @@ public interface VnfPackageManagement {
 	<U> U onboardedVnfPackagesVnfdIdGet(UUID vnfdId, Class<U> clazz);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
+
+	ResponseEntity<Resource> onboardedGetManifestByVnfd(UUID vnfdId, @Valid String includeSignature);
+
+	ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(UUID vnfdId, String range);
 }
