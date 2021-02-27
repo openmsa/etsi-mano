@@ -20,6 +20,8 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003;
 import static com.ubiqube.etsi.mano.Constants.VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNFLCM_SEARCH_MANDATORY_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -185,7 +187,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdInstantiatePost(final String vnfInstanceId, final InstantiateVnfRequest instantiateVnfRequest) {
 		final VnfInstantiate req = mapper.map(instantiateVnfRequest, VnfInstantiate.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.instantiate(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcm261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
@@ -193,7 +195,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
 		final VnfOperateRequest req = mapper.map(operateVnfRequest, VnfOperateRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.operate(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcm261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -214,7 +216,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(final String vnfInstanceId, final ScaleVnfRequest scaleVnfRequest) {
 		final VnfScaleRequest req = mapper.map(scaleVnfRequest, VnfScaleRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.scale(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcm261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -226,7 +228,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(final String vnfInstanceId, final ScaleVnfToLevelRequest scaleVnfToLevelRequest) {
 		final VnfScaleToLevelRequest req = mapper.map(scaleVnfToLevelRequest, VnfScaleToLevelRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.scaleToLevel(UUID.fromString(vnfInstanceId), req);
-		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcm261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 		// after return.
 		// VnfLcmOperationOccurenceNotification(STARTING) NFVO
@@ -237,8 +239,11 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		final VnfBlueprint lcm = vnfInstanceLcm.terminate(UUID.fromString(vnfInstanceId), CancelModeTypeEnum.fromValue(terminateVnfRequest.toString()), terminateVnfRequest.getGracefulTerminationTimeout());
-		final String link = VnfLcmOpOccs261Sol003Controller.getSelfLink(lcm.getId().toString());
+		final String link = VnfLcm261Sol003Controller.getSelfLink(lcm.getId().toString());
 		return ResponseEntity.noContent().header(LOCATION, link).build();
 	}
 
+	public static String getSelfLink(final String id) {
+		return linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
+	}
 }
