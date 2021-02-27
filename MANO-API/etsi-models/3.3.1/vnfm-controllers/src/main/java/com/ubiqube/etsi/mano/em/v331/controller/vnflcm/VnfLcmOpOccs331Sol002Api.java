@@ -34,8 +34,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping("/sol003/vnflcm/v2/vnf_lcm_op_occs")
-public interface VnfLcmOpOccs331Sol003Api {
+@RequestMapping("/sol002/vnflcm/v2/vnf_lcm_op_occs")
+public interface VnfLcmOpOccs331Sol002Api {
 
 	@Operation(summary = "", description = "The client can use this method to query status information about multiple VNF lifecycle management operation occurrences. ", tags = {})
 	@ApiResponses(value = {

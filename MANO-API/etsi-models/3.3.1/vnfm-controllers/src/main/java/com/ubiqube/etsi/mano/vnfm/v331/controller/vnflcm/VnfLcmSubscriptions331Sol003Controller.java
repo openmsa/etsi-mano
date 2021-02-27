@@ -1,19 +1,21 @@
-package com.ubiqube.etsi.mano.em.v331.controller.vnflcm;
+package com.ubiqube.etsi.mano.vnfm.v331.controller.vnflcm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscription;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.LccnSubscriptionRequest;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfLcmSubscriptions331Sol003Controller implements VnfLcmSubscriptions331Sol003Api {
 

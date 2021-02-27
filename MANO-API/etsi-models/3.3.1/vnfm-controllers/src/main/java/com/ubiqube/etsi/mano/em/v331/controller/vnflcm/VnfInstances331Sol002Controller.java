@@ -30,7 +30,7 @@ import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfInstance;
  *
  */
 @RestController
-public class VnfInstances331Sol003Controller implements VnfInstances331Sol003Api {
+public class VnfInstances331Sol002Controller implements VnfInstances331Sol002Api {
 
 	@Override
 	public ResponseEntity<List<VnfInstance>> vnfInstancesGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {

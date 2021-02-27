@@ -17,7 +17,7 @@ import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfSnapshotInfo;
  *
  */
 @RestController
-public class VnfSnapshots331Sol003Controller implements VnfSnapshots331Sol003Api {
+public class VnfSnapshots331Sol002Controller implements VnfSnapshots331Sol002Api {
 
 	@Override
 	public ResponseEntity<List<VnfSnapshotInfo>> vnfSnapshotsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
