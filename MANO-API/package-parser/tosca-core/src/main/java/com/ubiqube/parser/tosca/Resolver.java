@@ -83,11 +83,8 @@ public class Resolver implements IResolver {
 			final MessageDigest md = MessageDigest.getInstance("SHA-1");
 			final byte[] messageDigest = md.digest(url.getBytes(Charset.defaultCharset()));
 			final BigInteger no = new BigInteger(1, messageDigest);
-			String hashtext = no.toString(16);
-			while (hashtext.length() < 32) {
-				hashtext = "0" + hashtext;
-			}
-			return hashtext;
+			final String hashtext = no.toString(16);
+			return new String(new char[40 - hashtext.length()]).replace('\0', '0') + hashtext;
 		} catch (final NoSuchAlgorithmException e) {
 			throw new ParseException(e);
 		}
