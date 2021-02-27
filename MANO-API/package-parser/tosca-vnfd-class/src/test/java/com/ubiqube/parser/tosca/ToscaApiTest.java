@@ -63,7 +63,7 @@ public class ToscaApiTest {
 		conv.register(Size.class.getCanonicalName(), new SizeConverter());
 	}
 
-	@Test
+	// @Test
 	void testName() throws Exception {
 		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaContext root = tp.getContext();
@@ -93,7 +93,7 @@ public class ToscaApiTest {
 		System.out.println("" + res);
 	}
 
-	@Test
+	// @Test
 	void testResolvValue() throws Exception {
 		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
 		final ToscaContext root = tp.getContext();
