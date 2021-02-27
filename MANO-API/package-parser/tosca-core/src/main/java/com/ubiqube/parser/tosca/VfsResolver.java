@@ -17,14 +17,10 @@
 package com.ubiqube.parser.tosca;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -32,7 +28,7 @@ import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VfsResolver implements IResolver {
+public class VfsResolver extends Resolver {
 	private static final Logger LOG = LoggerFactory.getLogger(VfsResolver.class);
 	private final FileSystemManager fsManager;
 	final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
@@ -50,7 +46,7 @@ public class VfsResolver implements IResolver {
 	public String getContent(final String url) {
 		LOG.info("Resolving: {} from: {}", url, parent.toString());
 		if (isUrl(url)) {
-			return handleUrl(url);
+			return super.getContent(url);
 		}
 		if (url.startsWith("/")) {
 			// Handle absolute content
@@ -63,16 +59,6 @@ public class VfsResolver implements IResolver {
 			}
 		}
 		return null;
-	}
-
-	private static String handleUrl(final String url) {
-		try {
-			final URL urlObj = new URL(url);
-			return IOUtils.toString(urlObj.toURI(), StandardCharsets.UTF_8.name());
-		} catch (final IOException | URISyntaxException e) {
-			throw new ParseException(e);
-		}
-
 	}
 
 	private boolean isUrl(final String url) {
