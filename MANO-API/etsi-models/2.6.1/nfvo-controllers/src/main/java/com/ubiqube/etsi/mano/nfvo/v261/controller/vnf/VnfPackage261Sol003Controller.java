@@ -44,8 +44,6 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
-import ma.glasnost.orika.MapperFacade;
-
 /**
  * SOL005 - VNF Package Management Interface
  *
@@ -61,14 +59,11 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 
 	private final VnfPackageManagement vnfManagement;
 
-	private final MapperFacade mapper;
-
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	public VnfPackage261Sol003Controller(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
+	public VnfPackage261Sol003Controller(final VnfPackageManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
-		mapper = _mapper;
 		LOG.debug("Starting VNF Package SOL003 Controller.");
 	}
 
