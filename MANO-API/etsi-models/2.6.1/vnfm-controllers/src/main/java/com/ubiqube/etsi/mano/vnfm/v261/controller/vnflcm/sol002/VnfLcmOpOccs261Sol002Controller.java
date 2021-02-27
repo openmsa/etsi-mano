@@ -16,13 +16,10 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002;
 
-import static com.ubiqube.etsi.mano.Constants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -33,7 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
@@ -55,33 +52,32 @@ public class VnfLcmOpOccs261Sol002Controller implements VnfLcmOpOccs261Sol002Api
 
 	private final MapperFacade mapper;
 
-	private final VnfLcmController vnfLcmController;
+	private final VnfInstanceGenericFrontController frontController;
 
-	public VnfLcmOpOccs261Sol002Controller(final MapperFacade mapper, final VnfLcmController vnfLcmController) {
+	public VnfLcmOpOccs261Sol002Controller(final MapperFacade mapper, final VnfInstanceGenericFrontController _frontController) {
 		super();
 		this.mapper = mapper;
-		this.vnfLcmController = vnfLcmController;
+		frontController = _frontController;
 	}
 
 	@Override
 	public ResponseEntity<String> vnfLcmOpOccsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final Consumer<VnfLcmOpOcc> setLink = x -> x.setLinks(makeLink(x));
-		return vnfLcmController.search(requestParams, VnfLcmOpOcc.class, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, setLink);
+		return frontController.search(requestParams, VnfLcmOpOcc.class, VnfLcmOpOccs261Sol002Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		return frontController.lcmOpOccCancel(UUID.fromString(vnfLcmOpOccId));
 	}
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		return frontController.lcmOpOccFail(UUID.fromString(vnfLcmOpOccId));
 	}
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId) {
-		final VnfBlueprint resultDb = vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(UUID.fromString(vnfLcmOpOccId));
+		final VnfBlueprint resultDb = frontController.lcmOpOccFindById(UUID.fromString(vnfLcmOpOccId));
 		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
 		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
 		resultDb.getTasks().stream()
@@ -97,31 +93,31 @@ public class VnfLcmOpOccs261Sol002Controller implements VnfLcmOpOccs261Sol002Api
 				.map(x -> mapper.map(x, AffectedVnfc.class))
 				.forEach(resourceChanged::addAffectedVnfcsItem);
 		entity.setResourceChanges(resourceChanged);
-		entity.setLinks(makeLink(entity));
+		makeLinks(entity);
 		return new ResponseEntity<>(entity, HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		return frontController.lcmOpOccRetry(UUID.fromString(vnfLcmOpOccId));
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		return frontController.lcmOpOccRollback(UUID.fromString(vnfLcmOpOccId));
 	}
 
-	private static VnfLcmOpOccLinks makeLink(@NotNull final VnfLcmOpOcc vnfLcmOpOcc) {
+	private static void makeLinks(@NotNull final VnfLcmOpOcc vnfLcmOpOcc) {
 		@NotNull
 		final String id = vnfLcmOpOcc.getId();
-		final VnfLcmOpOccLinks link = new VnfLcmOpOccLinks();
+		final VnfLcmOpOccLinks links = new VnfLcmOpOccLinks();
 		final Link cancel = new Link();
 		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
-		link.setCancel(cancel);
+		links.setCancel(cancel);
 
 		final Link fail = new Link();
 		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id)).withSelfRel().getHref());
-		link.setFail(fail);
+		links.setFail(fail);
 
 		// XXX We can't have this grant link directly.
 		// grant.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(),
@@ -129,21 +125,21 @@ public class VnfLcmOpOccs261Sol002Controller implements VnfLcmOpOccs261Sol002Api
 
 		final Link retry = new Link();
 		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
-		link.setRetry(retry);
+		links.setRetry(retry);
 
 		final Link rollback = new Link();
 		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
-		link.setRollback(rollback);
+		links.setRollback(rollback);
 
 		final Link self = new Link();
 		self.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref());
-		link.setSelf(self);
+		links.setSelf(self);
 
 		final Link vnfInstance = new Link();
 		vnfInstance.setHref(linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdGet(vnfLcmOpOcc.getId())).withSelfRel().getHref());
-		link.setVnfInstance(vnfInstance);
+		links.setVnfInstance(vnfInstance);
 
-		return link;
+		vnfLcmOpOcc.setLinks(links);
 	}
 
 }
