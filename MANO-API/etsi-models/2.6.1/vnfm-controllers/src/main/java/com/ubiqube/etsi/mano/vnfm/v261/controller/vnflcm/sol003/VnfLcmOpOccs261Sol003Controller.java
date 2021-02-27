@@ -66,12 +66,12 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId, final String version) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(final String vnfLcmOpOccId) {
 		return frontController.lcmOpOccCancel(UUID.fromString(vnfLcmOpOccId));
 	}
 
 	@Override
-	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId, final String version) {
+	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(final String vnfLcmOpOccId) {
 		return frontController.lcmOpOccFail(UUID.fromString(vnfLcmOpOccId));
 	}
 
@@ -98,12 +98,12 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId, final String version) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(final String vnfLcmOpOccId) {
 		return frontController.lcmOpOccRetry(UUID.fromString(vnfLcmOpOccId));
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId, final String version) {
+	public ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(final String vnfLcmOpOccId) {
 		return frontController.lcmOpOccRollback(UUID.fromString(vnfLcmOpOccId));
 	}
 
@@ -112,22 +112,22 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 		final String id = vnfLcmOpOcc.getId();
 		final VnfLcmOpOccLinks links = new VnfLcmOpOccLinks();
 		final Link cancel = new Link();
-		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id, "")).withSelfRel().getHref());
+		cancel.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdCancelPost(id)).withSelfRel().getHref());
 		links.setCancel(cancel);
 
 		final Link fail = new Link();
-		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id, "")).withSelfRel().getHref());
+		fail.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id)).withSelfRel().getHref());
 		links.setFail(fail);
 
 		// XXX We can't have this grant link directly, because of classpath on interface.
 		// grant.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(),"")).withSelfRel().getHref());
 
 		final Link retry = new Link();
-		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id, "")).withSelfRel().getHref());
+		retry.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
 		links.setRetry(retry);
 
 		final Link rollback = new Link();
-		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id, "")).withSelfRel().getHref());
+		rollback.setHref(linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
 		links.setRollback(rollback);
 
 		final Link self = new Link();
