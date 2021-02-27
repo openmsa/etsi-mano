@@ -5,6 +5,12 @@
 	<artifactId>tosca-parser-parent</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.version.jackson.databind>2.12.1</project.version.jackson.databind>
+	</properties>
 
 	<modules>
 		<module>tosca-core</module>
@@ -112,6 +118,41 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.mycila.maven-license-plugin
+										</groupId>
+										<artifactId>
+											maven-license-plugin
+										</artifactId>
+										<versionRange>
+											[1.10.b1,)
+										</versionRange>
+										<goals>
+											<goal>format</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<distributionManagement>
 		<snapshotRepository>
@@ -123,12 +164,6 @@
 			<url>http://nexus2.ubiqube.com:8081/repository/maven-releases/</url>
 		</repository>
 	</distributionManagement>
-	<properties>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.version.jackson.databind>2.12.1</project.version.jackson.databind>
-	</properties>
 	<scm>
 		<developerConnection>scm:git:ssh://git@ubibucket.ubiqube.com:7999/~ovi/parser.git</developerConnection>
 		<tag>0.0.1</tag>
@@ -191,11 +226,10 @@
 			</dependency>
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>5.7.1</version>
+				<artifactId>junit-jupiter</artifactId>
+				<version>5.7.0</version>
 				<scope>test</scope>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 </project>
