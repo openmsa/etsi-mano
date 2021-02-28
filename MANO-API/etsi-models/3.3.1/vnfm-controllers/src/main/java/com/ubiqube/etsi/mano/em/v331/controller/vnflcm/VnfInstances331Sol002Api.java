@@ -5,11 +5,10 @@
  */
 package com.ubiqube.etsi.mano.em.v331.controller.vnflcm;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +35,6 @@ import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfIdentifierDeletionNotification;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfInfoModificationRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfInstance;
 
 import io.swagger.annotations.ApiParam;
@@ -73,7 +71,7 @@ public interface VnfInstances331Sol002Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(produces = { "application/json" })
-	ResponseEntity<List<VnfInstance>> vnfInstancesGet(
+	ResponseEntity<String> vnfInstancesGet(
 			@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
@@ -196,7 +194,7 @@ public interface VnfInstances331Sol002Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@DeleteMapping(value = "/{vnfInstanceId}", produces = { "application/json" })
-	ResponseEntity<VnfIdentifierDeletionNotification> vnfInstancesVnfInstanceIdDelete(
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("vnfInstanceId") final String vnfInstanceId,
 			@Parameter(in = ParameterIn.HEADER, description = "Version of the API requested to use when responding to this request. ", required = true, schema = @Schema()) @RequestHeader(value = "Version", required = true) final String version,
 			@Parameter(in = ParameterIn.HEADER, description = "The authorization token for the request. Reference: IETF RFC 7235. ", schema = @Schema()) @RequestHeader(value = "Authorization", required = false) final String authorization);
@@ -302,7 +300,8 @@ public interface VnfInstances331Sol002Api {
 	@PatchMapping(value = "/{vnfInstanceId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<Void> vnfInstancesVnfInstanceIdPatch(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF instance. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("vnfInstanceId") final String vnfInstanceId,
-			@Parameter(in = ParameterIn.DEFAULT, description = "Input parameters for VNF info modification", required = true, schema = @Schema()) @Valid @RequestBody final VnfInfoModificationRequest body);
+			@Parameter(in = ParameterIn.DEFAULT, description = "Input parameters for VNF info modification", required = true, schema = @Schema()) @Valid @RequestBody final String body,
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
 
 	@Operation(summary = "", description = "The POST method requests reverting a VNF/VNFC instance to a VNF/VNFC snapshot. ", tags = {})
 	@ApiResponses(value = {

@@ -40,7 +40,12 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfInstanceLinks;
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfInstances331Sol003Controller implements VnfInstances331Sol003Api {
-	private VnfInstanceGenericFrontController frontController;
+	private final VnfInstanceGenericFrontController frontController;
+
+	public VnfInstances331Sol003Controller(final VnfInstanceGenericFrontController frontController) {
+		super();
+		this.frontController = frontController;
+	}
 
 	@Override
 	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
