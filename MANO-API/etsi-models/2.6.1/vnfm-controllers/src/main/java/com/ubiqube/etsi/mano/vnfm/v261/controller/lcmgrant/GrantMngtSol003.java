@@ -49,7 +49,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Api;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcmOpOccs261Sol003Controller;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Controller;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -120,7 +120,7 @@ public class GrantMngtSol003 implements GrantManagement {
 	private static void makeLinks(final GrantRequest manoGrant) {
 		final GrantRequestLinks links = new GrantRequestLinks();
 		Link link = new Link();
-		link.setHref(VnfLcmOpOccs261Sol003Controller.getSelfLink(manoGrant.getVnfInstanceId()));
+		link.setHref(VnfLcm261Sol003Controller.getSelfLink(manoGrant.getVnfInstanceId()));
 		links.setVnfInstance(link);
 
 		link = new Link();

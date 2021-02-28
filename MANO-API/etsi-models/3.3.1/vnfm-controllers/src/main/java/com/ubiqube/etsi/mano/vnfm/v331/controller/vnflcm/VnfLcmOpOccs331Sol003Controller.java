@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmOpOccGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.AffectedVirtualLink;
@@ -35,11 +35,11 @@ import ma.glasnost.orika.MapperFacade;
 @RestController
 public class VnfLcmOpOccs331Sol003Controller implements VnfLcmOpOccs331Sol003Api {
 
-	private final VnfInstanceGenericFrontController frontController;
+	private final VnfLcmOpOccGenericFrontController frontController;
 
 	private final MapperFacade mapper;
 
-	public VnfLcmOpOccs331Sol003Controller(final VnfInstanceGenericFrontController frontController, final MapperFacade _mapper) {
+	public VnfLcmOpOccs331Sol003Controller(final VnfLcmOpOccGenericFrontController frontController, final MapperFacade _mapper) {
 		super();
 		this.frontController = frontController;
 		mapper = _mapper;

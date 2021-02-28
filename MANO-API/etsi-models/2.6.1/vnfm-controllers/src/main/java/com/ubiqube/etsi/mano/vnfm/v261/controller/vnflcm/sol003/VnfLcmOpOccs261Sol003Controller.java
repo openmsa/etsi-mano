@@ -33,7 +33,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmOpOccGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
@@ -52,9 +52,9 @@ public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api
 
 	private final MapperFacade mapper;
 
-	private final VnfInstanceGenericFrontController frontController;
+	private final VnfLcmOpOccGenericFrontController frontController;
 
-	public VnfLcmOpOccs261Sol003Controller(final MapperFacade _mapper, final VnfInstanceGenericFrontController _frontController) {
+	public VnfLcmOpOccs261Sol003Controller(final MapperFacade _mapper, final VnfLcmOpOccGenericFrontController _frontController) {
 		mapper = _mapper;
 		frontController = _frontController;
 		LOG.info("Starting VNF LCM OP OCCS SOL003 Controller.");

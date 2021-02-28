@@ -30,7 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
+import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmOpOccGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.AffectedVirtualLink;
@@ -52,9 +52,9 @@ public class VnfLcmOpOccs261Sol002Controller implements VnfLcmOpOccs261Sol002Api
 
 	private final MapperFacade mapper;
 
-	private final VnfInstanceGenericFrontController frontController;
+	private final VnfLcmOpOccGenericFrontController frontController;
 
-	public VnfLcmOpOccs261Sol002Controller(final MapperFacade mapper, final VnfInstanceGenericFrontController _frontController) {
+	public VnfLcmOpOccs261Sol002Controller(final MapperFacade mapper, final VnfLcmOpOccGenericFrontController _frontController) {
 		super();
 		this.mapper = mapper;
 		frontController = _frontController;

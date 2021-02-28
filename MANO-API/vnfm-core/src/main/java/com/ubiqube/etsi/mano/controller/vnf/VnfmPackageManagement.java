@@ -157,4 +157,16 @@ public class VnfmPackageManagement extends SearchableService implements VnfPacka
 		return null;
 	}
 
+	@Override
+	public ResponseEntity<Resource> onboardedGetManifestByVnfd(final UUID vnfdId, @Valid final String includeSignature) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(final UUID vnfdId, final String range) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
