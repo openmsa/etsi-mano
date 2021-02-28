@@ -22,7 +22,7 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfSnapshotInfoModifications
  */
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
-public class VnfSnapshotsApiController implements VnfSnapshotsApi {
+public class VnfSnapshots331Sol003Controller implements VnfSnapshots331Sol003Api {
 
 	@Override
 	public ResponseEntity<List<VnfSnapshotInfo>> vnfSnapshotsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
