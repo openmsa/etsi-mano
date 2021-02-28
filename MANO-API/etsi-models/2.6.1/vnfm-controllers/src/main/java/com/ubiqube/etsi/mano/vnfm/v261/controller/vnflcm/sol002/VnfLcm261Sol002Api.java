@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +38,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
 import io.swagger.annotations.ApiParam;
@@ -91,7 +96,8 @@ public interface VnfLcm261Sol002Api {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/change_ext_conn", consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(@Nonnull @ApiParam(value = "Identifier of the VNF instance of which the external connectivity is requested to be changed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId);
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(@Nonnull @ApiParam(value = "Identifier of the VNF instance of which the external connectivity is requested to be changed. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId,
+			@Valid @RequestBody ChangeExtVnfConnectivityRequest changeExtVnfConnectivityRequest);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Change VNF Flavour  The POST method changes the deployment flavour of a VNF instance. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
@@ -186,7 +192,8 @@ public interface VnfLcm261Sol002Api {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/operate", consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be operated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId);
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be operated. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId,
+			@RequestBody OperateVnfRequest operateVnfRequest);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Modify VNF Information  This method modifies an individual VNF instance resource. Changes to the VNF configurable properties are applied to the configuration in the VNF instance, and are reflected in the representation of this resource. Other changes are applied to the VNF instance information managed by the VNFM, and are reflected in the representation of this resource ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
@@ -219,7 +226,8 @@ public interface VnfLcm261Sol002Api {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfInstanceId}/scale", consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be scaled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId);
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdScalePost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be scaled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId,
+			@ApiParam(value = "Parameters for the scale VNF operation.", required = true) @Valid @RequestBody ScaleVnfRequest scaleVnfRequest);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Scale VNF to Level  The POST method requests to scale a VNF instance resource to a target level. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
@@ -234,7 +242,8 @@ public interface VnfLcm261Sol002Api {
 			@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@io.swagger.annotations.ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@DeleteMapping(value = "/{vnfInstanceId}/scale_to_level", consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be scaled to a target level. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId);
+	ResponseEntity<Void> vnfInstancesVnfInstanceIdScaleToLevelPost(@Nonnull @ApiParam(value = "Identifier of the VNF instance to be scaled to a target level. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") String vnfInstanceId,
+			@ApiParam(value = "Parameters for the scale VNF to Level operation.", required = true) @Valid @RequestBody ScaleVnfToLevelRequest scaleVnfToLevelRequest);
 
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Terminate VNF  The POST method terminates a VNF instance. ", response = Void.class, tags = {})
 	@io.swagger.annotations.ApiResponses(value = {
