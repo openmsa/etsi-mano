@@ -28,11 +28,11 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscription;
@@ -68,7 +68,8 @@ public interface VnflcmSubscriptions261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/subscriptions", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<LccnSubscription>> subscriptionsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM may supply this parameter. All attribute names that appear in the LccnSubscription and in data types referenced from it shall be supported by the VNFM in the filter expression. EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") @Valid @RequestParam(value = "filter", required = false) final String filter);
+	ResponseEntity<List<LccnSubscription>> subscriptionsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM may supply this parameter. All attribute names that appear in the LccnSubscription and in data types referenced from it shall be supported by the VNFM in the filter expression. EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") final MultiValueMap<String, String> requestParams,
+			@Valid final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "", nickname = "subscriptionsPost", notes = "The POST method creates a new subscription. ", response = LccnSubscription.class, tags = {})
 	@ApiResponses(value = {
