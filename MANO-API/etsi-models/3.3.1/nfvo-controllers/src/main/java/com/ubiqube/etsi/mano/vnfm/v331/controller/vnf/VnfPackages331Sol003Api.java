@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +77,7 @@ public interface VnfPackages331Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(value = "/vnf_packages/{vnfPkgId}/artifacts", produces = { "application/json" })
-	ResponseEntity<Void> vnfPackagesVnfPkgIdArtifactsGet(
+	ResponseEntity<Void> vnfPackagesVnfPkgIdArtifactsGet(@Nonnull HttpServletRequest request,
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") final String vnfPkgId,
 			@Parameter(in = ParameterIn.HEADER, description = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the VNF package file. This can be used to continue an aborted transmission.  If the \"Range\" header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead. ", schema = @Schema()) @RequestHeader(value = "Range", required = false) final String range);
 
@@ -150,7 +151,7 @@ public interface VnfPackages331Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(value = "/vnf_packages/{vnfPkgId}/vnfd", produces = { "application/json" })
-	ResponseEntity<Void> vnfPackagesVnfPkgIdVnfdGet(
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") final String vnfPkgId,
 			@Parameter(in = ParameterIn.QUERY, description = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter.     ", schema = @Schema()) @Valid @RequestParam(value = "include_signature", required = false) final String includeSignature);
 }

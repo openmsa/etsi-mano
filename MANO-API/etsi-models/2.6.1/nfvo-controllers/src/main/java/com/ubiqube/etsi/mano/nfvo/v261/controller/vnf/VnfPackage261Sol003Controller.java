@@ -19,10 +19,9 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -87,7 +86,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, @RequestHeader(value = "Range", required = false) final String range) {
 		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(getSafeUUID(vnfPkgId), artifactPath, range);
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(getSafeUUID(vnfPkgId), VnfPkgInfo.class);
 		links.makeLinks(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
@@ -108,12 +107,11 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 *
 	 * The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. This method shall follow the provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
-	 * @throws IOException
 	 *
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
+		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(getSafeUUID(vnfPkgId), range);
 	}
 
 	/**
@@ -127,7 +125,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId));
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(getSafeUUID(vnfPkgId), false);
 	}
 
 }

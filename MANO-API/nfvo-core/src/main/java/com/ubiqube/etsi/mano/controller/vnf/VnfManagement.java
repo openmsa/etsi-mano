@@ -119,7 +119,7 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final boolean includeSignature) {
 		vnfPackageRepository.get(vnfPkgId);
 
 		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
@@ -179,7 +179,7 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	@Override
 	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(final UUID vnfdId, @Valid final String includeSignatures) {
 		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
-		return vnfPackagesVnfPkgIdVnfdGet(vnfPackage.getId());
+		return vnfPackagesVnfPkgIdVnfdGet(vnfPackage.getId(), null != includeSignatures);
 	}
 
 	@Override

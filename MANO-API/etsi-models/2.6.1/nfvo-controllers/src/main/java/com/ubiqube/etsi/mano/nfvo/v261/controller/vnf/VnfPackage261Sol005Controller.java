@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
 import java.io.IOException;
 import java.net.URI;
@@ -90,25 +91,24 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfdId, final HttpServletRequest request, final String accept, final String range) {
 		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfdId), artifactPath, range);
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(getSafeUUID(vnfdId), artifactPath, range);
 	}
 
 	@Override
-	// TODO: Same as SOL003 ?
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String accept) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
+		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(getSafeUUID(vnfPkgId), VnfPkgInfo.class);
 		links.makeLinks(vnfPkgInfo);
 		return ResponseEntity.ok(vnfPkgInfo);
 	}
 
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
+		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(getSafeUUID(vnfPkgId), range);
 	}
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId));
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(getSafeUUID(vnfPkgId), false);
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	public ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(final String vnfPkgId, final String accept, final MultipartFile file) {
 		final UUID vnfPkgUuid = UUID.fromString(vnfPkgId);
 		try {
-			vnfPackageController.vnfPackagesVnfPkgIdPackageContentPut(vnfPkgUuid, file.getBytes());
+			vnfPackageController.vnfPackagesVnfPkgIdPackageContentPut(vnfPkgUuid, file.getBytes(), accept);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

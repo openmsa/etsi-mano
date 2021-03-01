@@ -5,25 +5,23 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.controller.vnf;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.ExternalArtifactsAccessConfig;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.ProblemDetails;
@@ -38,21 +36,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "vnf_packages", description = "the vnf_packages API")
-public interface VnfPackagesApi {
-
-	Logger log = LoggerFactory.getLogger(VnfPackagesApi.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
+@RequestMapping("/sol005/vnfpkgm/v2/vnf_packages")
+public interface VnfPackages331Sol005Api {
 
 	@ApiOperation(value = "Query VNF packages information.", nickname = "vnfPackagesGet", notes = "The GET method queries the information of the VNF packages matching the filter. This method shall follow the provisions specified in the  Tables 9.4.2.3.2-1 and 9.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfPkgInfo.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -67,25 +52,8 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<VnfPkgInfo>> vnfPackagesGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The NFV-MANO functional entity shall support receiving this parameter as part of the URI query string. The API consumer may supply this parameter. All attribute names that appear in the FmSubscription and in data types referenced from it shall be supported by the NFV-MANO functional entity in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV-SOL 013. The NFV-MANO functional entity shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields, @ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFV-MANO functional entity should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields, @ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFV-MANO functional entity should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFV-MANO functional entity shall support this parameter. The NFVO shall support this parameter. The following attributes shall be excluded from the NsInstance structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - vnfInstances - pnfInfo - virtualLinkInfo - vnffgInfo - sapInfo - nsScaleStatus - additionalAffinityOrAntiAffinityRules -   wanConnectionInfo") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault, @ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"[ {\n  \"packageSecurityOption\" : \"OPTION_1\",\n  \"vnfProductName\" : \"vnfProductName\",\n  \"signingCertificate\" : \"signingCertificate\",\n  \"vnfProvider\" : \"vnfProvider\",\n  \"vnfmInfo\" : [ \"vnfmInfo\", \"vnfmInfo\" ],\n  \"_links\" : {\n    \"self\" : {\n      \"href\" : \"http://example.com/aeiou\"\n    }\n  },\n  \"additionalArtifacts\" : [ {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  }, {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  } ],\n  \"usageState\" : \"IN_USE\",\n  \"onboardingFailureDetails\" : {\n    \"instance\" : \"instance\",\n    \"detail\" : \"detail\",\n    \"type\" : \"type\",\n    \"title\" : \"title\",\n    \"status\" : 5\n  },\n  \"checksum\" : {\n    \"hash\" : \"hash\",\n    \"algorithm\" : \"algorithm\"\n  },\n  \"softwareImages\" : [ {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  }, {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  } ],\n  \"id\" : \"id\",\n  \"operationalState\" : \"ENABLED\",\n  \"onboardingState\" : \"CREATED\",\n  \"vnfSoftwareVersion\" : \"vnfSoftwareVersion\"\n}, {\n  \"packageSecurityOption\" : \"OPTION_1\",\n  \"vnfProductName\" : \"vnfProductName\",\n  \"signingCertificate\" : \"signingCertificate\",\n  \"vnfProvider\" : \"vnfProvider\",\n  \"vnfmInfo\" : [ \"vnfmInfo\", \"vnfmInfo\" ],\n  \"_links\" : {\n    \"self\" : {\n      \"href\" : \"http://example.com/aeiou\"\n    }\n  },\n  \"additionalArtifacts\" : [ {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  }, {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  } ],\n  \"usageState\" : \"IN_USE\",\n  \"onboardingFailureDetails\" : {\n    \"instance\" : \"instance\",\n    \"detail\" : \"detail\",\n    \"type\" : \"type\",\n    \"title\" : \"title\",\n    \"status\" : 5\n  },\n  \"checksum\" : {\n    \"hash\" : \"hash\",\n    \"algorithm\" : \"algorithm\"\n  },\n  \"softwareImages\" : [ {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  }, {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  } ],\n  \"id\" : \"id\",\n  \"operationalState\" : \"ENABLED\",\n  \"onboardingState\" : \"CREATED\",\n  \"vnfSoftwareVersion\" : \"vnfSoftwareVersion\"\n} ]",
-							List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Create a new individual VNF package resource.", nickname = "vnfPackagesPost", notes = "The POST method creates a new individual VNF package resource. Upon successful creation of the \"Individual VNF package\" resource, the NFVO shall set the \"onboardingState\" attribute in the \"VnPkgInfo\" structure to \"CREATED\", the \"operationalState\" attribute to \"DISABLED\", and the \"usageState\" attribute to \"NOT_IN_USE\". ", response = VnfPkgInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -102,23 +70,7 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<VnfPkgInfo> vnfPackagesPost(@ApiParam(value = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2", required = true) @Valid @RequestBody final CreateVnfPkgInfoRequest body, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{\n  \"packageSecurityOption\" : \"OPTION_1\",\n  \"vnfProductName\" : \"vnfProductName\",\n  \"signingCertificate\" : \"signingCertificate\",\n  \"vnfProvider\" : \"vnfProvider\",\n  \"vnfmInfo\" : [ \"vnfmInfo\", \"vnfmInfo\" ],\n  \"_links\" : {\n    \"self\" : {\n      \"href\" : \"http://example.com/aeiou\"\n    }\n  },\n  \"additionalArtifacts\" : [ {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  }, {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  } ],\n  \"usageState\" : \"IN_USE\",\n  \"onboardingFailureDetails\" : {\n    \"instance\" : \"instance\",\n    \"detail\" : \"detail\",\n    \"type\" : \"type\",\n    \"title\" : \"title\",\n    \"status\" : 5\n  },\n  \"checksum\" : {\n    \"hash\" : \"hash\",\n    \"algorithm\" : \"algorithm\"\n  },\n  \"softwareImages\" : [ {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  }, {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  } ],\n  \"id\" : \"id\",\n  \"operationalState\" : \"ENABLED\",\n  \"onboardingState\" : \"CREATED\",\n  \"vnfSoftwareVersion\" : \"vnfSoftwareVersion\"\n}",
-							VnfPkgInfo.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfPkgInfo> vnfPackagesPost(@ApiParam(value = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2", required = true) @Valid @RequestBody final CreateVnfPkgInfoRequest body);
 
 	@ApiOperation(value = "Fetch individual VNF package artifact.", nickname = "vnfPackagesVnfPkgIdArtifactsArtifactPathGet", notes = "The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the Tables 9.4.7.3.2-1 and 9.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -135,15 +87,12 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "For an artifact contained as a file in the VNF package, this variable shall contain a sequence of one or more path segments representing the path of the artifact within the VNF package, relative to the root of the package. See note 3. EXAMPLE: foo/bar/m%40ster.sh For an external artifact represented as a URI in the VNF package manifest, this variable shall contain a sequence of one or more path segments as synthesized by the NFVO (see clause 9.5.3.3), representing this artifact. See note 2 and note 3 ", required = true) @PathVariable("artifactPath") final String artifactPath, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version,
-			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ") @RequestHeader(value = "Range", required = false) final String range, @ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/artifacts/**", produces = { "application/json" }, method = RequestMethod.GET)
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "For an artifact contained as a file in the VNF package, this variable shall contain a sequence of one or more path segments representing the path of the artifact within the VNF package, relative to the root of the package. See note 3. EXAMPLE: foo/bar/m%40ster.sh For an external artifact represented as a URI in the VNF package manifest, this variable shall contain a sequence of one or more path segments as synthesized by the NFVO (see clause 9.5.3.3), representing this artifact. See note 2 and note 3 ", required = true) @PathVariable("artifactPath") final HttpServletRequest requestParams,
+			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ") @RequestHeader(value = "Range", required = false) final String range,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@ApiOperation(value = "Fetch set of VNF package artifacts.", nickname = "vnfPackagesVnfPkgIdArtifactsGet", notes = "The GET method shall return an archive that contains a set of artifacts according to the provisions for inclusion/exclusion defined below, embedded in a directory structure being the same as in the VNF package. The criteria for exclusion/inclusion of an artifact in the archive are defined as follows: * Artifacts that are software images shall be excluded from the archive. * Artifacts that are external to the VNF package shall be excluded from the archive. * All additional artifacts included in the VNF package that are MANO artifacts shall be included in the archive,   unless the URI query parameter \"exclude_all_mano_artifacts\" has been provided, in which case such artifacts   shall be excluded. * All additional artifacts included in the VNF package that are non-MANO artifacts shall be included in the archive,   unless:   - the URI query parameter \"exclude_all_non_mano_artifacts\" has been provided, in which case such artifacts shall     be excluded;   - the URI query parameter \"select_non_mano_artifact_sets\" has been provided and is supported by the NFVO,     in which case only those non-MANO artifacts shall be included whose non-MANO artifact set identifier matches     one of the values of the query parameter. Package metadata such as manifest file or VNFD shall not be included     in the archive. This method shall follow the provisions specified in the Tables 9.4.5a.3.2-1 and 9.4.5a.3.2-2     for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -161,15 +110,13 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/artifacts", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdArtifactsGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ") @RequestHeader(value = "Range", required = false) final String range,
-			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures, @ApiParam(value = "Flag (i.e. parameter without value) that instructs the NFVO to exclude the set of additional MANO artifacts (i.e. those that are not images) from the response payload body. The NFVO shall support this parameter. The VNFM may supply this parameter. ") @Valid @RequestParam(value = "exclude_all_mano_artifacts", required = false) final String excludeAllManoArtifacts, @ApiParam(value = "Flag (i.e. parameter without value) that instructs the NFVO to exclude the set of non-MANO artifacts from the response payload body. The NFVO shall support this parameter. The VNFM may supply this parameter. ") @Valid @RequestParam(value = "exclude_all_non_mano_artifacts", required = false) final String excludeAllNonManoArtifacts,
-			@ApiParam(value = "Comma-separated list of non-MANO artifact set identifiers for which the artifacts are to be included in the response body. The NFVO should support this parameter. If the NFVO does not support this parameter, it shall ignore it, i.e. provide a response as if no parameter was provided. The VNFM may supply this parameter. ") @Valid @RequestParam(value = "select_non_mano_artifact_sets", required = false) final String selectNonManoArtifactSets) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfPackagesVnfPkgIdArtifactsGet(
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ") @RequestHeader(value = "Range", required = false) final String range,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures,
+			@ApiParam(value = "Flag (i.e. parameter without value) that instructs the NFVO to exclude the set of additional MANO artifacts (i.e. those that are not images) from the response payload body. The NFVO shall support this parameter. The VNFM may supply this parameter. ") @Valid @RequestParam(value = "exclude_all_mano_artifacts", required = false) final String excludeAllManoArtifacts,
+			@ApiParam(value = "Flag (i.e. parameter without value) that instructs the NFVO to exclude the set of non-MANO artifacts from the response payload body. The NFVO shall support this parameter. The VNFM may supply this parameter. ") @Valid @RequestParam(value = "exclude_all_non_mano_artifacts", required = false) final String excludeAllNonManoArtifacts,
+			@ApiParam(value = "Comma-separated list of non-MANO artifact set identifiers for which the artifacts are to be included in the response body. The NFVO should support this parameter. If the NFVO does not support this parameter, it shall ignore it, i.e. provide a response as if no parameter was provided. The VNFM may supply this parameter. ") @Valid @RequestParam(value = "select_non_mano_artifact_sets", required = false) final String selectNonManoArtifactSets);
 
 	@ApiOperation(value = "Delete an individual VNF package.", nickname = "vnfPackagesVnfPkgIdDelete", notes = "The DELETE method deletes an individual VNF Package resource. ", tags = {})
 	@ApiResponses(value = {
@@ -185,13 +132,7 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}", produces = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
 	@ApiOperation(value = "Get the content of external VNF package artifacts.", nickname = "vnfPackagesVnfPkgIdExtArtifactsAccessGet", notes = "The GET method reads the access configuration information that is used by the NFVO to get the content of external VNF package artifacts. This method shall follow the provisions specified in the Tables 9.4.4a.3.2-1 and 9.4.4a.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = ExternalArtifactsAccessConfig.class, tags = {})
 	@ApiResponses(value = {
@@ -206,21 +147,7 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/ext_artifacts_access", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<ExternalArtifactsAccessConfig> vnfPackagesVnfPkgIdExtArtifactsAccessGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{\n  \"artifact\" : {\n    \"password\" : \"password\",\n    \"paramsOauth2ClientCredentials\" : {\n      \"clientId\" : \"clientId\",\n      \"clientPassword\" : \"clientPassword\"\n    },\n    \"authType\" : \"BASIC\",\n    \"artifactUri\" : \"http://example.com/aeiou\",\n    \"username\" : \"username\"\n  }\n}", ExternalArtifactsAccessConfig.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<ExternalArtifactsAccessConfig> vnfPackagesVnfPkgIdExtArtifactsAccessGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
 	@ApiOperation(value = "Download the content of external VNF package artifacts.", nickname = "vnfPackagesVnfPkgIdExtArtifactsAccessPut", notes = "The PUT method provides the access configuration information for the NFVO to download the content of external VNF package artifacts. As precondition for invoking this method, the individual VNF package resource shall have been created, and the value of \"onboardingState\" attribute shall equal to \"CREATED\" or \"ERROR\". The resource representation in the payload body of the PUT request shall replace the current state of the resource. This method shall follow the provisions specified in the Tables 9.4.4a.3.3-1 and 9.4.4a.3.3-2 for URI query parameters, request and response data structures, and response codes. ", response = ExternalArtifactsAccessConfig.class, tags = {})
 	@ApiResponses(value = {
@@ -237,21 +164,9 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/ext_artifacts_access", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PUT)
-	default ResponseEntity<ExternalArtifactsAccessConfig> vnfPackagesVnfPkgIdExtArtifactsAccessPut(@ApiParam(value = "The payload body contains the access configuration information based on which the NFVO can obtain the external VNF package artifact files.", required = true) @Valid @RequestBody final ExternalArtifactsAccessConfig body, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{\n  \"artifact\" : {\n    \"password\" : \"password\",\n    \"paramsOauth2ClientCredentials\" : {\n      \"clientId\" : \"clientId\",\n      \"clientPassword\" : \"clientPassword\"\n    },\n    \"authType\" : \"BASIC\",\n    \"artifactUri\" : \"http://example.com/aeiou\",\n    \"username\" : \"username\"\n  }\n}", ExternalArtifactsAccessConfig.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<ExternalArtifactsAccessConfig> vnfPackagesVnfPkgIdExtArtifactsAccessPut(
+			@ApiParam(value = "The payload body contains the access configuration information based on which the NFVO can obtain the external VNF package artifact files.", required = true) @Valid @RequestBody final ExternalArtifactsAccessConfig body,
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
 	@ApiOperation(value = "Read information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdGet", notes = "The GET method reads the information of a VNF package. ", response = VnfPkgInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -266,23 +181,7 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"{\n  \"packageSecurityOption\" : \"OPTION_1\",\n  \"vnfProductName\" : \"vnfProductName\",\n  \"signingCertificate\" : \"signingCertificate\",\n  \"vnfProvider\" : \"vnfProvider\",\n  \"vnfmInfo\" : [ \"vnfmInfo\", \"vnfmInfo\" ],\n  \"_links\" : {\n    \"self\" : {\n      \"href\" : \"http://example.com/aeiou\"\n    }\n  },\n  \"additionalArtifacts\" : [ {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  }, {\n    \"nonManoArtifactSetId\" : \"nonManoArtifactSetId\",\n    \"isEncrypted\" : true,\n    \"artifactPath\" : \"artifactPath\",\n    \"artifactClassification\" : \"HISTORY\"\n  } ],\n  \"usageState\" : \"IN_USE\",\n  \"onboardingFailureDetails\" : {\n    \"instance\" : \"instance\",\n    \"detail\" : \"detail\",\n    \"type\" : \"type\",\n    \"title\" : \"title\",\n    \"status\" : 5\n  },\n  \"checksum\" : {\n    \"hash\" : \"hash\",\n    \"algorithm\" : \"algorithm\"\n  },\n  \"softwareImages\" : [ {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  }, {\n    \"imagePath\" : \"imagePath\",\n    \"minDisk\" : 0,\n    \"createdAt\" : \"\",\n    \"imageUri\" : \"http://example.com/aeiou\",\n    \"size\" : 0,\n    \"provider\" : \"provider\",\n    \"isEncrypted\" : true,\n    \"minRam\" : 0,\n    \"name\" : \"name\",\n    \"containerFormat\" : \"AKI\",\n    \"id\" : \"id\",\n    \"diskFormat\" : \"AKI\",\n    \"userMetadata\" : { }\n  } ],\n  \"id\" : \"id\",\n  \"operationalState\" : \"ENABLED\",\n  \"onboardingState\" : \"CREATED\",\n  \"vnfSoftwareVersion\" : \"vnfSoftwareVersion\"\n}",
-							VnfPkgInfo.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
 	@ApiOperation(value = "", nickname = "vnfPackagesVnfPkgIdManifestGet", notes = "The GET method reads the content of the manifest within a VNF package. ", tags = {})
 	@ApiResponses(value = {
@@ -298,13 +197,9 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/manifest", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@ApiOperation(value = "Fetch an on-boarded VNF package.", nickname = "vnfPackagesVnfPkgIdPackageContentGet", notes = "The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. The content of the package is provided as onboarded, i.e. depending on the security option used, the CSAR or the CSAR wrapped in a ZIP archive together with an external signature is returned, as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. NOTE: Information about the applicable security option can be obtained by evaluating the \"packageSecurityOption\" attribute in the \"VnfPkgInfo\" structure. This method shall follow the provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -322,13 +217,9 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/package_content", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ") @RequestHeader(value = "Range", required = false) final String range) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ") @RequestHeader(value = "Range", required = false) final String range);
 
 	@ApiOperation(value = "Upload a VNF package by providing the content of the VNF package.", nickname = "vnfPackagesVnfPkgIdPackageContentPut", notes = "The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes. Upon start of the upload of the package, the NFVO shall set the \"onboardingState\" attribute in the \"VnfPkgInfo\" structure to \"UPLOADING\". Upon successful upload of the package, if the package references external artifacts, the NFVO shall obtain the external artifacts. Subsequently, upon success, the NFVO shall set that attribute to \"PROCESSING\" and shall process the package, which shall include checking package consistency. Upon successful processing, the NFVO shall set the \"onboardingState\" attribute to \"ONBOARDED\". If an error occurs during uploading the package, downloading the external artifacts or processing the package, the NFVO shall set the \"onboardingState\" attribute to \"ERROR\" and shall populate the \"onboardingFailureDetails\" attribute in \"VnfPkgInfo\". ", tags = {})
 	@ApiResponses(value = {
@@ -345,13 +236,10 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "application/binary" }, method = RequestMethod.PUT)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(@ApiParam(value = "", required = true) @Valid @RequestBody final Object body, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(
+			@ApiParam(value = "", required = true) @Valid @RequestBody MultipartFile file,
+			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept,
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
 	@ApiOperation(value = "Upload a VNF package by providing the address information of the VNF package.", nickname = "vnfPackagesVnfPkgIdPackageContentUploadFromUriPost", notes = "The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes. Upon start of obtaining the package, the NFVO shall set the \"onboardingState\" attribute in the \"VnfPkgInfo\" structure to \"UPLOADING\". Upon successfully obtaining the package, if the package references external artifacts, the NFVO shall obtain the external artifacts. Subsequently, upon success, the NFVO shall set that attribute to \"PROCESSING\" and shall process the package, which shall include checking package consistency. Upon successful processing, the NFVO shall set the \"onboardingState\" attribute to \"ONBOARDED\", the \"operationalState\" attribute to \"ENABLED\", and the \"usageState\" attribute to \"NOT_IN_USE\". In addition, the NFVO shall set the value of the attributes in the \"VnfPkgInfo\" that are copied from the VNFD (refer to clause 9.5.2.5). If an error occurs during obtaining the package, downloading the external artifacts or processing the package, the NFVO shall set the \"onboardingState\" attribute to \"ERROR\" and shall populate the \"onboardingFailureDetails\" attribute in \"VnfPkgInfo\". ", tags = {})
 	@ApiResponses(value = {
@@ -368,13 +256,10 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/package_content/upload_from_uri", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@ApiParam(value = "The payload body contains the address information based on which the NFVO can obtain the content of the VNF package.", required = true) @Valid @RequestBody final UploadVnfPkgFromUriRequest body, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(
+			@ApiParam(value = "The payload body contains the address information based on which the NFVO can obtain the content of the VNF package.", required = true) @Valid @RequestBody final UploadVnfPkgFromUriRequest body,
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept);
 
 	@ApiOperation(value = "Update information about an individual VNF package.", nickname = "vnfPackagesVnfPkgIdPatch", notes = "The PATCH method updates the information of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfPkgInfoModifications.class, tags = {})
 	@ApiResponses(value = {
@@ -390,21 +275,9 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
-	default ResponseEntity<VnfPkgInfoModifications> vnfPackagesVnfPkgIdPatch(@ApiParam(value = "Parameters for VNF package information modifications.", required = true) @Valid @RequestBody final VnfPkgInfoModifications body, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{\n  \"operationalState\" : \"ENABLED\",\n  \"userDefinedData\" : { }\n}", VnfPkgInfoModifications.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(
+			@ApiParam(value = "Parameters for VNF package information modifications.", required = true) @RequestBody final String body,
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
 	@ApiOperation(value = "Read VNFD of an on-boarded VNF package.", nickname = "vnfPackagesVnfPkgIdVnfdGet", notes = "The GET method reads the content of the VNFD within a VNF package. The default format of the ZIP archive shall be the one specified in ETSI GS NFV-SOL 004 where only the files representing the VNFD and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the VNFD and (if requested) further security information are included. This means that the structure of the ZIP archive shall correspond to the directory structure used in the VNF package and that the archive shall contain the following files from the package: • TOSCA.meta (if available in the package). The main TOSCA definitions YAML file (either as referenced from TOSCA.meta or available as a file with the extension \".yml\" or \".yaml\" from the root of the archive). Every component of the VNFD referenced (recursively) from the main TOSCA definitions YAML file. • The related security information, if the \"include_signatures\" URI parameter is provided, as follows: - the manifest file; - the singleton certificate file in the root of the VNF package (if available in the package); - the signing certificates of the individual files included in the ZIP archive (if available in the package); - the signatures of the individual files (if available in the package). ", tags = {})
 	@ApiResponses(value = {
@@ -420,12 +293,8 @@ public interface VnfPackagesApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/vnfd", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> vnfPackagesVnfPkgIdVnfdGet(@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default VnfPackagesApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 }

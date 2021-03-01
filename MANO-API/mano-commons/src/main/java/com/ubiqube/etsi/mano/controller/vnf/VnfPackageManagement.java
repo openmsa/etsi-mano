@@ -47,11 +47,11 @@ public interface VnfPackageManagement {
 	 */
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull UUID vnfPkgId, @Nonnull String artifactPath, @Nullable String rangeHeader);
 
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId, boolean includeSignature);
 
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID _vnfPkgId, @Nullable String range);
 
-	ResponseEntity<Void> getPackageManifest(UUID vnfPkgId, @Valid String includeSignatures);
+	ResponseEntity<Void> getPackageManifest(UUID vnfPkgId, String includeSignatures);
 
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(UUID vnfPkgId, String artifactPath, String range);
 

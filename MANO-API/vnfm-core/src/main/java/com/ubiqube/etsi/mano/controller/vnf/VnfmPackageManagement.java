@@ -114,7 +114,7 @@ public class VnfmPackageManagement extends SearchableService implements VnfPacka
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final boolean includeSignature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
