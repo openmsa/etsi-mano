@@ -16,6 +16,8 @@
  */
 package com.ubiqube.parser.tosca;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -28,5 +30,6 @@ public class CsarTest {
 	void testGetFiles() throws Exception {
 		final CsarParser csar = new CsarParser("src/test/resources/csar_elk.csar");
 		final List<?> list = csar.getFiles();
+		assertNotNull(list);
 	}
 }

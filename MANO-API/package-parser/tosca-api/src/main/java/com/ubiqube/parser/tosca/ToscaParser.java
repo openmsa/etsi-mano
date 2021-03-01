@@ -79,7 +79,7 @@ public class ToscaParser {
 	}
 
 	private ToscaRoot loadToscaBase() {
-		final InputStream stream = this.getClass().getClassLoader().getResourceAsStream("TOSCA_definition_1_0.yaml");
+		final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("TOSCA_definition_1_0.yaml");
 		String content;
 		try {
 			content = IOUtils.toString(stream, Charset.defaultCharset());
