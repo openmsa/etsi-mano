@@ -52,6 +52,7 @@ import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
+import com.ubiqube.parser.tosca.ToscaBasePropertiesEntity;
 import com.ubiqube.parser.tosca.ToscaClass;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
@@ -152,8 +153,8 @@ public class JavaGenerator {
 		return false;
 	}
 
-	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
-		LOG.info("generateClassFromDataType class {}", className);
+	private JDefinedClass generateClassFrom(final String className, final ToscaBasePropertiesEntity definition) {
+		LOG.info("generateClassFrom class {}", className);
 		final JPackage pack = getPackage(className);
 		if (null == pack) {
 			throw new ParseException("Unable to create a class without a package: " + className);
@@ -166,24 +167,21 @@ public class JavaGenerator {
 			jc._extends(ToscaInernalBase.class);
 		}
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
-
 		LOG.debug("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
 	}
 
+	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) {
+		return generateClassFrom(className, definition);
+	}
+
+	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
+		return generateClassFrom(className, definition);
+	}
+
 	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) {
-		LOG.info("generateToscaClass class {}", className);
-		final JPackage pack = getPackage(className);
-		if (null == pack) {
-			throw new ParseException("Cannot create a class without a package : " + className);
-		}
-		final JDefinedClass jc = createClass(pack, ClassUtils.getClassName(className));
-		if (null != toscaClass.getDerivedFrom()) {
-			final JDefinedClass clazz = getExtends(toscaClass.getDerivedFrom());
-			jc._extends(clazz);
-		}
-		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
+		final JDefinedClass jc = generateClassFrom(className, toscaClass);
 
 		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(jc, x));
 
@@ -191,8 +189,6 @@ public class JavaGenerator {
 
 		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(jc, x));
 
-		LOG.info("Caching {}", className);
-		cache.put(className, jc);
 		return jc;
 
 	}
@@ -260,8 +256,8 @@ public class JavaGenerator {
 	private void generateCaps(final JDefinedClass jc, final Map<String, CapabilityDefinition> capabilities) {
 		capabilities.forEach((final String x, final CapabilityDefinition y) -> {
 			JDefinedClass jType = cache.get(y.getType());
-			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 			if (null == jType) {
+				final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 				jType = generateClass(y.getType(), caps);
 			}
 			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
@@ -280,30 +276,6 @@ public class JavaGenerator {
 			vo.setRequired(Boolean.FALSE);
 			createGetterSetter(fieldName, jc, field, vo);
 		});
-	}
-
-	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) {
-		LOG.info("generateClass class {}", className);
-		final JPackage pack = getPackage(className);
-		final JDefinedClass jc;
-		if (null != pack) {
-			jc = createClass(pack, ClassUtils.getClassName(className));
-		} else {
-			throw new ParseException("Definition without a package ?");
-		}
-
-		if (null != definition.getDerivedFrom()) {
-			JDefinedClass clazz = cache.get(definition.getDerivedFrom());
-			if (null == clazz) {
-				final CapabilityTypes def = root.getCapabilities().get(definition.getDerivedFrom());
-				clazz = generateClass(definition.getDerivedFrom(), def);
-				cache.put(definition.getDerivedFrom(), clazz);
-			}
-			jc._extends(clazz);
-		}
-		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
-		cache.put(className, jc);
-		return jc;
 	}
 
 	private static JDefinedClass createClass(@NotNull final JPackage pack, final String classname) {

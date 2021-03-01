@@ -19,18 +19,9 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 import java.util.Map;
 
-public class CapabilityTypes extends ToscaBaseEntity {
-	private ToscaProperties properties;
+public class CapabilityTypes extends ToscaBasePropertiesEntity {
 	private Map<String, ValueObject> attributes;
 	private List<String> valid_source_types;
-
-	public ToscaProperties getProperties() {
-		return properties;
-	}
-
-	public void setProperties(final ToscaProperties properties) {
-		this.properties = properties;
-	}
 
 	public Map<String, ValueObject> getAttributes() {
 		return attributes;

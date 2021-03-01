@@ -21,9 +21,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ToscaClass extends ToscaBaseEntity {
+public class ToscaClass extends ToscaBasePropertiesEntity {
 
-	private ToscaProperties properties;
 	private Map<String, ValueObject> attributes;
 	private String mimeType;
 	private List<String> fileExt;
@@ -64,11 +63,6 @@ public class ToscaClass extends ToscaBaseEntity {
 		this.requirements = requirements;
 	}
 
-	@JsonProperty("properties")
-	public ToscaProperties getProperties() {
-		return properties;
-	}
-
 	@JsonProperty("mime_type")
 	public String getMimeType() {
 		return mimeType;
@@ -95,10 +89,6 @@ public class ToscaClass extends ToscaBaseEntity {
 		this.interfaces = interfaces;
 	}
 
-	public void setProperties(final ToscaProperties properties) {
-		this.properties = properties;
-	}
-
 	public void setAttributes(final Map<String, ValueObject> attributes) {
 		this.attributes = attributes;
 	}
@@ -120,9 +110,6 @@ public class ToscaClass extends ToscaBaseEntity {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ToscaClass [");
 		sb.append(super.toString());
-		if (null != properties) {
-			sb.append("properties=" + properties + ", ");
-		}
 
 		if (null != attributes) {
 			sb.append(", attributes=" + attributes + ", ");
