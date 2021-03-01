@@ -69,7 +69,7 @@ public class VnfPackageFrontController {
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, range);
 	}
 
-	public <U> ResponseEntity<U> findById(final UUID vnfPkgId, @Valid final String includeSignature, final Class<U> clazz, final Consumer<U> makeLinks) {
+	public <U> ResponseEntity<U> findById(final UUID vnfPkgId, final Class<U> clazz, final Consumer<U> makeLinks) {
 		final U vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, clazz);
 		makeLinks.accept(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
@@ -140,6 +140,11 @@ public class VnfPackageFrontController {
 		final U vnfPkgInfo = mapper.map(vnfPackage, clazz);
 		makeLinks.accept(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
+	}
+
+	public ResponseEntity<List<ResourceRegion>> searchArtifact(final UUID safeUUID, final String range, final String includeSignatures, final String excludeAllManoArtifacts, final String excludeAllNonManoArtifacts, final String selectNonManoArtifactSets) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

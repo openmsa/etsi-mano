@@ -1,8 +1,6 @@
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
@@ -17,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.Link;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.VnfPkgInfoLinks;
 
 /**
  *
@@ -49,7 +45,7 @@ public class VnfPackages331Sol003Controller implements VnfPackages331Sol003Api {
 
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, @Valid final String includeSignature) {
-		return frontController.findById(getSafeUUID(vnfPkgId), includeSignature, VnfPkgInfo.class, VnfPackages331Sol003Controller::makeLinks);
+		return frontController.findById(getSafeUUID(vnfPkgId), VnfPkgInfo.class, LinksSol003::makeLinks);
 	}
 
 	@Override
@@ -65,24 +61,6 @@ public class VnfPackages331Sol003Controller implements VnfPackages331Sol003Api {
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignature) {
 		return frontController.getVfnd(getSafeUUID(vnfPkgId), includeSignature);
-	}
-
-	public static void makeLinks(final VnfPkgInfo vnfPackage) {
-		final String vnfPkgId = vnfPackage.getId();
-		final VnfPkgInfoLinks links = new VnfPkgInfoLinks();
-
-		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfPackages331Sol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, null)).withSelfRel().getHref());
-		links.self(self);
-
-		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackages331Sol003Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
-		links.setVnfd(vnfd);
-
-		final Link packageContent = new Link();
-		packageContent.setHref(linkTo(methodOn(VnfPackages331Sol003Api.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "")).withSelfRel().getHref());
-		links.setPackageContent(packageContent);
-		vnfPackage.setLinks(links);
 	}
 
 }
