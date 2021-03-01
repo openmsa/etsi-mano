@@ -52,7 +52,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol002/vnflcm/v2/vnf_instances")
+@RequestMapping(value = "/sol002/vnflcm/v2/vnf_instances", headers = { "Version=3.3.1" })
 public interface VnfInstances331Sol002Api {
 
 	@Operation(summary = "", description = "The GET method queries information about multiple VNF instances. ", tags = {})

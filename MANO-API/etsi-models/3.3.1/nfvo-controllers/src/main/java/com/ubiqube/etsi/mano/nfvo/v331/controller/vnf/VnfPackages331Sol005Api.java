@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "vnf_packages", description = "the vnf_packages API")
-@RequestMapping("/sol005/vnfpkgm/v2/vnf_packages")
+@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=3.3.1" })
 public interface VnfPackages331Sol005Api {
 
 	@ApiOperation(value = "Query VNF packages information.", nickname = "vnfPackagesGet", notes = "The GET method queries the information of the VNF packages matching the filter. This method shall follow the provisions specified in the  Tables 9.4.2.3.2-1 and 9.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfPkgInfo.class, responseContainer = "List", tags = {})

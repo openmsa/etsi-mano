@@ -80,7 +80,7 @@ public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignatures) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId));
+		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId), includeSignatures != null);
 	}
 
 }

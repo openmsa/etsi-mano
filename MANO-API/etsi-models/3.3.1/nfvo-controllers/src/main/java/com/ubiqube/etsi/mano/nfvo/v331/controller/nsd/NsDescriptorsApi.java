@@ -38,6 +38,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+@RequestMapping(value = "/sol005/nsd/v1", headers = { "Version=3.3.1" })
 public interface NsDescriptorsApi {
 
 	Logger log = LoggerFactory.getLogger(NsDescriptorsApi.class);
