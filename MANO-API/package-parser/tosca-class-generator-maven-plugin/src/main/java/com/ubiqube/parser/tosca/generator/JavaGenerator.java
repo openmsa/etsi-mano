@@ -352,11 +352,11 @@ public class JavaGenerator {
 			if (!val.getConstraints().isEmpty()) {
 				// XXX Add Constraint.
 				final List<Constraint> cont = val.getConstraints();
-				cont.forEach(x -> applyAnnotation(x, field));
+				cont.forEach(x -> applyAnnotation(x, field, val.getType()));
 			}
 			if (null != primitive.get(val.getType())) {
 				final List<Constraint> cont = primitive.get(val.getType()).getConstraints();
-				cont.forEach(x -> applyAnnotation(x, field));
+				cont.forEach(x -> applyAnnotation(x, field, val.getType()));
 			}
 			createGetterSetter(fieldName, jc, field, val);
 		}
@@ -389,7 +389,7 @@ public class JavaGenerator {
 		return sb.toString();
 	}
 
-	private static void applyAnnotation(final Constraint x, final JFieldVar field) {
+	private static void applyAnnotation(final Constraint x, final JFieldVar field, final String type) {
 		// XXX: All numéric values maybe scalars.
 		if (x instanceof Pattern) {
 			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", ((Pattern) x).getValue());
@@ -405,8 +405,13 @@ public class JavaGenerator {
 			// XXX.
 		} else if (x instanceof InRange) {
 			final InRange ir = (InRange) x;
-			field.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
-			field.annotate(Max.class).param(VALUE, Integer.parseInt(ir.getMax()));
+			if ("float".equals(type)) {
+				field.annotate(Min.class).param(VALUE, Float.parseFloat(ir.getMin()));
+				field.annotate(Max.class).param(VALUE, Float.parseFloat(ir.getMax()));
+			} else {
+				field.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
+				field.annotate(Max.class).param(VALUE, Integer.parseInt(ir.getMax()));
+			}
 		} else if (x instanceof MinLength) {
 			final MinLength ml = (MinLength) x;
 			field.annotate(javax.validation.constraints.Size.class).param("min", Integer.parseInt(ml.getValue()));
