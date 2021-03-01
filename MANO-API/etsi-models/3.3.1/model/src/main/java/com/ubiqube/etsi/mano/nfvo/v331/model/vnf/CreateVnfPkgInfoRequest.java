@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.nfvo.v331.model.vnf;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -12,16 +13,15 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * IndividualVNF package resource creation parameters, as defined in clause
- * 9.5.2.2.
+ * IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.
  */
 @ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2. ")
 @Validated
 public class CreateVnfPkgInfoRequest {
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
-	public CreateVnfPkgInfoRequest userDefinedData(final KeyValuePairs userDefinedData) {
+	public CreateVnfPkgInfoRequest userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -34,11 +34,11 @@ public class CreateVnfPkgInfoRequest {
 	@ApiModelProperty(value = "")
 
 	@Valid
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
@@ -70,8 +70,7 @@ public class CreateVnfPkgInfoRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
