@@ -16,102 +16,181 @@
  */
 // Generated from EtsiFilter.g4 by ANTLR 4.7.2
 
-	package com.ubiqube.etsi.mano.grammar;
-
+package com.ubiqube.etsi.mano.grammar;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link EtsiFilterListener},
- * which can be extended to create a listener which only needs to handle a subset
- * of the available methods.
+ * This class provides an empty implementation of {@link EtsiFilterListener}, which can be extended to create a listener which only needs to handle a subset of the available methods.
  */
 public class EtsiFilterBaseListener implements EtsiFilterListener {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * <p>The default implementation does nothing.</p>
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
 	 */
-	@Override public void enterSimpleFilterExpr(EtsiFilter.SimpleFilterExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSimpleFilterExpr(EtsiFilter.SimpleFilterExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFilterExpr(EtsiFilter.FilterExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFilterExpr(EtsiFilter.FilterExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterOp(EtsiFilter.OpContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitOp(EtsiFilter.OpContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAttrName(EtsiFilter.AttrNameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAttrName(EtsiFilter.AttrNameContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterValue(EtsiFilter.ValueContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitValue(EtsiFilter.ValueContext ctx) { }
+	@Override
+	public void enterSimpleFilterExpr(final EtsiFilter.SimpleFilterExprContext ctx) {
+		//
+	}
 
 	/**
 	 * {@inheritDoc}
 	 *
-	 * <p>The default implementation does nothing.</p>
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
 	 */
-	@Override public void enterEveryRule(ParserRuleContext ctx) { }
+	@Override
+	public void exitSimpleFilterExpr(final EtsiFilter.SimpleFilterExprContext ctx) {
+		//
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
-	 * <p>The default implementation does nothing.</p>
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
 	 */
-	@Override public void exitEveryRule(ParserRuleContext ctx) { }
+	@Override
+	public void enterFilterExpr(final EtsiFilter.FilterExprContext ctx) {
+		//
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
-	 * <p>The default implementation does nothing.</p>
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) { }
+	@Override
+	public void exitFilterExpr(final EtsiFilter.FilterExprContext ctx) {
+		//
+	}
+
 	/**
 	 * {@inheritDoc}
 	 *
-	 * <p>The default implementation does nothing.</p>
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
 	 */
-	@Override public void visitErrorNode(ErrorNode node) { }
+	@Override
+	public void enterOp(final EtsiFilter.OpContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void exitOp(final EtsiFilter.OpContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void enterAttrName(final EtsiFilter.AttrNameContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void exitAttrName(final EtsiFilter.AttrNameContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void enterValue(final EtsiFilter.ValueContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void exitValue(final EtsiFilter.ValueContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void enterEveryRule(final ParserRuleContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void exitEveryRule(final ParserRuleContext ctx) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void visitTerminal(final TerminalNode node) {
+		//
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation does nothing.
+	 * </p>
+	 */
+	@Override
+	public void visitErrorNode(final ErrorNode node) {
+		//
+	}
 }
