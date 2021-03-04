@@ -47,6 +47,11 @@ import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsVlNode;
 public class NsVirtualLinkContributor extends AbstractNsContributor {
 	NsBlueprintService blueprintService;
 
+	public NsVirtualLinkContributor(final NsBlueprintService blueprintService) {
+		super();
+		this.blueprintService = blueprintService;
+	}
+
 	@Override
 	public Class<? extends Node> getContributionType() {
 		return NsVlNode.class;

@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mec.meo.service;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.DefaultPackageProxy;
 import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
 import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.mec.AppToscaProvider;
@@ -57,10 +55,4 @@ public class AppPackagingManager {
 		return new AppDefaultPackageProvider();
 	}
 
-	private static AppPackageProvider createProxy() {
-		return (AppPackageProvider) Proxy.newProxyInstance(
-				DefaultPackageProxy.class.getClassLoader(),
-				new Class[] { AppPackageProvider.class },
-				new DefaultPackageProxy());
-	}
 }

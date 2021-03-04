@@ -26,7 +26,7 @@ import com.ubiqube.etsi.mano.config.properties.ManoRepositoryProperties;
 
 @Service
 public class DefaultNamingStrategy implements NamingStrategy {
-	private final ClassPathConverter cpConverter = new ClassPathConverter();
+	private static final ClassPathConverter CP_CONVERTER = new ClassPathConverter();
 	private final String root;
 
 	public DefaultNamingStrategy(final ManoRepositoryProperties props) {
@@ -40,17 +40,17 @@ public class DefaultNamingStrategy implements NamingStrategy {
 
 	@Override
 	public Path getRoot(final Class<?> clazz) {
-		return Paths.get(root, cpConverter.convert(clazz));
+		return Paths.get(root, CP_CONVERTER.convert(clazz));
 	}
 
 	@Override
 	public Path getRoot(final Class<?> clazz, final UUID _id) {
-		return Paths.get(root, cpConverter.convert(clazz), _id.toString());
+		return Paths.get(root, CP_CONVERTER.convert(clazz), _id.toString());
 	}
 
 	@Override
 	public Path getRoot(final Class<?> clazz, final UUID _id, final String _filename) {
-		return Paths.get(root, cpConverter.convert(clazz), _id.toString(), sanitize(_filename));
+		return Paths.get(root, CP_CONVERTER.convert(clazz), _id.toString(), sanitize(_filename));
 	}
 
 	@Override

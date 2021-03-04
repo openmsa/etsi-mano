@@ -29,8 +29,6 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
-import ma.glasnost.orika.MapperFacade;
-
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -40,12 +38,9 @@ import ma.glasnost.orika.MapperFacade;
 public class VnfLcmOpOccGenericFrontController {
 	private final VnfLcmController vnfLcmController;
 
-	private final MapperFacade mapper;
-
-	public VnfLcmOpOccGenericFrontController(final VnfLcmController vnfLcmController, final MapperFacade mapper) {
+	public VnfLcmOpOccGenericFrontController(final VnfLcmController vnfLcmController) {
 		super();
 		this.vnfLcmController = vnfLcmController;
-		this.mapper = mapper;
 	}
 
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> class1, final Consumer<U> makeLinks) {

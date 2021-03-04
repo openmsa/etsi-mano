@@ -74,7 +74,7 @@ public class VnfInstanceGenericFrontController {
 		this.mapper = mapper;
 	}
 
-	public <U> ResponseEntity<Void> terminate(@NotNull final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final int timeout, final Function<VnfBlueprint, String> getSelfLink) {
+	public ResponseEntity<Void> terminate(@NotNull final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final int timeout, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfBlueprint lcm = vnfInstanceLcm.terminate(vnfInstanceId, cancelMode, timeout);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
@@ -100,14 +100,14 @@ public class VnfInstanceGenericFrontController {
 		throw new GenericException("TODO");
 	}
 
-	public <U, V> ResponseEntity<V> modify(@NotNull final UUID vnfInstanceId, @Valid final String body, final String ifMatch, final Function<VnfInstance, String> getSelfLink) {
+	public <V> ResponseEntity<V> modify(@NotNull final UUID vnfInstanceId, @Valid final String body, final String ifMatch, final Function<VnfInstance, String> getSelfLink) {
 		VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
 		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body, ifMatch);
 		final String link = getSelfLink.apply(vnfInstance);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
-	public <U, V> ResponseEntity<Void> operate(@NotNull final UUID vnfInstanceId, final U body, final Function<VnfBlueprint, String> getSelfLink) {
+	public <U> ResponseEntity<Void> operate(@NotNull final UUID vnfInstanceId, final U body, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfOperateRequest req = mapper.map(body, VnfOperateRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.operate(vnfInstanceId, req);
 		final String link = getSelfLink.apply(lcm);

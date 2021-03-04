@@ -65,9 +65,8 @@ public abstract class AbstractGrantService implements VimResourceService {
 				.forEach(xx -> {
 					final VimTask x = (VimTask) xx;
 					if (x.getChangeType() == ChangeType.ADDED) {
-						x.getType();
 						grantRequest.getAddResources().add(mapper.map(x, GrantInformation.class));
-					} else if (x.getChangeType() == ChangeType.REMOVED) {
+					} else {
 						grantRequest.getRemoveResources().add(mapper.map(x, GrantInformation.class));
 					}
 				});
