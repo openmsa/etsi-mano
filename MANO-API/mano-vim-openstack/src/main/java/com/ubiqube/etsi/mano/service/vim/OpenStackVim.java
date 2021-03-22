@@ -130,7 +130,6 @@ public class OpenStackVim implements Vim {
 	}
 
 	private static OSClientV3 authenticate(final VimConnectionInformation vci) {
-		vci.getInterfaceInfo().get("endpoint");
 		final V3 base = OSFactory.builderV3()
 				.endpoint(vci.getInterfaceInfo().get("endpoint"));
 		final Map<String, String> ai = vci.getAccessInfo();
