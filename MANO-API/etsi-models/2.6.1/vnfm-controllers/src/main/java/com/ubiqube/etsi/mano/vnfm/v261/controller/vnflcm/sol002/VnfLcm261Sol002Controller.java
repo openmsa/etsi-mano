@@ -38,7 +38,6 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Controller;
 import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcmOpOccs261Sol003Controller;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
@@ -137,7 +136,7 @@ public class VnfLcm261Sol002Controller implements VnfLcm261Sol002Api {
 	}
 
 	private static String getInstanceLink(final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance) {
-		return linkTo(methodOn(VnfLcm261Sol003Controller.class).vnfInstancesVnfInstanceIdGet(vnfInstance.getId().toString())).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdGet(vnfInstance.getId().toString())).withSelfRel().getHref();
 	}
 
 	private static void makeLinks(@NotNull final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance) {
