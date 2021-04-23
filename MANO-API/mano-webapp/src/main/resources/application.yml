@@ -1,0 +1,114 @@
+debug: true
+eureka:
+  client:
+    enabled: true
+logging:
+  level:
+    com:
+      ubiqube:
+        etsi: DEBUG
+    org:
+      hibernate:
+        SQL: INFO
+      openstack4j: DEBUG
+      springframework:
+        boot:
+          autoconfigure:
+            logging:
+              ConditionEvaluationReportLoggingListener: INFO
+        jms: INFO
+        web: INFO
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    git:
+      mode: full
+
+mano:
+  election:
+    script-path: /tmp/etsi-mano/election/groovy
+  nfvo:
+    vnfm:
+      password: nfv
+      url: http://vnfm:8080/ubi-etsi-mano/sol003
+      username: nfvo
+  repository:
+    phys-root: /tmp/etsi-mano/repository
+  vnfm:
+    nfvo:
+      password: vnfm
+      url: http://nfvo:8110/ubi-etsi-mano/sol005
+      username: vnfm
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    contextPath: /ubi-etsi-mano
+
+spring:
+  application:
+    name: etsi-mano
+  artemis:
+    mode: embedded
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:file:~/etsi-mano.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
+    username: sa
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+    default-property-inclusion: NON_NULL
+    generator:
+      ignore-unknown: false
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      indent-output: true
+      write-empty-json-arrays: false
+  jmx:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        search:
+          backend:
+            directory:
+              root: /tmp/etsi-mano/indexes
+            type: lucene
+  liquibase:
+    enabled: false
+  mvc:
+    log-request-details: true
+  output:
+    ansi:
+      enabled: always
+  quartz:
+    jdbc:
+      commentPrefix: '" - "'
+      initialize-schema: always
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          jobStore:
+            clusterCheckinInterval: 5000
+            isClustered: true
+          scheduler:
+            instanceId: AUTO
+          threadPool:
+            threadCount: 10
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs

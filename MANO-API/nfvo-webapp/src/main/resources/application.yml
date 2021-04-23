@@ -1,0 +1,111 @@
+debug: true
+
+logging:
+  level:
+    com:
+      ubiqube:
+        etsi:
+          mano: DEBUG
+    org:
+      hibernate:
+        SQL: INFO
+      openstack4j: DEBUG
+      springframework:
+        boot:
+          autoconfigure:
+            logging:
+              ConditionEvaluationReportLoggingListener: DEBUG
+        jms: INFO
+        security: DEBUG
+        web: INFO
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    git:
+      mode: full
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+  port: 8100
+  servlet:
+    contextPath: /ubi-etsi-mano
+
+spring:
+  application:
+    name: etsi-mano
+  artemis:
+    mode: embedded
+  boot:
+    admin:
+      client:
+        instance:
+          metadata:
+            user:
+              name: admin
+              password: admin
+        password: admin
+        url: http://localhost:8081
+        username: admin
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:~/etsi-mano.h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+    default-property-inclusion: NON_NULL
+    generator:
+      ignore-unknown: false
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      indent-output: true
+  jmx:
+    enabled: true
+  jpa:
+    open-in-view: true
+    properties:
+      hibernate:
+        search:
+          backend:
+            directory:
+              root: /tmp/etsi-mano/indexes
+  liquibase:
+    enabled: true
+  mvc:
+    log-request-details: true
+  output:
+    ansi:
+      enabled: always
+  quartz:
+    jdbc:
+      commentPrefix: '" - "'
+      initialize-schema: always
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          jobStore:
+            clusterCheckinInterval: 5000
+            isClustered: true
+          scheduler:
+            instanceId: AUTO
+          threadPool:
+            threadCount: 10
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8083/auth/realms/etsi-mano
+          jwk-set-uri: http://localhost:8083/auth/realms/etsi-mano/protocol/openid-connect/certs
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
