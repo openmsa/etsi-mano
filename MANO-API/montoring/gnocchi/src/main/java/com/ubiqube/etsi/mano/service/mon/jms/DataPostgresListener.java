@@ -16,42 +16,30 @@
  */
 package com.ubiqube.etsi.mano.service.mon.jms;
 
-import java.time.Instant;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
-import com.influxdb.client.InfluxDBClient;
-import com.influxdb.client.WriteApi;
-import com.influxdb.client.domain.WritePrecision;
-import com.influxdb.client.write.Point;
 import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
+import com.ubiqube.etsi.mano.repository.jpa.mon.MonitoringDataJpa;
+import com.ubiqube.etsi.mano.repository.jpa.mon.MonitoringData;
 
 @Service
-public class DataListener {
+public class DataPostgresListener {
+	private static final Logger LOG = LoggerFactory.getLogger(DataPostgresListener.class);
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataListener.class);
+	private final MonitoringDataJpa monitoringDataJpa;
 
-	private final InfluxDBClient influxClient;
-
-	public DataListener(final InfluxDBClient influxClient) {
-		this.influxClient = influxClient;
+	public DataPostgresListener(final MonitoringDataJpa monitoringDataJpa) {
+		super();
+		this.monitoringDataJpa = monitoringDataJpa;
 	}
 
 	@JmsListener(destination = "mano.monitoring.gnocchi.data", subscription = "mano.monitoring.gnocchi.data", concurrency = "1", containerFactory = "gnocchiDataFactory")
 	public void onGnocchiData(final TelemetryMetricsResult action) {
-		LOG.info("influxdb-Receive: {}", action);
-		final Point point = Point.measurement(action.getMasterJobId())
-				.addField("value", action.getValue())
-				.addTag("key", action.getKey())
-				.addTag("status", action.isStatus() ? "success" : "fail")
-				.addTag("vnf-instance-id", action.getVnfInstanceId())
-				.time(Instant.now(), WritePrecision.MS);
-		try (WriteApi client = influxClient.getWriteApi()) {
-			client.writePoint(point);
-		}
-
+		LOG.info("Postgresql-Receive: {}", action);
+		final MonitoringData entity = new MonitoringData(action.getKey(), action.getMasterJobId(), action.getTimestamp(), action.getValue(), action.getVnfInstanceId(), action.isStatus());
+		monitoringDataJpa.save(entity);
 	}
 }
