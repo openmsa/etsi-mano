@@ -16,7 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,6 +28,7 @@ import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.telemetry.gnocchi.Measure;
+import org.openstack4j.model.telemetry.gnocchi.MeasureFilter;
 import org.openstack4j.model.telemetry.gnocchi.Resource;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
@@ -55,19 +57,21 @@ public class GnocchiSubTelemetry {
 	}
 
 	private static TelemetryMetricsResult map(final Entry<String, String> x, final String vnfInstanceId, final UUID id, final OSClientV3 os) {
+		final MeasureFilter mf = new MeasureFilter();
+		mf.start(OffsetDateTime.now().minus(10, ChronoUnit.MINUTES));
 		final List<? extends Measure> res;
 		try {
-			res = os.telemetry().gnocchi().mesures().read(x.getValue());
+			res = os.telemetry().gnocchi().mesures().read(x.getValue(), mf);
 		} catch (final RuntimeException e) {
 			LOG.warn("An error occured.", e);
-			return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), Double.valueOf(0), new Date(), false);
+			return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), Double.valueOf(0), OffsetDateTime.now(), false);
 		}
 		if (res.isEmpty()) {
 			LOG.warn("Metric {} is empty.", x.getValue());
-			return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), Double.valueOf(0), new Date(), false);
+			return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), Double.valueOf(0), OffsetDateTime.now(), false);
 		}
 		final Double value = res.get(0).getValue();
-		final Date ts = res.get(0).getTimeStamp();
+		final OffsetDateTime ts = res.get(res.size() - 1).getTimeStamp();
 		return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), value, ts, true);
 	}
 

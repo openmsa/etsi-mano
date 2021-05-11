@@ -146,14 +146,24 @@
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>com.github.openstack4j.core.connectors</groupId>
-            <artifactId>openstack4j-httpclient</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.github.openstack4j.core</groupId>
-                    <artifactId>openstack4j-core</artifactId>
-                </dependency>
+		<dependency>
+			<groupId>com.influxdb</groupId>
+			<artifactId>influxdb-spring</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.openstack4j.core.connectors</groupId>
+			<artifactId>openstack4j-httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.openstack4j.core</groupId>
+			<artifactId>openstack4j-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>

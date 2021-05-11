@@ -27,6 +27,8 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 @Configuration
 public class JmsDataTopic {
 
@@ -55,5 +57,10 @@ public class JmsDataTopic {
 		jt.setPubSubDomain(true);
 		jt.setMessageConverter(messageConverter);
 		return jt;
+	}
+
+	@Bean
+	public com.fasterxml.jackson.databind.Module dateTimeModule() {
+		return new JavaTimeModule();
 	}
 }
