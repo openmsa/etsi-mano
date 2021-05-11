@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
@@ -35,7 +36,7 @@ public class PmJobCriteria {
 	 *
 	 * Cardinaliy: 0..N
 	 */
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> performanceMetric;
 
 	/**
@@ -43,7 +44,7 @@ public class PmJobCriteria {
 	 *
 	 * Cardinaliy: 0..N
 	 */
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> performanceMetricGroup;
 
 	/**

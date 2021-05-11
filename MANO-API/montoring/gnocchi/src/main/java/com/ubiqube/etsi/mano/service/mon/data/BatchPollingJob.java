@@ -14,47 +14,33 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.mon;
+package com.ubiqube.etsi.mano.service.mon.data;
 
-import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 @Setter
 @Getter
-@ToString
-public class TelemetryMetricsResult {
-	private String masterJobId;
+public class BatchPollingJob {
 
-	private String vnfInstanceId;
+	private UUID id;
+	private List<String> hosts;
+	private List<Metric> metrics;
+	private UUID vimId;
 
-	private String key;
-
-	private Double value;
-
-	private Date timestamp;
-
-	private boolean status;
-
-	public TelemetryMetricsResult() {
+	public BatchPollingJob() {
 		// Nothing.
 	}
 
-	public TelemetryMetricsResult(final String masterJobId, final String vnfInstanceId, final String key, final Double value, final Date timestamp, final boolean status) {
+	public BatchPollingJob(final UUID id, final List<String> hosts, final List<Metric> metrics, final UUID vimId) {
 		super();
-		this.masterJobId = masterJobId;
-		this.vnfInstanceId = vnfInstanceId;
-		this.key = key;
-		this.value = value;
-		this.timestamp = timestamp;
-		this.status = status;
+		this.id = id;
+		this.hosts = hosts;
+		this.metrics = metrics;
+		this.vimId = vimId;
 	}
 
 }

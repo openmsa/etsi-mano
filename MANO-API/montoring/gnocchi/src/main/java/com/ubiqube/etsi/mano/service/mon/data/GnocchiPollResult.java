@@ -14,18 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.repository.jpa.mon;
+package com.ubiqube.etsi.mano.service.mon.data;
 
-import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import lombok.Getter;
+import lombok.Setter;
 
-import com.ubiqube.etsi.mano.dao.mano.mon.GnocchiTelemetryMetrics;
+@Setter
+@Getter
+public class GnocchiPollResult {
+	private UUID jobId;
+	private String host;
+	private String key;
+	private String value;
 
-@Repository
-public interface GnocchiTelemetryMetricsJpa extends CrudRepository<GnocchiTelemetryMetrics, UUID> {
+	public GnocchiPollResult(final UUID jobId, final String host, final String key, final String value) {
+		super();
+		this.jobId = jobId;
+		this.host = host;
+		this.key = key;
+		this.value = value;
+	}
 
-    List<GnocchiTelemetryMetrics> findByVnfInstanceId(String vnfcId);
 }

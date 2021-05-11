@@ -14,47 +14,39 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.mon;
+package com.ubiqube.etsi.mano.service.mon.data;
 
-import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
-@Getter
-@ToString
-public class TelemetryMetricsResult {
-	private String masterJobId;
+public enum MetricFunction {
+	PEAK("peak"),
+	MEAN("mean");
 
-	private String vnfInstanceId;
+	private String value;
 
-	private String key;
-
-	private Double value;
-
-	private Date timestamp;
-
-	private boolean status;
-
-	public TelemetryMetricsResult() {
-		// Nothing.
-	}
-
-	public TelemetryMetricsResult(final String masterJobId, final String vnfInstanceId, final String key, final Double value, final Date timestamp, final boolean status) {
-		super();
-		this.masterJobId = masterJobId;
-		this.vnfInstanceId = vnfInstanceId;
-		this.key = key;
+	MetricFunction(final String value) {
 		this.value = value;
-		this.timestamp = timestamp;
-		this.status = status;
 	}
 
+	@Override
+	@JsonValue
+	public String toString() {
+		return String.valueOf(value);
+	}
+
+	@JsonCreator
+	public static MetricFunction fromValue(final String text) {
+		for (final MetricFunction b : MetricFunction.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

@@ -14,47 +14,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.mon;
-
-import java.util.Date;
+package com.ubiqube.etsi.mano.service.mon.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 @Setter
 @Getter
-@ToString
-public class TelemetryMetricsResult {
-	private String masterJobId;
+public class Metric {
+	private String name;
+	private MetricFunction func;
 
-	private String vnfInstanceId;
-
-	private String key;
-
-	private Double value;
-
-	private Date timestamp;
-
-	private boolean status;
-
-	public TelemetryMetricsResult() {
+	public Metric() {
 		// Nothing.
 	}
 
-	public TelemetryMetricsResult(final String masterJobId, final String vnfInstanceId, final String key, final Double value, final Date timestamp, final boolean status) {
+	public Metric(final String name, final MetricFunction func) {
 		super();
-		this.masterJobId = masterJobId;
-		this.vnfInstanceId = vnfInstanceId;
-		this.key = key;
-		this.value = value;
-		this.timestamp = timestamp;
-		this.status = status;
+		this.name = name;
+		this.func = func;
 	}
 
 }

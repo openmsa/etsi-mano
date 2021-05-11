@@ -16,53 +16,62 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
 import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.telemetry.gnocchi.Measure;
+import org.openstack4j.model.telemetry.gnocchi.Resource;
 import org.openstack4j.openstack.OSFactory;
-import org.openstack4j.openstack.telemetry.domain.GnocchiResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.mon.GnocchiTelemetryMetrics;
-import com.ubiqube.etsi.mano.repository.jpa.mon.GnocchiTelemetryMetricsJpa;
+import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
+import com.ubiqube.etsi.mano.service.mon.data.Metric;
 
 @Service
 public class GnocchiSubTelemetry {
-	private final GnocchiTelemetryMetricsJpa gnocchiTelemetryMetricsJpa;
+	private static final Logger LOG = LoggerFactory.getLogger(GnocchiSubTelemetry.class);
 
-	public GnocchiSubTelemetry(final GnocchiTelemetryMetricsJpa _gnocchiTelemetryMetricsJpa) {
-		gnocchiTelemetryMetricsJpa = _gnocchiTelemetryMetricsJpa;
-	}
-
-	public List<GnocchiTelemetryMetrics> getMetricsForVnfc(final VimConnectionInformation vimConnectionInformation, final String vnfcId) {
+	public List<TelemetryMetricsResult> getMetricsForVnfc(final VimConnectionInformation vimConnectionInformation, final String vnfcId, final List<Metric> collectedMetrics, final UUID uuid) {
 		final OSClientV3 os = authenticate(vimConnectionInformation);
-		return getMetrics(vnfcId, os);
+		return getMetrics(uuid, vnfcId, collectedMetrics, os);
 	}
 
-	private List<GnocchiTelemetryMetrics> getMetrics(final String vnfcId, final OSClientV3 os) {
-		final List<GnocchiTelemetryMetrics> list = gnocchiTelemetryMetricsJpa.findByVnfInstanceId(vnfcId);
-		if (!list.isEmpty()) {
-			return list;
+	private List<TelemetryMetricsResult> getMetrics(final UUID uuid, final String vnfcId, final List<Metric> collectedMetrics, final OSClientV3 os) {
+		final List<String> colls = collectedMetrics.stream().map(Metric::getName).collect(Collectors.toList());
+		final Resource instanceResources = os.telemetry().resources().instance(vnfcId);
+		final List<Entry<String, String>> colMeter = instanceResources.getMetrics().entrySet().stream().filter(x -> colls.contains(x.getKey())).collect(Collectors.toList());
+		final List<TelemetryMetricsResult> newList = colMeter.stream().map(x -> map(x, vnfcId, uuid, os)).collect(Collectors.toList());
+		return newList;
+	}
+
+	private static TelemetryMetricsResult map(final Entry<String, String> x, final String vnfInstanceId, final UUID id, final OSClientV3 os) {
+		final List<? extends Measure> res;
+		try {
+			res = os.telemetry().gnocchi().mesures().read(x.getValue());
+		} catch (final RuntimeException e) {
+			LOG.warn("An error occured.", e);
+			return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), Double.valueOf(0), new Date(), false);
 		}
-		final List<GnocchiResource> res = os.telemetry().gnocchi().search().resource("instance", "instance_id=" + vnfcId);
-		final List<GnocchiTelemetryMetrics> newList = res.stream().flatMap(x -> map(x, vnfcId)).collect(Collectors.toList());
-		final Iterable<GnocchiTelemetryMetrics> ite = gnocchiTelemetryMetricsJpa.saveAll(newList);
-		return StreamSupport.stream(ite.spliterator(), false).collect(Collectors.toList());
-	}
-
-	private static Stream<GnocchiTelemetryMetrics> map(final GnocchiResource gnocchiresource, final String vnfInstanceId) {
-		return gnocchiresource.getMetrics().entrySet().stream().map(x -> new GnocchiTelemetryMetrics(vnfInstanceId, x.getKey(), x.getValue()));
+		if (res.isEmpty()) {
+			LOG.warn("Metric {} is empty.", x.getValue());
+			return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), Double.valueOf(0), new Date(), false);
+		}
+		final Double value = res.get(0).getValue();
+		final Date ts = res.get(0).getTimeStamp();
+		return new TelemetryMetricsResult(id.toString(), vnfInstanceId, x.getKey(), value, ts, true);
 	}
 
 	private static OSClientV3 authenticate(final VimConnectionInformation vci) {
-		vci.getInterfaceInfo().get("endpoint");
 		final V3 base = OSFactory.builderV3()
 				.endpoint(vci.getInterfaceInfo().get("endpoint"));
 		final Map<String, String> ai = vci.getAccessInfo();
@@ -78,7 +87,8 @@ public class GnocchiSubTelemetry {
 		final String projectId = ai.get("projectId");
 		if (null != project) {
 			base.scopeToProject(Identifier.byName(project));
-		} else if (null != projectId) {
+		}
+		if (null != projectId) {
 			base.scopeToProject(Identifier.byId(projectId));
 		}
 		return base.authenticate();

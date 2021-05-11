@@ -19,13 +19,18 @@ package com.ubiqube.etsi.mano.service.mon.config;
 import javax.jms.ConnectionFactory;
 
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.converter.MessageConverter;
 
 @Configuration
 public class JmsDataTopic {
 
+	@Bean
 	public JmsListenerContainerFactory<?> gnocchiDataFactory(final ConnectionFactory connectionFactory, final DefaultJmsListenerContainerFactoryConfigurer configurer) {
 		final DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		// This provides all boot's default to this factory, including the message converter
@@ -33,5 +38,22 @@ public class JmsDataTopic {
 		// You could still override some of Boot's default if necessary.
 		factory.setPubSubDomain(true);
 		return factory;
+	}
+
+	@Primary
+	@Bean
+	public JmsTemplate jmsQueueTemplate(final ConnectionFactory connectionFactory, final MessageConverter messageConverter) {
+		final JmsTemplate jt = new JmsTemplate(connectionFactory);
+		jt.setPubSubDomain(false);
+		jt.setMessageConverter(messageConverter);
+		return jt;
+	}
+
+	@Bean
+	public JmsTemplate jmsTopicTemplate(final ConnectionFactory connectionFactory, final MessageConverter messageConverter) {
+		final JmsTemplate jt = new JmsTemplate(connectionFactory);
+		jt.setPubSubDomain(true);
+		jt.setMessageConverter(messageConverter);
+		return jt;
 	}
 }

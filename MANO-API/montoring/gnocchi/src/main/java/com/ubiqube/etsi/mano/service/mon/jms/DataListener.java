@@ -19,15 +19,17 @@ package com.ubiqube.etsi.mano.service.mon.jms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.event.jms.GnocchiPollAction;
+import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
 
+@Service
 public class DataListener {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataListener.class);
 
-	@JmsListener(destination = "mano.monitoring.gnocchi.data", concurrency = "10", containerFactory = "gnocchiDataFactory")
-	public void onGnocchiData(final GnocchiPollAction action) {
-		LOG.debug("Receive: {}", action);
+	@JmsListener(destination = "mano.monitoring.gnocchi.data", subscription = "mano.monitoring.gnocchi.data", concurrency = "1", containerFactory = "gnocchiDataFactory")
+	public void onGnocchiData(final TelemetryMetricsResult action) {
+		LOG.info("Receive: {}", action);
 	}
 }

@@ -63,14 +63,14 @@ public class PmJob {
 	/**
 	 * Identifiers of the measured object instances for which performance information is collected.
 	 */
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> objectInstanceIds;
 
 	/**
 	 * Identifiers of the sub-object instances of the measured object instance for which performance information is requested to be collected. May be present if a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type If this attribute is present, the cardinality of the "objectInstanceIds" attribute shall be 1. If this attribute is absent and a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type,
 	 * measurements will be taken for all sub-object instances of the measured object instance.
 	 */
-	@ElementCollection
+	@ElementCollection // (fetch = FetchType.EAGER)
 	private List<String> subObjectInstanceIds;
 
 	/**
@@ -94,6 +94,6 @@ public class PmJob {
 	@Embedded
 	private AuthentificationInformations subscription;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, optional = false)
 	private VimConnectionInformation vimConnectionInformation;
 }

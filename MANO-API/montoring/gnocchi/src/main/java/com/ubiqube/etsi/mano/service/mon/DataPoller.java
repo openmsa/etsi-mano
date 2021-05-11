@@ -16,19 +16,30 @@
  */
 package com.ubiqube.etsi.mano.service.mon;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
+import com.ubiqube.etsi.mano.service.mon.data.BatchPollingJob;
+import com.ubiqube.etsi.mano.service.mon.data.Metric;
+import com.ubiqube.etsi.mano.service.mon.data.MetricFunction;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-//@Component
+@Component
 public class DataPoller {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataPoller.class);
@@ -37,9 +48,17 @@ public class DataPoller {
 
 	private final MonitoringEventManager monitoringEventManager;
 
+	private Properties props;
+
 	public DataPoller(final PmJobsJpa _pmJobsJpa, final MonitoringEventManager _monitoringEventManager) {
 		pmJobsJpa = _pmJobsJpa;
 		monitoringEventManager = _monitoringEventManager;
+		try (InputStream mappting = this.getClass().getClassLoader().getResourceAsStream("gnocchi-mapping.properties")) {
+			props = new Properties();
+			props.load(mappting);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	@Scheduled(fixedRate = 60000)
@@ -47,10 +66,27 @@ public class DataPoller {
 		final Iterable<PmJob> ite = pmJobsJpa.findAll();
 		LOG.debug("Polling data");
 		for (final PmJob pmJob : ite) {
-			LOG.debug(" - {}", pmJob);
-			monitoringEventManager.sendGetDataEvent(pmJob);
+			LOG.info(" - {}", pmJob);
+			monitoringEventManager.sendGetDataEvent(map(pmJob));
 		}
 
+	}
+
+	private BatchPollingJob map(final PmJob pmJob) {
+		final List<Metric> mettrics = pmJob.getCriteria().getPerformanceMetric().stream().map(this::map).collect(Collectors.toList());
+		return new BatchPollingJob(pmJob.getId(), pmJob.getObjectInstanceIds(), mettrics, pmJob.getVimConnectionInformation().getId());
+	}
+
+	private Metric map(final String x) {
+		final String prop = props.getProperty(x);
+		if (null == prop) {
+			throw new GenericException("Unable to map monitoring key : " + x);
+		}
+		final String[] metric = prop.split(",");
+		if (metric.length != 2) {
+			throw new GenericException("bad mapping key : " + x + "/" + prop + ". Should have one ','");
+		}
+		return new Metric(metric[0], MetricFunction.fromValue(metric[1]));
 	}
 
 }
