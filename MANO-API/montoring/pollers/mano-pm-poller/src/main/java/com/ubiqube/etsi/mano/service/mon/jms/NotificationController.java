@@ -26,7 +26,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
+import com.ubiqube.etsi.mano.mon.dao.TelemetryMetricsResult;
 import com.ubiqube.etsi.mano.service.mon.data.BatchPollingJob;
 import com.ubiqube.etsi.mano.service.mon.vim.GnocchiSubTelemetry;
 import com.ubiqube.etsi.mano.service.vim.VimManager;

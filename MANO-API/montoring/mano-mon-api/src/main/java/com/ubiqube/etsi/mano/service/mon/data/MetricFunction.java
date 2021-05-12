@@ -16,9 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service.mon.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -35,12 +32,11 @@ public enum MetricFunction {
 	}
 
 	@Override
-	@JsonValue
 	public String toString() {
 		return String.valueOf(value);
 	}
 
-	@JsonCreator
+	// @JsonCreator
 	public static MetricFunction fromValue(final String text) {
 		for (final MetricFunction b : MetricFunction.values()) {
 			if (String.valueOf(b.value).equals(text)) {

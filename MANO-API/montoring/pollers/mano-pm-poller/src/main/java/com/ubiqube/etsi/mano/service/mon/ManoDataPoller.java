@@ -28,11 +28,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
+import com.ubiqube.etsi.mano.mon.MonGenericException;
 import com.ubiqube.etsi.mano.service.mon.data.BatchPollingJob;
 import com.ubiqube.etsi.mano.service.mon.data.Metric;
 import com.ubiqube.etsi.mano.service.mon.data.MetricFunction;
+import com.ubiqube.etsi.mano.service.mon.repository.MonPmJobJpa;
 
 /**
  *
@@ -44,20 +44,20 @@ public class ManoDataPoller {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ManoDataPoller.class);
 
-	private final PmJobsJpa pmJobsJpa;
+	private final MonPmJobJpa pmJobsJpa;
 
 	private final MonitoringEventManager monitoringEventManager;
 
 	private Properties props;
 
-	public ManoDataPoller(final PmJobsJpa _pmJobsJpa, final MonitoringEventManager _monitoringEventManager) {
+	public ManoDataPoller(final MonPmJobJpa _pmJobsJpa, final MonitoringEventManager _monitoringEventManager) {
 		pmJobsJpa = _pmJobsJpa;
 		monitoringEventManager = _monitoringEventManager;
 		try (InputStream mappting = this.getClass().getClassLoader().getResourceAsStream("gnocchi-mapping.properties")) {
 			props = new Properties();
 			props.load(mappting);
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new MonGenericException(e);
 		}
 	}
 
@@ -80,11 +80,11 @@ public class ManoDataPoller {
 	private Metric map(final String x) {
 		final String prop = props.getProperty(x);
 		if (null == prop) {
-			throw new GenericException("Unable to map monitoring key : " + x);
+			throw new MonGenericException("Unable to map monitoring key : " + x);
 		}
 		final String[] metric = prop.split(",");
 		if (metric.length != 2) {
-			throw new GenericException("bad mapping key : " + x + "/" + prop + ". Should have one ','");
+			throw new MonGenericException("bad mapping key : " + x + "/" + prop + ". Should have one ','");
 		}
 		return new Metric(metric[0], MetricFunction.fromValue(metric[1]));
 	}
