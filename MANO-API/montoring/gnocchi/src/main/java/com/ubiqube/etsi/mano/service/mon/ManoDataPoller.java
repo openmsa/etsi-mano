@@ -40,9 +40,9 @@ import com.ubiqube.etsi.mano.service.mon.data.MetricFunction;
  *
  */
 @Component
-public class DataPoller {
+public class ManoDataPoller {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataPoller.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ManoDataPoller.class);
 
 	private final PmJobsJpa pmJobsJpa;
 
@@ -50,7 +50,7 @@ public class DataPoller {
 
 	private Properties props;
 
-	public DataPoller(final PmJobsJpa _pmJobsJpa, final MonitoringEventManager _monitoringEventManager) {
+	public ManoDataPoller(final PmJobsJpa _pmJobsJpa, final MonitoringEventManager _monitoringEventManager) {
 		pmJobsJpa = _pmJobsJpa;
 		monitoringEventManager = _monitoringEventManager;
 		try (InputStream mappting = this.getClass().getClassLoader().getResourceAsStream("gnocchi-mapping.properties")) {

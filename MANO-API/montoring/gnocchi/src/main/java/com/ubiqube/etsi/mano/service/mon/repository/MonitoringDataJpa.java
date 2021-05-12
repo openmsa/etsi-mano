@@ -14,12 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.repository.jpa.mon;
+package com.ubiqube.etsi.mano.service.mon.repository;
 
 import java.time.OffsetDateTime;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface MonitoringDataJpa extends CrudRepository<MonitoringData, OffsetDateTime> {
+import com.ubiqube.etsi.mano.service.mon.model.MonitoringData;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface MonitoringDataJpa extends CrudRepository<MonitoringData, OffsetDateTime> {
+	// Nothing.
 }

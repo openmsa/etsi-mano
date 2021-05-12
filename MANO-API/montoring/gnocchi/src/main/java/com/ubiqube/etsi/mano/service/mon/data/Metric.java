@@ -19,6 +19,11 @@ package com.ubiqube.etsi.mano.service.mon.data;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Setter
 @Getter
 public class Metric {

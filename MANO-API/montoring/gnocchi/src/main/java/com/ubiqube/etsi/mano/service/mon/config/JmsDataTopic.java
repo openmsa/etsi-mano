@@ -29,6 +29,11 @@ import org.springframework.jms.support.converter.MessageConverter;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Configuration
 public class JmsDataTopic {
 

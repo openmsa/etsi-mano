@@ -18,6 +18,11 @@ package com.ubiqube.etsi.mano.service.mon;
 
 import com.ubiqube.etsi.mano.service.mon.data.BatchPollingJob;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface MonitoringEventManager {
 
 	void sendGetDataEvent(BatchPollingJob pmJob);

@@ -21,15 +21,20 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Setter
 @Getter
-public class GnocchiPollResult {
+public class PollResult {
 	private UUID jobId;
 	private String host;
 	private String key;
 	private String value;
 
-	public GnocchiPollResult(final UUID jobId, final String host, final String key, final String value) {
+	public PollResult(final UUID jobId, final String host, final String key, final String value) {
 		super();
 		this.jobId = jobId;
 		this.host = host;

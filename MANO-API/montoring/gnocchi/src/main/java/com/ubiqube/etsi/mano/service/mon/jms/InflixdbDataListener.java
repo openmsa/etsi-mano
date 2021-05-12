@@ -29,14 +29,19 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class DataListener {
+public class InflixdbDataListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DataListener.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InflixdbDataListener.class);
 
 	private final InfluxDBClient influxClient;
 
-	public DataListener(final InfluxDBClient influxClient) {
+	public InflixdbDataListener(final InfluxDBClient influxClient) {
 		this.influxClient = influxClient;
 	}
 

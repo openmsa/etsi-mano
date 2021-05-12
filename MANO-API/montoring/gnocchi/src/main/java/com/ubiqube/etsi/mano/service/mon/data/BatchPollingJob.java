@@ -22,6 +22,11 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Setter
 @Getter
 public class BatchPollingJob {

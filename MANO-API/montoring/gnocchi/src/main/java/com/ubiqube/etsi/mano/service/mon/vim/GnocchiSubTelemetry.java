@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim;
+package com.ubiqube.etsi.mano.service.mon.vim;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -39,6 +39,11 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
 import com.ubiqube.etsi.mano.service.mon.data.Metric;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class GnocchiSubTelemetry {
 	private static final Logger LOG = LoggerFactory.getLogger(GnocchiSubTelemetry.class);

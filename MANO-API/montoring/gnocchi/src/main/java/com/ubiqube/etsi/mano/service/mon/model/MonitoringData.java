@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.repository.jpa.mon;
+package com.ubiqube.etsi.mano.service.mon.model;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -25,6 +25,11 @@ import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Setter
 @Getter
 @Entity

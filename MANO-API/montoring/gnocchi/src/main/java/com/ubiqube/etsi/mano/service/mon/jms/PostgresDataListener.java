@@ -22,16 +22,21 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.mon.TelemetryMetricsResult;
-import com.ubiqube.etsi.mano.repository.jpa.mon.MonitoringDataJpa;
-import com.ubiqube.etsi.mano.repository.jpa.mon.MonitoringData;
+import com.ubiqube.etsi.mano.service.mon.model.MonitoringData;
+import com.ubiqube.etsi.mano.service.mon.repository.MonitoringDataJpa;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class DataPostgresListener {
-	private static final Logger LOG = LoggerFactory.getLogger(DataPostgresListener.class);
+public class PostgresDataListener {
+	private static final Logger LOG = LoggerFactory.getLogger(PostgresDataListener.class);
 
 	private final MonitoringDataJpa monitoringDataJpa;
 
-	public DataPostgresListener(final MonitoringDataJpa monitoringDataJpa) {
+	public PostgresDataListener(final MonitoringDataJpa monitoringDataJpa) {
 		super();
 		this.monitoringDataJpa = monitoringDataJpa;
 	}

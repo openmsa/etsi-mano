@@ -16,7 +16,9 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.mon;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
+
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +33,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class TelemetryMetricsResult {
+	@NotNull
 	private String masterJobId;
 
 	private String vnfInstanceId;
@@ -39,7 +42,7 @@ public class TelemetryMetricsResult {
 
 	private Double value;
 
-	private Date timestamp;
+	private OffsetDateTime timestamp;
 
 	private boolean status;
 
@@ -47,7 +50,7 @@ public class TelemetryMetricsResult {
 		// Nothing.
 	}
 
-	public TelemetryMetricsResult(final String masterJobId, final String vnfInstanceId, final String key, final Double value, final Date timestamp, final boolean status) {
+	public TelemetryMetricsResult(@NotNull final String masterJobId, final String vnfInstanceId, final String key, final Double value, final OffsetDateTime timestamp, final boolean status) {
 		super();
 		this.masterJobId = masterJobId;
 		this.vnfInstanceId = vnfInstanceId;
