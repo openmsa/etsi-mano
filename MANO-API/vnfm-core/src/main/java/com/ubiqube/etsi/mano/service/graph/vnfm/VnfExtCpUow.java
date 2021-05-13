@@ -43,12 +43,12 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	public String exec(final VnfParameters params) {
 		final String networkId = params.getContext().get(extCp.getInternalVirtualLink());
 		final String extNetwork = params.getContext().get(extCp.getExternalVirtualLink());
-		return params.getVim().createRouter(params.getVimConnectionInformation(), task.getAlias(), networkId, extNetwork);
+		return params.getVim().network(params.getVimConnectionInformation()).createRouter(task.getAlias(), networkId, extNetwork);
 	}
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteRouter(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteRouter(params.getVimResourceId());
 		return null;
 	}
 

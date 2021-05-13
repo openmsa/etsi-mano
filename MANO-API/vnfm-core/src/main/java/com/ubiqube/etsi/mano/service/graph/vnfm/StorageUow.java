@@ -42,7 +42,7 @@ public class StorageUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String exec(final VnfParameters params) {
-		return params.getVim().createStorage(params.getVimConnectionInformation(), vnfStorage, storageTask.getAlias());
+		return params.getVim().storage(params.getVimConnectionInformation()).createStorage(vnfStorage, storageTask.getAlias());
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class StorageUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteStorage(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().storage(params.getVimConnectionInformation()).deleteStorage(params.getVimResourceId());
 		return null;
 	}
 

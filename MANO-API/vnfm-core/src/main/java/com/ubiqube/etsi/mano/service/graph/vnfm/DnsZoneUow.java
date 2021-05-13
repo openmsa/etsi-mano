@@ -38,12 +38,12 @@ public class DnsZoneUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String exec(final VnfParameters params) {
-		return params.getVim().createDnsZone(params.getVimConnectionInformation(), task.getDomainName());
+		return params.getVim().dns(params.getVimConnectionInformation()).createDnsZone(task.getDomainName());
 	}
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteDnsZone(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().dns(params.getVimConnectionInformation()).deleteDnsZone(params.getVimResourceId());
 		return null;
 	}
 

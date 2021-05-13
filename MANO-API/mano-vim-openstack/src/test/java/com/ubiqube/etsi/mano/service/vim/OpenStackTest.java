@@ -213,7 +213,7 @@ public class OpenStackTest {
 		vnfStorage.setToscaName("JUnit-test-volume");
 		when(vimJpa.findById(id)).thenReturn(Optional.of(vimConnectionInformation));
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
-		final String lid = vim.createStorage(vimConnectionInformation, vnfStorage, "junit-test");
+		final String lid = vim.storage(vimConnectionInformation).createStorage(vnfStorage, "junit-test");
 		assertNotNull(lid);
 	}
 
@@ -234,11 +234,11 @@ public class OpenStackTest {
 
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
-		final String net = vim.createNetwork(vimConnectionInformation, vl, "Junit-vl", "mano.junit.net.", null);
+		final String net = vim.network(vimConnectionInformation).createNetwork(vl, "Junit-vl", "mano.junit.net.", null);
 		final IpPool ipPool = new IpPool();
 		ipPool.setStartIpAddress("192.168.90.1");
 		ipPool.setEndIpAddress("192.168.90.126");
-		final String lid = vim.createSubnet(vimConnectionInformation, l3ProtocolData, ipPool, net);
+		final String lid = vim.network(vimConnectionInformation).createSubnet(l3ProtocolData, ipPool, net);
 		assertNotNull(lid);
 	}
 
@@ -253,7 +253,7 @@ public class OpenStackTest {
 		img.setName("Junit-uploaded-image");
 		img.setSize(1L);
 		img.setImagePath("/home/olivier/Downloads/cirros-0.5.1-x86_64-disk.img");
-		final SoftwareImage lid = vim.uploadSoftwareImage(vimConnectionInformation, img);
+		final SoftwareImage lid = vim.storage(vimConnectionInformation).uploadSoftwareImage(img);
 		assertNotNull(lid);
 	}
 

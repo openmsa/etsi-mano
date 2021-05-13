@@ -173,7 +173,7 @@ public abstract class AbstractGrantAction {
 		executorService.submit(getComputeResourceFlavours);
 
 		// Add public networks.
-		vim.getPublicNetworks(vimInfo).entrySet().forEach(x -> {
+		vim.network(vimInfo).getPublicNetworks().entrySet().forEach(x -> {
 			final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
 			extVl.setResourceId(x.getValue());
 			extVl.setResourceProviderId(vim.getType());
@@ -237,9 +237,9 @@ public abstract class AbstractGrantAction {
 			if (null != img) {
 				// Get Vim or create vim resource via Or-Vi
 				final SoftwareImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
-					final Optional<SoftwareImage> newImg = vim.getSwImageMatching(vimInfo, img);
+					final Optional<SoftwareImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
 					// Use or-vi, Vim is not on the same server. Path is given in tosca file.
-					return newImg.orElseGet(() -> vim.uploadSoftwareImage(vimInfo, x.getSoftwareImage()));
+					return newImg.orElseGet(() -> vim.storage(vimInfo).uploadSoftwareImage(x.getSoftwareImage()));
 				});
 				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
