@@ -20,7 +20,6 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol003;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URISyntaxException;
 import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
@@ -87,7 +86,7 @@ public class PmJobs261Sol003Controller implements PmJobs261Sol003Api {
 	}
 
 	@Override
-	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) throws URISyntaxException {
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) {
 		return vnfmPmGenericFrontController.pmJobsPost(createPmJobRequest, PmJob.class, PmJobs261Sol003Controller::makeLinks, PmJobs261Sol003Controller::makeSelf);
 	}
 

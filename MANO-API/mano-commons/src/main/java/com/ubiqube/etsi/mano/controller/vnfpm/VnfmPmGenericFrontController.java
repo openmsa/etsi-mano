@@ -84,4 +84,9 @@ public class VnfmPmGenericFrontController {
 		final String link = getSelfLink.apply(obj);
 		return ResponseEntity.created(URI.create(link)).body(obj);
 	}
+
+	public <U> ResponseEntity<U> pmJobsPmJobIdPatch(final UUID pmJobId, final Object pmJobModifications) {
+		// XXX
+		return null;
+	}
 }

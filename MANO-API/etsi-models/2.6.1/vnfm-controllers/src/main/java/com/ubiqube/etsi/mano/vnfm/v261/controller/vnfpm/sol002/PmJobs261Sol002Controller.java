@@ -16,12 +16,9 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
-import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
@@ -33,12 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
-import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
+import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -47,48 +42,40 @@ import ma.glasnost.orika.MapperFacade;
  */
 @RestController
 public class PmJobs261Sol002Controller implements PmJobs261Sol002Api {
-	private final MapperFacade mapper;
+	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;
 
-	private final VnfmPmController vnfmPmController;
-
-	public PmJobs261Sol002Controller(final MapperFacade mapper, final VnfmPmController vnfmPmController) {
+	public PmJobs261Sol002Controller(final VnfmPmGenericFrontController vnfmPmGenericFrontController) {
 		super();
-		this.mapper = mapper;
-		this.vnfmPmController = vnfmPmController;
+		this.vnfmPmGenericFrontController = vnfmPmGenericFrontController;
 	}
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobs261Sol002Controller::makeLinks);
+		return vnfmPmGenericFrontController.search(requestParams, PmJob.class, PmJobs261Sol002Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
-		vnfmPmController.delete(UUID.fromString(pmJobId));
-		return ResponseEntity.noContent().build();
+		return vnfmPmGenericFrontController.deleteById(UUID.fromString(pmJobId));
 	}
 
 	@Override
 	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobId) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.PmJob pmJob = vnfmPmController.findById(UUID.fromString(pmJobId));
-		final PmJob ret = mapper.map(pmJob, PmJob.class);
-		makeLinks(ret);
-		return ResponseEntity.ok(ret);
+		return vnfmPmGenericFrontController.findById(UUID.fromString(pmJobId), PmJob.class, PmJobs261Sol002Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport pm = vnfmPmController.findReport(UUID.fromString(pmJobId), UUID.fromString(reportId));
-		return ResponseEntity.ok(mapper.map(pm, PerformanceReport.class));
+		return vnfmPmGenericFrontController.findReportById(pmJobId, reportId, PerformanceReport.class);
 	}
 
 	@Override
 	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) throws URISyntaxException {
-		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
-		res = vnfmPmController.save(res);
-		final PmJob obj = mapper.map(res, PmJob.class);
-		makeLinks(obj);
-		return ResponseEntity.created(new URI(obj.getLinks().getSelf().getHref())).body(obj);
+		return vnfmPmGenericFrontController.pmJobsPost(createPmJobRequest, PmJob.class, PmJobs261Sol002Controller::makeLinks, PmJobs261Sol002Controller::makeSelf);
+	}
+
+	private static String makeSelf(final PmJob x) {
+		return linkTo(methodOn(PmJobs261Sol002Api.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref();
 	}
 
 	private static void makeLinks(final PmJob x) {
