@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.Null;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
@@ -30,6 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.service.vim.mon.VimMonitoring;
 
 /**
  *
@@ -108,4 +110,7 @@ public interface Vim {
 	void deleteDnsRecordSet(final VimConnectionInformation vimConnectionInformation, final String resourceId, final String zoneId, final Set<String> ips);
 
 	List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation);
+
+	@Null
+	VimMonitoring getMonitoring(VimConnectionInformation vimConnectionInformation);
 }

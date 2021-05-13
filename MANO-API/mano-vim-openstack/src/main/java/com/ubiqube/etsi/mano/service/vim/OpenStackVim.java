@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.Null;
 
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
@@ -91,6 +92,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.VimService;
+import com.ubiqube.etsi.mano.service.vim.mon.VimMonitoring;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -661,6 +663,12 @@ public class OpenStackVim implements Vim {
 			return VimCapability.HAVE_VXNET;
 		}
 		return null;
+	}
+
+	@Override
+	public @Null VimMonitoring getMonitoring(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		return new OpenstackMonitoring(os);
 	}
 
 }
