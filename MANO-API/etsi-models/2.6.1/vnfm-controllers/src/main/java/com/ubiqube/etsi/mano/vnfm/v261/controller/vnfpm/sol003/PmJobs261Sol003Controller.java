@@ -38,7 +38,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
 
 @RestController
-@RolesAllowed({ "ROLE_EM" })
+@RolesAllowed({ "ROLE_NFVO" })
 @RequestMapping("/sol003/vnffm/v1")
 public class PmJobs261Sol003Controller implements PmJobs261Sol003Api {
 

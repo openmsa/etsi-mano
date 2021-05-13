@@ -16,15 +16,10 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
-import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.UUID;
-
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -32,12 +27,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.vnfpm.VnfmThresholdController;
+import com.ubiqube.etsi.mano.controller.vnfpm.VnfmThresholdFrontController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -45,44 +38,32 @@ import ma.glasnost.orika.MapperFacade;
  *
  */
 @RestController
+@RolesAllowed({ "ROLE_EM" })
 public class Thresholds261Sol002Controller implements Thresholds261Sol002Api {
+	private final VnfmThresholdFrontController vnfmThresholdFrontController;
 
-	private final MapperFacade mapper;
-
-	private final VnfmThresholdController vnfmThresholdController;
-
-	public Thresholds261Sol002Controller(final MapperFacade mapper, final VnfmThresholdController _vnfmThresholdController) {
-		super();
-		this.mapper = mapper;
-		vnfmThresholdController = _vnfmThresholdController;
+	public Thresholds261Sol002Controller(final VnfmThresholdFrontController vnfmThresholdFrontController) {
+		this.vnfmThresholdFrontController = vnfmThresholdFrontController;
 	}
 
 	@Override
-	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return vnfmThresholdController.search(requestParams, Threshold.class, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, Thresholds261Sol002Controller::makeLinks);
-	}
-
-	@Override
-	public ResponseEntity<Threshold> thresholdsPost(@Valid final CreateThresholdRequest createThresholdRequest) throws URISyntaxException {
-		com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = mapper.map(createThresholdRequest, com.ubiqube.etsi.mano.dao.mano.pm.Threshold.class);
-		res = vnfmThresholdController.save(res);
-		final Threshold ret = mapper.map(res, Threshold.class);
-		makeLinks(ret);
-		return ResponseEntity.created(new URI(ret.getLinks().getSelf().getHref())).body(ret);
+	public ResponseEntity<Threshold> thresholdsPost(@Valid final CreateThresholdRequest createThresholdRequest) {
+		return vnfmThresholdFrontController.thresholdsCreate(createThresholdRequest, Threshold.class, Thresholds261Sol002Controller::makeLinks, Thresholds261Sol002Controller::getSelfLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> thresholdsThresholdIdDelete(final String thresholdId) {
-		vnfmThresholdController.delete(UUID.fromString(thresholdId));
-		return ResponseEntity.noContent().build();
+		return vnfmThresholdFrontController.deleteById(thresholdId);
 	}
 
 	@Override
 	public ResponseEntity<Threshold> thresholdsThresholdIdGet(final String thresholdId) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = vnfmThresholdController.findById(UUID.fromString(thresholdId));
-		final Threshold ret = mapper.map(res, Threshold.class);
-		makeLinks(ret);
-		return ResponseEntity.ok(ret);
+		return vnfmThresholdFrontController.findById(thresholdId, Threshold.class, Thresholds261Sol002Controller::makeLinks);
+	}
+
+	@Override
+	public ResponseEntity<String> thresholdsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		return vnfmThresholdFrontController.search(requestParams, nextpageOpaqueMarker, Threshold.class, Thresholds261Sol002Controller::makeLinks);
 	}
 
 	private static void makeLinks(final Threshold x) {
@@ -96,6 +77,10 @@ public class Thresholds261Sol002Controller implements Thresholds261Sol002Api {
 		// links.setObjects(link);
 
 		x.setLinks(links);
+	}
+
+	private static String getSelfLink(final Threshold threshold) {
+		return linkTo(methodOn(Thresholds261Sol002Api.class).thresholdsThresholdIdGet(threshold.getId().toString())).withSelfRel().getHref();
 	}
 
 }

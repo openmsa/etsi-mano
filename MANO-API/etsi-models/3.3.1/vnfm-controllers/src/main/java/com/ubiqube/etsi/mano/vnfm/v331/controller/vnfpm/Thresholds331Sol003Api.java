@@ -21,25 +21,18 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnfpm;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfpm.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfpm.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfpm.Threshold;
@@ -54,23 +47,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+@RolesAllowed({ "ROLE_NFVO" })
 @RequestMapping(value = "/sol003/vnffm/v1", headers = { "Version=3.3.1" })
 public interface Thresholds331Sol003Api {
-
-	Logger log = LoggerFactory.getLogger(Thresholds331Sol003Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
-
 	@Operation(summary = "", description = "Query Threshold. The API consumer can use this method to query information about thresholds. This method shall follow the provisions specified in the tables 6.4.5.3.2-1 and 6.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "200 OK  Shall be returned when information about zero or more thresholds has been queried successfully. If the \"filter\" URI parameter was supplied in the request, the data in the response body shall have been transformed according to the rules specified in clause 5.2.2 of ETSI GS NFV-SOL 013. The response body shall contain in an array the representations of zero or more thresholds, as defined in clause 6.5.2.9. If the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource, inclusion of the Link HTTP header in this response shall follow the provisions in clause 5.4.2.3 of ETSI GS NFV-SOL 013. ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Threshold.class)))),
@@ -95,22 +74,8 @@ public interface Thresholds331Sol003Api {
 
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/thresholds", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<Threshold>> thresholdsGet(@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) final String accept, @Parameter(in = ParameterIn.HEADER, description = "Version of the API requested to use when responding to this request. ", required = true, schema = @Schema()) @RequestHeader(value = "Version", required = true) final String version, @Parameter(in = ParameterIn.HEADER, description = "The authorization token for the request. Reference: IETF RFC 7235. ", schema = @Schema()) @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@Parameter(in = ParameterIn.QUERY, description = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The NFV-MANO functional entity shall support receiving this parameter as part of the URI query string. The API consumer may supply this parameter. All attribute names that appear in the FmSubscription and in data types referenced from it shall be supported by the NFV-MANO functional entity in the filter expression. ", schema = @Schema()) @Valid @RequestParam(value = "filter", required = false) final String filter, @Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("[ {\n  \"subObjectInstanceIds\" : [ \"subObjectInstanceIds\", \"subObjectInstanceIds\" ],\n  \"_links\" : {\n    \"self\" : { }\n  },\n  \"criteria\" : {\n    \"simpleThresholdDetails\" : {\n      \"thresholdValue\" : 0.8008282,\n      \"hysteresis\" : 617.2115\n    },\n    \"performanceMetric\" : \"performanceMetric\",\n    \"thresholdType\" : \"SIMPLE\"\n  },\n  \"callbackUri\" : \"callbackUri\",\n  \"id\" : \"id\",\n  \"objectType\" : \"objectType\"\n}, {\n  \"subObjectInstanceIds\" : [ \"subObjectInstanceIds\", \"subObjectInstanceIds\" ],\n  \"_links\" : {\n    \"self\" : { }\n  },\n  \"criteria\" : {\n    \"simpleThresholdDetails\" : {\n      \"thresholdValue\" : 0.8008282,\n      \"hysteresis\" : 617.2115\n    },\n    \"performanceMetric\" : \"performanceMetric\",\n    \"thresholdType\" : \"SIMPLE\"\n  },\n  \"callbackUri\" : \"callbackUri\",\n  \"id\" : \"id\",\n  \"objectType\" : \"objectType\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ThresholdsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<String> thresholdsGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@Operation(summary = "", description = "Create Threshold. The POST method can be used by the API consumer to create a threshold. This method shall follow the provisions specified in the tables 6.4.5.3.1-1 and 6.4.5.3.1-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, a new \"Individual threshold\" resource as defined in clause 6.4.6 shall have been created. ", tags = {})
 	@ApiResponses(value = {
@@ -136,21 +101,7 @@ public interface Thresholds331Sol003Api {
 
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/thresholds", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<Threshold> thresholdsPost(@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) final String accept, @Parameter(in = ParameterIn.HEADER, description = "Version of the API requested to use when responding to this request. ", required = true, schema = @Schema()) @RequestHeader(value = "Version", required = true) final String version, @Parameter(in = ParameterIn.HEADER, description = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true, schema = @Schema()) @RequestHeader(value = "Content-Type", required = true) final String contentType, @Parameter(in = ParameterIn.DEFAULT, description = "Request parameters to create a threshold resource.", required = true, schema = @Schema()) @Valid @RequestBody final CreateThresholdRequest body, @Parameter(in = ParameterIn.HEADER, description = "The authorization token for the request. Reference: IETF RFC 7235. ", schema = @Schema()) @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{\n  \"subObjectInstanceIds\" : [ \"subObjectInstanceIds\", \"subObjectInstanceIds\" ],\n  \"_links\" : {\n    \"self\" : { }\n  },\n  \"criteria\" : {\n    \"simpleThresholdDetails\" : {\n      \"thresholdValue\" : 0.8008282,\n      \"hysteresis\" : 617.2115\n    },\n    \"performanceMetric\" : \"performanceMetric\",\n    \"thresholdType\" : \"SIMPLE\"\n  },\n  \"callbackUri\" : \"callbackUri\",\n  \"id\" : \"id\",\n  \"objectType\" : \"objectType\"\n}", Threshold.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ThresholdsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Threshold> thresholdsPost(@Parameter(in = ParameterIn.DEFAULT, description = "Request parameters to create a threshold resource.", required = true, schema = @Schema()) @Valid @RequestBody final CreateThresholdRequest body);
 
 	@Operation(summary = "", description = "Delete Threshold. This method allows to delete a threshold. This method shall follow the provisions specified in the tables 6.4.6.3.5-1 and 6.4.6.3.5-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, the \"Individual threshold\" resource shall not exist any longer. ", tags = {})
 	@ApiResponses(value = {
@@ -176,13 +127,7 @@ public interface Thresholds331Sol003Api {
 
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> thresholdsThresholdIdDelete(@Parameter(in = ParameterIn.PATH, description = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual threshold\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("thresholdId") final String thresholdId, @Parameter(in = ParameterIn.HEADER, description = "Version of the API requested to use when responding to this request. ", required = true, schema = @Schema()) @RequestHeader(value = "Version", required = true) final String version, @Parameter(in = ParameterIn.HEADER, description = "The authorization token for the request. Reference: IETF RFC 7235. ", schema = @Schema()) @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ThresholdsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> thresholdsThresholdIdDelete(@Parameter(in = ParameterIn.PATH, description = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual threshold\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("thresholdId") final String thresholdId);
 
 	@Operation(summary = "", description = "Query Threshold. The API consumer can use this method for reading an individual threshold This method shall follow the provisions specified in the tables 6.4.6.3.2-1 and 6.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -208,22 +153,7 @@ public interface Thresholds331Sol003Api {
 
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Threshold> thresholdsThresholdIdGet(@Parameter(in = ParameterIn.PATH, description = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual threshold\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("thresholdId") final String thresholdId, @Parameter(in = ParameterIn.HEADER, description = "Version of the API requested to use when responding to this request. ", required = true, schema = @Schema()) @RequestHeader(value = "Version", required = true) final String version, @Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) final String accept,
-			@Parameter(in = ParameterIn.HEADER, description = "The authorization token for the request. Reference: IETF RFC 7235. ", schema = @Schema()) @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{\n  \"subObjectInstanceIds\" : [ \"subObjectInstanceIds\", \"subObjectInstanceIds\" ],\n  \"_links\" : {\n    \"self\" : { }\n  },\n  \"criteria\" : {\n    \"simpleThresholdDetails\" : {\n      \"thresholdValue\" : 0.8008282,\n      \"hysteresis\" : 617.2115\n    },\n    \"performanceMetric\" : \"performanceMetric\",\n    \"thresholdType\" : \"SIMPLE\"\n  },\n  \"callbackUri\" : \"callbackUri\",\n  \"id\" : \"id\",\n  \"objectType\" : \"objectType\"\n}", Threshold.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ThresholdsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Threshold> thresholdsThresholdIdGet(@Parameter(in = ParameterIn.PATH, description = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual threshold\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("thresholdId") final String thresholdId);
 
 	@Operation(summary = "", description = "This method allows to modify an \"Individual threshold\" resource. This method shall follow the provisions specified in the tables 6.4.6.3.4-1 and 6.4.6.3.4-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -251,20 +181,7 @@ public interface Thresholds331Sol003Api {
 
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, method = RequestMethod.PATCH)
-	default ResponseEntity<ThresholdModifications> thresholdsThresholdIdPatch(@Parameter(in = ParameterIn.PATH, description = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual threshold\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("thresholdId") final String thresholdId, @Parameter(in = ParameterIn.HEADER, description = "Version of the API requested to use when responding to this request. ", required = true, schema = @Schema()) @RequestHeader(value = "Version", required = true) final String version, @Parameter(in = ParameterIn.HEADER, description = "The authorization token for the request. Reference: IETF RFC 7235. ", schema = @Schema()) @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{\n  \"callbackUri\" : \"callbackUri\",\n  \"authentication\" : {\n    \"paramsOauth2ClientCredentials\" : {\n      \"clientId\" : \"clientId\",\n      \"clientPassword\" : \"clientPassword\"\n    },\n    \"paramsBasic\" : {\n      \"password\" : \"password\",\n      \"userName\" : \"userName\"\n    },\n    \"authType\" : [ \"BASIC\", \"BASIC\" ]\n  }\n}", ThresholdModifications.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default ThresholdsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<ThresholdModifications> thresholdsThresholdIdPatch(@Parameter(in = ParameterIn.PATH, description = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new \"Individual threshold\" resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("thresholdId") final String thresholdId,
+			@RequestBody ThresholdModifications body);
 
 }

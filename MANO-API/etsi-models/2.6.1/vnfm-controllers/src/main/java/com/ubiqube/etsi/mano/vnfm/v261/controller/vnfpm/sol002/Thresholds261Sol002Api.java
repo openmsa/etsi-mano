@@ -21,7 +21,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
-import java.net.URISyntaxException;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -103,7 +102,7 @@ public interface Thresholds261Sol002Api {
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/thresholds", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
 	ResponseEntity<Threshold> thresholdsPost(
-			@ApiParam(value = "Request parameters to create a new \"Individual threshold\" resource. ", required = true) @Valid @RequestBody final CreateThresholdRequest createThresholdRequest) throws URISyntaxException;
+			@ApiParam(value = "Request parameters to create a new \"Individual threshold\" resource. ", required = true) @Valid @RequestBody final CreateThresholdRequest createThresholdRequest);
 
 	@ApiOperation(value = "", nickname = "thresholdsThresholdIdDelete", notes = "This method allows to delete a threshold. As the result of successfully executing this method, the  \"Individual threshold\" resource shall not exist any longer. ", tags = {})
 	@ApiResponses(value = {
