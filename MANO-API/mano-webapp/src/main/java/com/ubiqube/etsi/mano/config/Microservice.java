@@ -16,17 +16,17 @@
  */
 package com.ubiqube.etsi.mano.config;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@EnableConfigurationProperties
-public class UbiqubeConfiguration {
+public class Microservice {
 
+	@LoadBalanced
 	@Bean
-	public static UbiqubeSourceLocator getSourceLocator() {
-		return new UbiqubeSourceLocator();
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
-
 }

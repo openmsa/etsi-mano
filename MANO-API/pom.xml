@@ -18,6 +18,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 	</properties>
 	<modules>
+		<module>ubi-spring-config</module>
 		<module>nfvo-core</module>
 		<module>nfvo-webapp</module>
 		<module>vnfm-core</module>
