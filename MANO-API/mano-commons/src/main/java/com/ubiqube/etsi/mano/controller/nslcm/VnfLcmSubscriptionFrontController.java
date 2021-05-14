@@ -22,8 +22,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -50,12 +48,12 @@ public class VnfLcmSubscriptionFrontController {
 		return ResponseEntity.ok(res);
 	}
 
-	public <U> ResponseEntity<List<U>> search(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> setLink) {
+	public <U> ResponseEntity<List<U>> search(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> setLink) {
 		final List<U> res = subscriptionService.query(requestParams, clazz, setLink, SubscriptionType.VNFLCM);
 		return ResponseEntity.ok(res);
 	}
 
-	public <U> ResponseEntity<U> create(@Valid final Object body, final Class<U> clazz, final Consumer<U> makeLinks, final Function<U, String> setLink) {
+	public <U> ResponseEntity<U> create(final Object body, final Class<U> clazz, final Consumer<U> makeLinks, final Function<U, String> setLink) {
 		final U res = subscriptionService.create(body, clazz, makeLinks, SubscriptionType.VNFLCM);
 		final String link = setLink.apply(res);
 		return ResponseEntity.created(URI.create(link)).body(res);
