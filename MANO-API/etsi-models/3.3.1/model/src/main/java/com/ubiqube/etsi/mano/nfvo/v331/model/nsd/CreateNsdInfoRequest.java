@@ -16,82 +16,82 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.model.nsd;
 
+import java.util.Map;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.KeyValuePairs;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type creates a completely new NS descriptor resource. 
+ * This type creates a completely new NS descriptor resource.
  */
 @Schema(description = "This type creates a completely new NS descriptor resource. ")
 @Validated
 
+public class CreateNsdInfoRequest {
+	@JsonProperty("userDefinedData")
+	private Map<String, String> userDefinedData = null;
 
-public class CreateNsdInfoRequest   {
-  @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+	public CreateNsdInfoRequest userDefinedData(final Map<String, String> userDefinedData) {
+		this.userDefinedData = userDefinedData;
+		return this;
+	}
 
-  public CreateNsdInfoRequest userDefinedData(KeyValuePairs userDefinedData) {
-    this.userDefinedData = userDefinedData;
-    return this;
-  }
+	/**
+	 * Get userDefinedData
+	 *
+	 * @return userDefinedData
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get userDefinedData
-   * @return userDefinedData
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getUserDefinedData() {
-    return userDefinedData;
-  }
+	@Valid
+	public Map<String, String> getUserDefinedData() {
+		return userDefinedData;
+	}
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
-    this.userDefinedData = userDefinedData;
-  }
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
+		this.userDefinedData = userDefinedData;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final CreateNsdInfoRequest createNsdInfoRequest = (CreateNsdInfoRequest) o;
+		return Objects.equals(this.userDefinedData, createNsdInfoRequest.userDefinedData);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CreateNsdInfoRequest createNsdInfoRequest = (CreateNsdInfoRequest) o;
-    return Objects.equals(this.userDefinedData, createNsdInfoRequest.userDefinedData);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(userDefinedData);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(userDefinedData);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class CreateNsdInfoRequest {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CreateNsdInfoRequest {\n");
-    
-    sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
