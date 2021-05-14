@@ -123,7 +123,7 @@ public class NsInstanceGenericFrontController {
 		throw new GenericException("TODO");
 	}
 
-	public <U> ResponseEntity<U> create(final Object request, final Class<U> clazz, final Consumer<U> makeLink, final String getLink) {
+	public <U> ResponseEntity<U> create(final Object request, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> getSelfLink) {
 		final CreateNsInstance req = mapper.map(request, CreateNsInstance.class);
 		if (req.getNsdId() == null) {
 			throw new NotFoundException("NsdId field is empty.");
@@ -131,6 +131,7 @@ public class NsInstanceGenericFrontController {
 		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req.getNsdId(), req.getNsName(), req.getNsDescription());
 		final U nsInstanceWeb = mapper.map(nsInstance, clazz);
 		makeLink.accept(nsInstanceWeb);
-		return ResponseEntity.created(URI.create(getLink)).body(nsInstanceWeb);
+		final String location = getSelfLink.apply(nsInstanceWeb);
+		return ResponseEntity.created(URI.create(location)).body(nsInstanceWeb);
 	}
 }

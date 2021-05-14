@@ -43,7 +43,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.UpdateNsRequest;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public final class NsInstances261Sol005Controller implements NsInstances262Sol005Api {
+public final class NsInstances261Sol005Controller implements NsInstances261Sol005Api {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsInstances261Sol005Controller.class);
 
@@ -150,40 +150,43 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesPost(final CreateNsRequest request) {
-		return frontController.create(request, NsInstance.class, NsInstances261Sol005Controller::makeLinks, "");
+		return frontController.create(request, NsInstance.class, NsInstances261Sol005Controller::makeLinks, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	private static void makeLinks(@Nonnull final NsInstance nsdInfo) {
 		final String id = nsdInfo.getId();
 		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
 		final Link heal = new Link();
-		heal.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
+		heal.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setHeal(heal);
 
 		final Link instantiate = new Link();
-		instantiate.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
+		instantiate.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setInstantiate(instantiate);
 		// nsInstanceLinks.setNestedNsInstances(nestedNsInstances);
 		final Link scale = new Link();
-		scale.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdScalePost(id, null)).withSelfRel().getHref());
+		scale.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdScalePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setScale(scale);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
 		nsInstanceLinks.setSelf(self);
 
 		final Link terminate = new Link();
-		terminate.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null)).withSelfRel().getHref());
+		terminate.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setTerminate(terminate);
 
 		final Link update = new Link();
-		update.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null)).withSelfRel().getHref());
+		update.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
 		nsdInfo.setLinks(nsInstanceLinks);
 	}
 
 	private static String getSelfLink(final NsBlueprint nsInstance) {
-		return linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdGet(nsInstance.getId().toString())).withSelfRel().getHref();
+		return linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdGet(nsInstance.getId().toString())).withSelfRel().getHref();
 	}
 
+	private static String getSelfLink(final NsInstance nsdInfo) {
+		return linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsdInfo.getId(), null)).withSelfRel().getHref();
+	}
 }

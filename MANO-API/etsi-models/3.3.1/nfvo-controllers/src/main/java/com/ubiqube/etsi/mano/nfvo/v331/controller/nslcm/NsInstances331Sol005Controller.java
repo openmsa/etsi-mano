@@ -16,17 +16,24 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.controller.nslcm;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceGenericFrontController;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.InstantiateNsRequest;
+import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstance;
+import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstanceLinks;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ScaleNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.UpdateNsRequest;
@@ -38,59 +45,88 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.UpdateNsRequest;
  */
 @RestController
 public class NsInstances331Sol005Controller implements NsInstances331Sol005Api {
+	private NsInstanceGenericFrontController nsInstanceGenericFrontController;
 
 	@Override
-	public ResponseEntity<List<NsInstance>> nsInstancesGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		return nsInstanceGenericFrontController.search(requestParams, NsInstance.class, nextpageOpaqueMarker, NsInstances331Sol005Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.delete(nsInstanceId);
 	}
 
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.findById(nsInstanceId, NsInstance.class, NsInstances331Sol005Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, @Valid final HealNsRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.heal(nsInstanceId, body);
 	}
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, @Valid final InstantiateNsRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.instantiate(nsInstanceId, body, NsInstances331Sol005Controller::getNsbLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, @Valid final ScaleNsRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.scale(nsInstanceId, body);
 	}
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, @Valid final TerminateNsRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.terminate(nsInstanceId, body, NsInstances331Sol005Controller::getNsbLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, @Valid final UpdateNsRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.update(nsInstanceId, body);
 	}
 
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesPost(@Valid final CreateNsRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstanceGenericFrontController.create(body, NsInstance.class, NsInstances331Sol005Controller::makeLinks, NsInstances331Sol005Controller::getLink);
+	}
+
+	private static String getLink(final NsInstance nsBlueprint) {
+		return linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsBlueprint.getId(), null)).withSelfRel().getHref();
+	}
+
+	private static String getNsbLink(final NsBlueprint nsBlueprint) {
+		return linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsBlueprint.getId().toString(), null)).withSelfRel().getHref();
+	}
+
+	private static void makeLinks(@Nonnull final NsInstance nsdInfo) {
+		final String id = nsdInfo.getId();
+		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
+		final Link heal = new Link();
+		heal.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
+		nsInstanceLinks.setHeal(heal);
+
+		final Link instantiate = new Link();
+		instantiate.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
+		nsInstanceLinks.setInstantiate(instantiate);
+		// nsInstanceLinks.setNestedNsInstances(nestedNsInstances);
+		final Link scale = new Link();
+		scale.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdScalePost(id, null)).withSelfRel().getHref());
+		nsInstanceLinks.setScale(scale);
+
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
+		nsInstanceLinks.setSelf(self);
+
+		final Link terminate = new Link();
+		terminate.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null)).withSelfRel().getHref());
+		nsInstanceLinks.setTerminate(terminate);
+
+		final Link update = new Link();
+		update.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null)).withSelfRel().getHref());
+		nsInstanceLinks.setUpdate(update);
+		nsdInfo.setLinks(nsInstanceLinks);
 	}
 
 }

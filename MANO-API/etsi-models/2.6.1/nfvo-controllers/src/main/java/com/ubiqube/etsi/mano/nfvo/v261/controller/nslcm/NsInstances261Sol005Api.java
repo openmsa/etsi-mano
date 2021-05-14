@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nslcm/v1/ns_instances")
 @Api(value = "/sol005/nslcm/v1/ns_instances")
-public interface NsInstances262Sol005Api {
+public interface NsInstances261Sol005Api {
 
 	/**
 	 * Query multiple NS instances.

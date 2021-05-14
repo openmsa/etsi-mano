@@ -21,11 +21,11 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.controller.nslcm;
 
-import java.util.List;
-
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,12 +73,7 @@ public interface NsInstances331Sol005Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/ns_instances", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<NsInstance>> nsInstancesGet(
-			@Parameter(in = ParameterIn.QUERY, description = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The NFV-MANO functional entity shall support receiving this parameter as part of the URI query string. The API consumer may supply this parameter. All attribute names that appear in the FmSubscription and in data types referenced from it shall be supported by the NFV-MANO functional entity in the filter expression. ", schema = @Schema()) @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@Parameter(in = ParameterIn.QUERY, description = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV-SOL 013. The NFV-MANO functional entity shall support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "all_fields", required = false) final String allFields,
-			@Parameter(in = ParameterIn.QUERY, description = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFV-MANO functional entity should support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "fields", required = false) final String fields,
-			@Parameter(in = ParameterIn.QUERY, description = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFV-MANO functional entity should support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@Parameter(in = ParameterIn.QUERY, description = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFV-MANO functional entity shall support this parameter. The NFVO shall support this parameter. The following attributes shall be excluded from the NsInstance structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - vnfInstances - pnfInfo - virtualLinkInfo - vnffgInfo - sapInfo - nsScaleStatus - additionalAffinityOrAntiAffinityRules -   wanConnectionInfo", schema = @Schema()) @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault,
+	ResponseEntity<String> nsInstancesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@Operation(summary = "Delete NS instance resource.", description = "Delete NS Identifier This method deletes an individual NS instance resource. As the result of successfully executing this method, the \"Individual NS instance\" resource shall not exist any longer. A notification of type \"NsIdentifierDeletionNotification\" shall be triggered as part of successfully executing this method as defined in clause 6.5.2.7. ", tags = {})
