@@ -23,8 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,13 +43,10 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.UpdateNsRequest;
 @RestController
 public final class NsInstances261Sol005Controller implements NsInstances261Sol005Api {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsInstances261Sol005Controller.class);
-
 	private final NsInstanceGenericFrontController frontController;
 
 	public NsInstances261Sol005Controller(final NsInstanceGenericFrontController _frontController) {
 		frontController = _frontController;
-		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 
 	/**
