@@ -64,4 +64,9 @@ public class VnfSnapshotsFrontController {
 		return null;
 	}
 
+	public ResponseEntity<Resource> fetchArtifact(final String vnfSnapshotPkgId, final String artifactPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
