@@ -100,4 +100,9 @@ public class Sol003Linkable implements Linkable {
 	public void makeLinks(final VnfPkgInfo _vnfPkgInfo) {
 		_vnfPkgInfo.setLinks(getVnfLinks(_vnfPkgInfo.getId()));
 	}
+
+	@Override
+	public String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
+		return linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId())).withSelfRel().getHref();
+	}
 }

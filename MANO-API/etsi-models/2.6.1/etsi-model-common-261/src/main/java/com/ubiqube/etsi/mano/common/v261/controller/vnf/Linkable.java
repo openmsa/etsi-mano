@@ -41,6 +41,8 @@ public interface Linkable {
 	 */
 	void makeLinks(VnfPkgInfo _vnfPkgInfo);
 
+	String getSelfLink(VnfPkgInfo _vnfPkgInfo);
+
 	PkgmLinks createNotificationLink(@Nonnull UUID _vnfPkgId, UUID _subscriptionId);
 
 	PkgmLinks createVnfPackageOnboardingNotificationLinks(@Nonnull UUID _vnfPkgId, UUID _subscriptionId);

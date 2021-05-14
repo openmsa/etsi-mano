@@ -102,11 +102,11 @@ public class VnfPackageFrontController {
 		return vnfManagement.search(requestParams, clazz, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, makeLinks);
 	}
 
-	public <U> ResponseEntity<U> create(@Valid final Map<String, String> userDefinedData, final Class<U> clazz, final Consumer<U> makeLinks, final Function<VnfPackage, String> getSelfLink) {
+	public <U> ResponseEntity<U> create(@Valid final Map<String, String> userDefinedData, final Class<U> clazz, final Consumer<U> makeLinks, final Function<U, String> getSelfLink) {
 		final VnfPackage vnfPackage = vnfPackageController.vnfPackagesPost(userDefinedData);
 		final U vnfPkgInfo = mapper.map(vnfPackage, clazz);
 		makeLinks.accept(vnfPkgInfo);
-		final String link = getSelfLink.apply(vnfPackage);
+		final String link = getSelfLink.apply(vnfPkgInfo);
 		return ResponseEntity.created(URI.create(link)).body(vnfPkgInfo);
 	}
 
@@ -143,6 +143,41 @@ public class VnfPackageFrontController {
 	}
 
 	public ResponseEntity<List<ResourceRegion>> searchArtifact(final UUID safeUUID, final String range, final String includeSignatures, final String excludeAllManoArtifacts, final String excludeAllNonManoArtifacts, final String selectNonManoArtifactSets) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public <U> ResponseEntity<String> onboardedSearch(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLinks) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<List<ResourceRegion>> onboardedGetContentByVnfdId(final String vnfdId, final String range) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<Resource> onboardedGetVnfdByVnfdId(final String vnfdId, final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<List<ResourceRegion>> onboardedGetArtifact(final HttpServletRequest request, final UUID safeUUID, final String range, final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public <U> ResponseEntity<U> onboardedFindById(final UUID safeUUID, final Class<U> clazz, final Consumer<U> makeLinks) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<List<ResourceRegion>> onboardedGetVnfdByVnfdId(final UUID safeUUID, final String range) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<Resource> onboardedGetManifestByVnfd(final UUID fromString, @Valid final String includeSignature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
