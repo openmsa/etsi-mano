@@ -54,7 +54,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RequestMapping(value = "/sol005/nsd/v1", headers = { "Version=3.3.1" })
-public interface NsDescriptorsApi {
+public interface NsDescriptors331Sol005Api {
 
 	@Operation(summary = "Query information about multiple NS descriptor resources.", description = "The GET method queries information about multiple NS descriptor resources. ", tags = {})
 	@ApiResponses(value = {

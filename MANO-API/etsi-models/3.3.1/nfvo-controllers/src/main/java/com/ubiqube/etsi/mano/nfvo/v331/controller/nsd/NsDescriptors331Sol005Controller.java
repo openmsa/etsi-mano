@@ -38,17 +38,17 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfoModifications;
 
 @RestController
-public class NsDescriptorsApiController implements NsDescriptorsApi {
+public class NsDescriptors331Sol005Controller implements NsDescriptors331Sol005Api {
 	private final NsDescriptorGenericFrontController nsDescriptorGenericFrontController;
 
-	public NsDescriptorsApiController(final NsDescriptorGenericFrontController nsDescriptorGenericFrontController) {
+	public NsDescriptors331Sol005Controller(final NsDescriptorGenericFrontController nsDescriptorGenericFrontController) {
 		super();
 		this.nsDescriptorGenericFrontController = nsDescriptorGenericFrontController;
 	}
 
 	@Override
 	public ResponseEntity<String> nsDescriptorsGet(final MultiValueMap<String, String> requestParams) {
-		return nsDescriptorGenericFrontController.search(requestParams, NsdInfo.class, NsDescriptorsApiController::makeLinks);
+		return nsDescriptorGenericFrontController.search(requestParams, NsdInfo.class, NsDescriptors331Sol005Controller::makeLinks);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class NsDescriptorsApiController implements NsDescriptorsApi {
 
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId) {
-		return nsDescriptorGenericFrontController.finsById(nsdInfoId, NsdInfo.class, NsDescriptorsApiController::makeLinks);
+		return nsDescriptorGenericFrontController.finsById(nsdInfoId, NsdInfo.class, NsDescriptors331Sol005Controller::makeLinks);
 	}
 
 	@Override
@@ -73,14 +73,14 @@ public class NsDescriptorsApiController implements NsDescriptorsApi {
 
 	@Override
 	public ResponseEntity<NsdInfoModifications> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, @Valid final String body, final String ifMatch) {
-		nsDescriptorGenericFrontController.modify(nsdInfoId, body, ifMatch, NsdInfo.class, NsDescriptorsApiController::makeLinks);
+		nsDescriptorGenericFrontController.modify(nsdInfoId, body, ifMatch, NsdInfo.class, NsDescriptors331Sol005Controller::makeLinks);
 		final NsdInfoModifications modif = new NsdInfoModifications();
 		return ResponseEntity.ok(modif);
 	}
 
 	@Override
 	public ResponseEntity<NsdInfo> nsDescriptorsPost(@Valid final CreateNsdInfoRequest body) {
-		return nsDescriptorGenericFrontController.create("", body.getUserDefinedData(), NsdInfo.class, NsDescriptorsApiController::makeLinks, NsDescriptorsApiController::makeSelfLink);
+		return nsDescriptorGenericFrontController.create("", body.getUserDefinedData(), NsdInfo.class, NsDescriptors331Sol005Controller::makeLinks, NsDescriptors331Sol005Controller::makeSelfLink);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class NsDescriptorsApiController implements NsDescriptorsApi {
 		nsdSelf.setHref(_self);
 		ret.setSelf(nsdSelf);
 
-		final String _nsdContent = linkTo(methodOn(NsDescriptorsApi.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
+		final String _nsdContent = linkTo(methodOn(NsDescriptors331Sol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
 		final Link nsdContent = new Link();
 		nsdContent.setHref(_nsdContent);
 		ret.setNsdContent(nsdContent);
@@ -115,7 +115,7 @@ public class NsDescriptorsApiController implements NsDescriptorsApi {
 	}
 
 	private static String makeSelfLink(final NsdInfo nsdInfo) {
-		return linkTo(methodOn(NsDescriptorsApi.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(NsDescriptors331Sol005Api.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
 	}
 
 }
