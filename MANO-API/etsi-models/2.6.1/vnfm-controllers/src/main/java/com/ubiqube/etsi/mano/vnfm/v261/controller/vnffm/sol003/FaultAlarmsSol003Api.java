@@ -17,29 +17,22 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol003;
 
-import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.UUID;
-
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
-import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
-import com.ubiqube.etsi.mano.service.AlarmVnfmController;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002.Alarms261Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -49,43 +42,37 @@ import ma.glasnost.orika.MapperFacade;
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class FaultAlarmsSol003Api implements FaultAlarmsSol003 {
-	private final MapperFacade mapper;
 
-	private final AlarmVnfmController alarmVnfmController;
+	private final AlarmFrontController alarmFrontController;
 
-	public FaultAlarmsSol003Api(final MapperFacade mapper, final AlarmVnfmController alarmVnfmController) {
+	public FaultAlarmsSol003Api(final AlarmFrontController alarmFrontController) {
 		super();
-		this.mapper = mapper;
-		this.alarmVnfmController = alarmVnfmController;
+		this.alarmFrontController = alarmFrontController;
 	}
 
 	@Override
 	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
-		final Alarms alarm = alarmVnfmController.findById(UUID.fromString(alarmId));
-		final Alarm ret = mapper.map(alarm, Alarm.class);
-		makeLinks(ret);
-		return ResponseEntity.ok().eTag("" + alarm.getVersion()).body(ret);
+		return alarmFrontController.findById(alarmId, Alarm.class, FaultAlarmsSol003Api::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId, final AlarmModifications alarmModifications, final String ifMatch) {
-		final Alarms alarm = alarmVnfmController.modify(UUID.fromString(alarmId), AckState.valueOf(alarmModifications.getAckState().toString()), ifMatch);
-		return ResponseEntity.ok(mapper.map(alarm, AlarmModifications.class));
+		return alarmFrontController.patch(alarmId, AckState.valueOf(alarmModifications.getAckState().toString()), ifMatch, AlarmModifications.class);
 	}
 
 	@Override
-	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		return alarmVnfmController.search(requestParams, Alarm.class, ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS, ALARM_SEARCH_MANDATORY_FIELDS, FaultAlarmsSol003Api::makeLinks);
+	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		return alarmFrontController.search(requestParams, Alarm.class, FaultAlarmsSol003Api::makeLinks);
 	}
 
 	private static void makeLinks(final Alarm alarm) {
 		final AlarmLinks links = new AlarmLinks();
 		Link link = new Link();
-		link.setHref(linkTo(methodOn(Alarms261Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultAlarmsSol003.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 
 		link = new Link();
-		link.setHref(linkTo(methodOn(Alarms261Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultAlarmsSol003.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
 		links.setObjectInstance(link);
 
 		alarm.setLinks(links);
