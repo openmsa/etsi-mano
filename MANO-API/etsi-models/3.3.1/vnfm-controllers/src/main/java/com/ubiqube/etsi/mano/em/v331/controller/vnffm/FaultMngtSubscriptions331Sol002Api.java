@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.em.v331.controller.vnffm;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,7 @@ import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscription;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscriptionRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.ProblemDetails;
 
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -63,7 +65,8 @@ public interface FaultMngtSubscriptions331Sol002Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/subscriptions", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @RequestParam String nextpageOpaqueMarker);
+	ResponseEntity<List<FmSubscription>> subscriptionsGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@RequestParam String nextpageOpaqueMarker);
 
 	@Operation(summary = "", description = "The POST method creates a new subscription. ", tags = {})
 	@ApiResponses(value = {

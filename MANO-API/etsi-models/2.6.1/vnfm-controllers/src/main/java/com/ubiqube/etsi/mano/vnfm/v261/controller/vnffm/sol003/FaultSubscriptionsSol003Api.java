@@ -20,10 +20,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol003;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -33,9 +30,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002.FaultmngtSubscriptions261Sol002Api;
+import com.ubiqube.etsi.mano.controller.vnffm.FaultMngtSubscriptionsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
@@ -48,43 +43,43 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class FaultSubscriptionsSol003Api implements FaultSubscriptionsSol003 {
-	private final SubscriptionServiceV2 subscriptionService;
+	private final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController;
 
-	public FaultSubscriptionsSol003Api(final SubscriptionServiceV2 subscriptionService) {
+	public FaultSubscriptionsSol003Api(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
 		super();
-		this.subscriptionService = subscriptionService;
+		this.faultMngtSubscriptionsFrontController = faultMngtSubscriptionsFrontController;
 	}
 
 	@Override
-	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		final List<FmSubscription> ret = subscriptionService.query(requestParams, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, SubscriptionType.ALARM);
-		return ResponseEntity.ok(ret);
+	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks);
 	}
 
 	@Override
-	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) throws URISyntaxException {
-		final FmSubscription res = subscriptionService.create(fmSubscriptionRequest, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, SubscriptionType.ALARM);
-		final URI location = new URI(res.getLinks().getSelf().getHref());
-		return ResponseEntity.created(location).body(res);
+	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) {
+		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, FaultSubscriptionsSol003Api::makeSelf);
 	}
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		subscriptionService.deleteById(UUID.fromString(subscriptionId), SubscriptionType.ALARM);
-		return ResponseEntity.noContent().build();
+		return faultMngtSubscriptionsFrontController.delete(subscriptionId);
 	}
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final FmSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks, SubscriptionType.ALARM);
-		return ResponseEntity.ok(res);
+		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, FaultSubscriptionsSol003Api::makeLinks);
 	}
 
 	private static void makeLinks(final FmSubscription subscription) {
 		final FmSubscriptionLinks links = new FmSubscriptionLinks();
 		final Link link = new Link();
-		link.setHref(linkTo(methodOn(FaultmngtSubscriptions261Sol002Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultSubscriptionsSol003.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 		subscription.setLinks(links);
 	}
+
+	private static String makeSelf(final FmSubscription subscription) {
+		return linkTo(methodOn(FaultSubscriptionsSol003.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
+	}
+
 }
