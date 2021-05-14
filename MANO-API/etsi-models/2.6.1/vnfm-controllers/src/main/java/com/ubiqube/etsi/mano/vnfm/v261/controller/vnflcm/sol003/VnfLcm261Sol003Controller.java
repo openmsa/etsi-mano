@@ -23,10 +23,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
-import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
@@ -34,24 +31,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.common.v261.model.nslcm.VirtualStorageResourceInfo;
-import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceLinks;
-import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.service.VnfInstanceService;
-import com.ubiqube.etsi.mano.service.VnfPackageService;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002.VnfLcm261Sol002Api;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002.VnfLcmOpOccs261Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
@@ -60,40 +48,26 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
-import ma.glasnost.orika.MapperFacade;
-
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcm261Sol003Controller.class);
-	// XXX Duplicate service.
-	private final VnfInstanceService vnfInstancesService;
-
-	private final VnfInstanceService vnfInstanceService;
-
-	private final MapperFacade mapper;
-
-	private final VnfPackageService vnfPackageService;
 
 	private final VnfInstanceGenericFrontController frontController;
 
-	public VnfLcm261Sol003Controller(final VnfInstanceService _vnfInstancesRepository, final MapperFacade _mapper, final VnfInstanceService _vnfInstanceService, final VnfPackageService _vnfPackageService, final VnfInstanceGenericFrontController _frontController) {
-		vnfInstancesService = _vnfInstancesRepository;
-		mapper = _mapper;
-		vnfInstanceService = _vnfInstanceService;
-		vnfPackageService = _vnfPackageService;
+	public VnfLcm261Sol003Controller(final VnfInstanceGenericFrontController _frontController) {
 		frontController = _frontController;
-		LOG.debug("Starting Ns Instance SOL003 Controller.");
+		LOG.info("Starting Ns Instance SOL002 Controller.");
 	}
 
 	@Override
-	public ResponseEntity<String> vnfInstancesGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
+	public ResponseEntity<String> vnfInstancesGet(final MultiValueMap<String, String> requestParams) {
 		return frontController.search(requestParams, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, null, VnfLcm261Sol003Controller::makeLinks);
 	}
 
 	@Override
-	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest request) {
-		return frontController.create(request.getVnfdId(), request.getVnfInstanceName(), request.getVnfInstanceDescription(),
+	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesPost(final CreateVnfRequest createVnfRequest) {
+		return frontController.create(createVnfRequest.getVnfdId(), createVnfRequest.getVnfInstanceName(), createVnfRequest.getVnfInstanceDescription(),
 				com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class, VnfLcm261Sol003Controller::makeLinks, "");
 	}
 
@@ -104,7 +78,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId) {
-		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), vnfInstanceId);
+		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), null);
 	}
 
 	@Override
@@ -114,32 +88,8 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 
 	@Override
 	public ResponseEntity<com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance> vnfInstancesVnfInstanceIdGet(final String vnfInstanceId) {
-		final VnfInstance vnfInstanceDb = vnfInstancesService.findById(UUID.fromString(vnfInstanceId));
-		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance = mapper.map(vnfInstanceDb, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
-
-		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfInstance.getVnfPkgId()));
-		mapper.map(vnfPackage, vnfInstance);
-		vnfInstance.setId(vnfInstanceDb.getId().toString());
-		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = vnfInstance.getInstantiatedVnfInfo();
-
-		final List<VnfLiveInstance> liveCompute = vnfInstanceService.getLiveComputeInstanceOf(vnfInstanceDb);
-		final List<VnfcResourceInfo> vnfcResourceInfo = mapper.mapAsList(liveCompute, VnfcResourceInfo.class);
-		instantiatedVnfInfo.setVnfcResourceInfo(vnfcResourceInfo);
-
-		final List<VnfLiveInstance> liveExtCp = vnfInstanceService.getLiveExtCpInstanceOf(vnfInstanceDb);
-		final List<VnfExtCpInfo> extCpInfo = mapper.mapAsList(liveExtCp, VnfExtCpInfo.class);
-		instantiatedVnfInfo.setExtCpInfo(extCpInfo);
-
-		final List<VnfLiveInstance> liveStorage = vnfInstanceService.getLiveStorageInstanceOf(vnfInstanceDb);
-		final List<VirtualStorageResourceInfo> virtualStorageResourceInfo = mapper.mapAsList(liveStorage, VirtualStorageResourceInfo.class);
-		instantiatedVnfInfo.setVirtualStorageResourceInfo(virtualStorageResourceInfo);
-
-		final List<VnfLiveInstance> liveVirtualLink = vnfInstanceService.getLiveVirtualLinkInstanceOf(vnfInstanceDb);
-		final List<VnfVirtualLinkResourceInfo> virtualLinkResourceInfo = mapper.mapAsList(liveVirtualLink, VnfVirtualLinkResourceInfo.class);
-		instantiatedVnfInfo.setVirtualLinkResourceInfo(virtualLinkResourceInfo);
-
-		makeLinks(vnfInstance);
-		return ResponseEntity.ok().eTag("" + vnfInstanceDb.getVersion()).body(vnfInstance);
+		return frontController.findById(getSafeUUID(vnfInstanceId), com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class,
+				VnfLcm261Sol003Controller::makeLinks, "");
 	}
 
 	@Override
@@ -154,7 +104,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
-		return frontController.operate(getSafeUUID(vnfInstanceId), operateVnfRequest, VnfLcm261Sol003Controller::getLcmLink);
+		return frontController.operate(getSafeUUID(vnfInstanceId), null, VnfLcm261Sol003Controller::getLcmLink);
 	}
 
 	@Override
@@ -174,12 +124,12 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
-		return frontController.terminate(getSafeUUID(vnfInstanceId), CancelModeTypeEnum.fromValue(terminateVnfRequest.getTerminationType().toString()),
+		return frontController.terminate(getSafeUUID(vnfInstanceId), CancelModeTypeEnum.valueOf(terminateVnfRequest.getTerminationType().toString()),
 				terminateVnfRequest.getGracefulTerminationTimeout(), VnfLcm261Sol003Controller::getLcmLink);
 	}
 
 	public static String getSelfLink(final String id) {
-		return linkTo(methodOn(VnfLcmOpOccs261Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcmOpOccs261Sol002Api.class).vnfLcmOpOccsVnfLcmOpOccIdGet(id)).withSelfRel().getHref();
 	}
 
 	private static String getLcmLink(final VnfBlueprint vnfblueprint) {
@@ -187,21 +137,21 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	}
 
 	private static String getInstanceLink(final com.ubiqube.etsi.mano.dao.mano.VnfInstance vnfInstance) {
-		return linkTo(methodOn(VnfLcm261Sol003Controller.class).vnfInstancesVnfInstanceIdGet(vnfInstance.getId().toString())).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdGet(vnfInstance.getId().toString())).withSelfRel().getHref();
 	}
 
 	private static void makeLinks(@NotNull final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance vnfInstance) {
 		final String id = vnfInstance.getId();
-		final String hrefScaleToLevel = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdScaleToLevelPost(id, null)).withSelfRel().getHref();
-		final String hrefScale = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdScalePost(id, null)).withSelfRel().getHref();
-		final String hrefOperate = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdOperatePost(id, null)).withSelfRel().getHref();
-		final String hrefInstanciate = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
+		final String hrefScaleToLevel = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdScaleToLevelPost(id, null)).withSelfRel().getHref();
+		final String hrefScale = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdScalePost(id, null)).withSelfRel().getHref();
+		final String hrefOperate = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdOperatePost(id, null)).withSelfRel().getHref();
+		final String hrefInstanciate = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
 		final String hrefIndicators = "";
-		final String hrefHeal = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdHealPost(id)).withSelfRel().getHref();
-		final String hrefChangeFlavor = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdChangeFlavourPost(id)).withSelfRel().getHref();
-		final String hrefChangeExtConn = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null)).withSelfRel().getHref();
-		final String hrefSelf = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
-		final String hrefTerminate = linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdTerminatePost(id, null)).withSelfRel().getHref();
+		final String hrefHeal = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdHealPost(id)).withSelfRel().getHref();
+		final String hrefChangeFlavor = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdChangeFlavourPost(id)).withSelfRel().getHref();
+		final String hrefChangeExtConn = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null)).withSelfRel().getHref();
+		final String hrefSelf = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
+		final String hrefTerminate = linkTo(methodOn(VnfLcm261Sol002Api.class).vnfInstancesVnfInstanceIdTerminatePost(id, null)).withSelfRel().getHref();
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		final Link self = new Link();
 		self.setHref(hrefSelf);
