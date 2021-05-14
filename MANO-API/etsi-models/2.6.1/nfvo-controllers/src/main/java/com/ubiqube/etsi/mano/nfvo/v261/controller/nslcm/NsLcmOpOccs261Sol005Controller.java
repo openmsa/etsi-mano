@@ -40,7 +40,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOccLinks;
  */
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class NsLcmOpOccs261Sol005Controller implements NsLcmOpOccs262Sol005Api {
+public class NsLcmOpOccs261Sol005Controller implements NsLcmOpOccs261Sol005Api {
 
 	private final NsLcmGenericFrontController nsLcmGenericFrontController;
 
@@ -111,7 +111,7 @@ public class NsLcmOpOccs261Sol005Controller implements NsLcmOpOccs262Sol005Api {
 		final NsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccLinks();
 
 		final Link _continue = new Link();
-		_continue.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
+		_continue.setHref(linkTo(methodOn(NsLcmOpOccs261Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setContinue(_continue);
 
 		final Link nsInstance = new Link();
@@ -119,22 +119,22 @@ public class NsLcmOpOccs261Sol005Controller implements NsLcmOpOccs262Sol005Api {
 		nsLcmOpOccLinks.setNsInstance(nsInstance);
 
 		final Link retry = new Link();
-		retry.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		retry.setHref(linkTo(methodOn(NsLcmOpOccs261Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setRetry(retry);
 
 		final Link rollback = new Link();
-		rollback.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		rollback.setHref(linkTo(methodOn(NsLcmOpOccs261Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setRollback(rollback);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsLcmOpOccs261Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref());
 		nsLcmOpOccLinks.setSelf(self);
 		nsLcmOpOccs.setLinks(nsLcmOpOccLinks);
 	}
 
 	public static String makeSelfLink(final NsBlueprint nsLcmOpOccs) {
 		final String id = nsLcmOpOccs.getId().toString();
-		return linkTo(methodOn(NsLcmOpOccs262Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref();
+		return linkTo(methodOn(NsLcmOpOccs261Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id, null)).withSelfRel().getHref();
 	}
 
 }
