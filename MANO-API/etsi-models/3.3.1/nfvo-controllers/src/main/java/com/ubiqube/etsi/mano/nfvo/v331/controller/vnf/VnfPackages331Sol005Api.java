@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.controller.vnf;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -68,7 +69,7 @@ public interface VnfPackages331Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams,
+	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Create a new individual VNF package resource.", nickname = "vnfPackagesPost", notes = "The POST method creates a new individual VNF package resource. Upon successful creation of the \"Individual VNF package\" resource, the NFVO shall set the \"onboardingState\" attribute in the \"VnPkgInfo\" structure to \"CREATED\", the \"operationalState\" attribute to \"DISABLED\", and the \"usageState\" attribute to \"NOT_IN_USE\". ", response = VnfPkgInfo.class, tags = {})
