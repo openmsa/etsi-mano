@@ -95,7 +95,7 @@ public class VnfInstances331Sol002Controller implements VnfInstances331Sol002Api
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(final String vnfInstanceId, final String version, final String authorization) {
+	public ResponseEntity<Void> vnfInstancesVnfInstanceIdDelete(final String vnfInstanceId) {
 		return frontController.deleteById(getSafeUUID(vnfInstanceId));
 	}
 
