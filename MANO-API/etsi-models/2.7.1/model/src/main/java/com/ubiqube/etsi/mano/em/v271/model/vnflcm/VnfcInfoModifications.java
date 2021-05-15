@@ -1,0 +1,110 @@
+package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * This type represents modifications of an entry in an array of \&quot;VnfcInfo\&quot; objects. It shall comply with the provisions defined in table 5.5.3.24-1. 
+ */
+@ApiModel(description = "This type represents modifications of an entry in an array of \"VnfcInfo\" objects. It shall comply with the provisions defined in table 5.5.3.24-1. ")
+@Validated
+
+public class VnfcInfoModifications   {
+  @JsonProperty("id")
+  private String id = null;
+
+  @JsonProperty("vnfcConfigurableProperties")
+  private KeyValuePairs vnfcConfigurableProperties = null;
+
+  public VnfcInfoModifications id(String id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Identifier of the VNFC instance of which the information is to be modified. 
+   * @return id
+  **/
+  @ApiModelProperty(required = true, value = "Identifier of the VNFC instance of which the information is to be modified. ")
+  @NotNull
+
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public VnfcInfoModifications vnfcConfigurableProperties(KeyValuePairs vnfcConfigurableProperties) {
+    this.vnfcConfigurableProperties = vnfcConfigurableProperties;
+    return this;
+  }
+
+  /**
+   * Changes of the configurable properties of the VNFC instance. 
+   * @return vnfcConfigurableProperties
+  **/
+  @ApiModelProperty(required = true, value = "Changes of the configurable properties of the VNFC instance. ")
+  @NotNull
+
+  @Valid
+
+  public KeyValuePairs getVnfcConfigurableProperties() {
+    return vnfcConfigurableProperties;
+  }
+
+  public void setVnfcConfigurableProperties(KeyValuePairs vnfcConfigurableProperties) {
+    this.vnfcConfigurableProperties = vnfcConfigurableProperties;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    VnfcInfoModifications vnfcInfoModifications = (VnfcInfoModifications) o;
+    return Objects.equals(this.id, vnfcInfoModifications.id) &&
+        Objects.equals(this.vnfcConfigurableProperties, vnfcInfoModifications.vnfcConfigurableProperties);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, vnfcConfigurableProperties);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class VnfcInfoModifications {\n");
+    
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    vnfcConfigurableProperties: ").append(toIndentedString(vnfcConfigurableProperties)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
+
