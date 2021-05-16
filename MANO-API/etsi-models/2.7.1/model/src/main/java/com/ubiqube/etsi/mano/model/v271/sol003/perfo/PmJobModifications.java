@@ -31,7 +31,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This type represents modifications to a PM job. It shall comply with the provisions defined in table 6.5.2.12-1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:40:34.645+01:00")
+
 
 public class PmJobModifications   {
   @JsonProperty("callbackUri")

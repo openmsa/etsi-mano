@@ -37,7 +37,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This type represents a subscription filter related to notifications about VNF faults. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:22:49.340+01:00")
+
 
 public class FmNotificationsFilter   {
   @JsonProperty("vnfInstanceSubscriptionFilter")

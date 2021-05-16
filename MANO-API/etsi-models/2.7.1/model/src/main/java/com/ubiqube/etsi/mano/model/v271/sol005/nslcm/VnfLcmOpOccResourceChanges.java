@@ -36,7 +36,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This attribute contains information about the cumulative changes to virtualised resources that were performed so far by the LCM operation since its start, if applicable. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+
 
 public class VnfLcmOpOccResourceChanges   {
   @JsonProperty("affectedVnfcs")
