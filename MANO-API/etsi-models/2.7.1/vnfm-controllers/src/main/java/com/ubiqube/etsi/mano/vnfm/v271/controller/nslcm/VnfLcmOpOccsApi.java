@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+
 
 @Api(value = "vnf_lcm_op_occs", description = "the vnf_lcm_op_occs API")
 // "Version=1.4.0"

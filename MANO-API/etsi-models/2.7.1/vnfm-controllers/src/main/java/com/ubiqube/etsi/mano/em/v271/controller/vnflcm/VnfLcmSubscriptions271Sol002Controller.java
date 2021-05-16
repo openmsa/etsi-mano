@@ -1,3 +1,19 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.etsi.mano.em.v271.controller.vnflcm;
 
 import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
@@ -19,7 +35,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 
 @Controller
-public class VnfLcmSubscriptions271Sol002Controller implements VnfLcmSubscriptions271Sol0à2Api {
+public class VnfLcmSubscriptions271Sol002Controller implements VnfLcmSubscriptions271Sol002Api {
 	private final VnfLcmSubscriptionFrontController frontController;
 
 	public VnfLcmSubscriptions271Sol002Controller(final VnfLcmSubscriptionFrontController frontController) {
@@ -50,12 +66,12 @@ public class VnfLcmSubscriptions271Sol002Controller implements VnfLcmSubscriptio
 	private static void makeLinks(final LccnSubscription subscription) {
 		final LccnSubscriptionLinks links = new LccnSubscriptionLinks();
 		final Link link = new Link();
-		link.setHref(linkTo(methodOn(VnfLcmSubscriptions271Sol0à2Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(VnfLcmSubscriptions271Sol002Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 		subscription.setLinks(links);
 	}
 
 	private static String getSelfLink(final LccnSubscription subscription) {
-		return linkTo(methodOn(VnfLcmSubscriptions271Sol0à2Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(VnfLcmSubscriptions271Sol002Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
 	}
 }

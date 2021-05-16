@@ -46,7 +46,7 @@ import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
 import ma.glasnost.orika.MapperFacade;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+
 
 @Controller
 public class VnfLcmOpOccsApiController implements VnfLcmOpOccsApi {
