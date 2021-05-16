@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-04T21:03:25.440+02:00")
+
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nslcm/v1/subscriptions", headers = "Version=2.7.1")

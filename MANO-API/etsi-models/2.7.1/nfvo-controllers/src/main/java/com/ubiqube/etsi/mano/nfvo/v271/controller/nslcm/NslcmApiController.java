@@ -25,7 +25,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-04T21:03:25.440+02:00")
+
 
 @Controller
 public class NslcmApiController implements NslcmApi {

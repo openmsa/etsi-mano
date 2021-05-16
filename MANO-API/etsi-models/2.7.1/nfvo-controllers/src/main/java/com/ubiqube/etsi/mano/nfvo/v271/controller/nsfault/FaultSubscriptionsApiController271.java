@@ -25,7 +25,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-04T21:37:40.971+02:00")
+
 
 @Controller
 public class FaultSubscriptionsApiController271 implements FaultSubscriptionsApi271 {

@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-04T21:37:40.971+02:00")
+
 
 @Api(value = "alarms", description = "the alarms API")
 @RequestMapping(value = "/sol005/vnffm/v1/alarms", headers = "Version=2.7.1")

@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T16:04:16.934+02:00")
+
 
 @Api(value = "pnf_descriptors", description = "the pnf_descriptors API")
 @RequestMapping(value = "/sol005/nsd/v1/pnf_descriptors", headers = "Version=2.7.1")

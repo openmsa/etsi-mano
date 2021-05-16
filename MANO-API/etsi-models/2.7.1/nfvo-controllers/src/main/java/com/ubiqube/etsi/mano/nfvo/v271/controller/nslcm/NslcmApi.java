@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-04T21:03:25.440+02:00")
+
 
 @Api(value = "nslcm", description = "the nslcm API")
 @RequestMapping(value = "/sol005/nsd/v1/ns_lcm_op_occs", headers = "Version=2.7.1")

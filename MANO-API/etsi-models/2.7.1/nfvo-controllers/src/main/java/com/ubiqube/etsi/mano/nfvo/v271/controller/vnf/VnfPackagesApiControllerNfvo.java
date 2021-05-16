@@ -25,7 +25,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T09:38:24.103+02:00")
+
 
 @Controller
 public class VnfPackagesApiControllerNfvo implements VnfPackagesApiNfvo {
