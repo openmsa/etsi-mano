@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.vim;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -33,12 +34,16 @@ public interface Vim {
 
 	String getType();
 
+	@NotNull
 	Network network(final VimConnectionInformation vimConnectionInformation);
 
+	@NotNull
 	Storage storage(final VimConnectionInformation vimConnectionInformation);
 
+	@NotNull
 	Dns dns(final VimConnectionInformation vimConnectionInformation);
 
+	@NotNull
 	VimMonitoring getMonitoring(VimConnectionInformation vimConnectionInformation);
 
 	@Nonnull
