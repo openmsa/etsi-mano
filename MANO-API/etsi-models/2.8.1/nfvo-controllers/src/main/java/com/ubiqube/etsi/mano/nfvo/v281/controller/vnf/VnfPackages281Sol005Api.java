@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -56,6 +57,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "vnf_packages", description = "the vnf_packages API")
+@RequestMapping(value = "/sol003/vnfpkgm/v1", headers = { "Version=2.8.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface VnfPackages281Sol005Api {
 
 	Logger log = LoggerFactory.getLogger(VnfPackages281Sol005Api.class);

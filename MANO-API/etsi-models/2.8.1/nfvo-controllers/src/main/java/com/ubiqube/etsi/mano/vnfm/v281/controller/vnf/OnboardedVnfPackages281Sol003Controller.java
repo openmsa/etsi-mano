@@ -16,32 +16,40 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnf;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-@Controller
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class OnboardedVnfPackages281Sol003Controller implements OnboardedVnfPackages281Sol003Api {
 
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    private final HttpServletRequest request;
+	private final HttpServletRequest request;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public OnboardedVnfPackages281Sol003Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@org.springframework.beans.factory.annotation.Autowired
+	public OnboardedVnfPackages281Sol003Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
+		this.objectMapper = objectMapper;
+		this.request = request;
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	@Override
+	public Optional<ObjectMapper> getObjectMapper() {
+		return Optional.ofNullable(objectMapper);
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public Optional<HttpServletRequest> getRequest() {
+		return Optional.ofNullable(request);
+	}
 
 }

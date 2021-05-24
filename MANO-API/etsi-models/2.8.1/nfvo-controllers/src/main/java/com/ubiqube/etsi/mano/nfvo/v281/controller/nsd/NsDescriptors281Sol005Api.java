@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.nfvo.v281.controller.nsd;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.core.io.support.ResourceRegion;
@@ -55,6 +56,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "ns_descriptors", description = "the ns_descriptors API")
+@RequestMapping(value = "/sol005/nsd/v1", headers = "Version=2.8.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsDescriptors281Sol005Api {
 
 	@ApiOperation(value = "", nickname = "nsDescriptorsGet", notes = "The GET method queries information about multiple NS descriptor resources. ", response = NsdInfo.class, responseContainer = "List", tags = {})

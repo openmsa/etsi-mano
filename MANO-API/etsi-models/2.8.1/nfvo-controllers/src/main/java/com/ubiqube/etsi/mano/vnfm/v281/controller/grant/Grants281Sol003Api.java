@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.grant;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "grants", description = "the grants API")
+@RequestMapping(value = "/sol003/grant/v1", headers = { "Version=2.8.1" })
+@RolesAllowed({ "ROLE_VNFM" })
 public interface Grants281Sol003Api {
 
 	@ApiOperation(value = "", nickname = "grantsGrantIdGet", notes = "Grant Lifecycle Operation. The GET method reads a grant. This method shall follow the provisions specified in the tables 9.4.3.3.2-1 and 9.4.3.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Grant.class, tags = {})

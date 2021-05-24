@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.nfvo.v281.controller.nslcm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "ns_instances", description = "the ns_instances API")
+@RequestMapping(value = "/sol005/nslcm/v1", headers = "Version=2.8.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsInstances281Sol005Api {
 
 	@ApiOperation(value = "", nickname = "nsInstancesGet", notes = "Query NS Instances. The GET method queries information about multiple NS instances. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.2.3.2-1 and 6.4.2.3.2-2. ", response = Object.class, responseContainer = "List", tags = {})
