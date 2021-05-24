@@ -65,7 +65,7 @@ public class VnfPackages271Sol003Controller implements VnfPackages271Sol003Api {
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(final String vnfPkgId, @Valid final String includeSignature) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdManifestGet(final String vnfPkgId, @Valid final String includeSignature) {
 		return frontController.getManifest(getSafeUUID(vnfPkgId), includeSignature);
 	}
 

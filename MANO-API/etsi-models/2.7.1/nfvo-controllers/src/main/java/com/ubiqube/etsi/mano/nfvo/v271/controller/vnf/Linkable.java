@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfoLinks;
 
 public interface Linkable {
@@ -29,4 +30,7 @@ public interface Linkable {
 
 	FrontApiTypesEnum getApi();
 
+	void makeLinks(final VnfPkgInfo _vnfPkgInfo);
+
+	String getSelfLink(final VnfPkgInfo _vnfPkgInfo);
 }
