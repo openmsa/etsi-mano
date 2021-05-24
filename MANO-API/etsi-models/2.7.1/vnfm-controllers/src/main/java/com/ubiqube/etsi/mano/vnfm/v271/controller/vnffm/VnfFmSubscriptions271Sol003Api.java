@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol003/vnffm/v1/subscriptions", headers = "Version=2.7.1")
 @RolesAllowed({ "ROLE_NFVO" })
-public interface AlarmsSubscriptions271Sol003Api {
+public interface VnfFmSubscriptions271Sol003Api {
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "Query Subscription Information  The API consumer can use this method to retrieve the list of active subscriptions for VNF alarms subscribed by the API consumer. It can be used e.g. for resynchronization after error situations. ", response = FmSubscription.class, tags = {})
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "200 OK The list of subscriptions has been queried successfully. The response body shall contain in an array the representations of all active subscriptions of the functional block that invokes the method, i.e. zero or more representations of FM subscriptions as defined in clause 7.5.2.3. If the \"filter\" URI parameter was supplied in the request, the data in the response body shall have been transformed according to the rules specified in clause 5.2.2 of ETSI GS NFV-SOL 013. If the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource, inclusion of the Link HTTP header in this response shall follow the provisions in clause 5.4.2.3 of ETSI GS NFV-SOL 013. ", response = FmSubscription.class),

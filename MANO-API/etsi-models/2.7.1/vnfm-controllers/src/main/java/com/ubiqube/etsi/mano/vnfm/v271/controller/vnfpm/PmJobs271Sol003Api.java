@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.vnfm.v271.controller.vnfpm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
+@RequestMapping(value = "/sol003/vnfpm/v1", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface PmJobs271Sol003Api {
 
 	@ApiOperation(value = "", nickname = "pmJobsGet", notes = "Query PM Job. The API consumer can use this method to retrieve information about PM jobs. This method shall follow the provisions specified in the tables 6.4.2.3.2-1 and 6.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. The API consumer can use this method to retrieve information about PM jobs. ", response = PmJob.class, responseContainer = "List", tags = {})

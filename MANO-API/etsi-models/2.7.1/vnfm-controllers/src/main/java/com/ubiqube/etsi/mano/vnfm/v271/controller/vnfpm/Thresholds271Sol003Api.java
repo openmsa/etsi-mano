@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.vnfm.v271.controller.vnfpm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -51,6 +52,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "thresholds", description = "the thresholds API")
+@RequestMapping(value = "/sol003/vnfpm/v1", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface Thresholds271Sol003Api {
 	@ApiOperation(value = "", nickname = "thresholdsGet", notes = "Query Threshold. The API consumer can use this method to query information about thresholds. This method shall follow the provisions specified in the tables 6.4.5.3.2-1 and 6.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Threshold.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {

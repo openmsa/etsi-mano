@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.em.v271.controller.vnffm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -52,6 +53,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "alarms", description = "the alarms API")
+@RequestMapping(value = "/sol002/vnffm/v1/alarms", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_EM" })
 public interface Alarms271Sol002Api {
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdEscalatePost", notes = "The POST method enables the consumer to escalate the perceived severity of an alarm that is represented by an ndividual alarm resource. As the result of successfully executing this method, a new \"Individual  subscription\" resource as defined in clause 7.4.5 shall have been created.  This method shall not trigger any notification. ", tags = {})
@@ -69,7 +72,7 @@ public interface Alarms271Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/alarms/{alarmId}/escalate", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
+	@RequestMapping(value = "/{alarmId}/escalate", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
 	ResponseEntity<Void> alarmsAlarmIdEscalatePost(
 			@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") String alarmId,
 			@ApiParam(value = "The proposed \"escalated perceived severity\" value") @Valid @RequestBody PerceivedSeverityRequest perceivedSeverityRequest);
@@ -89,7 +92,7 @@ public interface Alarms271Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/alarms/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Alarm> alarmsAlarmIdGet(@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") String alarmId);
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdPatch", notes = "This method modifies an individual alarm resource. ", response = AlarmModifications.class, tags = {})
@@ -109,7 +112,7 @@ public interface Alarms271Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/alarms/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
+	@RequestMapping(value = "/{alarmId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
 	ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(
 			@ApiParam(value = "Identifier of the alarm. This identifier can be retrieved from the \"id\" attribute of the \"alarm\" attribute in the AlarmNotification or AlarmClearedNotification. It can also be retrieved from the \"id\" attribute of the applicable array element in the payload body of the response to a GET request to the \"Alarms\" resource. ", required = true) @PathVariable("alarmId") String alarmId,
 			@ApiParam(value = "The parameter for the alarm modification", required = true) @Valid @RequestBody AlarmModifications alarmModifications,
@@ -130,7 +133,7 @@ public interface Alarms271Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/alarms", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<String> alarmsGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 5.2 of ETSI GS NFV-SOL 013  for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) String nextpageOpaqueMarker);
 

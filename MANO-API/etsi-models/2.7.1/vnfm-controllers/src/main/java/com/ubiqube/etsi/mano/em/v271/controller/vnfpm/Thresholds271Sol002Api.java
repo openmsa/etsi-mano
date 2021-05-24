@@ -19,9 +19,10 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.em.v271.controller.vnfind;
+package com.ubiqube.etsi.mano.em.v271.controller.vnfpm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -51,6 +52,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "thresholds", description = "the thresholds API")
+@RequestMapping(value = "/sol003/vnfpm/v1", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_EM" })
 public interface Thresholds271Sol002Api {
 
 	@ApiOperation(value = "", nickname = "thresholdsGet", notes = "The client can use this method to query information about thresholds. ", response = Threshold.class, responseContainer = "List", tags = {})
