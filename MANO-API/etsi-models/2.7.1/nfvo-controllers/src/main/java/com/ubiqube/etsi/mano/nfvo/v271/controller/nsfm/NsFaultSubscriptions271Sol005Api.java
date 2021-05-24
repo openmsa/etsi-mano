@@ -20,7 +20,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.nfvo.v271.controller.nsfault;
+package com.ubiqube.etsi.mano.nfvo.v271.controller.nsfm;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,9 +55,9 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nsfm/v1/subsciptions", headers = "Version=2.7.1")
-public interface FaultSubscriptionsApi271 {
+public interface NsFaultSubscriptions271Sol005Api {
 
-	Logger log = LoggerFactory.getLogger(FaultSubscriptionsApi271.class);
+	Logger log = LoggerFactory.getLogger(NsFaultSubscriptions271Sol005Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

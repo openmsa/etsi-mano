@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.nfvo.v271.controller.nsfault;
+package com.ubiqube.etsi.mano.nfvo.v271.controller.nsfm;
 
 import java.util.Optional;
 
@@ -28,14 +28,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
-public class FaultSubscriptionsApiController271 implements FaultSubscriptionsApi271 {
+public class NsFaultSubscriptions271Sol005Controller implements NsFaultSubscriptions271Sol005Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public FaultSubscriptionsApiController271(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public NsFaultSubscriptions271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
