@@ -23,11 +23,9 @@ package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +53,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-
 @RequestMapping("/sol003/vnfpkgm/v2/subscriptions")
 public interface VnfSubscriptions331Sol003Api {
 
@@ -73,8 +70,7 @@ public interface VnfSubscriptions331Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(produces = { "application/json" })
-	ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
-			@Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
+	ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The VNFM shall support receiving this parameter as part of the  URI query string. The NFVO may supply this parameter.  All attribute names that appear in the PkgmSubscription and in  data types referenced from it shall be supported by the VNFM in  the filter expression. ") @Valid @RequestParam(value = "filter", required = false) String filter);
 
 	@Operation(summary = "", description = "Subscribe. The POST method creates a new subscription. This method shall follow the provisions specified in the tables 10.4.7.3.1-1 and 10.4.7.3.1-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, a new \"Individual subscription\" resource as defined in clause 10.4.8 shall have been created. This method shall not trigger any notification. Creation of two \"Individual subscription\" resources with the same callback URI and the same filter can result in performance degradation and will provide duplicates of notifications to the VNFM, and might make sense only in very rare use cases. Consequently, the NFVO may either allow creating a new \"Individual subscription\" resource if another \"Individual subscription\" resource with the same filter and callback URI already exists (in which case it shall return the \"201 Created\" response code), or may decide to not create a duplicate \"Individual subscription\" resource (in which case it shall return a \"303 See Other\" response code referencing the existing \"Individual subscription\" resource with the same filter and callback URI). ", tags = {})
 	@ApiResponses(value = {
@@ -91,7 +87,7 @@ public interface VnfSubscriptions331Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<List<PkgmSubscription>> subscriptionsPost(@Parameter(in = ParameterIn.DEFAULT, description = "Representation of the created subscription resource.The HTTP response shall include a \"Location\" HTTP header thatpoints to the created subscription resource.", required = true, schema = @Schema()) @Valid @RequestBody final PkgmSubscriptionRequest body);
+	ResponseEntity<PkgmSubscription> subscriptionsPost(@Parameter(in = ParameterIn.DEFAULT, description = "Representation of the created subscription resource.The HTTP response shall include a \"Location\" HTTP header thatpoints to the created subscription resource.", required = true, schema = @Schema()) @Valid @RequestBody final PkgmSubscriptionRequest body);
 
 	@Operation(summary = "", description = "Terminate subscription. The DELETE method terminates an individual subscription. This method shall follow the provisions specified in the tables 10.4.8.3.5-1 and 10.4.8.3.5-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, the \"Individual subscription\" resource shall not exist any longer. This means that no notifications for that subscription shall be sent to the formerly-subscribed API consumer.    NOTE: Due to race conditions, some notifications might still be received by the formerly-subscribed         API consumer for a certain time period after the deletion. ", tags = {})
 	@ApiResponses(value = {
