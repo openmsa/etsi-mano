@@ -20,44 +20,40 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
-import java.util.UUID;
-
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
-import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
-import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
+import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsFrontController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
-import ma.glasnost.orika.MapperFacade;
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RolesAllowed({ "ROLE_VNFM" })
-@Controller
+@RestController
 public class LcmGrants261Sol003Controller implements LcmGrants261Sol003Api {
-	private final GrantManagement grantManagement;
-	private final MapperFacade mapper;
+	private final LcmGrantsFrontController lcmGrantsFrontController;
 
-	public LcmGrants261Sol003Controller(final GrantManagement _grantManagement, final MapperFacade _mapper) {
-		grantManagement = _grantManagement;
-		mapper = _mapper;
+	public LcmGrants261Sol003Controller(final LcmGrantsFrontController lcmGrantsFrontController) {
+		super();
+		this.lcmGrantsFrontController = lcmGrantsFrontController;
 	}
 
 	@Override
 	public ResponseEntity<Grant> grantsGrantIdGet(final String grantId) {
-		final GrantResponse grants = grantManagement.get(UUID.fromString(grantId));
-		if (!grants.getAvailable().equals(Boolean.TRUE)) {
-			return ResponseEntity.accepted().build();
-		}
-		final Grant jsonGrant = mapper.map(grants, Grant.class);
-		makeSelfLinks(jsonGrant);
-		return ResponseEntity.ok(jsonGrant);
+		return lcmGrantsFrontController.grantsGrantIdGet(grantId, Grant.class, LcmGrants261Sol003Controller::makeSelfLinks);
+	}
+
+	@Override
+	public ResponseEntity<Grant> grantsPost(@Valid final GrantRequest grantRequest) {
+		return lcmGrantsFrontController.grantsPost(grantRequest, Grant.class, LcmGrants261Sol003Controller::getSelfLink);
 	}
 
 	private static void makeSelfLinks(final Grant jsonGrant) {
@@ -66,12 +62,8 @@ public class LcmGrants261Sol003Controller implements LcmGrants261Sol003Api {
 		jsonGrant.getLinks().setSelf(link);
 	}
 
-	@Override
-	public ResponseEntity<Grant> grantsPost(@Valid final GrantRequest grantRequest, final String contentType, final String version) {
-		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
-		final GrantResponse resp = grantManagement.post(obj);
-		final URI location = linkTo(methodOn(LcmGrants261Sol003Api.class).grantsGrantIdGet(resp.getId().toString())).withSelfRel().toUri();
-		return ResponseEntity.created(location).build();
+	private static String getSelfLink(final Grant grant) {
+		return linkTo(methodOn(LcmGrants261Sol003Api.class).grantsGrantIdGet(grant.getId())).withSelfRel().getHref();
 	}
 
 }
