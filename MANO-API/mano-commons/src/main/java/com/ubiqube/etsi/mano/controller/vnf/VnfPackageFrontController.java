@@ -75,7 +75,7 @@ public class VnfPackageFrontController {
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
-	public ResponseEntity<Void> getManifest(final UUID vnfPkgId, @Valid final String includeSignature) {
+	public ResponseEntity<Resource> getManifest(final UUID vnfPkgId, @Valid final String includeSignature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -88,7 +88,7 @@ public class VnfPackageFrontController {
 		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, includeSignature != null);
 	}
 
-	public ResponseEntity<Void> getSelectArtifacts(final HttpServletRequest request, final UUID vnfPkgId, final String range) {
+	public ResponseEntity<List<ResourceRegion>> getSelectArtifacts(final HttpServletRequest request, final UUID vnfPkgId, final String range) {
 		// TODO Auto-generated method stub
 		return null;
 	}
