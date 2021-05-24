@@ -19,14 +19,17 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfconfig;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfconfig.VnfConfigModifications;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfconfig.VnfConfiguration;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
-
-@Controller
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class Configuration261Sol002ApiController implements Configuration261Sol002Api {
 
 	@Override

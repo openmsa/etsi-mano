@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -48,7 +49,13 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
 import io.swagger.annotations.ApiParam;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RequestMapping("/sol002/vnflcm/v1/vnf_instances")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfLcm261Sol002Api {
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query VNF  The GET method queries information about multiple VNF instances. ", response = VnfInstance.class, responseContainer = "List", tags = {})
 	@io.swagger.annotations.ApiResponses(value = {

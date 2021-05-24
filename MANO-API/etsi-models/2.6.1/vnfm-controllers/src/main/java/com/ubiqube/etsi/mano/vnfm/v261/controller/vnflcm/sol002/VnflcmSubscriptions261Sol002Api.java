@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -44,10 +45,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol002/vnflcm/v1", headers = "Version=2.6.1")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnflcmSubscriptions261Sol002Api {
 
 	Logger log = LoggerFactory.getLogger(VnflcmSubscriptions261Sol002Api.class);

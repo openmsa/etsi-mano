@@ -24,7 +24,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -47,7 +46,11 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
-@RolesAllowed({ "ROLE_EM" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class VnfLcm261Sol002Controller implements VnfLcm261Sol002Api {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcm261Sol002Controller.class);

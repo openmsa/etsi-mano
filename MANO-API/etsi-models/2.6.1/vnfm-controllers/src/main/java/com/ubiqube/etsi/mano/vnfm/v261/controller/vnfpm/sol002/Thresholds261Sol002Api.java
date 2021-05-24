@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -50,6 +51,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "thresholds", description = "the thresholds API")
 @RequestMapping("/sol002/vnfpm/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface Thresholds261Sol002Api {
 
 	Logger log = LoggerFactory.getLogger(Thresholds261Sol002Api.class);

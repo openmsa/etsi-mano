@@ -22,8 +22,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
@@ -39,7 +39,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.PerceivedSeverityRequest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Controller
+@RestController
 public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
 
 	private final AlarmFrontController alarmFrontController;

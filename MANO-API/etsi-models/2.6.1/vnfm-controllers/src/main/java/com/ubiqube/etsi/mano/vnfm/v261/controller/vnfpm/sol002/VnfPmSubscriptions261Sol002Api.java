@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping("/sol002/vnfpm/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfPmSubscriptions261Sol002Api {
 
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "The client can use this method to query the list of active subscriptions to Performance management notifications subscribed by the client. ", response = PmSubscription.class, responseContainer = "List", tags = {})

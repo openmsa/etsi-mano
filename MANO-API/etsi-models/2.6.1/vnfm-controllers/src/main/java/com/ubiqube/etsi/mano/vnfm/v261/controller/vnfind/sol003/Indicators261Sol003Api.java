@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol003;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "indicators", description = "the indicators API")
 @RequestMapping("/sol003/vnfind/v1/indicators")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface Indicators261Sol003Api {
 
 	@ApiOperation(value = "", nickname = "indicatorsGet", notes = "Get Indicator Value. The GET method queries multiple VNF indicators. This method shall follow the provisions specified in the tables 8.4.2.3.2-1 and 8.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfIndicator.class, responseContainer = "List", tags = {})

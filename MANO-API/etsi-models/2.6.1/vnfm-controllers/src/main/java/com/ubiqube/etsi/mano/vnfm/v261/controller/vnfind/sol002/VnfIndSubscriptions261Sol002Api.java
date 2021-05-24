@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol002;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping("/sol002/vnfind/v1/subscriptions")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfIndSubscriptions261Sol002Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "Service Unavailable The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. ", response = VnfIndicatorSubscription.class, responseContainer = "List", tags = {})

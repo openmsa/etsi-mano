@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping("/sol003/vnffm/v1/subscriptions")
-public interface FaultSubscriptionsSol003 {
+public interface VnfFmSubscriptions261Sol003 {
 
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "Query Subscription Information  The client can use this method to retrieve the list of active subscriptions for VNF alarms subscribed by the client. It can be used e.g. for resynchronization after error situations. ", response = FmSubscription.class, tags = {})
 	@ApiResponses(value = {

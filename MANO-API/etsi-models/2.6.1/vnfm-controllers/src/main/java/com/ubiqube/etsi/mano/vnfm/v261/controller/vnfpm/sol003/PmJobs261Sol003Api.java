@@ -25,6 +25,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol003;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -51,6 +52,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
+@RequestMapping("/sol003/vnfpm/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface PmJobs261Sol003Api {
 
 	Logger log = LoggerFactory.getLogger(PmJobs261Sol003Api.class);

@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "alarms", description = "the alarms API")
 @RequestMapping("/sol003/vnffm/v1/alarms")
-public interface FaultAlarmsSol003 {
+public interface FaultAlarms261Sol003 {
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdGet", notes = "The client can use this method to read an individual alarm. This method shall follow the provisions specified in the tables 7.4.3.3.2-1 and 7.4.3.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Alarm.class, tags = {})
 	@ApiResponses(value = {

@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,7 +43,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vnfind.VnfIndicatorSubscriptionRequ
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfIndSubscriptions261Sol003Controller implements VnfIndSubscriptions261Sol003Api {
 	private final SubscriptionServiceV2 subscriptionService;

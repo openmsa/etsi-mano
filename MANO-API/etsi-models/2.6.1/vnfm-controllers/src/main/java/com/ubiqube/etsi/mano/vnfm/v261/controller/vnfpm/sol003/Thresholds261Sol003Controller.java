@@ -22,7 +22,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URISyntaxException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.Threshold;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
 
 @RestController
-@RolesAllowed({ "ROLE_NFVO" })
 public class Thresholds261Sol003Controller implements Thresholds261Sol003Api {
 	private final VnfmThresholdFrontController vnfmThresholdFrontController;
 

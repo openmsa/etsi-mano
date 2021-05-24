@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -46,10 +47,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:11:39.646+01:00")
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "alarms", description = "the alarms API")
 @RequestMapping("/sol002/vnffm/v1/alarms")
+@RolesAllowed({ "ROLE_EM" })
 public interface Alarms261Sol002Api {
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdEscalatePost", notes = "The POST method enables the consumer to escalate the perceived severity of an alarm that is represented by an ndividual alarm resource. As the result of successfully executing this method, a new \"Individual  subscription\" resource as defined in clause 7.4.5 shall have been created.  This method shall not trigger any notification. ", tags = {})

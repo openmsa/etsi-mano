@@ -41,18 +41,18 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;
  */
 @RolesAllowed({ "ROLE_NFVO" })
 @RestController
-public class FaultAlarmsSol003Api implements FaultAlarmsSol003 {
+public class FaultAlarms261Sol003Api implements FaultAlarms261Sol003 {
 
 	private final AlarmFrontController alarmFrontController;
 
-	public FaultAlarmsSol003Api(final AlarmFrontController alarmFrontController) {
+	public FaultAlarms261Sol003Api(final AlarmFrontController alarmFrontController) {
 		super();
 		this.alarmFrontController = alarmFrontController;
 	}
 
 	@Override
 	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
-		return alarmFrontController.findById(alarmId, Alarm.class, FaultAlarmsSol003Api::makeLinks);
+		return alarmFrontController.findById(alarmId, Alarm.class, FaultAlarms261Sol003Api::makeLinks);
 	}
 
 	@Override
@@ -62,17 +62,17 @@ public class FaultAlarmsSol003Api implements FaultAlarmsSol003 {
 
 	@Override
 	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return alarmFrontController.search(requestParams, Alarm.class, FaultAlarmsSol003Api::makeLinks);
+		return alarmFrontController.search(requestParams, Alarm.class, FaultAlarms261Sol003Api::makeLinks);
 	}
 
 	private static void makeLinks(final Alarm alarm) {
 		final AlarmLinks links = new AlarmLinks();
 		Link link = new Link();
-		link.setHref(linkTo(methodOn(FaultAlarmsSol003.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultAlarms261Sol003.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 
 		link = new Link();
-		link.setHref(linkTo(methodOn(FaultAlarmsSol003.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultAlarms261Sol003.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
 		links.setObjectInstance(link);
 
 		alarm.setLinks(links);

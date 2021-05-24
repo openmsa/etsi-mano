@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol002;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "indicators", description = "the indicators API")
 @RequestMapping("/sol002/vnfind/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface Indicators261Sol002Api {
 
 	@ApiOperation(value = "Query multiple indicators", nickname = "indicatorsGet", notes = "Get a list of indicators. Support of attribute based filtering via query parameters.", response = VnfIndicator.class, responseContainer = "List", tags = {})

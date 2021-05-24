@@ -22,12 +22,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -37,9 +35,12 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
-@RolesAllowed({ "ROLE_NFVO" })
-@RequestMapping("/sol003/vnffm/v1")
 public class PmJobs261Sol003Controller implements PmJobs261Sol003Api {
 
 	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;

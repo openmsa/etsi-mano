@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -50,6 +51,7 @@ import io.swagger.annotations.ApiParam;
 
 //, headers = "Version=2.6.1"
 @RequestMapping(value = "/sol003/vnflcm/v1/vnf_instances")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcm261Sol003Api {
 	@io.swagger.annotations.ApiOperation(value = "", notes = "Query VNF  The GET method queries information about multiple VNF instances. ", response = VnfInstance.class, responseContainer = "List", tags = {})
 	@io.swagger.annotations.ApiResponses(value = {

@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +36,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 
-@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfLcmSubscriptions261Sol003Controller implements VnfLcmSubscriptions261Sol003Api {
 	private final VnfLcmSubscriptionFrontController frontController;

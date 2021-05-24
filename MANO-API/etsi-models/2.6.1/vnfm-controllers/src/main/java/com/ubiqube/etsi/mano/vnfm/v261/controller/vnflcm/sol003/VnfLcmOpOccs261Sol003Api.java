@@ -18,6 +18,7 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -36,6 +37,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol003/vnflcm/v1/vnf_lcm_op_occs")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcmOpOccs261Sol003Api {
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsGet", notes = "Get Operation Status. The client can use this method to query status information about multiple VNF lifecycle management operation occurrences. This method shall follow the provisions specified in the tables 5.4.12.3.2-1 and 5.4.12.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfLcmOpOcc.class, tags = {})

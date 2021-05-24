@@ -22,7 +22,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -45,7 +44,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 
-@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfLcmOpOccs261Sol003Controller implements VnfLcmOpOccs261Sol003Api {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfLcmOpOccs261Sol003Controller.class);

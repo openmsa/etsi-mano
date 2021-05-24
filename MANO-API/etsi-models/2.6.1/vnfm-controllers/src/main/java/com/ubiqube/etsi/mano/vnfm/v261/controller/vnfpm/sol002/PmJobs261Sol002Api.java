@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
 @RequestMapping("/sol002/vnfpm/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface PmJobs261Sol002Api {
 
 	@ApiOperation(value = "", nickname = "pmJobsGet", notes = "The client can use this method to retrieve information about PM jobs. ", response = PmJob.class, responseContainer = "List", tags = {})

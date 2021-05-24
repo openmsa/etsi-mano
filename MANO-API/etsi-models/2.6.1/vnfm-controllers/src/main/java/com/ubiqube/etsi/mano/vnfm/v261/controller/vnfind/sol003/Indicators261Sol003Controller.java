@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol003;
 
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vnfind.VnfIndicator;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_NFVO" })
 @Controller
 public class Indicators261Sol003Controller implements Indicators261Sol003Api {
 
