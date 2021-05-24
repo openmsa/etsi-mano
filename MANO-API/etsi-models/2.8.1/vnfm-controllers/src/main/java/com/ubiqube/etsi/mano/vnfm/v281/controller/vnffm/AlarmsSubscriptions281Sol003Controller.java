@@ -16,32 +16,67 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnffm;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Controller
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ubiqube.etsi.mano.controller.vnffm.FaultMngtSubscriptionsFrontController;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.FmSubscription;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.FmSubscriptionLinks;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.FmSubscriptionRequest;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.Link;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class AlarmsSubscriptions281Sol003Controller implements AlarmsSubscriptions281Sol003Api {
+	private final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController;
 
-    private final ObjectMapper objectMapper;
+	public AlarmsSubscriptions281Sol003Controller(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
+		super();
+		this.faultMngtSubscriptionsFrontController = faultMngtSubscriptionsFrontController;
+	}
 
-    private final HttpServletRequest request;
+	@Override
+	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, AlarmsSubscriptions281Sol003Controller::makeLinks);
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public AlarmsSubscriptions281Sol003Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@Override
+	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) {
+		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, AlarmsSubscriptions281Sol003Controller::makeLinks, AlarmsSubscriptions281Sol003Controller::makeSelf);
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	@Override
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		return faultMngtSubscriptionsFrontController.delete(subscriptionId);
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, AlarmsSubscriptions281Sol003Controller::makeLinks);
+	}
+
+	private static void makeLinks(final FmSubscription subscription) {
+		final FmSubscriptionLinks links = new FmSubscriptionLinks();
+		final Link link = new Link();
+		link.setHref(linkTo(methodOn(AlarmsSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+		subscription.setLinks(links);
+	}
+
+	private static String makeSelf(final FmSubscription subscription) {
+		return linkTo(methodOn(AlarmsSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
+	}
 
 }
