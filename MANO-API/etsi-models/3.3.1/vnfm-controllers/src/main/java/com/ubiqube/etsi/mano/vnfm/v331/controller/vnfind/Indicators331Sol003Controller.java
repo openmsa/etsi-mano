@@ -16,32 +16,47 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnfind;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnfind.VnfIndicator;
+import com.ubiqube.etsi.mano.vnfm.v331.model.vnfind.VnfIndicatorSubscription;
 
 @RestController
 public class Indicators331Sol003Controller implements Indicators331Sol003Api {
 
-    private final ObjectMapper objectMapper;
+	@Override
+	public ResponseEntity<List<VnfIndicator>> indicatorsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private final HttpServletRequest request;
+	@Override
+	public ResponseEntity<Void> indicatorsSubscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public Indicators331Sol003Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@Override
+	public ResponseEntity<VnfIndicatorSubscription> indicatorsSubscriptionsSubscriptionIdGet(final String subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	@Override
+	public ResponseEntity<List<VnfIndicator>> indicatorsVnfInstanceIdGet(final String vnfInstanceId, @Valid final String filter, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<VnfIndicator> indicatorsVnfInstanceIdIndicatorIdGet(final String indicatorId, final String vnfInstanceId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
