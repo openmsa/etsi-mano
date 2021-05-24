@@ -17,15 +17,10 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,29 +29,18 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
-import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
-import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-
-import ma.glasnost.orika.MapperFacade;
+import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol003FrontController;
 
 @RolesAllowed({ "ROLE_VNFM" })
 @RestController
 public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol003Api {
-
-	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscription261Sol003Controller.class);
-
-	private final VnfSubscriptionManagement vnfSubscriptionManagement;
+	private final VnfSubscriptionSol003FrontController vnfSubscriptionSol03FrontController;
 
 	private final Linkable links = new Sol003Linkable();
 
-	private final MapperFacade mapper;
-
-	public VnfSubscription261Sol003Controller(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper) {
-		vnfSubscriptionManagement = _vnfSubscriptionManagement;
-		mapper = _mapper;
-		LOG.info("Starting VNF Subscription Package SOL003 Controller.");
+	public VnfSubscription261Sol003Controller(final VnfSubscriptionSol003FrontController vnfSubscriptionSol03FrontController) {
+		super();
+		this.vnfSubscriptionSol03FrontController = vnfSubscriptionSol03FrontController;
 	}
 
 	/**
@@ -65,12 +49,8 @@ public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol
 	 * The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the Tables 9.4.7.8.2-1 and 9.4.8.3.2-2 for URI query parameters, request and response data structures, and response codes. ²
 	 */
 	@Override
-	public List<PkgmSubscription> subscriptionsGet(final String filter) {
-		final List<Subscription> subs = vnfSubscriptionManagement.subscriptionsGet(filter, SubscriptionType.VNF);
-		final List<PkgmSubscription> pkgms = mapper.mapAsList(subs, PkgmSubscription.class);
-		pkgms.stream()
-				.forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
-		return pkgms;
+	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(final String filter) {
+		return vnfSubscriptionSol03FrontController.search(filter, PkgmSubscription.class, links::makeSubscriptionLink);
 	}
 
 	/**
@@ -79,16 +59,10 @@ public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol
 	 * The POST method creates a new subscription. This method shall follow the provisions specified in the Tables 9.4.8.3.1-1 and 9.4.8.3.1-2 for URI query parameters, request and response data structures, and response codes. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow
 	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri).
 	 *
-	 * @throws URISyntaxException
-	 *
 	 */
 	@Override
-	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) throws URISyntaxException {
-		final Subscription subs = mapper.map(subscriptionsPostQuery, Subscription.class);
-		final Subscription res = vnfSubscriptionManagement.subscriptionsPost(subs, ApiTypesEnum.SOL003);
-		final PkgmSubscription pkgm = mapper.map(res, PkgmSubscription.class);
-		pkgm.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgm.getId()));
-		return ResponseEntity.created(new URI(pkgm.getLinks().getSelf().getHref())).body(pkgm);
+	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
+		return vnfSubscriptionSol03FrontController.create(subscriptionsPostQuery, PkgmSubscription.class, links::makeSubscriptionLink);
 	}
 
 	/**
@@ -99,8 +73,7 @@ public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol
 	 */
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId, SubscriptionType.VNF);
-		return ResponseEntity.noContent().build();
+		return vnfSubscriptionSol03FrontController.delete(subscriptionId);
 	}
 
 	/**
@@ -110,11 +83,8 @@ public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol
 	 *
 	 */
 	@Override
-	public PkgmSubscription subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final Subscription res = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId), SubscriptionType.VNF);
-		final PkgmSubscription pkgm = mapper.map(res, PkgmSubscription.class);
-		pkgm.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgm.getId()));
-		return pkgm;
+	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		return vnfSubscriptionSol03FrontController.findById(subscriptionId, PkgmSubscription.class, links::makeSubscriptionLink);
 	}
 
 	/**
@@ -136,8 +106,7 @@ public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol
 	 */
 	@Override
 	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
-		final com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification msg = mapper.map(notificationsMessage, com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification.class);
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(msg);
+		vnfSubscriptionSol03FrontController.vnfPackageChangeNotificationPost(notificationsMessage);
 	}
 
 	/**
@@ -148,8 +117,7 @@ public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol
 	 */
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
-		final com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification msg = mapper.map(notificationsMessage, com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification.class);
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(msg);
+		vnfSubscriptionSol03FrontController.vnfPackageOnboardingNotificationPost(notificationsMessage);
 	}
 
 }

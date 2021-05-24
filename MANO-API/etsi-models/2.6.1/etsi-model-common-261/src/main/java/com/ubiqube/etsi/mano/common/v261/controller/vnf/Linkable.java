@@ -22,6 +22,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
@@ -50,4 +51,6 @@ public interface Linkable {
 	PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(@Nonnull String _subscriptionId);
 
 	FrontApiTypesEnum getApi();
+
+	void makeSubscriptionLink(final PkgmSubscription pkgmSubscription);
 }

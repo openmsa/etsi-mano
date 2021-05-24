@@ -18,13 +18,9 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,79 +30,49 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
-import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
-import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.event.Notifications;
-
-import ma.glasnost.orika.MapperFacade;
+import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol005FrontController;
 
 @RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
-public class VnfSubscription261Sol005Controller implements VnfSubscription262Sol005Api {
-
-	private static final Logger LOG = LoggerFactory.getLogger(VnfSubscription261Sol005Controller.class);
-
-	private final VnfSubscriptionManagement vnfSubscriptionManagement;
+public class VnfSubscription261Sol005Controller implements VnfSubscription261Sol005Api {
+	private final VnfSubscriptionSol005FrontController vnfSubscriptionSol005FrontController;
 
 	private final Linkable links = new Sol005Linkable();
 
-	private final MapperFacade mapper;
-
-	private final Notifications notifications;
-
-	public VnfSubscription261Sol005Controller(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final Notifications _notifications) {
-		vnfSubscriptionManagement = _vnfSubscriptionManagement;
-		mapper = _mapper;
-		notifications = _notifications;
-		LOG.info("Starting VNF Subscription Package SOL005 Controller.");
+	public VnfSubscription261Sol005Controller(final VnfSubscriptionSol005FrontController vnfSubscriptionSol005FrontController) {
+		super();
+		this.vnfSubscriptionSol005FrontController = vnfSubscriptionSol005FrontController;
 	}
 
 	@Override
 	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) final String filters) {
-		final List<Subscription> list = vnfSubscriptionManagement.subscriptionsGet(filters, SubscriptionType.VNF);
-		final List<PkgmSubscription> pkgms = mapper.mapAsList(list, PkgmSubscription.class);
-		pkgms.stream().forEach(x -> x.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(x.getId())));
-		return ResponseEntity.ok(pkgms);
+		return vnfSubscriptionSol005FrontController.search(filters, PkgmSubscription.class, links::makeSubscriptionLink);
 	}
 
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
-		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
-		// Check subscription.
-		notifications.check(subscription.getAuthentificationInformations(), subscription.getCallbackUri());
-		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
-		final PkgmSubscription pkgmSubscription = mapper.map(subscription, PkgmSubscription.class);
-		pkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(pkgmSubscription.getId()));
-		return new ResponseEntity<>(pkgmSubscription, HttpStatus.CREATED);
+		return vnfSubscriptionSol005FrontController.create(subscriptionsPostQuery, PkgmSubscription.class, links::makeSubscriptionLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		vnfSubscriptionManagement.subscriptionsSubscriptionIdDelete(subscriptionId, SubscriptionType.NSDVNF);
-		return ResponseEntity.noContent().build();
+		return vnfSubscriptionSol005FrontController.delete(subscriptionId);
 	}
 
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final Subscription subscription = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId), SubscriptionType.NSDVNF);
-		final PkgmSubscription pkgmSubscription = mapper.map(subscription, PkgmSubscription.class);
-		pkgmSubscription.setLinks(links.createSubscriptionsPkgmSubscriptionLinks(subscriptionId));
-		return new ResponseEntity<>(pkgmSubscription, HttpStatus.OK);
+		return vnfSubscriptionSol005FrontController.findById(subscriptionId, PkgmSubscription.class, links::makeSubscriptionLink);
 
 	}
 
 	@Override
 	public void vnfPackageChangeNotificationPost(final VnfPackageChangeNotification notificationsMessage) {
-		final com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification msg = mapper.map(notificationsMessage, com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification.class);
-		vnfSubscriptionManagement.vnfPackageChangeNotificationPost(msg);
+		vnfSubscriptionSol005FrontController.vnfPackageChangeNotificationPost(notificationsMessage);
 	}
 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(final VnfPackageOnboardingNotification notificationsMessage) {
-		final com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification msg = mapper.map(notificationsMessage, com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification.class);
-		vnfSubscriptionManagement.vnfPackageOnboardingNotificationPost(msg);
+		vnfSubscriptionSol005FrontController.vnfPackageOnboardingNotificationPost(notificationsMessage);
 	}
 
 }

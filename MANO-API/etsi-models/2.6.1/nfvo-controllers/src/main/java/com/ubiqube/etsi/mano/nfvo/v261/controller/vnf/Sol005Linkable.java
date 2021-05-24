@@ -25,6 +25,7 @@ import java.util.UUID;
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
@@ -53,7 +54,7 @@ public class Sol005Linkable implements Linkable {
 	public PkgmLinks createNotificationLink(final UUID _vnfPkgId, final UUID _subscriptionId) {
 		final PkgmLinks ret = new PkgmLinks();
 		final Link subscription = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfSubscription262Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
+				linkTo(methodOn(VnfSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
 		ret.setSubscription(subscription);
 
 		final Link vnfPackage = createVnfPackagesVnfPkgInfoLinksSelf(
@@ -66,7 +67,7 @@ public class Sol005Linkable implements Linkable {
 	public PkgmLinks createVnfPackageOnboardingNotificationLinks(final UUID _vnfPkgId, final UUID _subscriptionId) {
 		final PkgmLinks vnfPackageOnboardingNotificationLinks = new PkgmLinks();
 		final Link subscription = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfSubscription262Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
+				linkTo(methodOn(VnfSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
 		vnfPackageOnboardingNotificationLinks.setSubscription(subscription);
 
 		final Link vnfPackage = createVnfPackagesVnfPkgInfoLinksSelf(
@@ -86,9 +87,14 @@ public class Sol005Linkable implements Linkable {
 	public PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(final String _subscriptionId) {
 		final PkgmSubscriptionLinks subscriptionsPkgmSubscriptionLinks = new PkgmSubscriptionLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfSubscription262Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId)).withSelfRel().getHref());
 		subscriptionsPkgmSubscriptionLinks.setSelf(self);
 		return subscriptionsPkgmSubscriptionLinks;
+	}
+
+	@Override
+	public void makeSubscriptionLink(final PkgmSubscription pkgmSubscription) {
+		pkgmSubscription.setLinks(createSubscriptionsPkgmSubscriptionLinks(pkgmSubscription.getId()));
 	}
 
 	@Override

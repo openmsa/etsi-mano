@@ -25,6 +25,7 @@ import java.util.UUID;
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
+import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
@@ -89,6 +90,11 @@ public class Sol003Linkable implements Linkable {
 		self.setHref(linkTo(methodOn(VnfSubscription261Sol003Api.class).subscriptionsSubscriptionIdGet(_subscriptionId)).withSelfRel().getHref());
 		subscriptionsPkgmSubscriptionLinks.setSelf(self);
 		return subscriptionsPkgmSubscriptionLinks;
+	}
+
+	@Override
+	public void makeSubscriptionLink(final PkgmSubscription pkgmSubscription) {
+		pkgmSubscription.setLinks(createSubscriptionsPkgmSubscriptionLinks(pkgmSubscription.getId()));
 	}
 
 	@Override
