@@ -35,6 +35,11 @@ import com.ubiqube.etsi.mano.em.v331.model.vnfind.PmJob;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.PmJobLinks;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.PmJobModifications;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class PmJobs331Sol002Controller implements PmJobs331Sol002Api {
 	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;
@@ -86,7 +91,7 @@ public class PmJobs331Sol002Controller implements PmJobs331Sol002Api {
 	}
 
 	@Override
-	public ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(final String pmJobId, final PmJobModifications pmJobModifications) {
+	public ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(final String pmJobId, final PmJobModifications pmJobModifications, final String ifMatch) {
 		return vnfmPmGenericFrontController.pmJobsPmJobIdPatch(UUID.fromString(pmJobId), pmJobModifications);
 	}
 

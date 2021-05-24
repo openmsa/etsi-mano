@@ -25,10 +25,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +50,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RolesAllowed({ "ROLE_EM" })
 @RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=3.3.1" })
 public interface PmJobs331Sol002Api {
@@ -165,7 +172,8 @@ public interface PmJobs331Sol002Api {
 	@RequestMapping(value = "/pm_jobs/{pmJobId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
 	ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the PM job. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PM job resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true, schema = @Schema()) @PathVariable("pmJobId") final String pmJobId,
-			@Parameter(in = ParameterIn.DEFAULT, description = "Parameters for the PM job modification", required = true, schema = @Schema()) @Valid @RequestBody final PmJobModifications body);
+			@Parameter(in = ParameterIn.DEFAULT, description = "Parameters for the PM job modification", required = true, schema = @Schema()) @Valid @RequestBody final PmJobModifications body,
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
 
 	@Operation(summary = "", description = "The client can use this method for reading an individual performance report. ", tags = {})
 	@ApiResponses(value = {
