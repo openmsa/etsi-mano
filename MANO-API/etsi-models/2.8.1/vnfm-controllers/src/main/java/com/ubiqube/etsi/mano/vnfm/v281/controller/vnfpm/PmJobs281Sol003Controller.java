@@ -16,32 +16,85 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnfpm;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Controller
+import java.util.UUID;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmGenericFrontController;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfpm.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfpm.Link;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfpm.PerformanceReport;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfpm.PmJob;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfpm.PmJobLinks;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfpm.PmJobModifications;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class PmJobs281Sol003Controller implements PmJobs281Sol003Api {
 
-    private final ObjectMapper objectMapper;
+	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;
 
-    private final HttpServletRequest request;
+	public PmJobs281Sol003Controller(final VnfmPmGenericFrontController vnfmPmGenericFrontController) {
+		this.vnfmPmGenericFrontController = vnfmPmGenericFrontController;
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public PmJobs281Sol003Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@Override
+	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		return vnfmPmGenericFrontController.search(requestParams, PmJob.class, PmJobs281Sol003Controller::makeLinks);
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	private static void makeLinks(final PmJob x) {
+		final PmJobLinks links = new PmJobLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(PmJobs281Sol003Api.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
+		links.setSelf(link);
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+		link = new Link();
+		link.setHref("");
+		// links.setObjects(link);
+
+		x.setLinks(links);
+	}
+
+	private static String makeSelf(final PmJob pmjob) {
+		return linkTo(methodOn(PmJobs281Sol003Api.class).pmJobsPmJobIdGet(pmjob.getId())).withSelfRel().getHref();
+	}
+
+	@Override
+	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
+		return vnfmPmGenericFrontController.deleteById(UUID.fromString(pmJobId));
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobIdn) {
+		return vnfmPmGenericFrontController.findById(UUID.fromString(pmJobIdn), PmJob.class, PmJobs281Sol003Controller::makeLinks);
+	}
+
+	@Override
+	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
+		return vnfmPmGenericFrontController.findReportById(pmJobId, reportId, PerformanceReport.class);
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) {
+		return vnfmPmGenericFrontController.pmJobsPost(createPmJobRequest, PmJob.class, PmJobs281Sol003Controller::makeLinks, PmJobs281Sol003Controller::makeSelf);
+	}
+
+	@Override
+	public ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(final String pmJobId, final PmJobModifications pmJobModifications, final String ifMatch) {
+		return vnfmPmGenericFrontController.pmJobsPmJobIdPatch(getSafeUUID(pmJobId), pmJobModifications);
+	}
 
 }
