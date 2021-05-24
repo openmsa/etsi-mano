@@ -16,37 +16,83 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol003FrontController;
+import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
-@javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
+public class VnfSubscriptions271Sol003Controller implements VnfSubscriptions271Sol003Api {
+	private final VnfSubscriptionSol003FrontController vnfSubscriptionSol03FrontController;
 
-@Controller
-public class VnfSubscriptions271Sol003Controller implements VnfSubscriptions271Sol005Api {
-
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public VnfSubscriptions271Sol003Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public VnfSubscriptions271Sol003Controller(final VnfSubscriptionSol003FrontController vnfSubscriptionSol03FrontController) {
+		super();
+		this.vnfSubscriptionSol03FrontController = vnfSubscriptionSol03FrontController;
 	}
 
+	/**
+	 * Query multiple subscriptions.
+	 *
+	 * The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the Tables 9.4.7.8.2-1 and 9.4.8.3.2-2 for URI query parameters, request and response data structures, and response codes. ²
+	 */
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(final String filter) {
+		return vnfSubscriptionSol03FrontController.search(filter, PkgmSubscription.class, VnfSubscriptions271Sol003Controller::makeLinks);
 	}
 
+	/**
+	 * Subscribe to notifications related to on-boarding and/or changes of VNF packages.
+	 *
+	 * The POST method creates a new subscription. This method shall follow the provisions specified in the Tables 9.4.8.3.1-1 and 9.4.8.3.1-2 for URI query parameters, request and response data structures, and response codes. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow
+	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri).
+	 *
+	 */
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
+		return vnfSubscriptionSol03FrontController.create(subscriptionsPostQuery, PkgmSubscription.class, VnfSubscriptions271Sol003Controller::makeLinks);
 	}
 
+	/**
+	 * Terminate a subscription.
+	 *
+	 * The DELETE method terminates an individual subscription.
+	 *
+	 */
+	@Override
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		return vnfSubscriptionSol03FrontController.delete(subscriptionId);
+	}
+
+	/**
+	 * Read an individual subscription resource.
+	 *
+	 * Query Subscription Information The GET method reads an individual subscription.
+	 *
+	 */
+	@Override
+	public ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		return vnfSubscriptionSol03FrontController.findById(subscriptionId, PkgmSubscription.class, VnfSubscriptions271Sol003Controller::makeLinks);
+	}
+
+	public static void makeLinks(final PkgmSubscription pkgmSubscription) {
+		final PkgmSubscriptionLinks subscriptionsPkgmSubscriptionLinks = new PkgmSubscriptionLinks();
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(VnfSubscriptions271Sol003Api.class).subscriptionsSubscriptionIdGet(pkgmSubscription.getId())).withSelfRel().getHref());
+		subscriptionsPkgmSubscriptionLinks.setSelf(self);
+		pkgmSubscription.setLinks(subscriptionsPkgmSubscriptionLinks);
+	}
 }
