@@ -16,32 +16,70 @@
  */
 package com.ubiqube.etsi.mano.em.v281.controller.vnffm;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Controller
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
+import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
+import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.Alarm;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.AlarmLinks;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.AlarmModifications;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.Link;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.PerceivedSeverityRequest;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class Alarms281Sol002Controller implements Alarms281Sol002Api {
 
-    private final ObjectMapper objectMapper;
+	private final AlarmFrontController alarmFrontController;
 
-    private final HttpServletRequest request;
+	public Alarms281Sol002Controller(final AlarmFrontController alarmFrontController) {
+		super();
+		this.alarmFrontController = alarmFrontController;
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public Alarms281Sol002Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@Override
+	public ResponseEntity<Void> alarmsAlarmIdEscalatePost(final String alarmId, @Valid final PerceivedSeverityRequest perceivedSeverityRequest) {
+		return alarmFrontController.escalate(alarmId, PerceivedSeverityType.valueOf(perceivedSeverityRequest.getProposedPerceivedSeverity().toString()));
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	@Override
+	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
+		return alarmFrontController.findById(alarmId, Alarm.class, Alarms281Sol002Controller::makeLinks);
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId, final AlarmModifications alarmModifications, final String ifMatch) {
+		return alarmFrontController.patch(alarmId, AckState.valueOf(alarmModifications.getAckState().toString()), ifMatch, AlarmModifications.class);
+	}
+
+	@Override
+	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		return alarmFrontController.search(requestParams, Alarm.class, Alarms281Sol002Controller::makeLinks);
+	}
+
+	private static void makeLinks(final Alarm alarm) {
+		final AlarmLinks links = new AlarmLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(Alarms281Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+
+		link = new Link();
+		link.setHref(linkTo(methodOn(Alarms281Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		links.setObjectInstance(link);
+
+		alarm.setLinks(links);
+	}
 
 }
