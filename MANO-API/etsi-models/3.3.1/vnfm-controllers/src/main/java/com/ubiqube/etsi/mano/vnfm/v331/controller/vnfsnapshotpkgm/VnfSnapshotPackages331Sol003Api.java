@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.controller.vnfsnapshotpkgm;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
@@ -53,6 +54,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  *
  */
 @RequestMapping(value = "/sol003/vnfsnapshotpkgm/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VnfSnapshotPackages331Sol003Api {
 
 	@Operation(summary = "", description = "The GET method queries the information of the VNF packages matching the filter. ", tags = {})

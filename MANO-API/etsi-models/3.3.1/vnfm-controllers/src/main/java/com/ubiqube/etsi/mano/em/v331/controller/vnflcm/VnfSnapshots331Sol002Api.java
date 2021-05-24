@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.em.v331.controller.vnflcm;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol002/vnflcm/v2/vnf_snapshots", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol002/vnflcm/v2", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfSnapshots331Sol002Api {
 
 	@Operation(summary = "", description = "The GET method queries information about multiple VNF/VNFC snapshots. ", tags = {})

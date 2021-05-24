@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.controller.vnffm;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RequestMapping(value = "/sol003/vnffm/v1/", headers = { "Version=3.3.1" })
-public interface FaultMngtSubscriptions331Sol003Api {
+@RolesAllowed({ "ROLE_EM" })
+public interface VnfFmSubscriptions331Sol003Api {
 
 	@Operation(summary = "", description = "Query Subscription Information   The API consumer can use this method to retrieve the list of active subscriptions for VNF alarms subscribed by the API consumer. It can be used e.g. for resynchronization after error situations. ", tags = {})
 	@ApiResponses(value = {

@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.controller.vnfind;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  *
  */
 @RequestMapping(value = "/sol003/vnfind/v1", headers = "Version=3.3.1")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface Indicators331Sol003Api {
 
 	@Operation(summary = "", description = "Get Indicator Value. The GET method queries multiple VNF indicators. This method shall follow the provisions specified in the tables 8.4.2.3.2-1 and 8.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

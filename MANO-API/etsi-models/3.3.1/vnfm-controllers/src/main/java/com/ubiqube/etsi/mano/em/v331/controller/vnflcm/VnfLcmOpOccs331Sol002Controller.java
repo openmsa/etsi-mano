@@ -21,7 +21,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -48,7 +47,6 @@ import ma.glasnost.orika.MapperFacade;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_NFVO" })
 @RestController
 public class VnfLcmOpOccs331Sol002Controller implements VnfLcmOpOccs331Sol002Api {
 	private final VnfLcmOpOccGenericFrontController frontController;

@@ -34,6 +34,11 @@ import com.ubiqube.etsi.mano.em.v331.model.vnffm.AlarmModifications;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.Link;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.PerceivedSeverityRequest;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class Alarms331Sol002Controller implements Alarms331Sol002Api {
 

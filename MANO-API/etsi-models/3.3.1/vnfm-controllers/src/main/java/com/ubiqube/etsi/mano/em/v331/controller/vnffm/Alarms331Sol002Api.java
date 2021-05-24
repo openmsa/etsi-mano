@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.em.v331.controller.vnffm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -46,7 +47,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=23.3.1" })
+@RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_EM" })
 public interface Alarms331Sol002Api {
 
 	@Operation(summary = "", description = "The POST method enables the consumer to escalate the perceived severity of an alarm that is represented by an individual alarm resource. As the result of successfully executing this method, a new \"Individual  subscription\" resource as defined in clause 7.4.5 shall have been created.  This method shall not trigger any notification. ", tags = {})

@@ -19,7 +19,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.em.v331.controller.vnfind;
+package com.ubiqube.etsi.mano.em.v331.controller.vnfpm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
@@ -55,8 +55,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_EM" })
 @RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_EM" })
 public interface PmJobs331Sol002Api {
 
 	@Operation(summary = "", description = "The client can use this method to retrieve information about PM jobs. ", tags = {})

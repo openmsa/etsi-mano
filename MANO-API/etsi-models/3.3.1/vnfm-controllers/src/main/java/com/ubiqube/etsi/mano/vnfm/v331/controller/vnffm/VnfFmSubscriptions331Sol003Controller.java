@@ -35,22 +35,22 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.Link;
 
 @RestController
-public class FaultMngtSubscriptions331Sol003Controller implements FaultMngtSubscriptions331Sol003Api {
+public class VnfFmSubscriptions331Sol003Controller implements VnfFmSubscriptions331Sol003Api {
 	private final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController;
 
-	public FaultMngtSubscriptions331Sol003Controller(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
+	public VnfFmSubscriptions331Sol003Controller(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
 		super();
 		this.faultMngtSubscriptionsFrontController = faultMngtSubscriptionsFrontController;
 	}
 
 	@Override
 	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, FaultMngtSubscriptions331Sol003Controller::makeLinks);
+		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, VnfFmSubscriptions331Sol003Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) {
-		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, FaultMngtSubscriptions331Sol003Controller::makeLinks, FaultMngtSubscriptions331Sol003Controller::makeSelf);
+		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, VnfFmSubscriptions331Sol003Controller::makeLinks, VnfFmSubscriptions331Sol003Controller::makeSelf);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class FaultMngtSubscriptions331Sol003Controller implements FaultMngtSubsc
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, FaultMngtSubscriptions331Sol003Controller::makeLinks);
+		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, VnfFmSubscriptions331Sol003Controller::makeLinks);
 	}
 
 	private static void makeLinks(final FmSubscription subscription) {
