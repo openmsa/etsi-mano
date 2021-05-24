@@ -16,32 +16,55 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnfind;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.net.URI;
+import java.util.List;
 
-@Controller
-public class IndicatorsSubscriptions281Sol003Controller implements IndicatorsSubscriptions281Sol003Api {
+import javax.validation.Valid;
 
-    private final ObjectMapper objectMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
-    private final HttpServletRequest request;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.Link;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscription;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscriptionLinks;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscriptionRequest;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public IndicatorsSubscriptions281Sol003Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
+public class VnfIndSubscriptions281Sol003Controller implements VnfIndSubscriptions281Sol003Api {
+	private final SubscriptionServiceV2 subscriptionService;
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	public VnfIndSubscriptions281Sol003Controller(final SubscriptionServiceV2 subscriptionService) {
+		super();
+		this.subscriptionService = subscriptionService;
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<List<VnfIndicatorSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		final List<VnfIndicatorSubscription> ret = subscriptionService.query(requestParams, VnfIndicatorSubscription.class, VnfIndSubscriptions281Sol003Controller::makeLinks, SubscriptionType.VNFIND);
+		return ResponseEntity.ok(ret);
+	}
+
+	@Override
+	public ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(@Valid final VnfIndicatorSubscriptionRequest vnfIndicatorSubscriptionRequest) {
+		final VnfIndicatorSubscription res = subscriptionService.create(vnfIndicatorSubscriptionRequest, VnfIndicatorSubscription.class, VnfIndSubscriptions281Sol003Controller::makeLinks, SubscriptionType.VNFPM);
+		final URI location = URI.create(res.getLinks().getSelf().getHref());
+		return ResponseEntity.created(location).body(res);
+	}
+
+	private static void makeLinks(final VnfIndicatorSubscription subscription) {
+		final VnfIndicatorSubscriptionLinks links = new VnfIndicatorSubscriptionLinks();
+		final Link link = new Link();
+		// link.setHref(linkTo(methodOn(VnfIndSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+		subscription.setLinks(links);
+	}
 
 }
