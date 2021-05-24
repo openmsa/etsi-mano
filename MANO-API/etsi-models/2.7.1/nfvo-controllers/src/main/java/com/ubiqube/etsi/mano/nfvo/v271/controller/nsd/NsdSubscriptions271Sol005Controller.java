@@ -24,7 +24,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscription;
@@ -32,7 +32,12 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscriptionLinks;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
-@Controller
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class NsdSubscriptions271Sol005Controller implements NsdSubscriptions271Sol005Api {
 	private final NsdSubscriptionFrontController nsdSubscriptionFrontController;
 

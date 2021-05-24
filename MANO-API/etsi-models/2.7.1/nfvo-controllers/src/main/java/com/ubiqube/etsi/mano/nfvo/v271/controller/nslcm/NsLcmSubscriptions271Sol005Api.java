@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.nfvo.v271.controller.nslcm;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nslcm/v1/subscriptions", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsLcmSubscriptions271Sol005Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "Query Subscription Information. The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. ", response = LccnSubscription.class, responseContainer = "List", tags = {})

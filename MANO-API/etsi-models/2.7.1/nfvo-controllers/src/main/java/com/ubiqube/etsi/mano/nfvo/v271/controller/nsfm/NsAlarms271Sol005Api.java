@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -51,10 +52,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
 @Api(value = "alarms", description = "the alarms API")
 @RequestMapping(value = "/sol005/vnffm/v1/alarms", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsAlarms271Sol005Api {
 
 	Logger log = LoggerFactory.getLogger(NsAlarms271Sol005Api.class);

@@ -21,13 +21,16 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
-@Controller
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class NsAlarms271Sol005Controller implements NsAlarms271Sol005Api {
 
 	private final ObjectMapper objectMapper;

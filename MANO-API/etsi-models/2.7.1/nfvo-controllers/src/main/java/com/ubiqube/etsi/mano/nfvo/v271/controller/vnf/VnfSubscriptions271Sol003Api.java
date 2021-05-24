@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -51,6 +52,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/vnfpkgm/v1/subscriptions", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface VnfSubscriptions271Sol003Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the Tables 9.4.8.3.2-1 and 9.4.8.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = PkgmSubscription.class, responseContainer = "List", tags = {})

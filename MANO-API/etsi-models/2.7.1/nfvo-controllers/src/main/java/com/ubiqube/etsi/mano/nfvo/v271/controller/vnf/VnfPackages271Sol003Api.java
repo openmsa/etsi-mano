@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -49,6 +50,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "vnf_packages", description = "the vnf_packages API")
 //"Version=2.0.0"
 @RequestMapping(value = "/sol003/vnfpkgm/v1", headers = { "Version=2.7.1" })
+@RolesAllowed({ "ROLE_VNFM" })
 public interface VnfPackages271Sol003Api {
 
 	Logger log = LoggerFactory.getLogger(VnfPackages271Sol003Api.class);

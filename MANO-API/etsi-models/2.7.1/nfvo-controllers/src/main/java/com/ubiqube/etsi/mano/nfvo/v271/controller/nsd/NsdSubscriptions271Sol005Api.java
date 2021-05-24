@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v271.controller.nsd;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nsd/v1/subscriptions", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsdSubscriptions271Sol005Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "TThe GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 5.4.8.3.2-1 and 5.4.8.3.2-2. ", response = NsdmSubscription.class, responseContainer = "List", tags = {})

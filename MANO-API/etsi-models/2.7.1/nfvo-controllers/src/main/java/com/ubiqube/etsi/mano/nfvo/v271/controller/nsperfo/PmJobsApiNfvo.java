@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -55,6 +56,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
 @RequestMapping(value = "/sol005/nspm/v1/pm_jobs", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface PmJobsApiNfvo {
 
 	Logger log = LoggerFactory.getLogger(PmJobsApiNfvo.class);
