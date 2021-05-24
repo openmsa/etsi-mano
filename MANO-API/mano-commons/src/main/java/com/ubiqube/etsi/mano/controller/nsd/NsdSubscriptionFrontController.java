@@ -14,39 +14,38 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.ubiqube.etsi.mano.controller.nsd;
 
-package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
+import java.net.URI;
 import java.util.List;
-
-import javax.annotation.security.RolesAllowed;
-import javax.validation.constraints.NotNull;
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionLinks;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.service.SubscriptionService;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_OSSBSS" })
-@RestController
-public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261Sol005Api {
-	private final NsdSubscriptionFrontController nsdSubscriptionFrontController;
+@Service
+public class NsdSubscriptionFrontController {
 
-	public NsdSubscriptions261Sol005Controller(final NsdSubscriptionFrontController nsdSubscriptionFrontController) {
-		super();
-		this.nsdSubscriptionFrontController = nsdSubscriptionFrontController;
+	private final SubscriptionService subscriptionService;
+
+	private final MapperFacade mapper;
+
+	public NsdSubscriptionFrontController(final SubscriptionService _subscriptionService, final MapperFacade _mapper) {
+		subscriptionService = _subscriptionService;
+		mapper = _mapper;
 	}
 
 	/**
@@ -55,9 +54,12 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 * The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall support the URI query parameters, request and response data structures, and response codes. This resource represents subscriptions. The client can use this resource to subscribe to notifications related to NSD management and to query its subscriptions.
 	 *
 	 */
-	@Override
-	public ResponseEntity<List<NsdmSubscription>> subscriptionsGet(final String filter) {
-		return nsdSubscriptionFrontController.search(filter, NsdmSubscription.class, NsdSubscriptions261Sol005Controller::makeLink);
+	public <U> ResponseEntity<List<U>> search(final String filter, final Class<U> clazz, final Consumer<U> makeLink) {
+		final List<Subscription> subs = subscriptionService.query(filter, SubscriptionType.NSD);
+		final List<U> pkgms = mapper.mapAsList(subs, clazz);
+		pkgms.stream()
+				.forEach(x -> makeLink.accept(x));
+		return ResponseEntity.ok(pkgms);
 	}
 
 	/**
@@ -68,9 +70,13 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 * subscribe to notifications related to NSD management and to query its subscriptions.
 	 *
 	 */
-	@Override
-	public ResponseEntity<NsdmSubscription> subscriptionsPost(final NsdmSubscriptionRequest body) {
-		return nsdSubscriptionFrontController.create(body, NsdmSubscription.class, NsdSubscriptions261Sol005Controller::makeLink, NsdSubscriptions261Sol005Controller::getSelfLink);
+	public <U> ResponseEntity<U> create(final Object body, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> getSelfLink) {
+		final Subscription subs = mapper.map(body, Subscription.class);
+		final Subscription res = subscriptionService.save(subs, SubscriptionType.NSD);
+		final U pkgm = mapper.map(res, clazz);
+		makeLink.accept(pkgm);
+		final String link = getSelfLink.apply(pkgm);
+		return ResponseEntity.created(URI.create(link)).body(pkgm);
 	}
 
 	/**
@@ -79,9 +85,9 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 * This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.9.3.3-2.
 	 *
 	 */
-	@Override
-	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		return nsdSubscriptionFrontController.delete(subscriptionId);
+	public ResponseEntity<Void> delete(final String subscriptionId) {
+		subscriptionService.delete(UUID.fromString(subscriptionId), SubscriptionType.NSD);
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
@@ -90,19 +96,11 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 * This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The GET method retrieves information about a subscription by reading an individual subscription resource. This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management.
 	 *
 	 */
-	@Override
-	public ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		return nsdSubscriptionFrontController.findById(subscriptionId, NsdmSubscription.class, NsdSubscriptions261Sol005Controller::makeLink);
+	public <U> ResponseEntity<U> findById(final String subscriptionId, final Class<U> clazz, final Consumer<U> makeLink) {
+		final Subscription res = subscriptionService.findById(UUID.fromString(subscriptionId), SubscriptionType.NSD);
+		final U pkgm = mapper.map(res, clazz);
+		makeLink.accept(pkgm);
+		return ResponseEntity.ok(pkgm);
 	}
 
-	private static void makeLink(@NotNull final NsdmSubscription subs) {
-		final NsdmSubscriptionLinks nsdmSubscriptionLinks = new NsdmSubscriptionLinks();
-		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsdSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(subs.getId())).withSelfRel().getHref());
-		nsdmSubscriptionLinks.setSelf(self);
-	}
-
-	private static String getSelfLink(@NotNull final NsdmSubscription subs) {
-		return linkTo(methodOn(NsdSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(subs.getId())).withSelfRel().getHref();
-	}
 }
