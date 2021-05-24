@@ -32,11 +32,11 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 
 @Controller("OnboardedVnfPackagesApiController271")
-public class OnboardedVnfPackagesApiControllerSol003 implements OnboardedVnfPackagesApiSol003 {
+public class OnboardedVnfPackages271Sol003Controller implements OnboardedVnfPackages271Sol003Api {
 	private final Linkable links = new Sol003Linkable();
 	private final VnfPackageManagement vnfManagement;
 
-	public OnboardedVnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement) {
+	public OnboardedVnfPackages271Sol003Controller(final VnfPackageManagement _vnfManagement) {
 		vnfManagement = _vnfManagement;
 	}
 

@@ -62,9 +62,9 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "vnf_packages", description = "the vnf_packages API")
 @RequestMapping(value = "/sol005/vnfpkgm/v1/vnf_packages", headers = "Version=2.7.1")
-public interface VnfPackagesApiNfvo {
+public interface VnfPackages271Sol005Api {
 
-	Logger log = LoggerFactory.getLogger(VnfPackagesApiNfvo.class);
+	Logger log = LoggerFactory.getLogger(VnfPackages271Sol005Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

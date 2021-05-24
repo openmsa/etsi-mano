@@ -36,7 +36,7 @@ import ma.glasnost.orika.MapperFacade;
 @javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
 
 @Controller("VnfPackagesApiControllerVnfm271")
-public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
+public class VnfPackages271Sol003Controller implements VnfPackages271Sol003Api {
 
 	private final VnfPackageManagement vnfManagement;
 
@@ -44,7 +44,7 @@ public class VnfPackagesApiControllerSol003 implements VnfPackagesApiSol003 {
 
 	private final MapperFacade mapper;
 
-	public VnfPackagesApiControllerSol003(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
+	public VnfPackages271Sol003Controller(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
 		vnfManagement = _vnfManagement;
 		mapper = _mapper;
 	}

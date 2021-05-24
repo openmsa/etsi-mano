@@ -31,15 +31,15 @@ public class Sol003Linkable implements Linkable {
 		final VnfPkgInfoLinks links = new VnfPkgInfoLinks();
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfPackagesApiSol003.class).vnfPackagesVnfPkgIdGet(vnfPkgId, null, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, null, null)).withSelfRel().getHref());
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackagesApiSol003.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();
-		packageContent.setHref(linkTo(methodOn(VnfPackagesApiSol003.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
+		packageContent.setHref(linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
 		links.setPackageContent(packageContent);
 		return links;
 	}

@@ -28,14 +28,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
-public class VnfSubscriptionsApiControllerNfvo271 implements VnfSubscriptionsApi271 {
+public class VnfSubscriptions271Sol005Controller implements VnfSubscriptions271Sol003Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public VnfSubscriptionsApiControllerNfvo271(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public VnfSubscriptions271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
