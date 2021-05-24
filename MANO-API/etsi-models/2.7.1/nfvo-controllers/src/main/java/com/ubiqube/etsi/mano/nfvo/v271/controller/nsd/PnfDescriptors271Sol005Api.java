@@ -22,17 +22,11 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nsd;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -40,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.PnfdInfo;
@@ -52,25 +45,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "pnf_descriptors", description = "the pnf_descriptors API")
 @RequestMapping(value = "/sol005/nsd/v1/pnf_descriptors", headers = "Version=2.7.1")
 public interface PnfDescriptors271Sol005Api {
-
-	Logger log = LoggerFactory.getLogger(PnfDescriptors271Sol005Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "Query information about multiple PNF descriptor resources.", nickname = "pnfDescriptorsGet", notes = "\"The GET method queries information about multiple PNF descriptor resources.\" ", response = PnfdInfo.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -85,25 +67,7 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<PnfdInfo>> pnfDescriptorsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The NFVO shall support receiving this filtering parameter as part of the URI query string. The OSS/BSS may supply this parameter. All attribute names that appear in the PnfdInfo and in data types referenced from it shall be supported by the NFVO in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter, @ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields,
-			@ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFVO should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields, @ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFVO should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields, @ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV-SOL 013 for details. The NFVO shall support this parameter. The following attributes shall be excluded from the PnfdInfo structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided: - userDefinedData - onboardingFailureDetails ") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"[ {  \"signingCertificate\" : { },  \"pnfdName\" : \"pnfdName\",  \"pnfdUsageState\" : { },  \"pnfdOnboardingState\" : { },  \"_links\" : {    \"pnfd_content\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"pnfdProvider\" : \"pnfdProvider\",  \"pnfdersion\" : { },  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ]}, {  \"signingCertificate\" : { },  \"pnfdName\" : \"pnfdName\",  \"pnfdUsageState\" : { },  \"pnfdOnboardingState\" : { },  \"_links\" : {    \"pnfd_content\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"pnfdProvider\" : \"pnfdProvider\",  \"pnfdersion\" : { },  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ]} ]",
-							List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<String> pnfDescriptorsGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@ApiOperation(value = "Delete an individual PNF descriptor resource.", nickname = "pnfDescriptorsPnfdInfoIdDelete", notes = "The DELETE method deletes an individual PNF descriptor resource. An individual PNF descriptor resource can only be deleted when t here is no NS instance using it or there is NSD referencing it. To delete all PNFD versions identified by a particular value of the \"pnfdInvariantId\" attribute, the procedure is to first use t he GET method with filter \"pnfdInvariantId\" towards the PNF descriptors resource to find all versions of the PNFD. Then, he API consumer uses the DELETE method described in this clause to delete each PNFD version individually. This method shall follow the provisions specified in the Tables 5.4.6.3.5-1 and 5.4.6.3.5-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -118,13 +82,7 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId);
 
 	@ApiOperation(value = "Read an individual PNFD resource.", nickname = "pnfDescriptorsPnfdInfoIdGet", notes = "The GET method reads information about an individual PNF descriptor. ", response = PnfdInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -139,21 +97,7 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId, @ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Details are specified in clause 4.5.3 of GS NFV-SOL 005. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"signingCertificate\" : { },  \"pnfdName\" : \"pnfdName\",  \"pnfdUsageState\" : { },  \"pnfdOnboardingState\" : { },  \"_links\" : {    \"pnfd_content\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"pnfdProvider\" : \"pnfdProvider\",  \"pnfdersion\" : { },  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ]}", PnfdInfo.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId);
 
 	@ApiOperation(value = "", nickname = "pnfDescriptorsPnfdInfoIdManifestGet", notes = "The GET method reads the content of the manifest file within a PNFD archive. This method shall follow the provisions specified in the Tables 5.4.7b.3.2-1 and 5.4.7b.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -169,14 +113,9 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}/manifest", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> pnfDescriptorsPnfdInfoIdManifestGet(@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "If this parameter is provided, the NFVO shall return the manifest and related security information (signature and certificate) either in a single text file if the signature and certificate are included in the manifest file, or in a zip file containing the manifest and the certificate file, if this is provided as a separate file in the PNFD archive. If this parameter is not given, the NFVO shall provide only a copy of the manifest file, as onboarded. If the security information is included in the onboarded manifest, it shall also be included in the returned copy. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdManifestGet(
+			@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall return the manifest and related security information (signature and certificate) either in a single text file if the signature and certificate are included in the manifest file, or in a zip file containing the manifest and the certificate file, if this is provided as a separate file in the PNFD archive. If this parameter is not given, the NFVO shall provide only a copy of the manifest file, as onboarded. If the security information is included in the onboarded manifest, it shall also be included in the returned copy. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@ApiOperation(value = "Modify the user defined data of an individual PNF descriptor resource.", nickname = "pnfDescriptorsPnfdInfoIdPatch", notes = "The PATCH method modifies the user defined data of an individual PNF descriptor resource. ", response = PnfdInfoModifications.class, tags = {})
 	@ApiResponses(value = {
@@ -192,21 +131,9 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
-	default ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId, @ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. This header field shall be present if the request has a non-empty message body. ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "", required = true) @Valid @RequestBody final PnfdInfoModifications pnfdInfoModifications) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"userDefinedData\" : { }}", PnfdInfoModifications.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(
+			@ApiParam(value = "Identifier of the individual PNF descriptor resource. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId,
+			@ApiParam(value = "", required = true) @Valid @RequestBody final PnfdInfoModifications pnfdInfoModifications);
 
 	@ApiOperation(value = "Fetch the content of a PNFD.", nickname = "pnfDescriptorsPnfdInfoIdPnfdContentGet", notes = "The GET method fetches the content of the PNFD archive. The content of the PNFD archive is provided as onboarded, i.e. depending on the security option used, the CSAR or the CSAR wrapped in a ZIP archive together with an external signature is returned, as defined in clause 5.1 of ETSI GS NFV-SOL 004. NOTE: Information about the applicable security option can be obtained by evaluating the \"archiveSecurityOption\" attribute in the \"pnfdInfo\" structure. This method shall follow the provisions specified in the Tables 5.4.7.3.2-1 and 5.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -224,14 +151,9 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}/pnfd_content", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentGet(@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the PNFD archive. This can be used to continue an aborted transmission. If the NFVO does not support range requests, the NFVO shall ignore the \"Range\" header, process the GET request, and return the whole PNFD archive with a 200 OK response (rather than returning a 4xx error status code). ") @RequestHeader(value = "Range", required = false) final String range) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentGet(
+			@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId,
+			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the PNFD archive. This can be used to continue an aborted transmission. If the NFVO does not support range requests, the NFVO shall ignore the \"Range\" header, process the GET request, and return the whole PNFD archive with a 200 OK response (rather than returning a 4xx error status code). ") @RequestHeader(value = "Range", required = false) final String range);
 
 	@ApiOperation(value = "Upload the content of a PNFD.", nickname = "pnfDescriptorsPnfdInfoIdPnfdContentPut", notes = "The PUT method is used to upload the content of a PNFD archive. This resource represents the content of the individual PNF descriptor, i.e. PNFD content.  The client can use this resource to upload and download the content of the PNFD.         ", tags = {})
 	@ApiResponses(value = {
@@ -247,14 +169,9 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}/pnfd_content", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PUT)
-	default ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentPut(@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "The request shall set the \"Content-Type\" HTTP header to \"application/zip\". ", allowableValues = "application/zip") @RequestHeader(value = "Content-type", required = false) final String contentType) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentPut(
+			@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId,
+			@ApiParam(value = "The request shall set the \"Content-Type\" HTTP header to \"application/zip\". ", allowableValues = "application/zip") @RequestHeader(value = "Content-type", required = false) final String contentType);
 
 	@ApiOperation(value = "", nickname = "pnfDescriptorsPnfdInfoIdPnfdGet", notes = "The GET method reads the content of the PNFD within a PNFD archive. The PNFD can be implemented as a single file or as a collection of multiple files. If the PNFD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the PNFD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \"Accept\" HTTP header passed in the GET request: • If the \"Accept\" header contains only \"text/plain\" and the PNFD is     implemented as a single file, the file shall be returned; otherwise,     an error message shall be returned. • If the \"Accept\" header contains only \"application/zip\", the single     file or the multiple files that make up the PNFD shall be returned     embedded in a ZIP file. • If the \"Accept\" header contains both \"text/plain\" and \"application/zip\",     it is up to the NFVO to choose the format to return for a single-file PNFD;     for a multi-file PNFD, a ZIP file shall be returned. The default format of the ZIP file shall be the one specified in ETSI GS NFV-SOL 004 where only the YAML files representing the PNFD, and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the PNFD and (if requested) further security information are included. This means that the content of the ZIP archive shall contain the following files from the PNFD archive: • TOSCA.meta (if available in the PNFD archive); • the main service template (either as referenced from TOSCA.meta or     available as a file with the extension \".yml\" or \".yaml\" from the     root of the archive); • every component of the PNFD referenced (recursively) from the main     service template; • the related security information, if the \"include_signatures\" URI     parameter is provided, as follows:     - the manifest file;     - the singleton certificate file in the root of the PNFD archive         (if available in the PNFD archive);     - the signing certificates of the individual files included in the         ZIP archive (if available in the PNFD archive);     - the signatures of the individual files (if available in the PNFD archive). This method shall follow the provisions specified in the Tables 5.4.7a.3.2-1 and 5.4.7a.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -270,14 +187,10 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{pnfdInfoId}/pnfd", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdGet(@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the PNFD archive. This can be used to continue an aborted transmission. If the NFVO does not support range requests, the NFVO shall ignore the \"Range\" header, process the GET request, and return the whole PNFD archive with a 200 OK response (rather than returning a 4xx error status code). ") @RequestHeader(value = "Range", required = false) final String range, @ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP file the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdGet(
+			@ApiParam(value = "Identifier of the individual PNF descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new PNF descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("pnfdInfoId") final String pnfdInfoId,
+			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the PNFD archive. This can be used to continue an aborted transmission. If the NFVO does not support range requests, the NFVO shall ignore the \"Range\" header, process the GET request, and return the whole PNFD archive with a 200 OK response (rather than returning a 4xx error status code). ") @RequestHeader(value = "Range", required = false) final String range,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP file the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@ApiOperation(value = "Create a new PNF descriptor resource.", nickname = "pnfDescriptorsPost", notes = "The POST method is used to create a new PNF descriptor resource ", response = PnfdInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -292,20 +205,6 @@ public interface PnfDescriptors271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<PnfdInfo> pnfDescriptorsPost(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "", required = true) @Valid @RequestBody final CreatePnfdInfoRequest createPnfdInfoRequest, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"signingCertificate\" : { },  \"pnfdName\" : \"pnfdName\",  \"pnfdUsageState\" : { },  \"pnfdOnboardingState\" : { },  \"_links\" : {    \"pnfd_content\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"pnfdProvider\" : \"pnfdProvider\",  \"pnfdersion\" : { },  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ]}", PnfdInfo.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default PnfDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<PnfdInfo> pnfDescriptorsPost(@ApiParam(value = "", required = true) @Valid @RequestBody final CreatePnfdInfoRequest createPnfdInfoRequest);
 
 }
