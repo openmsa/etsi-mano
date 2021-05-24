@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,8 +102,10 @@ public class PnfFrontController {
 	 *
 	 * The GET method fetches the content of the PNFD. This method shall follow the provisions specified in the Table 5.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
+	 * @param range
+	 *
 	 */
-	public ResponseEntity<Void> getContent(final String pnfdInfoId) {
+	public ResponseEntity<Void> getContent(final String pnfdInfoId, final String range) {
 		// : Implement...
 		return ResponseEntity.noContent().build();
 	}
@@ -129,6 +132,21 @@ public class PnfFrontController {
 		final U pnfd = mapper.map(pnfdDb, clazz);
 		makeLink.accept(pnfd);
 		return new ResponseEntity<>(pnfd, HttpStatus.OK);
+	}
+
+	public ResponseEntity<Void> manifestGet(final String pnfdInfoId, @Valid final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<Void> getPnfd(final String pnfdInfoId, final String range, @Valid final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResponseEntity<Void> getArtifact(final String pnfdInfoId, final String artifactPath, final String range, @Valid final String includeSignatures) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
