@@ -16,32 +16,46 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vrqan;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import java.util.List;
 
-@Controller
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ubiqube.etsi.mano.vnfm.v281.model.vrqan.VrQuotaAvailSubscription;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vrqan.VrQuotaAvailSubscriptionRequest;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class VrQanSubscriptions281Sol003Controller implements VrQanSubscriptions281Sol003Api {
 
-    private final ObjectMapper objectMapper;
+	@Override
+	public ResponseEntity<List<VrQuotaAvailSubscription>> subscriptionsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private final HttpServletRequest request;
+	@Override
+	public ResponseEntity<VrQuotaAvailSubscription> subscriptionsPost(@Valid final VrQuotaAvailSubscriptionRequest vrQuotaAvailSubscriptionRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public VrQanSubscriptions281Sol003Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@Override
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
-
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<VrQuotaAvailSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
