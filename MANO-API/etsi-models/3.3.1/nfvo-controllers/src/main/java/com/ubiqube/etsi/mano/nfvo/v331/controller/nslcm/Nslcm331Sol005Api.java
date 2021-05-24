@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.controller.nslcm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RequestMapping(value = "/sol005/nslcm/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface Nslcm331Sol005Api {
 
 	@Operation(summary = "Cancel a NS lifecycle management operation occurrence.", description = "The POST method initiates cancelling an ongoing NS lifecycle management operation while it is being executed or rolled back, i.e. the related NS LCM operation occurrence\\\" is either in \"PROCESSING\" or \"ROLLING_BACK\" state. This method shall follow the provisions specified in the Tables 6.4.15.3.1-1 and 6.4.15.3.1-2 for URI query parameters, request and response data structures, and response codes. Before returning the \"202 Accepted\" response, the NFVO shall update the \"isCancelPending\" and \"cancelMode\" attributes in the representation of the parent resource according to the provisions in clause 6.5.2.3. In case of success of processing the asynchronous request: 1) If the request has been processed in \"PROCESSING\" or \"ROLLING_BACK\" state, the \"operationState\" attribute in    the representation of the parent resource shall be changed to \"FAILED_TEMP\". In both cases, the NFVO shall update    the \"isCancelPending\" and \"cancelMode\" attributes in the representation of the parent resource according to the    provisions in clause 6.5.2.3 to reflect the new status, and the applicable \"result\" notification according to    clause 6.6.2.2 shall be emitted to indicate that the execution of the underlying NS LCM operation occurrence    has temporarily failed. Due to race conditions, the processing of the actual operation that is to be cancelled    may eventually still succeed, in which case the \"operationState\" attribute in the representation of the parent    resource shall represent the result of that operation, rather than the result of the cancellation. ", tags = {})

@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -53,6 +54,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  *
  */
 @RequestMapping("/sol003/vnfpkgm/v2/vnf_packages")
+@RolesAllowed({ "ROLE_VNFM" })
 public interface VnfPackages331Sol003Api {
 
 	@Operation(summary = "", description = "Fetch VNF Package Artifacts. The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the tables 10.4.6.3.2-1 and 10.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

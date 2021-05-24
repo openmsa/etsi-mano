@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.nfvo.v331.controller.nslcm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RequestMapping(value = "/sol005/nslcm/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsLcmOpOccs331Sol005Api {
 
 	@Operation(summary = "Query multiple NS LCM operation occurrences.", description = "Get Operation Status. Shall be returned upon the following error: The operation cannot be executed currently, due to a conflict with the state of the resource. Typically, this is due to the fact that the NS instance resource is in NOT_INSTANTIATED state, or that another lifecycle management operation is ongoing. The response body shall contain a ProblemDetails structure, in which the \"detail\" attribute shall convey more information about the error. ", tags = {})

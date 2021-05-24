@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.controller.vnf;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 @Api(value = "subscriptions", description = "the subscriptions API")
 public interface VnfSubscriptions331Sol005Api {
 

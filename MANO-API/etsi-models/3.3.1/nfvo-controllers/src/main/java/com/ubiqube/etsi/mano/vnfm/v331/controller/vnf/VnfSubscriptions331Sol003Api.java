@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  *
  */
 @RequestMapping("/sol003/vnfpkgm/v2/subscriptions")
+@RolesAllowed({ "ROLE_VNFM" })
 public interface VnfSubscriptions331Sol003Api {
 
 	@Operation(summary = "", description = "Query Subscription Information. The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the tables 10.4.7.3.2-1 and 10.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.nfvo.v331.controller.nsd;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RequestMapping(value = "/sol005/nsd/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface PnfDescriptors331Sol005Api {
 
 	@Operation(summary = "Query information about multiple PNF descriptor resources.", description = "\"The GET method queries information about multiple PNF descriptor resources.\" ", tags = {})

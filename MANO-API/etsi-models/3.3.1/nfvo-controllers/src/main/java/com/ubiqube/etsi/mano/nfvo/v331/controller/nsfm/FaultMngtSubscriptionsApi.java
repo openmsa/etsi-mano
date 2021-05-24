@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -53,7 +54,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping(value = "/sol005/nspm/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol005/nsfm/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface FaultMngtSubscriptionsApi {
 
 	Logger log = LoggerFactory.getLogger(FaultMngtSubscriptionsApi.class);
