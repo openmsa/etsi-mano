@@ -16,32 +16,84 @@
  */
 package com.ubiqube.etsi.mano.em.v271.controller.vnfind;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Controller
-public class PmJobsApiController implements PmJobsApi {
+import java.util.UUID;
 
-    private final ObjectMapper objectMapper;
+import javax.validation.Valid;
 
-    private final HttpServletRequest request;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public PmJobsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmGenericFrontController;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.Link;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PerformanceReport;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PmJob;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PmJobLinks;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PmJobModifications;
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
+public class PmJobs271Sol002Controller implements PmJobs271Sol002Api {
+	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	public PmJobs271Sol002Controller(final VnfmPmGenericFrontController vnfmPmGenericFrontController) {
+		super();
+		this.vnfmPmGenericFrontController = vnfmPmGenericFrontController;
+	}
+
+	@Override
+	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
+		return vnfmPmGenericFrontController.search(requestParams, PmJob.class, PmJobs271Sol002Controller::makeLinks);
+	}
+
+	@Override
+	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
+		return vnfmPmGenericFrontController.deleteById(UUID.fromString(pmJobId));
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobId) {
+		return vnfmPmGenericFrontController.findById(UUID.fromString(pmJobId), PmJob.class, PmJobs271Sol002Controller::makeLinks);
+	}
+
+	@Override
+	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
+		return vnfmPmGenericFrontController.findReportById(pmJobId, reportId, PerformanceReport.class);
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) {
+		return vnfmPmGenericFrontController.pmJobsPost(createPmJobRequest, PmJob.class, PmJobs271Sol002Controller::makeLinks, PmJobs271Sol002Controller::makeSelf);
+	}
+
+	@Override
+	public ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(final String pmJobId, @Valid final PmJobModifications pmJobModifications, final String ifMatch) {
+		return vnfmPmGenericFrontController.pmJobsPmJobIdPatch(UUID.fromString(pmJobId), pmJobModifications);
+	}
+
+	private static String makeSelf(final PmJob x) {
+		return linkTo(methodOn(PmJobs271Sol002Api.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref();
+	}
+
+	private static void makeLinks(final PmJob x) {
+		final PmJobLinks links = new PmJobLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(PmJobs271Sol002Api.class).pmJobsPmJobIdGet(x.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+
+		link = new Link();
+		link.setHref("");
+		// links.setObjects(link);
+
+		x.setLinks(links);
+	}
 
 }
