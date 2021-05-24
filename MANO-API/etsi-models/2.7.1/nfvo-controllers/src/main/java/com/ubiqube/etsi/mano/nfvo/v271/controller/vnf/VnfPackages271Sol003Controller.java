@@ -16,71 +16,67 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
-import java.util.List;
-import java.util.UUID;
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
+import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.utils.SpringUtils;
 
-import ma.glasnost.orika.MapperFacade;
-
-@javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
-
-@Controller("VnfPackagesApiControllerVnfm271")
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class VnfPackages271Sol003Controller implements VnfPackages271Sol003Api {
 
-	private final VnfPackageManagement vnfManagement;
-
+	private final VnfPackageFrontController frontController;
+	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	private final MapperFacade mapper;
-
-	public VnfPackages271Sol003Controller(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
-		vnfManagement = _vnfManagement;
-		mapper = _mapper;
+	public VnfPackages271Sol003Controller(final VnfPackageFrontController frontController) {
+		super();
+		this.frontController = frontController;
 	}
 
 	@Override
-	public ResponseEntity<String> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final String artifactPath, final String range, @Valid final String includeSignatures) {
-		// TODO.
-		return ResponseEntity.ok().build();
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfPkgId, final String range, @Valid final String includeSignature) {
+		return frontController.getArtifact(request, getSafeUUID(vnfPkgId), range, includeSignature);
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsGet(final String vnfPkgId, final HttpServletRequest request, final String range) {
-		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsGet(@Nonnull final HttpServletRequest request, final String vnfPkgId, final String range) {
+		return frontController.getSelectArtifacts(request, getSafeUUID(vnfPkgId), range);
 	}
 
 	@Override
-	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, final String version, @Valid final String includeSignature) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
-		vnfPkgInfo.setLinks(links.getVnfLinks(vnfPkgId));
-		return ResponseEntity.ok(vnfPkgInfo);
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, @Valid final String includeSignature) {
+		return frontController.findById(getSafeUUID(vnfPkgId), VnfPkgInfo.class, links::makeLinks);
 	}
 
 	@Override
-	public ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(final String vnfPkgId, @Valid final String includeSignatures) {
-		return vnfManagement.getPackageManifest(UUID.fromString(vnfPkgId), includeSignatures);
+	public ResponseEntity<Void> vnfPackagesVnfPkgIdManifestGet(final String vnfPkgId, @Valid final String includeSignature) {
+		return frontController.getManifest(getSafeUUID(vnfPkgId), includeSignature);
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String version, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String range) {
+		return frontController.getContent(getSafeUUID(vnfPkgId), range);
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignatures) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId), includeSignatures != null);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignature) {
+		return frontController.getVfnd(getSafeUUID(vnfPkgId), includeSignature);
 	}
 
 }
