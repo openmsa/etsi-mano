@@ -21,7 +21,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnflcm;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -89,7 +88,7 @@ public interface VnfLcmSubscriptions331Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<LccnSubscription> subscriptionsPost(@Parameter(in = ParameterIn.DEFAULT, description = "Details of the subscription to be created.", required = true, schema = @Schema()) @Valid @RequestBody final LccnSubscriptionRequest body) throws URISyntaxException;
+	ResponseEntity<LccnSubscription> subscriptionsPost(@Parameter(in = ParameterIn.DEFAULT, description = "Details of the subscription to be created.", required = true, schema = @Schema()) @Valid @RequestBody final LccnSubscriptionRequest body);
 
 	@Operation(summary = "", description = "Terminate Subscription. The DELETE method terminates an individual subscription. This method shall follow the provisions specified in the tables 5.4.19.3.5-1 and 5.4.19.3.5-2 for URI query parameters, request and response data structures, and response codes. As the result of successfully executing this method, the \"Individual subscription\" resource shall not exist any longer. This means that no notifications for that subscription shall be sent to the formerly-subscribed API consumer.    NOTE: Due to race conditions, some notifications might still be received by the formerly-subscribed  API consumer for a certain time period after the deletion. ", tags = {})
 	@ApiResponses(value = {
