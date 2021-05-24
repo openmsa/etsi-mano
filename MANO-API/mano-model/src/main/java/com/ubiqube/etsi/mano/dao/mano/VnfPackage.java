@@ -136,6 +136,14 @@ public class VnfPackage implements PackageBase, Auditable {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<NsdInstance> nsInstance;
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
+	@IndexedEmbedded
+	private Set<OsContainerDesc> osContainerDesc;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<UUID> mciopId;
+
 	@Embedded
 	private Audit audit;
 
@@ -344,6 +352,22 @@ public class VnfPackage implements PackageBase, Auditable {
 
 	public void setNsInstance(final Set<NsdInstance> nsInstance) {
 		this.nsInstance = nsInstance;
+	}
+
+	public Set<OsContainerDesc> getOsContainerDesc() {
+		return osContainerDesc;
+	}
+
+	public void setOsContainerDesc(final Set<OsContainerDesc> osContainerDesc) {
+		this.osContainerDesc = osContainerDesc;
+	}
+
+	public Set<UUID> getMciopId() {
+		return mciopId;
+	}
+
+	public void setMciopId(final Set<UUID> mciopId) {
+		this.mciopId = mciopId;
 	}
 
 	public void addInstantiationLevel(final VnfInstantiationLevels il) {

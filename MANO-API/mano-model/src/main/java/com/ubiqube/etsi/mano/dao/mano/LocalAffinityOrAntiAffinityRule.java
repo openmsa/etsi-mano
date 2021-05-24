@@ -17,31 +17,23 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Embeddable
-public class VduProfile implements Serializable {
+@Entity
+public class LocalAffinityOrAntiAffinityRule implements Serializable {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private int minNumberOfInstances;
+	private String groupId;
 
-	private int maxNumberOfInstances;
+	private String affinityOrAntiAffinity;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<LocalAffinityOrAntiAffinityRule> localAffinityOrAntiAffinityRule;
-
-	private Set<String> affinityOrAntiAffinityGroupId;
-
+	private String scope;
 }
