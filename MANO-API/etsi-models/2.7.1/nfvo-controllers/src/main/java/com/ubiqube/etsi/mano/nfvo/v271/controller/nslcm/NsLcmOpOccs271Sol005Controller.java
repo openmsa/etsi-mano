@@ -17,37 +17,95 @@
 
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nslcm;
 
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.controller.nslcm.NsLcmGenericFrontController;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.CancelMode;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsLcmOpOccLinks;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
-
-
-@Controller
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
 public class NsLcmOpOccs271Sol005Controller implements NsLcmOpOccs271Sol005Api {
+	private final NsLcmGenericFrontController nsLcmGenericFrontController;
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public NsLcmOpOccs271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public NsLcmOpOccs271Sol005Controller(final NsLcmGenericFrontController nsLcmGenericFrontController) {
+		super();
+		this.nsLcmGenericFrontController = nsLcmGenericFrontController;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<String> nsLcmOpOccsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		return nsLcmGenericFrontController.search(requestParams, NsLcmOpOcc.class, nextpageOpaqueMarker, NsLcmOpOccs271Sol005Controller::makeLinks);
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdContinuePost(final String nsLcmOpOccId) {
+		return nsLcmGenericFrontController.continu(nsLcmOpOccId);
+	}
+
+	@Override
+	public ResponseEntity<NsLcmOpOcc> nsLcmOpOccsNsLcmOpOccIdGet(final String nsLcmOpOccId) {
+		return nsLcmGenericFrontController.findById(nsLcmOpOccId, NsLcmOpOcc.class, NsLcmOpOccs271Sol005Controller::makeLinks);
+	}
+
+	@Override
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdRetryPost(final String nsLcmOpOccId) {
+		return nsLcmGenericFrontController.retry(nsLcmOpOccId);
+	}
+
+	@Override
+	public ResponseEntity<Void> nsLcmOpOccsNsLcmOpOccIdRollbackPost(final String nsLcmOpOccId) {
+		return nsLcmGenericFrontController.rollback(nsLcmOpOccId);
+	}
+
+	@Override
+	public ResponseEntity<Void> nslcmV1NsLcmOpOccsNsLcmOpOccIdCancelPost(final String nsLcmOpOccId, @Valid final CancelMode body) {
+		return nsLcmGenericFrontController.cancel(nsLcmOpOccId, body.getCancelMode().toString());
+	}
+
+	@Override
+	public ResponseEntity<NsLcmOpOcc> nslcmV1NsLcmOpOccsNsLcmOpOccIdFailPost(final String nsLcmOpOccId) {
+		return nsLcmGenericFrontController.fail(nsLcmOpOccId, NsLcmOpOcc.class, NsLcmOpOccs271Sol005Controller::makeLinks);
+	}
+
+	public static void makeLinks(@NotNull final NsLcmOpOcc nsLcmOpOccs) {
+		final String id = nsLcmOpOccs.getId();
+		final NsLcmOpOccLinks nsLcmOpOccLinks = new NsLcmOpOccLinks();
+
+		final Link _continue = new Link();
+		_continue.setHref(linkTo(methodOn(NsLcmOpOccs271Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdContinuePost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setContinue(_continue);
+
+		final Link nsInstance = new Link();
+		nsInstance.setHref(linkTo(methodOn(NsInstances271Sol005Api.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId())).withSelfRel().getHref());
+		nsLcmOpOccLinks.setNsInstance(nsInstance);
+
+		final Link retry = new Link();
+		retry.setHref(linkTo(methodOn(NsLcmOpOccs271Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRetryPost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setRetry(retry);
+
+		final Link rollback = new Link();
+		rollback.setHref(linkTo(methodOn(NsLcmOpOccs271Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdRollbackPost(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setRollback(rollback);
+
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(NsLcmOpOccs271Sol005Api.class).nsLcmOpOccsNsLcmOpOccIdGet(id)).withSelfRel().getHref());
+		nsLcmOpOccLinks.setSelf(self);
+		nsLcmOpOccs.setLinks(nsLcmOpOccLinks);
 	}
 
 }
