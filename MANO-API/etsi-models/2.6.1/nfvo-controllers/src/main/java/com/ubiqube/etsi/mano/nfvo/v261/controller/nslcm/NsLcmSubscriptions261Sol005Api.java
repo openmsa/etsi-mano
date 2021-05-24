@@ -17,7 +17,6 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -70,7 +69,7 @@ public interface NsLcmSubscriptions261Sol005Api {
 			@ApiResponse(code = 406, message = "Not Acceptable If the Accept HTTP header does not contain at least one name of a content type that is acceptable to the API producer, the API producer shall respond with this response code. The ProblemDetails structure may be omitted in that case.         ", response = ProblemDetails.class), @ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(consumes = { "application/json" }, produces = { "application/json" })
-	ResponseEntity<LccnSubscription> subscriptionsPost(@RequestBody LccnSubscriptionRequest body) throws URISyntaxException;
+	ResponseEntity<LccnSubscription> subscriptionsPost(@RequestBody LccnSubscriptionRequest body);
 
 	/**
 	 * Terminate a subscription.

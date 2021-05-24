@@ -20,7 +20,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -55,7 +54,7 @@ public class NsLcmSubscriptions261Sol005Controller implements NsLcmSubscriptions
 	}
 
 	@Override
-	public ResponseEntity<LccnSubscription> subscriptionsPost(final LccnSubscriptionRequest body) throws URISyntaxException {
+	public ResponseEntity<LccnSubscription> subscriptionsPost(final LccnSubscriptionRequest body) {
 		return nsLcmSubscriptionsGenericFrontController.create(body, LccnSubscription.class, NsLcmSubscriptions261Sol005Controller::makeLink, NsLcmSubscriptions261Sol005Controller::getSelfLink);
 	}
 
