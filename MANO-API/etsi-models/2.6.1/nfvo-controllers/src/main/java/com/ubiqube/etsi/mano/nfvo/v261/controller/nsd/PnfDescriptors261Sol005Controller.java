@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -37,7 +36,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoModifications;
 
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol005Api {
 	private final PnfFrontController pnfFrontController;

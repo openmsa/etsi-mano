@@ -20,7 +20,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOccLinks;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsLcmOpOccs261Sol005Controller implements NsLcmOpOccs261Sol005Api {
 

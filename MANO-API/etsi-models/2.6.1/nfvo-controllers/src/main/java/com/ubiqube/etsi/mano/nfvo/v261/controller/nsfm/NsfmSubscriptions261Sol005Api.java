@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsfm;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nsfm/v1/subscriptions", headers = { "Version=2.6.1" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsfmSubscriptions261Sol005Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "Query Subscription Information The client can use this method to retrieve the list of active subscriptions  for alarms related to a NS subscribed by the client.  It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the Tables 8.4.4.3.2-1 and 8.4.4.3.2-2 for URI query parameters, request and response data structures, and response codes. Table 8.4.4.3.2-1: URI query parameters supported. ", response = FmSubscription.class, responseContainer = "List", tags = {})

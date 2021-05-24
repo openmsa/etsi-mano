@@ -18,6 +18,7 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -44,8 +45,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@RequestMapping("/sol005/nslcm/v1/ns_instances")
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "/sol005/nslcm/v1/ns_instances")
+@RequestMapping("/sol005/nslcm/v1/ns_instances")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsInstances261Sol005Api {
 
 	/**

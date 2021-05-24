@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsfm;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "alarms", description = "the alarms API")
 @RequestMapping("/sol005/nsfm/v1/alarms")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface Alarms261Sol005Api {
 
 	@ApiOperation(value = "Read individual alarm.", nickname = "alarmsAlarmIdGet", notes = "The client can use this method to read an individual alarm. ", response = Object.class, tags = {})

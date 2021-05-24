@@ -18,6 +18,7 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,17 +40,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nsd/v1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsdNotifications261Sol005Api {
 
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})
@@ -64,12 +61,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})
@@ -84,12 +76,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})
@@ -104,12 +91,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})
@@ -124,13 +106,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Test the notification endpoint
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The GET method allows
-	 * the server to test the notification endpoint that is provided by the client,
-	 * e.g. during subscription. This method shall follow the provisions specified
-	 * in the Table 5.4.10.3.2-2 for URI query parameters, request and response data
-	 * structures, and response codes.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The GET method allows the server to test the notification endpoint that is provided by the client, e.g. during subscription. This method shall follow the provisions specified in the Table 5.4.10.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@ApiOperation(value = "Test the notification endpoint", tags = {})
@@ -145,12 +121,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})
@@ -165,12 +136,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})
@@ -185,12 +151,7 @@ public interface NsdNotifications261Sol005Api {
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@ApiOperation(value = "Notify about NSD and PNFD changes", tags = {})

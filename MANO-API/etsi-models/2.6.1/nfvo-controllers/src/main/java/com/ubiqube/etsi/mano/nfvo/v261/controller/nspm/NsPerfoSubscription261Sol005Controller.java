@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,11 @@ import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionLinks;
 
-@RolesAllowed({ "ROLE_OSSBSS" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class NsPerfoSubscription261Sol005Controller implements NsPerfoSubscription261Sol005Api {
 	private final SubscriptionServiceV2 subscriptionService;

@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RequestMapping("/sol005/nslcm/v1/subscriptions")
+@RolesAllowed({ "ROLE_OSSBSS" })
 @Api(value = "/sol005/nslcm/v1/subscriptions")
 public interface NsLcmSubscriptions261Sol005Api {
 

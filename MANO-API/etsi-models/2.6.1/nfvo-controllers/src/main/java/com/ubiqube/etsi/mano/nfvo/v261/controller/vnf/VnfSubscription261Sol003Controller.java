@@ -19,8 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +29,11 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol003FrontController;
 
-@RolesAllowed({ "ROLE_VNFM" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class VnfSubscription261Sol003Controller implements VnfSubscription261Sol003Api {
 	private final VnfSubscriptionSol003FrontController vnfSubscriptionSol03FrontController;

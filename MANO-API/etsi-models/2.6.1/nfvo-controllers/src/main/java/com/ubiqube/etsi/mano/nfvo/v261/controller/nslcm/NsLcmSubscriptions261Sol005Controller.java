@@ -22,8 +22,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +36,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsLcmSubscriptions261Sol005Controller implements NsLcmSubscriptions261Sol005Api {
 	private final NsLcmSubscriptionsGenericFrontController nsLcmSubscriptionsGenericFrontController;

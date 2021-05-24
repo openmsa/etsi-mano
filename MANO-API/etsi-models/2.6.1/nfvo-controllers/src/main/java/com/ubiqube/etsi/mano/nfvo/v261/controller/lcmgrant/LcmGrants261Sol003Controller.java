@@ -20,7 +20,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_VNFM" })
 @RestController
 public class LcmGrants261Sol003Controller implements LcmGrants261Sol003Api {
 	private final LcmGrantsFrontController lcmGrantsFrontController;

@@ -21,7 +21,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -39,7 +38,11 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ScaleNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.UpdateNsRequest;
 
-@RolesAllowed({ "ROLE_OSSBSS" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public final class NsInstances261Sol005Controller implements NsInstances261Sol005Api {
 

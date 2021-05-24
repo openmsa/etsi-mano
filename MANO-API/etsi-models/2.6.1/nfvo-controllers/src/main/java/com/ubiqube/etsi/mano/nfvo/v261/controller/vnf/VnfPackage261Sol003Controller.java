@@ -22,7 +22,6 @@ import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
@@ -30,7 +29,6 @@ import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
@@ -44,9 +42,7 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
  * SOL005 - VNF Package Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@RolesAllowed({ "ROLE_VNFM" })
 @RestController
-@RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
 public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 
 	private final VnfPackageFrontController vnfPackageFrontController;

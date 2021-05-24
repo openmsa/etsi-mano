@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol005/nsd/v1/subscriptions")
+@RolesAllowed({ "ROLE_OSSBSS" })
 @Api(value = "subscriptions")
 public interface NsdSubscriptions261Sol005Api {
 

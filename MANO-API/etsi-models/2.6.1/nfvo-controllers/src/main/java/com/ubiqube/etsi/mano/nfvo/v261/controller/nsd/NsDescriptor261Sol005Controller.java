@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.core.io.support.ResourceRegion;
@@ -48,7 +47,6 @@ import io.swagger.annotations.Api;
  * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 @Api(value = "/sol005/nsd/v1/ns_descriptors")
 public class NsDescriptor261Sol005Controller implements NsDescriptor261Sol005Api {

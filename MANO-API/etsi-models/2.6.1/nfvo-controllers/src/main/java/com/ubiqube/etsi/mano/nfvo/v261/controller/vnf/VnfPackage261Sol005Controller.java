@@ -22,7 +22,6 @@ import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
@@ -48,7 +47,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.UploadVnfPkgFromUriRequest;
  *
  */
 @RestController
-@RolesAllowed({ "ROLE_OSSBSS" })
 public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	private final VnfPackageFrontController vnfPackageFrontController;
 	@Nonnull

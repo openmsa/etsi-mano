@@ -22,7 +22,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261Sol005Api {
 	private final NsdSubscriptionFrontController nsdSubscriptionFrontController;

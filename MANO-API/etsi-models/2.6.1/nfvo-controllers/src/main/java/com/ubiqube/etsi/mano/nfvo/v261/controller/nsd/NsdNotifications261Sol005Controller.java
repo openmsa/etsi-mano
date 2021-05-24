@@ -17,8 +17,6 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
-import javax.annotation.security.RolesAllowed;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +29,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdDeletio
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdOnBoardingFailureNotification;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.notification.PnfdOnBoardingNotification;
 
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsdNotifications261Sol005Controller implements NsdNotifications261Sol005Api {
 
@@ -44,12 +41,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
@@ -61,12 +53,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
@@ -78,12 +65,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
@@ -95,12 +77,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
@@ -112,13 +89,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Test the notification endpoint
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The GET method allows
-	 * the server to test the notification endpoint that is provided by the client,
-	 * e.g. during subscription. This method shall follow the provisions specified
-	 * in the Table 5.4.10.3.2-2 for URI query parameters, request and response data
-	 * structures, and response codes.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The GET method allows the server to test the notification endpoint that is provided by the client, e.g. during subscription. This method shall follow the provisions specified in the Table 5.4.10.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -130,12 +101,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
@@ -147,12 +113,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
@@ -164,12 +125,7 @@ public class NsdNotifications261Sol005Controller implements NsdNotifications261S
 	/**
 	 * Notify about NSD and PNFD changes
 	 *
-	 * This resource represents a notification endpoint. The server can use this
-	 * resource to send notifications to a subscribed client, which has provided the
-	 * URI of this resource during the subscription process. The POST method
-	 * delivers a notification from the server to the client. This method shall
-	 * support the URI query parameters, request and response data structures, and
-	 * response codes, as specified in the Table 5.4.10.3.1-2.
+	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The POST method delivers a notification from the server to the client. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.10.3.1-2.
 	 *
 	 */
 	@Override
