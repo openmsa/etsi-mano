@@ -21,8 +21,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
-import java.net.URISyntaxException;
-
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
@@ -142,6 +140,6 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<PmJob> pmJobsPost(
-			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest) throws URISyntaxException;
+			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest);
 
 }
