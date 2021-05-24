@@ -53,9 +53,9 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "nslcm", description = "the nslcm API")
 @RequestMapping(value = "/sol005/nsd/v1/ns_lcm_op_occs", headers = "Version=2.7.1")
-public interface NslcmApi {
+public interface Nslcm271Sol005Api {
 
-	Logger log = LoggerFactory.getLogger(NslcmApi.class);
+	Logger log = LoggerFactory.getLogger(Nslcm271Sol005Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

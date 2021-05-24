@@ -60,9 +60,9 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "ns_instances", description = "the ns_instances API")
 @RequestMapping(value = "/sol005/nslcm/v1/ns_instances", headers = "Version=2.7.1")
-public interface NsInstancesApi {
+public interface NsInstances271Sol005Api {
 
-	Logger log = LoggerFactory.getLogger(NsInstancesApi.class);
+	Logger log = LoggerFactory.getLogger(NsInstances271Sol005Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

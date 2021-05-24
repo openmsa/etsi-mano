@@ -28,14 +28,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
-public class NslcmApiController implements NslcmApi {
+public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public NslcmApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public NsInstances271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
