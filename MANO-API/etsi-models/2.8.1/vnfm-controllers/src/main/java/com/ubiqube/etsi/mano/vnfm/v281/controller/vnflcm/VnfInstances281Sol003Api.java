@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnflcm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -58,6 +59,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "vnf_instances", description = "the vnf_instances API")
+@RequestMapping(value = "/sol003/vnflcm/v1/", headers = "Version=2.8.1")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VnfInstances281Sol003Api {
 
 	@ApiOperation(value = "", nickname = "vnfInstancesGet", notes = "Query VNF. The GET method queries information about multiple VNF instances. ", response = VnfInstance.class, responseContainer = "List", tags = {})

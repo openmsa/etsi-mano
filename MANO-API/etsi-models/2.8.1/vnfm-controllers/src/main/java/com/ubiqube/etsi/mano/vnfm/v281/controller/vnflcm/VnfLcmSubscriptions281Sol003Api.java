@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v281.controller.vnflcm;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
+@RequestMapping(value = "/sol003/vnflcm/v1/", headers = "Version=2.8.1")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcmSubscriptions281Sol003Api {
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "Query Subscription Information. The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. ", response = LccnSubscription.class, tags = {})
 	@ApiResponses(value = {

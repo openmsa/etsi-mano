@@ -39,22 +39,22 @@ import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.Link;
  *
  */
 @RestController
-public class AlarmsSubscriptions281Sol003Controller implements AlarmsSubscriptions281Sol003Api {
+public class VnfFmSubscriptions281Sol003Controller implements VnfFmSubscriptions281Sol003Api {
 	private final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController;
 
-	public AlarmsSubscriptions281Sol003Controller(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
+	public VnfFmSubscriptions281Sol003Controller(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
 		super();
 		this.faultMngtSubscriptionsFrontController = faultMngtSubscriptionsFrontController;
 	}
 
 	@Override
 	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, AlarmsSubscriptions281Sol003Controller::makeLinks);
+		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, VnfFmSubscriptions281Sol003Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) {
-		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, AlarmsSubscriptions281Sol003Controller::makeLinks, AlarmsSubscriptions281Sol003Controller::makeSelf);
+		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, VnfFmSubscriptions281Sol003Controller::makeLinks, VnfFmSubscriptions281Sol003Controller::makeSelf);
 	}
 
 	@Override
@@ -64,19 +64,19 @@ public class AlarmsSubscriptions281Sol003Controller implements AlarmsSubscriptio
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, AlarmsSubscriptions281Sol003Controller::makeLinks);
+		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, VnfFmSubscriptions281Sol003Controller::makeLinks);
 	}
 
 	private static void makeLinks(final FmSubscription subscription) {
 		final FmSubscriptionLinks links = new FmSubscriptionLinks();
 		final Link link = new Link();
-		link.setHref(linkTo(methodOn(AlarmsSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(VnfFmSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 		subscription.setLinks(links);
 	}
 
 	private static String makeSelf(final FmSubscription subscription) {
-		return linkTo(methodOn(AlarmsSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(VnfFmSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
 	}
 
 }

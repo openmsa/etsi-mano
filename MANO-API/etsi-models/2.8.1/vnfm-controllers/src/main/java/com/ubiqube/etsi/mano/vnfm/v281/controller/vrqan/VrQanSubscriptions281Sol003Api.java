@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.vnfm.v281.controller.vrqan;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
+@RequestMapping(value = "/sol003/vrqan/v1/", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VrQanSubscriptions281Sol003Api {
 
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "Query Subscription Information. The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the tables 11.4.2.3.2-1 and 11.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VrQuotaAvailSubscription.class, responseContainer = "List", tags = {})

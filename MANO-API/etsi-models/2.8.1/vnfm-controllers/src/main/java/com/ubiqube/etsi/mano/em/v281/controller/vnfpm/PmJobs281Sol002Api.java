@@ -19,7 +19,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.em.v281.controller.vnfind;
+package com.ubiqube.etsi.mano.em.v281.controller.vnfpm;
 
 import javax.annotation.Nonnull;
 import javax.validation.Valid;

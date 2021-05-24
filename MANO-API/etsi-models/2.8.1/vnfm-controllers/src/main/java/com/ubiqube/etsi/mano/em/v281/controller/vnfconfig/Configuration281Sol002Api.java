@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.em.v281.controller.vnfconfig;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "configuration", description = "the configuration API")
+@RequestMapping("/sol002/vnfconfig/v1/configuration")
+@RolesAllowed({ "ROLE_EM" })
 public interface Configuration281Sol002Api {
 
 	@ApiOperation(value = "", nickname = "configurationGet", notes = "The API consumer can use this method to read configuration information about a VNF instance and/or its VNFC instances. ", response = VnfConfiguration.class, tags = {})

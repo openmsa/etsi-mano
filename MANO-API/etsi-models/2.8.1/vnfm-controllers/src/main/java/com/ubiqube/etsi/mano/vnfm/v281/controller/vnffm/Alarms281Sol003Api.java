@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnffm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -50,6 +51,8 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "alarms", description = "the alarms API")
+@RequestMapping(value = "/sol003/vnffm/v1", headers = { "Version=2.8.1" })
+@RolesAllowed({ "ROLE_EM" })
 public interface Alarms281Sol003Api {
 
 	@ApiOperation(value = "", nickname = "alarmsAlarmIdGet", notes = "The API consumer can use this method to read an individual alarm. This method shall follow the provisions specified in the tables 7.4.3.3.2-1 and 7.4.3.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Alarm.class, tags = {})
