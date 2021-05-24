@@ -101,7 +101,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentGet(final String pnfdInfoId, final String accept) {
-		return pnfFrontController.getContent(pnfdInfoId);
+		return pnfFrontController.getContent(pnfdInfoId, null);
 	}
 
 	/**
