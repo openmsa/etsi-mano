@@ -22,25 +22,17 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nslcm;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.LccnSubscription;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.LccnSubscriptionRequest;
@@ -51,25 +43,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nslcm/v1/subscriptions", headers = "Version=2.7.1")
 public interface NsLcmSubscriptions271Sol005Api {
-
-	Logger log = LoggerFactory.getLogger(NsLcmSubscriptions271Sol005Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "Query Subscription Information. The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. ", response = LccnSubscription.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -84,24 +65,9 @@ public interface NsLcmSubscriptions271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<LccnSubscription>> subscriptionsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The NFVO shall support receiving this parameter as part of the URI query string. The OSS/BSS may supply this parameter. All attribute names that appear in the LccnSubscription and in data types  referenced from it shall be supported by the NFVO in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"[ {  \"filter\" : {    \"lcmOpOccStatusImpactingNsComponent\" : [ { }, { } ],    \"operationStates\" : [ { }, { } ],    \"nsInstanceSubscriptionFilter\" : {      \"nsdIds\" : [ null, null ],      \"vnfdIds\" : [ null, null ],      \"pnfdIds\" : [ null, null ],      \"nsInstanceIds\" : [ null, null ],      \"nsInstanceNames\" : [ { }, { } ]    },    \"nsComponentTypes\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsLcmOperationOccurenceNotification\", \"NsLcmOperationOccurenceNotification\" ],    \"lcmOpNameImpactingNsComponent\" : [ { }, { } ],    \"operationTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }}, {  \"filter\" : {    \"lcmOpOccStatusImpactingNsComponent\" : [ { }, { } ],    \"operationStates\" : [ { }, { } ],    \"nsInstanceSubscriptionFilter\" : {      \"nsdIds\" : [ null, null ],      \"vnfdIds\" : [ null, null ],      \"pnfdIds\" : [ null, null ],      \"nsInstanceIds\" : [ null, null ],      \"nsInstanceNames\" : [ { }, { } ]    },    \"nsComponentTypes\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsLcmOperationOccurenceNotification\", \"NsLcmOperationOccurenceNotification\" ],    \"lcmOpNameImpactingNsComponent\" : [ { }, { } ],    \"operationTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }} ]",
-							List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<List<LccnSubscription>> subscriptionsGet(
+			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The NFVO shall support receiving this parameter as part of the URI query string. The OSS/BSS may supply this parameter. All attribute names that appear in the LccnSubscription and in data types  referenced from it shall be supported by the NFVO in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Subscribe to NS lifecycle change notifications.", nickname = "subscriptionsPost", notes = "The POST method creates a new subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.16.3.1-1 and 6.4.16.3.1-2. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \"201 Created\" response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \"303 See Other\" response code referencing the existing subscription resource with the same filter and callbackUri). ", response = LccnSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -118,21 +84,7 @@ public interface NsLcmSubscriptions271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<LccnSubscription> subscriptionsPost(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "Details of the subscription to be created, as defined in clause 6.5.2.2. ", required = true) @Valid @RequestBody final LccnSubscriptionRequest body, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"filter\" : {    \"lcmOpOccStatusImpactingNsComponent\" : [ { }, { } ],    \"operationStates\" : [ { }, { } ],    \"nsInstanceSubscriptionFilter\" : {      \"nsdIds\" : [ null, null ],      \"vnfdIds\" : [ null, null ],      \"pnfdIds\" : [ null, null ],      \"nsInstanceIds\" : [ null, null ],      \"nsInstanceNames\" : [ { }, { } ]    },    \"nsComponentTypes\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsLcmOperationOccurenceNotification\", \"NsLcmOperationOccurenceNotification\" ],    \"lcmOpNameImpactingNsComponent\" : [ { }, { } ],    \"operationTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }}", LccnSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<LccnSubscription> subscriptionsPost(@ApiParam(value = "Details of the subscription to be created, as defined in clause 6.5.2.2. ", required = true) @Valid @RequestBody final LccnSubscriptionRequest body);
 
 	@ApiOperation(value = "Terminate a subscription.", nickname = "subscriptionsSubscriptionIdDelete", notes = "The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.17.3.5-1 and 6.4.17.3.5-2. As the result of successfully executing this method, the \"Individual subscription\" resource shall not exist any longer. This means that no notifications for that subscription shall be sent to the formerly-subscribed API consumer. NOTE: Due to race conditions, some notifications might still be received by the formerly-subscribed API consumer for a certain time period after the deletion. ", tags = {})
 	@ApiResponses(value = {
@@ -146,13 +98,7 @@ public interface NsLcmSubscriptions271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. ", required = true) @PathVariable("subscriptionId") final String subscriptionId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. ", required = true) @PathVariable("subscriptionId") final String subscriptionId);
 
 	@ApiOperation(value = "Read an individual subscription resource.", nickname = "subscriptionsSubscriptionIdGet", notes = "The GET method retrieves information about a subscription by reading an individual subscription resource. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.17.3.2-1 and 6.4.17.3.2-2 ", response = LccnSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -167,20 +113,6 @@ public interface NsLcmSubscriptions271Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<LccnSubscription> subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. ", required = true) @PathVariable("subscriptionId") final String subscriptionId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"filter\" : {    \"lcmOpOccStatusImpactingNsComponent\" : [ { }, { } ],    \"operationStates\" : [ { }, { } ],    \"nsInstanceSubscriptionFilter\" : {      \"nsdIds\" : [ null, null ],      \"vnfdIds\" : [ null, null ],      \"pnfdIds\" : [ null, null ],      \"nsInstanceIds\" : [ null, null ],      \"nsInstanceNames\" : [ { }, { } ]    },    \"nsComponentTypes\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsLcmOperationOccurenceNotification\", \"NsLcmOperationOccurenceNotification\" ],    \"lcmOpNameImpactingNsComponent\" : [ { }, { } ],    \"operationTypes\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }}", LccnSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<LccnSubscription> subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. ", required = true) @PathVariable("subscriptionId") final String subscriptionId);
 
 }
