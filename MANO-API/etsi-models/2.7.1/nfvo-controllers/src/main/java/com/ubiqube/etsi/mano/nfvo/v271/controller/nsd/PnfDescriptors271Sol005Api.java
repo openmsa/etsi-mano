@@ -56,9 +56,9 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pnf_descriptors", description = "the pnf_descriptors API")
 @RequestMapping(value = "/sol005/nsd/v1/pnf_descriptors", headers = "Version=2.7.1")
-public interface PnfDescriptorsApi {
+public interface PnfDescriptors271Sol005Api {
 
-	Logger log = LoggerFactory.getLogger(PnfDescriptorsApi.class);
+	Logger log = LoggerFactory.getLogger(PnfDescriptors271Sol005Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

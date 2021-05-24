@@ -21,25 +21,17 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nsd;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscription;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscriptionRequest;
@@ -50,25 +42,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol005/nsd/v1/subscriptions", headers = "Version=2.7.1")
-public interface NsdSubscriptionsApi {
-
-	Logger log = LoggerFactory.getLogger(NsdSubscriptionsApi.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
+public interface NsdSubscriptions271Sol005Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "TThe GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 5.4.8.3.2-1 and 5.4.8.3.2-2. ", response = NsdmSubscription.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -83,24 +64,9 @@ public interface NsdSubscriptionsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<NsdmSubscription>> subscriptionsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "AAttribute filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The NFVO shall support receiving this parameter as part of the URI query string. the OSS/BSS may supply this parameter. All attribute names that appear in the NsdmSubscription and in data types referenced from it shall be supported by the NFVO in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"[ {  \"filter\" : {    \"nsdOnboardingState\" : [ { }, { } ],    \"pnfdName\" : [ null, null ],    \"pnfdUsageState\" : [ { }, { } ],    \"nsdInfoId\" : [ null, null ],    \"vnfPkgIds\" : [ null, null ],    \"pnfdOnboardingState\" : [ { }, { } ],    \"nestedNsdInfoIds\" : [ null, null ],    \"nsdUsageState\" : [ { }, { } ],    \"pnfdId\" : [ null, null ],    \"pnfdInfoIds\" : [ null, null ],    \"nsdInvariantId\" : [ null, null ],    \"nsdDesigner\" : [ null, null ],    \"nsdVersion\" : [ { }, { } ],    \"pnfdProvider\" : [ null, null ],    \"pnfdVersion\" : [ null, null ],    \"nsdId\" : [ null, null ],    \"nsdName\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsdOnBoardingNotification\", \"NsdOnBoardingNotification\" ],    \"pnfdInvariantId\" : [ null, null ],    \"nsdOperationalState\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }}, {  \"filter\" : {    \"nsdOnboardingState\" : [ { }, { } ],    \"pnfdName\" : [ null, null ],    \"pnfdUsageState\" : [ { }, { } ],    \"nsdInfoId\" : [ null, null ],    \"vnfPkgIds\" : [ null, null ],    \"pnfdOnboardingState\" : [ { }, { } ],    \"nestedNsdInfoIds\" : [ null, null ],    \"nsdUsageState\" : [ { }, { } ],    \"pnfdId\" : [ null, null ],    \"pnfdInfoIds\" : [ null, null ],    \"nsdInvariantId\" : [ null, null ],    \"nsdDesigner\" : [ null, null ],    \"nsdVersion\" : [ { }, { } ],    \"pnfdProvider\" : [ null, null ],    \"pnfdVersion\" : [ null, null ],    \"nsdId\" : [ null, null ],    \"nsdName\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsdOnBoardingNotification\", \"NsdOnBoardingNotification\" ],    \"pnfdInvariantId\" : [ null, null ],    \"nsdOperationalState\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }} ]",
-							List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<List<NsdmSubscription>> subscriptionsGet(
+			@ApiParam(value = "AAttribute filtering expression according to clause 5.2 of ETSI GS NFV SOL 013. The NFVO shall support receiving this parameter as part of the URI query string. the OSS/BSS may supply this parameter. All attribute names that appear in the NsdmSubscription and in data types referenced from it shall be supported by the NFVO in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Subscribe to NSD and PNFD change notifications.", nickname = "subscriptionsPost", notes = "The POST method creates a new subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 5.4.8.3.1-1 and 5.4.8.3.1-2. Creation of two subscription resources with the same callback URI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow creating a subscription resource if another subscription resource with the same filter and callback URI already exists (in which case it shall return the \"201 Created\" response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \"303 See Other\" response code referencing the existing subscription resource with the same filter and callbackUricallback URI). ", response = NsdmSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -117,21 +83,7 @@ public interface NsdSubscriptionsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<NsdmSubscription> subscriptionsPost(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "", required = true) @Valid @RequestBody final NsdmSubscriptionRequest nsdmSubscriptionRequest, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"filter\" : {    \"nsdOnboardingState\" : [ { }, { } ],    \"pnfdName\" : [ null, null ],    \"pnfdUsageState\" : [ { }, { } ],    \"nsdInfoId\" : [ null, null ],    \"vnfPkgIds\" : [ null, null ],    \"pnfdOnboardingState\" : [ { }, { } ],    \"nestedNsdInfoIds\" : [ null, null ],    \"nsdUsageState\" : [ { }, { } ],    \"pnfdId\" : [ null, null ],    \"pnfdInfoIds\" : [ null, null ],    \"nsdInvariantId\" : [ null, null ],    \"nsdDesigner\" : [ null, null ],    \"nsdVersion\" : [ { }, { } ],    \"pnfdProvider\" : [ null, null ],    \"pnfdVersion\" : [ null, null ],    \"nsdId\" : [ null, null ],    \"nsdName\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsdOnBoardingNotification\", \"NsdOnBoardingNotification\" ],    \"pnfdInvariantId\" : [ null, null ],    \"nsdOperationalState\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }}", NsdmSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<NsdmSubscription> subscriptionsPost(@ApiParam(value = "", required = true) @Valid @RequestBody final NsdmSubscriptionRequest nsdmSubscriptionRequest);
 
 	@ApiOperation(value = "Terminate Subscription", nickname = "subscriptionsSubscriptionIdDelete", notes = "This resource represents an individual subscription.  It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and  response data structures, and response codes, as specified in the Table 5.4.9.3.3-2.       ", tags = {})
 	@ApiResponses(value = {
@@ -146,13 +98,7 @@ public interface NsdSubscriptionsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Details are specified in clause 4.5.3 of GS NFV-SOL 005. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> subscriptionsSubscriptionIdDelete(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId);
 
 	@ApiOperation(value = "Read an individual subscription resource.", nickname = "subscriptionsSubscriptionIdGet", notes = "This resource represents an individual subscription.  It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The GET method retrieves information about a subscription by reading an individual subscription resource.  This resource represents an individual subscription.  It can be used by the client to read and to terminate a subscription to notifications related to NSD management. ", response = NsdmSubscription.class, tags = {})
 	@ApiResponses(value = {
@@ -167,20 +113,6 @@ public interface NsdSubscriptionsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. This header field shall be present if the response is expected to have a non-empty message body. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Details are specified in clause 4.5.3 of GS NFV-SOL 005. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"filter\" : {    \"nsdOnboardingState\" : [ { }, { } ],    \"pnfdName\" : [ null, null ],    \"pnfdUsageState\" : [ { }, { } ],    \"nsdInfoId\" : [ null, null ],    \"vnfPkgIds\" : [ null, null ],    \"pnfdOnboardingState\" : [ { }, { } ],    \"nestedNsdInfoIds\" : [ null, null ],    \"nsdUsageState\" : [ { }, { } ],    \"pnfdId\" : [ null, null ],    \"pnfdInfoIds\" : [ null, null ],    \"nsdInvariantId\" : [ null, null ],    \"nsdDesigner\" : [ null, null ],    \"nsdVersion\" : [ { }, { } ],    \"pnfdProvider\" : [ null, null ],    \"pnfdVersion\" : [ null, null ],    \"nsdId\" : [ null, null ],    \"nsdName\" : [ { }, { } ],    \"notificationTypes\" : [ \"NsdOnBoardingNotification\", \"NsdOnBoardingNotification\" ],    \"pnfdInvariantId\" : [ null, null ],    \"nsdOperationalState\" : [ { }, { } ]  },  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"callbackUri\" : { },  \"id\" : { }}", NsdmSubscription.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default SubscriptionsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(@ApiParam(value = "Identifier of this subscription. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new subscription resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("subscriptionId") final String subscriptionId);
 
 }

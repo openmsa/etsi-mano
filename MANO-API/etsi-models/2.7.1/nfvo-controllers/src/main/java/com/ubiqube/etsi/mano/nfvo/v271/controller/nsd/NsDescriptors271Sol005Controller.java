@@ -17,37 +17,106 @@
 
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nsd;
 
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
-import org.springframework.stereotype.Controller;
+import javax.annotation.Nonnull;
+import javax.validation.Valid;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ubiqube.etsi.mano.controller.nsd.NsDescriptorGenericFrontController;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreateNsdInfoRequest;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfoLinks;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfoModifications;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RestController
+public class NsDescriptors271Sol005Controller implements NsDescriptors271Sol005Api {
+	private final NsDescriptorGenericFrontController nsDescriptorGenericFrontController;
 
-@Controller
-public class NsDescriptorsApiController implements NsDescriptorsApi {
-
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public NsDescriptorsApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public NsDescriptors271Sol005Controller(final NsDescriptorGenericFrontController nsDescriptorGenericFrontController) {
+		super();
+		this.nsDescriptorGenericFrontController = nsDescriptorGenericFrontController;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<String> nsDescriptorsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
+		return nsDescriptorGenericFrontController.search(requestParams, NsdInfo.class, NsDescriptors271Sol005Controller::makeLinks);
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(final String nsdInfoId) {
+		return nsDescriptorGenericFrontController.delete(nsdInfoId);
+	}
+
+	@Override
+	public ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(final String nsdInfoId) {
+		return nsDescriptorGenericFrontController.finsById(nsdInfoId, NsdInfo.class, NsDescriptors271Sol005Controller::makeLinks);
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
+		return nsDescriptorGenericFrontController.getNsdContent(nsdInfoId, accept, range);
+	}
+
+	@Override
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(final String nsdInfoId, final String accept, final MultipartFile file) {
+		return nsDescriptorGenericFrontController.putNsdContent(nsdInfoId, accept, file);
+	}
+
+	@Override
+	public ResponseEntity<NsdInfoModifications> nsDescriptorsNsdInfoIdPatch(final String nsdInfoId, @Valid final String body, final String ifMatch) {
+		nsDescriptorGenericFrontController.modify(nsdInfoId, body, ifMatch, NsdInfo.class, NsDescriptors271Sol005Controller::makeLinks);
+		final NsdInfoModifications modif = new NsdInfoModifications();
+		return ResponseEntity.ok(modif);
+	}
+
+	@Override
+	public ResponseEntity<NsdInfo> nsDescriptorsPost(@Valid final CreateNsdInfoRequest body) {
+		return nsDescriptorGenericFrontController.create("", body.getUserDefinedData(), NsdInfo.class, NsDescriptors271Sol005Controller::makeLinks, NsDescriptors271Sol005Controller::makeSelfLink);
+	}
+
+	@Override
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdGet(final String nsdInfoId, @Valid final String includeSignatures) {
+		return nsDescriptorGenericFrontController.getNsd(nsdInfoId, includeSignatures);
+	}
+
+	@Override
+	public ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(final String nsdInfoId) {
+		return nsDescriptorGenericFrontController.getManifext(nsdInfoId, null);
+	}
+
+	private static void makeLinks(@Nonnull final NsdInfo nsdInfo) {
+		final String id = nsdInfo.getId();
+		final NsdInfoLinks ret = new NsdInfoLinks();
+		final Link nsdSelf = new Link();
+		final String _self = makeSelfLink(nsdInfo);
+		nsdSelf.setHref(_self);
+		ret.setSelf(nsdSelf);
+
+		final String _nsdContent = linkTo(methodOn(NsDescriptors271Sol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
+		final Link nsdContent = new Link();
+		nsdContent.setHref(_nsdContent);
+		ret.setNsdContent(nsdContent);
+
+		nsdInfo.setLinks(ret);
+	}
+
+	private static String makeSelfLink(final NsdInfo nsdInfo) {
+		return linkTo(methodOn(NsDescriptors271Sol005Api.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
 	}
 
 }

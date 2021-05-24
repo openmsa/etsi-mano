@@ -22,25 +22,23 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nsd;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
@@ -52,25 +50,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "ns_descriptors", description = "the ns_descriptors API")
 @RequestMapping(value = "/sol005/nsd/v1/ns_descriptors", headers = "Version=2.7.1")
-public interface NsDescriptorsApi {
-
-	Logger log = LoggerFactory.getLogger(NsDescriptorsApi.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
+public interface NsDescriptors271Sol005Api {
 
 	@ApiOperation(value = "Query information about multiple NS descriptor resources.", nickname = "nsDescriptorsGet", notes = "The GET method queries information about multiple NS descriptor resources. ", response = NsdInfo.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -85,25 +72,8 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<NsdInfo>> nsDescriptorsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The NFVO shall support receiving this filtering parameter as part of the URI query string. The OSS/BSS may supply this parameter. All attribute names that appear in the NsdInfo and in data types referenced from it shall be supported by the NFVO in the filter expression. ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Include all complex attributes in the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "all_fields", required = false) final String allFields, @ApiParam(value = "Complex attributes to be included into the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The NFVO should support this parameter. ") @Valid @RequestParam(value = "fields", required = false) final String fields, @ApiParam(value = "Complex attributes to be excluded from the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The NFVO should support this parameter. ") @Valid @RequestParam(value = "exclude_fields", required = false) final String excludeFields,
-			@ApiParam(value = "Indicates to exclude the following complex attributes from the response. See clause 5.3 of ETSI GS NFV SOL 013 for details. The VNFM shall support this parameter. The following attributes shall be excluded from the NsdInfo structure in the response body if this parameter is provided, or none of the parameters \"all_fields,\" \"fields\", \"exclude_fields\", \"exclude_default\" are provided:   - userDefinedData   - onboardingFailureDetails ") @Valid @RequestParam(value = "exclude_default", required = false) final String excludeDefault, @ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue(
-							"[ {  \"signingCertificate\" : { },  \"nsdOnboardingState\" : { },  \"vnfPkgIds\" : [ null, null ],  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"nsd_content\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"nestedNsdInfoIds\" : [ null, null ],  \"nsdUsageState\" : { },  \"pnfdInfoIds\" : [ null, null ],  \"nsdDesigner\" : \"nsdDesigner\",  \"nsdVersion\" : { },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"nsdName\" : \"nsdName\",  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ],  \"nsdOperationalState\" : { }}, {  \"signingCertificate\" : { },  \"nsdOnboardingState\" : { },  \"vnfPkgIds\" : [ null, null ],  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"nsd_content\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"nestedNsdInfoIds\" : [ null, null ],  \"nsdUsageState\" : { },  \"pnfdInfoIds\" : [ null, null ],  \"nsdDesigner\" : \"nsdDesigner\",  \"nsdVersion\" : { },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"nsdName\" : \"nsdName\",  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ],  \"nsdOperationalState\" : { }} ]",
-							List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<String> nsDescriptorsGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the NFVO if the NFVO supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Delete an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdDelete", notes = "The DELETE method deletes an individual NS descriptor resource. An individual NS descriptor resource can only be deleted when there is no NS instance using it (i.e. usageState = NOT_IN_USE) and has been disabled already (i.e. operationalState = DISABLED). Otherwise, the DELETE method shall fail. ", tags = {})
 	@ApiResponses(value = {
@@ -119,13 +89,7 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
-	default ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> nsDescriptorsNsdInfoIdDelete(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId);
 
 	@ApiOperation(value = "Read information about an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdGet", notes = "The GET method reads information about an individual NS descriptor. ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -140,21 +104,7 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"signingCertificate\" : { },  \"nsdOnboardingState\" : { },  \"vnfPkgIds\" : [ null, null ],  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"nsd_content\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"nestedNsdInfoIds\" : [ null, null ],  \"nsdUsageState\" : { },  \"pnfdInfoIds\" : [ null, null ],  \"nsdDesigner\" : \"nsdDesigner\",  \"nsdVersion\" : { },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"nsdName\" : \"nsdName\",  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ],  \"nsdOperationalState\" : { }}", NsdInfo.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdGet(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId);
 
 	@ApiOperation(value = "Fetch the content of the manifest in an NSD archive.", nickname = "nsDescriptorsNsdInfoIdManifestGet", notes = "The GET method reads the content of the manifest file within an NSD archive. This method shall follow the provisions specified in the Tables 5.4.4b.3.2-1 and 5.4.4b.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -169,14 +119,7 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}/manifest", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(@ApiParam(value = "Identifier of the individual NS descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new NS descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization,
-			@ApiParam(value = "If this parameter is provided, the NFVO shall return the manifest and related security information (signature and certificate) either in a single text file if the signature and certificate are included in the manifest file, or in a zip file containing the manifest and the certificate file, if this is provided as a separate file in the NSD archive. If this parameter is not given, the NFVO shall provide only a copy of the manifest file, as onboarded. If the security information is included in the onboarded manifest, it shall also be included in the returned copy. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(@ApiParam(value = "Identifier of the individual NS descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new NS descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId);
 
 	@ApiOperation(value = "Fetch the content of a NSD.", nickname = "nsDescriptorsNsdInfoIdNsdContentGet", notes = "The GET method fetches the content of the NSD archive. The NSD archive is implemented as a single zip file. The content of the NSD archive is provided as onboarded, i.e. depending on the security option used, the CSAR wrapped in a ZIP archive together with an external signature is returned, as defined in clause 5.1 of ETSI GS NFV-SOL 007. NOTE: Information about the applicable security option can be         obtained by evaluating the \"archiveSecurityOption\"         attribute in the \"nsdInfo\" structure.  This method shall follow the provisions specified in the T ables 5.4.4.3.2-1 and 5.4.4.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -194,13 +137,9 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}/nsd_content", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentGet(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD archive. This can be used to continue an aborted transmission. If the Range header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead as defined below. ") @RequestHeader(value = "Range", required = false) final String range) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") final String nsdInfoId,
+			@ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) String accept,
+			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD archive. This can be used to continue an aborted transmission. If the Range header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead as defined below. ") @RequestHeader(value = "Range", required = false) final String range);
 
 	@ApiOperation(value = "Upload the content of a NSD.", nickname = "nsDescriptorsNsdInfoIdNsdContentPut", notes = "The PUT method is used to upload the content of an NSD archive. The NSD to be uploaded is implemented as a single ZIP file as defined in clause 5.4.4.3.2. The \"Content-Type\" HTTP header in the PUT request shall be set to \"application/zip\". This method shall follow the provisions specified in the Tables 5.4.4.3.3-1 and 5.4.4.3.3-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -217,13 +156,9 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}/nsd_content", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PUT)
-	default ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The payload body contains a ZIP file that represents the NSD archive, as specified above. The request shall set the \"Content-Type\" HTTP header to \"application/zip\". ", required = true, allowableValues = "application/zip") @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdContentPut(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") final String nsdInfoId,
+			@ApiParam(value = "The payload body contains a ZIP file that represents the NSD archive, as specified above. The request shall set the \"Content-Type\" HTTP header to \"application/zip\". ", required = true, allowableValues = "application/zip") @RequestHeader(value = "Content-Type", required = true) final String contentType,
+			MultipartFile file);
 
 	@ApiOperation(value = "", nickname = "nsDescriptorsNsdInfoIdNsdGet", notes = "The GET method reads the content of the NSD within an NSD archive. The NSD can be implemented as a single file or as a collection of multiple files. If the NSD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the NSD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \"Accept\" HTTP header passed in the GET request: • If the \"Accept\" header contains only \"text/plain\" and the NSD is implemented as a single file,     the file shall be returned; otherwise, an error message shall be returned. • If the \"Accept\" header contains only \"application/zip\", the single file or     the multiple files that make up the NSD shall be returned embedded in a ZIP file. • If the \"Accept\" header contains both \"text/plain\" and \"application/zip\", it is up     to the NFVO to choose the format to return for a single-file NSD; for a multi-file NSD,     a ZIP file shall be returned. The default format of the ZIP file shall be the one specified in ETSI GS NFV-SOL 007 where only the YAML files representing the NSD, and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the NSD and (if requested) further security information are included. This means that the content of the ZIP archive shall contain the following files from the NSD archive: • TOSCA.meta (if available in the NSD archive); • the main service template (either as referenced from TOSCA.meta or available as a     file with the extension \".yml\" or \".yaml\" from the root of the archive); • every component of the NSD referenced (recursively) from the main service template; • the related security information, if the \"include_signatures\" URI parameter is provided, as follows: - the manifest file; - the singleton certificate file in the root of the NSD archive (if available in the NSD archive); - the signing certificates of the individual files included in the ZIP archive     (if available in the NSD archive); - the signatures of the individual files (if available in the NSD archive). This method shall follow the provisions specified in the Tables 5.4.4a.3.2-1 and 5.4.4a.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -239,13 +174,8 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}/nsd", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdGet(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The request shall contain the appropriate entries in the \"Accept\" HTTP header as defined above. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization, @ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP file the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdGet(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") final String nsdInfoId,
+			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP file the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@ApiOperation(value = "Modify the operational state and/or the user defined data of an individual NS descriptor resource.", nickname = "nsDescriptorsNsdInfoIdPatch", notes = "The PATCH method modifies the operational state and/or user defined data of an individual NS descriptor resource. This method can be used to: 1) Enable a previously disabled individual NS descriptor resource, allowing again its use for instantiation of new network service with this descriptor. The usage state (i.e. \"IN_USE/NOT_IN_USE\") shall not change as a result. 2) Disable a previously enabled individual NS descriptor resource, preventing any further use for instantiation of new network service(s) with this descriptor. The usage state (i.e. \"IN_USE/NOT_IN_USE\") shall not change as a result. 3) Modify the user defined data of an individual NS descriptor resource. ", response = NsdInfoModifications.class, tags = {})
 	@ApiResponses(value = {
@@ -262,21 +192,10 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{nsdInfoId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
-	default ResponseEntity<NsdInfoModifications> nsDescriptorsNsdInfoIdPatch(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "", required = true) @Valid @RequestBody final NsdInfoModifications nsdInfoModifications, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"nsdOperationalState\" : { },  \"userDefinedData\" : [ { }, { } ]}", NsdInfoModifications.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<NsdInfoModifications> nsDescriptorsNsdInfoIdPatch(
+			@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") final String nsdInfoId,
+			@ApiParam(value = "", required = true) @Valid @RequestBody final /* NsdInfoModifications */ String nsdInfoModifications,
+			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
 
 	@ApiOperation(value = "Create a new NS descriptor resource.", nickname = "nsDescriptorsPost", notes = "The POST method is used to create a new NS descriptor resource. ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {
@@ -291,20 +210,6 @@ public interface NsDescriptorsApi {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/ns_descriptors", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	default ResponseEntity<NsdInfo> nsDescriptorsPost(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Content-Type", required = true) final String contentType, @ApiParam(value = "", required = true) @Valid @RequestBody final CreateNsdInfoRequest createNsdInfoRequest, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235. ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"signingCertificate\" : { },  \"nsdOnboardingState\" : { },  \"vnfPkgIds\" : [ null, null ],  \"_links\" : {    \"self\" : {      \"href\" : \"http://example.com/aeiou\"    },    \"nsd_content\" : {      \"href\" : \"http://example.com/aeiou\"    }  },  \"nestedNsdInfoIds\" : [ null, null ],  \"nsdUsageState\" : { },  \"pnfdInfoIds\" : [ null, null ],  \"nsdDesigner\" : \"nsdDesigner\",  \"nsdVersion\" : { },  \"onboardingFailureDetails\" : {    \"instance\" : \"instance\",    \"detail\" : \"detail\",    \"type\" : \"type\",    \"title\" : \"title\",    \"status\" : 0  },  \"nsdName\" : \"nsdName\",  \"id\" : { },  \"archiveSecurityOption\" : \"OPTION_1\",  \"artifacts\" : [ {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  }, {    \"metadata\" : { },    \"checksum\" : {      \"hash\" : \"hash\",      \"algorithm\" : \"algorithm\"    }  } ],  \"nsdOperationalState\" : { }}", NsdInfo.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default NsDescriptorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<NsdInfo> nsDescriptorsPost(@ApiParam(value = "", required = true) @Valid @RequestBody final CreateNsdInfoRequest createNsdInfoRequest);
 
 }

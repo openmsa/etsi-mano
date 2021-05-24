@@ -16,37 +16,86 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v271.controller.nsd;
 
-import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-
+import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscription;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscriptionLinks;
+import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscriptionRequest;
+import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
 @Controller
-public class NsdSubscriptionsApiController implements NsdSubscriptionsApi {
+public class NsdSubscriptions271Sol005Controller implements NsdSubscriptions271Sol005Api {
+	private final NsdSubscriptionFrontController nsdSubscriptionFrontController;
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public NsdSubscriptionsApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	public NsdSubscriptions271Sol005Controller(final NsdSubscriptionFrontController nsdSubscriptionFrontController) {
+		super();
+		this.nsdSubscriptionFrontController = nsdSubscriptionFrontController;
 	}
 
+	/**
+	 * Query multiple subscriptions.
+	 *
+	 * The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall support the URI query parameters, request and response data structures, and response codes. This resource represents subscriptions. The client can use this resource to subscribe to notifications related to NSD management and to query its subscriptions.
+	 *
+	 */
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<List<NsdmSubscription>> subscriptionsGet(final String accept, final String filter) {
+		return nsdSubscriptionFrontController.search(filter, NsdmSubscription.class, NsdSubscriptions271Sol005Controller::makeLink);
 	}
 
+	/**
+	 * Subscribe to NSD and PNFD change notifications.
+	 *
+	 * The POST method creates a new subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 5.4.8.3.1-1 and 5.4.8.3.1-2 of GS-NFV SOL 005. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow
+	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri). This resource represents subscriptions. The client can use this resource to
+	 * subscribe to notifications related to NSD management and to query its subscriptions.
+	 *
+	 */
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<NsdmSubscription> subscriptionsPost(final NsdmSubscriptionRequest body) {
+		return nsdSubscriptionFrontController.create(body, NsdmSubscription.class, NsdSubscriptions271Sol005Controller::makeLink, NsdSubscriptions271Sol005Controller::getSelfLink);
+	}
+
+	/**
+	 * Terminate Subscription
+	 *
+	 * This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.9.3.3-2.
+	 *
+	 */
+	@Override
+	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		return nsdSubscriptionFrontController.delete(subscriptionId);
+	}
+
+	/**
+	 * Read an individual subscription resource.
+	 *
+	 * This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The GET method retrieves information about a subscription by reading an individual subscription resource. This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management.
+	 *
+	 */
+	@Override
+	public ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		return nsdSubscriptionFrontController.findById(subscriptionId, NsdmSubscription.class, NsdSubscriptions271Sol005Controller::makeLink);
+	}
+
+	private static void makeLink(@NotNull final NsdmSubscription subs) {
+		final NsdmSubscriptionLinks nsdmSubscriptionLinks = new NsdmSubscriptionLinks();
+		final Link self = new Link();
+		self.setHref(linkTo(methodOn(NsdSubscriptions271Sol005Api.class).subscriptionsSubscriptionIdGet(subs.getId())).withSelfRel().getHref());
+		nsdmSubscriptionLinks.setSelf(self);
+	}
+
+	private static String getSelfLink(@NotNull final NsdmSubscription subs) {
+		return linkTo(methodOn(NsdSubscriptions271Sol005Api.class).subscriptionsSubscriptionIdGet(subs.getId())).withSelfRel().getHref();
 	}
 
 }

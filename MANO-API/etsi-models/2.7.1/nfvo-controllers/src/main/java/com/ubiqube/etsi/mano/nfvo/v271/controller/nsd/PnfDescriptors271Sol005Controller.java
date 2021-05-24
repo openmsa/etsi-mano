@@ -27,14 +27,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
-public class PnfDescriptorsApiController implements PnfDescriptorsApi {
+public class PnfDescriptors271Sol005Controller implements PnfDescriptors271Sol005Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public PnfDescriptorsApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public PnfDescriptors271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
