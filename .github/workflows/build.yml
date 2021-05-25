@@ -1,0 +1,20 @@
+name: Build
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Check PHP files syntax
+      run: .github/workflows/check_php_syntax.sh
+
+    - uses: actions/setup-java@v1
+      with:
+        java-version: "11"
+
+    - run: cd MANO-API && gradle build
