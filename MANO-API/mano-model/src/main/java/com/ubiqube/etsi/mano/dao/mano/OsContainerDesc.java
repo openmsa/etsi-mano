@@ -16,11 +16,17 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +38,9 @@ public class OsContainerDesc {
 	/**
 	 * Unique identifier of this OsContainerDesc in the VNFD.
 	 */
-	private UUID osContainerDescId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
 	/*
 	 * Number of CPU resources requested for the container (e.g. in milli-CPU-s).
@@ -52,7 +60,7 @@ public class OsContainerDesc {
 	/**
 	 * An array of key-value pairs of extended sts resources required by the container. See note.
 	 */
-	private Map<String, String> extendedResourceReque;
+	// private Map<String, String> extendedResourceReque;
 
 	/**
 	 * Number of CPU resources the container can maximally use (e.g. in milli-CPU).
@@ -82,11 +90,13 @@ public class OsContainerDesc {
 	/**
 	 * Links to virtualStorageDesc-s of the Vdu. (Reference to The storages represented by the linked VirtualStorageDe VirtualStorageDesc-s are attached to the sc) OS Container as volumes. Shall be present in case the OS container requires storage resources.
 	 */
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> virtualStorageDesc;
 
 	/**
 	 * MonitoringParam Specifies the virtualised resource related eter performance metrics on the OsContainerDesc level to be tracked by the VNFM. MonitoringParameter is defined in clause 7.1.11.3.
 	 */
-	Set<MonitoringParams> monitoringParameters;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<MonitoringParams> monitoringParameters;
 
 }

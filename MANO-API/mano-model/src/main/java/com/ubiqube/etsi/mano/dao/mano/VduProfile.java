@@ -20,8 +20,10 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -40,8 +42,10 @@ public class VduProfile implements Serializable {
 	private int maxNumberOfInstances;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<LocalAffinityOrAntiAffinityRule> localAffinityOrAntiAffinityRule;
 
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> affinityOrAntiAffinityGroupId;
 
 }
