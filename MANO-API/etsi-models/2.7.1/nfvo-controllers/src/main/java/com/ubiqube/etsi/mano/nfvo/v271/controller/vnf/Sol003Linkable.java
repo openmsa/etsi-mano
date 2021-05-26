@@ -21,6 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionLinks;
+import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
@@ -31,15 +32,15 @@ public class Sol003Linkable implements Linkable {
 		final VnfPkgInfoLinks links = new VnfPkgInfoLinks();
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfPackagesApiSol003.class).vnfPackagesVnfPkgIdGet(vnfPkgId, null, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, null)).withSelfRel().getHref());
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackagesApiSol003.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();
-		packageContent.setHref(linkTo(methodOn(VnfPackagesApiSol003.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
+		packageContent.setHref(linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, null)).withSelfRel().getHref());
 		links.setPackageContent(packageContent);
 		return links;
 	}
@@ -55,4 +56,13 @@ public class Sol003Linkable implements Linkable {
 		return FrontApiTypesEnum.SOL003;
 	}
 
+	@Override
+	public void makeLinks(final VnfPkgInfo _vnfPkgInfo) {
+		_vnfPkgInfo.setLinks(getVnfLinks(_vnfPkgInfo.getId()));
+	}
+
+	@Override
+	public String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
+		return linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId(), null)).withSelfRel().getHref();
+	}
 }

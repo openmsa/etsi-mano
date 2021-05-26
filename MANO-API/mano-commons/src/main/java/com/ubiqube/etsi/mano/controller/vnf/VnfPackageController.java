@@ -29,7 +29,7 @@ public interface VnfPackageController {
 
 	VnfPackage vnfPackagesVnfPkgIdPatch(UUID id, String body);
 
-	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, byte[] data);
+	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, byte[] data, String accept);
 
 	void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(UUID id, String contentType, String uri);
 

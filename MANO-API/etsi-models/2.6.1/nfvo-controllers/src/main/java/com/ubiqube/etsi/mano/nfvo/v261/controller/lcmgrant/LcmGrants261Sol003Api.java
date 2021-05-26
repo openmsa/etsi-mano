@@ -22,6 +22,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v261.controller.lcmgrant;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
@@ -44,6 +44,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "grants")
 @RequestMapping("/sol003/grant/v1/grants")
+@RolesAllowed({ "ROLE_VNFM" })
 public interface LcmGrants261Sol003Api {
 
 	@ApiOperation(value = "", nickname = "grantsGrantIdGet", notes = "Grant Lifecycle Operation. The GET method reads a grant. This method shall follow the provisions specified in the tables 9.4.3.3.2-1 and 9.4.3.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Grant.class, tags = {})
@@ -78,6 +79,6 @@ public interface LcmGrants261Sol003Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Grant> grantsPost(@ApiParam(value = "", required = true) @Valid @RequestBody GrantRequest grantRequest, @ApiParam(value = "The MIME type of the body of the request. Reference: IETF RFC 7231 ", required = true) @RequestHeader(value = "Content-Type", required = true) String contentType, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = false) String version);
+	ResponseEntity<Grant> grantsPost(@ApiParam(value = "", required = true) @Valid @RequestBody GrantRequest grantRequest);
 
 }

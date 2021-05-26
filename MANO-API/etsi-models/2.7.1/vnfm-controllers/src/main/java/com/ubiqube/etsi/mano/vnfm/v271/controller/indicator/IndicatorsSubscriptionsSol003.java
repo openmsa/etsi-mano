@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:30:43.104+01:00")
+
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping(value = "/sol003/vnfind/v1/indicators", headers = "Version=2.7.1")

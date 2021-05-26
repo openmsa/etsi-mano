@@ -39,12 +39,12 @@ public class DnsHostUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String exec(final VnfParameters params) {
-		return params.getVim().createDnsRecordSet(params.getVimConnectionInformation(), task.getZoneId(), task.getHostname(), task.getNetworkName());
+		return params.getVim().dns(params.getVimConnectionInformation()).createDnsRecordSet(task.getZoneId(), task.getHostname(), task.getNetworkName());
 	}
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteDnsRecordSet(params.getVimConnectionInformation(), params.getVimResourceId(), task.getZoneId(), task.getIps());
+		params.getVim().dns(params.getVimConnectionInformation()).deleteDnsRecordSet(params.getVimResourceId(), task.getZoneId(), task.getIps());
 		return null;
 	}
 

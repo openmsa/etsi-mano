@@ -21,7 +21,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.FmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.FmSubscriptionRequest;
@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.FmSubscriptionRequest;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Controller
+@RestController
 public class NsfmSubscriptions261Sol005Controller implements NsfmSubscriptions261Sol005Api {
 
 	@Override

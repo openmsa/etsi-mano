@@ -33,7 +33,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This type represents network address data for IP over Ethernet. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T17:47:42.824+01:00")
+
 
 public class IpOverEthernetAddressData   {
   @JsonProperty("macAddress")

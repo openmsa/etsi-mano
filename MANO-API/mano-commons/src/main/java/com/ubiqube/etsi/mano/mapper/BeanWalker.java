@@ -68,31 +68,39 @@ public class BeanWalker {
 			beanListener.addProperty(source);
 		}
 		for (final PropertyDescriptor propertyDescriptor : clspd) {
-			if ("class".equals(propertyDescriptor.getName())
-					|| "declaringClass".equals(propertyDescriptor.getName())
-					|| "java.lang.ClassLoader".equals(propertyDescriptor.getName())) {
+			if (isInternal(propertyDescriptor)) {
 				continue;
 			}
-			LOG.info("Handling property: {}", propertyDescriptor.getName());
-			final Method readMethod = propertyDescriptor.getReadMethod();
-			final Class<?> retCls = readMethod.getReturnType();
-			if (haveInnerType(retCls)) {
-				final Class<?> clazzRet = extractInnerListType(propertyDescriptor);
-				if (retCls.isAssignableFrom(List.class)) {
-					handleList(source, propertyDescriptor.getName(), readMethod, beanListener);
-				} else if (retCls.isAssignableFrom(Map.class)) {
-					handleMap(source, propertyDescriptor.getName(), readMethod, beanListener);
-				} else if (isComplex(clazzRet)) {
-					handleComplex(source, propertyDescriptor, readMethod, beanListener);
-				}
-			} else if (isComplex(retCls)) {
+			handlePropertyDescr(source, beanListener, propertyDescriptor);
+		}
+	}
+
+	private boolean isInternal(final PropertyDescriptor propertyDescriptor) {
+		return "class".equals(propertyDescriptor.getName())
+				|| "declaringClass".equals(propertyDescriptor.getName())
+				|| "java.lang.ClassLoader".equals(propertyDescriptor.getName());
+	}
+
+	private void handlePropertyDescr(final Object source, final BeanListener beanListener, final PropertyDescriptor propertyDescriptor) throws IllegalAccessException, InvocationTargetException, IntrospectionException {
+		LOG.info("Handling property: {}", propertyDescriptor.getName());
+		final Method readMethod = propertyDescriptor.getReadMethod();
+		final Class<?> retCls = readMethod.getReturnType();
+		if (isContainer(retCls)) {
+			final Class<?> clazzRet = extractInnerListType(propertyDescriptor);
+			if (retCls.isAssignableFrom(List.class)) {
+				handleList(source, propertyDescriptor.getName(), readMethod, beanListener);
+			} else if (retCls.isAssignableFrom(Map.class)) {
+				handleMap(source, propertyDescriptor.getName(), readMethod, beanListener);
+			} else if (isComplex(clazzRet)) {
 				handleComplex(source, propertyDescriptor, readMethod, beanListener);
-			} else {
-				beanListener.complexStart(propertyDescriptor.getName());
-				final Object val = readMethod.invoke(source);
-				beanListener.addProperty(val);
-				beanListener.complexEnd();
 			}
+		} else if (isComplex(retCls)) {
+			handleComplex(source, propertyDescriptor, readMethod, beanListener);
+		} else {
+			beanListener.complexStart(propertyDescriptor.getName());
+			final Object val = readMethod.invoke(source);
+			beanListener.addProperty(val);
+			beanListener.complexEnd();
 		}
 	}
 
@@ -132,7 +140,7 @@ public class BeanWalker {
 		beanListener.endList();
 	}
 
-	private boolean haveInnerType(final Class<?> clazz) {
+	private boolean isContainer(final Class<?> clazz) {
 		if (clazz.getName().contentEquals("java.util.List")) {
 			return true;
 		}

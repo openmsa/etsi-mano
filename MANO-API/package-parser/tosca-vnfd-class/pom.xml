@@ -11,6 +11,11 @@
 
 	<artifactId>tosca-vnfd-class</artifactId>
 
+	<properties>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -84,7 +89,7 @@
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
+			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

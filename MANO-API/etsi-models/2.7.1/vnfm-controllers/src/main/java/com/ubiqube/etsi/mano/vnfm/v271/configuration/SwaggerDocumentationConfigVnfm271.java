@@ -17,6 +17,9 @@
 
 package com.ubiqube.etsi.mano.vnfm.v271.configuration;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +33,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.paths.DefaultPathProvider;
 import springfox.documentation.spring.web.paths.Paths;
 import springfox.documentation.spring.web.plugins.Docket;
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
 
 @Configuration
 public class SwaggerDocumentationConfigVnfm271 {
@@ -58,8 +59,8 @@ public class SwaggerDocumentationConfigVnfm271 {
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mano.vnfm.v271"))
 				.build()
-				.directModelSubstitute(org.threeten.bp.LocalDate.class, java.sql.Date.class)
-				.directModelSubstitute(org.threeten.bp.OffsetDateTime.class, java.util.Date.class)
+				.directModelSubstitute(LocalDate.class, java.sql.Date.class)
+				.directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
 				.apiInfo(apiInfo());
 	}
 

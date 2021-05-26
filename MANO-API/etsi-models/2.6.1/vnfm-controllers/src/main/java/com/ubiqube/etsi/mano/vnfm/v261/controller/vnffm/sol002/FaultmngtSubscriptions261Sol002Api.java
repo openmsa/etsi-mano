@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,8 +45,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping("/sol002/vnffm/v1/subscriptions")
+@RolesAllowed({ "ROLE_EM" })
 public interface FaultmngtSubscriptions261Sol002Api {
 
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "The client can use this method to retrieve the list of active subscriptions for VNF alarms subscribed by the client. It can be used e.g. for resynchronization after error situations. ", response = FmSubscription.class, tags = {})

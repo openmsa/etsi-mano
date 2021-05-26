@@ -17,35 +17,18 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nslcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSingleField;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceController;
-import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
-import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.InstantiateNsRequest;
@@ -55,28 +38,18 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.ScaleNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.UpdateNsRequest;
 
-import ma.glasnost.orika.MapperFacade;
-
-@RolesAllowed({ "ROLE_OSSBSS" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
-public final class NsInstances261Sol005Controller implements NsInstances262Sol005Api {
-	private static final Logger LOG = LoggerFactory.getLogger(NsInstances261Sol005Controller.class);
+public final class NsInstances261Sol005Controller implements NsInstances261Sol005Api {
 
-	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsInstanceDescription", "nsdId", "nsdInfoId", "nsState", "nsInstanceName"));
+	private final NsInstanceGenericFrontController frontController;
 
-	private static final String NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS = "vnfInstances,pnfInfo,virtualLinkInfo,vnffgInfo,sapInfo,,nsScaleStatus,additionalAffinityOrAntiAffinityRules";
-
-	private final MapperFacade mapper;
-
-	private final NsInstanceControllerService nsInstanceControllerService;
-
-	private final NsInstanceController nsLcmController;
-
-	public NsInstances261Sol005Controller(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
-		mapper = _mapper;
-		nsInstanceControllerService = _nsInstanceControllerService;
-		nsLcmController = _nsLcmController;
-		LOG.debug("Starting Ns Instance SOL005 Controller.");
+	public NsInstances261Sol005Controller(final NsInstanceGenericFrontController _frontController) {
+		frontController = _frontController;
 	}
 
 	/**
@@ -87,9 +60,7 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 */
 	@Override
 	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams) {
-		final String filter = getSingleField(requestParams, "field");
-		final List<NsdInstance> result = nsLcmController.nsInstancesGet(filter);
-		return nsInstanceControllerService.search(requestParams, NsInstance.class, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, NsInstances261Sol005Controller::makeLinks);
+		return frontController.search(requestParams, NsInstance.class, null, NsInstances261Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -100,9 +71,7 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 */
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdDelete(final String nsInstanceId) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		nsLcmController.nsInstancesNsInstanceIdDelete(nsInstanceUuid);
-		return ResponseEntity.noContent().build();
+		return frontController.delete(nsInstanceId);
 	}
 
 	/**
@@ -113,11 +82,7 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdGet(final String nsInstanceId) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
-		final NsInstance nsInstance = mapper.map(nsInstanceDb, NsInstance.class);
-		makeLinks(nsInstance);
-		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
+		return frontController.findById(nsInstanceId, NsInstance.class, NsInstances261Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -128,9 +93,7 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final HealNsRequest body) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
-		throw new GenericException("TODO");
+		return frontController.heal(nsInstanceId, body);
 	}
 
 	/**
@@ -141,12 +104,7 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdInstantiatePost(final String nsInstanceId, final InstantiateNsRequest body) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsInstantiate nsInst = mapper.map(body, NsInstantiate.class);
-		final NsBlueprint nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, nsInst);
-
-		final String link = NsLcmOpOccs261Sol005Controller.makeSelfLink(nsLcm);
-		return ResponseEntity.accepted().header("Location", link).build();
+		return frontController.instantiate(nsInstanceId, body, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -156,10 +114,8 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final String contentType, final ScaleNsRequest body) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdScalePost(nsInstanceUuid);
-		throw new GenericException("TODO");
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final ScaleNsRequest body) {
+		return frontController.scale(nsInstanceId, body);
 	}
 
 	/**
@@ -169,12 +125,8 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final String contentType, final TerminateNsRequest request) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsBlueprint lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, request.getTerminationTime());
-
-		final String link = NsLcmOpOccs261Sol005Controller.makeSelfLink(lcm);
-		return ResponseEntity.accepted().header("Location", link).build();
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdTerminatePost(final String nsInstanceId, final TerminateNsRequest body) {
+		return frontController.terminate(nsInstanceId, body, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -184,10 +136,8 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final String contentType, final UpdateNsRequest body) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		nsLcmController.nsInstancesNsInstanceIdUpdatePost(nsInstanceUuid);
-		throw new GenericException("TODO");
+	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final UpdateNsRequest body) {
+		return frontController.update(nsInstanceId, body);
 	}
 
 	/**
@@ -197,43 +147,44 @@ public final class NsInstances261Sol005Controller implements NsInstances262Sol00
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsInstance> nsInstancesPost(final CreateNsRequest req) {
-		if (req.getNsdId() == null) {
-			throw new NotFoundException("NsdId field is empty.");
-		}
-		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req.getNsdId(), req.getNsName(), req.getNsDescription());
-		final NsInstance nsInstanceWeb = mapper.map(nsInstance, NsInstance.class);
-		makeLinks(nsInstanceWeb);
-		return ResponseEntity.created(URI.create(nsInstanceWeb.getLinks().getSelf().getHref())).body(nsInstanceWeb);
+	public ResponseEntity<NsInstance> nsInstancesPost(final CreateNsRequest request) {
+		return frontController.create(request, NsInstance.class, NsInstances261Sol005Controller::makeLinks, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	private static void makeLinks(@Nonnull final NsInstance nsdInfo) {
 		final String id = nsdInfo.getId();
 		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
 		final Link heal = new Link();
-		heal.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
+		heal.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setHeal(heal);
 
 		final Link instantiate = new Link();
-		instantiate.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
+		instantiate.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdInstantiatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setInstantiate(instantiate);
 		// nsInstanceLinks.setNestedNsInstances(nestedNsInstances);
 		final Link scale = new Link();
-		scale.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdScalePost(id, null, null)).withSelfRel().getHref());
+		scale.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdScalePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setScale(scale);
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdGet(id)).withSelfRel().getHref());
 		nsInstanceLinks.setSelf(self);
 
 		final Link terminate = new Link();
-		terminate.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null, null)).withSelfRel().getHref());
+		terminate.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdTerminatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setTerminate(terminate);
 
 		final Link update = new Link();
-		update.setHref(linkTo(methodOn(NsInstances262Sol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null, null)).withSelfRel().getHref());
+		update.setHref(linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdUpdatePost(id, null)).withSelfRel().getHref());
 		nsInstanceLinks.setUpdate(update);
 		nsdInfo.setLinks(nsInstanceLinks);
 	}
 
+	private static String getSelfLink(final NsBlueprint nsInstance) {
+		return linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdGet(nsInstance.getId().toString())).withSelfRel().getHref();
+	}
+
+	private static String getSelfLink(final NsInstance nsdInfo) {
+		return linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsdInfo.getId(), null)).withSelfRel().getHref();
+	}
 }

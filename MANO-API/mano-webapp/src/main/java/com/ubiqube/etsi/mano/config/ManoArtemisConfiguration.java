@@ -30,14 +30,17 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Configuration
 public class ManoArtemisConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ManoArtemisConfiguration.class);
 
 	@Bean
-	public static MessageConverter jacksonJmsMessageConverter() {
+	public static MessageConverter jacksonJmsMessageConverter(final ObjectMapper mapper) {
 		final MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+		converter.setObjectMapper(mapper);
 		converter.setTargetType(MessageType.TEXT);
 		converter.setTypeIdPropertyName("_type");
 		return converter;

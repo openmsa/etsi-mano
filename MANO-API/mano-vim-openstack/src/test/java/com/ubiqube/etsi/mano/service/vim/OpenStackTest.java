@@ -22,12 +22,14 @@ import static org.mockito.Mockito.when;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -50,6 +52,7 @@ import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
 import org.openstack4j.model.network.Subnet;
+import org.openstack4j.model.telemetry.gnocchi.MetricCreate;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,27 +118,20 @@ public class OpenStackTest {
 		// 1.17
 
 		/*
-		 * final RegionService regions = os.identity().regions(); final List<? extends
-		 * Region> zl = regions.list(); zl.forEach(x -> System.out.println("" +
-		 * x.getId()));
+		 * final RegionService regions = os.identity().regions(); final List<? extends Region> zl = regions.list(); zl.forEach(x -> System.out.println("" + x.getId()));
 		 */
 		/*
-		 * final List<? extends Domain> domains = os.identity().domains().list();
-		 * domains.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Domain> domains = os.identity().domains().list(); domains.forEach(x -> System.out.println("" + x.getName()));
 		 *
-		 * final List<? extends Flavor> flavors = os.compute().flavors().list();
-		 * flavors.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Flavor> flavors = os.compute().flavors().list(); flavors.forEach(x -> System.out.println("" + x.getName()));
 		 *
-		 * final List<? extends Image> images = os.compute().images().list();
-		 * images.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Image> images = os.compute().images().list(); images.forEach(x -> System.out.println("" + x.getName()));
 		 */
 		/*
-		 * final List<? extends Server> servers = os.compute().servers().list();
-		 * servers.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Server> servers = os.compute().servers().list(); servers.forEach(x -> System.out.println("" + x.getName()));
 		 */
 		/*
-		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println(""
-		 * + le);
+		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println("" + le);
 		 */
 		// createServer(os);
 
@@ -217,7 +213,7 @@ public class OpenStackTest {
 		vnfStorage.setToscaName("JUnit-test-volume");
 		when(vimJpa.findById(id)).thenReturn(Optional.of(vimConnectionInformation));
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
-		final String lid = vim.createStorage(vimConnectionInformation, vnfStorage, "junit-test");
+		final String lid = vim.storage(vimConnectionInformation).createStorage(vnfStorage, "junit-test");
 		assertNotNull(lid);
 	}
 
@@ -238,11 +234,11 @@ public class OpenStackTest {
 
 		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
-		final String net = vim.createNetwork(vimConnectionInformation, vl, "Junit-vl", "mano.junit.net.", null);
+		final String net = vim.network(vimConnectionInformation).createNetwork(vl, "Junit-vl", "mano.junit.net.", null);
 		final IpPool ipPool = new IpPool();
 		ipPool.setStartIpAddress("192.168.90.1");
 		ipPool.setEndIpAddress("192.168.90.126");
-		final String lid = vim.createSubnet(vimConnectionInformation, l3ProtocolData, ipPool, net);
+		final String lid = vim.network(vimConnectionInformation).createSubnet(l3ProtocolData, ipPool, net);
 		assertNotNull(lid);
 	}
 
@@ -257,7 +253,7 @@ public class OpenStackTest {
 		img.setName("Junit-uploaded-image");
 		img.setSize(1L);
 		img.setImagePath("/home/olivier/Downloads/cirros-0.5.1-x86_64-disk.img");
-		final SoftwareImage lid = vim.uploadSoftwareImage(vimConnectionInformation, img);
+		final SoftwareImage lid = vim.storage(vimConnectionInformation).uploadSoftwareImage(img);
 		assertNotNull(lid);
 	}
 
@@ -478,5 +474,48 @@ public class OpenStackTest {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Extension> exts = os.networking().network().listExtensions();
 		exts.forEach(System.out::println);
+	}
+
+	@Test
+	void testTelemetry() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		os.telemetry().alarms().list();
+		os.telemetry().meters().list();
+		os.telemetry().resources().list();
+		os.telemetry().samples().list();
+	}
+
+	@Test
+	void testGnochhiCreate() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final MetricCreate metrics = Builders.gnocchi().metric().archivePolicyName("high").name("test-ovi").resourceId(null).build();
+		os.telemetry().gnocchi().metrics().create(metrics);
+	}
+
+	@Test
+	void testGnocchiDelete() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		os.telemetry().gnocchi().metrics().delete("7856e791-c918-4f72-814c-b3f18127190b");
+	}
+
+	@Test
+	void testNameUbi1() throws Exception {
+		final SecureRandom random = new SecureRandom();
+		final int leftLimit = 48;
+		final int rightLimit = 122;
+		final int targetStringLength = 128;
+		final String key = random.ints(leftLimit, rightLimit + 1)
+				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))
+				.limit(targetStringLength)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString();
+		System.out.println(generateKey());
+	}
+
+	private String generateKey() {
+		final SecureRandom random = new SecureRandom();
+		final byte[] bytes = new byte[80];
+		random.nextBytes(bytes);
+		return Base64.encodeBase64String(bytes);
 	}
 }

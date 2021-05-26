@@ -51,12 +51,12 @@ public class AppVirtualLinkUow extends AppAbstractUnitOfWork {
 	@Override
 	public String exec(final AppParameters params) {
 		final String domainName = null; // dnsZone
-		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, networkTask.getAlias(), domainName, null);
+		return params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
 	@Override
 	public String rollback(final AppParameters params) {
-		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteVirtualLink(params.getVimResourceId());
 		return null;
 	}
 

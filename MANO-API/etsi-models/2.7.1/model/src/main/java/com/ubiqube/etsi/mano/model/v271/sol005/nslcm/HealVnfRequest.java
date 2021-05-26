@@ -31,7 +31,7 @@ import javax.validation.constraints.*;
  * HealVnfRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+
 
 public class HealVnfRequest   {
   @JsonProperty("cause")

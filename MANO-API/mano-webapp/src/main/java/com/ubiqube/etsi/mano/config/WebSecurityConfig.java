@@ -49,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/openApi*").permitAll()
 				.antMatchers("/download/**").permitAll()
+				.antMatchers("/actuator/**").permitAll()
 				.anyRequest().authenticated()
 				.and().httpBasic().authenticationEntryPoint(http403EntryPoint)
 				.and().csrf().disable();

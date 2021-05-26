@@ -53,7 +53,7 @@ public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 	@Override
 	public String exec(final VnfParameters params) {
 		final String domainName = params.getContext().get(NodeNaming.dnsZone());
-		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, networkTask.getAlias(), domainName, null);
+		return params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteVirtualLink(params.getVimResourceId());
 		return null;
 	}
 

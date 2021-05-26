@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -48,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "onboarded_vnf_packages", description = "the onboarded_vnf_packages API")
 @RequestMapping("/sol003/vnfpkgm/v1/onboarded_vnf_packages")
+@RolesAllowed({ "ROLE_VNFM" })
 public interface VnfPackagesOnboarded261Sol003Api {
 
 	@ApiOperation(value = "", nickname = "onboardedVnfPackagesGet", notes = "Query VNF Package Info. The GET method queries the information of the VNF packages matching the filter. This method shall follow the provisions specified in the tables 10.4.2.3.2-1 and 10.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfPkgInfo.class, responseContainer = "List", tags = {})

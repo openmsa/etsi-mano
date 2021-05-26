@@ -16,15 +16,11 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import javax.xml.bind.annotation.XmlEnumValue;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum ApiTypesEnum {
-	@XmlEnumValue("SOL003")
-	SOL003(String.valueOf("SOL003")),
-	@XmlEnumValue("SOL005")
-	SOL005(String.valueOf("SOL005"));
+	SOL003("SOL003"),
+	SOL005("SOL005");
 
 	private final String value;
 

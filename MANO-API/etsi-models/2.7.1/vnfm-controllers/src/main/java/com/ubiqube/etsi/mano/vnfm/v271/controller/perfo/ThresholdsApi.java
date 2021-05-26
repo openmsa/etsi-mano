@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:40:34.645+01:00")
+
 
 @Api(value = "thresholds", description = "the thresholds API")
 @RequestMapping(value = "/sol003/vnfpm/v1/thresholds", headers = "Version=2.7.1")

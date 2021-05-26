@@ -16,72 +16,57 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002;
 
-import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.UUID;
 
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
-import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
-import com.ubiqube.etsi.mano.service.AlarmVnfmController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.PerceivedSeverityRequest;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Controller
+@RestController
 public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
 
-	private final MapperFacade mapper;
+	private final AlarmFrontController alarmFrontController;
 
-	private final AlarmVnfmController alarmVnfmController;
-
-	public Alarms261Sol002ApiController(final MapperFacade mapper, final AlarmVnfmController alarmVnfmController) {
+	public Alarms261Sol002ApiController(final AlarmFrontController alarmFrontController) {
 		super();
-		this.mapper = mapper;
-		this.alarmVnfmController = alarmVnfmController;
+		this.alarmFrontController = alarmFrontController;
 	}
 
 	@Override
 	public ResponseEntity<Void> alarmsAlarmIdEscalatePost(final String alarmId, @Valid final PerceivedSeverityRequest perceivedSeverityRequest) {
-		alarmVnfmController.escalate(UUID.fromString(alarmId), PerceivedSeverityType.valueOf(perceivedSeverityRequest.getProposedPerceivedSeverity().toString()));
-		return ResponseEntity.noContent().build();
+		return alarmFrontController.escalate(alarmId, PerceivedSeverityType.valueOf(perceivedSeverityRequest.getProposedPerceivedSeverity().toString()));
 	}
 
 	@Override
 	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
-		final Alarms alarm = alarmVnfmController.findById(UUID.fromString(alarmId));
-		final Alarm ret = mapper.map(alarm, Alarm.class);
-		makeLinks(ret);
-		return ResponseEntity.ok(ret);
+		return alarmFrontController.findById(alarmId, Alarm.class, Alarms261Sol002ApiController::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<AlarmModifications> alarmsAlarmIdPatch(final String alarmId, final AlarmModifications alarmModifications, final String ifMatch) {
-		final Alarms alarm = alarmVnfmController.modify(UUID.fromString(alarmId), AckState.valueOf(alarmModifications.getAckState().toString()), ifMatch);
-		return ResponseEntity.ok(mapper.map(alarm, AlarmModifications.class));
+		return alarmFrontController.patch(alarmId, AckState.valueOf(alarmModifications.getAckState().toString()), ifMatch, AlarmModifications.class);
 	}
 
 	@Override
 	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return alarmVnfmController.search(requestParams, Alarm.class, ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS, ALARM_SEARCH_MANDATORY_FIELDS, Alarms261Sol002ApiController::makeLinks);
+		return alarmFrontController.search(requestParams, Alarm.class, Alarms261Sol002ApiController::makeLinks);
 	}
 
 	private static void makeLinks(final Alarm alarm) {

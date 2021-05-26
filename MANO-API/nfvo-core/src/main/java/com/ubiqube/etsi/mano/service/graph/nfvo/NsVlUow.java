@@ -53,12 +53,12 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 		// l3.setGatewayIp(gatewayIp);
 		l3.setIpVersion("ipv4");
 		// l3.setL3Name(l3Name);
-		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, null, null, null);
+		return params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, null, null, null);
 	}
 
 	@Override
 	public String rollback(final NsParameters params) {
-		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), task.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteVirtualLink(task.getVimResourceId());
 		return null;
 	}
 

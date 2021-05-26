@@ -30,7 +30,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This type contains information about a Compute, storage or network resource whose addition/update/deletion was granted. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T17:47:42.824+01:00")
+
 
 public class GrantInfo   {
   @JsonProperty("resourceDefinitionId")

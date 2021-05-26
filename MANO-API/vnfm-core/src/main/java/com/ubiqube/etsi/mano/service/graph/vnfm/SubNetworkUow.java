@@ -50,7 +50,7 @@ public class SubNetworkUow extends VnfAbstractUnitOfWork {
 	@Override
 	public String exec(final VnfParameters params) {
 		final String networkId = params.getContext().get(task.getParentName());
-		return params.getVim().createSubnet(params.getVimConnectionInformation(), task.getL3Data(), task.getIpPool(), networkId);
+		return params.getVim().network(params.getVimConnectionInformation()).createSubnet(task.getL3Data(), task.getIpPool(), networkId);
 	}
 
 	@Override

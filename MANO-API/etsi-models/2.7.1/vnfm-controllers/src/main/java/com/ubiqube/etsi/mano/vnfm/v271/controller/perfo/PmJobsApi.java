@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:40:34.645+01:00")
+
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
 // "Version=2.0.0"

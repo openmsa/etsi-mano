@@ -36,7 +36,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "This type represents API version information. ")
 @Validated
 
-
 public class ApiVersionInformation {
 	@JsonProperty("uriPrefix")
 	private String uriPrefix = null;
@@ -51,8 +50,7 @@ public class ApiVersionInformation {
 	}
 
 	/**
-	 * Specifies the URI prefix for the API, in the following form
-	 * {apiRoot}/{apiName}/{apiMajorVersion}/.
+	 * Specifies the URI prefix for the API, in the following form {apiRoot}/{apiName}/{apiMajorVersion}/.
 	 *
 	 * @return uriPrefix
 	 **/
@@ -67,12 +65,12 @@ public class ApiVersionInformation {
 		this.uriPrefix = uriPrefix;
 	}
 
-	public ApiVersionInformation apiVersions(final List<ApiVersionInformationApiVersions> apiVersions) {
+	public ApiVersionInformation apiVersions(final @Valid List<ApiVersionInformationApiVersions> apiVersions) {
 		this.apiVersions = apiVersions;
 		return this;
 	}
 
-	public ApiVersionInformation addApiVersionsItem(final ApiVersionInformationApiVersions apiVersionsItem) {
+	public ApiVersionInformation addApiVersionsItem(final @Valid ApiVersionInformationApiVersions apiVersionsItem) {
 		this.apiVersions.add(apiVersionsItem);
 		return this;
 	}
@@ -91,7 +89,7 @@ public class ApiVersionInformation {
 		return apiVersions;
 	}
 
-	public void setApiVersions(final List<ApiVersionInformationApiVersions> apiVersions) {
+	public void setApiVersions(final @Valid List<ApiVersionInformationApiVersions> apiVersions) {
 		this.apiVersions = apiVersions;
 	}
 
@@ -125,8 +123,7 @@ public class ApiVersionInformation {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

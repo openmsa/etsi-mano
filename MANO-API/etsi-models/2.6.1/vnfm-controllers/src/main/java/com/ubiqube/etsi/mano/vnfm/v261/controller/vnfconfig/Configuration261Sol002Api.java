@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfconfig;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Api(value = "configuration", description = "the configuration API")
+@RequestMapping(value = "/sol002/vnfconfig/v1/configuration")
+@RolesAllowed({ "ROLE_EM" })
 public interface Configuration261Sol002Api {
 
 	@ApiOperation(value = "Read VNF/VNFC configuration from VNF", nickname = "configurationGet", notes = "The client can use this method to read configuration information about a VNF instance and/or its VNFC instances. ", response = VnfConfiguration.class, tags = {})
@@ -58,7 +64,7 @@ public interface Configuration261Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/configuration", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<VnfConfiguration> configurationGet();
 
 	@ApiOperation(value = "Modify VNF/VNFC configuration.", nickname = "configurationPatch", notes = "This method sets or modifies a configuration resource.", response = VnfConfigModifications.class, tags = {})
@@ -77,7 +83,7 @@ public interface Configuration261Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
-	@RequestMapping(value = "/configuration", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
+	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
 	ResponseEntity<VnfConfigModifications> configurationPatch(@ApiParam(value = "The parameter for the configuration modification, as defined in clause 9.5.2.2. ", required = true) @Valid @RequestBody final VnfConfigModifications configModifications);
 
 }

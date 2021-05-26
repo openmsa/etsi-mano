@@ -32,7 +32,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This type represents a subscription related to notifications about VNF faults. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:22:49.340+01:00")
+
 
 public class FmSubscription   {
   @JsonProperty("id")

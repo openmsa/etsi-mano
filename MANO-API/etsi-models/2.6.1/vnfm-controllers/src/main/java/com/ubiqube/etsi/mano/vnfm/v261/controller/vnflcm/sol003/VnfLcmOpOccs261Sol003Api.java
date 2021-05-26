@@ -18,13 +18,13 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,6 +37,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RequestMapping("/sol003/vnflcm/v1/vnf_lcm_op_occs")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcmOpOccs261Sol003Api {
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsGet", notes = "Get Operation Status. The client can use this method to query status information about multiple VNF lifecycle management operation occurrences. This method shall follow the provisions specified in the tables 5.4.12.3.2-1 and 5.4.12.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfLcmOpOcc.class, tags = {})
@@ -68,9 +69,7 @@ public interface VnfLcmOpOccs261Sol003Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfLcmOpOccId}/cancel", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(
-			@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be cancelled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId,
-			@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version);
+	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdCancelPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be cancelled. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdFailPost", notes = "The POST method marks a VNF lifecycle management operation occurrence as \"finally failed\" if that operation occurrence is in \"FAILED_TEMP\" state. This method shall follow the provisions specified in the tables 5.4.16.3.1-1 and 5.4.16.3.1-2 for URI query parameters, request and response data structures, and response codes. In case of success, the \"operationState\" attribute in the representation of the parent resource shall be changed to \"FAILED\" and the applicable \"result\" notification according to clause 5.6.2.2 shall be emitted to indicate that the execution of the underlying VNF LCM operation occurrence has finally and unrecoverably failed. ", response = VnfLcmOpOcc.class, tags = {})
 	@ApiResponses(value = {
@@ -86,9 +85,7 @@ public interface VnfLcmOpOccs261Sol003Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfLcmOpOccId}/fail", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(
-			@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be marked as \"failed\". This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId,
-			@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version);
+	ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdFailPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be marked as \"failed\". This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") final String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdGet", notes = "Get Operation Status. The client can use this method to retrieve status information about a VNF lifecycle management operation occurrence by reading an \"Individual VNF LCM operation occurrence\" resource. This method shall follow the provisions specified in the tables 5.4.13.3.2-1 and 5.4.13.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = VnfLcmOpOcc.class, tags = {})
 	@ApiResponses(value = {
@@ -103,8 +100,7 @@ public interface VnfLcmOpOccs261Sol003Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{vnfLcmOpOccId}", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(
-			@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") @Nonnull String vnfLcmOpOccId);
+	ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") @Nonnull String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdRetryPost", notes = "The POST method initiates retrying a VNF lifecycle operation if that operation has experienced a temporary failure, i.e. the related \"Individual VNF LCM operation occurrence\" resource is in \"FAILED_TEMP\" state. This method shall follow the provisions specified in the tables 5.4.14.3.1-1 and 5.4.14.3.1-2 for URI query parameters, request and response data structures, and response codes. In case of success of processing the asynchronous request, the \"operationState\" attribute in the representation of the parent resource shall be changed to \"PROCESSING\" and the applicable \"start\" notification according to clause 5.6.2.2 shall be emitted to indicate that the underlying VNF LCM operation occurrence proceeds. ", tags = {})
 	@ApiResponses(value = {
@@ -120,9 +116,7 @@ public interface VnfLcmOpOccs261Sol003Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfLcmOpOccId}/retry", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(
-			@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be retried. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId,
-			@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) String version);
+	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRetryPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be retried. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId);
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsVnfLcmOpOccIdRollbackPost", notes = "The POST method initiates rolling back a VNF lifecycle operation if that operation has experienced a temporary failure, i.e. the related \"Individual VNF LCM operation occurrence\" resource is in \"FAILED_TEMP\" state. This method shall follow the provisions specified in the tables 5.4.15.3.1-1 and 5.4.15.3.1-2 for URI query parameters, request and response data structures, and response codes. In case of success of processing the asynchronous request, the \"operationState\" attribute in the representation of the parent resource shall be changed to \"ROLLING_BACK\" and the applicable \"start\" notification according to clause 5.6.2.2 shall be emitted to indicate that rollback of the underlying VNF LCM operation occurrence is attempted. ", tags = {})
 	@ApiResponses(value = {
@@ -138,8 +132,6 @@ public interface VnfLcmOpOccs261Sol003Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/{vnfLcmOpOccId}/rollback", produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(
-			@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be rolled back. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId,
-			@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) String version);
+	ResponseEntity<Void> vnfLcmOpOccsVnfLcmOpOccIdRollbackPost(@ApiParam(value = "Identifier of a VNF lifecycle management operation occurrence to be be rolled back. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a PATCH or POST request triggering a VNF LCM operation. It can also be retrieved from the \"vnfLcmOpOccId\" attribute in the VnfLcmOperationOccurrenceNotification. ", required = true) @PathVariable("vnfLcmOpOccId") String vnfLcmOpOccId);
 
 }

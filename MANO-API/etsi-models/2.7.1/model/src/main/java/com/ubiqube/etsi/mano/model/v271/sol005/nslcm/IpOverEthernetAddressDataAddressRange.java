@@ -30,7 +30,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+
 
 public class IpOverEthernetAddressDataAddressRange   {
   @JsonProperty("minAddress")

@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.repository;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -67,6 +69,7 @@ public class SubscriptionFilterTest {
 				System.out.println(">>> " + buildKey(stack));
 			}
 		}
+		assertNotNull(bi);
 	}
 
 	private void handleList(final PropertyDescriptor propertyDescriptor, final List list, final Deque<String> stack) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {

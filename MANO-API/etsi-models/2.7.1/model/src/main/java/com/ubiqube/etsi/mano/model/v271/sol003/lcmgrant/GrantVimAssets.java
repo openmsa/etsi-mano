@@ -34,7 +34,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Information about assets for the VNF that are managed by the NFVO in the VIM, such as software images and virtualised compute resource flavours. The Grant response allows the NFVO to pass to the VNFM VIM assets related to the VNF package that is identified by the vnfdId attribute in the corresponding Grant request. The NFVO may send in each Grant response the full set of VIM assets related to the VNF package defined by the vnfdId in the related Grant request, but shall send this information if the vnfdId in the related Grant request differs from the vnfdId passed in the previous Grant request, or if the Grant response is related to an InstantiateVnf operation. The set of VIM assets shall not change between subsequent Grant responses if the vnfdId has not changed. During each LCM operation occurrence, the VIM assets that relate to the VNF package identified by the current value of the vnfdId attribute in the “VnfInstance” structure shall be used by the VNFM for newly created resources. If the VNF package identifier of the VNF instance has been updated, VIM assets that relate to the previously-used VNF package(s), and that were communicated in previous Grant responses, apply to existing resources. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T17:47:42.824+01:00")
+
 
 public class GrantVimAssets   {
   @JsonProperty("computeResourceFlavours")

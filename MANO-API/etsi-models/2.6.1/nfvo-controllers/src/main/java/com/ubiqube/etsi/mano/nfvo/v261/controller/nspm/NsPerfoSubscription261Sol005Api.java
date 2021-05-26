@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,13 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RequestMapping("/sol005/nspm/v1/subscriptions")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsPerfoSubscription261Sol005Api {
 
 	/**

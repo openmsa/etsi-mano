@@ -16,6 +16,8 @@
  */
 package com.ubiqube.mano.mapping;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -58,6 +60,7 @@ public class TaskToGrantTest {
 		task.setVnfCompute(vnfCompute);
 		final GrantInformation grant = mapper.map(task, GrantInformation.class);
 		System.out.println("");
+		assertNotNull(grant);
 	}
 
 	@Test
@@ -69,6 +72,7 @@ public class TaskToGrantTest {
 		task.setVnfVl(vnfVl);
 		final GrantInformation grant = mapper.map(task, GrantInformation.class);
 		System.out.println("");
+		assertNotNull(grant);
 	}
 
 	private static void setBase(final VnfTask task) {

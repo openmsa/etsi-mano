@@ -21,24 +21,17 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol002;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicator;
 
@@ -52,21 +45,8 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "indicators", description = "the indicators API")
 @RequestMapping("/sol002/vnfind/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface Indicators261Sol002Api {
-
-	Logger log = LoggerFactory.getLogger(Indicators261Sol002Api.class);
-
-	default Optional<ObjectMapper> getObjectMapper() {
-		return Optional.empty();
-	}
-
-	default Optional<HttpServletRequest> getRequest() {
-		return Optional.empty();
-	}
-
-	default Optional<String> getAcceptHeader() {
-		return getRequest().map(r -> r.getHeader("Accept"));
-	}
 
 	@ApiOperation(value = "Query multiple indicators", nickname = "indicatorsGet", notes = "Get a list of indicators. Support of attribute based filtering via query parameters.", response = VnfIndicator.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -84,23 +64,9 @@ public interface Indicators261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/indicators", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<VnfIndicator>> indicatorsGet(@ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
+	ResponseEntity<List<VnfIndicator>> indicatorsGet(
 			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM/VNF may supply this parameter. The VNF may supply its instance Id as an attribute filter. All attribute names that appear in the VnfIndicator data type and in data types referenced from it shall be supported by the VNFM in the filter expression. If receiving, this parameter is not supported a 400 Bad Request response shall be returned (See table 8.4.2.3.2-2). EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the EM/VNF if the EM/VNF supports alternative 2 (paging) according to clause 5.4.2.1 of  ETSI GS NFV-SOL 013for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("[ {  \"vnfInstanceId\" : { },  \"_links\" : {    \"self\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    }  },  \"name\" : \"name\",  \"id\" : { },  \"value\" : \"{}\"}, {  \"vnfInstanceId\" : { },  \"_links\" : {    \"self\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    }  },  \"name\" : \"name\",  \"id\" : { },  \"value\" : \"{}\"} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default IndicatorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the EM/VNF if the EM/VNF supports alternative 2 (paging) according to clause 5.4.2.1 of  ETSI GS NFV-SOL 013for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Query multiple indicators related to a VNF instance.", nickname = "indicatorsVnfInstanceIdGet", notes = "Get a list of indicators related to a specific VNF instance. Support of attribute based filtering via query parameters. ", response = VnfIndicator.class, responseContainer = "List", tags = {})
 	@ApiResponses(value = {
@@ -118,23 +84,9 @@ public interface Indicators261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/indicators/{vnfInstanceId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<List<VnfIndicator>> indicatorsVnfInstanceIdGet(@ApiParam(value = "Service Unavailable Identifier of the VNF instance to which the VNF indicators applies. NOTE: This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") final String vnfInstanceId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization,
+	ResponseEntity<List<VnfIndicator>> indicatorsVnfInstanceIdGet(@ApiParam(value = "Service Unavailable Identifier of the VNF instance to which the VNF indicators applies. NOTE: This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") final String vnfInstanceId,
 			@ApiParam(value = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The EM/VNF shall support receiving filtering parameters as part of the URI query string. The VNFM may supply filtering parameters. All attribute names that appear in the VnfIndicator data type and in data types referenced from it shall be supported in attribute-based filtering parameters. EXAMPLE objects obj1: {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} obj2: {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} Request 1: GET …/container Response 1: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]},     {\"id\":456, \"weight\":500, \"parts\":[{\"id\":3, \"color\":\"green\"}, {\"id\":4, \"color\":\"blue\"}]} ] Request 2: GET …/container?filter=(eq.weight,100) Response 2: [     {\"id\":123, \"weight\":100, \"parts\":[{\"id\":1, \"color\":\"red\"}, {\"id\":2, \"color\":\"green\"}]} ] ") @Valid @RequestParam(value = "filter", required = false) final String filter,
-			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported  by the EM/VNF if the EM/VNF supports alternative 2 (paging) according  to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("[ {  \"vnfInstanceId\" : { },  \"_links\" : {    \"self\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    }  },  \"name\" : \"name\",  \"id\" : { },  \"value\" : \"{}\"}, {  \"vnfInstanceId\" : { },  \"_links\" : {    \"self\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    }  },  \"name\" : \"name\",  \"id\" : { },  \"value\" : \"{}\"} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default IndicatorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+			@RequestParam(value = "nextpageOpaqueMarker", required = false) @Valid final String nextpageOpaqueMarker);
 
 	@ApiOperation(value = "Read an inidividual VNF indicator related to a VNF instance.", nickname = "indicatorsVnfInstanceIdIndicatorIdGet", notes = "Read an individual VNF indicator related to a specific VNF instance. NOTE: This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", response = VnfIndicator.class, tags = {})
 	@ApiResponses(value = {
@@ -152,20 +104,7 @@ public interface Indicators261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/indicators/{vnfInstanceId}/{indicatorId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
-	default ResponseEntity<VnfIndicator> indicatorsVnfInstanceIdIndicatorIdGet(@ApiParam(value = "Service Unavailable Identifier of the VNF instance to which the VNF indicators applies. NOTE: This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") final String vnfInstanceId, @ApiParam(value = "Identifier of the VNF indicator. ", required = true) @PathVariable("indicatorId") final String indicatorId, @ApiParam(value = "Version of the API requested to use when responding to this request. ", required = true) @RequestHeader(value = "Version", required = true) final String version, @ApiParam(value = "The authorization token for the request. Reference: IETF RFC 7235 ") @RequestHeader(value = "Authorization", required = false) final String authorization) {
-		if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-			if (getAcceptHeader().get().contains("application/json")) {
-				try {
-					return new ResponseEntity<>(getObjectMapper().get().readValue("{  \"vnfInstanceId\" : { },  \"_links\" : {    \"self\" : {      \"href\" : { }    },    \"vnfInstance\" : {      \"href\" : { }    }  },  \"name\" : \"name\",  \"id\" : { },  \"value\" : \"{}\"}", VnfIndicator.class), HttpStatus.NOT_IMPLEMENTED);
-				} catch (final IOException e) {
-					log.error("Couldn't serialize response for content type application/json", e);
-					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-			}
-		} else {
-			log.warn("ObjectMapper or HttpServletRequest not configured in default IndicatorsApi interface so no example is generated");
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<VnfIndicator> indicatorsVnfInstanceIdIndicatorIdGet(@ApiParam(value = "Service Unavailable Identifier of the VNF instance to which the VNF indicators applies. NOTE: This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new VNF instance resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("vnfInstanceId") final String vnfInstanceId,
+			@ApiParam(value = "Identifier of the VNF indicator. ", required = true) @PathVariable("indicatorId") final String indicatorId);
 
 }

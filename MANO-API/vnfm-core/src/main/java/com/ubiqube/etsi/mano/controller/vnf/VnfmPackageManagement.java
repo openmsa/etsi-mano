@@ -114,7 +114,7 @@ public class VnfmPackageManagement extends SearchableService implements VnfPacka
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final boolean includeSignature) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -153,6 +153,18 @@ public class VnfmPackageManagement extends SearchableService implements VnfPacka
 
 	@Override
 	public <U> U onboardedVnfPackagesVnfdIdGet(final UUID vnfdId, final Class<U> clazz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Resource> onboardedGetManifestByVnfd(final UUID vnfdId, @Valid final String includeSignature) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(final UUID vnfdId, final String range) {
 		// TODO Auto-generated method stub
 		return null;
 	}

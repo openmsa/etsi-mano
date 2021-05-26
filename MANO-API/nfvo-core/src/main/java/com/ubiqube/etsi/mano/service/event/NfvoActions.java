@@ -152,7 +152,7 @@ public class NfvoActions {
 		// Create Ns.
 		final Map<String, String> userData = nsdInfo.getUserDefinedData();
 		// XXX elect vim?
-		final Map<String, String> pubNet = vim.getPublicNetworks(vimInfo);
+		final Map<String, String> pubNet = vim.network(vimInfo).getPublicNetworks();
 		final NsParameters params = new NsParameters(vim, vimInfo, pubNet, null);
 		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));

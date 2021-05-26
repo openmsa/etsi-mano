@@ -21,9 +21,8 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol002;
 
-import java.net.URISyntaxException;
-
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
 @RequestMapping("/sol002/vnfpm/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface PmJobs261Sol002Api {
 
 	@ApiOperation(value = "", nickname = "pmJobsGet", notes = "The client can use this method to retrieve information about PM jobs. ", response = PmJob.class, responseContainer = "List", tags = {})
@@ -142,6 +142,6 @@ public interface PmJobs261Sol002Api {
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@PostMapping(value = "/pm_jobs", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<PmJob> pmJobsPost(
-			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest) throws URISyntaxException;
+			@ApiParam(value = "The VNF creation parameters", required = true) @Valid @RequestBody final CreatePmJobRequest createPmJobRequest);
 
 }

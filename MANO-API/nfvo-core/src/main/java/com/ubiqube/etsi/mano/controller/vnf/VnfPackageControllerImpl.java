@@ -69,7 +69,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	}
 
 	@Override
-	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final byte[] data) {
+	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final byte[] data, final String accept) {
 		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> map = new HashMap<>();

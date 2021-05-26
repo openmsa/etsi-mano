@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,11 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.ThresholdLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
-@RolesAllowed({ "ROLE_OSSBSS" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class Thresholds261Sol005Controller implements Thresholds261Sol005Api {
 	private static final Set<String> THR_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));

@@ -1,3 +1,19 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.parser.tosca.generator;
 
 import java.io.File;
@@ -36,6 +52,7 @@ import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
+import com.ubiqube.parser.tosca.ToscaBasePropertiesEntity;
 import com.ubiqube.parser.tosca.ToscaClass;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
@@ -136,8 +153,8 @@ public class JavaGenerator {
 		return false;
 	}
 
-	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
-		LOG.info("generateClassFromDataType class {}", className);
+	private JDefinedClass generateClassFrom(final String className, final ToscaBasePropertiesEntity definition) {
+		LOG.info("generateClassFrom class {}", className);
 		final JPackage pack = getPackage(className);
 		if (null == pack) {
 			throw new ParseException("Unable to create a class without a package: " + className);
@@ -150,24 +167,21 @@ public class JavaGenerator {
 			jc._extends(ToscaInernalBase.class);
 		}
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
-
 		LOG.debug("Caching {}", className);
 		cache.put(className, jc);
 		return jc;
 	}
 
+	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) {
+		return generateClassFrom(className, definition);
+	}
+
+	private JDefinedClass generateClassFromDataType(final String className, final DataType definition) {
+		return generateClassFrom(className, definition);
+	}
+
 	private JDefinedClass generateToscaClass(final String className, final ToscaClass toscaClass) {
-		LOG.info("generateToscaClass class {}", className);
-		final JPackage pack = getPackage(className);
-		if (null == pack) {
-			throw new ParseException("Cannot create a class without a package : " + className);
-		}
-		final JDefinedClass jc = createClass(pack, ClassUtils.getClassName(className));
-		if (null != toscaClass.getDerivedFrom()) {
-			final JDefinedClass clazz = getExtends(toscaClass.getDerivedFrom());
-			jc._extends(clazz);
-		}
-		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
+		final JDefinedClass jc = generateClassFrom(className, toscaClass);
 
 		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(jc, x));
 
@@ -175,8 +189,6 @@ public class JavaGenerator {
 
 		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(jc, x));
 
-		LOG.info("Caching {}", className);
-		cache.put(className, jc);
 		return jc;
 
 	}
@@ -244,8 +256,8 @@ public class JavaGenerator {
 	private void generateCaps(final JDefinedClass jc, final Map<String, CapabilityDefinition> capabilities) {
 		capabilities.forEach((final String x, final CapabilityDefinition y) -> {
 			JDefinedClass jType = cache.get(y.getType());
-			final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 			if (null == jType) {
+				final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 				jType = generateClass(y.getType(), caps);
 			}
 			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
@@ -264,30 +276,6 @@ public class JavaGenerator {
 			vo.setRequired(Boolean.FALSE);
 			createGetterSetter(fieldName, jc, field, vo);
 		});
-	}
-
-	private JDefinedClass generateClass(final String className, final CapabilityTypes definition) {
-		LOG.info("generateClass class {}", className);
-		final JPackage pack = getPackage(className);
-		final JDefinedClass jc;
-		if (null != pack) {
-			jc = createClass(pack, ClassUtils.getClassName(className));
-		} else {
-			throw new ParseException("Definition without a package ?");
-		}
-
-		if (null != definition.getDerivedFrom()) {
-			JDefinedClass clazz = cache.get(definition.getDerivedFrom());
-			if (null == clazz) {
-				final CapabilityTypes def = root.getCapabilities().get(definition.getDerivedFrom());
-				clazz = generateClass(definition.getDerivedFrom(), def);
-				cache.put(definition.getDerivedFrom(), clazz);
-			}
-			jc._extends(clazz);
-		}
-		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(jc, x.getProperties()));
-		cache.put(className, jc);
-		return jc;
 	}
 
 	private static JDefinedClass createClass(@NotNull final JPackage pack, final String classname) {
@@ -336,11 +324,11 @@ public class JavaGenerator {
 			if (!val.getConstraints().isEmpty()) {
 				// XXX Add Constraint.
 				final List<Constraint> cont = val.getConstraints();
-				cont.forEach(x -> applyAnnotation(x, field));
+				cont.forEach(x -> applyAnnotation(x, field, val.getType()));
 			}
 			if (null != primitive.get(val.getType())) {
 				final List<Constraint> cont = primitive.get(val.getType()).getConstraints();
-				cont.forEach(x -> applyAnnotation(x, field));
+				cont.forEach(x -> applyAnnotation(x, field, val.getType()));
 			}
 			createGetterSetter(fieldName, jc, field, val);
 		}
@@ -373,7 +361,7 @@ public class JavaGenerator {
 		return sb.toString();
 	}
 
-	private static void applyAnnotation(final Constraint x, final JFieldVar field) {
+	private static void applyAnnotation(final Constraint x, final JFieldVar field, final String type) {
 		// XXX: All numéric values maybe scalars.
 		if (x instanceof Pattern) {
 			field.annotate(javax.validation.constraints.Pattern.class).param("regexp", ((Pattern) x).getValue());
@@ -389,8 +377,13 @@ public class JavaGenerator {
 			// XXX.
 		} else if (x instanceof InRange) {
 			final InRange ir = (InRange) x;
-			field.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
-			field.annotate(Max.class).param(VALUE, Integer.parseInt(ir.getMax()));
+			if ("float".equals(type)) {
+				field.annotate(Min.class).param(VALUE, Float.parseFloat(ir.getMin()));
+				field.annotate(Max.class).param(VALUE, Float.parseFloat(ir.getMax()));
+			} else {
+				field.annotate(Min.class).param(VALUE, Integer.parseInt(ir.getMin()));
+				field.annotate(Max.class).param(VALUE, Integer.parseInt(ir.getMax()));
+			}
 		} else if (x instanceof MinLength) {
 			final MinLength ml = (MinLength) x;
 			field.annotate(javax.validation.constraints.Size.class).param("min", Integer.parseInt(ml.getValue()));

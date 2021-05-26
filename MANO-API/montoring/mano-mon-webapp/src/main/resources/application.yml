@@ -1,0 +1,36 @@
+debug: true
+eureka:
+  client:
+    enabled: true
+logging:
+  level:
+    com:
+      ubiqube:
+        etsi: DEBUG
+    org:
+      hibernate:
+        SQL: INFO
+      openstack4j: DEBUG
+      springframework:
+        boot:
+          autoconfigure:
+            logging:
+              ConditionEvaluationReportLoggingListener: INFO
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure: 
+        include: '*'
+  info:
+    git:
+      mode: full
+
+spring:
+  application:
+    name: mano-mon
+
+
+

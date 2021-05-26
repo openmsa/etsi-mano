@@ -17,34 +17,23 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
-import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
-import com.ubiqube.etsi.mano.utils.SpringUtils;
-
-import ma.glasnost.orika.MapperFacade;
+import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 
 /**
  * SOL005 - VNF Package Management Interface
@@ -53,23 +42,15 @@ import ma.glasnost.orika.MapperFacade;
  * SOL005 - VNF Package Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@RolesAllowed({ "ROLE_VNFM" })
 @RestController
-@RequestMapping("/sol003/vnfpkgm/v1/vnf_packages")
 public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
-	private static final Logger LOG = LoggerFactory.getLogger(VnfPackage261Sol003Controller.class);
 
-	private final VnfPackageManagement vnfManagement;
-
-	private final MapperFacade mapper;
-
+	private final VnfPackageFrontController vnfPackageFrontController;
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	public VnfPackage261Sol003Controller(final VnfPackageManagement _vnfManagement, final MapperFacade _mapper) {
-		vnfManagement = _vnfManagement;
-		mapper = _mapper;
-		LOG.debug("Starting VNF Package SOL003 Controller.");
+	public VnfPackage261Sol003Controller(final VnfPackageFrontController vnfPackageFrontController) {
+		this.vnfPackageFrontController = vnfPackageFrontController;
 	}
 
 	/**
@@ -80,7 +61,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<String> vnfPackagesGet(final MultiValueMap<String, String> requestParams) {
-		return vnfManagement.search(requestParams, VnfPkgInfo.class, VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNF_SEARCH_MANDATORY_FIELDS, links::makeLinks);
+		return vnfPackageFrontController.search(requestParams, VnfPkgInfo.class, links::makeLinks);
 	}
 
 	/**
@@ -91,8 +72,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, @RequestHeader(value = "Range", required = false) final String range) {
-		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(UUID.fromString(vnfPkgId), artifactPath, range);
+		return vnfPackageFrontController.getArtifact(request, getSafeUUID(vnfPkgId), range, null);
 	}
 
 	/**
@@ -103,9 +83,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId) {
-		final VnfPkgInfo vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(UUID.fromString(vnfPkgId), VnfPkgInfo.class);
-		links.makeLinks(vnfPkgInfo);
-		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
+		return vnfPackageFrontController.findById(getSafeUUID(vnfPkgId), VnfPkgInfo.class, links::makeLinks);
 	}
 
 	/**
@@ -113,12 +91,11 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 *
 	 * The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. This method shall follow the provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
-	 * @throws IOException
 	 *
 	 */
 	@Override
 	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(UUID.fromString(vnfPkgId), range);
+		return vnfPackageFrontController.getContent(getSafeUUID(vnfPkgId), range);
 	}
 
 	/**
@@ -132,7 +109,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(UUID.fromString(vnfPkgId));
+		return vnfPackageFrontController.getVfnd(getSafeUUID(vnfPkgId), null);
 	}
 
 }

@@ -59,6 +59,7 @@ public class VnfBlueprintService {
 		return save(plan);
 	}
 
+	@Nonnull
 	public VnfBlueprint findById(final UUID blueprintId) {
 		return blueprintJpa.findById(blueprintId).orElseThrow(() -> new GenericException("Blueprint not found " + blueprintId));
 	}
