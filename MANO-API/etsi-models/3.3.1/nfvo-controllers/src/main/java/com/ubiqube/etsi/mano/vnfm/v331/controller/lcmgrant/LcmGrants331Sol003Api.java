@@ -19,7 +19,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package com.ubiqube.etsi.mano.or.v331.controller.grants;
+package com.ubiqube.etsi.mano.vnfm.v331.controller.lcmgrant;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -49,7 +49,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  */
 @RequestMapping(value = "/sol003/grant/v1/grants", headers = { "Version=3.3.1.1" })
 @RolesAllowed({ "ROLE_VNFM" })
-public interface GrantsApi {
+public interface LcmGrants331Sol003Api {
 
 	@Operation(summary = "", description = "The GET method reads a grant. This method shall follow the provisions specified in the tables 7.5.4.3.2-1 and 7.5.4.3.2-2 for URI query parameters, request and response data structures, and response codes.", tags = {})
 	@ApiResponses(value = {
