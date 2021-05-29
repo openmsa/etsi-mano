@@ -56,9 +56,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RequestMapping(value = "/sol005/nsfm/v1", headers = { "Version=3.3.1" })
 @RolesAllowed({ "ROLE_OSSBSS" })
-public interface FaultMngtSubscriptionsApi {
+public interface FaultMngtSubscriptions331Sol005Api {
 
-	Logger log = LoggerFactory.getLogger(FaultMngtSubscriptionsApi.class);
+	Logger log = LoggerFactory.getLogger(FaultMngtSubscriptions331Sol005Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

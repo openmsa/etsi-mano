@@ -30,14 +30,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 @RestController
-public class FaultMngtSubscriptionsApiController implements FaultMngtSubscriptionsApi {
+public class FaultMngtSubscriptions331Sol005Controller implements FaultMngtSubscriptions331Sol005Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public FaultMngtSubscriptionsApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public FaultMngtSubscriptions331Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
