@@ -36,7 +36,7 @@
 		<com.ubiqube.hibernate-search.version>5.7.2.Final</com.ubiqube.hibernate-search.version>
 		<com.ubiqube.hibernate-search6.version>6.0.2.Final</com.ubiqube.hibernate-search6.version>
 		<com.ubiqube.springfox-swagger.version>3.0.0-SNAPSHOT</com.ubiqube.springfox-swagger.version>
-		<com.ubiqube.openstack4j.version>3.9-SNAPSHOT</com.ubiqube.openstack4j.version>
+		<com.ubiqube.openstack4j.version>3.11-SNAPSHOT</com.ubiqube.openstack4j.version>
 		<com.ubiqube.swagger3>2.1.6</com.ubiqube.swagger3>
 	</properties>
 	<build>
