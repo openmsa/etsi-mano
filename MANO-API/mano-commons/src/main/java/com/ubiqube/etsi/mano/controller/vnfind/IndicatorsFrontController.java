@@ -22,7 +22,13 @@ import java.util.function.Consumer;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.stereotype.Service;
+/**
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
 public class IndicatorsFrontController {
 	public <U> ResponseEntity<List<U>> search(@Valid final String filter, @Valid final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> makeLink) {
 		// TODO:

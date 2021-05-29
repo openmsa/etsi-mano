@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import ma.glasnost.orika.MapperFacade;
@@ -34,6 +35,7 @@ import ma.glasnost.orika.MapperFacade;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class VnfmThresholdFrontController {
 	private final VnfmThresholdController vnfmThresholdController;
 
