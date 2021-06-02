@@ -155,8 +155,8 @@ public class ComputeContributor extends AbstractVnfPlanContributor {
 		final VnfInstance vnfInstance = vnfInstanceService.findById(plan.getVnfInstance().getId());
 		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
 		return tasks.stream()
-				.filter(x -> x instanceof ComputeTask)
-				.map(x -> (ComputeTask) x)
+				.filter(ComputeTask.class::isInstance)
+				.map(ComputeTask.class::cast)
 				.map(x -> {
 					final Optional<VnfCompute> vnfCompute = vnfPackageService.findComputeById(x.getVnfCompute().getId());
 					final Set<VnfLinkPort> linkPort = vnfPackageService.findVnfVirtualLinks(vnfPackage);

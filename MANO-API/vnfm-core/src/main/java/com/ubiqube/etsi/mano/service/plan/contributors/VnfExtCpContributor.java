@@ -105,8 +105,8 @@ public class VnfExtCpContributor extends AbstractVnfPlanContributor {
 	@Override
 	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
-				.filter(x -> x instanceof ExternalCpTask)
-				.map(x -> (ExternalCpTask) x)
+				.filter(ExternalCpTask.class::isInstance)
+				.map(ExternalCpTask.class::cast)
 				.map(VnfExtCpUow::new)
 				.collect(Collectors.toList());
 	}

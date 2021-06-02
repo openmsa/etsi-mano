@@ -101,10 +101,9 @@ public class NetworkContributor extends AbstractVnfPlanContributor {
 
 	@Override
 	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
-		final ArrayList<UnitOfWork<VnfTask, VnfParameters>> ret = new ArrayList<>();
 		return tasks.stream()
-				.filter(x -> x instanceof NetworkTask)
-				.map(x -> (NetworkTask) x)
+				.filter(NetworkTask.class::isInstance)
+				.map(NetworkTask.class::cast)
 				.map(x -> {
 					final VnfVl vnfVl = vnfPackageService.findVirtualLnkById(x.getVnfVl().getId()).orElseThrow();
 					return new VirtualLinkUow(x, vnfVl);

@@ -115,8 +115,8 @@ public class SubNetworkContributor extends AbstractVnfPlanContributor {
 	@Override
 	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
-				.filter(x -> x instanceof SubNetworkTask)
-				.map(x -> (SubNetworkTask) x)
+				.filter(SubNetworkTask.class::isInstance)
+				.map(SubNetworkTask.class::cast)
 				.map(SubNetworkUow::new)
 				.collect(Collectors.toList());
 	}

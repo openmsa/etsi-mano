@@ -118,8 +118,8 @@ public class StorageContributor extends AbstractVnfPlanContributor {
 	@Override
 	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
-				.filter(x -> x instanceof StorageTask)
-				.map(x -> (StorageTask) x)
+				.filter(StorageTask.class::isInstance)
+				.map(StorageTask.class::cast)
 				.map(x -> new StorageUow(x, x.getVnfStorage()))
 				.collect(Collectors.toList());
 	}

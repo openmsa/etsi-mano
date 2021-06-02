@@ -85,8 +85,8 @@ public class DnsZoneContributor extends AbstractVnfPlanContributor {
 	@Override
 	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
-				.filter(x -> x instanceof DnsZoneTask)
-				.map(x -> (DnsZoneTask) x)
+				.filter(DnsZoneTask.class::isInstance)
+				.map(DnsZoneTask.class::cast)
 				.map(DnsZoneUow::new)
 				.collect(Collectors.toList());
 	}
