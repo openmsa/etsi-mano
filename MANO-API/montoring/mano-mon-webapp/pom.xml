@@ -9,6 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+	<groupId>com.ubiqube.mano.service.mon</groupId>
 	<artifactId>mano-mon-webapp</artifactId>
 	<name>mano-mon-webapp</name>
 	<packaging>war</packaging>
