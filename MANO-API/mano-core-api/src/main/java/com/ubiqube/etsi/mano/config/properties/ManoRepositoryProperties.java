@@ -32,7 +32,7 @@ public class ManoRepositoryProperties {
 	/**
 	 * Path on file system to store packages.
 	 */
-	@Value("${mano.repository.phys.root}")
+	@Value("${phys-root:/tmp/mano}")
 	private String physRoot;
 
 	public String getPhysRoot() {
