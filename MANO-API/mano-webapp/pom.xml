@@ -156,6 +156,7 @@
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		 -->
+		<!--
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-mec-meo-controllers-211</artifactId>
