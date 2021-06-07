@@ -44,9 +44,9 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractPackageProvider {
+public abstract class AbstractPackageReader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractPackageProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractPackageReader.class);
 
 	private final ToscaApi toscaApi;
 	private final ToscaContext root;
@@ -54,7 +54,7 @@ public abstract class AbstractPackageProvider {
 
 	private final ToscaParser toscaParser;
 
-	protected AbstractPackageProvider(final byte[] data) {
+	protected AbstractPackageReader(final byte[] data) {
 		final File tempFile = PkgUtils.fetchData(data);
 		toscaParser = new ToscaParser(tempFile.getAbsolutePath());
 		root = toscaParser.getContext();

@@ -40,8 +40,8 @@ import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
-import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
 
 import ma.glasnost.orika.MapperFactory;
@@ -60,11 +60,11 @@ import tosca.policies.nfv.ScalingAspects;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ToscaVnfPackageProvider extends AbstractPackageProvider implements VnfPackageProvider {
+public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfPackageReader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfPackageProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfPackageReader.class);
 
-	public ToscaVnfPackageProvider(final byte[] data) {
+	public ToscaVnfPackageReader(final byte[] data) {
 		super(data);
 	}
 

@@ -18,8 +18,9 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
+import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -27,7 +28,7 @@ import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageProvider;
  *
  */
 @Service
-public class ToscaVnfRegistryHandler implements RegistryHandler<VnfPackageProvider> {
+public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageReader> {
 
 	@Override
 	public boolean isProcessable(final byte[] data) {
@@ -36,13 +37,19 @@ public class ToscaVnfRegistryHandler implements RegistryHandler<VnfPackageProvid
 	}
 
 	@Override
-	public String getName() {
-		return "Ubiqube Tosca VNF parser";
+	public String getProviderName() {
+		return "TOSCA-VNF";
 	}
 
 	@Override
-	public VnfPackageProvider getNewInstance(final byte[] data) {
-		return new ToscaVnfPackageProvider(data);
+	public VnfPackageReader getNewReaderInstance(final byte[] data) {
+		return new ToscaVnfPackageReader(data);
+	}
+
+	@Override
+	public ExecutionGraph getBlueprint() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

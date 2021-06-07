@@ -56,6 +56,7 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
@@ -110,40 +111,40 @@ public class VnfPackageOnboardingImpl {
 	private void uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
 		vnfPackage.setChecksum(getChecksum(data));
 		vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
-		final VnfPackageProvider packageProvider = packageManager.getProviderFor(data);
+		final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
-			mapVnfPackage(packageProvider, vnfPackage);
+			mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
 
 		}
 		finishOnboarding(vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 	}
 
-	private void mapVnfPackage(final VnfPackageProvider packageProvider, final VnfPackage vnfPackage) {
-		final ProviderData pd = packageProvider.getProviderPadata();
+	private void mapVnfPackage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final ProviderData pd = vnfPackageReader.getProviderPadata();
 		final Optional<VnfPackage> optPackage = getVnfPackage(pd);
 		optPackage.ifPresent(x -> {
 			throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
 		});
 		mapper.map(pd, vnfPackage);
-		final Set<VnfCompute> cNodes = packageProvider.getVnfComputeNodes(vnfPackage.getUserDefinedData());
+		final Set<VnfCompute> cNodes = vnfPackageReader.getVnfComputeNodes(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfCompute(cNodes);
-		final Set<VnfStorage> vboNodes = packageProvider.getVnfStorages(vnfPackage.getUserDefinedData());
+		final Set<VnfStorage> vboNodes = vnfPackageReader.getVnfStorages(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfStorage(vboNodes);
-		final Set<VnfVl> vvlNodes = packageProvider.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
+		final Set<VnfVl> vvlNodes = vnfPackageReader.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfVl(vvlNodes);
-		final Set<VnfLinkPort> vcNodes = packageProvider.getVnfVduCp(vnfPackage.getUserDefinedData());
+		final Set<VnfLinkPort> vcNodes = vnfPackageReader.getVnfVduCp(vnfPackage.getUserDefinedData());
 		vcNodes.stream().forEach(x -> x.setVnfPackage(vnfPackage));
 		vnfPackage.setVnfLinkPort(vcNodes);
 		remapNetworks(cNodes, vcNodes);
-		vnfPackage.setAdditionalArtifacts(packageProvider.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));
-		final Set<VnfExtCp> vnfExtCp = packageProvider.getVnfExtCp(vnfPackage.getUserDefinedData());
+		vnfPackage.setAdditionalArtifacts(vnfPackageReader.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));
+		final Set<VnfExtCp> vnfExtCp = vnfPackageReader.getVnfExtCp(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfExtCp(vnfExtCp);
-		final Set<ScalingAspect> scalingAspects = packageProvider.getScalingAspects(vnfPackage.getUserDefinedData());
-		final List<InstantiationLevels> instantiationLevels = packageProvider.getInstatiationLevels(vnfPackage.getUserDefinedData());
-		final List<VduInstantiationLevels> vduInstantiationLevel = packageProvider.getVduInstantiationLevels(vnfPackage.getUserDefinedData());
-		final List<VduInitialDelta> vduInitialDeltas = packageProvider.getVduInitialDelta(vnfPackage.getUserDefinedData());
-		final List<VduScalingAspectDeltas> vduScalingAspectDeltas = packageProvider.getVduScalingAspectDeltas(vnfPackage.getUserDefinedData());
+		final Set<ScalingAspect> scalingAspects = vnfPackageReader.getScalingAspects(vnfPackage.getUserDefinedData());
+		final List<InstantiationLevels> instantiationLevels = vnfPackageReader.getInstatiationLevels(vnfPackage.getUserDefinedData());
+		final List<VduInstantiationLevels> vduInstantiationLevel = vnfPackageReader.getVduInstantiationLevels(vnfPackage.getUserDefinedData());
+		final List<VduInitialDelta> vduInitialDeltas = vnfPackageReader.getVduInitialDelta(vnfPackage.getUserDefinedData());
+		final List<VduScalingAspectDeltas> vduScalingAspectDeltas = vnfPackageReader.getVduScalingAspectDeltas(vnfPackage.getUserDefinedData());
 		rebuildVduScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas, scalingAspects);
 	}
 

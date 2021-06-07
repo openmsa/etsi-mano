@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 
 /**
  *
@@ -34,20 +34,20 @@ public class VnfPackageManagerImpl implements VnfPackageManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageManagerImpl.class);
 
-	private final List<RegistryHandler<VnfPackageProvider>> providers;
+	private final List<PackageDescriptor<VnfPackageReader>> providers;
 
-	public VnfPackageManagerImpl(final List<RegistryHandler<VnfPackageProvider>> _providers) {
+	public VnfPackageManagerImpl(final List<PackageDescriptor<VnfPackageReader>> _providers) {
 		providers = _providers;
 	}
 
 	@Override
-	public VnfPackageProvider getProviderFor(final byte[] data) {
+	public PackageDescriptor<VnfPackageReader> getProviderFor(final byte[] data) {
 
-		for (final RegistryHandler<VnfPackageProvider> provider : providers) {
-			LOG.info("Testing {} for package support.", provider.getName());
+		for (final PackageDescriptor<VnfPackageReader> provider : providers) {
+			LOG.info("Testing {} for package support.", provider.getProviderName());
 			if (provider.isProcessable(data)) {
-				LOG.info("Using {} for package.", provider.getName());
-				return provider.getNewInstance(data);
+				LOG.info("Using {} for package.", provider.getProviderName());
+				return provider;
 			}
 		}
 		LOG.info("No package support, using default.");
