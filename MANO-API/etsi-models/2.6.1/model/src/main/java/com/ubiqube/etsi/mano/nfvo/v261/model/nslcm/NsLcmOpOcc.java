@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -50,7 +51,7 @@ public class NsLcmOpOcc {
 	private OffsetDateTime statusEnteredTime = null;
 
 	@JsonProperty("nsInstanceId")
-	private String nsInstanceId = null;
+	private UUID nsInstanceId = null;
 
 	@JsonProperty("lcmOperationType")
 	private NsLcmOpType lcmOperationType = null;
@@ -123,18 +124,19 @@ public class NsLcmOpOcc {
 		this.operationState = operationState;
 	}
 
-  public NsLcmOpOcc statusEnteredTime(OffsetDateTime statusEnteredTime) {
-    this.statusEnteredTime = statusEnteredTime;
-    return this;
-  }
+	public NsLcmOpOcc statusEnteredTime(final OffsetDateTime statusEnteredTime) {
+		this.statusEnteredTime = statusEnteredTime;
+		return this;
+	}
 
-  /**
-   * Date-time when the current state has been entered. 
-   * @return statusEnteredTime
-  **/
-  @ApiModelProperty(value = "Date-time when the current state has been entered. ")
-  
-    @Valid
+	/**
+	 * Date-time when the current state has been entered.
+	 *
+	 * @return statusEnteredTime
+	 **/
+	@ApiModelProperty(value = "Date-time when the current state has been entered. ")
+
+	@Valid
 	public OffsetDateTime getStatusEnteredTime() {
 		return statusEnteredTime;
 	}
@@ -143,7 +145,7 @@ public class NsLcmOpOcc {
 		this.statusEnteredTime = statusEnteredTime;
 	}
 
-	public NsLcmOpOcc nsInstanceId(final String nsInstanceId) {
+	public NsLcmOpOcc nsInstanceId(final UUID nsInstanceId) {
 		this.nsInstanceId = nsInstanceId;
 		return this;
 	}
@@ -156,11 +158,11 @@ public class NsLcmOpOcc {
 	@ApiModelProperty(required = true, value = "Identifier of the NS instance to which the operation applies. ")
 	@NotNull
 
-	public String getNsInstanceId() {
+	public UUID getNsInstanceId() {
 		return nsInstanceId;
 	}
 
-	public void setNsInstanceId(final String nsInstanceId) {
+	public void setNsInstanceId(final UUID nsInstanceId) {
 		this.nsInstanceId = nsInstanceId;
 	}
 

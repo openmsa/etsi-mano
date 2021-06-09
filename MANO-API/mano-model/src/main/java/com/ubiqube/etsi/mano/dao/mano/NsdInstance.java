@@ -50,6 +50,8 @@ public class NsdInstance extends Instance {
 
 	private String nsInstantiationLevelId;
 
+	private String flavourId;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	private List<NsVnfInstance> vnfInstance = null;
@@ -154,6 +156,14 @@ public class NsdInstance extends Instance {
 			nestedNsInstance = new ArrayList<>();
 		}
 		nestedNsInstance.add(nsIn);
+	}
+
+	public String getFlavourId() {
+		return flavourId;
+	}
+
+	public void setFlavourId(final String flavourId) {
+		this.flavourId = flavourId;
 	}
 
 }

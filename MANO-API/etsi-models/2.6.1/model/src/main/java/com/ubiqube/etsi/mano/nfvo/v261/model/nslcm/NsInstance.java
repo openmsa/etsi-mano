@@ -20,6 +20,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -34,12 +35,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a response for Query NS operation. It shall comply with
- * the provisions defined in Table 6.5.2.10-1.
+ * This type represents a response for Query NS operation. It shall comply with the provisions defined in Table 6.5.2.10-1.
  */
 @ApiModel(description = "This type represents a response for Query NS operation.  It shall comply with the provisions defined in Table 6.5.2.10-1. ")
 @Validated
-
 
 public class NsInstance {
 	@JsonProperty("id")
@@ -55,7 +54,7 @@ public class NsInstance {
 	private String nsdId = null;
 
 	@JsonProperty("nsdInfoId")
-	private String nsdInfoId = null;
+	private UUID nsdInfoId = null;
 
 	@JsonProperty("flavourId")
 	private String flavourId = null;
@@ -82,7 +81,7 @@ public class NsInstance {
 
 	@JsonProperty("nestedNsInstanceId")
 	@Valid
-	private List<String> nestedNsInstanceId = null;
+	private List<UUID> nestedNsInstanceId = null;
 
 	@JsonProperty("nsState")
 	private InstantiationStateEnum nsState = null;
@@ -186,25 +185,24 @@ public class NsInstance {
 		this.nsdId = nsdId;
 	}
 
-	public NsInstance nsdInfoId(final String nsdInfoId) {
+	public NsInstance nsdInfoId(final UUID nsdInfoId) {
 		this.nsdInfoId = nsdInfoId;
 		return this;
 	}
 
 	/**
-	 * Identifier of the NSD information object on which the NS instance is based.
-	 * This identifier has been allocated by the NFVO.
+	 * Identifier of the NSD information object on which the NS instance is based. This identifier has been allocated by the NFVO.
 	 *
 	 * @return nsdInfoId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the NSD information object on which the NS instance is based. This identifier has been allocated by the NFVO. ")
 	@NotNull
 
-	public String getNsdInfoId() {
+	public UUID getNsdInfoId() {
 		return nsdInfoId;
 	}
 
-	public void setNsdInfoId(final String nsdInfoId) {
+	public void setNsdInfoId(final UUID nsdInfoId) {
 		this.nsdInfoId = nsdInfoId;
 	}
 
@@ -214,8 +212,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * Identifier of the NS deployment flavor applied to the NS instance. This
-	 * attribute shall be present if the nsState attribute value is INSTANTIATED.
+	 * Identifier of the NS deployment flavor applied to the NS instance. This attribute shall be present if the nsState attribute value is INSTANTIATED.
 	 *
 	 * @return flavourId
 	 **/
@@ -303,9 +300,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * Information on the VL(s) of the NS instance. This attribute shall be present
-	 * if the nsState attribute value is INSTANTIATED and if the NS instance has
-	 * specified connectivity.
+	 * Information on the VL(s) of the NS instance. This attribute shall be present if the nsState attribute value is INSTANTIATED and if the NS instance has specified connectivity.
 	 *
 	 * @return virtualLinkInfo
 	 **/
@@ -381,12 +376,12 @@ public class NsInstance {
 		this.sapInfo = sapInfo;
 	}
 
-	public NsInstance nestedNsInstanceId(final List<String> nestedNsInstanceId) {
+	public NsInstance nestedNsInstanceId(final List<UUID> nestedNsInstanceId) {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 		return this;
 	}
 
-	public NsInstance addNestedNsInstanceIdItem(final String nestedNsInstanceIdItem) {
+	public NsInstance addNestedNsInstanceIdItem(final UUID nestedNsInstanceIdItem) {
 		if (this.nestedNsInstanceId == null) {
 			this.nestedNsInstanceId = new ArrayList<>();
 		}
@@ -401,11 +396,11 @@ public class NsInstance {
 	 **/
 	@ApiModelProperty(value = "Identifier of the nested NS(s) of the NS instance. ")
 
-	public List<String> getNestedNsInstanceId() {
+	public List<UUID> getNestedNsInstanceId() {
 		return nestedNsInstanceId;
 	}
 
-	public void setNestedNsInstanceId(final List<String> nestedNsInstanceId) {
+	public void setNestedNsInstanceId(final List<UUID> nestedNsInstanceId) {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 	}
 
@@ -415,9 +410,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS
-	 * instance is terminated or not instantiated. INSTANTIATED: The NS instance is
-	 * instantiated.
+	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS instance is terminated or not instantiated. INSTANTIATED: The NS instance is instantiated.
 	 *
 	 * @return nsState
 	 **/
@@ -446,8 +439,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * Performance metrics tracked by the NFVO (e.g. for auto-scaling purposes) as
-	 * identified by the NS designer in the NSD.
+	 * Performance metrics tracked by the NFVO (e.g. for auto-scaling purposes) as identified by the NS designer in the NSD.
 	 *
 	 * @return monitoringParameter
 	 **/
@@ -477,9 +469,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * Status of each NS scaling aspect declared in the applicable DF, how \"big\"
-	 * the NS instance has been scaled w.r.t. that aspect. This attribute shall be
-	 * present if the nsState attribute value is INSTANTIATED.
+	 * Status of each NS scaling aspect declared in the applicable DF, how \"big\" the NS instance has been scaled w.r.t. that aspect. This attribute shall be present if the nsState attribute value is INSTANTIATED.
 	 *
 	 * @return nsScaleStatus
 	 **/
@@ -509,9 +499,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * Information on the additional affinity or anti-affinity rule from NS
-	 * instantiation operation. Shall not conflict with rules already specified in
-	 * the NSD.
+	 * Information on the additional affinity or anti-affinity rule from NS instantiation operation. Shall not conflict with rules already specified in the NSD.
 	 *
 	 * @return additionalAffinityOrAntiAffinityRule
 	 **/
@@ -609,8 +597,7 @@ public class NsInstance {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

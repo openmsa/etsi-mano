@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -45,10 +46,10 @@ public class NsdInstanceTest {
 	void testJsonToDao() throws Exception {
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
 		final NsInstance nsInstance = new NsInstance();
-		final List<String> nestedNsInstanceId = new ArrayList<>();
-		nestedNsInstanceId.add("3bba2147-147a-41ab-a3ec-1a39e1b6d922");
+		final List<UUID> nestedNsInstanceId = new ArrayList<>();
+		nestedNsInstanceId.add(UUID.fromString("3bba2147-147a-41ab-a3ec-1a39e1b6d922"));
 		nsInstance.setNestedNsInstanceId(nestedNsInstanceId);
-		nsInstance.setNsdInfoId("3bba2147-147a-41ab-a3ec-1a39e1b6d922");
+		nsInstance.setNsdInfoId(UUID.fromString("3bba2147-147a-41ab-a3ec-1a39e1b6d922"));
 
 		final NsdInstance nsd = mapper.map(nsInstance, NsdInstance.class);
 		assertNotNull(nsd.getNestedNsInstance());
