@@ -18,8 +18,19 @@ package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class VnfLcmResourceChanges implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -29,8 +40,10 @@ public class VnfLcmResourceChanges implements Serializable {
 	private Set<VnfInstantiatedVirtualLink> affectedVirtualLinks = new HashSet<>();
 
 	private Set<VnfInstantiatedStorage> affectedVirtualStorages = new HashSet<>();
-
+	// Suppress in 2.8.1
 	private Set<VnfInstantiatedExtCp> affectedExtCp = new HashSet<>();
+	// @since 2.8.1
+	private List<VnfInstantiatedExtLinkPort> affectedExtLinkPorts;
 
 	private Set<VnfInstantiatedMonitoring> instanceMonitors;
 

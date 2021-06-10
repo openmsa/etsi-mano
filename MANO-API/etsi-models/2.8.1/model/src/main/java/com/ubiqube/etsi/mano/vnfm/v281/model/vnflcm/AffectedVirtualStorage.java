@@ -16,251 +16,254 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm;
 
+import java.util.Map;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ResourceHandle;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * This type provides information about added, deleted, modified and temporary virtual storage resources. 
+ * This type provides information about added, deleted, modified and temporary virtual storage resources.
  */
 @ApiModel(description = "This type provides information about added, deleted, modified and temporary virtual storage resources. ")
 @Validated
 
-public class AffectedVirtualStorage   {
-  @JsonProperty("id")
-  private String id = null;
+public class AffectedVirtualStorage {
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("virtualStorageDescId")
-  private String virtualStorageDescId = null;
+	@JsonProperty("virtualStorageDescId")
+	private String virtualStorageDescId = null;
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. 
-   */
-  public enum ChangeTypeEnum {
-    ADDED("ADDED"),
-    
-    REMOVED("REMOVED"),
-    
-    MODIFIED("MODIFIED"),
-    
-    TEMPORARY("TEMPORARY");
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists.
+	 */
+	public enum ChangeTypeEnum {
+		ADDED("ADDED"),
 
-    private String value;
+		REMOVED("REMOVED"),
 
-    ChangeTypeEnum(String value) {
-      this.value = value;
-    }
+		MODIFIED("MODIFIED"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		TEMPORARY("TEMPORARY");
 
-    @JsonCreator
-    public static ChangeTypeEnum fromValue(String text) {
-      for (ChangeTypeEnum b : ChangeTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		private final String value;
 
-  @JsonProperty("changeType")
-  private ChangeTypeEnum changeType = null;
+		ChangeTypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("storageResource")
-  private ResourceHandle storageResource = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("resourceDefinitionId")
-  private String resourceDefinitionId = null;
+		@JsonCreator
+		public static ChangeTypeEnum fromValue(final String text) {
+			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("changeType")
+	private ChangeTypeEnum changeType = null;
 
-  public AffectedVirtualStorage id(String id) {
-    this.id = id;
-    return this;
-  }
+	@JsonProperty("storageResource")
+	private ResourceHandle storageResource = null;
 
-  /**
-   * Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type. 
-   * @return id
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type. ")
-  @NotNull
+	@JsonProperty("resourceDefinitionId")
+	private String resourceDefinitionId = null;
 
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  public String getId() {
-    return id;
-  }
+	public AffectedVirtualStorage id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	/**
+	 * Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type.
+	 *
+	 * @return id
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type. ")
+	@NotNull
 
-  public AffectedVirtualStorage virtualStorageDescId(String virtualStorageDescId) {
-    this.virtualStorageDescId = virtualStorageDescId;
-    return this;
-  }
+	public String getId() {
+		return id;
+	}
 
-  /**
-   * Identifier of the related VirtualStorage descriptor in the VNFD. 
-   * @return virtualStorageDescId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the related VirtualStorage descriptor in the VNFD. ")
-  @NotNull
+	public void setId(final String id) {
+		this.id = id;
+	}
 
+	public AffectedVirtualStorage virtualStorageDescId(final String virtualStorageDescId) {
+		this.virtualStorageDescId = virtualStorageDescId;
+		return this;
+	}
 
-  public String getVirtualStorageDescId() {
-    return virtualStorageDescId;
-  }
+	/**
+	 * Identifier of the related VirtualStorage descriptor in the VNFD.
+	 *
+	 * @return virtualStorageDescId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the related VirtualStorage descriptor in the VNFD. ")
+	@NotNull
 
-  public void setVirtualStorageDescId(String virtualStorageDescId) {
-    this.virtualStorageDescId = virtualStorageDescId;
-  }
+	public String getVirtualStorageDescId() {
+		return virtualStorageDescId;
+	}
 
-  public AffectedVirtualStorage changeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-    return this;
-  }
+	public void setVirtualStorageDescId(final String virtualStorageDescId) {
+		this.virtualStorageDescId = virtualStorageDescId;
+	}
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. 
-   * @return changeType
-  **/
-  @ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. ")
-  @NotNull
+	public AffectedVirtualStorage changeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+		return this;
+	}
 
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists.
+	 *
+	 * @return changeType
+	 **/
+	@ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. ")
+	@NotNull
 
-  public ChangeTypeEnum getChangeType() {
-    return changeType;
-  }
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
 
-  public void setChangeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-  }
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
 
-  public AffectedVirtualStorage storageResource(ResourceHandle storageResource) {
-    this.storageResource = storageResource;
-    return this;
-  }
+	public AffectedVirtualStorage storageResource(final ResourceHandle storageResource) {
+		this.storageResource = storageResource;
+		return this;
+	}
 
-  /**
-   * Reference to the VirtualStorage resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. 
-   * @return storageResource
-  **/
-  @ApiModelProperty(required = true, value = "Reference to the VirtualStorage resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
-  @NotNull
+	/**
+	 * Reference to the VirtualStorage resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM.
+	 *
+	 * @return storageResource
+	 **/
+	@ApiModelProperty(required = true, value = "Reference to the VirtualStorage resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
+	@NotNull
 
-  @Valid
+	@Valid
 
-  public ResourceHandle getStorageResource() {
-    return storageResource;
-  }
+	public ResourceHandle getStorageResource() {
+		return storageResource;
+	}
 
-  public void setStorageResource(ResourceHandle storageResource) {
-    this.storageResource = storageResource;
-  }
+	public void setStorageResource(final ResourceHandle storageResource) {
+		this.storageResource = storageResource;
+	}
 
-  public AffectedVirtualStorage resourceDefinitionId(String resourceDefinitionId) {
-    this.resourceDefinitionId = resourceDefinitionId;
-    return this;
-  }
+	public AffectedVirtualStorage resourceDefinitionId(final String resourceDefinitionId) {
+		this.resourceDefinitionId = resourceDefinitionId;
+		return this;
+	}
 
-  /**
-   * The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\". 
-   * @return resourceDefinitionId
-  **/
-  @ApiModelProperty(value = "The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\". ")
+	/**
+	 * The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual
+	 * VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\".
+	 *
+	 * @return resourceDefinitionId
+	 **/
+	@ApiModelProperty(value = "The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\". ")
 
+	public String getResourceDefinitionId() {
+		return resourceDefinitionId;
+	}
 
-  public String getResourceDefinitionId() {
-    return resourceDefinitionId;
-  }
+	public void setResourceDefinitionId(final String resourceDefinitionId) {
+		this.resourceDefinitionId = resourceDefinitionId;
+	}
 
-  public void setResourceDefinitionId(String resourceDefinitionId) {
-    this.resourceDefinitionId = resourceDefinitionId;
-  }
+	public AffectedVirtualStorage metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  public AffectedVirtualStorage metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	/**
+	 * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure.
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure. ")
 
-  /**
-   * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure. 
-   * @return metadata
-  **/
-  @ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure. ")
+	@Valid
 
-  @Valid
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
 
-  public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AffectedVirtualStorage affectedVirtualStorage = (AffectedVirtualStorage) o;
+		return Objects.equals(this.id, affectedVirtualStorage.id) &&
+				Objects.equals(this.virtualStorageDescId, affectedVirtualStorage.virtualStorageDescId) &&
+				Objects.equals(this.changeType, affectedVirtualStorage.changeType) &&
+				Objects.equals(this.storageResource, affectedVirtualStorage.storageResource) &&
+				Objects.equals(this.resourceDefinitionId, affectedVirtualStorage.resourceDefinitionId) &&
+				Objects.equals(this.metadata, affectedVirtualStorage.metadata);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, virtualStorageDescId, changeType, storageResource, resourceDefinitionId, metadata);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffectedVirtualStorage affectedVirtualStorage = (AffectedVirtualStorage) o;
-    return Objects.equals(this.id, affectedVirtualStorage.id) &&
-        Objects.equals(this.virtualStorageDescId, affectedVirtualStorage.virtualStorageDescId) &&
-        Objects.equals(this.changeType, affectedVirtualStorage.changeType) &&
-        Objects.equals(this.storageResource, affectedVirtualStorage.storageResource) &&
-        Objects.equals(this.resourceDefinitionId, affectedVirtualStorage.resourceDefinitionId) &&
-        Objects.equals(this.metadata, affectedVirtualStorage.metadata);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffectedVirtualStorage {\n");
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, virtualStorageDescId, changeType, storageResource, resourceDefinitionId, metadata);
-  }
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    virtualStorageDescId: ").append(toIndentedString(virtualStorageDescId)).append("\n");
+		sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
+		sb.append("    storageResource: ").append(toIndentedString(storageResource)).append("\n");
+		sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffectedVirtualStorage {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    virtualStorageDescId: ").append(toIndentedString(virtualStorageDescId)).append("\n");
-    sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
-    sb.append("    storageResource: ").append(toIndentedString(storageResource)).append("\n");
-    sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

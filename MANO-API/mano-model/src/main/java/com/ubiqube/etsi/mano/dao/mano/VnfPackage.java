@@ -169,6 +169,9 @@ public class VnfPackage implements PackageBase, Auditable {
 
 	// 2.7.1
 	private String vnfmInfo;
+	// 2.8.1
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> vnfmInfo281;
 	// 2.7.1
 	private PackageSecurityOptionType packageSecurityOption = null;
 	// 2.7.1

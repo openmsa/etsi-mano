@@ -17,12 +17,10 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Transient;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
@@ -55,8 +53,10 @@ public class AdditionalArtifact implements Serializable {
 	// 2.7.1
 	private String nonManoArtifactSetId;
 	// 2.7.1 XXX: Multiple URIs ?
-	@Transient
-	private List<String> artifactURI;
+	// @Transient
+	// private List<String> artifactURI;
+	// 2.8.1
+	private String artifactURI;
 	// 2.7.1
 	private ArtifactClassificationType artifactClassification;
 

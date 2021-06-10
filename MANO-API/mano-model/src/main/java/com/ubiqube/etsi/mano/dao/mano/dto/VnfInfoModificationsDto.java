@@ -44,6 +44,9 @@ public class VnfInfoModificationsDto {
 
 	private List<VimConnectionInformation> vimConnectionInfo = null;
 
+	// @since 2.8.1
+	private List<String> vimConnectionInfoDeleteIds = null;
+	// Removed => 2.7.1
 	private String vnfPkgId = null;
 
 	private String vnfdId = null;
