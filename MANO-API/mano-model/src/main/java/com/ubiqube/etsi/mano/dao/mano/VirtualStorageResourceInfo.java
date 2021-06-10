@@ -16,52 +16,45 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Setter
 @Getter
+@Setter
 @Entity
-public class ExtManagedVirtualLinkDataEntity implements Serializable {
+@EntityListeners(AuditListener.class)
+public class VirtualStorageResourceInfo implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private UUID id;
 
-	private String vnfVirtualLinkDescId = null;
+	private String virtualStorageDescId = null;
 
-	private String vimConnectionId = null;
+	@Embedded
+	private VimResource storageResource = null;
 
-	private String resourceProviderId = null;
+	@JsonProperty("reservationId")
+	private String reservationId = null;
 
-	private String resourceId = null;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> metadata = null;
 
-	private String vimLevelResourceType;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private Set<LinkPortInfo> vnfLinkPorts;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private GrantResponse grants;
-
+	private Audit audit = new Audit();
 }

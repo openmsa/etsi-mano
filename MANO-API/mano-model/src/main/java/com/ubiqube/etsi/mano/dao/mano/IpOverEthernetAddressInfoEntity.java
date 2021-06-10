@@ -16,45 +16,35 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * TODO: maybe we can remove this table. USED: IpOverEthernetAddressDataIpAddressesEntity
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
 @Setter
+@Getter
 @Entity
-public class IpOverEthernetAddressDataEntity implements Serializable {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+public class IpOverEthernetAddressInfoEntity {
 	private String macAddress = null;
 
-	@Valid
-	@OneToMany(mappedBy = "ipOverEthernetAddressDataEntity")
-	private List<IpOverEthernetAddressDataIpAddressesEntity> ipAddresses = null;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private List<IpOverEthernetAddressDataIpAddressesEntity> ipAddresses = new ArrayList<>();
 
 	/**
 	 * The type of the IP addresses
@@ -87,6 +77,7 @@ public class IpOverEthernetAddressDataEntity implements Serializable {
 		}
 	}
 
+	@JsonProperty("type")
 	private TypeEnum type = null;
 
 	private String addresses = null;
@@ -94,7 +85,7 @@ public class IpOverEthernetAddressDataEntity implements Serializable {
 	private Boolean isDynamic = null;
 
 	@Embedded
-	private IpOverEthernetAddressInfoAddressRangeEntity addressRange;
+	private IpOverEthernetAddressInfoAddressRangeEntity addressRange = null;
 
 	private String minAddress = null;
 

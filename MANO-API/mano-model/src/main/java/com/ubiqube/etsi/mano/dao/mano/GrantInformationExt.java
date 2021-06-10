@@ -26,6 +26,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class GrantInformationExt implements BaseEntity, Serializable {
 	/** Serial. */
@@ -40,7 +50,11 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 
 	private UUID vduId;
 
+	private String resourceTemplateId;
+
 	private String resourceDefinitionId;
+
+	private String resourceId;
 
 	private String reservationId;
 
@@ -48,82 +62,11 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 
 	private String resourceProviderId;
 
+	private String vimLevelResourceType;
+
 	private String zoneId;
 
 	private String resourceGroupId;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getResourceDefinitionId() {
-		return resourceDefinitionId;
-	}
-
-	public void setResourceDefinitionId(final String resourceDefinitionId) {
-		this.resourceDefinitionId = resourceDefinitionId;
-	}
-
-	public String getReservationId() {
-		return reservationId;
-	}
-
-	public void setReservationId(final String reservationId) {
-		this.reservationId = reservationId;
-	}
-
-	public String getVimConnectionId() {
-		return vimConnectionId;
-	}
-
-	public void setVimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
-	}
-
-	public String getResourceProviderId() {
-		return resourceProviderId;
-	}
-
-	public void setResourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getZoneId() {
-		return zoneId;
-	}
-
-	public void setZoneId(final String zoneId) {
-		this.zoneId = zoneId;
-	}
-
-	public String getResourceGroupId() {
-		return resourceGroupId;
-	}
-
-	public void setResourceGroupId(final String resourceGroupId) {
-		this.resourceGroupId = resourceGroupId;
-	}
-
-	public ResourceTypeEnum getType() {
-		return type;
-	}
-
-	public void setType(final ResourceTypeEnum type) {
-		this.type = type;
-	}
-
-	public UUID getVduId() {
-		return vduId;
-	}
-
-	public void setVduId(final UUID vduId) {
-		this.vduId = vduId;
-	}
 
 	@Override
 	public String toString() {
@@ -143,10 +86,9 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

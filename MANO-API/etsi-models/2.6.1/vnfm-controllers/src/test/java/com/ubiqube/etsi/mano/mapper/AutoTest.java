@@ -53,15 +53,8 @@ public class AutoTest extends TestHelper {
 	@Test
 	void testVnfInstance() throws Exception {
 		final Set<String> ignore = new HashSet<>();
-		ignore.add("getExtManagedVirtualLinkInfo");
-		ignore.add("getVnfcResourceInfo");
 		ignore.add("getLinks");
-		ignore.add("getLocalizationLanguage");
-		ignore.add("getVirtualLinkResourceInfo");
-		ignore.add("getMonitoringParameters");
-		ignore.add("getExtCpInfo");
-		ignore.add("getExtVirtualLinkInfo");
-		ignore.add("getVirtualStorageResourceInfo");
+		ignore.add("getVirtualLinkResourceInfo"); // VnfInstanceInstantiatedVnfInfo
 		ignore.add("getVimId");
 		doTest(VnfInstance.class, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class, ignore);
 	}
@@ -80,13 +73,7 @@ public class AutoTest extends TestHelper {
 	@Test
 	void testGrant() throws Exception {
 		final Set<String> ignore = new HashSet<>();
-		ignore.add("getInstantiationLevelId");
 		ignore.add("getLinks");
-		ignore.add("getVimLevelResourceType");
-		ignore.add("getResourceId");
-		ignore.add("getResourceTemplateId");
-		ignore.add("getPlacementConstraints");
-		ignore.add("getVimConstraints");
 		doTest(GrantRequest.class, GrantResponse.class, ignore);
 	}
 }

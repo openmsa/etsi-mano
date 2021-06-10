@@ -25,8 +25,10 @@ import java.beans.Introspector;
 import java.beans.MethodDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +69,11 @@ public class TestHelper {
 		final Object avc = podam.manufacturePojo(json);
 		final Object avcDb = mapper.map(avc, db);
 		final Object res = mapper.map(avcDb, json);
-		assertFullEqual(avc, res, ignore);
+		final Deque<String> stack = new ArrayDeque<>();
+		assertFullEqual(avc, res, ignore, stack);
 	}
 
-	protected void assertFullEqual(final Object orig, final Object tgt, final Set<String> ignore) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	protected void assertFullEqual(final Object orig, final Object tgt, final Set<String> ignore, final Deque<String> stack) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		final BeanInfo beanInfo = Introspector.getBeanInfo(orig.getClass());
 		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
 		for (final MethodDescriptor methodDescriptor : m) {
@@ -78,6 +81,7 @@ public class TestHelper {
 				continue;
 			}
 			LOG.debug(" + {}", methodDescriptor.getName());
+			stack.push(methodDescriptor.getName());
 			final Object src = methodDescriptor.getMethod().invoke(orig);
 			final Object dst = methodDescriptor.getMethod().invoke(tgt);
 			if (null == src) {
@@ -87,36 +91,46 @@ public class TestHelper {
 			if (src instanceof List) {
 				final List sl = (List) src;
 				final List dl = (List) dst;
-				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName());
-				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName());
+				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
+				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName() + prettyStack(stack));
 				Collections.sort(sl, Comparator.comparing(Object::toString));
 				Collections.sort(dl, Comparator.comparing(Object::toString));
 				for (int i = 0; i < sl.size(); i++) {
 					final Object so = sl.get(i);
 					final Object dobj = dl.get(i);
+					stack.push("[" + i + "]");
 					if (isComplex(so)) {
 						LOG.warn("  + Looping: {}", src.getClass());
-						assertFullEqual(so, dobj, ignore);
+						assertFullEqual(so, dobj, ignore, stack);
 					} else {
-						assertEquals(so, dobj, "List in " + methodDescriptor.getName() + ": is not equal at " + i);
+						assertEquals(so, dobj, "List in " + methodDescriptor.getName() + ": is not equal at " + i + prettyStack(stack));
 					}
+					stack.pop();
 				}
+				stack.pop();
 				continue;
 			}
 			if (src instanceof Map) {
+				stack.pop();
 				continue;
 			}
 			if (src instanceof Set) {
+				stack.pop();
 				continue;
 			}
 			if (isComplex(src)) {
 				LOG.warn("  + Looping: {}", src.getClass());
-				assertNotNull(dst, "Target element is null for field: " + methodDescriptor.getName());
-				assertFullEqual(src, dst, ignore);
+				assertNotNull(dst, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
+				assertFullEqual(src, dst, ignore, stack);
 			} else {
-				assertEquals(src, dst, "Field " + methodDescriptor.getName() + ": must be equals.");
+				assertEquals(src, dst, "Field " + methodDescriptor.getName() + ": must be equals." + prettyStack(stack));
 			}
+			stack.pop();
 		}
+	}
+
+	private String prettyStack(final Deque<String> stack) {
+		return "\n" + stack.toString();
 	}
 
 	private void checknull(final Object avcDb) throws IntrospectionException, IllegalArgumentException, InvocationTargetException, IllegalAccessException {

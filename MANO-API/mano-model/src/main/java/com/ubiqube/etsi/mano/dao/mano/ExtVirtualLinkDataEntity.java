@@ -29,6 +29,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Setter
+@Getter
 @Entity
 public class ExtVirtualLinkDataEntity implements Serializable {
 	/** Serial. */
@@ -44,6 +54,8 @@ public class ExtVirtualLinkDataEntity implements Serializable {
 
 	private String resourceId = null;
 
+	private String vimLevelResourceType;
+
 	@Valid
 	@OneToMany(mappedBy = "extVirtualLinkDataEntity")
 	private List<VnfExtCpDataEntity> extCps = new ArrayList<>();
@@ -54,61 +66,5 @@ public class ExtVirtualLinkDataEntity implements Serializable {
 
 	@ManyToOne
 	private VnfInstance vnfInstance;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getVimConnectionId() {
-		return vimConnectionId;
-	}
-
-	public void setVimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
-	}
-
-	public String getResourceProviderId() {
-		return resourceProviderId;
-	}
-
-	public void setResourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getResourceId() {
-		return resourceId;
-	}
-
-	public void setResourceId(final String resourceId) {
-		this.resourceId = resourceId;
-	}
-
-	public List<VnfExtCpDataEntity> getExtCps() {
-		return extCps;
-	}
-
-	public void setExtCps(final List<VnfExtCpDataEntity> extCps) {
-		this.extCps = extCps;
-	}
-
-	public List<ExtLinkPortDataEntity> getExtLinkPorts() {
-		return extLinkPorts;
-	}
-
-	public void setExtLinkPorts(final List<ExtLinkPortDataEntity> extLinkPorts) {
-		this.extLinkPorts = extLinkPorts;
-	}
-
-	public VnfInstance getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final VnfInstance vnfInstance) {
-		this.vnfInstance = vnfInstance;
-	}
 
 }

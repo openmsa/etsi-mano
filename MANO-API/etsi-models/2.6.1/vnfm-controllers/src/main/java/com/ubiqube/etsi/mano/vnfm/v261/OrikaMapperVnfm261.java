@@ -22,6 +22,8 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkInfo;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstanceInstantiatedVnfInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.Checksum;
@@ -31,6 +33,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.C
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
@@ -73,7 +76,8 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("vnfPkgId", "vnfPkg.id")
 				.field("vnfConfigurableProperties{key}", "vnfConfigurableProperties{key}")
 				.field("vnfConfigurableProperties{value}", "vnfConfigurableProperties{value}")
-
+				.field("vimId", "vimConnectionInfo{vimId}")
+				.field("instantiatedVnfInfo.extVirtualLinkInfo", "instantiatedVnfInfo.extVirtualLinkInfo")
 				.field("metadata{key}", "metadata{key}")
 				.field("metadata{value}", "metadata{value}")
 
@@ -83,6 +87,9 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VnfInstanceInstantiatedVnfInfo.class, BlueprintParameters.class)
 				.field("vnfState", "state")
+				.field("localizationLanguage", "localizationLanguage")
+				.field("monitoringParameters", "vnfMonitoringParameter")
+				.field("extManagedVirtualLinkInfo", "extManagedVirtualLinks")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfPackage.class, VnfPkgInfo.class)
@@ -188,6 +195,20 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("vimId", "vimConnectionId")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(ExtVirtualLinkInfo.class, ExtVirtualLinkDataEntity.class)
+				.field("resourceHandle.vimConnectionId", "vimConnectionId")
+				.field("resourceHandle.resourceProviderId", "resourceProviderId")
+				.field("resourceHandle.resourceId", "resourceId")
+				.field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ExtManagedVirtualLinkInfo.class, ExtManagedVirtualLinkDataEntity.class)
+				.field("networkResource.vimConnectionId", "vimConnectionId")
+				.field("networkResource.resourceProviderId", "resourceProviderId")
+				.field("networkResource.resourceId", "resourceId")
+				.field("networkResource.vimLevelResourceType", "vimLevelResourceType")
+				.byDefault()
+				.register();
 		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfLcmOpOccs.class)
 				.field("vnfInstanceId", "vnfInstance.id")
 				.byDefault()
@@ -204,6 +225,9 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("type", "type")
 				.field("vduId", "vduId")
 				.field("resource.vimConnectionId", "vimConnectionId")
+				.field("resource.resourceProviderId", "resourceProviderId")
+				.field("resource.vimLevelResourceType", "vimLevelResourceType")
+				.field("resource.resourceId", "resourceId")
 				.field("resource.resourceProviderId", "resourceProviderId")
 				.byDefault()
 				.register();

@@ -14,20 +14,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.grant;
 
-import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,10 +40,11 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
+@Setter
 @Entity
-public class ExtManagedVirtualLinkDataEntity implements Serializable {
+@EntityListeners(AuditListener.class)
+public class VimConstraint implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -48,20 +52,11 @@ public class ExtManagedVirtualLinkDataEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private String vnfVirtualLinkDescId = null;
+	@Embedded
+	private Audit audit;
 
-	private String vimConnectionId = null;
+	private Boolean sameResourceGroup = null;
 
-	private String resourceProviderId = null;
-
-	private String resourceId = null;
-
-	private String vimLevelResourceType;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private Set<LinkPortInfo> vnfLinkPorts;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private GrantResponse grants;
+	private List<ConstraintResourceRef> resource = new ArrayList<>();
 
 }

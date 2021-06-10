@@ -16,18 +16,18 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,31 +37,24 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
+@Setter
 @Entity
-public class ExtManagedVirtualLinkDataEntity implements Serializable {
+@EntityListeners(AuditListener.class)
+public class ExtVirtualLinkInfoEntity implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private UUID id;
 
-	private String vnfVirtualLinkDescId = null;
+	@Embedded
+	private Audit audit;
 
-	private String vimConnectionId = null;
-
-	private String resourceProviderId = null;
-
-	private String resourceId = null;
-
-	private String vimLevelResourceType;
+	@Embedded
+	private VimResource resourceHandle = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private Set<LinkPortInfo> vnfLinkPorts;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private GrantResponse grants;
-
+	private List<ExtLinkPortInfoEntity> extLinkPorts = null;
 }

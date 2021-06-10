@@ -16,52 +16,42 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
+
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import lombok.Getter;
+import lombok.Setter;
+
 @Getter
+@Setter
 @Entity
-public class ExtManagedVirtualLinkDataEntity implements Serializable {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
+public class VnfcResourceInfoVnfcCpInfoEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private String id = null;
 
-	private String vnfVirtualLinkDescId = null;
+	private String cpdId = null;
 
-	private String vimConnectionId = null;
+	private String vnfExtCpId = null;
 
-	private String resourceProviderId = null;
+	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+	private List<CpProtocolInfoEntity> cpProtocolInfo = null;
 
-	private String resourceId = null;
+	private String vnfLinkPortId = null;
 
-	private String vimLevelResourceType;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private Set<LinkPortInfo> vnfLinkPorts;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private GrantResponse grants;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> metadata = null;
 
 }
