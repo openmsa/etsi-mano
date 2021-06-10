@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class VnfcResourceInfoEntity {
+public class VnfcResourceInfoEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	private String id = null;
 
@@ -46,6 +50,9 @@ public class VnfcResourceInfoEntity {
 
 	@Embedded
 	private VimResource computeResource = null;
+
+	// 2.7.1
+	private String zoneId;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> storageResourceIds = null;

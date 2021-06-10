@@ -54,7 +54,6 @@ public class AutoTest extends TestHelper {
 	void testVnfInstance() throws Exception {
 		final Set<String> ignore = new HashSet<>();
 		ignore.add("getLinks");
-		ignore.add("getVirtualLinkResourceInfo"); // VnfInstanceInstantiatedVnfInfo
 		ignore.add("getVimId");
 		doTest(VnfInstance.class, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class, ignore);
 	}
@@ -62,11 +61,7 @@ public class AutoTest extends TestHelper {
 	@Test
 	void testLcmOpOccs() throws Exception {
 		final Set<String> ignore = new HashSet<>();
-		ignore.add("getChangedInfo");
-		ignore.add("getChangedExtConnectivity");
 		ignore.add("getLinks");
-		ignore.add("getVirtualStorageDescId");
-		ignore.add("getStorageResource");
 		doTest(VnfLcmOpOcc.class, VnfLcmOpOccs.class, ignore);
 	}
 

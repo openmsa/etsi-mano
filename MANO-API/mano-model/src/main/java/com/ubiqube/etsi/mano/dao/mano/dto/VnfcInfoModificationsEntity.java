@@ -14,49 +14,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
-import java.io.Serializable;
-
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-
-import java.util.List;
 import java.util.Map;
-
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @since 2.7.1
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Getter
 @Setter
-@Entity
-public class VnfcResourceInfoVnfcCpInfoEntity implements Serializable {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@Id
+public class VnfcInfoModificationsEntity {
 	private String id = null;
 
-	private String cpdId = null;
-
-	private String vnfExtCpId = null;
-
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-	private List<CpProtocolInfoEntity> cpProtocolInfo = null;
-
-	private String vnfLinkPortId = null;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> metadata = null;
-
+	private Map<String, String> vnfcConfigurableProperties = null;
 }

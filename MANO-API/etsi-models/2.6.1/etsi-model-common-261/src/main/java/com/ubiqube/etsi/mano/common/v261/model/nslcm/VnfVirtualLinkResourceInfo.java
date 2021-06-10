@@ -32,6 +32,7 @@ package com.ubiqube.etsi.mano.common.v261.model.nslcm;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -42,8 +43,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the information that allows addressing a virtualised
- * resource that is used by an internal VL instance in a VNF instance.
+ * This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance.
  */
 @ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
 public class VnfVirtualLinkResourceInfo {
@@ -51,7 +51,7 @@ public class VnfVirtualLinkResourceInfo {
 	private String id = null;
 
 	@JsonProperty("vnfVirtualLinkDescId")
-	private String vnfVirtualLinkDescId = null;
+	private UUID vnfVirtualLinkDescId = null;
 
 	@JsonProperty("networkResource")
 	private ResourceHandle networkResource = null;
@@ -86,7 +86,7 @@ public class VnfVirtualLinkResourceInfo {
 		this.id = id;
 	}
 
-	public VnfVirtualLinkResourceInfo vnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
+	public VnfVirtualLinkResourceInfo vnfVirtualLinkDescId(final UUID vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 		return this;
 	}
@@ -99,11 +99,11 @@ public class VnfVirtualLinkResourceInfo {
 	@JsonProperty("vnfVirtualLinkDescId")
 	@ApiModelProperty(required = true, value = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
 	@NotNull
-	public String getVnfVirtualLinkDescId() {
+	public UUID getVnfVirtualLinkDescId() {
 		return vnfVirtualLinkDescId;
 	}
 
-	public void setVnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
+	public void setVnfVirtualLinkDescId(final UUID vnfVirtualLinkDescId) {
 		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
 	}
 
@@ -134,8 +134,7 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * The reservation identifier applicable to the resource. It shall be present
-	 * when an applicable reservation exists.
+	 * The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists.
 	 *
 	 * @return reservationId
 	 **/
@@ -163,9 +162,7 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * Links ports of this VL. Shall be present when the linkPort is used for
-	 * external connectivity by the VNF (refer to VnfLinkPortInfo). May be present
-	 * otherwise.
+	 * Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise.
 	 *
 	 * @return vnfLinkPorts
 	 **/
@@ -215,8 +212,7 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

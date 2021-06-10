@@ -18,11 +18,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
@@ -47,6 +47,19 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
@@ -154,221 +167,17 @@ public class VnfPackage implements PackageBase, Auditable {
 	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getVnfdId() {
-		return vnfdId;
-	}
-
-	public void setVnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
-	}
-
-	public String getVnfProvider() {
-		return vnfProvider;
-	}
-
-	public void setVnfProvider(final String vnfProvider) {
-		this.vnfProvider = vnfProvider;
-	}
-
-	public String getVnfProductName() {
-		return vnfProductName;
-	}
-
-	public void setVnfProductName(final String vnfProductName) {
-		this.vnfProductName = vnfProductName;
-	}
-
-	public String getVnfSoftwareVersion() {
-		return vnfSoftwareVersion;
-	}
-
-	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
-		this.vnfSoftwareVersion = vnfSoftwareVersion;
-	}
-
-	public String getVnfdVersion() {
-		return vnfdVersion;
-	}
-
-	public void setVnfdVersion(final String vnfdVersion) {
-		this.vnfdVersion = vnfdVersion;
-	}
-
-	public PkgChecksum getChecksum() {
-		return checksum;
-	}
-
-	public void setChecksum(final PkgChecksum checksum) {
-		this.checksum = checksum;
-	}
-
-	public Set<AdditionalArtifact> getAdditionalArtifacts() {
-		return additionalArtifacts;
-	}
-
-	public void setAdditionalArtifacts(final Set<AdditionalArtifact> additionalArtifacts) {
-		this.additionalArtifacts = additionalArtifacts;
-	}
-
-	@Override
-	public OnboardingStateType getOnboardingState() {
-		return onboardingState;
-	}
-
-	public void setOnboardingState(final OnboardingStateType onboardingState) {
-		this.onboardingState = onboardingState;
-	}
-
-	@Override
-	public PackageOperationalState getOperationalState() {
-		return operationalState;
-	}
-
-	public void setOperationalState(final PackageOperationalState operationalState) {
-		this.operationalState = operationalState;
-	}
-
-	@Override
-	public PackageUsageState getUsageState() {
-		return usageState;
-	}
-
-	public void setUsageState(final PackageUsageState usageState) {
-		this.usageState = usageState;
-	}
-
-	public Map<String, String> getUserDefinedData() {
-		return userDefinedData;
-	}
-
-	public void setUserDefinedData(final Map<String, String> userDefinedData) {
-		this.userDefinedData = userDefinedData;
-	}
-
-	public String getFlavorId() {
-		return flavorId;
-	}
-
-	public void setFlavorId(final String flavorId) {
-		this.flavorId = flavorId;
-	}
-
-	public String getDescriptorId() {
-		return descriptorId;
-	}
-
-	public void setDescriptorId(final String descriptorId) {
-		this.descriptorId = descriptorId;
-	}
-
-	public String getDescriptorVersion() {
-		return descriptorVersion;
-	}
-
-	public void setDescriptorVersion(final String descriptorVersion) {
-		this.descriptorVersion = descriptorVersion;
-	}
-
-	@Nonnull
-	public Set<VnfCompute> getVnfCompute() {
-		return vnfCompute;
-	}
-
-	public void setVnfCompute(final Set<VnfCompute> vnfCompute) {
-		this.vnfCompute = vnfCompute;
-	}
-
-	public Set<VnfVl> getVnfVl() {
-		return vnfVl;
-	}
-
-	public void setVnfVl(final Set<VnfVl> vnfVl) {
-		this.vnfVl = vnfVl;
-	}
-
-	@Nonnull
-	public Set<VnfStorage> getVnfStorage() {
-		return vnfStorage;
-	}
-
-	public void setVnfStorage(final Set<VnfStorage> vnfStorage) {
-		this.vnfStorage = vnfStorage;
-	}
-
-	public Set<VnfLinkPort> getVnfLinkPort() {
-		return vnfLinkPort;
-	}
-
-	public void setVnfLinkPort(final Set<VnfLinkPort> vnfLinkPort) {
-		this.vnfLinkPort = vnfLinkPort;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	public Set<VnfExtCp> getVnfExtCp() {
-		return vnfExtCp;
-	}
-
-	public void setVnfExtCp(final Set<VnfExtCp> vnfExtCp) {
-		this.vnfExtCp = vnfExtCp;
-	}
-
-	public String getDefaultInstantiationLevel() {
-		return defaultInstantiationLevel;
-	}
-
-	public void setDefaultInstantiationLevel(final String defaultInstantiationLevel) {
-		this.defaultInstantiationLevel = defaultInstantiationLevel;
-	}
-
-	public Set<VnfInstantiationLevels> getVnfInstantiationLevels() {
-		return vnfInstantiationLevels;
-	}
-
-	public void setVnfInstantiationLevels(final Set<VnfInstantiationLevels> vnfInstantiationLevels) {
-		this.vnfInstantiationLevels = vnfInstantiationLevels;
-	}
-
-	public Set<NsdInstance> getNsInstance() {
-		return nsInstance;
-	}
-
-	public void setNsInstance(final Set<NsdInstance> nsInstance) {
-		this.nsInstance = nsInstance;
-	}
-
-	public Set<OsContainerDesc> getOsContainerDesc() {
-		return osContainerDesc;
-	}
-
-	public void setOsContainerDesc(final Set<OsContainerDesc> osContainerDesc) {
-		this.osContainerDesc = osContainerDesc;
-	}
-
-	public Set<UUID> getMciopId() {
-		return mciopId;
-	}
-
-	public void setMciopId(final Set<UUID> mciopId) {
-		this.mciopId = mciopId;
-	}
+	// 2.7.1
+	private String vnfmInfo;
+	// 2.7.1
+	private PackageSecurityOptionType packageSecurityOption = null;
+	// 2.7.1
+	private String signingCertificate = null;
+	// 2.7.1
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<String> compatibleSpecificationVersions;
+	// 2.7.1
+	private FailureDetails onboardingFailureDetails = null;
 
 	public void addInstantiationLevel(final VnfInstantiationLevels il) {
 		if (null == vnfInstantiationLevels) {
@@ -376,14 +185,6 @@ public class VnfPackage implements PackageBase, Auditable {
 		}
 		il.setVnfPackage(this);
 		vnfInstantiationLevels.add(il);
-	}
-
-	public Set<NsdPackageVnfPackage> getNsdPackages() {
-		return nsdPackages;
-	}
-
-	public void setNsdPackages(final Set<NsdPackageVnfPackage> nsdPackages) {
-		this.nsdPackages = nsdPackages;
 	}
 
 	public void addNsdPackage(final NsdPackageVnfPackage nsdPackage) {

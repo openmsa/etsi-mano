@@ -16,9 +16,10 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,12 +31,33 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+public class VnfInfoModificationsDto {
+	private String vnfInstanceName = null;
 
-	private UUID id = null;
+	private String vnfInstanceDescription = null;
 
-	private VduInstantiationLevel instantiationLevel;
+	private Map<String, String> vnfConfigurableProperties = null;
 
+	private Map<String, String> metadata = null;
+
+	private Map<String, String> extensions = null;
+
+	private List<VimConnectionInformation> vimConnectionInfo = null;
+
+	private String vnfPkgId = null;
+
+	private String vnfdId = null;
+
+	private String vnfProvider = null;
+
+	private String vnfProductName = null;
+
+	private String vnfSoftwareVersion = null;
+
+	private String vnfdVersion = null;
+
+	// @since 2.7.1
+	private List<VnfcInfoModificationsEntity> vnfcInfoModifications;
+	// @since 2.7.1
+	private List<String> vnfcInfoModificationsDeleteIds;
 }

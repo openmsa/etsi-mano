@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -34,7 +36,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class CpProtocolInfoEntity {
+public class CpProtocolInfoEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The identifier of layer(s) and protocol(s) associated to the network address information. Permitted values: IP_OVER_ETHERNET See note.
 	 */

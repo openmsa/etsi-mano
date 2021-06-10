@@ -14,26 +14,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum OnboardingStateType {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public enum PackageSecurityOptionType {
+	_1("OPTION_1"),
 
-	CREATED("CREATED"),
+	_2("OPTION_2");
 
-	UPLOADING("UPLOADING"),
+	private final String value;
 
-	PROCESSING("PROCESSING"),
-
-	ONBOARDED("ONBOARDED"),
-	// 2.7.1
-	ERROR("ERROR");
-
-	private String value;
-
-	OnboardingStateType(final String value) {
+	PackageSecurityOptionType(final String value) {
 		this.value = value;
 	}
 
@@ -44,8 +42,8 @@ public enum OnboardingStateType {
 	}
 
 	@JsonCreator
-	public static OnboardingStateType fromValue(final String text) {
-		for (final OnboardingStateType b : OnboardingStateType.values()) {
+	public static PackageSecurityOptionType fromValue(final String text) {
+		for (final PackageSecurityOptionType b : PackageSecurityOptionType.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

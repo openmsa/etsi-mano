@@ -50,11 +50,15 @@ public class VirtualStorageResourceInfo implements BaseEntity, Auditable {
 	@Embedded
 	private VimResource storageResource = null;
 
+	// 2.7.1
+	private String zoneId;
+
 	@JsonProperty("reservationId")
 	private String reservationId = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
+	@Embedded
 	private Audit audit = new Audit();
 }

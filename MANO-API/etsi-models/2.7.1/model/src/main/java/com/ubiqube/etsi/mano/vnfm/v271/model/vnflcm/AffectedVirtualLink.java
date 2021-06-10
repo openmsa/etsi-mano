@@ -16,280 +16,284 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm;
 
+import java.util.Map;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ResourceHandle;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * This type provides information about added, deleted, modified and temporary VLs. 
+ * This type provides information about added, deleted, modified and temporary VLs.
  */
 @ApiModel(description = "This type provides information about added, deleted, modified and temporary VLs. ")
 @Validated
 
-public class AffectedVirtualLink   {
-  @JsonProperty("id")
-  private String id = null;
+public class AffectedVirtualLink {
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("vnfVirtualLinkDescId")
-  private String vnfVirtualLinkDescId = null;
+	@JsonProperty("vnfVirtualLinkDescId")
+	private UUID vnfVirtualLinkDescId = null;
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. 
-   */
-  public enum ChangeTypeEnum {
-    ADDED("ADDED"),
-    
-    REMOVED("REMOVED"),
-    
-    MODIFIED("MODIFIED"),
-    
-    TEMPORARY("TEMPORARY"),
-    
-    LINK_PORT_ADDED("LINK_PORT_ADDED"),
-    
-    LINK_PORT_REMOVED("LINK_PORT_REMOVED");
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists.
+	 */
+	public enum ChangeTypeEnum {
+		ADDED("ADDED"),
 
-    private String value;
+		REMOVED("REMOVED"),
 
-    ChangeTypeEnum(String value) {
-      this.value = value;
-    }
+		MODIFIED("MODIFIED"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		TEMPORARY("TEMPORARY"),
 
-    @JsonCreator
-    public static ChangeTypeEnum fromValue(String text) {
-      for (ChangeTypeEnum b : ChangeTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		LINK_PORT_ADDED("LINK_PORT_ADDED"),
 
-  @JsonProperty("changeType")
-  private ChangeTypeEnum changeType = null;
+		LINK_PORT_REMOVED("LINK_PORT_REMOVED");
 
-  @JsonProperty("networkResource")
-  private ResourceHandle networkResource = null;
+		private final String value;
 
-  @JsonProperty("resourceDefinitionId")
-  private String resourceDefinitionId = null;
+		ChangeTypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("zoneId")
-  private String zoneId = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+		@JsonCreator
+		public static ChangeTypeEnum fromValue(final String text) {
+			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  public AffectedVirtualLink id(String id) {
-    this.id = id;
-    return this;
-  }
+	@JsonProperty("changeType")
+	private ChangeTypeEnum changeType = null;
 
-  /**
-   * Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type. 
-   * @return id
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type. ")
-  @NotNull
+	@JsonProperty("networkResource")
+	private ResourceHandle networkResource = null;
 
+	@JsonProperty("resourceDefinitionId")
+	private String resourceDefinitionId = null;
 
-  public String getId() {
-    return id;
-  }
+	@JsonProperty("zoneId")
+	private String zoneId = null;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  public AffectedVirtualLink vnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
-    this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
-    return this;
-  }
+	public AffectedVirtualLink id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  /**
-   * Identifier of the related VLD in the VNFD. 
-   * @return vnfVirtualLinkDescId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the related VLD in the VNFD. ")
-  @NotNull
+	/**
+	 * Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type.
+	 *
+	 * @return id
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type. ")
+	@NotNull
 
+	public String getId() {
+		return id;
+	}
 
-  public String getVnfVirtualLinkDescId() {
-    return vnfVirtualLinkDescId;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setVnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
-    this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
-  }
+	public AffectedVirtualLink vnfVirtualLinkDescId(final UUID vnfVirtualLinkDescId) {
+		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
+		return this;
+	}
 
-  public AffectedVirtualLink changeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-    return this;
-  }
+	/**
+	 * Identifier of the related VLD in the VNFD.
+	 *
+	 * @return vnfVirtualLinkDescId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the related VLD in the VNFD. ")
+	@NotNull
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. 
-   * @return changeType
-  **/
-  @ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. ")
-  @NotNull
+	public UUID getVnfVirtualLinkDescId() {
+		return vnfVirtualLinkDescId;
+	}
 
+	public void setVnfVirtualLinkDescId(final UUID vnfVirtualLinkDescId) {
+		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
+	}
 
-  public ChangeTypeEnum getChangeType() {
-    return changeType;
-  }
+	public AffectedVirtualLink changeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+		return this;
+	}
 
-  public void setChangeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-  }
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists.
+	 *
+	 * @return changeType
+	 **/
+	@ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. ")
+	@NotNull
 
-  public AffectedVirtualLink networkResource(ResourceHandle networkResource) {
-    this.networkResource = networkResource;
-    return this;
-  }
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
 
-  /**
-   * Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. 
-   * @return networkResource
-  **/
-  @ApiModelProperty(required = true, value = "Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
-  @NotNull
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
 
-  @Valid
+	public AffectedVirtualLink networkResource(final ResourceHandle networkResource) {
+		this.networkResource = networkResource;
+		return this;
+	}
 
-  public ResourceHandle getNetworkResource() {
-    return networkResource;
-  }
+	/**
+	 * Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM.
+	 *
+	 * @return networkResource
+	 **/
+	@ApiModelProperty(required = true, value = "Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
+	@NotNull
 
-  public void setNetworkResource(ResourceHandle networkResource) {
-    this.networkResource = networkResource;
-  }
+	@Valid
 
-  public AffectedVirtualLink resourceDefinitionId(String resourceDefinitionId) {
-    this.resourceDefinitionId = resourceDefinitionId;
-    return this;
-  }
+	public ResourceHandle getNetworkResource() {
+		return networkResource;
+	}
 
-  /**
-   * The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\". 
-   * @return resourceDefinitionId
-  **/
-  @ApiModelProperty(value = "The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\". ")
+	public void setNetworkResource(final ResourceHandle networkResource) {
+		this.networkResource = networkResource;
+	}
 
+	public AffectedVirtualLink resourceDefinitionId(final String resourceDefinitionId) {
+		this.resourceDefinitionId = resourceDefinitionId;
+		return this;
+	}
 
-  public String getResourceDefinitionId() {
-    return resourceDefinitionId;
-  }
+	/**
+	 * The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual
+	 * VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\".
+	 *
+	 * @return resourceDefinitionId
+	 **/
+	@ApiModelProperty(value = "The identifier of the \"ResourceDefinition\" in the granting exchange related to the LCM operation occurrence. It shall be present when an applicable GrantInfo for the granted resource exists. The \"resourceDefinitionId\" attribute provides information to the API consumer (i.e. the NFVO) to assist in correlating the resource changes performed during the LCM operation with the granted resources in a specific Grant exchange, which is identified by the \"grantId\" available in the \"Individual VNF lifecycle management operation occurrence\" and the \"id\" in the \"Individual Grant\". ")
 
-  public void setResourceDefinitionId(String resourceDefinitionId) {
-    this.resourceDefinitionId = resourceDefinitionId;
-  }
+	public String getResourceDefinitionId() {
+		return resourceDefinitionId;
+	}
 
-  public AffectedVirtualLink zoneId(String zoneId) {
-    this.zoneId = zoneId;
-    return this;
-  }
+	public void setResourceDefinitionId(final String resourceDefinitionId) {
+		this.resourceDefinitionId = resourceDefinitionId;
+	}
 
-  /**
-   * The identifier of the resource zone, as managed by the resource management layer (typically, the VIM), where the referenced VirtualNetwork resource is placed. Shall be provided if this information is available from the VIM. 
-   * @return zoneId
-  **/
-  @ApiModelProperty(value = "The identifier of the resource zone, as managed by the resource management layer (typically, the VIM), where the referenced VirtualNetwork resource is placed. Shall be provided if this information is available from the VIM. ")
+	public AffectedVirtualLink zoneId(final String zoneId) {
+		this.zoneId = zoneId;
+		return this;
+	}
 
+	/**
+	 * The identifier of the resource zone, as managed by the resource management layer (typically, the VIM), where the referenced VirtualNetwork resource is placed. Shall be provided if this information is available from the VIM.
+	 *
+	 * @return zoneId
+	 **/
+	@ApiModelProperty(value = "The identifier of the resource zone, as managed by the resource management layer (typically, the VIM), where the referenced VirtualNetwork resource is placed. Shall be provided if this information is available from the VIM. ")
 
-  public String getZoneId() {
-    return zoneId;
-  }
+	public String getZoneId() {
+		return zoneId;
+	}
 
-  public void setZoneId(String zoneId) {
-    this.zoneId = zoneId;
-  }
+	public void setZoneId(final String zoneId) {
+		this.zoneId = zoneId;
+	}
 
-  public AffectedVirtualLink metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public AffectedVirtualLink metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  /**
-   * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure. 
-   * @return metadata
-  **/
-  @ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure. ")
+	/**
+	 * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure.
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure. ")
 
-  @Valid
+	@Valid
 
-  public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AffectedVirtualLink affectedVirtualLink = (AffectedVirtualLink) o;
+		return Objects.equals(this.id, affectedVirtualLink.id) &&
+				Objects.equals(this.vnfVirtualLinkDescId, affectedVirtualLink.vnfVirtualLinkDescId) &&
+				Objects.equals(this.changeType, affectedVirtualLink.changeType) &&
+				Objects.equals(this.networkResource, affectedVirtualLink.networkResource) &&
+				Objects.equals(this.resourceDefinitionId, affectedVirtualLink.resourceDefinitionId) &&
+				Objects.equals(this.zoneId, affectedVirtualLink.zoneId) &&
+				Objects.equals(this.metadata, affectedVirtualLink.metadata);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffectedVirtualLink affectedVirtualLink = (AffectedVirtualLink) o;
-    return Objects.equals(this.id, affectedVirtualLink.id) &&
-        Objects.equals(this.vnfVirtualLinkDescId, affectedVirtualLink.vnfVirtualLinkDescId) &&
-        Objects.equals(this.changeType, affectedVirtualLink.changeType) &&
-        Objects.equals(this.networkResource, affectedVirtualLink.networkResource) &&
-        Objects.equals(this.resourceDefinitionId, affectedVirtualLink.resourceDefinitionId) &&
-        Objects.equals(this.zoneId, affectedVirtualLink.zoneId) &&
-        Objects.equals(this.metadata, affectedVirtualLink.metadata);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, vnfVirtualLinkDescId, changeType, networkResource, resourceDefinitionId, zoneId, metadata);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, vnfVirtualLinkDescId, changeType, networkResource, resourceDefinitionId, zoneId, metadata);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffectedVirtualLink {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffectedVirtualLink {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    vnfVirtualLinkDescId: ").append(toIndentedString(vnfVirtualLinkDescId)).append("\n");
-    sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
-    sb.append("    networkResource: ").append(toIndentedString(networkResource)).append("\n");
-    sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
-    sb.append("    zoneId: ").append(toIndentedString(zoneId)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    vnfVirtualLinkDescId: ").append(toIndentedString(vnfVirtualLinkDescId)).append("\n");
+		sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
+		sb.append("    networkResource: ").append(toIndentedString(networkResource)).append("\n");
+		sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
+		sb.append("    zoneId: ").append(toIndentedString(zoneId)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

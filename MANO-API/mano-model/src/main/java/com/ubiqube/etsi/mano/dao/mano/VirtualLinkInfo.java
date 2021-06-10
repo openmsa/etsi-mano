@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,16 @@ import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedBase;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class VirtualLinkInfo extends VnfInstantiatedBase {
 	/** Serial. */
@@ -41,11 +52,14 @@ public class VirtualLinkInfo extends VnfInstantiatedBase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
-	private UUID vnfVirtualLinkDescId = null;
+	private String vnfVirtualLinkDescId = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<LinkPortInfo> vnfLinkPorts = null;
+
+	@Embedded
+	private VimResource networkResource;
 
 	@ElementCollection
 	private Map<String, String> metadata = null;
@@ -54,36 +68,4 @@ public class VirtualLinkInfo extends VnfInstantiatedBase {
 	public UUID getId() {
 		return id;
 	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public UUID getVnfVirtualLinkDescId() {
-		return vnfVirtualLinkDescId;
-	}
-
-	public void setVnfVirtualLinkDescId(final UUID vnfVirtualLinkDescId) {
-		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
-	}
-
-	public Set<LinkPortInfo> getVnfLinkPorts() {
-		return vnfLinkPorts;
-	}
-
-	public void setVnfLinkPorts(final Set<LinkPortInfo> vnfLinkPorts) {
-		this.vnfLinkPorts = vnfLinkPorts;
-	}
-
-	@Override
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
-
-	@Override
-	public void setMetadata(final Map<String, String> metadata) {
-		this.metadata = metadata;
-	}
-
 }

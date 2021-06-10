@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.model.v271.sol003.vnf;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -34,8 +35,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents an artifact other than a software image which is
- * contained in a VNF package.
+ * This type represents an artifact other than a software image which is contained in a VNF package.
  */
 @ApiModel(description = "This type represents an artifact other than a software image which is contained in a VNF package. ")
 @Validated
@@ -59,12 +59,7 @@ public class VnfPackageArtifactInfo {
 	private String nonManoArtifactSetId = null;
 
 	/**
-	 * Marks specific types of artifacts as defined in the VNF package. If none of
-	 * the specific classes listed below applies, the attribute shall not be
-	 * present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in
-	 * ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI
-	 * GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS
-	 * NFV-SOL 004
+	 * Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004
 	 */
 	public enum ArtifactClassificationEnum {
 		HISTORY("HISTORY"),
@@ -100,7 +95,7 @@ public class VnfPackageArtifactInfo {
 	private ArtifactClassificationEnum artifactClassification = null;
 
 	@JsonProperty("metadata")
-	private HashMap<String, Object> metadata = null;
+	private Map<String, Object> metadata = null;
 
 	public VnfPackageArtifactInfo artifactPath(final String artifactPath) {
 		this.artifactPath = artifactPath;
@@ -108,19 +103,8 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Path in the VNF package, which identifies the artifact and also allows to
-	 * access a copy of the artifact. The For an artifact contained as a file in the
-	 * VNF package, this attribute shall be present, and the value of this attribute
-	 * shall start with the name of the first segment in the path in the package,
-	 * i.e. it shall not be prefixed by path separator characters such as \".\" and
-	 * \"/\". EXAMPLE: foo/bar/runm@ster.sh For an external artifact represented as
-	 * a URI in the VNF descriptor, this attribute shall be present if the artifact
-	 * has been downloaded by the NFVO and shall be absent otherwise. If present, it
-	 * shall contain the artifactPath under which the artifact can be obtained using
-	 * the \"Individual artifact in a VNF package\" resource defined in clause
-	 * 10.4.6. It is the responsibility of the NFVO to synthesize this path in a
-	 * manner that avoids any collision of the synthesized artifact path with the
-	 * paths and names of artifacts included in the package.
+	 * Path in the VNF package, which identifies the artifact and also allows to access a copy of the artifact. The For an artifact contained as a file in the VNF package, this attribute shall be present, and the value of this attribute shall start with the name of the first segment in the path in the package, i.e. it shall not be prefixed by path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/runm@ster.sh For an external artifact represented as a URI in the VNF descriptor, this
+	 * attribute shall be present if the artifact has been downloaded by the NFVO and shall be absent otherwise. If present, it shall contain the artifactPath under which the artifact can be obtained using the \"Individual artifact in a VNF package\" resource defined in clause 10.4.6. It is the responsibility of the NFVO to synthesize this path in a manner that avoids any collision of the synthesized artifact path with the paths and names of artifacts included in the package.
 	 *
 	 * @return artifactPath
 	 **/
@@ -193,9 +177,7 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * URI of the artifact as defined in the VNF package manifest. Shall be present
-	 * if the artifact is external to the package and shall be absent otherwise.
-	 * EXAMPLE: https://example.com/m%40ster.sh
+	 * URI of the artifact as defined in the VNF package manifest. Shall be present if the artifact is external to the package and shall be absent otherwise. EXAMPLE: https://example.com/m%40ster.sh
 	 *
 	 * @return artifactURI
 	 **/
@@ -215,10 +197,7 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Non-MANO artifact set identifier of the non-MANO artifact set to which the
-	 * artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004. Shall be
-	 * provided if the artifact is a non-MANO artifact, and shall be omitted
-	 * otherwise.
+	 * Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise.
 	 *
 	 * @return nonManoArtifactSetId
 	 **/
@@ -238,12 +217,7 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Marks specific types of artifacts as defined in the VNF package. If none of
-	 * the specific classes listed below applies, the attribute shall not be
-	 * present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in
-	 * ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI
-	 * GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS
-	 * NFV-SOL 004
+	 * Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004
 	 *
 	 * @return artifactClassification
 	 **/
@@ -263,8 +237,7 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * The metadata of the artifact that are available in the VNF package, such as
-	 * Content type, size, creation date, etc.
+	 * The metadata of the artifact that are available in the VNF package, such as Content type, size, creation date, etc.
 	 *
 	 * @return metadata
 	 **/
@@ -272,11 +245,11 @@ public class VnfPackageArtifactInfo {
 
 	@Valid
 
-	public HashMap<String, Object> getMetadata() {
+	public Map<String, Object> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final HashMap<String, Object> metadata) {
+	public void setMetadata(final Map<String, Object> metadata) {
 		this.metadata = metadata;
 	}
 
@@ -320,8 +293,7 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
