@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.grant;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -59,6 +59,6 @@ public class VimConstraint implements BaseEntity, Auditable {
 	private Boolean sameResourceGroup = null;
 
 	@OneToMany
-	private Set<ConstraintResourceRef> resource = new HashSet<>();
+	private Set<ConstraintResourceRef> resource = new LinkedHashSet<>();
 
 }

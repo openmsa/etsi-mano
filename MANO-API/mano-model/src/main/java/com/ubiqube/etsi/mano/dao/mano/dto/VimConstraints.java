@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class VimConstraints implements Serializable {
 
 	private boolean sameResourceGroup;
 
-	private Set<ConstraintRef> resources;
+	private Set<ConstraintRef> resources = new LinkedHashSet<>();
 
 	private VnfGrantsRequest grants;
 
