@@ -16,6 +16,15 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.grant;
 
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -29,8 +38,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Entity
 public class ConstraintResourceRef {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id = null;
 
+	@Enumerated(EnumType.STRING)
 	private IdTypeEnum idType = null;
 
 	private String resourceId = null;

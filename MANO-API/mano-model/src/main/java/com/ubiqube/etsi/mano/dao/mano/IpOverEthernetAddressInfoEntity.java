@@ -18,15 +18,20 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import lombok.Getter;
@@ -41,10 +46,28 @@ import lombok.Setter;
 @Getter
 @Entity
 public class IpOverEthernetAddressInfoEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+
 	private String macAddress = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private List<IpOverEthernetAddressDataIpAddressesEntity> ipAddresses = new ArrayList<>();
+
+	@Enumerated(EnumType.STRING)
+	private TypeEnum type = null;
+
+	private String addresses = null;
+	// 3.3.1
+	private String segmentationId;
+
+	private Boolean isDynamic = null;
+
+	@Embedded
+	private IpOverEthernetAddressInfoAddressRangeEntity addressRange = null;
+
+	private String subnetId = null;
 
 	/**
 	 * The type of the IP addresses
@@ -76,23 +99,5 @@ public class IpOverEthernetAddressInfoEntity {
 			return null;
 		}
 	}
-
-	@JsonProperty("type")
-	private TypeEnum type = null;
-
-	private String addresses = null;
-	// 3.3.1
-	private String segmentationId;
-
-	private Boolean isDynamic = null;
-
-	@Embedded
-	private IpOverEthernetAddressInfoAddressRangeEntity addressRange = null;
-
-	private String minAddress = null;
-
-	private String maxAddress = null;
-
-	private String subnetId = null;
 
 }

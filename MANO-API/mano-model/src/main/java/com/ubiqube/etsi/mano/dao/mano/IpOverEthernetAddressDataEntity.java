@@ -53,8 +53,20 @@ public class IpOverEthernetAddressDataEntity implements Serializable {
 	private String macAddress = null;
 
 	@Valid
-	@OneToMany(mappedBy = "ipOverEthernetAddressDataEntity")
+	@OneToMany
 	private List<IpOverEthernetAddressDataIpAddressesEntity> ipAddresses = null;
+
+	private TypeEnum type = null;
+
+	private String addresses = null;
+
+	private Boolean isDynamic = null;
+	// 3.3.1
+	private String segmentationId;
+	@Embedded
+	private IpOverEthernetAddressInfoAddressRangeEntity addressRange;
+
+	private String subnetId = null;
 
 	/**
 	 * The type of the IP addresses
@@ -86,21 +98,5 @@ public class IpOverEthernetAddressDataEntity implements Serializable {
 			return null;
 		}
 	}
-
-	private TypeEnum type = null;
-
-	private String addresses = null;
-
-	private Boolean isDynamic = null;
-	// 3.3.1
-	private String segmentationId;
-	@Embedded
-	private IpOverEthernetAddressInfoAddressRangeEntity addressRange;
-
-	private String minAddress = null;
-
-	private String maxAddress = null;
-
-	private String subnetId = null;
 
 }

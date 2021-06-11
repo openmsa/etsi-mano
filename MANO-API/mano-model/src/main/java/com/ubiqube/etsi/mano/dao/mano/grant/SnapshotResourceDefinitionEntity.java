@@ -16,7 +16,12 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.grant;
 
-import javax.persistence.Embeddable;
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import com.ubiqube.etsi.mano.dao.mano.VimResource;
 
@@ -30,8 +35,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Embeddable
+@Entity
 public class SnapshotResourceDefinitionEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+
 	private String vnfSnapshotId = null;
 
 	private String vnfcSnapshotId = null;

@@ -17,8 +17,8 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -58,12 +58,12 @@ public class VnfcResourceInfoEntity implements Serializable {
 	private String zoneId;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> storageResourceIds = null;
+	private Set<String> storageResourceIds = null;
 
 	private String reservationId = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private List<VnfcResourceInfoVnfcCpInfoEntity> vnfcCpInfo = null;
+	private Set<VnfcResourceInfoVnfcCpInfoEntity> vnfcCpInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;

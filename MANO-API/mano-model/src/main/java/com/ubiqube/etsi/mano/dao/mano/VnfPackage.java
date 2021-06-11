@@ -102,9 +102,10 @@ public class VnfPackage implements PackageBase, Auditable {
 	@IndexedEmbedded
 	private PkgChecksum checksum;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
 	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	private Set<AdditionalArtifact> additionalArtifacts;
 
 	@Enumerated(EnumType.STRING)

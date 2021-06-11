@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.grant;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Embedded;
@@ -26,6 +26,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
@@ -57,6 +58,7 @@ public class VimConstraint implements BaseEntity, Auditable {
 
 	private Boolean sameResourceGroup = null;
 
-	private List<ConstraintResourceRef> resource = new ArrayList<>();
+	@OneToMany
+	private Set<ConstraintResourceRef> resource = new HashSet<>();
 
 }

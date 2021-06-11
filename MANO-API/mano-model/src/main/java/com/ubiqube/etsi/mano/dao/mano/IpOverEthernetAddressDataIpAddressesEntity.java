@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -57,6 +58,7 @@ public class IpOverEthernetAddressDataIpAddressesEntity implements Serializable 
 
 	private Integer numDynamicAddresses = null;
 
+	@Embedded
 	private IpOverEthernetAddressDataAddressRangeEntity addressRange = null;
 
 	private String subnetId = null;

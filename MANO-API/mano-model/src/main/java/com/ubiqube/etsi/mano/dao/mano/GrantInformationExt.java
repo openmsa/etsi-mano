@@ -19,13 +19,13 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.io.Serializable;
 import java.util.UUID;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.grant.SnapshotResourceDefinitionEntity;
 
@@ -73,7 +73,7 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 
 	private String resourceGroupId;
 	// 3.3.1
-	@Embedded
+	@OneToOne
 	private SnapshotResourceDefinitionEntity snapshotResDef;
 
 	@Override

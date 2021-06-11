@@ -33,6 +33,16 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @Indexed
 public class NsdInstance extends Instance {
@@ -50,7 +60,7 @@ public class NsdInstance extends Instance {
 
 	private String nsInstantiationLevelId;
 
-	private String flavourId;
+	private String instanceFlavourId;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
@@ -79,91 +89,11 @@ public class NsdInstance extends Instance {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
 	private Set<NsBlueprint> blueprint;
 
-	public String getNsInstanceName() {
-		return nsInstanceName;
-	}
-
-	public void setNsInstanceName(final String nsInstanceName) {
-		this.nsInstanceName = nsInstanceName;
-	}
-
-	public String getNsInstanceDescription() {
-		return nsInstanceDescription;
-	}
-
-	public void setNsInstanceDescription(final String nsInstanceDescription) {
-		this.nsInstanceDescription = nsInstanceDescription;
-	}
-
-	public NsdPackage getNsdInfo() {
-		return nsdInfo;
-	}
-
-	public void setNsdInfo(final NsdPackage nsdInfoId) {
-		this.nsdInfo = nsdInfoId;
-	}
-
-	public List<NsVnfInstance> getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final List<NsVnfInstance> vnfInstance) {
-		this.vnfInstance = vnfInstance;
-	}
-
-	public List<NsdInstance> getNestedNsInstance() {
-		return nestedNsInstance;
-	}
-
-	public void setNestedNsInstance(final List<NsdInstance> nestedNsInstanceId) {
-		this.nestedNsInstance = nestedNsInstanceId;
-	}
-
-	public String getNsInstantiationLevelId() {
-		return nsInstantiationLevelId;
-	}
-
-	public void setNsInstantiationLevelId(final String nsInstantiationLevelId) {
-		this.nsInstantiationLevelId = nsInstantiationLevelId;
-	}
-
-	public Set<NestedNsInstanceData> getNestedNsInstanceData() {
-		return nestedNsInstanceData;
-	}
-
-	public void setNestedNsInstanceData(final Set<NestedNsInstanceData> nestedNsInstanceData) {
-		this.nestedNsInstanceData = nestedNsInstanceData;
-	}
-
-	public Set<VnfInstanceData> getVnfInstanceData() {
-		return vnfInstanceData;
-	}
-
-	public void setVnfInstanceData(final Set<VnfInstanceData> vnfInstanceData) {
-		this.vnfInstanceData = vnfInstanceData;
-	}
-
-	public Set<NsBlueprint> getBlueprint() {
-		return blueprint;
-	}
-
-	public void setBlueprint(final Set<NsBlueprint> blueprint) {
-		this.blueprint = blueprint;
-	}
-
 	public void addNestedNsInstance(final NsdInstance nsIn) {
 		if (null == nestedNsInstance) {
 			nestedNsInstance = new ArrayList<>();
 		}
 		nestedNsInstance.add(nsIn);
-	}
-
-	public String getFlavourId() {
-		return flavourId;
-	}
-
-	public void setFlavourId(final String flavourId) {
-		this.flavourId = flavourId;
 	}
 
 }
