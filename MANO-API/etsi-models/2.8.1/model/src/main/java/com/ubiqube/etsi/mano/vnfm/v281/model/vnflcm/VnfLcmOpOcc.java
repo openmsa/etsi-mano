@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -46,10 +46,10 @@ public class VnfLcmOpOcc {
 	private LcmOperationStateType operationState = null;
 
 	@JsonProperty("stateEnteredTime")
-	private Date stateEnteredTime = null;
+	private OffsetDateTime stateEnteredTime = null;
 
 	@JsonProperty("startTime")
-	private Date startTime = null;
+	private OffsetDateTime startTime = null;
 
 	@JsonProperty("vnfInstanceId")
 	private String vnfInstanceId = null;
@@ -132,7 +132,7 @@ public class VnfLcmOpOcc {
 		this.operationState = operationState;
 	}
 
-	public VnfLcmOpOcc stateEnteredTime(final Date stateEnteredTime) {
+	public VnfLcmOpOcc stateEnteredTime(final OffsetDateTime stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 		return this;
 	}
@@ -145,15 +145,15 @@ public class VnfLcmOpOcc {
 	@ApiModelProperty(required = true, value = "Date-time when the current state has been entered. ")
 	@NotNull
 
-	public Date getStateEnteredTime() {
+	public OffsetDateTime getStateEnteredTime() {
 		return stateEnteredTime;
 	}
 
-	public void setStateEnteredTime(final Date stateEnteredTime) {
+	public void setStateEnteredTime(final OffsetDateTime stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
-	public VnfLcmOpOcc startTime(final Date startTime) {
+	public VnfLcmOpOcc startTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 		return this;
 	}
@@ -166,11 +166,11 @@ public class VnfLcmOpOcc {
 	@ApiModelProperty(required = true, value = "Date-time of the start of the operation. ")
 	@NotNull
 
-	public Date getStartTime() {
+	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(final Date startTime) {
+	public void setStartTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 	}
 

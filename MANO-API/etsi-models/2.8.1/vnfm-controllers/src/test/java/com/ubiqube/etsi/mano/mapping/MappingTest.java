@@ -31,6 +31,11 @@ import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfLcmOpOcc;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class MappingTest extends TestHelper {
 
 	public MappingTest() {

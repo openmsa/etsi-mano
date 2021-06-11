@@ -16,9 +16,7 @@
  */
 package com.ubiqube.etsi.mano.model.v271.sol003.vnf;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -53,7 +51,7 @@ public class VnfPackageArtifactInfo {
 
 	@JsonProperty("artifactURI")
 	@Valid
-	private List<String> artifactURI = null;
+	private String artifactURI = null;
 
 	@JsonProperty("nonManoArtifactSetId")
 	private String nonManoArtifactSetId = null;
@@ -163,16 +161,8 @@ public class VnfPackageArtifactInfo {
 		this.isEncrypted = isEncrypted;
 	}
 
-	public VnfPackageArtifactInfo artifactURI(final List<String> artifactURI) {
+	public VnfPackageArtifactInfo artifactURI(final String artifactURI) {
 		this.artifactURI = artifactURI;
-		return this;
-	}
-
-	public VnfPackageArtifactInfo addArtifactURIItem(final String artifactURIItem) {
-		if (this.artifactURI == null) {
-			this.artifactURI = new ArrayList<>();
-		}
-		this.artifactURI.add(artifactURIItem);
 		return this;
 	}
 
@@ -183,11 +173,11 @@ public class VnfPackageArtifactInfo {
 	 **/
 	@ApiModelProperty(value = "URI of the artifact as defined in the VNF package manifest. Shall be present if the artifact is external to the package and shall be absent otherwise. EXAMPLE: https://example.com/m%40ster.sh ")
 
-	public List<String> getArtifactURI() {
+	public String getArtifactURI() {
 		return artifactURI;
 	}
 
-	public void setArtifactURI(final List<String> artifactURI) {
+	public void setArtifactURI(final String artifactURI) {
 		this.artifactURI = artifactURI;
 	}
 
