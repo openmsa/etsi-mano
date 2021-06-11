@@ -89,10 +89,6 @@
 			<artifactId>spring-beans</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.threeten</groupId>
-			<artifactId>threetenbp</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
 		</dependency>
