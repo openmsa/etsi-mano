@@ -52,6 +52,10 @@ public class ExtCpInfo implements Serializable {
 	private UUID id = null;
 
 	private String cpdId = null;
+	// 3.3.1
+	private String cpConfigId;
+	// 3.3.1
+	private String vnfdId;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<CpProtocolDataEntity> cpProtocolInfo = null;

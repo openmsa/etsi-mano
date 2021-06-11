@@ -48,6 +48,9 @@ public class VnfcResourceInfoEntity implements Serializable {
 
 	private String vduId = null;
 
+	// 3.3.1
+	private String vnfdId;
+
 	@Embedded
 	private VimResource computeResource = null;
 

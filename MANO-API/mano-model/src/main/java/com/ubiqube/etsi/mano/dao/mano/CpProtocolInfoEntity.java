@@ -44,7 +44,8 @@ public class CpProtocolInfoEntity implements Serializable {
 	 * The identifier of layer(s) and protocol(s) associated to the network address information. Permitted values: IP_OVER_ETHERNET See note.
 	 */
 	public enum LayerProtocolEnum {
-		IP_OVER_ETHERNET("IP_OVER_ETHERNET");
+		IP_OVER_ETHERNET("IP_OVER_ETHERNET"),
+		ETHERNET("ETHERNET");
 
 		private final String value;
 

@@ -14,16 +14,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.grant;
 
-import java.util.UUID;
+import javax.persistence.Embeddable;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.ubiqube.etsi.mano.dao.mano.VimResource;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,22 +30,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Entity
-@EntityListeners(AuditListener.class)
-public class VnfMonitoringParameter implements Auditable, BaseEntity {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+@Embeddable
+public class SnapshotResourceDefinitionEntity {
+	private String vnfSnapshotId = null;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+	private String vnfcSnapshotId = null;
 
-	@Embedded
-	private Audit audit;
+	private String storageSnapshotId = null;
 
-	private String name = null;
-	// 3.3.1
-	private String vnfdId;
-
-	private String performanceMetric = null;
+	private VimResource snapshotResource = null;
 }

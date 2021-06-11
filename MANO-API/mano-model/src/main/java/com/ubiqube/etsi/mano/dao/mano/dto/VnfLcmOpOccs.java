@@ -16,7 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -50,9 +51,9 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	private InstantiationStatusType operationState = null;
 
-	private Date stateEnteredTime = null;
+	private OffsetDateTime stateEnteredTime = null;
 
-	private Date startTime = null;
+	private OffsetDateTime startTime = null;
 
 	private VnfInstance vnfInstance = null;
 
@@ -61,6 +62,8 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	private NsdChangeType operation = null;
 
 	private Boolean isAutomaticInvocation = null;
+
+	private Map<String, String> operationParams;
 
 	private Boolean isCancelPending = null;
 
@@ -83,6 +86,11 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	private Set<ExtVirtualLinkInfoEntity> changedExtConnectivity;
 
 	private VnfInfoModificationsDto changedInfo;
+
+	// 3.3.1
+	private ModificationsTriggeredByVnfPkgChangeEntity modificationsTriggeredByVnfPkgChange;
+	// 3.3.1
+	private String vnfSnapshotInfoId;
 
 	private Audit audit;
 

@@ -92,7 +92,8 @@ public class IpOverEthernetAddressDataEntity implements Serializable {
 	private String addresses = null;
 
 	private Boolean isDynamic = null;
-
+	// 3.3.1
+	private String segmentationId;
 	@Embedded
 	private IpOverEthernetAddressInfoAddressRangeEntity addressRange;
 

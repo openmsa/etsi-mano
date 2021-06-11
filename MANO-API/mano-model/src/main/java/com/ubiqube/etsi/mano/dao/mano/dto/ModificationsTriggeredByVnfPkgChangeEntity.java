@@ -14,16 +14,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.dto;
 
-import java.util.UUID;
+import java.util.Map;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,24 +28,24 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
 @Setter
-@Entity
-@EntityListeners(AuditListener.class)
-public class VnfMonitoringParameter implements Auditable, BaseEntity {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+@Getter
+@Embeddable
+public class ModificationsTriggeredByVnfPkgChangeEntity {
+	private Map<String, String> vnfConfigurableProperties = null;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+	private Map<String, String> metadata = null;
 
-	@Embedded
-	private Audit audit;
+	private Map<String, String> extensions = null;
 
-	private String name = null;
-	// 3.3.1
-	private String vnfdId;
+	private String vnfdId = null;
 
-	private String performanceMetric = null;
+	private String vnfProvider = null;
+
+	private String vnfProductName = null;
+
+	private String vnfSoftwareVersion = null;
+
+	private String vnfdVersion = null;
+
 }

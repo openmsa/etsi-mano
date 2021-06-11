@@ -27,7 +27,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
 import lombok.Getter;
@@ -62,6 +61,4 @@ public class IpOverEthernetAddressDataIpAddressesEntity implements Serializable 
 
 	private String subnetId = null;
 
-	@OneToOne
-	private IpOverEthernetAddressDataEntity ipOverEthernetAddressDataEntity;
 }

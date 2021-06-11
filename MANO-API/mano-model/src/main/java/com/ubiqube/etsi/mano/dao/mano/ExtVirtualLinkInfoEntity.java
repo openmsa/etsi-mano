@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -57,4 +58,8 @@ public class ExtVirtualLinkInfoEntity implements BaseEntity, Auditable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private List<ExtLinkPortInfoEntity> extLinkPorts = null;
+
+	// 3.3.1
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private List<VnfExtCpDataEntity> currentVnfExtCpData = new ArrayList<>();
 }

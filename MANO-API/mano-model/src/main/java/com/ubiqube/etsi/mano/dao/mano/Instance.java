@@ -76,6 +76,7 @@ public class Instance implements BaseEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> metadata = null;
 
+	// 3.3.1 it's a map
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private Set<VimConnectionInformation> vimConnectionInfo = new LinkedHashSet<>();
 

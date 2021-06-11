@@ -63,6 +63,9 @@ public class GrantResponse implements BaseEntity, Auditable {
 
 	private String vnfdId;
 
+	// 3.3.1
+	private String dstVnfdId;
+
 	private String flavourId;
 
 	private String operation;

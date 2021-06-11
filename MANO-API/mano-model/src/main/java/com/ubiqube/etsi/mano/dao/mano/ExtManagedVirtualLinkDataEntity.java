@@ -50,6 +50,9 @@ public class ExtManagedVirtualLinkDataEntity implements Serializable {
 
 	private String vnfVirtualLinkDescId = null;
 
+	// 3.3.1
+	private String vnfdId;
+
 	private String vimConnectionId = null;
 
 	private String resourceProviderId = null;
@@ -60,6 +63,9 @@ public class ExtManagedVirtualLinkDataEntity implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private Set<LinkPortInfo> vnfLinkPorts;
+
+	// 3.3.1
+	private String extManagedMultisiteVirtualLinkId;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private GrantResponse grants;

@@ -81,6 +81,8 @@ public class IpOverEthernetAddressInfoEntity {
 	private TypeEnum type = null;
 
 	private String addresses = null;
+	// 3.3.1
+	private String segmentationId;
 
 	private Boolean isDynamic = null;
 

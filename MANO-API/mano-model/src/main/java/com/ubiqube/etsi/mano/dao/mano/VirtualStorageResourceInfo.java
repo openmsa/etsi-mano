@@ -46,6 +46,8 @@ public class VirtualStorageResourceInfo implements BaseEntity, Auditable {
 	private UUID id;
 
 	private String virtualStorageDescId = null;
+	// 3.3.1
+	private String vnfdId;
 
 	@Embedded
 	private VimResource storageResource = null;

@@ -16,287 +16,295 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.CpProtocolInfo;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Map;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1. 
+ * This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1.
  */
 @Schema(description = "This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1. ")
 @Validated
 
+public class VnfExtCpInfo implements OneOfVnfExtCpInfo {
+	@JsonProperty("id")
+	private String id = null;
 
-public class VnfExtCpInfo  implements OneOfVnfExtCpInfo {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("cpdId")
+	private String cpdId = null;
 
-  @JsonProperty("cpdId")
-  private String cpdId = null;
+	@JsonProperty("cpConfigId")
+	private String cpConfigId = null;
 
-  @JsonProperty("cpConfigId")
-  private String cpConfigId = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+	@JsonProperty("cpProtocolInfo")
+	@Valid
+	private List<CpProtocolInfo> cpProtocolInfo = new ArrayList<>();
 
-  @JsonProperty("cpProtocolInfo")
-  @Valid
-  private List<CpProtocolInfo> cpProtocolInfo = new ArrayList<>();
+	@JsonProperty("extLinkPortId")
+	private String extLinkPortId = null;
 
-  @JsonProperty("extLinkPortId")
-  private String extLinkPortId = null;
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("associatedVnfcCpId")
+	private String associatedVnfcCpId = null;
 
-  @JsonProperty("associatedVnfcCpId")
-  private String associatedVnfcCpId = null;
+	@JsonProperty("associatedVnfVirtualLinkId")
+	private String associatedVnfVirtualLinkId = null;
 
-  @JsonProperty("associatedVnfVirtualLinkId")
-  private String associatedVnfVirtualLinkId = null;
+	public VnfExtCpInfo id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  public VnfExtCpInfo id(String id) {
-    this.id = id;
-    return this;
-  }
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getId() {
+		return id;
+	}
 
-    public String getId() {
-    return id;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public VnfExtCpInfo cpdId(final String cpdId) {
+		this.cpdId = cpdId;
+		return this;
+	}
 
-  public VnfExtCpInfo cpdId(String cpdId) {
-    this.cpdId = cpdId;
-    return this;
-  }
+	/**
+	 * Get cpdId
+	 *
+	 * @return cpdId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get cpdId
-   * @return cpdId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getCpdId() {
+		return cpdId;
+	}
 
-    public String getCpdId() {
-    return cpdId;
-  }
+	public void setCpdId(final String cpdId) {
+		this.cpdId = cpdId;
+	}
 
-  public void setCpdId(String cpdId) {
-    this.cpdId = cpdId;
-  }
+	public VnfExtCpInfo cpConfigId(final String cpConfigId) {
+		this.cpConfigId = cpConfigId;
+		return this;
+	}
 
-  public VnfExtCpInfo cpConfigId(String cpConfigId) {
-    this.cpConfigId = cpConfigId;
-    return this;
-  }
+	/**
+	 * Get cpConfigId
+	 *
+	 * @return cpConfigId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get cpConfigId
-   * @return cpConfigId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getCpConfigId() {
+		return cpConfigId;
+	}
 
-    public String getCpConfigId() {
-    return cpConfigId;
-  }
+	public void setCpConfigId(final String cpConfigId) {
+		this.cpConfigId = cpConfigId;
+	}
 
-  public void setCpConfigId(String cpConfigId) {
-    this.cpConfigId = cpConfigId;
-  }
+	public VnfExtCpInfo vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  public VnfExtCpInfo vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	/**
+	 * Get vnfdId
+	 *
+	 * @return vnfdId
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get vnfdId
-   * @return vnfdId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfdId() {
-    return vnfdId;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-  public VnfExtCpInfo cpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
-    this.cpProtocolInfo = cpProtocolInfo;
-    return this;
-  }
+	public VnfExtCpInfo cpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
+		this.cpProtocolInfo = cpProtocolInfo;
+		return this;
+	}
 
-  public VnfExtCpInfo addCpProtocolInfoItem(CpProtocolInfo cpProtocolInfoItem) {
-    this.cpProtocolInfo.add(cpProtocolInfoItem);
-    return this;
-  }
+	public VnfExtCpInfo addCpProtocolInfoItem(final CpProtocolInfo cpProtocolInfoItem) {
+		this.cpProtocolInfo.add(cpProtocolInfoItem);
+		return this;
+	}
 
-  /**
-   * Network protocol information for this CP. 
-   * @return cpProtocolInfo
-   **/
-  @Schema(required = true, description = "Network protocol information for this CP. ")
-      @NotNull
-    @Valid
-    public List<CpProtocolInfo> getCpProtocolInfo() {
-    return cpProtocolInfo;
-  }
+	/**
+	 * Network protocol information for this CP.
+	 *
+	 * @return cpProtocolInfo
+	 **/
+	@Schema(required = true, description = "Network protocol information for this CP. ")
+	@NotNull
+	@Valid
+	public List<CpProtocolInfo> getCpProtocolInfo() {
+		return cpProtocolInfo;
+	}
 
-  public void setCpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
-    this.cpProtocolInfo = cpProtocolInfo;
-  }
+	public void setCpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
+		this.cpProtocolInfo = cpProtocolInfo;
+	}
 
-  public VnfExtCpInfo extLinkPortId(String extLinkPortId) {
-    this.extLinkPortId = extLinkPortId;
-    return this;
-  }
+	public VnfExtCpInfo extLinkPortId(final String extLinkPortId) {
+		this.extLinkPortId = extLinkPortId;
+		return this;
+	}
 
-  /**
-   * Get extLinkPortId
-   * @return extLinkPortId
-   **/
-  @Schema(description = "")
-  
-    public String getExtLinkPortId() {
-    return extLinkPortId;
-  }
+	/**
+	 * Get extLinkPortId
+	 *
+	 * @return extLinkPortId
+	 **/
+	@Schema(description = "")
 
-  public void setExtLinkPortId(String extLinkPortId) {
-    this.extLinkPortId = extLinkPortId;
-  }
+	public String getExtLinkPortId() {
+		return extLinkPortId;
+	}
 
-  public VnfExtCpInfo metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public void setExtLinkPortId(final String extLinkPortId) {
+		this.extLinkPortId = extLinkPortId;
+	}
 
-  /**
-   * Get metadata
-   * @return metadata
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public VnfExtCpInfo metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	/**
+	 * Get metadata
+	 *
+	 * @return metadata
+	 **/
+	@Schema(description = "")
 
-  public VnfExtCpInfo associatedVnfcCpId(String associatedVnfcCpId) {
-    this.associatedVnfcCpId = associatedVnfcCpId;
-    return this;
-  }
+	@Valid
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
 
-  /**
-   * Get associatedVnfcCpId
-   * @return associatedVnfcCpId
-   **/
-  @Schema(description = "")
-  
-    public String getAssociatedVnfcCpId() {
-    return associatedVnfcCpId;
-  }
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
 
-  public void setAssociatedVnfcCpId(String associatedVnfcCpId) {
-    this.associatedVnfcCpId = associatedVnfcCpId;
-  }
+	public VnfExtCpInfo associatedVnfcCpId(final String associatedVnfcCpId) {
+		this.associatedVnfcCpId = associatedVnfcCpId;
+		return this;
+	}
 
-  public VnfExtCpInfo associatedVnfVirtualLinkId(String associatedVnfVirtualLinkId) {
-    this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
-    return this;
-  }
+	/**
+	 * Get associatedVnfcCpId
+	 *
+	 * @return associatedVnfcCpId
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get associatedVnfVirtualLinkId
-   * @return associatedVnfVirtualLinkId
-   **/
-  @Schema(description = "")
-  
-    public String getAssociatedVnfVirtualLinkId() {
-    return associatedVnfVirtualLinkId;
-  }
+	public String getAssociatedVnfcCpId() {
+		return associatedVnfcCpId;
+	}
 
-  public void setAssociatedVnfVirtualLinkId(String associatedVnfVirtualLinkId) {
-    this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
-  }
+	public void setAssociatedVnfcCpId(final String associatedVnfcCpId) {
+		this.associatedVnfcCpId = associatedVnfcCpId;
+	}
 
+	public VnfExtCpInfo associatedVnfVirtualLinkId(final String associatedVnfVirtualLinkId) {
+		this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
+		return this;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfExtCpInfo vnfExtCpInfo = (VnfExtCpInfo) o;
-    return Objects.equals(this.id, vnfExtCpInfo.id) &&
-        Objects.equals(this.cpdId, vnfExtCpInfo.cpdId) &&
-        Objects.equals(this.cpConfigId, vnfExtCpInfo.cpConfigId) &&
-        Objects.equals(this.vnfdId, vnfExtCpInfo.vnfdId) &&
-        Objects.equals(this.cpProtocolInfo, vnfExtCpInfo.cpProtocolInfo) &&
-        Objects.equals(this.extLinkPortId, vnfExtCpInfo.extLinkPortId) &&
-        Objects.equals(this.metadata, vnfExtCpInfo.metadata) &&
-        Objects.equals(this.associatedVnfcCpId, vnfExtCpInfo.associatedVnfcCpId) &&
-        Objects.equals(this.associatedVnfVirtualLinkId, vnfExtCpInfo.associatedVnfVirtualLinkId);
-  }
+	/**
+	 * Get associatedVnfVirtualLinkId
+	 *
+	 * @return associatedVnfVirtualLinkId
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, cpdId, cpConfigId, vnfdId, cpProtocolInfo, extLinkPortId, metadata, associatedVnfcCpId, associatedVnfVirtualLinkId);
-  }
+	public String getAssociatedVnfVirtualLinkId() {
+		return associatedVnfVirtualLinkId;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfExtCpInfo {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    cpdId: ").append(toIndentedString(cpdId)).append("\n");
-    sb.append("    cpConfigId: ").append(toIndentedString(cpConfigId)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    cpProtocolInfo: ").append(toIndentedString(cpProtocolInfo)).append("\n");
-    sb.append("    extLinkPortId: ").append(toIndentedString(extLinkPortId)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("    associatedVnfcCpId: ").append(toIndentedString(associatedVnfcCpId)).append("\n");
-    sb.append("    associatedVnfVirtualLinkId: ").append(toIndentedString(associatedVnfVirtualLinkId)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public void setAssociatedVnfVirtualLinkId(final String associatedVnfVirtualLinkId) {
+		this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final VnfExtCpInfo vnfExtCpInfo = (VnfExtCpInfo) o;
+		return Objects.equals(this.id, vnfExtCpInfo.id) &&
+				Objects.equals(this.cpdId, vnfExtCpInfo.cpdId) &&
+				Objects.equals(this.cpConfigId, vnfExtCpInfo.cpConfigId) &&
+				Objects.equals(this.vnfdId, vnfExtCpInfo.vnfdId) &&
+				Objects.equals(this.cpProtocolInfo, vnfExtCpInfo.cpProtocolInfo) &&
+				Objects.equals(this.extLinkPortId, vnfExtCpInfo.extLinkPortId) &&
+				Objects.equals(this.metadata, vnfExtCpInfo.metadata) &&
+				Objects.equals(this.associatedVnfcCpId, vnfExtCpInfo.associatedVnfcCpId) &&
+				Objects.equals(this.associatedVnfVirtualLinkId, vnfExtCpInfo.associatedVnfVirtualLinkId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, cpdId, cpConfigId, vnfdId, cpProtocolInfo, extLinkPortId, metadata, associatedVnfcCpId, associatedVnfVirtualLinkId);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfExtCpInfo {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    cpdId: ").append(toIndentedString(cpdId)).append("\n");
+		sb.append("    cpConfigId: ").append(toIndentedString(cpConfigId)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    cpProtocolInfo: ").append(toIndentedString(cpProtocolInfo)).append("\n");
+		sb.append("    extLinkPortId: ").append(toIndentedString(extLinkPortId)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("    associatedVnfcCpId: ").append(toIndentedString(associatedVnfcCpId)).append("\n");
+		sb.append("    associatedVnfVirtualLinkId: ").append(toIndentedString(associatedVnfVirtualLinkId)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

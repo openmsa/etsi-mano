@@ -54,6 +54,8 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	 */
 	private UUID vduId = null;
 
+	// 3.3.1
+	private String vnfdId;
 	/**
 	 * Point to a VnfInstantiated row.
 	 */
