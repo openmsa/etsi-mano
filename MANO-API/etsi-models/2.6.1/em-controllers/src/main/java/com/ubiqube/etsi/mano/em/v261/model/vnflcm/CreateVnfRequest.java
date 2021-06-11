@@ -32,7 +32,6 @@ import io.swagger.annotations.ApiModelProperty;
  * CreateVnfRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class CreateVnfRequest {
 	@JsonProperty("vnfdId")
@@ -53,8 +52,7 @@ public class CreateVnfRequest {
 	}
 
 	/**
-	 * Identifier that identifies the VNFD which defines the VNF instance to be
-	 * created.
+	 * Identifier that identifies the VNFD which defines the VNF instance to be created.
 	 *
 	 * @return vnfdId
 	 **/
@@ -115,11 +113,7 @@ public class CreateVnfRequest {
 	}
 
 	/**
-	 * If present, this attribute provides values for the \"metadata\" attribute in
-	 * \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this
-	 * CreateVnfRequest data structure has a corresponding default value declared in
-	 * the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure
-	 * takes precedence.
+	 * If present, this attribute provides values for the \"metadata\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this CreateVnfRequest data structure has a corresponding default value declared in the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure takes precedence.
 	 *
 	 * @return metadata
 	 **/
@@ -169,8 +163,7 @@ public class CreateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

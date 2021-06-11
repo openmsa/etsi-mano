@@ -28,12 +28,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * An IP address range to be used, e.g. in case of egress connections. In case
- * this attribute is present, IP addresses from the range will be used.
+ * An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used.
  */
 @ApiModel(description = "An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class IpOverEthernetAddressDataAddressRange {
 	@JsonProperty("minAddress")
@@ -114,8 +112,7 @@ public class IpOverEthernetAddressDataAddressRange {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

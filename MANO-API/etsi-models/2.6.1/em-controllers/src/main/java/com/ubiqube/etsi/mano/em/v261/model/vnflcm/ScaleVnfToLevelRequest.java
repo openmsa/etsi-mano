@@ -31,12 +31,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents request parameters for the \&quot;Scale VNF to
- * Level\&quot; operation.
+ * This type represents request parameters for the \&quot;Scale VNF to Level\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Scale VNF to Level\" operation. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ScaleVnfToLevelRequest {
 	@JsonProperty("instantiationLevelId")
@@ -55,9 +53,7 @@ public class ScaleVnfToLevelRequest {
 	}
 
 	/**
-	 * Identifier of the target instantiation level of the current deployment
-	 * flavour to which the VNF is requested to be scaled. Either the
-	 * instantiationLevelId attribute or the scaleInfo attribute shall be included.
+	 * Identifier of the target instantiation level of the current deployment flavour to which the VNF is requested to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included.
 	 *
 	 * @return instantiationLevelId
 	 **/
@@ -85,9 +81,7 @@ public class ScaleVnfToLevelRequest {
 	}
 
 	/**
-	 * For each scaling aspect of the current deployment flavour, indicates the
-	 * target scale level to which the VNF is to be scaled. Either the
-	 * instantiationLevelId attribute or the scaleInfo attribute shall be included.
+	 * For each scaling aspect of the current deployment flavour, indicates the target scale level to which the VNF is to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included.
 	 *
 	 * @return scaleInfo
 	 **/
@@ -109,9 +103,7 @@ public class ScaleVnfToLevelRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the scaling process,
-	 * specific to the VNF being scaled, as declared in the VNFD as part of
-	 * \"ScaleVnfToLevelOpConfig\".
+	 * Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfToLevelOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -159,8 +151,7 @@ public class ScaleVnfToLevelRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

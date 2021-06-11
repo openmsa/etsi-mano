@@ -33,7 +33,6 @@ import io.swagger.annotations.ApiModelProperty;
  * HealVnfRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class HealVnfRequest {
 	@JsonProperty("vnfcInstanceId")
@@ -103,9 +102,7 @@ public class HealVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the healing process,
-	 * specific to the VNF being healed, as declared in the VNFD as part of
-	 * \"HealVnfOpConfig\".
+	 * Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -127,8 +124,7 @@ public class HealVnfRequest {
 	}
 
 	/**
-	 * Provides link to a script that should be executed as part of the healing
-	 * action or a set of rules for healing procedure.
+	 * Provides link to a script that should be executed as part of the healing action or a set of rules for healing procedure.
 	 *
 	 * @return healScript
 	 **/
@@ -176,8 +172,7 @@ public class HealVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

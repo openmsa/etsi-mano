@@ -31,8 +31,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
-
 @Api(value = "configuration", description = "the configuration API")
 public interface Configuration261Sol002Api {
 

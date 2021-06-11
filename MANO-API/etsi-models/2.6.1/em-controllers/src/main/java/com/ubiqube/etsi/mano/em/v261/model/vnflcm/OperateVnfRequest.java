@@ -34,12 +34,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents request parameters for the \&quot;Operate VNF\&quot;
- * operation.
+ * This type represents request parameters for the \&quot;Operate VNF\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class OperateVnfRequest {
 	@JsonProperty("vnfcInstanceId")
@@ -50,9 +48,7 @@ public class OperateVnfRequest {
 	private VnfOperationalStateType changeStateTo = null;
 
 	/**
-	 * It signals whether forceful or graceful stop is requested. Ignored if
-	 * changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down
-	 * the VNF or the affected VNFCs immediately after accepting the request.
+	 * It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request.
 	 */
 	public enum StopTypeEnum {
 		FORCEFUL("FORCEFUL");
@@ -100,8 +96,7 @@ public class OperateVnfRequest {
 	}
 
 	/**
-	 * Identifier of VNFC instances. Cardinality can be \"0\" to denote that the
-	 * request applies to the whole VNF and not a specific VNFC instance.
+	 * Identifier of VNFC instances. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance.
 	 *
 	 * @return vnfcInstanceId
 	 **/
@@ -144,9 +139,7 @@ public class OperateVnfRequest {
 	}
 
 	/**
-	 * It signals whether forceful or graceful stop is requested. Ignored if
-	 * changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down
-	 * the VNF or the affected VNFCs immediately after accepting the request.
+	 * It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request.
 	 *
 	 * @return stopType
 	 **/
@@ -166,9 +159,7 @@ public class OperateVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the process, specific to
-	 * the VNF of which the operation status is changed, as declared in the VNFD as
-	 * part of \"OperateVnfOpConfig\".
+	 * Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -218,8 +209,7 @@ public class OperateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

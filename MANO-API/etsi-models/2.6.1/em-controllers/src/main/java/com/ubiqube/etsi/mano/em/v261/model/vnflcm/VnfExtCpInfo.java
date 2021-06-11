@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents information about an external CP of a VNF. It shall
- * comply with the provisions defined in table 5.5.3.25 1.
+ * This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1.
  */
 @ApiModel(description = "This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfExtCpInfo {
 	@JsonProperty("id")
@@ -138,9 +136,7 @@ public class VnfExtCpInfo {
 	}
 
 	/**
-	 * Identifier of the \"extLinkPortInfo\" structure inside the
-	 * \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to
-	 * a link port.
+	 * Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to a link port.
 	 *
 	 * @return extLinkPortId
 	 **/
@@ -182,9 +178,7 @@ public class VnfExtCpInfo {
 	}
 
 	/**
-	 * Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure
-	 * that represents the VNFC CP which is exposed by this external CP instance.
-	 * Shall be present in case this CP instance maps to a VNFC CP. See note.
+	 * Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure that represents the VNFC CP which is exposed by this external CP instance. Shall be present in case this CP instance maps to a VNFC CP. See note.
 	 *
 	 * @return associatedVnfcCpId
 	 **/
@@ -204,9 +198,7 @@ public class VnfExtCpInfo {
 	}
 
 	/**
-	 * Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents
-	 * the internal VL which is exposed by this external CP instance. Shall be
-	 * present in case this CP instance maps to an internal VL. See note.
+	 * Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents the internal VL which is exposed by this external CP instance. Shall be present in case this CP instance maps to an internal VL. See note.
 	 *
 	 * @return associatedVnfVirtualLinkId
 	 **/
@@ -260,8 +252,7 @@ public class VnfExtCpInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

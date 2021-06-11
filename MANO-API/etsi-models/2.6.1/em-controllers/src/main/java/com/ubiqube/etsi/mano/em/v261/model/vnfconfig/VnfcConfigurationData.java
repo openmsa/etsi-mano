@@ -18,7 +18,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents configuration parameters of a VNFC instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
 
 public class VnfcConfigurationData {
 	@JsonProperty("vnfcInstanceId")
@@ -39,8 +38,7 @@ public class VnfcConfigurationData {
 	}
 
 	/**
-	 * Identifier of a VNFC instance to which this set of configuration data
-	 * applies.
+	 * Identifier of a VNFC instance to which this set of configuration data applies.
 	 *
 	 * @return vnfcInstanceId
 	 **/
@@ -83,8 +81,7 @@ public class VnfcConfigurationData {
 	}
 
 	/**
-	 * IP address of the DHCP server that the VNF instance can use to obtain IP
-	 * addresses to be assigned to its external CPs.
+	 * IP address of the DHCP server that the VNF instance can use to obtain IP addresses to be assigned to its external CPs.
 	 *
 	 * @return dhcpServer
 	 **/
@@ -104,8 +101,7 @@ public class VnfcConfigurationData {
 	}
 
 	/**
-	 * Additional configurable properties of the VNFC instance declared in the VNFD
-	 * as \"VnfcConfigurableProperties\".
+	 * Additional configurable properties of the VNFC instance declared in the VNFD as \"VnfcConfigurableProperties\".
 	 *
 	 * @return vnfcSpecificData
 	 **/
@@ -155,8 +151,7 @@ public class VnfcConfigurationData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

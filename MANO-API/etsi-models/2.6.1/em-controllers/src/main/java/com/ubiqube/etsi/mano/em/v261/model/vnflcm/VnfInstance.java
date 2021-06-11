@@ -36,7 +36,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a VNF instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfInstance {
 	@JsonProperty("id")
@@ -142,8 +141,7 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Name of the VNF instance. This attribute can be modified with the PATCH
-	 * method.
+	 * Name of the VNF instance. This attribute can be modified with the PATCH method.
 	 *
 	 * @return vnfInstanceName
 	 **/
@@ -163,8 +161,7 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Human-readable description of the VNF instance. This attribute can be
-	 * modified with the PATCH method.
+	 * Human-readable description of the VNF instance. This attribute can be modified with the PATCH method.
 	 *
 	 * @return vnfInstanceDescription
 	 **/
@@ -184,15 +181,8 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Identifier of the VNFD on which the VNF instance is based. This attribute can
-	 * be modified with the PATCH method. Modifying the value of this attribute
-	 * shall not be performed when conflicts exist between the previous and the
-	 * newly referred VNF package, i.e. when the new VNFD is not changed with
-	 * respect to the previous VNFD apart from referencing to other VNF software
-	 * images. In order to avoid misalignment of the VnfInstance with the current
-	 * VNF's on-boarded VNF package, the values of attributes in the VnfInstance
-	 * that have corresponding attributes in the VNFD shall be kept in sync with the
-	 * values in the VNFD.
+	 * Identifier of the VNFD on which the VNF instance is based. This attribute can be modified with the PATCH method. Modifying the value of this attribute shall not be performed when conflicts exist between the previous and the newly referred VNF package, i.e. when the new VNFD is not changed with respect to the previous VNFD apart from referencing to other VNF software images. In order to avoid misalignment of the VnfInstance with the current VNF's on-boarded VNF package, the values of
+	 * attributes in the VnfInstance that have corresponding attributes in the VNFD shall be kept in sync with the values in the VNFD.
 	 *
 	 * @return vnfdId
 	 **/
@@ -297,9 +287,7 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Identifier of information held by the NFVO about the specific VNF package on
-	 * which the VNF is based. This identifier was allocated by the NFVO. This
-	 * attribute can be modified with the PATCHmethod.
+	 * Identifier of information held by the NFVO about the specific VNF package on which the VNF is based. This identifier was allocated by the NFVO. This attribute can be modified with the PATCHmethod.
 	 *
 	 * @return vnfPkgInfoId
 	 **/
@@ -320,32 +308,10 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Additional VNF-specific attributes that provide the current values of the
-	 * configurable properties of the VNF instance. These attributes represent
-	 * values that are stored persistently in the VnfInstance structure and that
-	 * correspond to configuration parameters of the VNF instance. Modifying these
-	 * attributes affects the configuration of the VNF instance either directly (if
-	 * the VNF instance is in INSTANTIATED state at the time of the modification) or
-	 * as part of the subsequent VNF instantiation operation (if the VNF instance is
-	 * in NOT_INSTANTIATED state at the time of the modification). Configurable
-	 * properties referred in these attributes shall be declared in the VNFD. The
-	 * declaration of configurable properties in the VNFD can optionally contain the
-	 * specification of initial values. ETSI GS NFV-SOL 001 specifies the structure
-	 * and format of the VNFD based on TOSCA specifications. VNF configurable
-	 * properties are sometimes also referred to as configuration parameters
-	 * applicable to a VNF. Some of these are set prior to instantiation and cannot
-	 * be modified if the VNF is instantiated, some are set prior to instantiation
-	 * (are part of initial configuration) and can be modified later, and others can
-	 * be set only after instantiation. The applicability of certain configuration
-	 * may depend on the VNF and the required operation of the VNF at a certain
-	 * point in time. These configurable properties include the following standard
-	 * attributes, which are declared in the VNFD if auto-scaling and/or
-	 * auto-healing are supported by the VNF: - isAutoscaleEnabled: If present, the
-	 * VNF supports auto-scaling. If set to true, auto-scaling is currently enabled.
-	 * If set to false, auto-scaling is currently disabled. - isAutohealEnabled: If
-	 * present, the VNF supports auto-healing. If set to true, auto-healing is
-	 * currently enabled. If set to false, auto-healing is currently disabled. This
-	 * attributeThese attributes can be modified with the PATCH method.
+	 * Additional VNF-specific attributes that provide the current values of the configurable properties of the VNF instance. These attributes represent values that are stored persistently in the VnfInstance structure and that correspond to configuration parameters of the VNF instance. Modifying these attributes affects the configuration of the VNF instance either directly (if the VNF instance is in INSTANTIATED state at the time of the modification) or as part of the subsequent VNF instantiation
+	 * operation (if the VNF instance is in NOT_INSTANTIATED state at the time of the modification). Configurable properties referred in these attributes shall be declared in the VNFD. The declaration of configurable properties in the VNFD can optionally contain the specification of initial values. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications. VNF configurable properties are sometimes also referred to as configuration parameters applicable to a
+	 * VNF. Some of these are set prior to instantiation and cannot be modified if the VNF is instantiated, some are set prior to instantiation (are part of initial configuration) and can be modified later, and others can be set only after instantiation. The applicability of certain configuration may depend on the VNF and the required operation of the VNF at a certain point in time. These configurable properties include the following standard attributes, which are declared in the VNFD if
+	 * auto-scaling and/or auto-healing are supported by the VNF: - isAutoscaleEnabled: If present, the VNF supports auto-scaling. If set to true, auto-scaling is currently enabled. If set to false, auto-scaling is currently disabled. - isAutohealEnabled: If present, the VNF supports auto-healing. If set to true, auto-healing is currently enabled. If set to false, auto-healing is currently disabled. This attributeThese attributes can be modified with the PATCH method.
 	 *
 	 * @return vnfConfigurableProperties
 	 **/
@@ -410,19 +376,8 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Additional VNF-specific attributes that provide metadata describing the VNF
-	 * instance. These attributes represent values that are stored persistently in
-	 * the VnfInstance structure for consumption by functional blocks that invoke
-	 * the VNF lifecycle management interface. They are not consumed by the VNFM, or
-	 * the lifecycle management scripts. Modifying the values of these attributes
-	 * has no effect on the VNF instance, it only affects the information
-	 * represented in the VnfInstance structure. Metadata that VNF provider foresees
-	 * shall be declared in the VNFD. The VNFM shall accept requests to write
-	 * metadata that are not are declared in the VNFD. These attributes can be
-	 * initialized with default values from VNFD and/or with values passed in the
-	 * CreateVnfRequest structure (see clause 5.5.2.3). This attribute can be
-	 * modified with the PATCH method. ETSI GS NFV-SOL 001 specifies the structure
-	 * and format of the VNFD based on TOSCA specifications.
+	 * Additional VNF-specific attributes that provide metadata describing the VNF instance. These attributes represent values that are stored persistently in the VnfInstance structure for consumption by functional blocks that invoke the VNF lifecycle management interface. They are not consumed by the VNFM, or the lifecycle management scripts. Modifying the values of these attributes has no effect on the VNF instance, it only affects the information represented in the VnfInstance structure. Metadata
+	 * that VNF provider foresees shall be declared in the VNFD. The VNFM shall accept requests to write metadata that are not are declared in the VNFD. These attributes can be initialized with default values from VNFD and/or with values passed in the CreateVnfRequest structure (see clause 5.5.2.3). This attribute can be modified with the PATCH method. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications.
 	 *
 	 * @return metadata
 	 **/
@@ -444,22 +399,9 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Additional VNF specific attributes that affect the lifecycle management of
-	 * this VNF instance by the VNFM, or the lifecycle management scripts. These
-	 * attributes represent values that are stored persistently in the VnfInstance
-	 * structure for consumption by the VNFM, or by the lifecycle management scripts
-	 * during the execution of VNF lifecycle management operations. Modifying the
-	 * values of these attributes has no direct effect on the VNF instance; however,
-	 * the modified attribute values can be considered during subsequent VNF
-	 * lifecycle management operations, which means that the modified values can
-	 * indirectly affect the configuration of the VNF instance. All extensions that
-	 * are allowed for the VNF shall be declared in the VNFD. This attribute can be
-	 * be initialized with default values from VNFD and/or with values passed in the
-	 * InstantiateVnfRequest structure (see clause 5.5.2.4). A value initialised
-	 * with default values from the VNFD can be updated with values passed in the
-	 * InstantiateVnfRequest structure. Further, these attributes can be modified
-	 * with the PATCH method. ETSI GS NFV-SOL 001 specifies the structure and format
-	 * of the VNFD based on TOSCA specifications.
+	 * Additional VNF specific attributes that affect the lifecycle management of this VNF instance by the VNFM, or the lifecycle management scripts. These attributes represent values that are stored persistently in the VnfInstance structure for consumption by the VNFM, or by the lifecycle management scripts during the execution of VNF lifecycle management operations. Modifying the values of these attributes has no direct effect on the VNF instance; however, the modified attribute values can be
+	 * considered during subsequent VNF lifecycle management operations, which means that the modified values can indirectly affect the configuration of the VNF instance. All extensions that are allowed for the VNF shall be declared in the VNFD. This attribute can be be initialized with default values from VNFD and/or with values passed in the InstantiateVnfRequest structure (see clause 5.5.2.4). A value initialised with default values from the VNFD can be updated with values passed in the
+	 * InstantiateVnfRequest structure. Further, these attributes can be modified with the PATCH method. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications.
 	 *
 	 * @return extensions
 	 **/
@@ -553,8 +495,7 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

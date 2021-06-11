@@ -33,7 +33,6 @@ import io.swagger.annotations.ApiModelProperty;
  * VnfLinkPortInfo
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfLinkPortInfo {
 	@JsonProperty("id")
@@ -46,10 +45,7 @@ public class VnfLinkPortInfo {
 	private String cpInstanceId = null;
 
 	/**
-	 * Type of the CP instance that is identified by cpInstanceId. Shall be present
-	 * if \"cpInstanceId\" is present, and shall be absent otherwise. Permitted
-	 * values: VNFC_CP: The link port is connected to a VNFC CP EXT_CP: The link
-	 * port is associated to an external CP.
+	 * Type of the CP instance that is identified by cpInstanceId. Shall be present if \"cpInstanceId\" is present, and shall be absent otherwise. Permitted values: VNFC_CP: The link port is connected to a VNFC CP EXT_CP: The link port is associated to an external CP.
 	 */
 	public enum CpInstanceTypeEnum {
 		VNFC_CP("VNFC_CP"),
@@ -88,8 +84,7 @@ public class VnfLinkPortInfo {
 	}
 
 	/**
-	 * Identifier of this link port as provided by the entity that has created the
-	 * link port.
+	 * Identifier of this link port as provided by the entity that has created the link port.
 	 *
 	 * @return id
 	 **/
@@ -133,16 +128,8 @@ public class VnfLinkPortInfo {
 	}
 
 	/**
-	 * When the link port is used for external connectivity by the VNF, this
-	 * attribute represents the identifier of the external CP of the VNF to be
-	 * connected to this link port. When the link port is used for internal
-	 * connectivity in the VNF, this attribute represents the VNFC CP to be
-	 * connected to this link port. Shall be present when the link port is used for
-	 * external connectivity by the VNF. May be present if used to reference a VNFC
-	 * CP instance. There shall be at most one link port associated with any
-	 * external connection point instance or internal connection point (i.e. VNFC
-	 * CP) instance. The value refers to an \"extCpInfo\" item in the VnfInstance or
-	 * a \"vnfcCpInfo\" item of a \"vnfcResouceInfo\" item in the VnfInstance.
+	 * When the link port is used for external connectivity by the VNF, this attribute represents the identifier of the external CP of the VNF to be connected to this link port. When the link port is used for internal connectivity in the VNF, this attribute represents the VNFC CP to be connected to this link port. Shall be present when the link port is used for external connectivity by the VNF. May be present if used to reference a VNFC CP instance. There shall be at most one link port associated
+	 * with any external connection point instance or internal connection point (i.e. VNFC CP) instance. The value refers to an \"extCpInfo\" item in the VnfInstance or a \"vnfcCpInfo\" item of a \"vnfcResouceInfo\" item in the VnfInstance.
 	 *
 	 * @return cpInstanceId
 	 **/
@@ -162,10 +149,7 @@ public class VnfLinkPortInfo {
 	}
 
 	/**
-	 * Type of the CP instance that is identified by cpInstanceId. Shall be present
-	 * if \"cpInstanceId\" is present, and shall be absent otherwise. Permitted
-	 * values: VNFC_CP: The link port is connected to a VNFC CP EXT_CP: The link
-	 * port is associated to an external CP.
+	 * Type of the CP instance that is identified by cpInstanceId. Shall be present if \"cpInstanceId\" is present, and shall be absent otherwise. Permitted values: VNFC_CP: The link port is connected to a VNFC CP EXT_CP: The link port is associated to an external CP.
 	 *
 	 * @return cpInstanceType
 	 **/
@@ -213,8 +197,7 @@ public class VnfLinkPortInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

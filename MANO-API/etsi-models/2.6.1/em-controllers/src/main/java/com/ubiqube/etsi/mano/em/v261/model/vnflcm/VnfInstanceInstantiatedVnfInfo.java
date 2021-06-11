@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Information specific to an instantiated VNF instance. This attribute shall be
- * present if the instantiateState attribute value is INSTANTIATED.
+ * Information specific to an instantiated VNF instance. This attribute shall be present if the instantiateState attribute value is INSTANTIATED.
  */
 @ApiModel(description = "Information specific to an instantiated VNF instance. This attribute shall be present if the instantiateState attribute value is INSTANTIATED. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfInstanceInstantiatedVnfInfo {
 	@JsonProperty("flavourId")
@@ -139,8 +137,7 @@ public class VnfInstanceInstantiatedVnfInfo {
 	}
 
 	/**
-	 * Scale status of the VNF, one entry per aspect. Represents for every scaling
-	 * aspect how \"big\" the VNF has been scaled w.r.t. that aspect.
+	 * Scale status of the VNF, one entry per aspect. Represents for every scaling aspect how \"big\" the VNF has been scaled w.r.t. that aspect.
 	 *
 	 * @return scaleStatus
 	 **/
@@ -280,10 +277,7 @@ public class VnfInstanceInstantiatedVnfInfo {
 	}
 
 	/**
-	 * Information about localization language of the VNF (includes e.g. strings in
-	 * the VNFD). The localization languages supported by a VNF can be declared in
-	 * the VNFD, and localization language selection can take place at instantiation
-	 * time. The value shall comply with the format defined in IETF RFC 5646.
+	 * Information about localization language of the VNF (includes e.g. strings in the VNFD). The localization languages supported by a VNF can be declared in the VNFD, and localization language selection can take place at instantiation time. The value shall comply with the format defined in IETF RFC 5646.
 	 *
 	 * @return localizationLanguage
 	 **/
@@ -311,8 +305,7 @@ public class VnfInstanceInstantiatedVnfInfo {
 	}
 
 	/**
-	 * Information about the virtualised compute and storage resources used by the
-	 * VNFCs of the VNF instance.
+	 * Information about the virtualised compute and storage resources used by the VNFCs of the VNF instance.
 	 *
 	 * @return vnfcResourceInfo
 	 **/
@@ -342,8 +335,7 @@ public class VnfInstanceInstantiatedVnfInfo {
 	}
 
 	/**
-	 * Information about the virtualised network resources used by the VLs of the
-	 * VNF instance.
+	 * Information about the virtualised network resources used by the VLs of the VNF instance.
 	 *
 	 * @return virtualLinkResourceInfo
 	 **/
@@ -373,8 +365,7 @@ public class VnfInstanceInstantiatedVnfInfo {
 	}
 
 	/**
-	 * Information on the virtualised storage resource(s) used as storage for the
-	 * VNF instance.
+	 * Information on the virtualised storage resource(s) used as storage for the VNF instance.
 	 *
 	 * @return virtualStorageResourceInfo
 	 **/
@@ -438,8 +429,7 @@ public class VnfInstanceInstantiatedVnfInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

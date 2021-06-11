@@ -33,7 +33,6 @@ import io.swagger.annotations.ApiModelProperty;
  * VnfInstanceSubscriptionFilterVersions
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfInstanceSubscriptionFilterVersions {
 	@JsonProperty("vnfSoftwareVersion")
@@ -78,9 +77,7 @@ public class VnfInstanceSubscriptionFilterVersions {
 	}
 
 	/**
-	 * If present, match VNF instances that belong to VNF products with certain VNFD
-	 * versions, a certain software version and a certain product name, from one
-	 * particular provider.
+	 * If present, match VNF instances that belong to VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider.
 	 *
 	 * @return vnfdVersions
 	 **/
@@ -124,8 +121,7 @@ public class VnfInstanceSubscriptionFilterVersions {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the information on virtualised compute and storage
- * resources used by a VNFC in a VNF instance.
+ * This type represents the information on virtualised compute and storage resources used by a VNFC in a VNF instance.
  */
 @ApiModel(description = "This type represents the information on virtualised compute and storage resources used by a VNFC in a VNF instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfcResourceInfo {
 	@JsonProperty("id")
@@ -142,8 +140,7 @@ public class VnfcResourceInfo {
 	}
 
 	/**
-	 * References to the VirtualStorage resources. The value refers to a
-	 * VirtualStorageResourceInfo item in the VnfInstance.
+	 * References to the VirtualStorage resources. The value refers to a VirtualStorageResourceInfo item in the VnfInstance.
 	 *
 	 * @return storageResourceIds
 	 **/
@@ -163,8 +160,7 @@ public class VnfcResourceInfo {
 	}
 
 	/**
-	 * The reservation identifier applicable to the resource. It shall be present
-	 * when an applicable reservation exists.
+	 * The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists.
 	 *
 	 * @return reservationId
 	 **/
@@ -192,9 +188,7 @@ public class VnfcResourceInfo {
 	}
 
 	/**
-	 * CPs of the VNFC instance. Shall be present when that particular CP of the
-	 * VNFC instance is associated to an external CP of the VNF instance. May be
-	 * present otherwise.
+	 * CPs of the VNFC instance. Shall be present when that particular CP of the VNFC instance is associated to an external CP of the VNF instance. May be present otherwise.
 	 *
 	 * @return vnfcCpInfo
 	 **/
@@ -272,8 +266,7 @@ public class VnfcResourceInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

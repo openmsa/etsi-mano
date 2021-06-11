@@ -34,7 +34,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents network address data for IP over Ethernet. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class IpOverEthernetAddressData {
 	@JsonProperty("macAddress")
@@ -50,8 +49,7 @@ public class IpOverEthernetAddressData {
 	}
 
 	/**
-	 * MAC address. If this attribute is not present, it shall be chosen by the VIM.
-	 * At least one of \"macAddress\" or \"ipAddresses\" shall be present.
+	 * MAC address. If this attribute is not present, it shall be chosen by the VIM. At least one of \"macAddress\" or \"ipAddresses\" shall be present.
 	 *
 	 * @return macAddress
 	 **/
@@ -79,9 +77,7 @@ public class IpOverEthernetAddressData {
 	}
 
 	/**
-	 * List of IP addresses to assign to the CP instance. Each entry represents IP
-	 * address data for fixed or dynamic IP address assignment per subnet. If this
-	 * attribute is not present, no IP address shall be assigned.
+	 * List of IP addresses to assign to the CP instance. Each entry represents IP address data for fixed or dynamic IP address assignment per subnet. If this attribute is not present, no IP address shall be assigned.
 	 *
 	 * @return ipAddresses
 	 **/
@@ -127,8 +123,7 @@ public class IpOverEthernetAddressData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

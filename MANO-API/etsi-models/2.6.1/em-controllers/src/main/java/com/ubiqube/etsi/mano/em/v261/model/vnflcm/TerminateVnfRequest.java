@@ -34,13 +34,10 @@ import io.swagger.annotations.ApiModelProperty;
  * TerminateVnfRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class TerminateVnfRequest {
 	/**
-	 * Indicates the type of termination is requested. Permitted values: * FORCEFUL:
-	 * The VNFM will shut down the VNF and release the resources immediately after
-	 * accepting the request.
+	 * Indicates the type of termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the resources immediately after accepting the request.
 	 */
 	public enum TerminationTypeEnum {
 		FORCEFUL("FORCEFUL");
@@ -80,9 +77,7 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * Indicates the type of termination is requested. Permitted values: * FORCEFUL:
-	 * The VNFM will shut down the VNF and release the resources immediately after
-	 * accepting the request.
+	 * Indicates the type of termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the resources immediately after accepting the request.
 	 *
 	 * @return terminationType
 	 **/
@@ -103,9 +98,7 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the termination process,
-	 * specific to the VNF being terminated, as declared in the VNFD as part of
-	 * \"TerminateVnfOpConfig\".
+	 * Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -151,8 +144,7 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

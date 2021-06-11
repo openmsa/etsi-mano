@@ -29,12 +29,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a subscription request related to notifications about
- * VNF lifecycle changes.
+ * This type represents a subscription request related to notifications about VNF lifecycle changes.
  */
 @ApiModel(description = "This type represents a subscription request related to notifications about VNF lifecycle changes. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class LccnSubscriptionRequest {
 	@JsonProperty("filter")
@@ -52,9 +50,7 @@ public class LccnSubscriptionRequest {
 	}
 
 	/**
-	 * Filter settings for this subscription, to define the subset of all
-	 * notifications this subscription relates to. A particular notification is sent
-	 * to the subscriber if the filter matches, or if there is no filter.
+	 * Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter.
 	 *
 	 * @return filter
 	 **/
@@ -97,10 +93,7 @@ public class LccnSubscriptionRequest {
 	}
 
 	/**
-	 * Authentication parameters to configure the use of Authorization when sending
-	 * notifications corresponding to this subscription, as defined in clause 8.3.4
-	 * of ETSI GS NFV-SOL 013. This attribute shall only be present if the
-	 * subscriber requires authorization of notifications.
+	 * Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications.
 	 *
 	 * @return authentication
 	 **/
@@ -148,8 +141,7 @@ public class LccnSubscriptionRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

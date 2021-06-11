@@ -35,7 +35,6 @@ import io.swagger.annotations.ApiModelProperty;
  * IpOverEthernetAddressDataIpAddresses
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class IpOverEthernetAddressDataIpAddresses {
 	/**
@@ -120,9 +119,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Fixed addresses to assign (from the subnet defined by \"subnetId\" if
-	 * provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or
-	 * \"ipAddressRange\" shall be present.
+	 * Fixed addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
 	 *
 	 * @return fixedAddresses
 	 **/
@@ -142,9 +139,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Number of dynamic addresses to assign (from the subnet defined by
-	 * \"subnetId\" if provided). Exactly one of \"fixedAddresses\",
-	 * \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
+	 * Number of dynamic addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
 	 *
 	 * @return numDynamicAddresses
 	 **/
@@ -186,9 +181,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
-	 * this attribute is present, IP addresses from that subnet will be assigned;
-	 * otherwise, IP addresses not bound to a subnet will be assigned.
+	 * Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses from that subnet will be assigned; otherwise, IP addresses not bound to a subnet will be assigned.
 	 *
 	 * @return subnetId
 	 **/
@@ -238,8 +231,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

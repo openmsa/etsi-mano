@@ -1,32 +1,34 @@
 package com.ubiqube.etsi.mano.em.v261.controller.vnfconfig;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Controller;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:16:20.445+01:00")
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class Configuration261Sol002ApiController implements Configuration261Sol002Api {
 
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    private final HttpServletRequest request;
+	private final HttpServletRequest request;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public Configuration261Sol002ApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+	@org.springframework.beans.factory.annotation.Autowired
+	public Configuration261Sol002ApiController(final ObjectMapper objectMapper, final HttpServletRequest request) {
+		this.objectMapper = objectMapper;
+		this.request = request;
+	}
 
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
+	@Override
+	public Optional<ObjectMapper> getObjectMapper() {
+		return Optional.ofNullable(objectMapper);
+	}
 
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public Optional<HttpServletRequest> getRequest() {
+		return Optional.ofNullable(request);
+	}
 
 }

@@ -35,7 +35,6 @@ import io.swagger.annotations.ApiModelProperty;
  * IpOverEthernetAddressInfoIpAddresses
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class IpOverEthernetAddressInfoIpAddresses {
 	/**
@@ -120,8 +119,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Fixed addresses assigned (from the subnet defined by \"subnetId\" if
-	 * provided). Exactly one of \"addresses\" or \"addressRange\" shall be present.
+	 * Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). Exactly one of \"addresses\" or \"addressRange\" shall be present.
 	 *
 	 * @return addresses
 	 **/
@@ -141,9 +139,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Indicates whether this set of addresses was assigned dynamically (true) or
-	 * based on address information provided as input from the API consumer (false).
-	 * Shall be present if \"addresses\" is present and shall be absent otherwise.
+	 * Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise.
 	 *
 	 * @return isDynamic
 	 **/
@@ -185,8 +181,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
-	 * this attribute is present, IP addresses are bound to that subnet.
+	 * Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet.
 	 *
 	 * @return subnetId
 	 **/
@@ -236,8 +231,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

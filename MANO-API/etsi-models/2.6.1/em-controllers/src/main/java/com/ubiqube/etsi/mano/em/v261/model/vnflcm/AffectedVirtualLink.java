@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type provides information about added, deleted, modified and temporary
- * VLs.
+ * This type provides information about added, deleted, modified and temporary VLs.
  */
 @ApiModel(description = "This type provides information about added, deleted, modified and temporary VLs. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class AffectedVirtualLink {
 	@JsonProperty("id")
@@ -47,10 +45,7 @@ public class AffectedVirtualLink {
 	private String vnfVirtualLinkDescId = null;
 
 	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an
-	 * AffectedVirtualLink structure exists as long as the temporary resource
-	 * exists.
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists.
 	 */
 	public enum ChangeTypeEnum {
 		ADDED("ADDED"),
@@ -103,8 +98,7 @@ public class AffectedVirtualLink {
 	}
 
 	/**
-	 * Identifier of the virtual link instance, identifying the applicable
-	 * \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type.
+	 * Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type.
 	 *
 	 * @return id
 	 **/
@@ -146,10 +140,7 @@ public class AffectedVirtualLink {
 	}
 
 	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an
-	 * AffectedVirtualLink structure exists as long as the temporary resource
-	 * exists.
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists.
 	 *
 	 * @return changeType
 	 **/
@@ -170,9 +161,7 @@ public class AffectedVirtualLink {
 	}
 
 	/**
-	 * Reference to the VirtualNetwork resource. Detailed information is (for new
-	 * and modified resources) or has been (for removed resources) available from
-	 * the VIM.
+	 * Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM.
 	 *
 	 * @return networkResource
 	 **/
@@ -195,9 +184,7 @@ public class AffectedVirtualLink {
 	}
 
 	/**
-	 * Metadata about this resource. The content of this attribute shall be a copy
-	 * of the content of the \"metadata\" attribute of the
-	 * VnfVirtualLinkResourceInfo structure.
+	 * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure.
 	 *
 	 * @return metadata
 	 **/
@@ -249,8 +236,7 @@ public class AffectedVirtualLink {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
