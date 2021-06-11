@@ -53,4 +53,9 @@ public class ScaleInfo implements Serializable {
 		// Nothing.
 	}
 
+	public ScaleInfo(final String ascpectId, final int scaleLevel) {
+		this.aspectId = ascpectId;
+		this.scaleLevel = scaleLevel;
+	}
+
 }
