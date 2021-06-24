@@ -13,10 +13,6 @@
 	<name>mano-build</name>
 	<description>Build document for ETSI-MANO project</description>
 	<packaging>pom</packaging>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 	<modules>
 		<module>ubi-spring-config</module>
 		<module>nfvo-core</module>

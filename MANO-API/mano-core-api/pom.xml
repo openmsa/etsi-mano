@@ -14,8 +14,6 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 

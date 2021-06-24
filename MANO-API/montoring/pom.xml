@@ -10,13 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ubiqube.mano.service.mon</groupId>
-	<artifactId>mon-parent</artifactId>
+	<artifactId>mano-mon-aggregator</artifactId>
 	<description>Build document for ETSI-MANO Monitoring</description>
 	<packaging>pom</packaging>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
+
 	<modules>
 		<module>gnocchi</module>
 		<module>mano-mon-webapp</module>
