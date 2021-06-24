@@ -29,6 +29,8 @@ import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
+import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
@@ -37,8 +39,6 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
-import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
 
 @Service
 public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport> {

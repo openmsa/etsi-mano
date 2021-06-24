@@ -24,14 +24,14 @@ import java.util.List;
 import org.jgrapht.ListenableGraph;
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.graph.contributors.ComputeCont;
 import com.ubiqube.etsi.mano.service.graph.contributors.NetworkCont;
 import com.ubiqube.etsi.mano.service.graph.uow.CompTestUow;
 import com.ubiqube.etsi.mano.service.graph.uow.VlUow;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
-import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 public class WfConfigurationTest {
 

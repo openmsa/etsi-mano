@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsZone;
 
 public class DnsZoneUow extends VnfAbstractUnitOfWork {
 

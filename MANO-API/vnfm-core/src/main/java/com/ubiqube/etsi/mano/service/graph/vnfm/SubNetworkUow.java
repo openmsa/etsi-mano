@@ -23,10 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SubNetwork;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.SubNetwork;
 
 /**
  *

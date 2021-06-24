@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.service.sys.SysImage;
 
 /**
  *
@@ -49,6 +50,6 @@ public interface Storage {
 	String createObjectStorage(final VnfStorage vnfStorage);
 
 	@Nonnull
-	VimImage getImagesInformations(String name);
+	SysImage getImagesInformations(String name);
 
 }

@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
 
 /**
  *

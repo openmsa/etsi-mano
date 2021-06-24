@@ -18,6 +18,14 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.orchestrator.BlueprintBuilder;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsHost;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Monitoring;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
@@ -48,8 +56,12 @@ public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageRead
 
 	@Override
 	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
+		return BlueprintBuilder.builder().fork()
+				.from(Storage.class).connect(Compute.class)
+				.from(DnsZone.class).connect(Network.class).then(Compute.class)
+				.fork().from(Monitoring.class).from(DnsHost.class).join()
+				.connect(VnfExtCp.class)
+				.build();
 	}
 
 }

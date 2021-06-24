@@ -24,9 +24,9 @@ import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsVlNode;
 
 public class NsVlUow extends AbstractNsUnitOfWork {
 	/** Serial. */
