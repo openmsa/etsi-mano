@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.controllers;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,9 +34,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
@@ -42,15 +47,22 @@ import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
+import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
+import com.ubiqube.etsi.mano.dao.mano.alarm.EventType;
+import com.ubiqube.etsi.mano.dao.mano.alarm.FaultyResourceInfo;
+import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
+import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.jpa.AlarmsJpa;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
-import com.ubiqube.etsi.mano.service.vim.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.vim.OpenStackVim;
 import com.ubiqube.etsi.mano.service.vim.VimCapability;
 
@@ -68,11 +80,18 @@ public class Poc {
 	private final VnfPlanner planner;
 	private final VnfBlueprintService blueprintService;
 
-	public Poc(final OpenStackVim _osv, final VimConnectionInformationJpa _vimConnectionInformationJpa, final VnfPlanner _planner, final VnfBlueprintService _blueprintService) {
+	private final AlarmsJpa alarmsJpa;
+
+	private final RestTemplate restTemplate;
+
+	public Poc(final OpenStackVim _osv, final VimConnectionInformationJpa _vimConnectionInformationJpa, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final RestTemplate restTemplate,
+			final AlarmsJpa _alarmsJpa) {
 		osv = _osv;
 		vimConnectionInformationJpa = _vimConnectionInformationJpa;
 		planner = _planner;
 		blueprintService = _blueprintService;
+		this.restTemplate = restTemplate;
+		alarmsJpa = _alarmsJpa;
 	}
 
 	@GetMapping(value = "/test/{id}")
@@ -104,5 +123,43 @@ public class Poc {
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.IMAGE_PNG);
 		return new ResponseEntity<>(img, headers, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/alarm")
+	public void alarm() {
+		final Alarms alarm = new Alarms();
+		final FaultyResourceInfo rootCauseFaultyResource = new FaultyResourceInfo();
+		final ResourceHandle faultyResource = new ResourceHandle();
+		faultyResource.setResourceId(UUID.randomUUID());
+		faultyResource.setResourceProviderId("PROVIDER");
+		faultyResource.setVimConnectionId(UUID.randomUUID());
+		faultyResource.setVimLevelResourceType("LEVEL");
+		rootCauseFaultyResource.setFaultyResource(faultyResource);
+		alarm.setAckState(AckState.ACKNOWLEDGED);
+		alarm.setAlarmAcknowledgedTime(LocalDateTime.now());
+		alarm.setAlarmChangedTime(LocalDateTime.now());
+		alarm.setAlarmClearedTime(LocalDateTime.now());
+		alarm.setAlarmRaisedTime(LocalDateTime.now());
+		alarm.setEventTime(LocalDateTime.now());
+		alarm.setEventType(EventType.COMMUNICATIONS_ALARM);
+		alarm.setFaultType("Fault type");
+		alarm.setManagedObjectId(UUID.randomUUID());
+		alarm.setPerceivedSeverity(PerceivedSeverityType.CLEARED);
+		alarm.setProbableCause("Probable cause");
+		alarm.setRootCauseFaultyResource(rootCauseFaultyResource);
+		alarm.setRootCause(true);
+		alarm.setFaultType("Faultly");
+		alarmsJpa.save(alarm);
+	}
+
+	@GetMapping(value = "/test")
+	public void test() {
+		restTemplate.postForEntity("http://mano-geo-service/", new HashMap<>(), String.class);
+	}
+
+	@GetMapping(value = "/template", produces = "test/html")
+	public String template(@RequestParam(name = "name", required = false, defaultValue = "World") final String name, final Model model) {
+		model.addAttribute("name", name);
+		return "hello";
 	}
 }
