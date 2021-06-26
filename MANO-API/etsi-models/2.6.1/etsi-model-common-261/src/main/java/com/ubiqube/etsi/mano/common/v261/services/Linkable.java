@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.common.v261.controller.vnf;
+package com.ubiqube.etsi.mano.common.v261.services;
 
 import java.util.UUID;
 

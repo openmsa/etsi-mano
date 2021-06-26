@@ -15,37 +15,39 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.v261.services;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfoLinks;
+import com.ubiqube.etsi.mano.common.v261.services.Linkable;
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.VnfPackage261Sol005Api;
+import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.VnfSubscription261Sol005Api;
 
-public class Sol003Linkable implements Linkable {
+public class Sol005Linkable implements Linkable {
 
-	public static VnfPkgInfoLinks getVnfLinks(final String vnfPkgId) {
+	public VnfPkgInfoLinks getVnfLinks(final String vnfPkgId) {
 		final VnfPkgInfoLinks links = new VnfPkgInfoLinks();
 
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgId, "")).withSelfRel().getHref());
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();
-		packageContent.setHref(linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "")).withSelfRel().getHref());
+		packageContent.setHref(linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, "", null)).withSelfRel().getHref());
 		links.setPackageContent(packageContent);
 		return links;
 	}
@@ -54,11 +56,11 @@ public class Sol003Linkable implements Linkable {
 	public PkgmLinks createNotificationLink(final UUID _vnfPkgId, final UUID _subscriptionId) {
 		final PkgmLinks ret = new PkgmLinks();
 		final Link subscription = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfSubscription261Sol003Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
+				linkTo(methodOn(VnfSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
 		ret.setSubscription(subscription);
 
 		final Link vnfPackage = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString())).withSelfRel().getHref());
+				linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString(), "")).withSelfRel().getHref());
 		ret.setVnfPackage(vnfPackage);
 		return ret;
 	}
@@ -67,11 +69,11 @@ public class Sol003Linkable implements Linkable {
 	public PkgmLinks createVnfPackageOnboardingNotificationLinks(final UUID _vnfPkgId, final UUID _subscriptionId) {
 		final PkgmLinks vnfPackageOnboardingNotificationLinks = new PkgmLinks();
 		final Link subscription = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfSubscription261Sol003Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
+				linkTo(methodOn(VnfSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId.toString())).withSelfRel().getHref());
 		vnfPackageOnboardingNotificationLinks.setSubscription(subscription);
 
 		final Link vnfPackage = createVnfPackagesVnfPkgInfoLinksSelf(
-				linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString())).withSelfRel().getHref());
+				linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString(), "")).withSelfRel().getHref());
 		vnfPackageOnboardingNotificationLinks.setVnfPackage(vnfPackage);
 
 		return null;
@@ -87,7 +89,7 @@ public class Sol003Linkable implements Linkable {
 	public PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(final String _subscriptionId) {
 		final PkgmSubscriptionLinks subscriptionsPkgmSubscriptionLinks = new PkgmSubscriptionLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(VnfSubscription261Sol003Api.class).subscriptionsSubscriptionIdGet(_subscriptionId)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(VnfSubscription261Sol005Api.class).subscriptionsSubscriptionIdGet(_subscriptionId)).withSelfRel().getHref());
 		subscriptionsPkgmSubscriptionLinks.setSelf(self);
 		return subscriptionsPkgmSubscriptionLinks;
 	}
@@ -99,7 +101,7 @@ public class Sol003Linkable implements Linkable {
 
 	@Override
 	public FrontApiTypesEnum getApi() {
-		return FrontApiTypesEnum.SOL003;
+		return FrontApiTypesEnum.SOL005;
 	}
 
 	@Override
@@ -109,6 +111,6 @@ public class Sol003Linkable implements Linkable {
 
 	@Override
 	public String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
-		return linkTo(methodOn(VnfPackage261Sol003Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId(), null)).withSelfRel().getHref();
 	}
 }

@@ -22,11 +22,11 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.common.v261.controller.vnf.Linkable;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageChangeType;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.common.v261.services.Linkable;
 
 public class VnfSubscriptionFactory {
 	@Nonnull
