@@ -40,6 +40,9 @@
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
+						<configuration>
+							<testClassesDirectory>${project.build.directory}/classes</testClassesDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

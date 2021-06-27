@@ -6,7 +6,12 @@
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>etsi-nfvo-261-controllers</name>
-
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>etsi-models-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 	<repositories>
 		<repository>
 			<id>nexus</id>
@@ -20,12 +25,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.ubiqube.mano</groupId>
-			<artifactId>mano-test-helper</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -71,7 +70,6 @@
 		<dependency>
 			<groupId>uk.co.jemos.podam</groupId>
 			<artifactId>podam</artifactId>
-			<version>7.2.5.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -145,9 +143,4 @@
 			<artifactId>swagger-annotations</artifactId>
 		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
 </project>

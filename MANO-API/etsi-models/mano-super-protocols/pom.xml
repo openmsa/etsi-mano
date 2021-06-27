@@ -30,8 +30,8 @@
 									<groupId>com.ubiqube.mano</groupId>
 									<artifactId>mano-test-helper</artifactId>
 									<version>0.0.1-SNAPSHOT</version>
-									<classifier>tests</classifier>
-									<type>test-jar</type>
+									<overWrite>true</overWrite>
+									<includes>**/*.class</includes>
 									<outputDirectory>${project.build.directory}/test-classes</outputDirectory>
 								</artifactItem>
 							</artifactItems>

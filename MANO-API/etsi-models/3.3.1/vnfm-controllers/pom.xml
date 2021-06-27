@@ -6,10 +6,12 @@
 	<packaging>jar</packaging>
 	<name>etsi-vnfm-331-controllers</name>
 	<url>http://maven.apache.org</url>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>etsi-models-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 	<repositories>
 		<repository>
 			<id>nexus</id>
@@ -133,10 +135,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/>
-	</parent>
 </project>
