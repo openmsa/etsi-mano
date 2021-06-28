@@ -107,7 +107,6 @@
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-eclipse-tools</artifactId>
-			<version>1.5.4</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

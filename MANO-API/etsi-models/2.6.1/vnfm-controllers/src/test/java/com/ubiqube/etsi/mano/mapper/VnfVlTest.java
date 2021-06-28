@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class VnfVlTest {
@@ -34,7 +35,7 @@ public class VnfVlTest {
 
 	public VnfVlTest() {
 		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaConfiguration.configure(mapperFactory);
 
 		podam = new PodamFactoryImpl();
