@@ -20,6 +20,7 @@ package com.ubiqube.etsi.mano.config;
 import org.springframework.stereotype.Component;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory.MapperFactoryBuilder;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import ma.glasnost.orika.unenhance.HibernateUnenhanceStrategy;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryBuilderConfigurer;
 
@@ -28,7 +29,9 @@ public class HibernateOrikaMapperFactoryBuilderConfigurer implements OrikaMapper
 
 	@Override
 	public void configure(final MapperFactoryBuilder<?, ?> orikaMapperFactoryBuilder) {
-		orikaMapperFactoryBuilder.unenhanceStrategy(new HibernateUnenhanceStrategy());
+		orikaMapperFactoryBuilder
+				.unenhanceStrategy(new HibernateUnenhanceStrategy())
+				.compilerStrategy(new EclipseJdtCompilerStrategy());
 	}
 
 }
