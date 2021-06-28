@@ -41,27 +41,27 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorLinks;
  */
 @RolesAllowed({ "ROLE_EM" })
 @Controller
-public class Indicators261Sol002ApiController implements Indicators261Sol002Api {
+public class Indicators261Sol002Controller implements Indicators261Sol002Api {
 	private final IndicatorsFrontController indicatorsFrontController;
 
-	public Indicators261Sol002ApiController(final IndicatorsFrontController indicatorsFrontController) {
+	public Indicators261Sol002Controller(final IndicatorsFrontController indicatorsFrontController) {
 		super();
 		this.indicatorsFrontController = indicatorsFrontController;
 	}
 
 	@Override
 	public ResponseEntity<List<VnfIndicator>> indicatorsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
-		return indicatorsFrontController.search(filter, nextpageOpaqueMarker, VnfIndicator.class, Indicators261Sol002ApiController::makeLink);
+		return indicatorsFrontController.search(filter, nextpageOpaqueMarker, VnfIndicator.class, Indicators261Sol002Controller::makeLink);
 	}
 
 	@Override
 	public ResponseEntity<List<VnfIndicator>> indicatorsVnfInstanceIdGet(final String vnfInstanceId, @Valid final String filter, @Valid final String nextpageOpaqueMarker) {
-		return indicatorsFrontController.findByVnfInstanceId(vnfInstanceId, filter, nextpageOpaqueMarker, VnfIndicator.class, Indicators261Sol002ApiController::makeLink);
+		return indicatorsFrontController.findByVnfInstanceId(vnfInstanceId, filter, nextpageOpaqueMarker, VnfIndicator.class, Indicators261Sol002Controller::makeLink);
 	}
 
 	@Override
 	public ResponseEntity<VnfIndicator> indicatorsVnfInstanceIdIndicatorIdGet(final String vnfInstanceId, final String indicatorId) {
-		return indicatorsFrontController.findByVnfInstanceIdAndIndicatorId(vnfInstanceId, indicatorId, VnfIndicator.class, Indicators261Sol002ApiController::makeLink);
+		return indicatorsFrontController.findByVnfInstanceIdAndIndicatorId(vnfInstanceId, indicatorId, VnfIndicator.class, Indicators261Sol002Controller::makeLink);
 	}
 
 	private static void makeLink(final VnfIndicator x) {
