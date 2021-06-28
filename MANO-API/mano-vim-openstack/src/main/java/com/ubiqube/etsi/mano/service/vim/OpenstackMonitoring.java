@@ -42,7 +42,7 @@ public class OpenstackMonitoring implements VimMonitoring {
 
 	public OpenstackMonitoring(final OSClientV3 os) {
 		this.os = os;
-		try (InputStream mappting = this.getClass().getClassLoader().getResourceAsStream("gnocchi-mapping.properties")) {
+		try (InputStream mappting = Thread.currentThread().getContextClassLoader().getResourceAsStream("gnocchi-mapping.properties")) {
 			props = new Properties();
 			props.load(mappting);
 		} catch (final IOException e) {
