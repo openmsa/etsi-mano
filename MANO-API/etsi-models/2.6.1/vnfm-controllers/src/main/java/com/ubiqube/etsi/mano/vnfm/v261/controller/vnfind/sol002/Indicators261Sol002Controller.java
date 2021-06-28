@@ -25,7 +25,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.vnfind.IndicatorsFrontController;
@@ -40,7 +40,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorLinks;
  *
  */
 @RolesAllowed({ "ROLE_EM" })
-@Controller
+@RestController
 public class Indicators261Sol002Controller implements Indicators261Sol002Api {
 	private final IndicatorsFrontController indicatorsFrontController;
 
