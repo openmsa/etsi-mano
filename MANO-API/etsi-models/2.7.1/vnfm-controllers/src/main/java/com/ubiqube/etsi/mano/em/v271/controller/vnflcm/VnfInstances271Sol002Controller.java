@@ -25,8 +25,8 @@ import java.util.HashMap;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
@@ -44,7 +44,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstanceLinks;
 
-@Controller
+@RestController
 public class VnfInstances271Sol002Controller implements VnfInstances271Sol002Api {
 	private final VnfInstanceGenericFrontController frontController;
 

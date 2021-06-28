@@ -21,12 +21,12 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicator;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscription;
 
-@Controller
+@RestController
 public class Indicators271Sol003Controller implements Indicators271Sol003Api {
 
 	@Override

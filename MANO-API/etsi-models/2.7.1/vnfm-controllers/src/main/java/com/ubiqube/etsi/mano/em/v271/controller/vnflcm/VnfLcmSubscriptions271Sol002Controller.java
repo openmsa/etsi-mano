@@ -25,8 +25,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmSubscriptionFrontController;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscription;
@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionLinks;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 
-@Controller
+@RestController
 public class VnfLcmSubscriptions271Sol002Controller implements VnfLcmSubscriptions271Sol002Api {
 	private final VnfLcmSubscriptionFrontController frontController;
 
