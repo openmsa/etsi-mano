@@ -80,5 +80,10 @@
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-eclipse-tools</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
