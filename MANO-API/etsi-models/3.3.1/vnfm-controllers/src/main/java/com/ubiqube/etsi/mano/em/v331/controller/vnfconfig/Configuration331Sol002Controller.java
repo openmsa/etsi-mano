@@ -22,14 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
-public class ConfigurationApiController implements ConfigurationApi {
+public class Configuration331Sol002Controller implements Configuration331Sol002Api {
 
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public ConfigurationApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public Configuration331Sol002Controller(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
     }

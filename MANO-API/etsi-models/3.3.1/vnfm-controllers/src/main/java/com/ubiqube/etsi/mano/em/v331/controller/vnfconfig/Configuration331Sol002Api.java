@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.em.v331.controller.vnfconfig;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -50,9 +51,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RequestMapping(value = "/sol002/vnfconfig/v1/configuration", headers = "Version=3.3.1")
-public interface ConfigurationApi {
+@RolesAllowed({ "ROLE_EM" })
+public interface Configuration331Sol002Api {
 
-	Logger log = LoggerFactory.getLogger(ConfigurationApi.class);
+	Logger log = LoggerFactory.getLogger(Configuration331Sol002Api.class);
 
 	default Optional<ObjectMapper> getObjectMapper() {
 		return Optional.empty();

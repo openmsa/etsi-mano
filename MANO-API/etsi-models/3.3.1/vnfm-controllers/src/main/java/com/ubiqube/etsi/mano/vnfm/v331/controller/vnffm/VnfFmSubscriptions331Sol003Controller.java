@@ -28,7 +28,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnffm.FaultMngtSubscriptionsFrontController;
-import com.ubiqube.etsi.mano.em.v331.controller.vnffm.FaultMngtSubscriptions331Sol002Api;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscriptionRequest;
@@ -66,12 +65,12 @@ public class VnfFmSubscriptions331Sol003Controller implements VnfFmSubscriptions
 	private static void makeLinks(final FmSubscription subscription) {
 		final FmSubscriptionLinks links = new FmSubscriptionLinks();
 		final Link link = new Link();
-		link.setHref(linkTo(methodOn(FaultMngtSubscriptions331Sol002Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(VnfFmSubscriptions331Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 		subscription.setLinks(links);
 	}
 
 	private static String makeSelf(final FmSubscription subscription) {
-		return linkTo(methodOn(FaultMngtSubscriptions331Sol002Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(VnfFmSubscriptions331Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
 	}
 }
