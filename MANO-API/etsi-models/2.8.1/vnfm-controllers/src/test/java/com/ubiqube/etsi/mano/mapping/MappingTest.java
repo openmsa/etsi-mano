@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.em.v281.controller.OrikaMapperVnfm281;
+import com.ubiqube.etsi.mano.em.v281.OrikaMapperVnfm281;
 import com.ubiqube.etsi.mano.test.TestHelper;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.GrantRequest;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPkgInfo;
