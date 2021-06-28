@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -51,7 +52,7 @@ public class TestHelper {
 	private final Set<Class<?>> complex = new HashSet<>();
 
 	public TestHelper(final OrikaMapperFactoryConfigurer orikaMapperFactoryConfigurer) {
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaMapperFactoryConfigurer.configure(mapperFactory);
 
 		podam = new PodamFactoryImpl();

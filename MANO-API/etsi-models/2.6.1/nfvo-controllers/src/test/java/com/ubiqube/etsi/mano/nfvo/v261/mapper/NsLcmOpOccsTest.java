@@ -34,13 +34,14 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
 public class NsLcmOpOccsTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public NsLcmOpOccsTest() {
 		final OrikaConfigurationNfvo261 orikaConfiguration = new OrikaConfigurationNfvo261();
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaConfiguration.configure(mapperFactory);
 	}
 
