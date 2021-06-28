@@ -4,11 +4,11 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Controller
+@RestController
 public class Indicators261Sol002ApiController implements Indicators261Sol002Api {
 
 	private final ObjectMapper objectMapper;

@@ -30,7 +30,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vnfconfig.VnfConfiguration;
  *
  */
 @RestController
-public class Configuration261Sol002ApiController implements Configuration261Sol002Api {
+public class Configuration261Sol002Controller implements Configuration261Sol002Api {
 
 	@Override
 	public ResponseEntity<VnfConfiguration> configurationGet() {

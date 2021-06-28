@@ -14,7 +14,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002;
+
+package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol003;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -28,11 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
-import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.AlarmModifications;
-import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.PerceivedSeverityRequest;
 
 /**
  *
@@ -40,23 +39,18 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.PerceivedSeverityRequest;
  *
  */
 @RestController
-public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
+public class FaultAlarms261Sol003Controller implements FaultAlarms261Sol003Api {
 
 	private final AlarmFrontController alarmFrontController;
 
-	public Alarms261Sol002ApiController(final AlarmFrontController alarmFrontController) {
+	public FaultAlarms261Sol003Controller(final AlarmFrontController alarmFrontController) {
 		super();
 		this.alarmFrontController = alarmFrontController;
 	}
 
 	@Override
-	public ResponseEntity<Void> alarmsAlarmIdEscalatePost(final String alarmId, @Valid final PerceivedSeverityRequest perceivedSeverityRequest) {
-		return alarmFrontController.escalate(alarmId, PerceivedSeverityType.valueOf(perceivedSeverityRequest.getProposedPerceivedSeverity().toString()));
-	}
-
-	@Override
 	public ResponseEntity<Alarm> alarmsAlarmIdGet(final String alarmId) {
-		return alarmFrontController.findById(alarmId, Alarm.class, Alarms261Sol002ApiController::makeLinks);
+		return alarmFrontController.findById(alarmId, Alarm.class, FaultAlarms261Sol003Controller::makeLinks);
 	}
 
 	@Override
@@ -66,19 +60,20 @@ public class Alarms261Sol002ApiController implements Alarms261Sol002Api {
 
 	@Override
 	public ResponseEntity<String> alarmsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return alarmFrontController.search(requestParams, Alarm.class, Alarms261Sol002ApiController::makeLinks);
+		return alarmFrontController.search(requestParams, Alarm.class, FaultAlarms261Sol003Controller::makeLinks);
 	}
 
 	private static void makeLinks(final Alarm alarm) {
 		final AlarmLinks links = new AlarmLinks();
 		Link link = new Link();
-		link.setHref(linkTo(methodOn(Alarms261Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultAlarms261Sol003Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
 		links.setSelf(link);
 
 		link = new Link();
-		link.setHref(linkTo(methodOn(Alarms261Sol002Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
+		link.setHref(linkTo(methodOn(FaultAlarms261Sol003Api.class).alarmsAlarmIdGet(alarm.getId())).withSelfRel().getHref());
 		links.setObjectInstance(link);
 
 		alarm.setLinks(links);
 	}
+
 }
