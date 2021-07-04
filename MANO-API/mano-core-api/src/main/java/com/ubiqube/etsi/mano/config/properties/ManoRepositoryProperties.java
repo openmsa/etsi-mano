@@ -20,12 +20,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 /**
  * Physical driver properties.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @Configuration
 @ConfigurationProperties(prefix = "mano.repository")
 public class ManoRepositoryProperties {

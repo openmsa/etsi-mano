@@ -30,6 +30,10 @@ import org.springframework.http.ResponseEntity.BodyBuilder;
 import com.ubiqube.etsi.mano.exception.RequestRangeNotSatisfiableException;
 
 public class SpringUtil {
+	private SpringUtil() {
+		// Nothing.
+	}
+
 	public static ResponseEntity<List<ResourceRegion>> handleBytes(final byte[] bytes, final String _range) {
 		final Optional<String> oRange = Optional.ofNullable(_range);
 		final List<HttpRange> ranges = HttpRange.parseRanges(oRange.orElse("bytes=0-"));
@@ -45,7 +49,7 @@ public class SpringUtil {
 			final List<ResourceRegion> body = HttpRange.toResourceRegions(ranges, resource);
 			return bodyBuilder.body(body);
 		} catch (final IllegalArgumentException e) {
-			throw new RequestRangeNotSatisfiableException(e.getMessage());
+			throw new RequestRangeNotSatisfiableException(e.getMessage(), e);
 		}
 	}
 }

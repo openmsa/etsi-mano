@@ -31,13 +31,13 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -122,7 +122,7 @@ public class NsDescriptorGenericFrontController {
 	 * codes.\&quot;
 	 *
 	 */
-	public ResponseEntity<Void> putNsdContent(final String nsdInfoId, final String accept, final MultipartFile file) {
+	public ResponseEntity<Void> putNsdContent(final String nsdInfoId, final String accept, final InputStreamSource file) {
 		try (InputStream is = file.getInputStream()) {
 			nsdController.nsDescriptorsNsdInfoIdNsdContentPut(UUID.fromString(nsdInfoId), is);
 		} catch (final IOException e) {

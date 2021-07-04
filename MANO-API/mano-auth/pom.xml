@@ -11,8 +11,8 @@
 	</parent>
 	<groupId>com.ubiqube.mano.auth</groupId>
 	<artifactId>mano-auth-aggregator</artifactId>
-	<description>Build document for ETSI-MANO Auth</description>
 	<packaging>pom</packaging>
+	<description>Build document for ETSI-MANO Auth</description>
 	<modules>
 		<module>auth-api</module>
 		<module>auth-basic</module>
