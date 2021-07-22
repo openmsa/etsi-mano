@@ -89,11 +89,8 @@ public class PlannerImpl<U> implements Planner<U> {
 			}
 		});
 		// Rebuild connectivity.
-		gf.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
-			final VirtualTask<?> dep = findDependency(y, gf);
-			LOG.debug("Add edge : {} <-> {}", dep, x);
-			gf.addEdge(dep, x);
-		}));
+		rebuildConnectivity(gf);
+		rebuildConnectivity(gr);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Create graph:");
 			GraphTools.dumpVt(gf);
@@ -101,6 +98,14 @@ public class PlannerImpl<U> implements Planner<U> {
 			GraphTools.dumpVt(gr);
 		}
 		return new PreExecutionGraphImpl(gf, gr);
+	}
+
+	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf) {
+		gf.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
+			final VirtualTask<?> dep = findDependency(y, gf);
+			LOG.debug("Add edge : {} <-> {}", dep, x);
+			gf.addEdge(dep, x);
+		}));
 	}
 
 	@Override
@@ -174,7 +179,7 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	private static OrchExecutionResults convertResults(final ExecutionResults<UnitOfWork<?>, String> res) {
-		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), x.getResult(), x.getMessage())).collect(Collectors.toList());
+		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).collect(Collectors.toList());
 		return new OrchExecutionResultsImpl(all);
 	}
 
