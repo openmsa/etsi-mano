@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,10 @@ public class PreExecutionGraphImpl<U> implements PreExecutionGraph<U> {
 
 	@Override
 	public List<VirtualTask<U>> getPreTasks() {
-		return g.vertexSet().stream().collect(Collectors.toList());
+		final List<VirtualTask<U>> ret = new ArrayList<>();
+		ret.addAll(g.vertexSet().stream().collect(Collectors.toList()));
+		ret.addAll(r.vertexSet().stream().collect(Collectors.toList()));
+		return ret;
 	}
 
 }
