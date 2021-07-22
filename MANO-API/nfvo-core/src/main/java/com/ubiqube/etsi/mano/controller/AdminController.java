@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.service.SystemService;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -44,16 +45,19 @@ public class AdminController {
 	private final VimConnectionInformationJpa vciJpa;
 	private final MapperFacade mapper;
 	private final VimManager vimManager;
+	private final SystemService systemService;
 
-	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager) {
+	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager, final SystemService systemService) {
 		super();
 		this.vciJpa = vciJpa;
 		this.mapper = mapper;
 		this.vimManager = vimManager;
+		this.systemService = systemService;
 	}
 
 	@PostMapping(value = "/vim/register")
 	public ResponseEntity<VimConnectionInformation> registerVim(@RequestBody final VimConnectionInformation body) {
+		systemService.registerVim(body);
 		VimConnectionInformation vci = mapper.map(body, VimConnectionInformation.class);
 		vci = vciJpa.save(vci);
 		vimManager.rebuildCache();
