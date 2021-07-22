@@ -35,11 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
-import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
-import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
-import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
@@ -53,7 +49,11 @@ import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.InstantiationLevels;
 import tosca.policies.nfv.ScalingAspects;
+import tosca.policies.nfv.VduInitialDelta;
+import tosca.policies.nfv.VduInstantiationLevels;
+import tosca.policies.nfv.VduScalingAspectDeltas;
 
 /**
  *
