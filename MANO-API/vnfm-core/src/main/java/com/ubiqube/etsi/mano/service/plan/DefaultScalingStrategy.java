@@ -52,6 +52,9 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 	public NumberOfCompute getNumberOfCompute(final VnfBlueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute vnfCompute) {
 		final String instantiationLevelId = blueprint.getParameters().getInstantiationLevelId();
 		Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
+		if (instantiationLevels.isEmpty()) {
+			return new NumberOfCompute(0, 1, new ScaleInfo("default", 1));
+		}
 		if (null != instantiationLevelId) {
 			// Get Instantiation levels or baseLine levels..
 			instantiationLevels = resolvLevelName(instantiationLevelId, 0, vnfPakage.getVnfInstantiationLevels());
