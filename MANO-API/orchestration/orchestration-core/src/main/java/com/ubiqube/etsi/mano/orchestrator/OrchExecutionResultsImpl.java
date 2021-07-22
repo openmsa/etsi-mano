@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -28,6 +29,16 @@ public class OrchExecutionResultsImpl implements OrchExecutionResults {
 
 	public OrchExecutionResultsImpl(final List<OrchExecutionResultImpl> all) {
 		this.results = all;
+	}
+
+	@Override
+	public List<? extends OrchExecutionResult> getSuccess() {
+		return results.stream().filter(x -> x.getResult() == ResultType.SUCCESS).collect(Collectors.toList());
+	}
+
+	@Override
+	public List getErrored() {
+		return results.stream().filter(x -> x.getResult() == ResultType.FAILURE).collect(Collectors.toList());
 	}
 
 }

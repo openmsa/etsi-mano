@@ -28,8 +28,8 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class OrchExecutionResultImpl {
+public class OrchExecutionResultImpl implements OrchExecutionResult {
 	UnitOfWork task;
-	String result;
+	ResultType result;
 	String message;
 }

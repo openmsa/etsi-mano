@@ -18,11 +18,16 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
-public interface OrchExecutionResult {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface OrchExecutionResult<U> {
 
-	Task<UnitOfWork> getTask();
+	UnitOfWork<U> getTask();
 
-	String getResult();
+	ResultType getResult();
 
 	String getMessage();
 }

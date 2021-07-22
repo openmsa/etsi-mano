@@ -16,11 +16,17 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+import java.util.List;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface OrchExecutionResults {
+public interface OrchExecutionResults<U> {
+
+	List<? extends OrchExecutionResult<U>> getSuccess();
+
+	List<? extends OrchExecutionResult<U>> getErrored();
 
 }
