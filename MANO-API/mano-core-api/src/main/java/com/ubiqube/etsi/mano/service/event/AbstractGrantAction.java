@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -55,7 +56,6 @@ import com.ubiqube.etsi.mano.service.event.elect.VimElection;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 /**
  *
@@ -125,7 +125,7 @@ public abstract class AbstractGrantAction {
 	}
 
 	protected final void getVimInformations(final VimConnectionInformation vimInfo, final GrantResponse grants) {
-		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "grant");
+		final ExecutorService executorService = Executors.newFixedThreadPool(10);
 		Exception throwable = null;
 		try {
 			getGrantInformationsImpl(executorService, vimInfo, grants);
@@ -177,7 +177,7 @@ public abstract class AbstractGrantAction {
 			final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
 			extVl.setResourceId(x.getValue());
 			extVl.setResourceProviderId(vim.getType());
-			extVl.setVimConnectionId(vimInfo.getId().toString());
+			extVl.setVimConnectionId(vimInfo.getVimId());
 			extVl.setVnfVirtualLinkDescId(x.getKey());
 			extVl.setGrants(grants);
 			grants.addExtManagedVl(extVl);
@@ -188,7 +188,7 @@ public abstract class AbstractGrantAction {
 		grants.getAddResources().forEach(x -> {
 			vim.allocateResources(vimInfo, x);
 			x.setResourceProviderId(vim.getType());
-			x.setVimConnectionId(vimInfo.getId().toString());
+			x.setVimConnectionId(vimInfo.getVimId());
 			x.setZoneId(zoneId);
 			x.setResourceGroupId(zgi.getZoneId().iterator().next());
 		});
@@ -197,7 +197,7 @@ public abstract class AbstractGrantAction {
 
 	private static ZoneInfoEntity mapZone(final String zoneId, final VimConnectionInformation vimInfo) {
 		final ZoneInfoEntity zoneInfoEntity = new ZoneInfoEntity();
-		zoneInfoEntity.setVimConnectionId(vimInfo.getId().toString());
+		zoneInfoEntity.setVimConnectionId(vimInfo.getVimId());
 		zoneInfoEntity.setResourceProviderId(vimInfo.getVimType());
 		zoneInfoEntity.setZoneId(zoneId);
 		return zoneInfoEntity;
@@ -217,7 +217,7 @@ public abstract class AbstractGrantAction {
 			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
 				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), x.getDiskSize());
 				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
-				vcrfe.setVimConnectionId(vimConnectionInformation.getId().toString());
+				vcrfe.setVimConnectionId(vimConnectionInformation.getVimId());
 				vcrfe.setResourceProviderId(vim.getType());
 				vcrfe.setVimFlavourId(flavorId);
 				return vcrfe;
@@ -258,7 +258,7 @@ public abstract class AbstractGrantAction {
 		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
 		vsie.setVimSoftwareImageId(softwareImage.getId().toString());
 		vsie.setVnfdSoftwareImageId(vduId.toString());
-		vsie.setVimConnectionId(vimInfo.getId().toString());
+		vsie.setVimConnectionId(vimInfo.getVimId());
 		vsie.setResourceProviderId(vim.getType());
 		return vsie;
 	}
