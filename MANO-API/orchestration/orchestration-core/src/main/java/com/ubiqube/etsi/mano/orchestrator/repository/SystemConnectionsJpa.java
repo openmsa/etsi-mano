@@ -14,23 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator.repository;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.repository.CrudRepository;
+
+import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
-
-	String execute(Context context);
-
-	String rollback(Context context);
-
-	Class<? extends Node> getNode();
+public interface SystemConnectionsJpa extends CrudRepository<SystemConnections, UUID> {
+	Optional<SystemConnections> findByVimIdAndVimType(String vimId, String vimType);
 }

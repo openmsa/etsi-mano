@@ -14,23 +14,34 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import org.springframework.stereotype.Service;
+
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @param <U>
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+@Service
+public class OrchestrationServiceImpl<U> implements OrchestrationService<U> {
 
-	String execute(Context context);
+	@Override
+	public SystemBuilder systemBuilderOf(final UnitOfWork<U> uow) {
+		return SystemBuilderImpl.of(uow);
+	}
 
-	String rollback(Context context);
+	@Override
+	public SystemBuilder systemBuilderOf(final UnitOfWork<U> left, final UnitOfWork<U> right) {
+		return SystemBuilderImpl.of(left, right);
+	}
 
-	Class<? extends Node> getNode();
+	@Override
+	public SystemBuilder createEmptySystemBuilder() {
+		return new SystemBuilderImpl();
+	}
+
 }

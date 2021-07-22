@@ -14,23 +14,32 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.github.dexecutor.core.ExecutionListener;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @param <U>
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+public class OrchExecutionListenerAdapter<U> implements ExecutionListener<Task<U>, String> {
+	private final OrchExecutionListener<U> listener;
 
-	String execute(Context context);
+	public OrchExecutionListenerAdapter(final OrchExecutionListener<U> listener) {
+		super();
+		this.listener = listener;
+	}
 
-	String rollback(Context context);
+	@Override
+	public void onSuccess(final com.github.dexecutor.core.task.Task<Task<U>, String> task) {
+		listener.onSuccess(task.getId());
+	}
 
-	Class<? extends Node> getNode();
+	@Override
+	public void onError(final com.github.dexecutor.core.task.Task<Task<U>, String> task, final Exception exception) {
+		listener.onError(task.getId(), exception);
+	}
+
 }

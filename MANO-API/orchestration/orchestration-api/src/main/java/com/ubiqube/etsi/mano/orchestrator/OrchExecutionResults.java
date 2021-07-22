@@ -14,23 +14,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
-
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+package com.ubiqube.etsi.mano.orchestrator;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+public interface OrchExecutionResults {
 
-	String execute(Context context);
-
-	String rollback(Context context);
-
-	Class<? extends Node> getNode();
 }

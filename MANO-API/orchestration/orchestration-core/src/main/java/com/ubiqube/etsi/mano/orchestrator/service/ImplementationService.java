@@ -23,8 +23,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 import com.ubiqube.etsi.mano.orchestrator.exceptions.OrchestrationException;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.sys.System;
@@ -38,24 +39,26 @@ import com.ubiqube.etsi.mano.service.sys.System;
 public class ImplementationService {
 	private final Map<String, System> systems;
 	private final SystemManager vimManager;
+	private final OrchestrationService orchestrationService;
 
-	public ImplementationService(final List<System> systems, final SystemManager vimManager) {
+	public ImplementationService(final List<System> systems, final SystemManager vimManager, final OrchestrationService orchestrationService) {
 		super();
 		this.systems = systems.stream().collect(Collectors.toMap(System::getProviderId, Function.identity()));
 		this.vimManager = vimManager;
+		this.orchestrationService = orchestrationService;
 	}
 
-	public SystemBuilder getTaretSystem(final VirtualTask virtualTask) {
-		final String providerId = virtualTask.getProviderId();
-		if (null == providerId) {
-			throw new OrchestrationException("Unable to find ProviderId.");
+	public SystemBuilder getTaretSystem(final VirtualTask<?> virtualTask) {
+		final String connectionId = virtualTask.getVimConnectionId();
+		if (null == connectionId) {
+			throw new OrchestrationException("Unable to find VimId.");
 		}
-		final VimConnectionInformation vim = vimManager.findVimByVimId(providerId);
+		final SystemConnections vim = vimManager.findVimByVimIdAndProviderId(connectionId, virtualTask.getProviderId());
 		final System sys = systems.get(vim.getVimType());
 		if (null == sys) {
 			throw new OrchestrationException("Unable to find system matching: " + vim.getVimType());
 		}
-		return sys.getImplementation(virtualTask);
+		return sys.getImplementation(orchestrationService, virtualTask, vim);
 	}
 
 }

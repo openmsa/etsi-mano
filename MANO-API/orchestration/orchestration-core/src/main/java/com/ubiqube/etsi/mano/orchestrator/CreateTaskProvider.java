@@ -16,25 +16,34 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.github.dexecutor.core.task.Task;
+import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface SystemBuilder {
-	List<UnitOfWorkConnectivity> getEdges();
+public class CreateTaskProvider implements TaskProvider<UnitOfWork<?>, String> {
 
-	UnitOfWork<?> getSingle();
+	private static final Logger LOG = LoggerFactory.getLogger(DeleteTaskProvider.class);
+	private final Context context;
+	private final OrchExecutionListener listener;
 
-	List<UnitOfWork<?>> getIncomingVertex();
+	public CreateTaskProvider(final Context context, final OrchExecutionListener listener) {
+		super();
+		this.context = context;
+		this.listener = listener;
+	}
 
-	List<UnitOfWork<?>> getOutgoingVertex();
-
-	void add(UnitOfWork<?> src, UnitOfWork<?> dest);
+	@Override
+	public Task<UnitOfWork<?>, String> provideTask(final UnitOfWork uaow) {
+		LOG.debug("Called with: {}", uaow);
+		return new UowExecCreateTask(listener, uaow, context);
+	}
 
 }

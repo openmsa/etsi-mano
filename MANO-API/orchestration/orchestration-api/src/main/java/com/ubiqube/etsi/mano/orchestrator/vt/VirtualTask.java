@@ -34,9 +34,17 @@ public interface VirtualTask<U> {
 
 	String getProviderId();
 
+	String getVimConnectionId();
+
 	U getParameters();
+
+	void setParameters(U u);
 
 	void setSystemBuilder(SystemBuilder db);
 
 	SystemBuilder getSystemBuilder();
+
+	boolean isDeleteTask();
+
+	String getName();
 }

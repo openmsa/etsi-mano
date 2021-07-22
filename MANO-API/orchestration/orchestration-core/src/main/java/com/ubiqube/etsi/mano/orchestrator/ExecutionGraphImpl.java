@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
-import java.util.List;
+import org.jgrapht.ListenableGraph;
 
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
@@ -26,15 +26,22 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface SystemBuilder {
-	List<UnitOfWorkConnectivity> getEdges();
+public class ExecutionGraphImpl implements ExecutionGraph {
 
-	UnitOfWork<?> getSingle();
+	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g;
+	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> r;
 
-	List<UnitOfWork<?>> getIncomingVertex();
+	public ExecutionGraphImpl(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> nr) {
+		this.g = g;
+		this.r = nr;
+	}
 
-	List<UnitOfWork<?>> getOutgoingVertex();
+	public ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> getCreateImplementation() {
+		return g;
+	}
 
-	void add(UnitOfWork<?> src, UnitOfWork<?> dest);
+	public ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> getDeleteImplementation() {
+		return r;
+	}
 
 }

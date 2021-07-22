@@ -14,23 +14,39 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator.entities;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+public enum SystemType {
+	COMPUTE("COMMPUTE"),
+	NETWORK("NETWORK"),
+	DNS("DNS"),
+	STORAGE("STORAGE"),
+	ROUTER("TROUTER"),
+	MONITORING("MONITORING");
 
-	String execute(Context context);
+	private final String value;
 
-	String rollback(Context context);
+	SystemType(final String value) {
+		this.value = value;
+	}
 
-	Class<? extends Node> getNode();
+	@Override
+	@JsonValue
+	public String toString() {
+		return String.valueOf(value);
+	}
+
+	@JsonCreator
+	public static SystemType fromValue(final String text) {
+		for (final SystemType b : SystemType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
+
 }

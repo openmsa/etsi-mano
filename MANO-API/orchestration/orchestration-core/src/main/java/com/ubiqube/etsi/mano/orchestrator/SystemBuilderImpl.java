@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
-import org.jgrapht.graph.DefaultListenableGraph;
-import org.jgrapht.graph.DirectedAcyclicGraph;
 
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
@@ -33,16 +31,16 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
  *
  */
 public class SystemBuilderImpl implements SystemBuilder {
-	private final ListenableGraph<UnitOfWork, UnitOfWorkConnectivity> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(UnitOfWorkConnectivity.class));
-	private UnitOfWork single = null;
+	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g = GraphTools.createGraph();
+	private UnitOfWork<?> single = null;
 
-	public static SystemBuilder of(final UnitOfWork vt) {
+	public static SystemBuilder of(final UnitOfWork<?> vt) {
 		final SystemBuilderImpl ib = new SystemBuilderImpl();
 		ib.single = vt;
 		return ib;
 	}
 
-	public static SystemBuilder of(final UnitOfWork left, final UnitOfWork right) {
+	public static SystemBuilder of(final UnitOfWork<?> left, final UnitOfWork<?> right) {
 		final SystemBuilderImpl ib = new SystemBuilderImpl();
 		ib.g.addVertex(left);
 		ib.g.addVertex(right);
@@ -50,28 +48,29 @@ public class SystemBuilderImpl implements SystemBuilder {
 		return ib;
 	}
 
-	public SystemBuilder edge(final UnitOfWork left, final UnitOfWork right) {
+	public SystemBuilder edge(final UnitOfWork<?> left, final UnitOfWork<?> right) {
 		g.addVertex(left);
 		g.addVertex(right);
 		g.addEdge(left, right);
 		return this;
 	}
 
+	@Override
 	public List<UnitOfWorkConnectivity> getEdges() {
 		return g.edgeSet().stream().collect(Collectors.toList());
 	}
 
 	@Override
-	public UnitOfWork getSingle() {
+	public UnitOfWork<?> getSingle() {
 		return single;
 	}
 
-	public List<UnitOfWork> getVertex() {
+	public List<UnitOfWork<?>> getVertex() {
 		return g.vertexSet().stream().collect(Collectors.toList());
 	}
 
 	@Override
-	public List<UnitOfWork> getIncomingVertex() {
+	public List<UnitOfWork<?>> getIncomingVertex() {
 		if (null != single) {
 			return Arrays.asList(single);
 		}
@@ -79,10 +78,17 @@ public class SystemBuilderImpl implements SystemBuilder {
 	}
 
 	@Override
-	public List<UnitOfWork> getOutgoingVertex() {
+	public List<UnitOfWork<?>> getOutgoingVertex() {
 		if (null != single) {
 			return Arrays.asList(single);
 		}
 		return g.vertexSet().stream().filter(x -> g.outgoingEdgesOf(x).isEmpty()).collect(Collectors.toList());
+	}
+
+	@Override
+	public void add(final UnitOfWork<?> src, final UnitOfWork<?> dest) {
+		g.addVertex(src);
+		g.addVertex(dest);
+		g.addEdge(src, dest);
 	}
 }

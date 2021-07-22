@@ -18,21 +18,18 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.List;
 
-import org.jgrapht.ListenableGraph;
-
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTaskConnectivity;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @param <P>
  *
  */
-public interface Planner {
-	ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent);
+public interface Planner<P> {
+	<U> PreExecutionGraph<U> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, P parameters);
 
-	ListenableGraph<UnitOfWork, UnitOfWorkConnectivity> implement(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf);
+	ExecutionGraph implement(final PreExecutionGraph gf, P parameters);
+
+	OrchExecutionResults execute(ExecutionGraph impl, final OrchExecutionListener listener);
 }

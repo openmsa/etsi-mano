@@ -16,6 +16,12 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+/**
+ * An opaque type.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface ExecutionGraph {
-
+	// Nothing.
 }

@@ -14,23 +14,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+public class UowExecCreateTask extends DexecutorTask {
 
-	String execute(Context context);
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
-	String rollback(Context context);
+	public UowExecCreateTask(final OrchExecutionListener listener, final UnitOfWork<?> uaow, final Context context) {
+		super(listener, uaow, context, true);
+	}
 
-	Class<? extends Node> getNode();
 }

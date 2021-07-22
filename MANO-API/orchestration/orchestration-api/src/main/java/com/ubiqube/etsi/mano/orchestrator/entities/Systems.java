@@ -14,19 +14,45 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.sys;
+package com.ubiqube.etsi.mano.orchestrator.entities;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface MonitoringSystem<P> extends System<P> {
+@Getter
+@Setter
+@Entity
+public class Systems {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id = null;
 
-	String registerAlarm(UUID x, String performanceMetric, Double thresholdValue, Double hysteresis, String url);
+	private String name;
 
-	boolean removeAlarm(String resource);
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<SystemConnections> subSystems;
 
+	public void add(final SystemConnections sc) {
+		if (null == subSystems) {
+			subSystems = new LinkedHashSet<>();
+		}
+		subSystems.add(sc);
+	}
 }

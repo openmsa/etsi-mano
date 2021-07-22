@@ -14,23 +14,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
+import java.io.Serializable;
+import java.util.List;
+
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+public interface Context extends Serializable {
 
-	String execute(Context context);
+	<U> void add(UnitOfWork<U> uaow, String res);
 
-	String rollback(Context context);
+	String get(Class<? extends Node> class1, String toscaName);
 
-	Class<? extends Node> getNode();
+	List<String> getParent(Class<? extends Node> class1, String toscaName);
+
 }

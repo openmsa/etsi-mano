@@ -14,23 +14,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.uow;
+package com.ubiqube.etsi.mano.orchestrator;
 
-import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @param <U> Unit of work Parameter.
  */
-public interface UnitOfWork<U> {
-	VirtualTask<U> getTask();
+public interface OrchestrationService<U> {
 
-	String execute(Context context);
+	SystemBuilder systemBuilderOf(UnitOfWork<U> uow);
 
-	String rollback(Context context);
+	SystemBuilder systemBuilderOf(final UnitOfWork<U> left, final UnitOfWork<U> right);
 
-	Class<? extends Node> getNode();
+	SystemBuilder createEmptySystemBuilder();
 }
