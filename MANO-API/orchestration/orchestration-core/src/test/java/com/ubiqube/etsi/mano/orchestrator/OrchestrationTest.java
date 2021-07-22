@@ -19,10 +19,9 @@ package com.ubiqube.etsi.mano.orchestrator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jgrapht.ListenableGraph;
 import org.junit.jupiter.api.Test;
@@ -65,10 +64,10 @@ public class OrchestrationTest {
 	private Planner getPlanner() {
 		final List<System> systems = Arrays.asList(new SysA(), new SysB());
 
-		implementationService = new ImplementationService(systems, vimManager);
-		final Map<Class<? extends Node>, PlanContributor> contributors = new HashMap<>();
-		contributors.put(Network.class, new ContributorA());
-		contributors.put(Compute.class, new ContributorB());
+		implementationService = new ImplementationService(systems, vimManager, null);
+		final List<PlanContributor> contributors = new ArrayList<>();
+		contributors.add(new ContributorA());
+		contributors.add(new ContributorB());
 		return new PlannerImpl(contributors, implementationService);
 	}
 
@@ -76,7 +75,8 @@ public class OrchestrationTest {
 	void testplanLevel() throws Exception {
 		final Planner p = getPlanner();
 		final List<Class<? extends Node>> planConstituent = Arrays.asList(Network.class, Compute.class, Monitoring.class);
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> plan = p.makePlan(null, planConstituent);
+		final PreExecutionGraph<?> planOpaque = p.makePlan(null, planConstituent, null);
+		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> plan = ((PreExecutionGraphImpl) planOpaque).getCreateGraph();
 		assertEquals(1, plan.edgeSet().size());
 		final VirtualTaskConnectivity o = plan.edgeSet().iterator().next();
 		assertNotNull(o.getSource());
@@ -84,9 +84,10 @@ public class OrchestrationTest {
 		assertEquals(o.getSource().getClass(), ProvAVt.class);
 		assertEquals(o.getTarget().getClass(), ProvBVt.class);
 		//
-		Mockito.lenient().when(vimManager.findVimByVimId("PROVA")).thenReturn(TestFactory.createVimConnectionA());
-		Mockito.lenient().when(vimManager.findVimByVimId("PROVB")).thenReturn(TestFactory.createVimConnectionB());
-		final ListenableGraph<UnitOfWork, UnitOfWorkConnectivity> r = p.implement(plan);
+		Mockito.lenient().when(vimManager.findVimByVimIdAndProviderId("PROVA", "")).thenReturn(TestFactory.createVimConnectionA());
+		Mockito.lenient().when(vimManager.findVimByVimIdAndProviderId("PROVB", "")).thenReturn(TestFactory.createVimConnectionB());
+		final ExecutionGraph rOpaq = p.implement(planOpaque, null);
+		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> r = ((ExecutionGraphImpl) rOpaq).getCreateImplementation();
 		assertEquals(1, r.edgeSet().size());
 		final UnitOfWorkConnectivity e = r.edgeSet().iterator().next();
 		assertNotNull(e.getSource());

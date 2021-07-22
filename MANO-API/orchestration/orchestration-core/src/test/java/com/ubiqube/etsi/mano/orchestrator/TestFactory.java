@@ -16,18 +16,18 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 
 public class TestFactory {
 
-	public static VimConnectionInformation createVimConnectionA() {
-		final VimConnectionInformation vim = new VimConnectionInformation();
+	public static SystemConnections createVimConnectionA() {
+		final SystemConnections vim = new SystemConnections();
 		vim.setVimType("PROVA");
 		return vim;
 	}
 
-	public static VimConnectionInformation createVimConnectionB() {
-		final VimConnectionInformation vim = new VimConnectionInformation();
+	public static SystemConnections createVimConnectionB() {
+		final SystemConnections vim = new SystemConnections();
 		vim.setVimType("PROVB");
 		return vim;
 	}

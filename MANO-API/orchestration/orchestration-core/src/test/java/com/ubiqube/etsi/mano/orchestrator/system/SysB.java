@@ -16,8 +16,10 @@
  */
 package com.ubiqube.etsi.mano.orchestrator.system;
 
+import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilderImpl;
+import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitB;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitC;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
@@ -31,7 +33,7 @@ public class SysB implements System {
 	}
 
 	@Override
-	public <U extends VirtualTask<?>> SystemBuilder getImplementation(final U virtualTask) {
+	public SystemBuilder getImplementation(final OrchestrationService orchestrationService, final VirtualTask virtualTask, final SystemConnections vim) {
 		return SystemBuilderImpl.of(new UnitB(), new UnitC());
 	}
 

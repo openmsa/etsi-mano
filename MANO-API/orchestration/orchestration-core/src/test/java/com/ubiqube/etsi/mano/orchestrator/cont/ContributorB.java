@@ -16,19 +16,23 @@
  */
 package com.ubiqube.etsi.mano.orchestrator.cont;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.PlanContributor;
-import com.ubiqube.etsi.mano.orchestrator.vt.ProvBVt;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
 public class ContributorB implements PlanContributor {
 
 	@Override
-	public List<? extends VirtualTask<?>> contribute(final Bundle bundle) {
-		return Arrays.asList(new ProvBVt());
+	public List contribute(final Bundle bundle, final Object parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class getNode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

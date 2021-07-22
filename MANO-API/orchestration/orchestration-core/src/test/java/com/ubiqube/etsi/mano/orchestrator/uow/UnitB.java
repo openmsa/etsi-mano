@@ -16,6 +16,33 @@
  */
 package com.ubiqube.etsi.mano.orchestrator.uow;
 
+import com.ubiqube.etsi.mano.orchestrator.Context;
+import com.ubiqube.etsi.mano.orchestrator.Task;
+
 public class UnitB implements UnitOfWork {
+
+	@Override
+	public Task getTask() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String execute(final Context context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String rollback(final Context context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class getNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
