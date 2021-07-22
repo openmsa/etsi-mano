@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.repository.jpa;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 
 	private final NamingStrategy namingStrategy;
 
-	public AbstractBinaryRepository(final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy _namingStrategy) {
+	protected AbstractBinaryRepository(final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy _namingStrategy) {
 		super();
 		this.contentManager = contentManager;
 		this.jsonMapper = jsonMapper;
@@ -55,7 +56,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	public final void storeObject(final UUID _id, final String _filename, final Object _object) {
 		try {
 			final String str = jsonMapper.writeValueAsString(_object);
-			storeBinary(_id, _filename, new ByteArrayInputStream(str.getBytes()));
+			storeBinary(_id, _filename, new ByteArrayInputStream(str.getBytes(Charset.defaultCharset())));
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
