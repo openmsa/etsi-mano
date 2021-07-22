@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 import org.jgrapht.ListenableGraph;
@@ -29,7 +30,6 @@ import com.github.dexecutor.core.task.TaskProvider;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 public class PlanExecutor<U extends Task, P> {
 
@@ -44,7 +44,7 @@ public class PlanExecutor<U extends Task, P> {
 	}
 
 	private ExecutionResults<UnitOfWork<U, P>, String> createExecutor(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, final TaskProvider<UnitOfWork<U, P>, String> uowTaskProvider) {
-		final ExecutorService executorService = SpringUtils.getFixedThreadPool(10, "executor");
+		final ExecutorService executorService = Executors.newFixedThreadPool(10);
 		final DexecutorConfig<UnitOfWork<U, P>, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
 		final DefaultDexecutor<UnitOfWork<U, P>, String> executor = new DefaultDexecutor<>(config);

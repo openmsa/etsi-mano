@@ -48,7 +48,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 
 	private final ResourceAllocate nfvo;
 
-	public AbstractGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
+	protected AbstractGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
 		mapper = _mapper;
 		nfvo = _nfvo;
 	}

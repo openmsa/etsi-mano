@@ -196,6 +196,7 @@ public class JsonBeanUtil {
 			final Field field = clazz.getDeclaredField(name);
 			return field.getAnnotation(JsonProperty.class);
 		} catch (NoSuchFieldException | SecurityException e) {
+			LOG.trace("", e);
 			LOG.warn("Could not find field for annotation: {}", name);
 		}
 		return null;

@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
@@ -50,16 +52,20 @@ public interface VnfInstanceService {
 
 	int getNumberOfLiveStorage(final VnfInstance vnfInstance, final VnfStorage x);
 
+	@Nonnull
 	VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId);
 
+	@Nonnull
 	VnfInstance findById(final UUID id);
 
 	VnfInstance save(final VnfInstance vnfInstance);
 
 	void delete(final UUID vnfInstanceId);
 
+	@Nonnull
 	VnfLiveInstance findLiveInstanceByInstantiated(final UUID id);
 
+	@Nonnull
 	VnfLiveInstance save(final VnfLiveInstance vli);
 
 	Optional<VnfLiveInstance> findLiveInstanceById(final UUID vnfLiveInstance);
@@ -80,6 +86,7 @@ public interface VnfInstanceService {
 
 	boolean isInstantiate(UUID id);
 
+	@Nonnull
 	VnfInstance vnfLcmPatch(VnfInstance vnfInstance, String body, String ifMatch);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
