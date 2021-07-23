@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 public interface Planner<P> {
 	<U> PreExecutionGraph<U> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, P parameters);
 
-	ExecutionGraph implement(final PreExecutionGraph gf, P parameters);
+	ExecutionGraph implement(final PreExecutionGraph<?> gf);
 
-	OrchExecutionResults execute(ExecutionGraph impl, final OrchExecutionListener listener);
+	OrchExecutionResults<?> execute(ExecutionGraph impl, final OrchExecutionListener<?> listener);
 }

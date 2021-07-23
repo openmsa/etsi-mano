@@ -77,6 +77,8 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 				ret.addAll(addInstance(x, blueprint, numInst.getScaleInfo(), numInst));
 			} else if (numInst.getCurrent() > numInst.getWanted()) {
 				ret.addAll(removeInstance(x, blueprint, numInst.getScaleInfo(), numInst));
+			} else {
+				// Equal, nothing to do.
 			}
 		});
 		return ret;
@@ -85,15 +87,8 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	private List<ComputeVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ComputeTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final ComputeTask computeTask = new ComputeTask();
-			computeTask.setChangeType(ChangeType.REMOVED);
-			computeTask.setStatus(PlanStatusType.NOT_STARTED);
+			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, x.getTask());
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
-			computeTask.setToscaName(x.getTask().getToscaName());
-			computeTask.setAlias(x.getTask().getAlias());
-			computeTask.setVimResourceId(x.getResourceId());
-			computeTask.setVimConnectionId(x.getVimConnectionId());
-			computeTask.setRemovedVnfLiveInstance(x.getId());
 			computeTask.setVnfCompute(((ComputeTask) x.getTask()).getVnfCompute());
 			return new ComputeVt(computeTask);
 		}).collect(Collectors.toList());
@@ -104,18 +99,11 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		final Deque<VnfLiveInstance> instantiated = vnfInstanceService.getLiveComputeInstanceOf(plan, vnfCompute);
 		final List<ComputeVt> ret = new ArrayList<>();
 		for (int i = 0; i < toDelete; i++) {
-			final ComputeTask computeTask = new ComputeTask();
 			final VnfLiveInstance inst = instantiated.pop();
+			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, inst.getTask());
 			computeTask.setVnfCompute(vnfCompute);
-			computeTask.setChangeType(ChangeType.REMOVED);
-			computeTask.setStatus(PlanStatusType.NOT_STARTED);
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
 			computeTask.setScaleInfo(scaleInfo);
-			computeTask.setToscaName(vnfCompute.getToscaName());
-			computeTask.setAlias(inst.getTask().getAlias());
-			computeTask.setVimResourceId(inst.getResourceId());
-			computeTask.setVimConnectionId(inst.getVimConnectionId());
-			computeTask.setRemovedVnfLiveInstance(inst.getId());
 			ret.add(new ComputeVt(computeTask));
 		}
 		return ret;

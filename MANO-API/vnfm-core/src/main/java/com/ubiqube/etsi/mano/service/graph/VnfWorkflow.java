@@ -70,7 +70,7 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 
 	@Override
 	public OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final VnfBlueprint parameters) {
-		final ExecutionGraph impl = planv2.implement(plan, parameters);
+		final ExecutionGraph impl = planv2.implement(plan);
 		return planv2.execute(impl, new OrchListenetImpl(vnfTaskJpa));
 	}
 

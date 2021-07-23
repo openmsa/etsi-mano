@@ -68,13 +68,9 @@ public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTa
 	private List<DnsZoneVT> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, NetworkTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final DnsZoneTask dnsZoneTask = new DnsZoneTask();
+			final DnsZoneTask dnsZoneTask = createTask(DnsZoneTask::new, x.getTask());
 			dnsZoneTask.setToscaName(NodeNaming.dnsZone());
-			dnsZoneTask.setAlias(x.getTask().getAlias());
-			dnsZoneTask.setChangeType(ChangeType.ADDED);
 			dnsZoneTask.setType(ResourceTypeEnum.DNSZONE);
-			dnsZoneTask.setVimResourceId(x.getResourceId());
-			dnsZoneTask.setVimConnectionId(x.getVimConnectionId());
 			return new DnsZoneVT(dnsZoneTask);
 		}).collect(Collectors.toList());
 	}

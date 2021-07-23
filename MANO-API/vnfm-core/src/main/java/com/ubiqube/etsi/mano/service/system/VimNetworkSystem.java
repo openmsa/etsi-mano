@@ -52,7 +52,7 @@ public class VimNetworkSystem extends AbstractVimSystem<NetworkTask> {
 	}
 
 	@Override
-	SystemBuilder getImplementation(final OrchestrationService orchestrationService, final VirtualTask<NetworkTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	SystemBuilder getImplementation(final OrchestrationService<NetworkTask> orchestrationService, final VirtualTask<NetworkTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		final VirtualLinkUowV2 net = new VirtualLinkUowV2(virtualTask, vim, vimConnectionInformation);
 		final NetworkTask p = virtualTask.getParameters();
 		final Set<VlProtocolData> vlp = p.getVnfVl().getVlProfileEntity().getVirtualLinkProtocolData();

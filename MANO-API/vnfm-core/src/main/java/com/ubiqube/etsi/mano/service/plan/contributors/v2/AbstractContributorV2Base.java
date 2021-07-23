@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.plan.contributors.v2;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.orchestrator.PlanContributor;
@@ -26,11 +27,30 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
 public abstract class AbstractContributorV2Base<U, T extends VirtualTask<U>, P> implements PlanContributor<U, T, P> {
 
+	protected static <U extends VnfTask> U createTask(final Supplier<U> newInstance, final VnfTask t) {
+		final U task = createTask(newInstance);
+		task.setToscaName(t.getToscaName());
+		return task;
+	}
+
 	protected static <U extends VnfTask> U createTask(final Supplier<U> newInstance) {
 		final U task = newInstance.get();
 		task.setStartDate(LocalDateTime.now());
+		task.setChangeType(ChangeType.ADDED);
 		task.setStatus(PlanStatusType.NOT_STARTED);
 		return task;
 	}
 
+	protected static <U extends VnfTask> U createDeleteTask(final Supplier<U> newInstance, final VnfTask t) {
+		final U task = newInstance.get();
+		task.setStartDate(LocalDateTime.now());
+		task.setChangeType(ChangeType.REMOVED);
+		task.setStatus(PlanStatusType.NOT_STARTED);
+		task.setToscaName(t.getToscaName());
+		task.setAlias(t.getAlias());
+		task.setVimResourceId(t.getVimResourceId());
+		task.setVimConnectionId(t.getVimConnectionId());
+		task.setRemovedVnfLiveInstance(t.getId());
+		return task;
+	}
 }

@@ -26,8 +26,13 @@ import com.ubiqube.etsi.mano.service.sys.System;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U> Task parameter.
+ */
 public abstract class AbstractVimSystem<U> implements System<U> {
-
 	@Override
 	public final SystemBuilder getImplementation(final OrchestrationService orchestrationService, final VirtualTask<U> virtualTask, final SystemConnections vimConnectionInformation) {
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
@@ -36,5 +41,5 @@ public abstract class AbstractVimSystem<U> implements System<U> {
 		return getImplementation(orchestrationService, virtualTask, vimConn);
 	}
 
-	abstract SystemBuilder getImplementation(final OrchestrationService orchestrationService, final VirtualTask<U> virtualTask, VimConnectionInformation vimConnectionInformation);
+	abstract SystemBuilder getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, VimConnectionInformation vimConnectionInformation);
 }

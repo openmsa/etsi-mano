@@ -109,7 +109,7 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public ExecutionGraph implement(final PreExecutionGraph g, final Object parameters) {
+	public ExecutionGraph implement(final PreExecutionGraph<?> g) {
 		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> ng = createImplementation(((PreExecutionGraphImpl) g).getCreateGraph());
 		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> nr = createImplementation(((PreExecutionGraphImpl) g).getDeleteGraph());
 		if (LOG.isDebugEnabled()) {
@@ -165,7 +165,7 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public OrchExecutionResults execute(final ExecutionGraph implementation, final OrchExecutionListener listener) {
+	public OrchExecutionResults<?> execute(final ExecutionGraph implementation, final OrchExecutionListener<?> listener) {
 		final ExecutionGraphImpl impl = (ExecutionGraphImpl) implementation;
 		final Context context = new ContextImpl();
 		// Execute delete.
@@ -178,7 +178,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		return convertResults(res);
 	}
 
-	private static OrchExecutionResults convertResults(final ExecutionResults<UnitOfWork<?>, String> res) {
+	private static OrchExecutionResults<?> convertResults(final ExecutionResults<UnitOfWork<?>, String> res) {
 		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).collect(Collectors.toList());
 		return new OrchExecutionResultsImpl(all);
 	}

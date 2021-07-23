@@ -17,19 +17,18 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -474,6 +473,7 @@ public class OpenStackTest {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Extension> exts = os.networking().network().listExtensions();
 		exts.forEach(System.out::println);
+		assertTrue(!exts.isEmpty());
 	}
 
 	@Test
@@ -483,6 +483,7 @@ public class OpenStackTest {
 		os.telemetry().meters().list();
 		os.telemetry().resources().list();
 		os.telemetry().samples().list();
+		assertNotNull(os);
 	}
 
 	@Test
@@ -490,32 +491,14 @@ public class OpenStackTest {
 		final OSClientV3 os = getQueensConnection();
 		final MetricCreate metrics = Builders.gnocchi().metric().archivePolicyName("high").name("test-ovi").resourceId(null).build();
 		os.telemetry().gnocchi().metrics().create(metrics);
+		assertNotNull(os);
 	}
 
 	@Test
 	void testGnocchiDelete() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.telemetry().gnocchi().metrics().delete("7856e791-c918-4f72-814c-b3f18127190b");
+		assertNotNull(os);
 	}
 
-	@Test
-	void testNameUbi1() throws Exception {
-		final SecureRandom random = new SecureRandom();
-		final int leftLimit = 48;
-		final int rightLimit = 122;
-		final int targetStringLength = 128;
-		final String key = random.ints(leftLimit, rightLimit + 1)
-				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))
-				.limit(targetStringLength)
-				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-				.toString();
-		System.out.println(generateKey());
-	}
-
-	private String generateKey() {
-		final SecureRandom random = new SecureRandom();
-		final byte[] bytes = new byte[80];
-		random.nextBytes(bytes);
-		return Base64.encodeBase64String(bytes);
-	}
 }

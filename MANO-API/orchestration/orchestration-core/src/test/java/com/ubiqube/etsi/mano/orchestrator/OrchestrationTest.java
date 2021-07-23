@@ -86,7 +86,7 @@ public class OrchestrationTest {
 		//
 		Mockito.lenient().when(vimManager.findVimByVimIdAndProviderId("PROVA", "")).thenReturn(TestFactory.createVimConnectionA());
 		Mockito.lenient().when(vimManager.findVimByVimIdAndProviderId("PROVB", "")).thenReturn(TestFactory.createVimConnectionB());
-		final ExecutionGraph rOpaq = p.implement(planOpaque, null);
+		final ExecutionGraph rOpaq = p.implement(planOpaque);
 		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> r = ((ExecutionGraphImpl) rOpaq).getCreateImplementation();
 		assertEquals(1, r.edgeSet().size());
 		final UnitOfWorkConnectivity e = r.edgeSet().iterator().next();

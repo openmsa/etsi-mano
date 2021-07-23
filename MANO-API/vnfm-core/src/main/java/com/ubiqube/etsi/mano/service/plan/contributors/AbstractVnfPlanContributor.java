@@ -27,10 +27,10 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 
 public abstract class AbstractVnfPlanContributor implements PlanContributor<VnfPackage, VnfBlueprint, VnfTask, VnfParameters> {
 
-	protected static <U> U createTask(final Supplier<VnfTask> newInstance) {
-		final VnfTask task = newInstance.get();
+	protected static <U extends VnfTask> U createTask(final Supplier<U> newInstance) {
+		final U task = newInstance.get();
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);
-		return (U) task;
+		return task;
 	}
 }

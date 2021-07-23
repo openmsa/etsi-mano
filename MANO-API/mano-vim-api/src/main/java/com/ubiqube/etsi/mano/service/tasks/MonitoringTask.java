@@ -68,4 +68,28 @@ public class MonitoringTask implements VirtualTask<MonitoringTask> {
 		return null;
 	}
 
+	@Override
+	public boolean isDeleteTask() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getVimConnectionId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setParameters(final MonitoringTask u) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
