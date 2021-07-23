@@ -16,11 +16,12 @@
  */
 package com.ubiqube.etsi.mano.service.event;
 
-import java.util.Set;
-
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
+import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 
 /**
@@ -30,12 +31,15 @@ import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
  * @param <P>
  * @param <B>
  */
-public interface Workflow<P extends PackageBase, B extends Blueprint, R extends Report> {
+public interface Workflow<P extends PackageBase, B extends Blueprint, R extends Report, T extends Task> {
 
-	void setWorkflowBlueprint(P bundle, B blueprint, Set<ScaleInfo> newScale);
+	PreExecutionGraph<T> setWorkflowBlueprint(P bundle, B blueprint);
 
 	R execDelete(B localPlan, GenericExecParams params);
 
 	R execCreate(B localPlan, GenericExecParams params);
 
+	OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final B parameters);
+
+	void refresh(PreExecutionGraph<T> prePlan, Blueprint<T, ?> localPlan);
 }

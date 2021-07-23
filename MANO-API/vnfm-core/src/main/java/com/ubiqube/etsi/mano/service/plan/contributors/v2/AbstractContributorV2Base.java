@@ -14,36 +14,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2;
+package com.ubiqube.etsi.mano.service.plan.contributors.v2;
 
-import javax.persistence.Entity;
+import java.time.LocalDateTime;
+import java.util.function.Supplier;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.orchestrator.PlanContributor;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
-@Entity
-public class DnsZoneTask extends VnfTask {
+public abstract class AbstractContributorV2Base<U, T extends VirtualTask<U>, P> implements PlanContributor<U, T, P> {
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private String domainName;
-
-	private VnfVl vnfVl;
-
-	public String getDomainName() {
-		return domainName;
-	}
-
-	public void setDomainName(final String domainName) {
-		this.domainName = domainName;
-	}
-
-	public VnfVl getVnfVl() {
-		return vnfVl;
-	}
-
-	public void setVnfVl(final VnfVl vnfVl) {
-		this.vnfVl = vnfVl;
+	protected static <U extends VnfTask> U createTask(final Supplier<U> newInstance) {
+		final U task = newInstance.get();
+		task.setStartDate(LocalDateTime.now());
+		task.setStatus(PlanStatusType.NOT_STARTED);
+		return task;
 	}
 
 }

@@ -14,36 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2;
+package com.ubiqube.etsi.mano.service.graph;
 
-import javax.persistence.Entity;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.orchestrator.Bundle;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+public class VnfBundleAdapter implements Bundle {
 
-@Entity
-public class DnsZoneTask extends VnfTask {
+	private final VnfPackage vnfPackage;
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private String domainName;
-
-	private VnfVl vnfVl;
-
-	public String getDomainName() {
-		return domainName;
+	public VnfBundleAdapter(final VnfPackage vnfPackage) {
+		this.vnfPackage = vnfPackage;
 	}
 
-	public void setDomainName(final String domainName) {
-		this.domainName = domainName;
+	public VnfPackage getVnfPackage() {
+		return vnfPackage;
 	}
-
-	public VnfVl getVnfVl() {
-		return vnfVl;
-	}
-
-	public void setVnfVl(final VnfVl vnfVl) {
-		this.vnfVl = vnfVl;
-	}
-
 }

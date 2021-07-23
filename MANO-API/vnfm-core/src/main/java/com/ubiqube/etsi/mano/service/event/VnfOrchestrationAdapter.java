@@ -67,8 +67,8 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 	}
 
 	@Override
-	public void createLiveInstance(@NotNull final Instance vnfInstance, final String il, final Task task, @NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, final String vimResourceId) {
-		final VnfLiveInstance vli = new VnfLiveInstance((VnfInstance) vnfInstance, il, (VnfTask) task, (VnfBlueprint) blueprint, task.getVimResourceId());
+	public void createLiveInstance(@NotNull final Instance vnfInstance, final String il, final Task task, @NotNull final Blueprint<? extends Task, ? extends Instance> blueprint) {
+		final VnfLiveInstance vli = new VnfLiveInstance((VnfInstance) vnfInstance, il, (VnfTask) task, (VnfBlueprint) blueprint, task.getVimResourceId(), task.getVimConnectionId());
 		vnfInstancesService.save(vli);
 	}
 

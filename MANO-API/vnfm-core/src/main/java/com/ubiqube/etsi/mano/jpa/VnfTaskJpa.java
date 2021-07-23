@@ -14,36 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2;
+package com.ubiqube.etsi.mano.jpa;
 
-import javax.persistence.Entity;
+import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import org.springframework.data.repository.CrudRepository;
 
-@Entity
-public class DnsZoneTask extends VnfTask {
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private String domainName;
-
-	private VnfVl vnfVl;
-
-	public String getDomainName() {
-		return domainName;
-	}
-
-	public void setDomainName(final String domainName) {
-		this.domainName = domainName;
-	}
-
-	public VnfVl getVnfVl() {
-		return vnfVl;
-	}
-
-	public void setVnfVl(final VnfVl vnfVl) {
-		this.vnfVl = vnfVl;
-	}
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface VnfTaskJpa extends CrudRepository<VnfTask, UUID> {
+	// Nothing.
 }

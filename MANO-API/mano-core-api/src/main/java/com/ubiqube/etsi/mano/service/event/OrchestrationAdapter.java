@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public interface OrchestrationAdapter<B extends Task, V extends Instance> {
 
-	void createLiveInstance(@NotNull Instance instance, String il, Task task, @NotNull Blueprint<? extends Task, ? extends Instance> blueprint, String vimResourceId);
+	void createLiveInstance(@NotNull Instance instance, String il, Task task, @NotNull Blueprint<? extends Task, ? extends Instance> blueprint);
 
 	void deleteLiveInstance(@Nonnull UUID removedLiveInstanceId);
 
@@ -47,6 +47,7 @@ public interface OrchestrationAdapter<B extends Task, V extends Instance> {
 
 	Instance getInstance(@Nonnull Blueprint<B, V> blueprint);
 
+	@NotNull
 	Blueprint<B, V> save(@Nonnull Blueprint blueprint);
 
 	Instance save(@Nonnull Instance instance);

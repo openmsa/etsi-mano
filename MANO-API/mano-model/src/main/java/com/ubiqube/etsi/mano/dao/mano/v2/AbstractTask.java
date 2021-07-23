@@ -53,7 +53,7 @@ public abstract class AbstractTask implements Task {
 	@FullTextField
 	private String toscaName;
 
-	private String toscaId;
+	private String toscaId = UUID.randomUUID().toString();
 	private String state;
 	@FullTextField
 	private String alias;
@@ -67,6 +67,7 @@ public abstract class AbstractTask implements Task {
 	private PlanStatusType status;
 	@FullTextField
 	private String vimResourceId;
+	private String vimConnectionId;
 
 	public abstract void setId(final UUID id);
 
@@ -90,6 +91,7 @@ public abstract class AbstractTask implements Task {
 		return changeType;
 	}
 
+	@Override
 	public void setChangeType(final ChangeType changeType) {
 		this.changeType = changeType;
 	}
@@ -168,6 +170,15 @@ public abstract class AbstractTask implements Task {
 	@Override
 	public void setState(final String state) {
 		this.state = state;
+	}
+
+	@Override
+	public String getVimConnectionId() {
+		return vimConnectionId;
+	}
+
+	public void setVimConnectionId(final String vimConnectionId) {
+		this.vimConnectionId = vimConnectionId;
 	}
 
 }

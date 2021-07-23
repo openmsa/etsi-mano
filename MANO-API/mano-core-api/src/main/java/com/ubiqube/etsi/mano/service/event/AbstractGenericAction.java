@@ -39,6 +39,9 @@ import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
+import com.ubiqube.etsi.mano.orchestrator.Planner;
+import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
@@ -54,6 +57,8 @@ public abstract class AbstractGenericAction {
 	private final Workflow vnfWorkflow;
 
 	private final VimResourceService vimResourceService;
+
+	private Planner planner;
 
 	OrchestrationAdapter<?, ?> orchestrationAdapter;
 
@@ -88,7 +93,7 @@ public abstract class AbstractGenericAction {
 		}
 		final PackageBase vnfPkg = orchestrationAdapter.getPackage(vnfInstance);
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
-		vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint, newScale);
+		final PreExecutionGraph prePlan = vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint);
 		Blueprint<?, ?> localPlan = orchestrationAdapter.save(blueprint);
 		orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_PROCESSING, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
@@ -99,14 +104,12 @@ public abstract class AbstractGenericAction {
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		//
 		final GenericExecParams vparams = orchestrationAdapter.createParameter(vimConnection, vim, new HashMap<>(), null);
-		final Report removeResults = vnfWorkflow.execDelete(localPlan, vparams);
-		setLiveSatus(localPlan, vnfInstance, removeResults);
-		// Create plan
-		final GenericExecParams params = buildContext(vimConnection, vim, localPlan, vnfInstance);
-		final Report createResults = vnfWorkflow.execCreate(localPlan, params);
-		setLiveSatus(localPlan, vnfInstance, createResults);
+		vnfWorkflow.refresh(prePlan, localPlan);
+		final OrchExecutionResults res = vnfWorkflow.execute(prePlan, localPlan);
+		localPlan = orchestrationAdapter.getBluePrint(localPlan.getId());
+		setLiveSatus(localPlan, vnfInstance, res);
 		//
-		setResultLcmInstance(localPlan, createResults);
+		setResultLcmInstance(localPlan, res);
 		if (OperationStatusType.COMPLETED == localPlan.getOperationStatus()) {
 			setInstanceStatus(vnfInstance, localPlan, newScale);
 		}
@@ -152,8 +155,8 @@ public abstract class AbstractGenericAction {
 		return scaleInfos.stream().noneMatch(x -> x.getAspectId().equals(aspectId));
 	}
 
-	private static void setResultLcmInstance(@NotNull final Blueprint<?, ?> blueprint, final Report createResults) {
-		if (createResults.getErrored().isEmpty()) {
+	private static void setResultLcmInstance(@NotNull final Blueprint<?, ?> blueprint, final OrchExecutionResults<?> res) {
+		if (res.getErrored().isEmpty()) {
 			blueprint.setOperationStatus(OperationStatusType.COMPLETED);
 		} else {
 			blueprint.setOperationStatus(OperationStatusType.FAILED);
@@ -163,7 +166,7 @@ public abstract class AbstractGenericAction {
 
 	public final void terminate(@Nonnull final UUID blueprintId) {
 		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
+		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
 			LOG.info("Terminate {} Success...", blueprintId);
@@ -213,10 +216,10 @@ public abstract class AbstractGenericAction {
 		}
 	}
 
-	private void setLiveSatus(@NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, @NotNull final Instance vnfInstance, final Report createResults) {
+	private void setLiveSatus(@NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, @NotNull final Instance vnfInstance, final OrchExecutionResults<Task> res) {
 		LOG.info("Creating / deleting live instances.");
-		createResults.getSuccess().forEach(x -> {
-			final Task rhe = x.getTask();
+		res.getSuccess().forEach(x -> {
+			final Task rhe = x.getTask().getTask().getParameters();
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
 				String il = null;
@@ -224,9 +227,9 @@ public abstract class AbstractGenericAction {
 					il = rhe.getScaleInfo().getAspectId();
 				}
 				if (null != rhe.getId()) {
-					orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint, rhe.getVimResourceId());
+					orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {
-					LOG.warn("Could not store: {}", x.getTask().getToscaName());
+					LOG.warn("Could not store: {}", x.getTask().getTask().getParameters().getToscaName());
 				}
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());

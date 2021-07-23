@@ -55,6 +55,8 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 	 */
 	private String resourceId;
 
+	private String vimConnectionId;
+
 	@Embedded
 	private Audit audit;
 
@@ -62,13 +64,14 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 		// Nothing.
 	}
 
-	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfTask _task, final VnfBlueprint _blueprint, final String _resourceId) {
+	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfTask _task, final VnfBlueprint _blueprint, final String _resourceId, final String vimConnectionId) {
 		super();
 		this.vnfInstance = vnfInstance;
 		this.instantiationLevel = instantiationLevel;
-		blueprint = _blueprint;
-		task = _task;
-		resourceId = _resourceId;
+		this.blueprint = _blueprint;
+		this.task = _task;
+		this.resourceId = _resourceId;
+		this.vimConnectionId = vimConnectionId;
 	}
 
 	@Override
@@ -118,6 +121,14 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 
 	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
+	}
+
+	public String getVimConnectionId() {
+		return vimConnectionId;
+	}
+
+	public void setVimConnectionId(final String vimConnectionId) {
+		this.vimConnectionId = vimConnectionId;
 	}
 
 	@Override

@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
@@ -25,38 +24,54 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.jpa.VnfTaskJpa;
+import com.ubiqube.etsi.mano.orchestrator.ExecutionGraph;
+import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
+import com.ubiqube.etsi.mano.orchestrator.Planner;
+import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
-import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
-import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
 import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
 
 @Service
-public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport> {
+public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport, VnfTask> {
 	private final VnfPlanner planner;
+	private final Planner<VnfBlueprint> planv2;
 	private final VnfPlanExecutor executor;
+	private final VnfTaskJpa vnfTaskJpa;
 	private final List<AbstractVnfPlanContributor> planContributors;
 
-	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final List<AbstractVnfPlanContributor> _planContributors) {
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final VnfTaskJpa vnfTaskJpa, final List<AbstractVnfPlanContributor> _planContributors, final Planner<VnfBlueprint> planv2) {
 		this.planner = planner;
 		this.executor = executor;
 		planContributors = _planContributors;
+		this.vnfTaskJpa = vnfTaskJpa;
+		this.planv2 = planv2;
 	}
 
 	@Override
-	public void setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint, final Set<ScaleInfo> scaling) {
-		final WfConfiguration wfc = new WfConfiguration(planContributors);
-		final List<NodeConnectivity> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
-		planner.doPlan(bundle, blueprint, scaling, conns);
+	public PreExecutionGraph<VnfTask> setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint) {
+		final List<Class<? extends Node>> planConstituent = planContributors.stream().map(AbstractVnfPlanContributor::getContributionType).collect(Collectors.toList());
+		final PreExecutionGraph<VnfTask> plan = planv2.makePlan(new VnfBundleAdapter(bundle), planConstituent, blueprint);
+		plan.getPreTasks().stream().map(VirtualTask::getParameters).forEach(blueprint::addTask);
+		return plan;
+	}
+
+	@Override
+	public OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final VnfBlueprint parameters) {
+		final ExecutionGraph impl = planv2.implement(plan, parameters);
+		return planv2.execute(impl, new OrchListenetImpl(vnfTaskJpa));
 	}
 
 	@Override
@@ -73,6 +88,18 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 		GraphTools.exportGraph(graph, "vnf-del.dot");
 		final ExecutionResults<UnitOfWork<VnfTask, VnfParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>((VnfParameters) vparams));
 		return new VnfReport(removeResults);
+	}
+
+	@Override
+	public void refresh(final PreExecutionGraph<VnfTask> prePlan, final Blueprint<VnfTask, ?> localPlan) {
+		prePlan.getPreTasks().forEach(x -> {
+			final VnfTask task = find(x.getParameters().getToscaId(), localPlan);
+			x.setParameters(task);
+		});
+	}
+
+	private static VnfTask find(final String id, final Blueprint<VnfTask, ?> localPlan) {
+		return localPlan.getTasks().stream().filter(x -> x.getToscaId().equals(id)).findFirst().orElseThrow();
 	}
 
 }
