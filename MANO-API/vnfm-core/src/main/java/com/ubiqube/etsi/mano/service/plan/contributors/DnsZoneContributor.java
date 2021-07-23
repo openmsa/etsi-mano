@@ -33,15 +33,15 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.graph.NodeNaming;
 import com.ubiqube.etsi.mano.service.graph.vnfm.DnsZoneUow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsZone;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class DnsZoneContributor extends AbstractVnfPlanContributor {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
@@ -85,8 +85,8 @@ public class DnsZoneContributor extends AbstractVnfPlanContributor {
 	@Override
 	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
 		return tasks.stream()
-				.filter(x -> x instanceof DnsZoneTask)
-				.map(x -> (DnsZoneTask) x)
+				.filter(DnsZoneTask.class::isInstance)
+				.map(DnsZoneTask.class::cast)
 				.map(DnsZoneUow::new)
 				.collect(Collectors.toList());
 	}

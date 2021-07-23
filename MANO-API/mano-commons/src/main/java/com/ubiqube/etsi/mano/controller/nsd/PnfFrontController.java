@@ -28,13 +28,19 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 
 import ma.glasnost.orika.MapperFacade;
-
+/**
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
 public class PnfFrontController {
 
 	private static final Set<String> PNFD_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));

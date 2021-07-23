@@ -9,15 +9,12 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+	<groupId>com.ubiqube.mano.service.mon</groupId>
 	<artifactId>mano-mon-webapp</artifactId>
 	<name>mano-mon-webapp</name>
 	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 	<build>
 		<finalName>${artifactId}</finalName>
 		<plugins>

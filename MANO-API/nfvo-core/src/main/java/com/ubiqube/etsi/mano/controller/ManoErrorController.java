@@ -39,16 +39,10 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller
 @ApiIgnore
 public class ManoErrorController extends AbstractErrorController {
+	private static final Logger LOG = LoggerFactory.getLogger(ManoErrorController.class);
 
 	public ManoErrorController(final ErrorAttributes errorAttributes) {
 		super(errorAttributes);
-	}
-
-	private static final Logger LOG = LoggerFactory.getLogger(ManoErrorController.class);
-
-	@Override
-	public String getErrorPath() {
-		return "/error";
 	}
 
 	@RequestMapping("/error")

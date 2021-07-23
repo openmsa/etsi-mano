@@ -9,7 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<artifactId>etsi-models</artifactId>
+	<artifactId>etsi-models-aggregator</artifactId>
 	<description>Build document for ETSI-MANO model 2.6.1</description>
 	<packaging>pom</packaging>
 	<properties>
@@ -19,5 +19,7 @@
 	<modules>
 		<module>2.6.1</module>
 		<module>2.7.1</module>
+		<module>2.8.1</module>
+		<module>3.3.1</module>
 	</modules>
 </project>

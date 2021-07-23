@@ -26,13 +26,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Parameters for authentication/authorization using BASIC. Shall be present if
- * authType is \&quot;BASIC\&quot; and the contained information has not been
- * provisioned out of band. Shall be absent otherwise.
+ * Parameters for authentication/authorization using BASIC. Shall be present if authType is \&quot;BASIC\&quot; and the contained information has not been provisioned out of band. Shall be absent otherwise.
  */
 @ApiModel(description = "Parameters for authentication/authorization using BASIC. Shall be present if authType is \"BASIC\" and the contained information has not been provisioned out of band. Shall be absent otherwise. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class SubscriptionAuthenticationParamsBasic {
 	@JsonProperty("userName")
@@ -47,8 +44,7 @@ public class SubscriptionAuthenticationParamsBasic {
 	}
 
 	/**
-	 * Username to be used in HTTP Basic authentication. Shall be present if it has
-	 * not been provisioned out of band.
+	 * Username to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band.
 	 *
 	 * @return userName
 	 **/
@@ -68,8 +64,7 @@ public class SubscriptionAuthenticationParamsBasic {
 	}
 
 	/**
-	 * Password to be used in HTTP Basic authentication. Shall be present if it has
-	 * not been provisioned out of band.
+	 * Password to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band.
 	 *
 	 * @return password
 	 **/
@@ -113,8 +108,7 @@ public class SubscriptionAuthenticationParamsBasic {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

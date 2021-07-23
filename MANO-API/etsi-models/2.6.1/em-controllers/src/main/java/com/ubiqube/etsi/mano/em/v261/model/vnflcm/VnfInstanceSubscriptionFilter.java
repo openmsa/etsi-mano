@@ -34,7 +34,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents subscription filter criteria to match VNF instances. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfInstanceSubscriptionFilter {
 	@JsonProperty("vnfdIds")
@@ -67,11 +66,7 @@ public class VnfInstanceSubscriptionFilter {
 	}
 
 	/**
-	 * If present, match VNF instances that were created based on a VNFD identified
-	 * by one of the vnfdId values listed in this attribute. The attributes
-	 * \"vnfdIds\" and \"vnfProductsFromProviders\" are alternatives to reference to
-	 * VNF instances that are based on certain VNFDs in a filter. They should not be
-	 * used both in the same filter instance, but one alternative should be chosen.
+	 * If present, match VNF instances that were created based on a VNFD identified by one of the vnfdId values listed in this attribute. The attributes \"vnfdIds\" and \"vnfProductsFromProviders\" are alternatives to reference to VNF instances that are based on certain VNFDs in a filter. They should not be used both in the same filter instance, but one alternative should be chosen.
 	 *
 	 * @return vnfdIds
 	 **/
@@ -99,11 +94,7 @@ public class VnfInstanceSubscriptionFilter {
 	}
 
 	/**
-	 * If present, match VNF instances that belong to VNF products from certain
-	 * providers. The attributes \"vnfdIds\" and \"vnfProductsFromProviders\" are
-	 * alternatives to reference to VNF instances that are based on certain VNFDs in
-	 * a filter. They should not be used both in the same filter instance, but one
-	 * alternative should be chosen.
+	 * If present, match VNF instances that belong to VNF products from certain providers. The attributes \"vnfdIds\" and \"vnfProductsFromProviders\" are alternatives to reference to VNF instances that are based on certain VNFDs in a filter. They should not be used both in the same filter instance, but one alternative should be chosen.
 	 *
 	 * @return vnfProductsFromProviders
 	 **/
@@ -133,11 +124,7 @@ public class VnfInstanceSubscriptionFilter {
 	}
 
 	/**
-	 * If present, match VNF instances with an instance identifier listed in this
-	 * attribute. The attributes \"vnfInstanceIds\" and \"vnfInstanceNames\" are
-	 * alternatives to reference to particular VNF Instances in a filter. They
-	 * should not be used both in the same filter instance, but one alternative
-	 * should be chosen.
+	 * If present, match VNF instances with an instance identifier listed in this attribute. The attributes \"vnfInstanceIds\" and \"vnfInstanceNames\" are alternatives to reference to particular VNF Instances in a filter. They should not be used both in the same filter instance, but one alternative should be chosen.
 	 *
 	 * @return vnfInstanceIds
 	 **/
@@ -165,11 +152,7 @@ public class VnfInstanceSubscriptionFilter {
 	}
 
 	/**
-	 * If present, match VNF instances with a VNF Instance Name listed in this
-	 * attribute. The attributes \"vnfInstanceIds\" and \"vnfInstanceNames\" are
-	 * alternatives to reference to particular VNF Instances in a filter. They
-	 * should not be used both in the same filter instance, but one alternative
-	 * should be chosen.
+	 * If present, match VNF instances with a VNF Instance Name listed in this attribute. The attributes \"vnfInstanceIds\" and \"vnfInstanceNames\" are alternatives to reference to particular VNF Instances in a filter. They should not be used both in the same filter instance, but one alternative should be chosen.
 	 *
 	 * @return vnfInstanceNames
 	 **/
@@ -217,8 +200,7 @@ public class VnfInstanceSubscriptionFilter {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

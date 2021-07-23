@@ -24,6 +24,16 @@ import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.CpProtocolDataEntity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -45,71 +55,5 @@ public class VnfInstantiatedCompute extends VnfInstantiatedBase {
 	private Set<String> addedStorageResourceIds = null;
 
 	private Set<String> removedStorageResourceIds = null;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public List<String> getStorageResourceIds() {
-		return storageResourceIds;
-	}
-
-	public void setStorageResourceIds(final List<String> storageResourceIds) {
-		this.storageResourceIds = storageResourceIds;
-	}
-
-	public Set<CpProtocolDataEntity> getVnfcCpInfo() {
-		return vnfcCpInfo;
-	}
-
-	public void setVnfcCpInfo(final Set<CpProtocolDataEntity> vnfcCpInfo) {
-		this.vnfcCpInfo = vnfcCpInfo;
-	}
-
-	public String getFlavorId() {
-		return flavorId;
-	}
-
-	public void setFlavorId(final String flavorId) {
-		this.flavorId = flavorId;
-	}
-
-	public String getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(final String imageId) {
-		this.imageId = imageId;
-	}
-
-	public Set<String> getAffectedVnfcCpIds() {
-		return affectedVnfcCpIds;
-	}
-
-	public void setAffectedVnfcCpIds(final Set<String> affectedVnfcCpIds) {
-		this.affectedVnfcCpIds = affectedVnfcCpIds;
-	}
-
-	public Set<String> getAddedStorageResourceIds() {
-		return addedStorageResourceIds;
-	}
-
-	public void setAddedStorageResourceIds(final Set<String> addedStorageResourceIds) {
-		this.addedStorageResourceIds = addedStorageResourceIds;
-	}
-
-	public Set<String> getRemovedStorageResourceIds() {
-		return removedStorageResourceIds;
-	}
-
-	public void setRemovedStorageResourceIds(final Set<String> removedStorageResourceIds) {
-		this.removedStorageResourceIds = removedStorageResourceIds;
-	}
 
 }

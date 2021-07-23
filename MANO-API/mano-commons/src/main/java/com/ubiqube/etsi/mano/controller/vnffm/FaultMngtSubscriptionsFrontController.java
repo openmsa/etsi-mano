@@ -25,11 +25,17 @@ import java.util.function.Function;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
-
+/**
+ * 
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
 public class FaultMngtSubscriptionsFrontController {
 	private final SubscriptionServiceV2 subscriptionService;
 

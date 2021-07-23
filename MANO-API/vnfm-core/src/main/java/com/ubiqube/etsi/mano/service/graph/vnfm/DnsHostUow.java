@@ -20,10 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsHostTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsHost;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsHost;
 
 public class DnsHostUow extends VnfAbstractUnitOfWork {
 

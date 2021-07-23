@@ -34,7 +34,6 @@ import io.swagger.annotations.ApiModelProperty;
  * InstantiateVnfRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class InstantiateVnfRequest {
 	@JsonProperty("flavourId")
@@ -87,9 +86,7 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Identifier of the instantiation level of the deployment flavour to be
-	 * instantiated. If not present, the default instantiation level as declared in
-	 * the VNFD is instantiated.
+	 * Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated.
 	 *
 	 * @return instantiationLevelId
 	 **/
@@ -169,8 +166,7 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Localization language of the VNF to be instantiated. The value shall comply
-	 * with the format defined in IETF RFC 5646.
+	 * Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646.
 	 *
 	 * @return localizationLanguage
 	 **/
@@ -190,9 +186,7 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Additional input parameters for the instantiation process, specific to the
-	 * VNF being instantiated, as declared in the VNFD as part of
-	 * \"InstantiateVnfOpConfig\".
+	 * Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -214,10 +208,7 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * If present, this attribute provides values for the \"extensions\" attribute
-	 * in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same
-	 * key exists in the VnfInstance data structure, the VNFM shall replace its
-	 * value with the value passed in the InstantiateVnfRequest data structure.
+	 * If present, this attribute provides values for the \"extensions\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure.
 	 *
 	 * @return extensions
 	 **/
@@ -273,8 +264,7 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

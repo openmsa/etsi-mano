@@ -22,9 +22,9 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Storage;
 
 public class StorageUow extends VnfAbstractUnitOfWork {
 	/** Serial. */

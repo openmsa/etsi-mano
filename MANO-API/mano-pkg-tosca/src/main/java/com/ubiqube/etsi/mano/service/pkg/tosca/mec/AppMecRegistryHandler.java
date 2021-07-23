@@ -29,8 +29,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
 /**
@@ -39,7 +40,7 @@ import com.ubiqube.parser.tosca.csar.CsarParser;
  *
  */
 @Service
-public class AppMecRegistryHandler implements RegistryHandler<AppToscaProvider> {
+public class AppMecRegistryHandler implements PackageDescriptor<AppToscaProvider> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppMecRegistryHandler.class);
 
@@ -83,12 +84,12 @@ public class AppMecRegistryHandler implements RegistryHandler<AppToscaProvider> 
 	}
 
 	@Override
-	public String getName() {
-		return "Ubique tosca for MEC.";
+	public String getProviderName() {
+		return "TOSCA-MEC";
 	}
 
 	@Override
-	public AppToscaProvider getNewInstance(final byte[] data) {
+	public AppToscaProvider getNewReaderInstance(final byte[] data) {
 		return new AppToscaProvider(data);
 	}
 
@@ -99,5 +100,11 @@ public class AppMecRegistryHandler implements RegistryHandler<AppToscaProvider> 
 		mapper.registerModule(module);
 
 		return mapper;
+	}
+
+	@Override
+	public ExecutionGraph getBlueprint() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

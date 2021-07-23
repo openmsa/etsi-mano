@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.vnfm.v281.model.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -122,7 +123,7 @@ public class VnfPkgInfo {
 	private List<String> vnfmInfo = null;
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	@JsonProperty("onboardingFailureDetails")
 	private ProblemDetails2 onboardingFailureDetails = null;
@@ -494,7 +495,7 @@ public class VnfPkgInfo {
 		this.vnfmInfo = vnfmInfo;
 	}
 
-	public VnfPkgInfo userDefinedData(final KeyValuePairs userDefinedData) {
+	public VnfPkgInfo userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -508,11 +509,11 @@ public class VnfPkgInfo {
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

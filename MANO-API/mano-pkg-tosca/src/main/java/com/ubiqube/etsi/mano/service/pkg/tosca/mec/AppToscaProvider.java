@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.capabilities.nfv.VirtualCompute;
@@ -54,7 +54,7 @@ import tosca.policies.mec.DnsRuleDescriptor;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class AppToscaProvider extends AbstractPackageProvider implements AppPackageProvider {
+public class AppToscaProvider extends AbstractPackageReader implements AppPackageProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppToscaProvider.class);
 

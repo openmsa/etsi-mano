@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the information that allows addressing a virtualised
- * resource that is used by an internal VL instance in a VNF instance.
+ * This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance.
  */
 @ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfVirtualLinkResourceInfo {
 	@JsonProperty("id")
@@ -130,8 +128,7 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * The reservation identifier applicable to the resource. It shall be present
-	 * when an applicable reservation exists.
+	 * The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists.
 	 *
 	 * @return reservationId
 	 **/
@@ -159,9 +156,7 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * Links ports of this VL. Shall be present when the linkPort is used for
-	 * external connectivity by the VNF (refer to VnfLinkPortInfo). May be present
-	 * otherwise.
+	 * Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise.
 	 *
 	 * @return vnfLinkPorts
 	 **/
@@ -237,8 +232,7 @@ public class VnfVirtualLinkResourceInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

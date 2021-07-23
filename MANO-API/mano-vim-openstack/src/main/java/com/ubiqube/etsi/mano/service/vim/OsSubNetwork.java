@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
-import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 
 public class OsSubNetwork implements Node {
 	// Nothng.

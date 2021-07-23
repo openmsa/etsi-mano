@@ -34,7 +34,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "Links to resources related to this resource. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfInstanceLinks {
 	@JsonProperty("self")
@@ -118,9 +117,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Instantiate VNF task\" resource, if the related operation is
-	 * possible based on the current status of this VNF instance resource (i.e. VNF
-	 * instance in NOT_INSTANTIATED state).
+	 * Link to the \"Instantiate VNF task\" resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance in NOT_INSTANTIATED state).
 	 *
 	 * @return instantiate
 	 **/
@@ -142,9 +139,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Terminate VNF task\" resource, if the related operation is
-	 * possible based on the current status of this VNF instance resource (i.e. VNF
-	 * instance is in INSTANTIATED state).
+	 * Link to the \"Terminate VNF task\" resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return terminate
 	 **/
@@ -166,9 +161,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Scale VNF task\" resource, if the related operation is
-	 * supported for this VNF instance, and is possible based on the current status
-	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
+	 * Link to the \"Scale VNF task\" resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return scale
 	 **/
@@ -190,9 +183,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Scale VNF to Level task\" resource, if the related operation is
-	 * supported for this VNF instance, and is possible based on the current status
-	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
+	 * Link to the \"Scale VNF to Level task\" resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return scaleToLevel
 	 **/
@@ -214,9 +205,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Change VNF flavour task\" resource, if the related operation is
-	 * supported for this VNF instance, and is possible based on the current status
-	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
+	 * Link to the \"Change VNF flavour task\" resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return changeFlavour
 	 **/
@@ -238,9 +227,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Heal VNF task\" resource, if the related operation is supported
-	 * for this VNF instance, and is possible based on the current status of this
-	 * VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
+	 * Link to the \"Heal VNF task\" resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return heal
 	 **/
@@ -262,9 +249,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Operate VNF task\" resource, if the related operation is
-	 * supported for this VNF instance, and is possible based on the current status
-	 * of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
+	 * Link to the \"Operate VNF task\" resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return operate
 	 **/
@@ -286,9 +271,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Link to the \"Change external VNF connectivity task\" resource, if the
-	 * related operation is possible based on the current status of this VNF
-	 * instance resource (i.e. VNF instance is in INSTANTIATED state).
+	 * Link to the \"Change external VNF connectivity task\" resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state).
 	 *
 	 * @return changeExtConn
 	 **/
@@ -350,8 +333,7 @@ public class VnfInstanceLinks {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -34,12 +34,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type provides information about added, deleted, modified and temporary
- * VNFCs.
+ * This type provides information about added, deleted, modified and temporary VNFCs.
  */
 @ApiModel(description = "This type provides information about added, deleted, modified and temporary VNFCs. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class AffectedVnfc {
 	@JsonProperty("id")
@@ -49,9 +47,7 @@ public class AffectedVnfc {
 	private String vduId = null;
 
 	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long
-	 * as the temporary resource exists.
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long as the temporary resource exists.
 	 */
 	public enum ChangeTypeEnum {
 		ADDED("ADDED"),
@@ -112,8 +108,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * Identifier of the Vnfc instance, identifying the applicable
-	 * \"vnfcResourceInfo\" entry in the \"VnfInstance\" data type.
+	 * Identifier of the Vnfc instance, identifying the applicable \"vnfcResourceInfo\" entry in the \"VnfInstance\" data type.
 	 *
 	 * @return id
 	 **/
@@ -155,9 +150,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long
-	 * as the temporary resource exists.
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long as the temporary resource exists.
 	 *
 	 * @return changeType
 	 **/
@@ -178,9 +171,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * Reference to the VirtualCompute resource. Detailed information is (for new
-	 * and modified resources) or has been (for removed resources) available from
-	 * the VIM.
+	 * Reference to the VirtualCompute resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM.
 	 *
 	 * @return computeResource
 	 **/
@@ -203,9 +194,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * Metadata about this resource. The content of this attribute shall be a copy
-	 * of the content of the \"metadata\" attribute of the VnfcResourceInfo
-	 * structure.
+	 * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfcResourceInfo structure.
 	 *
 	 * @return metadata
 	 **/
@@ -235,10 +224,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * Identifiers of CP(s) of the VNFC instance that were affected by the change.
-	 * Shall be present for those affected CPs of the VNFC instance that are
-	 * associated to an external CP of the VNF instance. May be present for further
-	 * affected CPs of the VNFC instance.
+	 * Identifiers of CP(s) of the VNFC instance that were affected by the change. Shall be present for those affected CPs of the VNFC instance that are associated to an external CP of the VNF instance. May be present for further affected CPs of the VNFC instance.
 	 *
 	 * @return affectedVnfcCpIds
 	 **/
@@ -266,10 +252,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * References to VirtualStorage resources that have been added. Each value
-	 * refers to a VirtualStorageResourceInfo item in the VnfInstance that was added
-	 * to the VNFC. It shall be provided if at least one storage resource was added
-	 * to the VNFC.
+	 * References to VirtualStorage resources that have been added. Each value refers to a VirtualStorageResourceInfo item in the VnfInstance that was added to the VNFC. It shall be provided if at least one storage resource was added to the VNFC.
 	 *
 	 * @return addedStorageResourceIds
 	 **/
@@ -297,10 +280,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * References to VirtualStorage resources that have been removed. The value
-	 * contains the identifier of a VirtualStorageResourceInfo item that has been
-	 * removed from the VNFC, and might no longer exist in the VnfInstance. It shall
-	 * be provided if at least one storage resource was removed from the VNFC.
+	 * References to VirtualStorage resources that have been removed. The value contains the identifier of a VirtualStorageResourceInfo item that has been removed from the VNFC, and might no longer exist in the VnfInstance. It shall be provided if at least one storage resource was removed from the VNFC.
 	 *
 	 * @return removedStorageResourceIds
 	 **/
@@ -356,8 +336,7 @@ public class AffectedVnfc {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

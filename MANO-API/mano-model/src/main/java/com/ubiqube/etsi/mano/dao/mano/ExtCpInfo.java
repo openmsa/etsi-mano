@@ -32,6 +32,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class ExtCpInfo implements Serializable {
 	/** Serial. */
@@ -42,12 +52,19 @@ public class ExtCpInfo implements Serializable {
 	private UUID id = null;
 
 	private String cpdId = null;
+	// 3.3.1
+	private String cpConfigId;
+	// 3.3.1
+	private String vnfdId;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<CpProtocolDataEntity> cpProtocolInfo = null;
 
+	@Deprecated
 	@OneToOne
 	private CpProtocolDataEntity extLinkPortId = null;
+	// 2.7.1 Type change
+	private CpProtocolDataEntity extLinkPortId271;
 
 	@ElementCollection
 	private Map<String, String> metadata = new HashMap<>();
@@ -55,61 +72,5 @@ public class ExtCpInfo implements Serializable {
 	private String associatedVnfcCpId = null;
 
 	private String associatedVnfVirtualLinkId = null;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getCpdId() {
-		return cpdId;
-	}
-
-	public void setCpdId(final String cpdId) {
-		this.cpdId = cpdId;
-	}
-
-	public Set<CpProtocolDataEntity> getCpProtocolInfo() {
-		return cpProtocolInfo;
-	}
-
-	public void setCpProtocolInfo(final Set<CpProtocolDataEntity> cpProtocolInfo) {
-		this.cpProtocolInfo = cpProtocolInfo;
-	}
-
-	public CpProtocolDataEntity getExtLinkPortId() {
-		return extLinkPortId;
-	}
-
-	public void setExtLinkPortId(final CpProtocolDataEntity extLinkPortId) {
-		this.extLinkPortId = extLinkPortId;
-	}
-
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final Map<String, String> metadata) {
-		this.metadata = metadata;
-	}
-
-	public String getAssociatedVnfcCpId() {
-		return associatedVnfcCpId;
-	}
-
-	public void setAssociatedVnfcCpId(final String associatedVnfcCpId) {
-		this.associatedVnfcCpId = associatedVnfcCpId;
-	}
-
-	public String getAssociatedVnfVirtualLinkId() {
-		return associatedVnfVirtualLinkId;
-	}
-
-	public void setAssociatedVnfVirtualLinkId(final String associatedVnfVirtualLinkId) {
-		this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
-	}
 
 }

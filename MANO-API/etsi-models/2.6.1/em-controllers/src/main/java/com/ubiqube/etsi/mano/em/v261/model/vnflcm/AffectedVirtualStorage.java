@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type provides information about added, deleted, modified and temporary
- * virtual storage resources.
+ * This type provides information about added, deleted, modified and temporary virtual storage resources.
  */
 @ApiModel(description = "This type provides information about added, deleted, modified and temporary virtual storage resources. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class AffectedVirtualStorage {
 	@JsonProperty("id")
@@ -47,9 +45,7 @@ public class AffectedVirtualStorage {
 	private String virtualStorageDescId = null;
 
 	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure
-	 * exists as long as the temporary resource exists.
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists.
 	 */
 	public enum ChangeTypeEnum {
 		ADDED("ADDED"),
@@ -98,8 +94,7 @@ public class AffectedVirtualStorage {
 	}
 
 	/**
-	 * Identifier of the storage instance, identifying the applicable
-	 * \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type.
+	 * Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type.
 	 *
 	 * @return id
 	 **/
@@ -141,9 +136,7 @@ public class AffectedVirtualStorage {
 	}
 
 	/**
-	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
-	 * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure
-	 * exists as long as the temporary resource exists.
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists.
 	 *
 	 * @return changeType
 	 **/
@@ -164,9 +157,7 @@ public class AffectedVirtualStorage {
 	}
 
 	/**
-	 * Reference to the VirtualStorage resource. Detailed information is (for new
-	 * and modified resources) or has been (for removed resources) available from
-	 * the VIM.
+	 * Reference to the VirtualStorage resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM.
 	 *
 	 * @return storageResource
 	 **/
@@ -189,9 +180,7 @@ public class AffectedVirtualStorage {
 	}
 
 	/**
-	 * Metadata about this resource. The content of this attribute shall be a copy
-	 * of the content of the \"metadata\" attribute of the
-	 * VirtualStorageResourceInfo structure.
+	 * Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure.
 	 *
 	 * @return metadata
 	 **/
@@ -243,8 +232,7 @@ public class AffectedVirtualStorage {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

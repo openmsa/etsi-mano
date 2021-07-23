@@ -34,14 +34,10 @@ import io.swagger.annotations.ApiModelProperty;
  * ScaleVnfRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ScaleVnfRequest {
 	/**
-	 * Indicates the type of the scale operation requested. Permitted values: *
-	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
-	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
-	 * capacity.
+	 * Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity * SCALE_IN: removing VNFC instances from the VNF in order to release unused capacity.
 	 */
 	public enum TypeEnum {
 		OUT("SCALE_OUT"),
@@ -89,10 +85,7 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Indicates the type of the scale operation requested. Permitted values: *
-	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
-	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
-	 * capacity.
+	 * Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity * SCALE_IN: removing VNFC instances from the VNF in order to release unused capacity.
 	 *
 	 * @return type
 	 **/
@@ -134,8 +127,7 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Number of scaling steps to be executed as part of this Scale VNF operation.
-	 * It shall be a positive number and the default value shall be 1.
+	 * Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1.
 	 *
 	 * @return numberOfSteps
 	 **/
@@ -155,9 +147,7 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the scaling process,
-	 * specific to the VNF being scaled, as declared in the VNFD as part of
-	 * \"ScaleVnfOpConfig\".
+	 * Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -207,8 +197,7 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

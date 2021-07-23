@@ -24,7 +24,11 @@ public class RequestRangeNotSatisfiableException extends ResponseStatusException
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public RequestRangeNotSatisfiableException(String _detail) {
+	public RequestRangeNotSatisfiableException(final String _detail) {
 		super(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE, _detail);
+	}
+
+	public RequestRangeNotSatisfiableException(final String message, final IllegalArgumentException e) {
+		super(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE, message, e);
 	}
 }

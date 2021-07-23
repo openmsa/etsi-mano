@@ -18,6 +18,9 @@ package com.ubiqube.etsi.mano.mapper;
 
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.metadata.Type;
@@ -29,9 +32,16 @@ import ma.glasnost.orika.metadata.Type;
  */
 public class UuidConverter extends BidirectionalConverter<String, UUID> {
 
+	private static final Logger LOG = LoggerFactory.getLogger(UuidConverter.class);
+
 	@Override
 	public UUID convertTo(final String source, final Type<UUID> _destinationType, final MappingContext mappingContext) {
-		return UUID.fromString(source);
+		try {
+			return UUID.fromString(source);
+		} catch (final RuntimeException e) {
+			LOG.error("Just break here.");
+			throw e;
+		}
 	}
 
 	@Override

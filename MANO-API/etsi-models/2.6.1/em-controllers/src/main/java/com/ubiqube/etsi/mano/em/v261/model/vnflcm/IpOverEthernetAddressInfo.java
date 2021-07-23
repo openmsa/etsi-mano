@@ -30,12 +30,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents information about a network address that has been
- * assigned.
+ * This type represents information about a network address that has been assigned.
  */
 @ApiModel(description = "This type represents information about a network address that has been assigned. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class IpOverEthernetAddressInfo {
 	@JsonProperty("macAddress")
@@ -51,8 +49,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * MAC address, if assigned. At least one of \"macAddress\" or \"ipAddresses\"
-	 * shall be present.
+	 * MAC address, if assigned. At least one of \"macAddress\" or \"ipAddresses\" shall be present.
 	 *
 	 * @return macAddress
 	 **/
@@ -80,8 +77,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * Addresses assigned to the CP instance. Each entry represents IP addresses
-	 * assigned by fixed or dynamic IP address assignment per subnet.
+	 * Addresses assigned to the CP instance. Each entry represents IP addresses assigned by fixed or dynamic IP address assignment per subnet.
 	 *
 	 * @return ipAddresses
 	 **/
@@ -127,8 +123,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.service.sys.SysImage;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -140,10 +141,10 @@ public class OsStorage implements Storage {
 
 	@Override
 	@Nonnull
-	public VimImage getImagesInformations(final String name) {
+	public SysImage getImagesInformations(final String name) {
 		final List<? extends Image> images = os.compute().images().list();
 		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new VimException("Image " + name + " Cannot be found on Vim."));
-		return mapper.map(image, VimImage.class);
+		return mapper.map(image, SysImage.class);
 	}
 
 	private static void checkResult(final ActionResponse action) {

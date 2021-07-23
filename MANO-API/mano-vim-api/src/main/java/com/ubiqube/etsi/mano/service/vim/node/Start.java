@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.vim.node;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+
 public class Start implements Node {
 	// Nothing.
 }

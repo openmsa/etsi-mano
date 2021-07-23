@@ -16,7 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
@@ -31,6 +33,16 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Setter
+@Getter
 public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -39,9 +51,9 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	private InstantiationStatusType operationState = null;
 
-	private Date stateEnteredTime = null;
+	private OffsetDateTime stateEnteredTime = null;
 
-	private Date startTime = null;
+	private OffsetDateTime startTime = null;
 
 	private VnfInstance vnfInstance = null;
 
@@ -50,6 +62,8 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 	private NsdChangeType operation = null;
 
 	private Boolean isAutomaticInvocation = null;
+
+	private Map<String, String> operationParams;
 
 	private Boolean isCancelPending = null;
 
@@ -69,153 +83,15 @@ public class VnfLcmOpOccs implements BaseEntity, Auditable {
 
 	private VnfScaleInfo vnfScaleInfo = new VnfScaleInfo();
 
+	private Set<ExtVirtualLinkInfoEntity> changedExtConnectivity;
+
+	private VnfInfoModificationsDto changedInfo;
+
+	// 3.3.1
+	private ModificationsTriggeredByVnfPkgChangeEntity modificationsTriggeredByVnfPkgChange;
+	// 3.3.1
+	private String vnfSnapshotInfoId;
+
 	private Audit audit;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public InstantiationStatusType getOperationState() {
-		return operationState;
-	}
-
-	public void setOperationState(final InstantiationStatusType operationState) {
-		this.operationState = operationState;
-	}
-
-	public Date getStateEnteredTime() {
-		return stateEnteredTime;
-	}
-
-	public void setStateEnteredTime(final Date stateEnteredTime) {
-		this.stateEnteredTime = stateEnteredTime;
-	}
-
-	public Date getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(final Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public VnfInstance getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final VnfInstance vnfInstanceId) {
-		this.vnfInstance = vnfInstanceId;
-	}
-
-	public String getGrantId() {
-		return grantId;
-	}
-
-	public void setGrantId(final String grantId) {
-		this.grantId = grantId;
-	}
-
-	public NsdChangeType getOperation() {
-		return operation;
-	}
-
-	public void setOperation(final NsdChangeType operation) {
-		this.operation = operation;
-	}
-
-	public Boolean getIsAutomaticInvocation() {
-		return isAutomaticInvocation;
-	}
-
-	public void setIsAutomaticInvocation(final Boolean isAutomaticInvocation) {
-		this.isAutomaticInvocation = isAutomaticInvocation;
-	}
-
-	public Boolean getIsCancelPending() {
-		return isCancelPending;
-	}
-
-	public void setIsCancelPending(final Boolean isCancelPending) {
-		this.isCancelPending = isCancelPending;
-	}
-
-	public CancelModeTypeEnum getCancelMode() {
-		return cancelMode;
-	}
-
-	public void setCancelMode(final CancelModeTypeEnum cancelMode) {
-		this.cancelMode = cancelMode;
-	}
-
-	public FailureDetails getError() {
-		return error;
-	}
-
-	public void setError(final FailureDetails error) {
-		this.error = error;
-	}
-
-	public VnfLcmResourceChanges getResourceChanges() {
-		return resourceChanges;
-	}
-
-	public void setResourceChanges(final VnfLcmResourceChanges resourceChanges) {
-		this.resourceChanges = resourceChanges;
-	}
-
-	public String getExternalProcessId() {
-		return externalProcessId;
-	}
-
-	public void setExternalProcessId(final String externalProcessId) {
-		this.externalProcessId = externalProcessId;
-	}
-
-	public Set<VnfInstantiatedBase> getResourceHandleEntity() {
-		return resourceHandleEntity;
-	}
-
-	public void setResourceHandleEntity(final Set<VnfInstantiatedBase> resourceHandleEntity) {
-		this.resourceHandleEntity = resourceHandleEntity;
-	}
-
-	public VnfInstantiatedInfo getVnfInstantiatedInfo() {
-		return vnfInstantiatedInfo;
-	}
-
-	public void setVnfInstantiatedInfo(final VnfInstantiatedInfo vnfInstantiatedInfo) {
-		this.vnfInstantiatedInfo = vnfInstantiatedInfo;
-	}
-
-	public VnfScaleInfo getVnfScaleInfo() {
-		return vnfScaleInfo;
-	}
-
-	public void setVnfScaleInfo(final VnfScaleInfo _vnfScaleInfo) {
-		vnfScaleInfo = _vnfScaleInfo;
-	}
-
-	public OperateChanges getOperateChanges() {
-		return operateChanges;
-	}
-
-	public void setOperateChanges(final OperateChanges operateChanges) {
-		this.operateChanges = operateChanges;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
 
 }

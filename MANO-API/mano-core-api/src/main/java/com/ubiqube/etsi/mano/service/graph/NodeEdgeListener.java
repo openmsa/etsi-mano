@@ -20,8 +20,8 @@ import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.event.GraphListener;
 import org.jgrapht.event.GraphVertexChangeEvent;
 
-import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
 
 /**
  *

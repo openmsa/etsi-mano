@@ -33,7 +33,6 @@ import io.swagger.annotations.ApiModelProperty;
  * ExtVirtualLinkInfo
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ExtVirtualLinkInfo {
 	@JsonProperty("id")
@@ -52,9 +51,7 @@ public class ExtVirtualLinkInfo {
 	}
 
 	/**
-	 * Identifier of the external VL and the related external VL information
-	 * instance. The identifier is assigned by the NFV-MANO entity that manages this
-	 * VL instance.
+	 * Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance.
 	 *
 	 * @return id
 	 **/
@@ -154,8 +151,7 @@ public class ExtVirtualLinkInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

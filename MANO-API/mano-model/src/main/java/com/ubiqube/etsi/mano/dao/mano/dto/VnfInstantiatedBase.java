@@ -31,6 +31,16 @@ import com.ubiqube.etsi.mano.dao.mano.InstantiationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Setter
+@Getter
 public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -44,6 +54,8 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	 */
 	private UUID vduId = null;
 
+	// 3.3.1
+	private String vnfdId;
 	/**
 	 * Point to a VnfInstantiated row.
 	 */
@@ -95,179 +107,9 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	private String toscaName;
 
 	private Map<String, String> metadata = new HashMap<>();
+	// @Since 2.7.1
+	private String resourceDefinitionId;
 
 	@Embedded
 	private Audit audit;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public UUID getVduId() {
-		return vduId;
-	}
-
-	public void setVduId(final UUID vduId) {
-		this.vduId = vduId;
-	}
-
-	public String getReservationId() {
-		return reservationId;
-	}
-
-	public void setReservationId(final String reservationId) {
-		this.reservationId = reservationId;
-	}
-
-	public String getResourceProviderId() {
-		return resourceProviderId;
-	}
-
-	public void setResourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getZoneId() {
-		return zoneId;
-	}
-
-	public void setZoneId(final String zoneId) {
-		this.zoneId = zoneId;
-	}
-
-	public String getResourceGroupId() {
-		return resourceGroupId;
-	}
-
-	public void setResourceGroupId(final String resourceGroupId) {
-		this.resourceGroupId = resourceGroupId;
-	}
-
-	public VimConnectionInformation getVimConnectionInformation() {
-		return vimConnectionInformation;
-	}
-
-	public void setVimConnectionInformation(final VimConnectionInformation vimConnectionInformation) {
-		this.vimConnectionInformation = vimConnectionInformation;
-	}
-
-	public String getResourceId() {
-		return resourceId;
-	}
-
-	public void setResourceId(final String resourceId) {
-		this.resourceId = resourceId;
-	}
-
-	public String getVimLevelResourceType() {
-		return vimLevelResourceType;
-	}
-
-	public void setVimLevelResourceType(final String vimLevelResourceType) {
-		this.vimLevelResourceType = vimLevelResourceType;
-	}
-
-	public InstantiationStatusType getStatus() {
-		return status;
-	}
-
-	public void setStatus(final InstantiationStatusType status) {
-		this.status = status;
-	}
-
-	public Date getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(final Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public Date getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(final Date endTime) {
-		this.endTime = endTime;
-	}
-
-	public UUID getManoResourceId() {
-		return manoResourceId;
-	}
-
-	public void setManoResourceId(final UUID manoResourceId) {
-		this.manoResourceId = manoResourceId;
-	}
-
-	public VnfLcmOpOccs getVnfLcmOpOccs() {
-		return vnfLcmOpOccs;
-	}
-
-	public void setVnfLcmOpOccs(final VnfLcmOpOccs vnfLcmOpOccs) {
-		this.vnfLcmOpOccs = vnfLcmOpOccs;
-	}
-
-	public ChangeType getChangeType() {
-		return changeType;
-	}
-
-	public void setChangeType(final ChangeType changeType) {
-		this.changeType = changeType;
-	}
-
-	public UUID getRemovedInstantiated() {
-		return removedInstantiated;
-	}
-
-	public void setRemovedInstantiated(final UUID removedInstantiated) {
-		this.removedInstantiated = removedInstantiated;
-	}
-
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
-	}
-
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(final Map<String, String> metadata) {
-		this.metadata = metadata;
-	}
-
-	public String getAliasName() {
-		return aliasName;
-	}
-
-	public void setAliasName(final String aliasName) {
-		this.aliasName = aliasName;
-	}
-
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
 }

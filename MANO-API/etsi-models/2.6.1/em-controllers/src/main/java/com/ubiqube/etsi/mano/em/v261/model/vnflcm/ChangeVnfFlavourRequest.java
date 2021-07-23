@@ -32,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents request parameters for the \&quot;Change VNF
- * flavour\&quot; operation.
+ * This type represents request parameters for the \&quot;Change VNF flavour\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Change VNF flavour\" operation. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ChangeVnfFlavourRequest {
 	@JsonProperty("newFlavourId")
@@ -84,9 +82,7 @@ public class ChangeVnfFlavourRequest {
 	}
 
 	/**
-	 * Identifier of the instantiation level of the deployment flavour to be
-	 * instantiated. If not present, the default instantiation level as declared in
-	 * the VNFD is instantiated.
+	 * Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated.
 	 *
 	 * @return instantiationLevelId
 	 **/
@@ -166,9 +162,7 @@ public class ChangeVnfFlavourRequest {
 	}
 
 	/**
-	 * Additional input parameters for the instantiation process, specific to the
-	 * VNF being instantiated, as declared in the VNFD as part of
-	 * \"InstantiateVnfOpConfig\".
+	 * Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -220,8 +214,7 @@ public class ChangeVnfFlavourRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

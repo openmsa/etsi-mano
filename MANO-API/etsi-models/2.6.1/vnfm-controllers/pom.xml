@@ -7,10 +7,12 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>etsi-vnfm-261-controllers</name>
 	<url>http://maven.apache.org</url>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>etsi-models-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 	<repositories>
 		<repository>
 			<id>nexus</id>
@@ -35,10 +37,6 @@
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
 			<artifactId>spring-hateoas</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.threeten</groupId>
-			<artifactId>threetenbp</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
@@ -69,7 +67,6 @@
 		<dependency>
 			<groupId>uk.co.jemos.podam</groupId>
 			<artifactId>podam</artifactId>
-			<version>7.2.5.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -132,10 +129,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mano-test-helper</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-eclipse-tools</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>	
 </project>

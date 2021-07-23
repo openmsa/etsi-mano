@@ -30,7 +30,6 @@ import io.swagger.annotations.ApiModelProperty;
  * ExtManagedVirtualLinkData
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ExtManagedVirtualLinkData {
 	@JsonProperty("id")
@@ -54,8 +53,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * The identifier of the externally-managed internal VL instance. The identifier
-	 * is assigned by the NFV-MANO entity that manages this VL instance.
+	 * The identifier of the externally-managed internal VL instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance.
 	 *
 	 * @return id
 	 **/
@@ -96,9 +94,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Identifier of the VIM connection to manage this resource. This attribute
-	 * shall only be supported and present if VNF-related resource management in
-	 * direct mode is applicable.
+	 * Identifier of the VIM connection to manage this resource. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable.
 	 *
 	 * @return vimConnectionId
 	 **/
@@ -118,10 +114,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Identifies the entity responsible for the management of this resource. This
-	 * attribute shall only be supported and present if VNF-related resource
-	 * management in indirect mode is applicable. The identification scheme is
-	 * outside the scope of the present document.
+	 * Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document.
 	 *
 	 * @return resourceProviderId
 	 **/
@@ -141,8 +134,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * The identifier of the resource in the scope of the VIM or the resource
-	 * provider.
+	 * The identifier of the resource in the scope of the VIM or the resource provider.
 	 *
 	 * @return resourceId
 	 **/
@@ -193,8 +185,7 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

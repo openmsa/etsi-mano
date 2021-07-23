@@ -35,7 +35,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class MapperForView {
+public final class MapperForView {
+
 	private MapperForView() {
 		// Nothing.
 	}

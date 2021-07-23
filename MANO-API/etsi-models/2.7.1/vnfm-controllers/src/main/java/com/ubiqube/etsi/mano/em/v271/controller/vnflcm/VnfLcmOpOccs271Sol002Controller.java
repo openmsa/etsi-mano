@@ -26,8 +26,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmOpOccGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -43,7 +43,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 
-@Controller
+@RestController
 public class VnfLcmOpOccs271Sol002Controller implements VnfLcmOpOccs271Sol002Api {
 	private final VnfLcmOpOccGenericFrontController frontController;
 

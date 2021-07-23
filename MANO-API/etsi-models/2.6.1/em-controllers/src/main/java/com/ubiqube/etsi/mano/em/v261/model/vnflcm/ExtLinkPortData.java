@@ -29,12 +29,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents an externally provided link port to be used to connect
- * an external connection point to an external VL.
+ * This type represents an externally provided link port to be used to connect an external connection point to an external VL.
  */
 @ApiModel(description = "This type represents an externally provided link port to be used to connect an external connection point to an external VL. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ExtLinkPortData {
 	@JsonProperty("id")
@@ -49,8 +47,7 @@ public class ExtLinkPortData {
 	}
 
 	/**
-	 * Identifier of this link port as provided by the entity that has created the
-	 * link port.
+	 * Identifier of this link port as provided by the entity that has created the link port.
 	 *
 	 * @return id
 	 **/
@@ -118,8 +115,7 @@ public class ExtLinkPortData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

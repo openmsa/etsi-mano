@@ -29,12 +29,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a subscription related to notifications about VNF
- * lifecycle changes.
+ * This type represents a subscription related to notifications about VNF lifecycle changes.
  */
 @ApiModel(description = "This type represents a subscription related to notifications about VNF lifecycle changes. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class LccnSubscription {
 	@JsonProperty("id")
@@ -76,9 +74,7 @@ public class LccnSubscription {
 	}
 
 	/**
-	 * Filter settings for this subscription, to define the subset of all
-	 * notifications this subscription relates to. A particular notification is sent
-	 * to the subscriber if the filter matches, or if there is no filter.
+	 * Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter.
 	 *
 	 * @return filter
 	 **/
@@ -172,8 +168,7 @@ public class LccnSubscription {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

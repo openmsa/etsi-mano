@@ -18,8 +18,9 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -27,7 +28,7 @@ import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
  *
  */
 @Service
-public class ToscaNsRegistryHandler implements RegistryHandler<NsPackageProvider> {
+public class ToscaNsRegistryHandler implements PackageDescriptor<NsPackageProvider> {
 
 	@Override
 	public boolean isProcessable(final byte[] data) {
@@ -36,13 +37,19 @@ public class ToscaNsRegistryHandler implements RegistryHandler<NsPackageProvider
 	}
 
 	@Override
-	public String getName() {
-		return "Ubiqube Tosca parser";
+	public String getProviderName() {
+		return "TOSCA-NS";
 	}
 
 	@Override
-	public NsPackageProvider getNewInstance(final byte[] data) {
+	public NsPackageProvider getNewReaderInstance(final byte[] data) {
 		return new ToscaNsPackageProvider(data);
+	}
+
+	@Override
+	public ExecutionGraph getBlueprint() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

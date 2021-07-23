@@ -58,7 +58,7 @@ public class NsdSubscriptionFrontController {
 		final List<Subscription> subs = subscriptionService.query(filter, SubscriptionType.NSD);
 		final List<U> pkgms = mapper.mapAsList(subs, clazz);
 		pkgms.stream()
-				.forEach(x -> makeLink.accept(x));
+				.forEach(makeLink::accept);
 		return ResponseEntity.ok(pkgms);
 	}
 

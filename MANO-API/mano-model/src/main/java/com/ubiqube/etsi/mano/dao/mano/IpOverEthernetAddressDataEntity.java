@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,13 +28,20 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- * TODO: maybe we can remove this table. USED:
- * IpOverEthernetAddressDataIpAddressesEntity
+ * TODO: maybe we can remove this table. USED: IpOverEthernetAddressDataIpAddressesEntity
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Entity
 public class IpOverEthernetAddressDataEntity implements Serializable {
 	/** Serial. */
@@ -45,31 +53,50 @@ public class IpOverEthernetAddressDataEntity implements Serializable {
 	private String macAddress = null;
 
 	@Valid
-	@OneToMany(mappedBy = "ipOverEthernetAddressDataEntity")
+	@OneToMany
 	private List<IpOverEthernetAddressDataIpAddressesEntity> ipAddresses = null;
 
-	public UUID getId() {
-		return id;
-	}
+	private TypeEnum type = null;
 
-	public void setId(final UUID id) {
-		this.id = id;
-	}
+	private String addresses = null;
 
-	public String getMacAddress() {
-		return macAddress;
-	}
+	private Boolean isDynamic = null;
+	// 3.3.1
+	private String segmentationId;
+	@Embedded
+	private IpOverEthernetAddressInfoAddressRangeEntity addressRange;
 
-	public void setMacAddress(final String macAddress) {
-		this.macAddress = macAddress;
-	}
+	private String subnetId = null;
 
-	public List<IpOverEthernetAddressDataIpAddressesEntity> getIpAddresses() {
-		return ipAddresses;
-	}
+	/**
+	 * The type of the IP addresses
+	 */
+	public enum TypeEnum {
+		PV4("PV4"),
 
-	public void setIpAddresses(final List<IpOverEthernetAddressDataIpAddressesEntity> ipAddresses) {
-		this.ipAddresses = ipAddresses;
+		PV6("PV6");
+
+		private final String value;
+
+		TypeEnum(final String value) {
+			this.value = value;
+		}
+
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		@JsonCreator
+		public static TypeEnum fromValue(final String text) {
+			for (final TypeEnum b : TypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
 	}
 
 }

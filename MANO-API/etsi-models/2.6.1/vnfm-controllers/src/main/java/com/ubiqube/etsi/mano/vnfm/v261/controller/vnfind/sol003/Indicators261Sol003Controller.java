@@ -21,7 +21,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfind.VnfIndicator;
 
@@ -30,7 +30,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vnfind.VnfIndicator;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Controller
+@RestController
 public class Indicators261Sol003Controller implements Indicators261Sol003Api {
 
 	@Override

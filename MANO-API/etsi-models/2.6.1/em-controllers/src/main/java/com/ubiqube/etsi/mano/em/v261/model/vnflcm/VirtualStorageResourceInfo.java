@@ -30,12 +30,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the information that allows addressing a virtualised
- * resource that is used by a VNF instance.
+ * This type represents the information that allows addressing a virtualised resource that is used by a VNF instance.
  */
 @ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VirtualStorageResourceInfo {
 	@JsonProperty("id")
@@ -124,8 +122,7 @@ public class VirtualStorageResourceInfo {
 	}
 
 	/**
-	 * The reservation identifier applicable to the resource. It shall be present
-	 * when an applicable reservation exists.
+	 * The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists.
 	 *
 	 * @return reservationId
 	 **/
@@ -197,8 +194,7 @@ public class VirtualStorageResourceInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

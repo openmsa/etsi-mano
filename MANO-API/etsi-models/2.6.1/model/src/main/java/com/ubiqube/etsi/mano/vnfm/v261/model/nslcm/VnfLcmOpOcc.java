@@ -29,8 +29,8 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,10 +63,10 @@ public class VnfLcmOpOcc {
 	private LcmOperationStateType operationState = null;
 
 	@JsonProperty("stateEnteredTime")
-	private Date stateEnteredTime = null;
+	private OffsetDateTime stateEnteredTime = null;
 
 	@JsonProperty("startTime")
-	private Date startTime = null;
+	private OffsetDateTime startTime = null;
 
 	@JsonProperty("vnfInstanceId")
 	private String vnfInstanceId = null;
@@ -147,7 +147,7 @@ public class VnfLcmOpOcc {
 		this.operationState = operationState;
 	}
 
-	public VnfLcmOpOcc stateEnteredTime(final Date stateEnteredTime) {
+	public VnfLcmOpOcc stateEnteredTime(final OffsetDateTime stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 		return this;
 	}
@@ -159,15 +159,15 @@ public class VnfLcmOpOcc {
 	 **/
 	@ApiModelProperty(required = true, value = "Date-time when the current state was entered. ")
 	@NotNull
-	public Date getStateEnteredTime() {
+	public OffsetDateTime getStateEnteredTime() {
 		return stateEnteredTime;
 	}
 
-	public void setStateEnteredTime(final Date stateEnteredTime) {
+	public void setStateEnteredTime(final OffsetDateTime stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
-	public VnfLcmOpOcc startTime(final Date startTime) {
+	public VnfLcmOpOcc startTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 		return this;
 	}
@@ -179,11 +179,11 @@ public class VnfLcmOpOcc {
 	 **/
 	@ApiModelProperty(required = true, value = "Date-time of the start of the operation. ")
 	@NotNull
-	public Date getStartTime() {
+	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(final Date startTime) {
+	public void setStartTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -213,8 +213,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Identifier of the grant related to this VNF LCM operation occurrence, if such
-	 * grant exists.
+	 * Identifier of the grant related to this VNF LCM operation occurrence, if such grant exists.
 	 *
 	 * @return grantId
 	 **/
@@ -233,8 +232,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Type of the actual LCM operation represented by this VNF LCM operation
-	 * occurrence.
+	 * Type of the actual LCM operation represented by this VNF LCM operation occurrence.
 	 *
 	 * @return operation
 	 **/
@@ -255,10 +253,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Set to true if this VNF LCM operation occurrence has been triggered by an
-	 * automated procedure inside the VNFM (i.e. ScaleVnf / ScaleVnfToLevel
-	 * triggered by auto-scale, or HealVnf triggered by auto-heal). Set to false
-	 * otherwise.
+	 * Set to true if this VNF LCM operation occurrence has been triggered by an automated procedure inside the VNFM (i.e. ScaleVnf / ScaleVnfToLevel triggered by auto-scale, or HealVnf triggered by auto-heal). Set to false otherwise.
 	 *
 	 * @return isAutomaticInvocation
 	 **/
@@ -278,13 +273,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Input parameters of the LCM operation. This attribute shall be formatted
-	 * according to the request data type of the related LCM operation. The
-	 * following mapping between operationType and the data type of this attribute
-	 * shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest *
-	 * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR:
-	 * ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest *
-	 * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE:
+	 * Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE:
 	 * TerminateVnfRequest * MODIFY_INFO: VnfInfoModificationRequest
 	 *
 	 * @return operationParams
@@ -305,9 +294,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * If the VNF LCM operation occurrence is in \"STARTING\", \"PROCESSING\" or
-	 * \"ROLLING_BACK\" state and the operation is being cancelled, this attribute
-	 * shall be set to true. Otherwise, it shall be set to false.
+	 * If the VNF LCM operation occurrence is in \"STARTING\", \"PROCESSING\" or \"ROLLING_BACK\" state and the operation is being cancelled, this attribute shall be set to true. Otherwise, it shall be set to false.
 	 *
 	 * @return isCancelPending
 	 **/
@@ -327,8 +314,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * The mode of an ongoing cancellation. Shall be present when
-	 * isCancelPending=true, and shall be absent otherwise.
+	 * The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise.
 	 *
 	 * @return cancelMode
 	 **/
@@ -348,11 +334,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\"
-	 * is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of
-	 * \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and
-	 * contain error information, unless it has been requested to be excluded via an
-	 * attribute selector.
+	 * If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector.
 	 *
 	 * @return error
 	 **/
@@ -392,10 +374,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Information about the changed VNF instance information, including VNF
-	 * configurable properties, if applicable. This allows the NFVO to obtain the
-	 * information contained in the latest \"result\" notification if it has not
-	 * received it due to an error or a wrongly configured subscription filter.
+	 * Information about the changed VNF instance information, including VNF configurable properties, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter.
 	 *
 	 * @return changedInfo
 	 **/
@@ -423,10 +402,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Information about changed external connectivity, if applicable. This allows
-	 * the NFVO to obtain the information contained in the latest \"result\"
-	 * notification if it has not received it due to an error or a wrongly
-	 * configured subscription filter.
+	 * Information about changed external connectivity, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter.
 	 *
 	 * @return changedExtConnectivity
 	 **/
@@ -518,8 +494,7 @@ public class VnfLcmOpOcc {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

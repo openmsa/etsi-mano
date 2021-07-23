@@ -29,12 +29,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents information about a link port of an external VL, i.e. a
- * port providing connectivity for the VNF to an NS VL.
+ * This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL.
  */
 @ApiModel(description = "This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ExtLinkPortInfo {
 	@JsonProperty("id")
@@ -52,8 +50,7 @@ public class ExtLinkPortInfo {
 	}
 
 	/**
-	 * Identifier of this link port as provided by the entity that has created the
-	 * link port.
+	 * Identifier of this link port as provided by the entity that has created the link port.
 	 *
 	 * @return id
 	 **/
@@ -97,9 +94,7 @@ public class ExtLinkPortInfo {
 	}
 
 	/**
-	 * Identifier of the external CP of the VNF connected to this link port. There
-	 * shall be at most one link port associated with any external connection point
-	 * instance. The value refers to an \"extCpInfo\" item in the VnfInstance.
+	 * Identifier of the external CP of the VNF connected to this link port. There shall be at most one link port associated with any external connection point instance. The value refers to an \"extCpInfo\" item in the VnfInstance.
 	 *
 	 * @return cpInstanceId
 	 **/
@@ -145,8 +140,7 @@ public class ExtLinkPortInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

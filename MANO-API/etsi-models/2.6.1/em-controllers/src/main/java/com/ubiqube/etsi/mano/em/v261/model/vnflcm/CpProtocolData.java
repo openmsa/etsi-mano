@@ -35,14 +35,10 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents network protocol data. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class CpProtocolData {
 	/**
-	 * Identifier of layer(s) and protocol(s). This attribute allows to signal the
-	 * addition of further types of layer and protocol in future versions of the
-	 * present document in a backwards-compatible way. In the current version of the
-	 * present document, only IP over Ethernet is supported.
+	 * Identifier of layer(s) and protocol(s). This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported.
 	 */
 	public enum LayerProtocolEnum {
 		IP_OVER_ETHERNET("IP_OVER_ETHERNET");
@@ -82,10 +78,7 @@ public class CpProtocolData {
 	}
 
 	/**
-	 * Identifier of layer(s) and protocol(s). This attribute allows to signal the
-	 * addition of further types of layer and protocol in future versions of the
-	 * present document in a backwards-compatible way. In the current version of the
-	 * present document, only IP over Ethernet is supported.
+	 * Identifier of layer(s) and protocol(s). This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported.
 	 *
 	 * @return layerProtocol
 	 **/
@@ -106,9 +99,7 @@ public class CpProtocolData {
 	}
 
 	/**
-	 * Network address data for IP over Ethernet to assign to the extCP instance.
-	 * Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall
-	 * be absent otherwise.
+	 * Network address data for IP over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall be absent otherwise.
 	 *
 	 * @return ipOverEthernet
 	 **/
@@ -154,8 +145,7 @@ public class CpProtocolData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

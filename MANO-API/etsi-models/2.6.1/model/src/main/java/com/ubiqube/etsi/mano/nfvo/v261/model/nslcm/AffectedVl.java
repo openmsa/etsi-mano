@@ -18,6 +18,7 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nslcm;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,12 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type provides information about added, deleted and modified VLs. It
- * shall comply with the provisions in Table 6.5.3.4-1.
+ * This type provides information about added, deleted and modified VLs. It shall comply with the provisions in Table 6.5.3.4-1.
  */
 @ApiModel(description = "This type provides information about added, deleted and modified VLs.  It shall comply with the provisions in Table 6.5.3.4-1. ")
 @Validated
-
 
 public class AffectedVl {
 	@JsonProperty("nsVirtualLinkInstanceId")
@@ -46,11 +45,10 @@ public class AffectedVl {
 	private String nsVirtualLinkDescId = null;
 
 	@JsonProperty("vlProfileId")
-	private String vlProfileId = null;
+	private UUID vlProfileId = null;
 
 	/**
-	 * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY -
-	 * ADD_LINK_PORT - REMOVE_LINK_PORT
+	 * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY - ADD_LINK_PORT - REMOVE_LINK_PORT
 	 */
 	public enum ChangeTypeEnum {
 		ADD("ADD"),
@@ -90,8 +88,7 @@ public class AffectedVl {
 	private ChangeTypeEnum changeType = null;
 
 	/**
-	 * Signals the result of change identified by the \"changeType\" attribute.
-	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
+	 * Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED
 	 */
 	public enum ChangeResultEnum {
 		COMPLETED("COMPLETED"),
@@ -133,7 +130,7 @@ public class AffectedVl {
 
 	/**
 	 * Identifier of the VL Instance.
-	 * 
+	 *
 	 * @return nsVirtualLinkInstanceId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VL Instance. ")
@@ -154,7 +151,7 @@ public class AffectedVl {
 
 	/**
 	 * Identifier of the VLD in the NSD for this VL.
-	 * 
+	 *
 	 * @return nsVirtualLinkDescId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VLD in the NSD for this VL. ")
@@ -168,24 +165,24 @@ public class AffectedVl {
 		this.nsVirtualLinkDescId = nsVirtualLinkDescId;
 	}
 
-	public AffectedVl vlProfileId(final String vlProfileId) {
+	public AffectedVl vlProfileId(final UUID vlProfileId) {
 		this.vlProfileId = vlProfileId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the VLD in the NSD for this VL.
-	 * 
+	 *
 	 * @return vlProfileId
 	 **/
 	@ApiModelProperty(required = true, value = "Identifier of the VLD in the NSD for this VL. ")
 	@NotNull
 
-	public String getVlProfileId() {
+	public UUID getVlProfileId() {
 		return vlProfileId;
 	}
 
-	public void setVlProfileId(final String vlProfileId) {
+	public void setVlProfileId(final UUID vlProfileId) {
 		this.vlProfileId = vlProfileId;
 	}
 
@@ -195,9 +192,8 @@ public class AffectedVl {
 	}
 
 	/**
-	 * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY -
-	 * ADD_LINK_PORT - REMOVE_LINK_PORT
-	 * 
+	 * Signals the type of change. Permitted values: - ADD - DELETE - MODIFY - ADD_LINK_PORT - REMOVE_LINK_PORT
+	 *
 	 * @return changeType
 	 **/
 	@ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY - ADD_LINK_PORT - REMOVE_LINK_PORT ")
@@ -216,9 +212,8 @@ public class AffectedVl {
 	}
 
 	/**
-	 * Signals the result of change identified by the \"changeType\" attribute.
-	 * Permitted values: - COMPLETED - ROLLED_BACK - FAILED
-	 * 
+	 * Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED
+	 *
 	 * @return changeResult
 	 **/
 	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
@@ -267,8 +262,7 @@ public class AffectedVl {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

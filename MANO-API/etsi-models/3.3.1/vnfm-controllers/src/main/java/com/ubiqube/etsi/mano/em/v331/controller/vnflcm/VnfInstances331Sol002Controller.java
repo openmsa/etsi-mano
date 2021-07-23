@@ -154,16 +154,16 @@ public class VnfInstances331Sol002Controller implements VnfInstances331Sol002Api
 
 	private static void makeLinks(final VnfInstance vnfInstance) {
 		final String id = vnfInstance.getId();
-		final String hrefScaleToLevel = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdScaleToLevelPost(id, null)).withSelfRel().getHref();
-		final String hrefScale = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdScalePost(id, null)).withSelfRel().getHref();
-		final String hrefOperate = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdOperatePost(id, null)).withSelfRel().getHref();
-		final String hrefInstanciate = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
+		final String hrefScaleToLevel = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdScaleToLevelPost(id, null)).withSelfRel().getHref();
+		final String hrefScale = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdScalePost(id, null)).withSelfRel().getHref();
+		final String hrefOperate = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdOperatePost(id, null)).withSelfRel().getHref();
+		final String hrefInstanciate = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdInstantiatePost(id, null)).withSelfRel().getHref();
 		final String hrefIndicators = "";
-		final String hrefHeal = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdHealPost(id, null)).withSelfRel().getHref();
-		final String hrefChangeFlavor = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdChangeFlavourPost(id, null)).withSelfRel().getHref();
-		final String hrefChangeExtConn = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null)).withSelfRel().getHref();
-		final String hrefSelf = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
-		final String hrefTerminate = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdTerminatePost(id, null)).withSelfRel().getHref();
+		final String hrefHeal = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdHealPost(id, null)).withSelfRel().getHref();
+		final String hrefChangeFlavor = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdChangeFlavourPost(id, null)).withSelfRel().getHref();
+		final String hrefChangeExtConn = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null)).withSelfRel().getHref();
+		final String hrefSelf = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
+		final String hrefTerminate = linkTo(methodOn(VnfInstances331Sol002Api.class).vnfInstancesVnfInstanceIdTerminatePost(id, null)).withSelfRel().getHref();
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		final Link self = new Link();
 		self.setHref(hrefSelf);

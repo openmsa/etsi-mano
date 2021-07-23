@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.service.vim.NodeConnectivity;
+import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsdNode;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.VnfNode;
 
 public class NsConnections {
 

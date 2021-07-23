@@ -33,25 +33,23 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Validated
 
-
 public class ApiVersionInformationApiVersions {
 	@JsonProperty("version")
-	private String version = null;
+	private String version;
 
 	@JsonProperty("isDeprecated")
-	private Boolean isDeprecated = null;
+	private Boolean isDeprecated;
 
 	@JsonProperty("retirementDate")
-	private OffsetDateTime retirementDate = null;
+	private OffsetDateTime retirementDate;
 
-	public ApiVersionInformationApiVersions version(final String version) {
-		this.version = version;
+	public ApiVersionInformationApiVersions version(final String _version) {
+		this.version = _version;
 		return this;
 	}
 
 	/**
-	 * Identifies a supported version. The value of the version attribute shall be a
-	 * version identifier as specified in clause 4.6.1.
+	 * Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1.
 	 *
 	 * @return version
 	 **/
@@ -66,17 +64,13 @@ public class ApiVersionInformationApiVersions {
 		this.version = version;
 	}
 
-	public ApiVersionInformationApiVersions isDeprecated(final Boolean isDeprecated) {
-		this.isDeprecated = isDeprecated;
+	public ApiVersionInformationApiVersions isDeprecated(final Boolean _isDeprecated) {
+		this.isDeprecated = _isDeprecated;
 		return this;
 	}
 
 	/**
-	 * If such information is available, this attribute indicates whether use of the
-	 * version signaled by the version attribute is deprecated (true) or not
-	 * (false). A deprecated version is still supported by the API producer but is
-	 * recommended not to be used any longer. When a version is no longer supported,
-	 * it does not appear in the response body.
+	 * If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body.
 	 *
 	 * @return isDeprecated
 	 **/
@@ -90,15 +84,13 @@ public class ApiVersionInformationApiVersions {
 		this.isDeprecated = isDeprecated;
 	}
 
-	public ApiVersionInformationApiVersions retirementDate(final OffsetDateTime retirementDate) {
-		this.retirementDate = retirementDate;
+	public ApiVersionInformationApiVersions retirementDate(final OffsetDateTime _retirementDate) {
+		this.retirementDate = _retirementDate;
 		return this;
 	}
 
 	/**
-	 * The date and time after which the API version will no longer be supported.
-	 * This attribute may be included if the value of the isDeprecated attribute is
-	 * set to true and shall be absent otherwise.
+	 * The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise.
 	 *
 	 * @return retirementDate
 	 **/
@@ -146,8 +138,7 @@ public class ApiVersionInformationApiVersions {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

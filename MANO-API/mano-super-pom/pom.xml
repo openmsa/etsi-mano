@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.5</version>
+		<version>2.5.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ubiqube.mano</groupId>
@@ -30,21 +30,21 @@
 	</distributionManagement>
 
 	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
-		<com.ubiqube.hibernate-search.version>5.7.2.Final</com.ubiqube.hibernate-search.version>
-		<com.ubiqube.hibernate-search6.version>6.0.2.Final</com.ubiqube.hibernate-search6.version>
+		<com.ubiqube.hibernate-search.version>5.11.9.Final</com.ubiqube.hibernate-search.version>
+		<com.ubiqube.hibernate-search6.version>6.0.5.Final</com.ubiqube.hibernate-search6.version>
 		<com.ubiqube.springfox-swagger.version>3.0.0-SNAPSHOT</com.ubiqube.springfox-swagger.version>
-		<com.ubiqube.openstack4j.version>3.9-SNAPSHOT</com.ubiqube.openstack4j.version>
-		<com.ubiqube.swagger3>2.1.6</com.ubiqube.swagger3>
+		<com.ubiqube.openstack4j.version>3.11-SNAPSHOT</com.ubiqube.openstack4j.version>
+		<com.ubiqube.swagger3>2.1.9</com.ubiqube.swagger3>
+		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
+		<com.ubiqube.elasticsearch.version>7.13.2</com.ubiqube.elasticsearch.version>
 	</properties>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
+				<version>0.8.7</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
@@ -127,6 +127,41 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+					<fork>true</fork>
+					<compilerArgs>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.20</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkCount>0</forkCount>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -162,10 +197,18 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-
 			</plugins>
 		</pluginManagement>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+				<version>2.0</version>
+			</plugin>
+		</plugins>
+	</reporting>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -237,7 +280,7 @@
 			<dependency>
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
-				<version>1.5.20</version>
+				<version>1.6.2</version>
 			</dependency>
 			<dependency>
 				<groupId>net.rakugakibox.spring.boot</groupId>
@@ -247,12 +290,12 @@
 			<dependency>
 				<groupId>ma.glasnost.orika</groupId>
 				<artifactId>orika-core</artifactId>
-				<version>1.5.4</version>
+				<version>1.5.5-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>org.threeten</groupId>
-				<artifactId>threetenbp</artifactId>
-				<version>1.3.1</version>
+				<groupId>ma.glasnost.orika</groupId>
+				<artifactId>orika-eclipse-tools</artifactId>
+				<version>1.5.5-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.github.dexecutor</groupId>
@@ -283,14 +326,12 @@
 			<dependency>
 				<groupId>org.elasticsearch.client</groupId>
 				<artifactId>elasticsearch-rest-client</artifactId>
-				<version>7.10.0</version>
+				<version>${com.ubiqube.elasticsearch.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.elasticsearch.client</groupId>
-				<artifactId>
-					elasticsearch-rest-client-sniffer
-				</artifactId>
-				<version>7.10.0</version>
+				<artifactId>elasticsearch-rest-client-sniffer</artifactId>
+				<version>${com.ubiqube.elasticsearch.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.codehaus.groovy</groupId>
@@ -317,6 +358,26 @@
 				<groupId>io.swagger.core.v3</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>${com.ubiqube.swagger3}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tngtech.archunit</groupId>
+				<artifactId>archunit-junit5</artifactId>
+				<version>0.19.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${com.ubiqube.mockito.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-junit-jupiter</artifactId>
+				<version>${com.ubiqube.mockito.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.co.jemos.podam</groupId>
+				<artifactId>podam</artifactId>
+				<version>7.2.7.RELEASE</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -21,9 +21,9 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
@@ -64,6 +64,6 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public List<WfProduce> getProduce() {
-		return Arrays.asList(new WfProduce(com.ubiqube.etsi.mano.service.vim.node.vnfm.VnfExtCp.class, task.getToscaName(), task.getId()));
+		return Arrays.asList(new WfProduce(com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp.class, task.getToscaName(), task.getId()));
 	}
 }

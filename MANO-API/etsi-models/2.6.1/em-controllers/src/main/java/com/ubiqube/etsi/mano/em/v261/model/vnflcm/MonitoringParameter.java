@@ -30,7 +30,6 @@ import io.swagger.annotations.ApiModelProperty;
  * MonitoringParameter
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class MonitoringParameter {
 	@JsonProperty("id")
@@ -89,9 +88,7 @@ public class MonitoringParameter {
 	}
 
 	/**
-	 * Performance metric that is monitored. This attribute shall contain the
-	 * related \"Measurement Name\" value as defined in clause 7.2 of ETSI GS
-	 * NFV-IFA 027.
+	 * Performance metric that is monitored. This attribute shall contain the related \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027.
 	 *
 	 * @return performanceMetric
 	 **/
@@ -138,8 +135,7 @@ public class MonitoringParameter {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

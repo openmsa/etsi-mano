@@ -32,13 +32,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents request parameters for the \&quot;Change external VNF
- * connectivity\&quot; operation to modify the external connectivity of a VNF
- * instance.
+ * This type represents request parameters for the \&quot;Change external VNF connectivity\&quot; operation to modify the external connectivity of a VNF instance.
  */
 @ApiModel(description = "This type represents request parameters for the \"Change external VNF connectivity\" operation to modify the external connectivity of a VNF instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ChangeExtVnfConnectivityRequest {
 	@JsonProperty("extVirtualLinks")
@@ -82,9 +79,7 @@ public class ChangeExtVnfConnectivityRequest {
 	}
 
 	/**
-	 * Additional input parameters for the instantiation process, specific to the
-	 * VNF being instantiated, as declared in the VNFD as part of
-	 * \"ChangeExtVnfConnectivityOpConfig\".\".
+	 * Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"ChangeExtVnfConnectivityOpConfig\".\".
 	 *
 	 * @return additionalParams
 	 **/
@@ -130,8 +125,7 @@ public class ChangeExtVnfConnectivityRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

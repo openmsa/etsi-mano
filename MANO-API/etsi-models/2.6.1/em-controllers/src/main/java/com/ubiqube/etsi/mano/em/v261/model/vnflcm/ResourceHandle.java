@@ -28,13 +28,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the information that allows addressing a virtualised
- * resource that is used by a VNF instance. Information about the resource is
- * available from the VIM.
+ * This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. Information about the resource is available from the VIM.
  */
 @ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. Information about the resource is available from the VIM. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ResourceHandle {
 	@JsonProperty("vimConnectionId")
@@ -55,11 +52,7 @@ public class ResourceHandle {
 	}
 
 	/**
-	 * Identifier of the VIM connection to manage the resource. This attribute shall
-	 * only be supported and present if VNF-related resource management in direct
-	 * mode is applicable. The applicable \"VimConnectionInfo\" structure, which is
-	 * referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\"
-	 * attribute of the \"VnfInstance\" structure.
+	 * Identifier of the VIM connection to manage the resource. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable. The applicable \"VimConnectionInfo\" structure, which is referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\" attribute of the \"VnfInstance\" structure.
 	 *
 	 * @return vimConnectionId
 	 **/
@@ -80,10 +73,7 @@ public class ResourceHandle {
 	}
 
 	/**
-	 * Identifier of the entity responsible for the management of the resource. This
-	 * attribute shall only be supported and present when VNF-related resource
-	 * management in indirect mode is applicable. The identification scheme is
-	 * outside the scope of the present document.
+	 * Identifier of the entity responsible for the management of the resource. This attribute shall only be supported and present when VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document.
 	 *
 	 * @return resourceProviderId
 	 **/
@@ -124,11 +114,7 @@ public class ResourceHandle {
 	}
 
 	/**
-	 * The value set of the \"vimLevelResourceType\" attribute is within the scope
-	 * of the VIM or the resource provider and can be used as information that
-	 * complements the ResourceHandle. This value set is different from the value
-	 * set of the \"type\" attribute in the ResourceDefinition (refer to clause
-	 * 9.5.3.2 in SOL003).
+	 * The value set of the \"vimLevelResourceType\" attribute is within the scope of the VIM or the resource provider and can be used as information that complements the ResourceHandle. This value set is different from the value set of the \"type\" attribute in the ResourceDefinition (refer to clause 9.5.3.2 in SOL003).
 	 *
 	 * @return vimLevelResourceType
 	 **/
@@ -176,8 +162,7 @@ public class ResourceHandle {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

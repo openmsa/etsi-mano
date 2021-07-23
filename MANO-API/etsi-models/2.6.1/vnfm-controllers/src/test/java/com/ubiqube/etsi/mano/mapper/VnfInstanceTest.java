@@ -50,6 +50,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class VnfInstanceTest {
@@ -59,7 +60,7 @@ public class VnfInstanceTest {
 	public VnfInstanceTest() {
 		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		final OrikaMapperVnfm261 orikaVnfm = new OrikaMapperVnfm261();
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaConfiguration.configure(mapperFactory);
 		orikaVnfm.configure(mapperFactory);
 		podam = new PodamFactoryImpl();
@@ -74,7 +75,7 @@ public class VnfInstanceTest {
 		nsInstancesNsInstanceVnfInstance.setVnfdId("1234");
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceDescription("description");
 		nsInstancesNsInstanceVnfInstance.setVnfInstanceName("instance_name");
-		nsInstancesNsInstanceVnfInstance.setVnfPkgId("3bba2147-147a-41ab-a3ec-1a39e1b6d922");
+		nsInstancesNsInstanceVnfInstance.setVnfPkgId(UUID.fromString("3bba2147-147a-41ab-a3ec-1a39e1b6d922"));
 		final VnfInstanceInstantiatedVnfInfo instantiatedVnfInfo = new VnfInstanceInstantiatedVnfInfo();
 		instantiatedVnfInfo.setFlavourId("flavour");
 		instantiatedVnfInfo.setVnfState(VnfOperationalStateType.STARTED);

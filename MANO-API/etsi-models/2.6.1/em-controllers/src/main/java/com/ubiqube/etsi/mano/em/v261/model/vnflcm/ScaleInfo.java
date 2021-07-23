@@ -30,7 +30,6 @@ import io.swagger.annotations.ApiModelProperty;
  * ScaleInfo
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class ScaleInfo {
 	@JsonProperty("aspectId")
@@ -66,8 +65,7 @@ public class ScaleInfo {
 	}
 
 	/**
-	 * Indicates the scale level. The minimum value shall be 0 and the maximum value
-	 * shall be <= maxScaleLevel as described in the VNFD.
+	 * Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD.
 	 *
 	 * @return scaleLevel
 	 **/
@@ -112,8 +110,7 @@ public class ScaleInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

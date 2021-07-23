@@ -31,12 +31,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents configuration information for external CPs created from
- * a CPD.
+ * This type represents configuration information for external CPs created from a CPD.
  */
 @ApiModel(description = "This type represents configuration information for external CPs created from a CPD. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T18:14:17.202+01:00")
 
 public class VnfExtCpData {
 	@JsonProperty("cpdId")
@@ -81,8 +79,7 @@ public class VnfExtCpData {
 	}
 
 	/**
-	 * List of instance data that need to be configured on the CP instances created
-	 * from the respective CPD.
+	 * List of instance data that need to be configured on the CP instances created from the respective CPD.
 	 *
 	 * @return cpConfig
 	 **/
@@ -128,8 +125,7 @@ public class VnfExtCpData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

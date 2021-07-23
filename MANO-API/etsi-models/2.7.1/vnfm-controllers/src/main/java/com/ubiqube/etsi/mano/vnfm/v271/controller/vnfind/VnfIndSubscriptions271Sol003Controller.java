@@ -26,8 +26,8 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
@@ -36,7 +36,7 @@ import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscription;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscriptionRequest;
 
-@Controller
+@RestController
 public class VnfIndSubscriptions271Sol003Controller implements VnfIndSubscriptions271Sol003Api {
 	private final SubscriptionServiceV2 subscriptionService;
 

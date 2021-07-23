@@ -48,6 +48,7 @@ public class CpProtocolDataEntity implements Serializable {
 	@OneToOne
 	private IpOverEthernetAddressDataEntity ipOverEthernet = null;
 
+	// 2.7.1 Removed.
 	@OneToOne
 	private VnfExtCpConfiguration vnfExtCpConfiguration = null;
 

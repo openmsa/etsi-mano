@@ -14,8 +14,6 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 
@@ -130,10 +128,6 @@
 			<artifactId>spring-boot</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jms</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
@@ -225,7 +219,6 @@
 		<dependency>
 			<groupId>uk.co.jemos.podam</groupId>
 			<artifactId>podam</artifactId>
-			<version>7.2.5.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

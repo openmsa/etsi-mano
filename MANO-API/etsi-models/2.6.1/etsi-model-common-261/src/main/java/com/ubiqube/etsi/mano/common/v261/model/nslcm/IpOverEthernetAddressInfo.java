@@ -34,8 +34,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents information about a network address that has been
- * assigned. It shall comply with the provisions defined in Table 6.5.3.18-1.
+ * This type represents information about a network address that has been assigned. It shall comply with the provisions defined in Table 6.5.3.18-1.
  */
 @ApiModel(description = "This type represents information about a network address that has been assigned. It shall comply with the provisions defined in Table 6.5.3.18-1. ")
 @Validated
@@ -90,12 +89,6 @@ public class IpOverEthernetAddressInfo {
 	@JsonProperty("addressRange")
 	private IpOverEthernetAddressInfoAddressRange addressRange = null;
 
-	@JsonProperty("minAddress")
-	private String minAddress = null;
-
-	@JsonProperty("maxAddress")
-	private String maxAddress = null;
-
 	@JsonProperty("subnetId")
 	private String subnetId = null;
 
@@ -131,8 +124,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * Addresses assigned to the CP instance. Each entry represents IP addresses
-	 * assigned by fixed or dynamic IP address assignment per subnet.
+	 * Addresses assigned to the CP instance. Each entry represents IP addresses assigned by fixed or dynamic IP address assignment per subnet.
 	 *
 	 * @return ipAddresses
 	 **/
@@ -175,8 +167,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * Fixed addresses assigned (from the subnet defined by \"subnetId\" if
-	 * provided). See note.
+	 * Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). See note.
 	 *
 	 * @return addresses
 	 **/
@@ -197,9 +188,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * Indicates whether this set of addresses was assigned dynamically (true) or
-	 * based on address information provided as input from the API consumer (false).
-	 * Shall be present if \"addresses\" is present and shall be absent otherwise.
+	 * Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise.
 	 *
 	 * @return isDynamic
 	 **/
@@ -236,45 +225,11 @@ public class IpOverEthernetAddressInfo {
 		this.addressRange = addressRange;
 	}
 
-	public IpOverEthernetAddressInfo minAddress(final String minAddress) {
-		this.minAddress = minAddress;
-		return this;
-	}
-
 	/**
 	 * Lowest IP address belonging to the range
 	 *
 	 * @return minAddress
 	 **/
-	@ApiModelProperty(value = "Lowest IP address belonging to the range ")
-
-	public String getMinAddress() {
-		return minAddress;
-	}
-
-	public void setMinAddress(final String minAddress) {
-		this.minAddress = minAddress;
-	}
-
-	public IpOverEthernetAddressInfo maxAddress(final String maxAddress) {
-		this.maxAddress = maxAddress;
-		return this;
-	}
-
-	/**
-	 * Highest IP address belonging to the range.
-	 *
-	 * @return maxAddress
-	 **/
-	@ApiModelProperty(value = "Highest IP address belonging to the range. ")
-
-	public String getMaxAddress() {
-		return maxAddress;
-	}
-
-	public void setMaxAddress(final String maxAddress) {
-		this.maxAddress = maxAddress;
-	}
 
 	public IpOverEthernetAddressInfo subnetId(final String subnetId) {
 		this.subnetId = subnetId;
@@ -282,8 +237,7 @@ public class IpOverEthernetAddressInfo {
 	}
 
 	/**
-	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
-	 * this attribute is present, IP addresses are bound to that subnet.
+	 * Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet.
 	 *
 	 * @return subnetId
 	 **/
@@ -313,14 +267,12 @@ public class IpOverEthernetAddressInfo {
 				Objects.equals(this.addresses, ipOverEthernetAddressInfo.addresses) &&
 				Objects.equals(this.isDynamic, ipOverEthernetAddressInfo.isDynamic) &&
 				Objects.equals(this.addressRange, ipOverEthernetAddressInfo.addressRange) &&
-				Objects.equals(this.minAddress, ipOverEthernetAddressInfo.minAddress) &&
-				Objects.equals(this.maxAddress, ipOverEthernetAddressInfo.maxAddress) &&
 				Objects.equals(this.subnetId, ipOverEthernetAddressInfo.subnetId);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(macAddress, ipAddresses, type, addresses, isDynamic, addressRange, minAddress, maxAddress, subnetId);
+		return Objects.hash(macAddress, ipAddresses, type, addresses, isDynamic, addressRange, subnetId);
 	}
 
 	@Override
@@ -334,16 +286,13 @@ public class IpOverEthernetAddressInfo {
 		sb.append("    addresses: ").append(toIndentedString(addresses)).append("\n");
 		sb.append("    isDynamic: ").append(toIndentedString(isDynamic)).append("\n");
 		sb.append("    addressRange: ").append(toIndentedString(addressRange)).append("\n");
-		sb.append("    minAddress: ").append(toIndentedString(minAddress)).append("\n");
-		sb.append("    maxAddress: ").append(toIndentedString(maxAddress)).append("\n");
 		sb.append("    subnetId: ").append(toIndentedString(subnetId)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

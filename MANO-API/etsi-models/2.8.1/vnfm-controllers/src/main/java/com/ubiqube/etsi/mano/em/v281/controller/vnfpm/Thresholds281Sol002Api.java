@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.em.v281.controller.vnfpm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -51,6 +52,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "thresholds", description = "the thresholds API")
+@RolesAllowed({ "ROLE_EM" })
 public interface Thresholds281Sol002Api {
 
 	@ApiOperation(value = "", nickname = "thresholdsGet", notes = "The API consumer can use this method to query information about thresholds. ", response = Threshold.class, responseContainer = "List", tags = {})

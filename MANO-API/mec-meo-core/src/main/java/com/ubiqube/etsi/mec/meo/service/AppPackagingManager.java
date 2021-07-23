@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.mec.AppPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.mec.AppToscaProvider;
 
@@ -37,18 +37,18 @@ public class AppPackagingManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppPackagingManager.class);
 
-	private final List<RegistryHandler<AppToscaProvider>> providers;
+	private final List<PackageDescriptor<AppToscaProvider>> providers;
 
-	public AppPackagingManager(final List<RegistryHandler<AppToscaProvider>> _providers) {
+	public AppPackagingManager(final List<PackageDescriptor<AppToscaProvider>> _providers) {
 		providers = new ArrayList<>(_providers);
 	}
 
 	public AppPackageProvider getProviderFor(final byte[] data) {
-		for (final RegistryHandler<AppToscaProvider> provider : providers) {
-			LOG.info("Testing {} for package support.", provider.getName());
+		for (final PackageDescriptor<AppToscaProvider> provider : providers) {
+			LOG.info("Testing {} for package support.", provider.getProviderName());
 			if (provider.isProcessable(data)) {
-				LOG.info("Using {} for package.", provider.getName());
-				return provider.getNewInstance(data);
+				LOG.info("Using {} for package.", provider.getProviderName());
+				return provider.getNewReaderInstance(data);
 			}
 		}
 		LOG.info("No package support, using default.");
