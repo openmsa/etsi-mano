@@ -47,6 +47,7 @@
         <sections>Scale To Level</sections>
       </sections>
     </variable>
+    <variable displayName="Number Of Steps" name="params.numberOfSteps" startIncrement="0" type="Integer" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="8" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="1" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
   </variables>
   <example/>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Create_VNF_Instance">
@@ -157,6 +158,26 @@
     <task name="Task_Delete_VNF_Instance.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Delete_VNF_Instance/Tasks/</processPath>
       <displayName>Delete VNF Instance</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_In">
+    <displayName>Scale In</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_Scale_In_VNF_Instance.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_In/Tasks</processPath>
+      <displayName>Scale In VNF Instance</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_Out">
+    <displayName>Scale Out</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_Scale_Out_VNF_Instance.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_Out/Tasks</processPath>
+      <displayName>Scale Out VNF Instance</displayName>
     </task>
   </process>
   <information>
