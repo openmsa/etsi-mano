@@ -1,290 +1,315 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 
+import java.util.Map;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ResourceHandle;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type provides information about added, deleted, modified and temporary virtual storage resources. 
+ * This type provides information about added, deleted, modified and temporary virtual storage resources.
  */
 @Schema(description = "This type provides information about added, deleted, modified and temporary virtual storage resources. ")
 @Validated
 
+public class AffectedVirtualStorage {
+	@JsonProperty("id")
+	private String id = null;
 
-public class AffectedVirtualStorage   {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("virtualStorageDescId")
+	private String virtualStorageDescId = null;
 
-  @JsonProperty("virtualStorageDescId")
-  private String virtualStorageDescId = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists.
+	 */
+	public enum ChangeTypeEnum {
+		ADDED("ADDED"),
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. 
-   */
-  public enum ChangeTypeEnum {
-    ADDED("ADDED"),
-    
-    REMOVED("REMOVED"),
-    
-    MODIFIED("MODIFIED"),
-    
-    TEMPORARY("TEMPORARY");
+		REMOVED("REMOVED"),
 
-    private String value;
+		MODIFIED("MODIFIED"),
 
-    ChangeTypeEnum(String value) {
-      this.value = value;
-    }
+		TEMPORARY("TEMPORARY");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		private final String value;
 
-    @JsonCreator
-    public static ChangeTypeEnum fromValue(String text) {
-      for (ChangeTypeEnum b : ChangeTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("changeType")
-  private ChangeTypeEnum changeType = null;
+		ChangeTypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("storageResource")
-  private ResourceHandle storageResource = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("resourceDefinitionId")
-  private String resourceDefinitionId = null;
+		@JsonCreator
+		public static ChangeTypeEnum fromValue(final String text) {
+			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("zoneId")
-  private String zoneId = null;
+	@JsonProperty("changeType")
+	private ChangeTypeEnum changeType = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("storageResource")
+	private ResourceHandle storageResource = null;
 
-  public AffectedVirtualStorage id(String id) {
-    this.id = id;
-    return this;
-  }
+	@JsonProperty("resourceDefinitionId")
+	private String resourceDefinitionId = null;
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@JsonProperty("zoneId")
+	private String zoneId = null;
 
-    public String getId() {
-    return id;
-  }
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public AffectedVirtualStorage id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  public AffectedVirtualStorage virtualStorageDescId(String virtualStorageDescId) {
-    this.virtualStorageDescId = virtualStorageDescId;
-    return this;
-  }
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get virtualStorageDescId
-   * @return virtualStorageDescId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getId() {
+		return id;
+	}
 
-    public String getVirtualStorageDescId() {
-    return virtualStorageDescId;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setVirtualStorageDescId(String virtualStorageDescId) {
-    this.virtualStorageDescId = virtualStorageDescId;
-  }
+	public AffectedVirtualStorage virtualStorageDescId(final String virtualStorageDescId) {
+		this.virtualStorageDescId = virtualStorageDescId;
+		return this;
+	}
 
-  public AffectedVirtualStorage vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	/**
+	 * Get virtualStorageDescId
+	 *
+	 * @return virtualStorageDescId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get vnfdId
-   * @return vnfdId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfdId() {
-    return vnfdId;
-  }
+	public String getVirtualStorageDescId() {
+		return virtualStorageDescId;
+	}
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	public void setVirtualStorageDescId(final String virtualStorageDescId) {
+		this.virtualStorageDescId = virtualStorageDescId;
+	}
 
-  public AffectedVirtualStorage changeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-    return this;
-  }
+	public AffectedVirtualStorage vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. 
-   * @return changeType
-   **/
-  @Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. ")
-      @NotNull
+	/**
+	 * Get vnfdId
+	 *
+	 * @return vnfdId
+	 **/
+	@Schema(description = "")
 
-    public ChangeTypeEnum getChangeType() {
-    return changeType;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  public void setChangeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-  }
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-  public AffectedVirtualStorage storageResource(ResourceHandle storageResource) {
-    this.storageResource = storageResource;
-    return this;
-  }
+	public AffectedVirtualStorage changeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+		return this;
+	}
 
-  /**
-   * Get storageResource
-   * @return storageResource
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists.
+	 *
+	 * @return changeType
+	 **/
+	@Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. ")
+	@NotNull
 
-    @Valid
-    public ResourceHandle getStorageResource() {
-    return storageResource;
-  }
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
 
-  public void setStorageResource(ResourceHandle storageResource) {
-    this.storageResource = storageResource;
-  }
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
 
-  public AffectedVirtualStorage resourceDefinitionId(String resourceDefinitionId) {
-    this.resourceDefinitionId = resourceDefinitionId;
-    return this;
-  }
+	public AffectedVirtualStorage storageResource(final ResourceHandle storageResource) {
+		this.storageResource = storageResource;
+		return this;
+	}
 
-  /**
-   * Get resourceDefinitionId
-   * @return resourceDefinitionId
-   **/
-  @Schema(description = "")
-  
-    public String getResourceDefinitionId() {
-    return resourceDefinitionId;
-  }
+	/**
+	 * Get storageResource
+	 *
+	 * @return storageResource
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public void setResourceDefinitionId(String resourceDefinitionId) {
-    this.resourceDefinitionId = resourceDefinitionId;
-  }
+	@Valid
+	public ResourceHandle getStorageResource() {
+		return storageResource;
+	}
 
-  public AffectedVirtualStorage zoneId(String zoneId) {
-    this.zoneId = zoneId;
-    return this;
-  }
+	public void setStorageResource(final ResourceHandle storageResource) {
+		this.storageResource = storageResource;
+	}
 
-  /**
-   * Get zoneId
-   * @return zoneId
-   **/
-  @Schema(description = "")
-  
-    public String getZoneId() {
-    return zoneId;
-  }
+	public AffectedVirtualStorage resourceDefinitionId(final String resourceDefinitionId) {
+		this.resourceDefinitionId = resourceDefinitionId;
+		return this;
+	}
 
-  public void setZoneId(String zoneId) {
-    this.zoneId = zoneId;
-  }
+	/**
+	 * Get resourceDefinitionId
+	 *
+	 * @return resourceDefinitionId
+	 **/
+	@Schema(description = "")
 
-  public AffectedVirtualStorage metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public String getResourceDefinitionId() {
+		return resourceDefinitionId;
+	}
 
-  /**
-   * Get metadata
-   * @return metadata
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public void setResourceDefinitionId(final String resourceDefinitionId) {
+		this.resourceDefinitionId = resourceDefinitionId;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	public AffectedVirtualStorage zoneId(final String zoneId) {
+		this.zoneId = zoneId;
+		return this;
+	}
 
+	/**
+	 * Get zoneId
+	 *
+	 * @return zoneId
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffectedVirtualStorage affectedVirtualStorage = (AffectedVirtualStorage) o;
-    return Objects.equals(this.id, affectedVirtualStorage.id) &&
-        Objects.equals(this.virtualStorageDescId, affectedVirtualStorage.virtualStorageDescId) &&
-        Objects.equals(this.vnfdId, affectedVirtualStorage.vnfdId) &&
-        Objects.equals(this.changeType, affectedVirtualStorage.changeType) &&
-        Objects.equals(this.storageResource, affectedVirtualStorage.storageResource) &&
-        Objects.equals(this.resourceDefinitionId, affectedVirtualStorage.resourceDefinitionId) &&
-        Objects.equals(this.zoneId, affectedVirtualStorage.zoneId) &&
-        Objects.equals(this.metadata, affectedVirtualStorage.metadata);
-  }
+	public String getZoneId() {
+		return zoneId;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, virtualStorageDescId, vnfdId, changeType, storageResource, resourceDefinitionId, zoneId, metadata);
-  }
+	public void setZoneId(final String zoneId) {
+		this.zoneId = zoneId;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffectedVirtualStorage {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    virtualStorageDescId: ").append(toIndentedString(virtualStorageDescId)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
-    sb.append("    storageResource: ").append(toIndentedString(storageResource)).append("\n");
-    sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
-    sb.append("    zoneId: ").append(toIndentedString(zoneId)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public AffectedVirtualStorage metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Get metadata
+	 *
+	 * @return metadata
+	 **/
+	@Schema(description = "")
+
+	@Valid
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+		final AffectedVirtualStorage affectedVirtualStorage = (AffectedVirtualStorage) o;
+		return Objects.equals(this.id, affectedVirtualStorage.id) &&
+				Objects.equals(this.virtualStorageDescId, affectedVirtualStorage.virtualStorageDescId) &&
+				Objects.equals(this.vnfdId, affectedVirtualStorage.vnfdId) &&
+				Objects.equals(this.changeType, affectedVirtualStorage.changeType) &&
+				Objects.equals(this.storageResource, affectedVirtualStorage.storageResource) &&
+				Objects.equals(this.resourceDefinitionId, affectedVirtualStorage.resourceDefinitionId) &&
+				Objects.equals(this.zoneId, affectedVirtualStorage.zoneId) &&
+				Objects.equals(this.metadata, affectedVirtualStorage.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, virtualStorageDescId, vnfdId, changeType, storageResource, resourceDefinitionId, zoneId, metadata);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffectedVirtualStorage {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    virtualStorageDescId: ").append(toIndentedString(virtualStorageDescId)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
+		sb.append("    storageResource: ").append(toIndentedString(storageResource)).append("\n");
+		sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");
+		sb.append("    zoneId: ").append(toIndentedString(zoneId)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

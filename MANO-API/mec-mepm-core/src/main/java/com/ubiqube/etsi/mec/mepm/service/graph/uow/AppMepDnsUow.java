@@ -19,10 +19,10 @@ package com.ubiqube.etsi.mec.mepm.service.graph.uow;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.mec.MepDnsRulesNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.mec.MepDnsRulesNode;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepDnsRulesTask;
 

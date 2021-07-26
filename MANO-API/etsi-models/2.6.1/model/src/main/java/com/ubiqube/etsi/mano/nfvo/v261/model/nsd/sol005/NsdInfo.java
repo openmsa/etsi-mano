@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -39,7 +40,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a response for the query NSD operation. ")
 @Validated
-
 
 public class NsdInfo {
 	@JsonProperty("id")
@@ -62,15 +62,15 @@ public class NsdInfo {
 
 	@JsonProperty("vnfPkgIds")
 	@Valid
-	private List<String> vnfPkgIds = null;
+	private List<UUID> vnfPkgIds = null;
 
 	@JsonProperty("pnfdInfoIds")
 	@Valid
-	private List<String> pnfdInfoIds = null;
+	private List<UUID> pnfdInfoIds = null;
 
 	@JsonProperty("nestedNsdInfoIds")
 	@Valid
-	private List<String> nestedNsdInfoIds = null;
+	private List<UUID> nestedNsdInfoIds = null;
 
 	@JsonProperty("nsdOnboardingState")
 	private NsdOnboardingStateType nsdOnboardingState = null;
@@ -96,8 +96,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Identifier of the on boarded individual NS descriptor resource. This
-	 * identifier is allocated by the NFVO.
+	 * Identifier of the on boarded individual NS descriptor resource. This identifier is allocated by the NFVO.
 	 *
 	 * @return id
 	 **/
@@ -118,9 +117,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * This identifier, which is allocated by the NSD designer, identifies the NSD
-	 * in a globally unique way. It is copied from the NSD content and shall be
-	 * present after the NSD content is on-boarded.
+	 * This identifier, which is allocated by the NSD designer, identifies the NSD in a globally unique way. It is copied from the NSD content and shall be present after the NSD content is on-boarded.
 	 *
 	 * @return nsdId
 	 **/
@@ -140,8 +137,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Name of the on boarded NSD. This information is copied from the NSD content
-	 * and shall be present after the NSD content is on-boarded.
+	 * Name of the on boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded.
 	 *
 	 * @return nsdName
 	 **/
@@ -161,8 +157,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Version of the on-boarded NSD. This information is copied from the NSD
-	 * content and shall be present after the NSD content is on-boarded.
+	 * Version of the on-boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded.
 	 *
 	 * @return nsdVersion
 	 **/
@@ -182,8 +177,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Designer of the on-boarded NSD. This information is copied from the NSD
-	 * content and shall be present after the NSD content is on-boarded.
+	 * Designer of the on-boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded.
 	 *
 	 * @return nsdDesigner
 	 **/
@@ -203,9 +197,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * This identifier, which is allocated by the NSD designer, identifies an NSD in
-	 * a version independent manner. This information is copied from the NSD content
-	 * and shall be present after the NSD content is on-boarded.
+	 * This identifier, which is allocated by the NSD designer, identifies an NSD in a version independent manner. This information is copied from the NSD content and shall be present after the NSD content is on-boarded.
 	 *
 	 * @return nsdInvariantId
 	 **/
@@ -219,12 +211,12 @@ public class NsdInfo {
 		this.nsdInvariantId = nsdInvariantId;
 	}
 
-	public NsdInfo vnfPkgIds(final List<String> vnfPkgIds) {
+	public NsdInfo vnfPkgIds(final List<UUID> vnfPkgIds) {
 		this.vnfPkgIds = vnfPkgIds;
 		return this;
 	}
 
-	public NsdInfo addVnfPkgIdsItem(final String vnfPkgIdsItem) {
+	public NsdInfo addVnfPkgIdsItem(final UUID vnfPkgIdsItem) {
 		if (this.vnfPkgIds == null) {
 			this.vnfPkgIds = new ArrayList<>();
 		}
@@ -233,27 +225,26 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Identifies the VNF package for the VNFD referenced by the on-boarded NS
-	 * descriptor resource.
+	 * Identifies the VNF package for the VNFD referenced by the on-boarded NS descriptor resource.
 	 *
 	 * @return vnfPkgIds
 	 **/
 	@ApiModelProperty(value = "Identifies the VNF package for the VNFD referenced by the on-boarded NS descriptor resource. ")
 
-	public List<String> getVnfPkgIds() {
+	public List<UUID> getVnfPkgIds() {
 		return vnfPkgIds;
 	}
 
-	public void setVnfPkgIds(final List<String> vnfPkgIds) {
+	public void setVnfPkgIds(final List<UUID> vnfPkgIds) {
 		this.vnfPkgIds = vnfPkgIds;
 	}
 
-	public NsdInfo pnfdInfoIds(final List<String> pnfdInfoIds) {
+	public NsdInfo pnfdInfoIds(final List<UUID> pnfdInfoIds) {
 		this.pnfdInfoIds = pnfdInfoIds;
 		return this;
 	}
 
-	public NsdInfo addPnfdInfoIdsItem(final String pnfdInfoIdsItem) {
+	public NsdInfo addPnfdInfoIdsItem(final UUID pnfdInfoIdsItem) {
 		if (this.pnfdInfoIds == null) {
 			this.pnfdInfoIds = new ArrayList<>();
 		}
@@ -262,27 +253,26 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Identifies the PnfdInfo element for the PNFD referenced by the on-boarded NS
-	 * descriptor resource.
+	 * Identifies the PnfdInfo element for the PNFD referenced by the on-boarded NS descriptor resource.
 	 *
 	 * @return pnfdInfoIds
 	 **/
 	@ApiModelProperty(value = "Identifies the PnfdInfo element for the PNFD referenced by the on-boarded NS descriptor resource. ")
 
-	public List<String> getPnfdInfoIds() {
+	public List<UUID> getPnfdInfoIds() {
 		return pnfdInfoIds;
 	}
 
-	public void setPnfdInfoIds(final List<String> pnfdInfoIds) {
+	public void setPnfdInfoIds(final List<UUID> pnfdInfoIds) {
 		this.pnfdInfoIds = pnfdInfoIds;
 	}
 
-	public NsdInfo nestedNsdInfoIds(final List<String> nestedNsdInfoIds) {
+	public NsdInfo nestedNsdInfoIds(final List<UUID> nestedNsdInfoIds) {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 		return this;
 	}
 
-	public NsdInfo addNestedNsdInfoIdsItem(final String nestedNsdInfoIdsItem) {
+	public NsdInfo addNestedNsdInfoIdsItem(final UUID nestedNsdInfoIdsItem) {
 		if (this.nestedNsdInfoIds == null) {
 			this.nestedNsdInfoIds = new ArrayList<>();
 		}
@@ -291,18 +281,17 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Identifies the NsdInfo element for the nested NSD referenced by the
-	 * on-boarded NS descriptor resource.
+	 * Identifies the NsdInfo element for the nested NSD referenced by the on-boarded NS descriptor resource.
 	 *
 	 * @return nestedNsdInfoIds
 	 **/
 	@ApiModelProperty(value = "Identifies the NsdInfo element for the nested NSD referenced by the on-boarded NS descriptor resource. ")
 
-	public List<String> getNestedNsdInfoIds() {
+	public List<UUID> getNestedNsdInfoIds() {
 		return nestedNsdInfoIds;
 	}
 
-	public void setNestedNsdInfoIds(final List<String> nestedNsdInfoIds) {
+	public void setNestedNsdInfoIds(final List<UUID> nestedNsdInfoIds) {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 	}
 
@@ -335,10 +324,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Failure details of current on boarding procedure. See clause 6.3 of ETSI GS
-	 * NFV-SOL 013 for the details of \"ProblemDetails\" structure. It shall be
-	 * present when the \"nsdOnboardingState\" attribute is CREATED and the
-	 * uploading or processing fails in NFVO.
+	 * Failure details of current on boarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. It shall be present when the \"nsdOnboardingState\" attribute is CREATED and the uploading or processing fails in NFVO.
 	 *
 	 * @return onboardingFailureDetails
 	 **/
@@ -360,8 +346,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Operational state of the individual NS descriptor resource. This attribute
-	 * can be modified with the PATCH method.
+	 * Operational state of the individual NS descriptor resource. This attribute can be modified with the PATCH method.
 	 *
 	 * @return nsdOperationalState
 	 **/
@@ -407,8 +392,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * User defined data for the individual NS descriptor resource. This attribute
-	 * can be modified with the PATCH method.
+	 * User defined data for the individual NS descriptor resource. This attribute can be modified with the PATCH method.
 	 *
 	 * @return userDefinedData
 	 **/
@@ -503,8 +487,7 @@ public class NsdInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

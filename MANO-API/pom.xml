@@ -13,15 +13,15 @@
 	<name>mano-build</name>
 	<description>Build document for ETSI-MANO project</description>
 	<packaging>pom</packaging>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 	<modules>
+		<module>ubi-spring-config</module>
 		<module>nfvo-core</module>
 		<module>nfvo-webapp</module>
 		<module>vnfm-core</module>
 		<module>vnfm-webapp</module>
+		<module>mano-super-pom</module>
+		<module>mano-super-webapp</module>
+		<module>mano-auth</module>
 		<module>mano-core-api</module>
 		<module>mano-vim-api</module>
 		<module>mano-vim-openstack</module>
@@ -32,5 +32,6 @@
 		<module>mec-common</module>
 		<module>mec-meo-core</module>
 		<module>mec-mepm-core</module>
+		<module>orchestration</module>
 	</modules>
 </project>

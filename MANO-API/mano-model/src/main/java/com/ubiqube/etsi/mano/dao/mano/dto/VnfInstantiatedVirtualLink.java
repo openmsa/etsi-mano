@@ -16,10 +16,21 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -28,23 +39,6 @@ public class VnfInstantiatedVirtualLink extends VnfInstantiatedBase {
 
 	private VduInstantiationLevel instantiationLevel;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+	private List<String> vnfLinkPortIds;
 
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	@Override
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
-	}
 }

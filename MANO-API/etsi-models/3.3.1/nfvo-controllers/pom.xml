@@ -4,12 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>etsi-nfvo-331-controllers</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>etsi-nfvo-331-controllers</name>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>etsi-models-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 	<repositories>
 		<repository>
 			<id>nexus</id>
@@ -41,10 +42,6 @@
 			<artifactId>spring-hateoas</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.threeten</groupId>
-			<artifactId>threetenbp</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-model-331</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -72,7 +69,6 @@
 		<dependency>
 			<groupId>uk.co.jemos.podam</groupId>
 			<artifactId>podam</artifactId>
-			<version>7.2.5.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -139,10 +135,10 @@
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-eclipse-tools</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
 </project>

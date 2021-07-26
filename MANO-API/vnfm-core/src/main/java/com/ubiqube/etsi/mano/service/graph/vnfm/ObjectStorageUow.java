@@ -38,7 +38,7 @@ public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String exec(final VnfParameters params) {
-		return params.getVim().createObjectStorage(params.getVimConnectionInformation(), vnfStorage);
+		return params.getVim().storage(params.getVimConnectionInformation()).createObjectStorage(vnfStorage);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteObjectStorage(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().storage(params.getVimConnectionInformation()).deleteObjectStorage(params.getVimResourceId());
 		return null;
 	}
 

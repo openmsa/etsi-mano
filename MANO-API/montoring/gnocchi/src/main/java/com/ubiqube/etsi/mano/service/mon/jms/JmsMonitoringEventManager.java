@@ -19,8 +19,8 @@ package com.ubiqube.etsi.mano.service.mon.jms;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.service.mon.MonitoringEventManager;
+import com.ubiqube.etsi.mano.service.mon.data.BatchPollingJob;
 
 /**
  *
@@ -29,16 +29,16 @@ import com.ubiqube.etsi.mano.service.mon.MonitoringEventManager;
  */
 @Service
 public class JmsMonitoringEventManager implements MonitoringEventManager {
-	private final JmsTemplate jmsTemplate;
+	private final JmsTemplate jmsQueueTemplate;
 
-	public JmsMonitoringEventManager(final JmsTemplate _jmsTemplate) {
-		jmsTemplate = _jmsTemplate;
+	public JmsMonitoringEventManager(final JmsTemplate jmsQueueTemplate) {
+		this.jmsQueueTemplate = jmsQueueTemplate;
 	}
 
 	@Override
-	public void sendGetDataEvent(final PmJob pmJob) {
+	public void sendGetDataEvent(final BatchPollingJob pmJob) {
 		// PmType controller ?
-		jmsTemplate.convertAndSend("mano.monitoring.gnocchi.data-polling", pmJob);
+		jmsQueueTemplate.convertAndSend("mano.monitoring.gnocchi.data-polling", pmJob);
 	}
 
 }

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -54,6 +55,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "thresholds", description = "the thresholds API")
 @RequestMapping(value = "/sol005/nspm/v1/thresholds", headers = "Version=2.7.1")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface ThresholdsApiNfvo {
 
 	Logger log = LoggerFactory.getLogger(ThresholdsApiNfvo.class);

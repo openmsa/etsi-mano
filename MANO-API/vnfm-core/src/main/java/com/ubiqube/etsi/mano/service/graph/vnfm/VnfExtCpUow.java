@@ -21,9 +21,9 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
@@ -43,12 +43,12 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 	public String exec(final VnfParameters params) {
 		final String networkId = params.getContext().get(extCp.getInternalVirtualLink());
 		final String extNetwork = params.getContext().get(extCp.getExternalVirtualLink());
-		return params.getVim().createRouter(params.getVimConnectionInformation(), task.getAlias(), networkId, extNetwork);
+		return params.getVim().network(params.getVimConnectionInformation()).createRouter(task.getAlias(), networkId, extNetwork);
 	}
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteRouter(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteRouter(params.getVimResourceId());
 		return null;
 	}
 
@@ -64,6 +64,6 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public List<WfProduce> getProduce() {
-		return Arrays.asList(new WfProduce(com.ubiqube.etsi.mano.service.vim.node.vnfm.VnfExtCp.class, task.getToscaName(), task.getId()));
+		return Arrays.asList(new WfProduce(com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp.class, task.getToscaName(), task.getId()));
 	}
 }

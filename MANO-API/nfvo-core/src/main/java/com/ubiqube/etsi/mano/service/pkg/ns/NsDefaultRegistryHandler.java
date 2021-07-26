@@ -16,14 +16,15 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.ns;
 
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsDefaultRegistryHandler implements RegistryHandler<NsPackageProvider> {
+public class NsDefaultRegistryHandler implements PackageDescriptor<NsPackageProvider> {
 
 	@Override
 	public boolean isProcessable(final byte[] data) {
@@ -31,13 +32,19 @@ public class NsDefaultRegistryHandler implements RegistryHandler<NsPackageProvid
 	}
 
 	@Override
-	public String getName() {
+	public String getProviderName() {
 		return "NSD default package processor.";
 	}
 
 	@Override
-	public NsPackageProvider getNewInstance(final byte[] data) {
+	public NsPackageProvider getNewReaderInstance(final byte[] data) {
 		return new DefaultNsPackageProvider();
+	}
+
+	@Override
+	public ExecutionGraph getBlueprint() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

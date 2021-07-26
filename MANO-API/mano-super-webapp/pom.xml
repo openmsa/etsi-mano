@@ -9,9 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ubiqube.mano</groupId>
 	<artifactId>mano-super-webapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>mano-super-webapp</name>
 	<description>ETSI-MANO super pom for webapps.</description>
 	<packaging>pom</packaging>
@@ -42,7 +40,7 @@
 				<dependency>
 					<groupId>org.hibernate.search</groupId>
 					<artifactId>hibernate-search-backend-lucene</artifactId>
-					<version>6.0.0.Final</version>
+					<version>6.0.2.Final</version>
 					<scope>runtime</scope>
 				</dependency>
 				<dependency>

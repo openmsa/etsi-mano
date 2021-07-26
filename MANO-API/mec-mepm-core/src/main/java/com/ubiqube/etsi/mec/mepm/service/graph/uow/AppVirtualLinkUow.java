@@ -23,9 +23,9 @@ import java.util.List;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mec.tasks.AppNetworkTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 
 /**
@@ -51,12 +51,12 @@ public class AppVirtualLinkUow extends AppAbstractUnitOfWork {
 	@Override
 	public String exec(final AppParameters params) {
 		final String domainName = null; // dnsZone
-		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, networkTask.getAlias(), domainName, null);
+		return params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, networkTask.getAlias(), domainName, null);
 	}
 
 	@Override
 	public String rollback(final AppParameters params) {
-		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteVirtualLink(params.getVimResourceId());
 		return null;
 	}
 

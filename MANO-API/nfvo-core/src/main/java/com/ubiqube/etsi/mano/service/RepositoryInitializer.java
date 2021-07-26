@@ -40,7 +40,7 @@ public class RepositoryInitializer {
 
 	private final Low lowDriver;
 
-	private final ClassPathConverter cpConverter = new ClassPathConverter();
+	private static final ClassPathConverter CP_CONVERTER = new ClassPathConverter();
 
 	private final NamingStrategy namingStrategy;
 
@@ -60,7 +60,7 @@ public class RepositoryInitializer {
 		if (!lowDriver.exist(NVFO_DATAFILE_BASE_PATH)) {
 			lowDriver.mkdir(NVFO_DATAFILE_BASE_PATH);
 		}
-		final Set<Class<?>> set = cpConverter.getList();
+		final Set<Class<?>> set = CP_CONVERTER.getList();
 		set.stream().forEach(x -> {
 			final Path root = namingStrategy.getRoot(x);
 			lowDriver.mkdir(root.toString());

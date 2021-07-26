@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +39,11 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
 
 import ma.glasnost.orika.MapperFacade;
 
-@RolesAllowed({ "ROLE_OSSBSS" })
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class PmJobs261Sol005Controller implements PmJobs261Sol005Api {
 	private static final String PMJ_SEARCH_DEFAULT_EXCLUDE_FIELDS = "";

@@ -30,7 +30,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Details of a simple threshold. Shall be present if thresholdType=\"SIMPLE\". ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:40:34.645+01:00")
+
 
 public class ThresholdCriteriaSimpleThresholdDetails   {
   @JsonProperty("thresholdValue")

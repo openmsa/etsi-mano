@@ -36,7 +36,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This type represents the information on virtualised compute and storage resources used by a VNFC in a VNF instance. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:14:43.989+01:00")
+
 
 public class VnfcResourceInfo   {
   @JsonProperty("id")

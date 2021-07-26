@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class GrantTest {
@@ -38,7 +39,7 @@ public class GrantTest {
 
 	public GrantTest() {
 		final OrikaConfigurationNfvo261 orikaConfiguration = new OrikaConfigurationNfvo261();
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaConfiguration.configure(mapperFactory);
 
 		podam = new PodamFactoryImpl();

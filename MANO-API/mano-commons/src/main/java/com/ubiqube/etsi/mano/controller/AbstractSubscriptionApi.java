@@ -16,8 +16,9 @@
  */
 package com.ubiqube.etsi.mano.controller;
 
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -105,7 +106,7 @@ public abstract class AbstractSubscriptionApi<U extends WebEntity<? extends U>> 
 	 *
 	 */
 	public final ResponseEntity<U> subscriptionGetById(final String subscriptionId) {
-		final Subscription res = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(UUID.fromString(subscriptionId), subscriptionType);
+		final Subscription res = vnfSubscriptionManagement.subscriptionsSubscriptionIdGet(getSafeUUID(subscriptionId), subscriptionType);
 		final U pkgm = mapper.map(res, clazz);
 		setLink(pkgm);
 		return ResponseEntity.ok(pkgm);

@@ -22,6 +22,7 @@
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "vnf_lcm_op_occs", description = "the vnf_lcm_op_occs API")
 @RequestMapping("/sol002/vnflcm/v1")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfLcmOpOccs261Sol002Api {
 
 	@ApiOperation(value = "", nickname = "vnfLcmOpOccsGet", notes = "The client can use this method to query status information about multiple VNF lifecycle management operation occurrences. ", response = VnfLcmOpOcc.class, tags = {})

@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageProvider;
+import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.AddressData;
@@ -43,7 +43,7 @@ import tosca.policies.nfv.SecurityGroupRule;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ToscaNsPackageProvider extends AbstractPackageProvider implements NsPackageProvider {
+public class ToscaNsPackageProvider extends AbstractPackageReader implements NsPackageProvider {
 
 	public ToscaNsPackageProvider(final byte[] data) {
 		super(data);

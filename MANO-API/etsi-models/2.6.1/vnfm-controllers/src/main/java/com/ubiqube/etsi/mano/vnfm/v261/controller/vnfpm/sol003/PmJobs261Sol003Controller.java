@@ -17,49 +17,41 @@
 
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol003;
 
-import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
-import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
+import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;
 
-import ma.glasnost.orika.MapperFacade;
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
-@RolesAllowed({ "ROLE_EM" })
-@RequestMapping("/sol003/vnffm/v1")
 public class PmJobs261Sol003Controller implements PmJobs261Sol003Api {
 
-	private final MapperFacade mapper;
+	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;
 
-	private final VnfmPmController vnfmPmController;
-
-	public PmJobs261Sol003Controller(final VnfmPmController _vnfmPmController, final MapperFacade _mapper) {
-		vnfmPmController = _vnfmPmController;
-		mapper = _mapper;
+	public PmJobs261Sol003Controller(final VnfmPmGenericFrontController vnfmPmGenericFrontController) {
+		this.vnfmPmGenericFrontController = vnfmPmGenericFrontController;
 	}
 
 	@Override
 	public ResponseEntity<String> pmJobsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		return vnfmPmController.search(requestParams, PmJob.class, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, PmJobs261Sol003Controller::makeLinks);
+		return vnfmPmGenericFrontController.search(requestParams, PmJob.class, PmJobs261Sol003Controller::makeLinks);
 	}
 
 	private static void makeLinks(final PmJob x) {
@@ -75,33 +67,28 @@ public class PmJobs261Sol003Controller implements PmJobs261Sol003Api {
 		x.setLinks(links);
 	}
 
+	private static String makeSelf(final PmJob pmjob) {
+		return linkTo(methodOn(PmJobs261Sol003Api.class).pmJobsPmJobIdGet(pmjob.getId())).withSelfRel().getHref();
+	}
+
 	@Override
 	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
-		vnfmPmController.delete(UUID.fromString(pmJobId));
-		return ResponseEntity.noContent().build();
+		return vnfmPmGenericFrontController.deleteById(UUID.fromString(pmJobId));
 	}
 
 	@Override
 	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobIdn) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.PmJob pmJob = vnfmPmController.findById(UUID.fromString(pmJobIdn));
-		final PmJob ret = mapper.map(pmJob, PmJob.class);
-		makeLinks(ret);
-		return ResponseEntity.ok(ret);
+		return vnfmPmGenericFrontController.findById(UUID.fromString(pmJobIdn), PmJob.class, PmJobs261Sol003Controller::makeLinks);
 	}
 
 	@Override
 	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport pm = vnfmPmController.findReport(UUID.fromString(pmJobId), UUID.fromString(reportId));
-		return ResponseEntity.ok(mapper.map(pm, PerformanceReport.class));
+		return vnfmPmGenericFrontController.findReportById(pmJobId, reportId, PerformanceReport.class);
 	}
 
 	@Override
-	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) throws URISyntaxException {
-		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
-		res = vnfmPmController.save(res);
-		final PmJob obj = mapper.map(res, PmJob.class);
-		makeLinks(obj);
-		return ResponseEntity.created(new URI(obj.getLinks().getSelf().getHref())).body(obj);
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest createPmJobRequest) {
+		return vnfmPmGenericFrontController.pmJobsPost(createPmJobRequest, PmJob.class, PmJobs261Sol003Controller::makeLinks, PmJobs261Sol003Controller::makeSelf);
 	}
 
 }

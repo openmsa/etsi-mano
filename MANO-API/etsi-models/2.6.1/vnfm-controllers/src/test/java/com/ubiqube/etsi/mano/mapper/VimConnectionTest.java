@@ -31,13 +31,14 @@ import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
 public class VimConnectionTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public VimConnectionTest() {
 		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
-		mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaConfiguration.configure(mapperFactory);
 	}
 

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vrqan;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @RequestMapping("/sol003/vrqan/v1/notification")
+@RolesAllowed({ "ROLE_NFVO" })
 public interface VrQanNotification261Sol003Api {
 	@ApiOperation(value = "", nickname = "uRIIsProvidedByTheClientWhenCreatingTheSubscriptionAlarmListRebuiltNotificationGet", notes = "The GET method allows the server to test the notification endpoint that is provided by the client, e.g. during subscription. This method shall follow the provisions specified in the tables 7.4.6.3.2-1 and 7.4.6.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {

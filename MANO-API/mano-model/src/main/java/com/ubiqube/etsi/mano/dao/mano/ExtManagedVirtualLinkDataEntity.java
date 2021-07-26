@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -25,8 +26,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Setter
+@Getter
 @Entity
 public class ExtManagedVirtualLinkDataEntity implements Serializable {
 	/** Serial. */
@@ -38,61 +50,24 @@ public class ExtManagedVirtualLinkDataEntity implements Serializable {
 
 	private String vnfVirtualLinkDescId = null;
 
+	// 3.3.1
+	private String vnfdId;
+
 	private String vimConnectionId = null;
 
 	private String resourceProviderId = null;
 
 	private String resourceId = null;
 
+	private String vimLevelResourceType;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<LinkPortInfo> vnfLinkPorts;
+
+	// 3.3.1
+	private String extManagedMultisiteVirtualLinkId;
+
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private GrantResponse grants;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getVnfVirtualLinkDescId() {
-		return vnfVirtualLinkDescId;
-	}
-
-	public void setVnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
-		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
-	}
-
-	public String getVimConnectionId() {
-		return vimConnectionId;
-	}
-
-	public void setVimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
-	}
-
-	public String getResourceProviderId() {
-		return resourceProviderId;
-	}
-
-	public void setResourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getResourceId() {
-		return resourceId;
-	}
-
-	public void setResourceId(final String resourceId) {
-		this.resourceId = resourceId;
-	}
-
-	public GrantResponse getGrants() {
-		return grants;
-	}
-
-	public void setGrants(final GrantResponse grants) {
-		this.grants = grants;
-	}
 
 }

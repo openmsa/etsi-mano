@@ -21,10 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsVlNode;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.SapNode;
 
 /**
  *

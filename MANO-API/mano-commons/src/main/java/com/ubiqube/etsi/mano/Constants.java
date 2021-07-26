@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.springframework.util.MultiValueMap;
@@ -174,4 +176,8 @@ public final class Constants {
 		}
 	}
 
+	@Nonnull
+	public static UUID getSafeUUID(final String uuid) {
+		return UUID.fromString(uuid);
+	}
 }

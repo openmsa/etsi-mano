@@ -20,51 +20,29 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.security.RolesAllowed;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.nsd.PnfdController;
-import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
+import com.ubiqube.etsi.mano.controller.nsd.PnfFrontController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.PnfdInfoModifications;
 
-import ma.glasnost.orika.MapperFacade;
-
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol005Api {
+	private final PnfFrontController pnfFrontController;
 
-	private static final Logger LOG = LoggerFactory.getLogger(PnfDescriptors261Sol005Controller.class);
-
-	private static final Set<String> PNFD_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id"));
-
-	private static final String PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS = "userDefinedData";
-
-	private final PnfdController pnfdController;
-
-	private final MapperFacade mapper;
-
-	public PnfDescriptors261Sol005Controller(final PnfdController _pnfdController, final MapperFacade _mapper) {
-		pnfdController = _pnfdController;
-		mapper = _mapper;
-		LOG.info("Starting PNF Management SOL005 Controller.");
+	public PnfDescriptors261Sol005Controller(final PnfFrontController pnfFrontController) {
+		super();
+		this.pnfFrontController = pnfFrontController;
 	}
 
 	/**
@@ -76,7 +54,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	@Override
 	public ResponseEntity<String> pnfDescriptorsGet(@Nonnull @RequestParam final MultiValueMap<String, String> requestParams) {
 		final Consumer<PnfdInfo> setLink = x -> x.setLinks(makeLinks(x));
-		return pnfdController.search(requestParams, PnfdInfo.class, PNFD_SEARCH_DEFAULT_EXCLUDE_FIELDS, PNFD_SEARCH_MANDATORY_FIELDS, setLink);
+		return pnfFrontController.search(requestParams, PnfdInfo.class, setLink);
 	}
 
 	/**
@@ -88,8 +66,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdDelete(final String pnfdInfoId) {
-		pnfdController.pnfDescriptorsPnfdInfoIdDelete(UUID.fromString(pnfdInfoId));
-		return ResponseEntity.noContent().build();
+		return pnfFrontController.delete(pnfdInfoId);
 	}
 
 	/**
@@ -100,10 +77,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPnfdInfoIdGet(final String pnfdInfoId) {
-		final PnfDescriptor pnfdInfoDb = pnfdController.pnfDescriptorsPnfdInfoIdGet(UUID.fromString(pnfdInfoId));
-		final PnfdInfo pnfdInfo = mapper.map(pnfdInfoDb, PnfdInfo.class);
-		pnfdInfo.setLinks(makeLinks(pnfdInfo));
-		return new ResponseEntity<>(pnfdInfo, HttpStatus.OK);
+		return pnfFrontController.findById(pnfdInfoId, PnfdInfo.class, PnfDescriptors261Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -114,9 +88,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<PnfdInfoModifications> pnfDescriptorsPnfdInfoIdPatch(final String pnfdInfoId, final String contentType, final PnfdInfoModifications body) {
-		// : Implement...
-
-		return null;
+		return pnfFrontController.modify(pnfdInfoId, contentType, body);
 	}
 
 	/**
@@ -127,8 +99,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentGet(final String pnfdInfoId, final String accept) {
-		// : Implement...
-		return ResponseEntity.noContent().build();
+		return pnfFrontController.getContent(pnfdInfoId, null);
 	}
 
 	/**
@@ -139,8 +110,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<Void> pnfDescriptorsPnfdInfoIdPnfdContentPut(final String pnfdInfoId, final String accept) {
-		// PnfdOnBoardingNotification OSS/BSS
-		return ResponseEntity.noContent().build();
+		return pnfFrontController.putContent(pnfdInfoId, accept);
 	}
 
 	/**
@@ -151,10 +121,7 @@ public class PnfDescriptors261Sol005Controller implements PnfDescriptors261Sol00
 	 */
 	@Override
 	public ResponseEntity<PnfdInfo> pnfDescriptorsPost(final String contentType, final CreatePnfdInfoRequest body) {
-		final PnfDescriptor pnfdDb = pnfdController.pnfDescriptorsPost(body.getUserDefinedData());
-		final PnfdInfo pnfd = mapper.map(pnfdDb, PnfdInfo.class);
-		pnfd.setLinks(makeLinks(pnfd));
-		return new ResponseEntity<>(pnfd, HttpStatus.OK);
+		return pnfFrontController.create(body.getUserDefinedData(), PnfdInfo.class, PnfDescriptors261Sol005Controller::makeLinks);
 	}
 
 	private static PnfdInfoLinks makeLinks(final PnfdInfo x) {

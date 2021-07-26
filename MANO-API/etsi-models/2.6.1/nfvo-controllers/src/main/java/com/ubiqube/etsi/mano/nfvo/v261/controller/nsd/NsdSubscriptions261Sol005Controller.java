@@ -20,48 +20,31 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdmSubscriptionRequest;
-import com.ubiqube.etsi.mano.service.SubscriptionService;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RolesAllowed({ "ROLE_OSSBSS" })
 @RestController
 public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261Sol005Api {
+	private final NsdSubscriptionFrontController nsdSubscriptionFrontController;
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsdSubscriptions261Sol005Controller.class);
-
-	private final SubscriptionService subscriptionService;
-
-	private final MapperFacade mapper;
-
-	public NsdSubscriptions261Sol005Controller(final SubscriptionService _subscriptionService, final MapperFacade _mapper) {
-		subscriptionService = _subscriptionService;
-		mapper = _mapper;
-		LOG.info("Starting NSD Subscription SOL005 Controller.");
+	public NsdSubscriptions261Sol005Controller(final NsdSubscriptionFrontController nsdSubscriptionFrontController) {
+		super();
+		this.nsdSubscriptionFrontController = nsdSubscriptionFrontController;
 	}
 
 	/**
@@ -71,12 +54,8 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<NsdmSubscription>> subscriptionsGet(final String accept, final String filter) {
-		final List<Subscription> subs = subscriptionService.query(filter, SubscriptionType.NSD);
-		final List<NsdmSubscription> pkgms = mapper.mapAsList(subs, NsdmSubscription.class);
-		pkgms.stream()
-				.forEach(x -> x.setLinks(createSubscriptionsLinks(x.getId())));
-		return ResponseEntity.ok(pkgms);
+	public ResponseEntity<List<NsdmSubscription>> subscriptionsGet(final String filter) {
+		return nsdSubscriptionFrontController.search(filter, NsdmSubscription.class, NsdSubscriptions261Sol005Controller::makeLink);
 	}
 
 	/**
@@ -86,16 +65,10 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri). This resource represents subscriptions. The client can use this resource to
 	 * subscribe to notifications related to NSD management and to query its subscriptions.
 	 *
-	 * @throws URISyntaxException
-	 *
 	 */
 	@Override
-	public ResponseEntity<NsdmSubscription> subscriptionsPost(final String accept, final String contentType, final NsdmSubscriptionRequest body) throws URISyntaxException {
-		final Subscription subs = mapper.map(body, Subscription.class);
-		final Subscription res = subscriptionService.save(subs, SubscriptionType.NSD);
-		final NsdmSubscription pkgm = mapper.map(res, NsdmSubscription.class);
-		pkgm.setLinks(createSubscriptionsLinks(pkgm.getId()));
-		return ResponseEntity.created(new URI(pkgm.getLinks().getSelf().getHref())).body(pkgm);
+	public ResponseEntity<NsdmSubscription> subscriptionsPost(final NsdmSubscriptionRequest body) {
+		return nsdSubscriptionFrontController.create(body, NsdmSubscription.class, NsdSubscriptions261Sol005Controller::makeLink, NsdSubscriptions261Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -106,8 +79,7 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 */
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		subscriptionService.delete(UUID.fromString(subscriptionId), SubscriptionType.NSD);
-		return ResponseEntity.noContent().build();
+		return nsdSubscriptionFrontController.delete(subscriptionId);
 	}
 
 	/**
@@ -117,19 +89,18 @@ public class NsdSubscriptions261Sol005Controller implements NsdSubscriptions261S
 	 *
 	 */
 	@Override
-	public ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId, final String accept) {
-		final Subscription res = subscriptionService.findById(UUID.fromString(subscriptionId), SubscriptionType.NSD);
-		final NsdmSubscription pkgm = mapper.map(res, NsdmSubscription.class);
-		pkgm.setLinks(createSubscriptionsLinks(pkgm.getId()));
-		return ResponseEntity.ok(pkgm);
+	public ResponseEntity<NsdmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
+		return nsdSubscriptionFrontController.findById(subscriptionId, NsdmSubscription.class, NsdSubscriptions261Sol005Controller::makeLink);
 	}
 
-	private static NsdmSubscriptionLinks createSubscriptionsLinks(@NotNull final String id) {
+	private static void makeLink(@NotNull final NsdmSubscription subs) {
 		final NsdmSubscriptionLinks nsdmSubscriptionLinks = new NsdmSubscriptionLinks();
 		final Link self = new Link();
-		self.setHref(linkTo(methodOn(NsdSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(id, null)).withSelfRel().getHref());
+		self.setHref(linkTo(methodOn(NsdSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(subs.getId())).withSelfRel().getHref());
 		nsdmSubscriptionLinks.setSelf(self);
-		return nsdmSubscriptionLinks;
 	}
 
+	private static String getSelfLink(@NotNull final NsdmSubscription subs) {
+		return linkTo(methodOn(NsdSubscriptions261Sol005Api.class).subscriptionsSubscriptionIdGet(subs.getId())).withSelfRel().getHref();
+	}
 }

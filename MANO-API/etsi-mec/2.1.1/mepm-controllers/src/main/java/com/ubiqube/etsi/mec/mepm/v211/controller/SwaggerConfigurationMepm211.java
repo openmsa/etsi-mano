@@ -16,6 +16,9 @@
  */
 package com.ubiqube.etsi.mec.mepm.v211.controller;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,8 +63,8 @@ public class SwaggerConfigurationMepm211 {
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mec.mepm.v211"))
 				.build()
-				.directModelSubstitute(org.threeten.bp.LocalDate.class, java.sql.Date.class)
-				.directModelSubstitute(org.threeten.bp.OffsetDateTime.class, java.util.Date.class)
+				.directModelSubstitute(LocalDate.class, java.sql.Date.class)
+				.directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
 				.apiInfo(apiInfo());
 	}
 

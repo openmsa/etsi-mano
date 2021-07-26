@@ -71,7 +71,7 @@ public class AdminController {
 	public ResponseEntity<Map<String, String>> connectVim(@PathVariable("id") final UUID id) {
 		final Vim vim = vimManager.getVimById(id);
 		final VimConnectionInformation vimconn = vciJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find vim id " + id));
-		final Map<String, String> networks = vim.getPublicNetworks(vimconn);
+		final Map<String, String> networks = vim.network(vimconn).getPublicNetworks();
 		return ResponseEntity.ok(networks);
 	}
 

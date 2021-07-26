@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 
 	private NsdChangeType lcmOperationType = null;
 
-	private Date startTime = null;
+	private OffsetDateTime startTime = null;
 
 	private Boolean isAutomaticInvocation = null;
 
@@ -98,11 +99,11 @@ public class NsLcmOpOccs implements BaseEntity, Serializable {
 		this.lcmOperationType = lcmOperationType;
 	}
 
-	public Date getStartTime() {
+	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(final Date startTime) {
+	public void setStartTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 	}
 

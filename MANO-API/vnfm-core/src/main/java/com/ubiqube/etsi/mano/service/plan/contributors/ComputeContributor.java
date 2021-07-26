@@ -39,6 +39,9 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.VduNamingStrategy;
@@ -48,9 +51,6 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy.NumberOfCompute;
-import com.ubiqube.etsi.mano.service.vim.node.Node;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Compute;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 
 /**
  *
@@ -155,8 +155,8 @@ public class ComputeContributor extends AbstractVnfPlanContributor {
 		final VnfInstance vnfInstance = vnfInstanceService.findById(plan.getVnfInstance().getId());
 		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstance.getVnfPkg().getId());
 		return tasks.stream()
-				.filter(x -> x instanceof ComputeTask)
-				.map(x -> (ComputeTask) x)
+				.filter(ComputeTask.class::isInstance)
+				.map(ComputeTask.class::cast)
 				.map(x -> {
 					final Optional<VnfCompute> vnfCompute = vnfPackageService.findComputeById(x.getVnfCompute().getId());
 					final Set<VnfLinkPort> linkPort = vnfPackageService.findVnfVirtualLinks(vnfPackage);

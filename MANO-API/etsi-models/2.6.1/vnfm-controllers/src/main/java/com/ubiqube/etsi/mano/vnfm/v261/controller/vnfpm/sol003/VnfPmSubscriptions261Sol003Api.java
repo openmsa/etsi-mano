@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping("/sol003/vnfpm/v1/subscriptions")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfPmSubscriptions261Sol003Api {
 
 	@ApiOperation(value = "", nickname = "subscriptionsGet", notes = "Query Subscription Information. TThe client can use this method to query the list of active subscriptions to Performance management notifications subscribed by the client. This method shall follow the provisions specified in the tables 6.4.7.3.2-1 and 6.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = PmSubscription.class, responseContainer = "List", tags = {})

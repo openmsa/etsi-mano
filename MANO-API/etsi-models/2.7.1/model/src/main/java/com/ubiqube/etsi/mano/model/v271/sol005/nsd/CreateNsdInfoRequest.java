@@ -36,9 +36,9 @@ import io.swagger.annotations.ApiModelProperty;
 @Validated
 public class CreateNsdInfoRequest {
 	@JsonProperty("userDefinedData")
-	private Map<String, Object> userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
-	public CreateNsdInfoRequest userDefinedData(final Map<String, Object> userDefinedData) {
+	public CreateNsdInfoRequest userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -51,11 +51,11 @@ public class CreateNsdInfoRequest {
 	@ApiModelProperty(value = "")
 
 	@Valid
-	public Map<String, Object> getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final Map<String, Object> userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
@@ -87,8 +87,7 @@ public class CreateNsdInfoRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

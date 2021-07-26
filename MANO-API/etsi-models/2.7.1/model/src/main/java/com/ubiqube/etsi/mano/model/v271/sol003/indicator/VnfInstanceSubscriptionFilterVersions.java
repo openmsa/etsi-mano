@@ -31,7 +31,7 @@ import javax.validation.constraints.*;
  * VnfInstanceSubscriptionFilterVersions
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:30:43.104+01:00")
+
 
 public class VnfInstanceSubscriptionFilterVersions   {
   @JsonProperty("vnfSoftwareVersion")

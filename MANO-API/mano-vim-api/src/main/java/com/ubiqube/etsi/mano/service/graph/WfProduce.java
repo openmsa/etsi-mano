@@ -18,7 +18,7 @@ package com.ubiqube.etsi.mano.service.graph;
 
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.service.vim.node.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 
 /**
  *

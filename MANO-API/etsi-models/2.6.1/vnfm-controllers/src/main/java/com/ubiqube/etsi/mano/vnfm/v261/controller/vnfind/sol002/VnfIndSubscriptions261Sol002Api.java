@@ -21,10 +21,10 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfind.sol002;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -49,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
 @RequestMapping("/sol002/vnfind/v1/subscriptions")
+@RolesAllowed({ "ROLE_EM" })
 public interface VnfIndSubscriptions261Sol002Api {
 
 	@ApiOperation(value = "Query multiple subscriptions.", nickname = "subscriptionsGet", notes = "Service Unavailable The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. ", response = VnfIndicatorSubscription.class, responseContainer = "List", tags = {})
@@ -88,7 +89,7 @@ public interface VnfIndSubscriptions261Sol002Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(@ApiParam(value = "Details of the subscription to be created.", required = true) @Valid @RequestBody final VnfIndicatorSubscriptionRequest vnfIndicatorSubscriptionRequest) throws URISyntaxException;
+	ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(@ApiParam(value = "Details of the subscription to be created.", required = true) @Valid @RequestBody final VnfIndicatorSubscriptionRequest vnfIndicatorSubscriptionRequest);
 
 	@ApiOperation(value = "Delete a subscription", nickname = "subscriptionsSubscriptionIdDelete", notes = "This method terminates an individual subscription. As the result of successfully executing this method, the \"Individual  subscription\" resource shall not exist any longer. This means that no  notifications for that subscription shall be sent to the formerly-subscribed  API consumer. NOTE: Due to race conditions, some notifications might still be received  by the formerly-subscribed API consumer for a certain time period after  the deletion. ", tags = {})
 	@ApiResponses(value = {

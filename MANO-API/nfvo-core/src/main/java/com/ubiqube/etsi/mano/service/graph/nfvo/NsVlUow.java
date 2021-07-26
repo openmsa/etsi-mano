@@ -24,9 +24,9 @@ import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.nfvo.NsVlNode;
 
 public class NsVlUow extends AbstractNsUnitOfWork {
 	/** Serial. */
@@ -53,12 +53,12 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 		// l3.setGatewayIp(gatewayIp);
 		l3.setIpVersion("ipv4");
 		// l3.setL3Name(l3Name);
-		return params.getVim().createNetwork(params.getVimConnectionInformation(), vlProtocolData, null, null, null);
+		return params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, null, null, null);
 	}
 
 	@Override
 	public String rollback(final NsParameters params) {
-		params.getVim().deleteVirtualLink(params.getVimConnectionInformation(), task.getVimResourceId());
+		params.getVim().network(params.getVimConnectionInformation()).deleteVirtualLink(task.getVimResourceId());
 		return null;
 	}
 

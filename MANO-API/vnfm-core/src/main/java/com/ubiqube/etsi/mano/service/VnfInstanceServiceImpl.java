@@ -128,8 +128,8 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 	@Override
 	@Transactional
 	public void delete(final UUID vnfInstanceId) {
-		vnfInstanceJpa.findById(vnfInstanceId).orElseThrow(() -> new NotFoundException("Vnf Instance " + vnfInstanceId + " not found."));
-		vnfInstanceJpa.deleteById(vnfInstanceId);
+		final VnfInstance entity = vnfInstanceJpa.findById(vnfInstanceId).orElseThrow(() -> new NotFoundException("Vnf Instance " + vnfInstanceId + " not found."));
+		vnfInstanceJpa.delete(entity);
 	}
 
 	@Override

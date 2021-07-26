@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.nfvo.v261.factory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
@@ -74,9 +75,9 @@ public class TestFactory {
 
 	public static NsdInfo createNsDescriptorsNsdInfo() {
 		final NsdInfo nsd = NsdFactories.createNsdInfo();
-		final List<String> nestedNsdInfoIds = new ArrayList<>();
-		nestedNsdInfoIds.add("25dca365-ff1b-4204-a9ca-c3745e6d3244");
-		nestedNsdInfoIds.add("52d993dc-7a50-46da-b30c-e8fb344ef140");
+		final List<UUID> nestedNsdInfoIds = new ArrayList<>();
+		nestedNsdInfoIds.add(UUID.fromString("25dca365-ff1b-4204-a9ca-c3745e6d3244"));
+		nestedNsdInfoIds.add(UUID.fromString("52d993dc-7a50-46da-b30c-e8fb344ef140"));
 		nsd.setNestedNsdInfoIds(nestedNsdInfoIds);
 		nsd.setPnfdInfoIds(nestedNsdInfoIds);
 		nsd.setVnfPkgIds(nestedNsdInfoIds);

@@ -17,13 +17,13 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nspm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PerformanceInformationAvailableNotification;
@@ -40,8 +40,8 @@ import io.swagger.annotations.ApiResponses;
  * SOL005 - NS Performance Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
-@RestController
 @RequestMapping("/sol005/nspm/v1/")
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsPmNotification261Sol005Api {
 
 	/**

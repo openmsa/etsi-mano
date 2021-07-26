@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.security.RolesAllowed;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +43,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RequestMapping("/sol003/vnfpkgm/v1/subscriptions")
+@RolesAllowed({ "ROLE_VNFM" })
 public interface VnfSubscription261Sol003Api {
 
 	/**
@@ -63,7 +70,7 @@ public interface VnfSubscription261Sol003Api {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
-	List<PkgmSubscription> subscriptionsGet(@Nullable @RequestParam(value = "filter", required = false) String filter);
+	ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@Nullable @RequestParam(value = "filter", required = false) String filter);
 
 	/**
 	 * Subscribe to notifications related to on-boarding and/or changes of VNF packages.
@@ -88,7 +95,7 @@ public interface VnfSubscription261Sol003Api {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-	ResponseEntity<PkgmSubscription> subscriptionsPost(@RequestBody PkgmSubscriptionRequest subscriptionsPostQuery) throws URISyntaxException;
+	ResponseEntity<PkgmSubscription> subscriptionsPost(@RequestBody PkgmSubscriptionRequest subscriptionsPostQuery);
 
 	/**
 	 * Terminate a subscription.
@@ -130,7 +137,7 @@ public interface VnfSubscription261Sol003Api {
 			@ApiResponse(code = 500, message = "Internal Server Error If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond withthis response code. The ProblemDetails structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "Service Unavailable If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 [13] for the use of the Retry-After HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@GetMapping(value = "/{subscriptionId}", produces = { "application/json" }, consumes = { "application/json" })
-	PkgmSubscription subscriptionsSubscriptionIdGet(@Nonnull @PathVariable("subscriptionId") String subscriptionId);
+	ResponseEntity<PkgmSubscription> subscriptionsSubscriptionIdGet(@Nonnull @PathVariable("subscriptionId") String subscriptionId);
 
 	/**
 	 * Test the notification endpoint

@@ -19,11 +19,16 @@ package com.ubiqube.etsi.mano.config.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @Configuration
 @ConfigurationProperties(prefix = "mano.nfvo.vnfm")
 public class VnfmConnectionProperties {

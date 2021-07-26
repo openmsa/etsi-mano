@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mec.pkg.TrafficRuleDescriptor;
+import com.ubiqube.etsi.mano.orchestrator.nodes.mec.MepTrafficRulesNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.mec.MepTrafficRulesNode;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.Network;
 import com.ubiqube.etsi.mec.mepm.service.graph.AppParameters;
 import com.ubiqube.etsi.mec.mepm.service.graph.mepm.MepSecurityRulesTask;
 

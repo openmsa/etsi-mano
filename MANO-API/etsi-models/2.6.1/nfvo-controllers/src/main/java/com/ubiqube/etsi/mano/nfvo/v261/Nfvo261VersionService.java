@@ -37,7 +37,7 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.controller.vnf.Sol005Linkable;
+import com.ubiqube.etsi.mano.nfvo.v261.services.Sol005Linkable;
 import com.ubiqube.etsi.mano.service.VersionService;
 import com.ubiqube.etsi.mano.service.rest.VnfmRest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;

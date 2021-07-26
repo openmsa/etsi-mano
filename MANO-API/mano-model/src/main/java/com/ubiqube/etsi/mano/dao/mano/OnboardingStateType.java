@@ -27,7 +27,9 @@ public enum OnboardingStateType {
 
 	PROCESSING("PROCESSING"),
 
-	ONBOARDED("ONBOARDED");
+	ONBOARDED("ONBOARDED"),
+	// 2.7.1
+	ERROR("ERROR");
 
 	private String value;
 

@@ -9,13 +9,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<artifactId>etsi-model-261-pom</artifactId>
+	<artifactId>etsi-model-261-aggregator</artifactId>
 	<description>Build document for ETSI-MANO model 2.6.1</description>
 	<packaging>pom</packaging>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 	<modules>
 		<module>etsi-model-common-261</module>
 		<module>model</module>

@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
-import com.ubiqube.etsi.mano.service.vim.node.vnfm.DnsZone;
 
 public class DnsZoneUow extends VnfAbstractUnitOfWork {
 
@@ -38,12 +38,12 @@ public class DnsZoneUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public String exec(final VnfParameters params) {
-		return params.getVim().createDnsZone(params.getVimConnectionInformation(), task.getDomainName());
+		return params.getVim().dns(params.getVimConnectionInformation()).createDnsZone(task.getDomainName());
 	}
 
 	@Override
 	public String rollback(final VnfParameters params) {
-		params.getVim().deleteDnsZone(params.getVimConnectionInformation(), params.getVimResourceId());
+		params.getVim().dns(params.getVimConnectionInformation()).deleteDnsZone(params.getVimResourceId());
 		return null;
 	}
 

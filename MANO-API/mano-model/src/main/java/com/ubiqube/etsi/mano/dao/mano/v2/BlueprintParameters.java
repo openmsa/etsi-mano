@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -28,10 +29,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
+import com.ubiqube.etsi.mano.dao.mano.VirtualStorageResourceInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfMonitoringParameter;
+import com.ubiqube.etsi.mano.dao.mano.VnfcResourceInfoEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +61,10 @@ public class BlueprintParameters implements Serializable {
 	@JoinColumn
 	private Set<ScaleInfo> scaleStatus = null;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private List<ScaleInfo> maxScaleLevels;
+
 	@Valid
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
@@ -68,4 +79,24 @@ public class BlueprintParameters implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private OperationalStateType state;
+
+	private String localizationLanguage;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<VnfMonitoringParameter> vnfMonitoringParameter;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<VirtualStorageResourceInfo> virtualStorageResourceInfo;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<ExtVirtualLinkInfoEntity> extVirtualLinkInfo;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<ExtCpInfo> extCpInfo;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<VnfcResourceInfoEntity> vnfcResourceInfo;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<VirtualLinkInfo> virtualLinkResourceInfo;
 }

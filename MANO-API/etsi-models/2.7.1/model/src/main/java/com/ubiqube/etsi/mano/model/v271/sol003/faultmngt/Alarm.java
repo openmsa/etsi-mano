@@ -37,7 +37,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "The alarm data type encapsulates information about an alarm. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-11-09T10:22:49.340+01:00")
+
 
 public class Alarm   {
   @JsonProperty("id")

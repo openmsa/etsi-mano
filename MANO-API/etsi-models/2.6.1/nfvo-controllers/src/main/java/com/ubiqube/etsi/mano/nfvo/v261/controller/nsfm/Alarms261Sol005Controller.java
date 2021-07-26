@@ -21,7 +21,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.AlarmModifications;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.InlineResponse200;
@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsfm.InlineResponse200;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Controller
+@RestController
 public class Alarms261Sol005Controller implements Alarms261Sol005Api {
 
 	@Override

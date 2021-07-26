@@ -18,31 +18,22 @@ package com.ubiqube.etsi.mano.dao.mano.dto;
 
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class VnfInstantiatedStorage extends VnfInstantiatedBase {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private UUID id = null;
 
-	private VduInstantiationLevel instantiationLevel;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public VduInstantiationLevel getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	@Override
-	public void setInstantiationLevel(final VduInstantiationLevel instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
-	}
+	private String virtualStorageDescId;
 
 }

@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.RegistryHandler;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 
 /**
  *
@@ -34,19 +34,19 @@ public class NsPackageManagerImpl implements NsPackageManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsPackageManagerImpl.class);
 
-	private final List<RegistryHandler<NsPackageProvider>> providers;
+	private final List<PackageDescriptor<NsPackageProvider>> providers;
 
-	public NsPackageManagerImpl(final List<RegistryHandler<NsPackageProvider>> _providers) {
+	public NsPackageManagerImpl(final List<PackageDescriptor<NsPackageProvider>> _providers) {
 		providers = _providers;
 	}
 
 	@Override
 	public NsPackageProvider getProviderFor(final byte[] data) {
-		for (final RegistryHandler<NsPackageProvider> provider : providers) {
-			LOG.info("Testing {} for package support.", provider.getName());
+		for (final PackageDescriptor<NsPackageProvider> provider : providers) {
+			LOG.info("Testing {} for package support.", provider.getProviderName());
 			if (provider.isProcessable(data)) {
-				LOG.info("Using {} for package.", provider.getName());
-				return provider.getNewInstance(data);
+				LOG.info("Using {} for package.", provider.getProviderName());
+				return provider.getNewReaderInstance(data);
 			}
 		}
 		LOG.info("No package support, using default.");
