@@ -17,7 +17,7 @@ $vnfInstanceId = $vnfInstance['id'];
 $vnfLcm = new VnfLcmSol003($context['url']);
 
 try{
-    $changeStateTo = 'STOPPED';
+    $changeStateTo = 'STARTED';
     $stopType = 'FORCEFUL';
     $gracefulStopTimeout = 0;
     $additionalParamas = new stdClass();
