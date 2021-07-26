@@ -3,6 +3,7 @@
     <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
     <description/>
     <displayField>service_id</displayField>
+    <serviceTaskType>php</serviceTaskType>
     <executionDetailsVisibility>5</executionDetailsVisibility>
     <executionMode>TRANSACTION</executionMode>
     <group>NFV|NFVO</group>
