@@ -231,6 +231,12 @@
 			<artifactId>etsi-nfvo-331-controllers</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>etsi-sol012-341</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
  
 		<!-- 
 		<dependency>
@@ -267,6 +273,11 @@
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>ubi-spring-config</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>orchestration-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
