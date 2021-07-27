@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.or.v331.controller.nsium;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RequestMapping(value = "/sol011/nsiun/v1", headers = { "Version=3.3.1" })
+@RolesAllowed({ "ROLE_VNFM" })
 public interface NsiumSubscriptions331Sol011Api {
 
 	@Operation(summary = "", description = "The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations.", tags = {})
