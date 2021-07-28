@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.jpa.VnfTaskJpa;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionListener;
 import com.ubiqube.etsi.mano.orchestrator.Task;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
@@ -37,11 +36,6 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 public class OrchListenetImpl implements OrchExecutionListener<VnfTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OrchListenetImpl.class);
-	private final VnfTaskJpa vnfTaskJpa;
-
-	public OrchListenetImpl(final VnfTaskJpa vnfTaskJpa) {
-		this.vnfTaskJpa = vnfTaskJpa;
-	}
 
 	@Override
 	public void onSuccess(final Task<VnfTask> task) {
@@ -53,7 +47,7 @@ public class OrchListenetImpl implements OrchExecutionListener<VnfTask> {
 
 	@Override
 	public void onError(final Task<VnfTask> task, final Exception exception) {
-		LOG.warn("ERROR {}", task);
+		LOG.warn("Error {}", task);
 		final VnfTask resource = task.getParameters();
 		resource.setStatus(PlanStatusType.FAILED);
 		resource.setEndDate(LocalDateTime.now());
@@ -69,6 +63,7 @@ public class OrchListenetImpl implements OrchExecutionListener<VnfTask> {
 
 	@Override
 	public void onTerminate(final UnitOfWork<VnfTask> uaow, final String res) {
+		LOG.info("Terminate {} => {}", uaow.getTask(), res);
 		uaow.getTask().getParameters().setVimResourceId(res);
 	}
 
