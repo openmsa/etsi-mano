@@ -132,7 +132,7 @@ public abstract class AbstractGenericAction {
 			vnfInstance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());
 		}
 		// XXX Copy new ScaleInfo.
-		removeScaleScatus(vnfInstance, newScale);
+		removeScaleStatus(vnfInstance, newScale);
 	}
 
 	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance vnfInstance) {
@@ -141,7 +141,7 @@ public abstract class AbstractGenericAction {
 		return tmp;
 	}
 
-	private static void removeScaleScatus(final Instance localVnfInstance, final Set<ScaleInfo> newScale) {
+	private static void removeScaleStatus(final Instance localVnfInstance, final Set<ScaleInfo> newScale) {
 		final Set<ScaleInfo> scales = localVnfInstance.getInstantiatedVnfInfo().getScaleStatus();
 		newScale.stream().forEach(x -> find(scales, x.getAspectId()).ifPresent(scales::remove));
 		newScale.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).forEach(newScale::add);
