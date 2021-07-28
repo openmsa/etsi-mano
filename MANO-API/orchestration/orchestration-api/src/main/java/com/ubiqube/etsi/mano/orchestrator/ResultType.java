@@ -18,6 +18,6 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 public enum ResultType {
 	SUCCESS,
-	FAILURE,
+	ERRORED,
 	SKIPPED
 }

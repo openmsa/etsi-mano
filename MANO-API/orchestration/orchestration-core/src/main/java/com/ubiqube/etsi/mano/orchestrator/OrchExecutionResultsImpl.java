@@ -38,7 +38,7 @@ public class OrchExecutionResultsImpl implements OrchExecutionResults {
 
 	@Override
 	public List getErrored() {
-		return results.stream().filter(x -> x.getResult() == ResultType.FAILURE).collect(Collectors.toList());
+		return results.stream().filter(x -> x.getResult() == ResultType.ERRORED).collect(Collectors.toList());
 	}
 
 }
