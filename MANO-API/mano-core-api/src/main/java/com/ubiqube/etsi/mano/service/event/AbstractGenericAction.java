@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -93,17 +92,12 @@ public abstract class AbstractGenericAction {
 		}
 		final PackageBase vnfPkg = orchestrationAdapter.getPackage(vnfInstance);
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
-		final PreExecutionGraph prePlan = vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint);
+		final PreExecutionGraph<?> prePlan = vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint);
 		Blueprint<?, ?> localPlan = orchestrationAdapter.save(blueprint);
 		orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_PROCESSING, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
 		localPlan = orchestrationAdapter.updateState(localPlan, OperationStatusType.PROCESSING);
-		/////////////////////////////////
-		// XXX Multiple Vim ?
-		final VimConnectionInformation vimConnection = localPlan.getVimConnections().iterator().next();
-		final Vim vim = vimManager.getVimById(vimConnection.getId());
 		//
-		final GenericExecParams vparams = orchestrationAdapter.createParameter(vimConnection, vim, new HashMap<>(), null);
 		vnfWorkflow.refresh(prePlan, localPlan);
 		final OrchExecutionResults res = vnfWorkflow.execute(prePlan, localPlan);
 		localPlan = orchestrationAdapter.getBluePrint(localPlan.getId());
