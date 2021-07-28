@@ -58,19 +58,19 @@ public class SystemService {
 	private Systems registerOpenStask(final VimConnectionInformation vimConnectionInformation) {
 		final Systems sys = new Systems();
 		SystemConnections sc = mapper.map(vimConnectionInformation, SystemConnections.class);
-		sc.setVimType("OS-COMPUTE");
+		sc.setVimType("COMPUTE");
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
-		sc.setVimType("OS-NETWORK");
+		sc.setVimType("NETWORK");
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
-		sc.setVimType("OS-DNS");
+		sc.setVimType("DNS");
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
-		sc.setVimType("OS-MONITORING");
+		sc.setVimType("MONITORING");
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
-		sc.setVimType("OS-ROUTER");
+		sc.setVimType("VNFEXTCP");
 		sys.add(sc);
 		return systemJpa.save(sys);
 	}
