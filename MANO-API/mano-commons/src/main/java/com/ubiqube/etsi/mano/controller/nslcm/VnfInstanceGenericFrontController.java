@@ -174,7 +174,7 @@ public class VnfInstanceGenericFrontController {
 	}
 
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, @Valid final String nextpageOpaqueMarker, final Consumer<U> makeLink) {
-		return vnfPackageService.search(requestParams, clazz, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, makeLink);
+		return vnfInstancesService.search(requestParams, clazz, VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCM_SEARCH_MANDATORY_FIELDS, makeLink);
 	}
 
 }
