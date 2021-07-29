@@ -58,7 +58,7 @@ class NsdSol005 extends BaseApi
          */
 	public function nsDescriptorsNsdInfoIdNsdFilePut($_nsdInfoId, $_filename)
         {
-                $base = "/home/ncuser/etsi-mano/WORKFLOWS/ETSI-MANO/src/EtsiMano";
+                $base = "/opt/fmc_repository/Process/ETSI-MANO/src/EtsiMano";
                 return shell_exec("$base/onboard_nsd.sh $_nsdInfoId $_filename 2>&1");;
         }
 

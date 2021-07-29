@@ -1,111 +1,72 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ObjectDefinition>  <information>
-    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
-    <description/>
-    <displayField>service_id</displayField>
-    <executionDetailsVisibility>5</executionDetailsVisibility>
-    <executionMode>TRANSACTION</executionMode>
-    <group>NFV|VNFM|</group>
-    <icon>/images/repository/CommandDefinition/icons/service control.jpg</icon>
-    <name>VNF LCM (VNFD based-on SOL001)</name>
-    <order>10000</order>
-    <poolId>0</poolId>
-    <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>true</showDetailedServiceInstances>
-    <showProcessExecConsole>true</showProcessExecConsole>
-    <showProcessResult>false</showProcessResult>
-    <showVariables>false</showVariables>
-    <visibility>5</visibility>
-  </information>  <variables frozen="0">
-    <variable displayName="Nfvo Device" displayOrder="0" isMandatory="true" keepOnImport="true" maxLength="165" name="params.nfvo_device" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+<ObjectDefinition>
+  <variables frozen="0">
+    <variable displayName="Nfvo Device" name="params.nfvo_device" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="true" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Instance Resource</section>
+        <sections>Create VNF Instance Resource</sections>
       </sections>
     </variable>
-    <variable displayName="Vnfpkgid" displayOrder="2" isMandatory="true" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" refDeviceIdVar="params.nfvo_device" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="Vnfpkgid" name="params.vnfPkgId" startIncrement="0" type="OBMFRef" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="2" increment="0" refServiceURI="" refDeviceIdVar="params.nfvo_device" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Instance Resource</section>
+        <sections>Create VNF Instance Resource</sections>
       </sections>
       <classes>
         <class>vnf_catalogs</class>
       </classes>
     </variable>
-    <variable displayName="Vnfinstancename" displayOrder="5" maxLength="100" name="params.vnfInstanceName" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnfinstancename" name="params.vnfInstanceName" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="5" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Instance Resource</section>
+        <sections>Create VNF Instance Resource</sections>
       </sections>
     </variable>
-    <variable displayName="Vnfinstancedescription" displayOrder="6" maxLength="100" name="params.vnfInstanceDescription" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnfinstancedescription" name="params.vnfInstanceDescription" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="6" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Instance Resource</section>
+        <sections>Create VNF Instance Resource</sections>
       </sections>
     </variable>
-    <variable displayName="Devicemanufaturer" displayOrder="7" maxLength="100" name="params.deviceManufaturer" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnfd Id" name="params.vnfdId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="9" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="Devicemanufaturer" name="params.deviceManufaturer" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="7" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Instance Resource</section>
+        <sections>Create VNF Instance Resource</sections>
       </sections>
     </variable>
-    <variable displayName="Devicemodel" displayOrder="8" maxLength="100" name="params.deviceModel" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Devicemodel" name="params.deviceModel" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="8" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Instance Resource</section>
+        <sections>Create VNF Instance Resource</sections>
       </sections>
     </variable>
-    <variable displayName="Aspectid" displayOrder="15" maxLength="100" name="params.aspectId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Aspectid" name="params.aspectId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="15" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>Scale To Level</sections>
+      </sections>
       <values>
-        <value>database</value>
-        <value>webserver</value>
+        <values>database</values>
+        <values>webserver</values>
       </values>
+    </variable>
+    <variable displayName="Scalelevel" name="params.scaleLevel" startIncrement="0" type="Integer" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="24" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="1" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Scale To Level</section>
+        <sections>Scale To Level</sections>
       </sections>
     </variable>
-    <variable default="1" displayName="Scalelevel" displayOrder="24" maxLength="100" name="params.scaleLevel" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Integer">
-      <sections>
-        <section>Scale To Level</section>
-      </sections>
-    </variable>
-  </variables>  <example>    <content/>  </example>
+    <variable displayName="Number Of Steps" name="params.numberOfSteps" startIncrement="0" type="Integer" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="8" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" default="1" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+  </variables>
+  <example/>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Create_VNF_Instance">
-    <visibility>5</visibility>
     <displayName>Create VNF Instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>CREATE</type>
-  
-    
-  
-    
-  <task name="Task_Create_VNF_Instance_Resource.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Create_VNF_Instance_Resource.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Create_VNF_Instance/Tasks/</processPath>
       <displayName>Create VNF Instance Resource</displayName>
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Instantiate_VNF">
-    <visibility>5</visibility>
     <displayName>Instantiate VNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-    
-  
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-    
-    
-    
-    
-  <task name="Task_Instantiate_VNF.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Instantiate_VNF.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Instantiate_VNF/Tasks/</processPath>
       <displayName>Instantiate VNF</displayName>
     </task>
@@ -134,31 +95,32 @@
       <displayName>VNF Ping Check</displayName>
     </task>
   </process>
-  <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_stop_VNF">
-    <visibility>5</visibility>
+  <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Stop_VNF">
     <displayName>Stop VNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Stop_VNF_Instance.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Stop_VNF/Tasks</processPath>
+      <displayName>Stop VNF Instance</displayName>
+    </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Start_VNF">
-    <visibility>5</visibility>
     <displayName>Start VNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Start_VNF_Instance.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Start_VNF/Tasks</processPath>
+      <displayName>Start VNF Instance</displayName>
+    </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_ToLevel">
-    <visibility>5</visibility>
     <displayName>Scale ToLevel</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-  <task name="Task_Scale_To_Level.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Scale_To_Level.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_ToLevel/Tasks/</processPath>
       <displayName>Scale To Level</displayName>
     </task>
@@ -168,22 +130,11 @@
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Terminate_VNF">
-    <visibility>5</visibility>
     <displayName>Terminate VNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-    
-  
-    
-    
-  
-    
-    
-    
-  <task name="Task_Terminate_VNF.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Terminate_VNF.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Terminate_VNF/Tasks/</processPath>
       <displayName>Terminate VNF</displayName>
     </task>
@@ -201,19 +152,43 @@
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Delete_VNF_Instance">
-    <visibility>5</visibility>
     <displayName>Delete VNF Instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
-  
-    
-  <task name="Task_Delete_VNF_Instance.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Delete_VNF_Instance.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Delete_VNF_Instance/Tasks/</processPath>
       <displayName>Delete VNF Instance</displayName>
     </task>
   </process>
-
-
+  <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_In">
+    <displayName>Scale In</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_Scale_In_VNF_Instance.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_In/Tasks</processPath>
+      <displayName>Scale In VNF Instance</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_Out">
+    <displayName>Scale Out</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_Scale_Out_VNF_Instance.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_VNF_LCM/Process_Scale_Out/Tasks</processPath>
+      <displayName>Scale Out VNF Instance</displayName>
+    </task>
+  </process>
+  <information>
+    <icon>/images/repository/CommandDefinition/icons/service control.jpg</icon>
+    <description/>
+    <displayField>service_id</displayField>
+    <serviceTaskType>php</serviceTaskType>
+    <order>10000</order>
+    <visibility>5</visibility>
+    <name>VNF LCM (VNFD based-on SOL001)</name>
+    <group>NFV|VNFM|</group>
+  </information>
 </ObjectDefinition>
