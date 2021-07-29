@@ -11,9 +11,14 @@ function list_args(){
 $url = get_url_from_device($context['device_id']);
 $vnfPkgApi = new VnfPkgSol005($url);
 
+$name = '';
+if (isset($context['vnf_package_name'])) {
+	$name = $context['vnf_package_name'];
+}
+
 try {
-	// { "userDefinedData": { "name": "Test TOSCA VNF" } }'
-	$body_array = array('userDefinedData' => array("name" => $context['name']));
+	// { "userDefinedData": { "name": "Test TOSCA VNF" } }'	
+	$body_array = array('userDefinedData' => array("name" => $name));
 	$body = json_encode($body_array);
 	$response = $vnfPkgApi->vnfPackagesPost($body);
 } catch (ManoException $e) {
