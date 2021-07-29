@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final SecutiryConfig secutiryConfig;
 
-	public WebSecurityConfig(SecutiryConfig secutiryConfig) {
+	public WebSecurityConfig(final SecutiryConfig secutiryConfig) {
 		super();
 		this.secutiryConfig = secutiryConfig;
 	}
@@ -44,7 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
-		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry res = http.authorizeRequests()
+		http.headers().frameOptions().sameOrigin();
+		final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry res = http.authorizeRequests()
 				.antMatchers("/openApi*").permitAll()
 				.antMatchers("/download/**").permitAll()
 				.antMatchers("/actuator/**").permitAll()
