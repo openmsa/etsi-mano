@@ -82,7 +82,7 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 	private List<NetWorkVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, NetworkTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final NetworkTask networkTask = createTask(NetworkTask::new, x.getTask());
+			final NetworkTask networkTask = createDeleteTask(NetworkTask::new, x);
 			networkTask.setAlias(x.getTask().getAlias());
 			networkTask.setChangeType(ChangeType.REMOVED);
 			networkTask.setToscaName(x.getTask().getToscaName());

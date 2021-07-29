@@ -87,7 +87,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	private List<ComputeVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ComputeTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, x.getTask());
+			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, x);
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
 			computeTask.setVnfCompute(((ComputeTask) x.getTask()).getVnfCompute());
 			return new ComputeVt(computeTask);
@@ -100,7 +100,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		final List<ComputeVt> ret = new ArrayList<>();
 		for (int i = 0; i < toDelete; i++) {
 			final VnfLiveInstance inst = instantiated.pop();
-			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, inst.getTask());
+			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, inst);
 			computeTask.setVnfCompute(vnfCompute);
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
 			computeTask.setScaleInfo(scaleInfo);
