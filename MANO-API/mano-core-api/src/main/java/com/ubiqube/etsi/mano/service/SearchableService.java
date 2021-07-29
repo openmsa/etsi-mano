@@ -50,7 +50,7 @@ public class SearchableService {
 		clazz = _clazz;
 	}
 
-	public final <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
+	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<?> result = queryDb(filter);
 		return searchService.search(requestParams, clazz, excludeDefaults, mandatoryFields, result, clazz, makeLink);
