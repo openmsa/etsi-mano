@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
@@ -51,8 +53,10 @@ public interface VnfPackageService {
 
 	VduInstantiationLevel findByVnfComputeAndInstantiationLevel(final VnfCompute x, final String scaleInfoName);
 
+	@NotNull
 	VnfPackage findById(final VnfPackage vnfPackage);
 
+	@NotNull
 	VnfPackage findById(final UUID vnfPkgId);
 
 	List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfComputeAndLevel(final VnfPackage vnfPackage, final String level);

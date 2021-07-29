@@ -48,6 +48,11 @@ import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfInstanceServiceImpl extends SearchableService implements VnfInstanceService {
 
@@ -63,7 +68,8 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 
 	private final EventManager eventManager;
 
-	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance, final EntityManager _entityManager, final Patcher _patcher, final EventManager _eventManager, final ManoSearchResponseService _searchService) {
+	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance,
+			final EntityManager _entityManager, final Patcher _patcher, final EventManager _eventManager, final ManoSearchResponseService _searchService) {
 		super(_searchService, _entityManager, VnfInstance.class);
 		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
 		vnfInstanceJpa = _vnfInstanceJpa;

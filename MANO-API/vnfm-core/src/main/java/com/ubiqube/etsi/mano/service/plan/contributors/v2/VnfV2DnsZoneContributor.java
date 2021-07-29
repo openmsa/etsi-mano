@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -42,7 +40,7 @@ import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.DnsZoneVT;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
+//@Service
 public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTask, DnsZoneVT, VnfBlueprint> {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
