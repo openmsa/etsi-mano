@@ -11,6 +11,7 @@ function list_args()
 {
   create_var_def('nfvo_device', 'Device');
   create_var_def('vnfPkgId', 'OBMFRef');
+  create_var_def('vnfdId', 'String');
   create_var_def('vnfInstanceName', 'String');
   create_var_def('vnfInstanceDescription', 'String');
   create_var_def('deviceManufaturer', 'String');
@@ -21,6 +22,7 @@ check_mandatory_param('vnfPkgId');
 check_mandatory_param('nfvo_device');
 
 $vnfPkgId= $context['vnfPkgId'];
+$vnfdId= $context['vnfdId'];
 $url = get_url_from_device($context['nfvo_device']);
 
 //$url = "http://localhost:8380/ubi-etsi-mano/";
@@ -32,7 +34,7 @@ try {
 	$metadata['deviceModel'] = $context['deviceModel'];
 
 	$body = json_encode(array(
-				"vnfdId" => $vnfPkgId,
+				"vnfdId" => $vnfdId,
 				"vnfInstanceName" => "",
   				"vnfInstanceDescription" => "",
   				"metadata" => $metadata
