@@ -14,35 +14,30 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.plan.contributors;
+package com.ubiqube.etsi.mano.service.plan.contributors.v2;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.vnfm.VnfExtCpUow;
-import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
-import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
+import com.ubiqube.etsi.mano.service.graph.VnfBundleAdapter;
+import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.VnfExtCpVt;
 
 /**
  *
@@ -50,28 +45,24 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
  *
  */
 @Service
-public class VnfExtCpContributor extends AbstractVnfPlanContributor {
+public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTask, VnfExtCpVt, VnfBlueprint> {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfExtCpContributor(final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+	public VnfExtCpContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+		super();
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 	}
 
 	@Override
-	public Class<? extends Node> getContributionType() {
-		return VnfExtCp.class;
-	}
-
-	@Override
-	public List<VnfTask> contribute(final VnfPackage vnfPackage, final VnfBlueprint plan, final Set<ScaleInfo> scaling) {
+	public List<VnfExtCpVt> contribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final List<VnfTask> ret = new ArrayList<>();
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(plan.getVnfInstance(), ExternalCpTask.class.getSimpleName());
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final List<VnfExtCpVt> ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
-			final Optional<NetworkTask> vl = plan.getTasks().stream()
-					.filter(y -> y instanceof NetworkTask)
-					.map(y -> (NetworkTask) y)
+			final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
 					.filter(y -> y.getToscaName().equals(x.getInternalVirtualLink()))
 					.findFirst();
 			vl.ifPresent(y -> {
@@ -81,39 +72,25 @@ public class VnfExtCpContributor extends AbstractVnfPlanContributor {
 				task.setChangeType(ChangeType.ADDED);
 				task.setType(ResourceTypeEnum.LINKPORT);
 				task.setVnfExtCp(x);
-				ret.add(task);
+				ret.add(new VnfExtCpVt(task));
 			});
 		});
 		return ret;
 	}
 
-	private List<VnfTask> doTerminatePlan(final VnfInstance vnfInstance) {
+	private List<VnfExtCpVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ExternalCpTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final ExternalCpTask networkTask = createTask(ExternalCpTask::new);
-			networkTask.setAlias(x.getTask().getAlias());
-			networkTask.setChangeType(ChangeType.REMOVED);
-			networkTask.setToscaName(x.getTask().getToscaName());
-			networkTask.setType(ResourceTypeEnum.VL);
-			networkTask.setRemovedVnfLiveInstance(x.getId());
-			networkTask.setVimResourceId(x.getResourceId());
+			final ExternalCpTask networkTask = createDeleteTask(ExternalCpTask::new, x);
+			networkTask.setType(ResourceTypeEnum.LINKPORT);
 			networkTask.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
-			return networkTask;
+			return new VnfExtCpVt(networkTask);
 		}).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<UnitOfWork<VnfTask, VnfParameters>> convertTasksToExecNode(final Set<VnfTask> tasks, final VnfBlueprint plan) {
-		return tasks.stream()
-				.filter(ExternalCpTask.class::isInstance)
-				.map(ExternalCpTask.class::cast)
-				.map(VnfExtCpUow::new)
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		dependencyBuilder.connectionFrom(Network.class);
+	public Class<? extends Node> getNode() {
+		return VnfExtCp.class;
 	}
 
 }
