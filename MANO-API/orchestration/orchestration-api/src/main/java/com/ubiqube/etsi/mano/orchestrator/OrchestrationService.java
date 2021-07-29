@@ -31,4 +31,6 @@ public interface OrchestrationService<U> {
 	SystemBuilder systemBuilderOf(final UnitOfWork<U> left, final UnitOfWork<U> right);
 
 	SystemBuilder createEmptySystemBuilder();
+
+	Context createEmptyContext();
 }

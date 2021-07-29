@@ -25,6 +25,7 @@ import org.springframework.util.LinkedMultiValueMap;
 
 import com.ubiqube.etsi.mano.orchestrator.exceptions.OrchestrationException;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
@@ -71,6 +72,13 @@ public class ContextImpl implements Context {
 			return Collections.emptyList();
 		}
 		return r;
+	}
+
+	@Override
+	public void add(final Class<Network> class1, final String key, final String resourceId) {
+		context.computeIfAbsent(class1, x -> new LinkedMultiValueMap<>());
+		final LinkedMultiValueMap<String, String> m = context.get(class1);
+		m.add(key, resourceId);
 	}
 
 }

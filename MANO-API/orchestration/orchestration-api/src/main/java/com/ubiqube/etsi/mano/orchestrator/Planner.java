@@ -31,5 +31,5 @@ public interface Planner<P> {
 
 	ExecutionGraph implement(final PreExecutionGraph<?> gf);
 
-	OrchExecutionResults<?> execute(ExecutionGraph impl, final OrchExecutionListener<?> listener);
+	OrchExecutionResults<?> execute(ExecutionGraph impl, Context context, final OrchExecutionListener<?> listener);
 }

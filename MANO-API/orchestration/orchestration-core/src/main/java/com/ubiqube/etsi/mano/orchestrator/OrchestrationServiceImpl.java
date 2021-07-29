@@ -44,4 +44,9 @@ public class OrchestrationServiceImpl<U> implements OrchestrationService<U> {
 		return new SystemBuilderImpl();
 	}
 
+	@Override
+	public Context createEmptyContext() {
+		return new ContextImpl();
+	}
+
 }

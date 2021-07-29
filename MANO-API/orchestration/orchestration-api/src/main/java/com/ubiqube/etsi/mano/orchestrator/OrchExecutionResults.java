@@ -29,4 +29,6 @@ public interface OrchExecutionResults<U> {
 
 	List<? extends OrchExecutionResult<U>> getErrored();
 
+	void addAll(OrchExecutionResults<?> convertResults);
+
 }

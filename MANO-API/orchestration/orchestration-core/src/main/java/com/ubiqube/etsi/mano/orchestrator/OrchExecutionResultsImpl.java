@@ -41,4 +41,10 @@ public class OrchExecutionResultsImpl implements OrchExecutionResults {
 		return results.stream().filter(x -> x.getResult() == ResultType.ERRORED).collect(Collectors.toList());
 	}
 
+	@Override
+	public void addAll(final OrchExecutionResults convertResults) {
+		results.addAll(convertResults.getErrored());
+		results.addAll(convertResults.getSuccess());
+	}
+
 }

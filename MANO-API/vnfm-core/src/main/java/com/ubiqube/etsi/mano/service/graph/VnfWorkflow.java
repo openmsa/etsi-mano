@@ -29,12 +29,15 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.jpa.VnfTaskJpa;
+import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.ExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
+import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.Planner;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -42,27 +45,34 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UowTaskDeleteProvider;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.service.plan.VnfPlanner;
-import com.ubiqube.etsi.mano.service.plan.contributors.AbstractVnfPlanContributor;
+import com.ubiqube.etsi.mano.service.plan.contributors.v2.AbstractContributorV2Base;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport, VnfTask> {
 	private final VnfPlanner planner;
 	private final Planner<VnfBlueprint> planv2;
 	private final VnfPlanExecutor executor;
 	private final VnfTaskJpa vnfTaskJpa;
-	private final List<AbstractVnfPlanContributor> planContributors;
+	private final List<AbstractContributorV2Base> planContributors;
+	private final OrchestrationService<?> orchestrationService;
 
-	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final VnfTaskJpa vnfTaskJpa, final List<AbstractVnfPlanContributor> _planContributors, final Planner<VnfBlueprint> planv2) {
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final VnfTaskJpa vnfTaskJpa, final List<AbstractContributorV2Base> _planContributors, final Planner<VnfBlueprint> planv2, final OrchestrationService<?> orchestrationService) {
 		this.planner = planner;
 		this.executor = executor;
 		planContributors = _planContributors;
 		this.vnfTaskJpa = vnfTaskJpa;
 		this.planv2 = planv2;
+		this.orchestrationService = orchestrationService;
 	}
 
 	@Override
 	public PreExecutionGraph<VnfTask> setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint) {
-		final List<Class<? extends Node>> planConstituent = planContributors.stream().map(AbstractVnfPlanContributor::getContributionType).collect(Collectors.toList());
+		final List<Class<? extends Node>> planConstituent = planContributors.stream().map(AbstractContributorV2Base::getNode).collect(Collectors.toList());
 		final PreExecutionGraph<VnfTask> plan = planv2.makePlan(new VnfBundleAdapter(bundle), planConstituent, blueprint);
 		plan.getPreTasks().stream().map(VirtualTask::getParameters).forEach(blueprint::addTask);
 		return plan;
@@ -71,7 +81,16 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	@Override
 	public OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final VnfBlueprint parameters) {
 		final ExecutionGraph impl = planv2.implement(plan);
-		return planv2.execute(impl, new OrchListenetImpl(vnfTaskJpa));
+		final Context context = orchestrationService.createEmptyContext();
+		populateExtNetworks(context, parameters);
+		return planv2.execute(impl, context, new OrchListenetImpl());
+	}
+
+	private void populateExtNetworks(final Context context, final VnfBlueprint parameters) {
+		parameters.getExtManagedVirtualLinks().forEach(x -> {
+			context.add(Network.class, x.getVnfVirtualLinkDescId(), x.getResourceId());
+		});
+
 	}
 
 	@Override

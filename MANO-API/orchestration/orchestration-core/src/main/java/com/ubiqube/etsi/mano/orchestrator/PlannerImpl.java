@@ -165,17 +165,18 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public OrchExecutionResults<?> execute(final ExecutionGraph implementation, final OrchExecutionListener<?> listener) {
+	public OrchExecutionResults<?> execute(final ExecutionGraph implementation, final Context context, final OrchExecutionListener<?> listener) {
 		final ExecutionGraphImpl impl = (ExecutionGraphImpl) implementation;
-		final Context context = new ContextImpl();
 		// Execute delete.
-		ExecutionResults<UnitOfWork<?>, String> res = execDelete(impl.getDeleteImplementation(), context, listener);
-		if (!res.getErrored().isEmpty()) {
-			return convertResults(res);
+		final ExecutionResults<UnitOfWork<?>, String> deleteRes = execDelete(impl.getDeleteImplementation(), context, listener);
+		final OrchExecutionResults<?> finalDelete = convertResults(deleteRes);
+		if (!deleteRes.getErrored().isEmpty()) {
+			return finalDelete;
 		}
 		// Execute create.
-		res = execCreate(impl.getCreateImplementation(), context, listener);
-		return convertResults(res);
+		final ExecutionResults<UnitOfWork<?>, String> res = execCreate(impl.getCreateImplementation(), context, listener);
+		finalDelete.addAll(convertResults(res));
+		return finalDelete;
 	}
 
 	private static OrchExecutionResults<?> convertResults(final ExecutionResults<UnitOfWork<?>, String> res) {
