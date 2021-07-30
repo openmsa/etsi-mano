@@ -20,9 +20,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.Task;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
@@ -30,36 +28,25 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfStorageUowV2 implements UnitOfWork<StorageTask> {
-	private final Task<StorageTask> task;
+public class VnfStorageUowV2 extends AbstractUowV2<StorageTask> {
 	private Vim vim;
 	private VimConnectionInformation vimConnectionInformation;
 
 	public VnfStorageUowV2(final Task<StorageTask> task) {
-		this.task = task;
-	}
-
-	@Override
-	public Task<StorageTask> getTask() {
-		return task;
+		super(task, Storage.class);
 	}
 
 	@Override
 	public String execute(final Context context) {
-		final StorageTask params = task.getParameters();
+		final StorageTask params = getTask().getParameters();
 		return vim.storage(vimConnectionInformation).createStorage(params.getVnfStorage(), params.getAlias());
 	}
 
 	@Override
 	public String rollback(final Context context) {
-		final StorageTask params = task.getParameters();
+		final StorageTask params = getTask().getParameters();
 		vim.storage(vimConnectionInformation).deleteStorage(params.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public Class<? extends Node> getNode() {
-		return Storage.class;
 	}
 
 }

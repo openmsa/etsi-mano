@@ -22,11 +22,9 @@ import java.util.stream.Collectors;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -35,28 +33,21 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfComputeUowV2 implements UnitOfWork<ComputeTask> {
+public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 
-	private final VirtualTask<ComputeTask> task;
 	private final Vim vim;
 	private final VimConnectionInformation vimConnectionInformation;
 
 	public VnfComputeUowV2(final VirtualTask<ComputeTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super();
-		this.task = task;
+		super(task, Compute.class);
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 	@Override
-	public VirtualTask<ComputeTask> getTask() {
-		return task;
-	}
-
-	@Override
 	public String execute(final Context context) {
-		final ComputeTask t = task.getParameters();
-		final List<String> storages = context.getParent(Storage.class, task.getParameters().getToscaName());
+		final ComputeTask t = getTask().getParameters();
+		final List<String> storages = context.getParent(Storage.class, getTask().getParameters().getToscaName());
 		final List<String> net = t.getVnfCompute().getNetworks().stream()
 				.flatMap(x -> context.getParent(Network.class, x).stream())
 				.collect(Collectors.toList());
@@ -65,14 +56,9 @@ public class VnfComputeUowV2 implements UnitOfWork<ComputeTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final ComputeTask t = task.getParameters();
+		final ComputeTask t = getTask().getParameters();
 		vim.deleteCompute(vimConnectionInformation, t.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public Class<? extends Node> getNode() {
-		return Compute.class;
 	}
 
 }

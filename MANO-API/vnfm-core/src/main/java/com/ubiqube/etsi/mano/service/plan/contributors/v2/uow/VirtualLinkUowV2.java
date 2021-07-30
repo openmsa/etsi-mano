@@ -20,10 +20,8 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -32,44 +30,30 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VirtualLinkUowV2 implements UnitOfWork<NetworkTask> {
-	private final VirtualTask<NetworkTask> task;
-
+public class VirtualLinkUowV2 extends AbstractUowV2<NetworkTask> {
 	private final Vim vim;
-
 	private final VimConnectionInformation vimConnectionInformation;
-
 	private final VlProtocolData vlProtocolData;
 
 	public VirtualLinkUowV2(final VirtualTask<NetworkTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		this.task = task;
+		super(task, Network.class);
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
 		vlProtocolData = task.getParameters().getVnfVl().getVlProfileEntity().getVirtualLinkProtocolData().iterator().next();
 	}
 
 	@Override
-	public VirtualTask<NetworkTask> getTask() {
-		return task;
-	}
-
-	@Override
 	public String execute(final Context context) {
-		final NetworkTask params = task.getParameters();
-		final String domainName = context.get(DnsZone.class, task.getParameters().getToscaName());
+		final NetworkTask params = getTask().getParameters();
+		final String domainName = context.get(DnsZone.class, getTask().getParameters().getToscaName());
 		return vim.network(vimConnectionInformation).createNetwork(vlProtocolData, params.getToscaName(), domainName, params.getQosPolicy());
 	}
 
 	@Override
 	public String rollback(final Context context) {
-		final NetworkTask params = task.getParameters();
+		final NetworkTask params = getTask().getParameters();
 		vim.network(vimConnectionInformation).deleteVirtualLink(params.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public Class<? extends Node> getNode() {
-		return Network.class;
 	}
 
 }

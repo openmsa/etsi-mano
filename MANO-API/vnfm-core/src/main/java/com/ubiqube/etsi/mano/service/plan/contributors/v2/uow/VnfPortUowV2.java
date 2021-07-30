@@ -19,11 +19,9 @@ package com.ubiqube.etsi.mano.service.plan.contributors.v2.uow;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -32,26 +30,19 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfPortUowV2 implements UnitOfWork<ExternalCpTask> {
+public class VnfPortUowV2 extends AbstractUowV2<ExternalCpTask> {
 	private final Vim vim;
-	private final VirtualTask<ExternalCpTask> task;
 	private final VimConnectionInformation vimConnectionInformation;
 
 	public VnfPortUowV2(final VirtualTask<ExternalCpTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super();
-		this.task = task;
+		super(task, VnfExtCp.class);
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 	@Override
-	public VirtualTask<ExternalCpTask> getTask() {
-		return task;
-	}
-
-	@Override
 	public String execute(final Context context) {
-		final com.ubiqube.etsi.mano.dao.mano.VnfExtCp extCp = task.getParameters().getVnfExtCp();
+		final com.ubiqube.etsi.mano.dao.mano.VnfExtCp extCp = getTask().getParameters().getVnfExtCp();
 		final String computeId = context.get(Compute.class, extCp.getInternalVirtualLink());
 		final String extNetwork = context.get(Network.class, extCp.getExternalVirtualLink());
 		return vim.network(vimConnectionInformation).createPort(extCp.getToscaName(), extNetwork, computeId);
@@ -59,14 +50,9 @@ public class VnfPortUowV2 implements UnitOfWork<ExternalCpTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final ExternalCpTask param = task.getParameters();
+		final ExternalCpTask param = getTask().getParameters();
 		vim.network(vimConnectionInformation).deletePort(param.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public Class<? extends Node> getNode() {
-		return VnfExtCp.class;
 	}
 
 }

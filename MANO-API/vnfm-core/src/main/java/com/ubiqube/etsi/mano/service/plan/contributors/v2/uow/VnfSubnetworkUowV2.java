@@ -19,10 +19,8 @@ package com.ubiqube.etsi.mano.service.plan.contributors.v2.uow;
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SubNetwork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -31,26 +29,19 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfSubnetworkUowV2 implements UnitOfWork<SubNetworkTask> {
-	private final VirtualTask<SubNetworkTask> task;
+public class VnfSubnetworkUowV2 extends AbstractUowV2<SubNetworkTask> {
 	private final Vim vim;
 	private final VimConnectionInformation vimConnectionInformation;
 
 	public VnfSubnetworkUowV2(final VirtualTask<SubNetworkTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super();
-		this.task = task;
+		super(task, SubNetwork.class);
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 	@Override
-	public VirtualTask<SubNetworkTask> getTask() {
-		return task;
-	}
-
-	@Override
 	public String execute(final Context context) {
-		final SubNetworkTask params = task.getParameters();
+		final SubNetworkTask params = getTask().getParameters();
 		final String networkId = context.get(Network.class, params.getParentName());
 		return vim.network(vimConnectionInformation).createSubnet(params.getL3Data(), params.getIpPool(), networkId);
 	}
@@ -60,11 +51,6 @@ public class VnfSubnetworkUowV2 implements UnitOfWork<SubNetworkTask> {
 		// params.getVim().deleteSubnet(params.getVimConnectionInformation(),
 		// params.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	public Class<? extends Node> getNode() {
-		return SubNetwork.class;
 	}
 
 }
