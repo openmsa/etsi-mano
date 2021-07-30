@@ -3,11 +3,11 @@
     <map>
         <entry>
             <key>DISPLAYNAME</key>
-            <value>CNF_Mgmt_Yaml_Based.xml</value>
+            <value>Task_Get_CNF_Descriptor_contents.py</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1627636949099</value>
+            <value>1627570494234</value>
         </entry>
         <entry>
             <key>REPOSITORY</key>
@@ -15,14 +15,18 @@
         </entry>
         <entry>
             <key>DATE_CREATION</key>
-            <value>1627636949099</value>
+            <value>1627570494229</value>
         </entry>
         <entry>
             <key>TAG</key>
         </entry>
         <entry>
+            <key>FILE_TYPE</key>
+            <value>text</value>
+        </entry>
+        <entry>
             <key>TYPE</key>
-            <value>FILE</value>
+            <value>UPLOAD</value>
         </entry>
         <entry>
             <key>COMMENT</key>

@@ -1,230 +1,195 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ObjectDefinition>  <information>
-    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
-    <description/>
-    <displayField>deployment_name</displayField>
-    <executionDetailsVisibility>5</executionDetailsVisibility>
-    <executionMode>TRANSACTION</executionMode>
-    <group>NFV|CNF</group>
-    <icon>/images/repository/CommandDefinition/icons/3200 mobile access router.jpg</icon>
-    <name>CNF LCM v2 (Based-on Kubernetes Descriptor)</name>
-    <order>10000</order>
-    <poolId>0</poolId>
-    <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>true</showDetailedServiceInstances>
-    <showProcessExecConsole>false</showProcessExecConsole>
-    <showProcessResult>false</showProcessResult>
-    <showVariables>false</showVariables>
-    <visibility>5</visibility>
-  </information>  <variables frozen="0">
-    <variable displayName="Deviceid" displayOrder="0" maxLength="100" name="params.deviceid" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+<ObjectDefinition>
+  <variables frozen="0">
+    <variable displayName="CNF Descriptor Contents" name="params.cnf_descriptor_content" startIncrement="0" type="Link" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="36" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="Deviceid" name="params.deviceid" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Sync VIM-K8s services inventories</section>
+        <sections>Sync VIM-K8s services inventories</sections>
       </sections>
     </variable>
-    <variable default="KUBERNETES/nginx-deployment.yaml" displayName="File" displayOrder="1" maxLength="100" name="params.file" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="File">
+    <variable displayName="File" name="params.file" startIncrement="0" type="File" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="1" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="KUBERNETES/nginx-deployment.yaml" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Deploy</section>
-      </sections>
-      <repositories>
-        <repository>Datafiles</repository>
-      </repositories>
-    </variable>
-    <variable displayName="Authentication Method" displayOrder="2" editable="false" maxLength="100" name="params.auth_method" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false"/>
-    <variable displayName="Kube Token" displayOrder="3" editable="false" isUserLocked="true" maxLength="100" name="params.kube_token" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false">
-      <sections>
-        <section>Sync VIM-K8s services inventories</section>
+        <sections>Deploy</sections>
       </sections>
     </variable>
-    <variable displayName="Kubernetes Endpoint" displayOrder="4" editable="false" maxLength="100" name="params.kubernetes_endpoint" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false">
+    <variable displayName="Authentication Method" name="params.auth_method" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="2" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="Kube Token" name="params.kube_token" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Sync VIM-K8s services inventories</section>
+        <sections>Sync VIM-K8s services inventories</sections>
       </sections>
     </variable>
-    <variable displayName="Keystone Public Endpoint" displayOrder="5" editable="false" maxLength="100" name="params.keystone_public_endpoint" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String" visible="false">
+    <variable displayName="Kubernetes Endpoint" name="params.kubernetes_endpoint" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="4" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Sync VIM-K8s services inventories</section>
+        <sections>Sync VIM-K8s services inventories</sections>
       </sections>
     </variable>
-    <variable displayName="Deployment Name" displayOrder="6" isUserLocked="true" maxLength="100" name="params.deployment_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Keystone Public Endpoint" name="params.keystone_public_endpoint" startIncrement="0" type="String" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="5" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Deploy</section>
+        <sections>Sync VIM-K8s services inventories</sections>
       </sections>
     </variable>
-    <variable displayName="Container Name" displayOrder="7" maxLength="100" name="params.container_name" numberOfRowMax="0" refDeviceIdVar="params.deviceid" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="Deployment Name" name="params.deployment_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="6" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Deploy</section>
+        <sections>Deploy</sections>
+      </sections>
+    </variable>
+    <variable displayName="Container Name" name="params.container_name" startIncrement="0" type="OBMFRef" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="7" increment="0" refServiceURI="" refDeviceIdVar="params.deviceid" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>Deploy</sections>
       </sections>
       <classes>
         <class>kube_pods_list</class>
       </classes>
     </variable>
-    <variable displayName="Appication Name" displayOrder="8" isUserLocked="true" maxLength="100" name="params.app_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Appication Name" name="params.app_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="8" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Deploy</section>
+        <sections>Deploy</sections>
       </sections>
     </variable>
-    <variable default="default" displayName="Namespace" displayOrder="9" maxLength="100" name="params.namespace" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
-    <variable displayName="Secret Name in Kubernetes Cluster" displayOrder="10" maxLength="100" name="params.secret_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Namespace" name="params.namespace" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="9" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="default" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="Secret Name in Kubernetes Cluster" name="params.secret_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="10" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Docker Reg Url" displayOrder="11" isMandatory="true" maxLength="100" name="params.docker_reg_url" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Docker Reg Url" name="params.docker_reg_url" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="11" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Docker Reg Username" displayOrder="12" isMandatory="true" maxLength="100" name="params.docker_reg_username" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Docker Reg Username" name="params.docker_reg_username" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="12" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="true" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Docker Reg Password" displayOrder="13" maxLength="100" name="params.docker_reg_password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Password">
+    <variable displayName="Docker Reg Password" name="params.docker_reg_password" startIncrement="0" type="Password" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="13" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Docker Reg Email" displayOrder="14" maxLength="100" name="params.docker_reg_email" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Docker Reg Email" name="params.docker_reg_email" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="14" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Docker Reg Config" displayOrder="15" isUserLocked="true" maxLength="100" name="params.docker_reg_config" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Docker Reg Config" name="params.docker_reg_config" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="15" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Docker Reg Config Base64" displayOrder="16" isUserLocked="true" maxLength="100" name="params.docker_reg_config_base64" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Docker Reg Config Base64" name="params.docker_reg_config_base64" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="16" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Private Registry Secret</section>
+        <sections>Create Private Registry Secret</sections>
       </sections>
     </variable>
-    <variable displayName="Load Balancer Template" displayOrder="17" editable="false" maxLength="100" name="params.load_balancer_template" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="File" visible="false">
+    <variable displayName="Load Balancer Template" name="params.load_balancer_template" startIncrement="0" type="File" mandatoryArray="false" visible="false" description="" groupSeparator="" groupDisplayName="" displayOrder="17" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>CNF Load Balancer</section>
-      </sections>
-      <repositories>
-        <repository>Datafiles</repository>
-      </repositories>
-    </variable>
-    <variable displayName="Load Balancer Service Name" displayOrder="18" isUserLocked="true" maxLength="100" name="params.load_balancer_service_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>CNF Load Balancer</section>
+        <sections>CNF Load Balancer</sections>
       </sections>
     </variable>
-    <variable displayName="Ssh Remote Access Ip" displayOrder="19" isUserLocked="true" maxLength="100" name="params.ssh_remote_access_ip" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Load Balancer Service Name" name="params.load_balancer_service_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="18" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>CNF Load Balancer</section>
+        <sections>CNF Load Balancer</sections>
       </sections>
     </variable>
-    <variable displayName="Ssh Remote Access Port" displayOrder="20" isUserLocked="true" maxLength="100" name="params.ssh_remote_access_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Ssh Remote Access Ip" name="params.ssh_remote_access_ip" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="19" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>CNF Load Balancer</section>
+        <sections>CNF Load Balancer</sections>
       </sections>
     </variable>
-    <variable displayName="Service Load Balancer Name" displayOrder="41" isUserLocked="true" maxLength="100" name="params.service_lb_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Ssh Remote Access Port" name="params.ssh_remote_access_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="20" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>CNF Load Balancer</section>
+        <sections>CNF Load Balancer</sections>
       </sections>
     </variable>
-    <variable default="22" displayName="Container Port" displayOrder="63" isMandatory="true" isUserLocked="true" maxLength="100" name="params.container_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Service Load Balancer Name" name="params.service_lb_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="41" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>CNF Load Balancer</section>
+        <sections>CNF Load Balancer</sections>
       </sections>
     </variable>
-    <variable displayName="Customer" displayOrder="92" maxLength="100" name="params.customer" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Customer">
+    <variable displayName="Container Port" name="params.container_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="63" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="22" isMandatory="true" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Corresponding MSA Device</section>
+        <sections>CNF Load Balancer</sections>
       </sections>
     </variable>
-    <variable default="14020601" displayName="Manufacturer Id" displayOrder="93" maxLength="100" name="params.manufacturer_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Customer" name="params.customer" startIncrement="0" type="Customer" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="92" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>Create Corresponding MSA Device</sections>
+      </sections>
+    </variable>
+    <variable displayName="Manufacturer Id" name="params.manufacturer_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="93" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="14020601" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>Create Corresponding MSA Device</sections>
+      </sections>
       <values>
-        <value displayValue="Linux">14020601</value>
+        <values displayValue="Linux">14020601</values>
       </values>
-      <sections>
-        <section>Create Corresponding MSA Device</section>
-      </sections>
     </variable>
-    <variable default="14020601" displayName="Model Id" displayOrder="94" maxLength="100" name="params.model_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Model Id" name="params.model_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="94" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="14020601" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <sections>
+        <sections>Create Corresponding MSA Device</sections>
+      </sections>
       <values>
-        <value displayValue="Generic">14020601</value>
+        <values displayValue="Generic">14020601</values>
       </values>
+    </variable>
+    <variable displayName="Device Id" name="params.device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="95" increment="0" refServiceURI="" keepOnImport="true" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Corresponding MSA Device</section>
+        <sections>Create Corresponding MSA Device</sections>
       </sections>
     </variable>
-    <variable displayName="Device Id" displayOrder="95" isUserLocked="true" keepOnImport="true" maxLength="165" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+    <variable displayName="Status In Msa" name="params.status in msa" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="96" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="true" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Corresponding MSA Device</section>
+        <sections>Create Corresponding MSA Device</sections>
       </sections>
     </variable>
-    <variable displayName="Status In Msa" displayOrder="96" isUserLocked="true" maxLength="100" name="params.status in msa" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Profile Ref" name="params.profile_ref" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="116" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Corresponding MSA Device</section>
+        <sections>Attach Profiles</sections>
       </sections>
     </variable>
-    <variable displayName="Profile Ref" displayOrder="116" maxLength="100" name="params.profile_ref" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Username" name="params.username" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="135" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Attach Profiles</section>
+        <sections>Create Corresponding MSA Device</sections>
       </sections>
     </variable>
-    <variable displayName="Username" displayOrder="135" maxLength="100" name="params.username" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Device Password" name="params.device_password" startIncrement="0" type="Password" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="136" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Corresponding MSA Device</section>
+        <sections>Create Corresponding MSA Device</sections>
       </sections>
     </variable>
-    <variable displayName="Device Password" displayOrder="136" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Password">
+    <variable displayName="Service Name" name="params.lb.0.service_lb_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="138" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create Corresponding MSA Device</section>
+        <sections>Add Load Balancers</sections>
       </sections>
     </variable>
-    <variable displayName="Service Name" displayOrder="138" maxLength="100" name="params.lb.0.service_lb_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Related App Name" name="params.lb.0.app_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="139" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Add Load Balancers</section>
+        <sections>Add Load Balancers</sections>
       </sections>
     </variable>
-    <variable displayName="Related App Name" displayOrder="139" maxLength="100" name="params.lb.0.app_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Container Port" name="params.lb.0.container_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="140" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Add Load Balancers</section>
+        <sections>Add Load Balancers</sections>
       </sections>
     </variable>
-    <variable displayName="Container Port" displayOrder="140" maxLength="100" name="params.lb.0.container_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Remote Access Ip" name="params.lb.0.remote_access_ip" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="141" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Add Load Balancers</section>
+        <sections>Add Load Balancers</sections>
       </sections>
     </variable>
-    <variable displayName="Remote Access Ip" displayOrder="141" maxLength="100" name="params.lb.0.remote_access_ip" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Remote Access Port" name="params.lb.0.remote_access_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="142" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Add Load Balancers</section>
+        <sections>Add Load Balancers</sections>
       </sections>
     </variable>
-    <variable displayName="Remote Access Port" displayOrder="142" maxLength="100" name="params.lb.0.remote_access_port" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Add Load Balancers</section>
-      </sections>
-    </variable>
-  </variables>  <example>    <content/>  </example>
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments">
-    <visibility>5</visibility>
+  </variables>
+  <example/>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments">
     <displayName>CNF Deployments</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/</processPath>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -241,22 +206,12 @@
       <displayName>Synchronize k8s Cluster MicroServices</displayName>
     </task>
   </process>
-  
   <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Stop_CNF">
-    <visibility>5</visibility>
     <displayName>Stop CNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-  
-    
-    
-  
-    
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -269,27 +224,12 @@
       <displayName>Stop CNF</displayName>
     </task>
   </process>
-  
   <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Pods">
-    <visibility>5</visibility>
     <displayName>Terminate CNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-  
-    
-    
-  
-    
-    
-  
-    
-    
-    
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -311,25 +251,17 @@
     </task>
   </process>
   <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Instance">
-    <visibility>5</visibility>
     <displayName>Delete Instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
-  </process>
-
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status">
     <visibility>5</visibility>
-    <displayName>Get CNF Status</displayName>
-    <icon/>
-    <poolId>0</poolId>
     <allowSchedule>false</allowSchedule>
+  </process>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Status">
+    <displayName>Get CNF Status</displayName>
     <type>UPDATE</type>
-  
-    
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -342,17 +274,12 @@
       <displayName>Get Status</displayName>
     </task>
   </process>
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF">
-    <visibility>5</visibility>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Start_CNF">
     <displayName>Start CNF</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-    
-    
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -365,16 +292,12 @@
       <displayName>Start CNF</displayName>
     </task>
   </process>
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_">
-    <visibility>5</visibility>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Docker_Private_Registry_Secret_Authentication_">
     <displayName>Add Docker Private Registry Secret</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -395,14 +318,12 @@
       <displayName>Create Private Registry Secret</displayName>
     </task>
   </process>
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Docker_Private_Registry_Secret">
-    <visibility>5</visibility>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Delete_Docker_Private_Registry_Secret">
     <displayName>Delete Docker Private Registry Secret</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -415,51 +336,18 @@
       <displayName>Delete Private Registry Secret</displayName>
     </task>
   </process>
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Create_Instance">
-    <visibility>5</visibility>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Create_Instance">
     <displayName>Create Instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>CREATE</type>
-  </process>
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_">
     <visibility>5</visibility>
-    <displayName>MSA Managed Entity Creation</displayName>
-    <icon/>
-    <poolId>0</poolId>
     <allowSchedule>false</allowSchedule>
+  </process>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_CNF_External_Remote_Access_">
+    <displayName>MSA Managed Entity Creation</displayName>
     <type>UPDATE</type>
-  
-    
-    
-    
-  
-    
-    
-  
-    
-    
-    
-    
-    
-    
-    
-    
-  
-    
-    
-    
-    
-    
-    
-  
-    
-    
-    
-    
-    
-  <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
     </task>
@@ -488,14 +376,11 @@
       <displayName>MSA Initial Device Provisionning</displayName>
     </task>
   </process>
-
-<process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Dedicated_Load_Balancer">
-    <visibility>5</visibility>
+  <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Add_Dedicated_Load_Balancer">
     <displayName>Add Dedicated Load Balancer</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
@@ -510,12 +395,10 @@
     </task>
   </process>
   <process name="Process/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Remove_Dedicated_Load_Balancer">
-    <visibility>5</visibility>
     <displayName>Remove Dedicated Load Balancer</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
     <task name="/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Pods_Deployments/Tasks/Task_Sync_VIM-K8s_services_inventories.php">
       <processPath/>
       <displayName>Sync VIM-K8s services inventories</displayName>
@@ -529,4 +412,24 @@
       <displayName>Delete Load Balancers</displayName>
     </task>
   </process>
+  <process name="Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Descriptor">
+    <displayName>Get CNF Descriptor</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_Get_CNF_Descriptor_contents.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_Mgmt_Yaml_Based/Process_Get_CNF_Descriptor/Tasks</processPath>
+      <displayName>Get CNF Descriptor contents</displayName>
+    </task>
+  </process>
+  <information>
+    <icon>/images/repository/CommandDefinition/icons/3200 mobile access router.jpg</icon>
+    <description/>
+    <displayField>deployment_name</displayField>
+    <serviceTaskType>php</serviceTaskType>
+    <order>10000</order>
+    <visibility>5</visibility>
+    <name>CNF LCM v2 (Based-on Kubernetes Descriptor)</name>
+    <group>NFV|CNF</group>
+  </information>
 </ObjectDefinition>
