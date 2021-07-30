@@ -133,7 +133,22 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	public Map<String, String> getPublicNetworks() {
 		return os.networking().network().list().stream().filter(Network::isRouterExternal)
 				.collect(Collectors.toMap(Network::getName, Network::getId));
+	}
 
+	@Override
+	public String createPort(final String name, final String networkId, final String deviceId) {
+		final Port port = Builders.port()
+				.networkId(networkId)
+				.name(name)
+				.deviceId(deviceId)
+				.build();
+		final Port p = os.networking().port().create(port);
+		return p.getId();
+	}
+
+	@Override
+	public void deletePort(final String uuid) {
+		os.networking().port().delete(uuid);
 	}
 
 	private static void checkResult(final ActionResponse action) {

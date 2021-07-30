@@ -56,7 +56,7 @@ public class ImplementationService {
 		final SystemConnections vim = vimManager.findVimByVimIdAndProviderId(connectionId, virtualTask.getProviderId());
 		final System sys = systems.get(vim.getVimType());
 		if (null == sys) {
-			throw new OrchestrationException("Unable to find system matching: " + vim.getVimType());
+			throw new OrchestrationException("Unable to find system matching: " + vim.getVimType() + "/" + connectionId);
 		}
 		return sys.getImplementation(orchestrationService, virtualTask, vim);
 	}

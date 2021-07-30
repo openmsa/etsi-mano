@@ -72,6 +72,9 @@ public class SystemService {
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("VNFEXTCP");
 		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("PORT");
+		sys.add(sc);
 		return systemJpa.save(sys);
 	}
 }

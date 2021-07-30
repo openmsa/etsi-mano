@@ -19,10 +19,7 @@ package com.ubiqube.etsi.mano.service.plan.contributors.v2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -30,102 +27,65 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
 import com.ubiqube.etsi.mano.service.graph.VnfBundleAdapter;
 import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.PortVt;
-import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.VnfExtCpVt;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
-public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTask, VnfExtCpVt, VnfBlueprint> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(VnfExtCpContributor.class);
-
+public class PortContributor extends AbstractContributorV2Base<ExternalCpTask, PortVt, VnfBlueprint> {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfExtCpContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+	public PortContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
 		super();
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 	}
 
 	@Override
-	public List<VnfExtCpVt> contribute(final Bundle bundle, final VnfBlueprint plan) {
+	public List<PortVt> contribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(plan.getVnfInstance(), ExternalCpTask.class.getSimpleName());
 		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
-		final List ret = new ArrayList<>();
+		final List<PortVt> ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
-			final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
+			final Optional<VnfCompute> compute = vnfPackage.getVnfCompute().stream()
 					.filter(y -> y.getToscaName().equals(x.getInternalVirtualLink()))
 					.findFirst();
-			if (vl.isPresent()) {
-				final VnfVl y = vl.get();
+			compute.ifPresent(y -> {
 				final ExternalCpTask task = createTask(ExternalCpTask::new);
 				task.setToscaName(x.getToscaName());
 				task.setAlias(y.getToscaName() + "-" + x.getToscaName());
 				task.setChangeType(ChangeType.ADDED);
 				task.setType(ResourceTypeEnum.LINKPORT);
 				task.setVnfExtCp(x);
-				ret.add(new VnfExtCpVt(task));
-			} else {
-				final Optional<VnfCompute> compute = vnfPackage.getVnfCompute().stream()
-						.filter(y -> {
-							LOG.debug(" '" + y.getToscaName() + "' = '" + x.getInternalVirtualLink() + "' => " + y.getToscaName().equals(x.getInternalVirtualLink()));
-							return y.getToscaName().equals(x.getInternalVirtualLink());
-						})
-						.findFirst();
-				compute.ifPresent(y -> {
-					final ExternalCpTask task = createTask(ExternalCpTask::new);
-					task.setToscaName(x.getToscaName());
-					task.setAlias(y.getToscaName() + "-" + x.getToscaName());
-					task.setChangeType(ChangeType.ADDED);
-					task.setType(ResourceTypeEnum.LINKPORT);
-					task.setVnfExtCp(x);
-					task.setPort(true);
-					ret.add(new PortVt(task));
-				});
-			}
+				ret.add(new PortVt(task));
+			});
 		});
 		return ret;
 	}
 
-	private List doTerminatePlan(final VnfInstance vnfInstance) {
+	private List<PortVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ExternalCpTask.class.getSimpleName());
-		final List ret = new ArrayList<>();
-		instances.stream().forEach(x -> {
-			final ExternalCpTask extCp = (ExternalCpTask) x.getTask();
-			if ((extCp.getPort() != null) && extCp.getPort()) {
-				final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
-				task.setType(ResourceTypeEnum.LINKPORT);
-				task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
-				task.setPort(true);
-				ret.add(new PortVt(task));
-			} else {
-				final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
-				task.setType(ResourceTypeEnum.LINKPORT);
-				task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
-				ret.add(new VnfExtCpVt(task));
-			}
-		});
-		return ret;
+		return instances.stream().map(x -> {
+			final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
+			task.setType(ResourceTypeEnum.LINKPORT);
+			task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
+			return new PortVt(task);
+		}).collect(Collectors.toList());
 	}
 
 	@Override
 	public Class<? extends Node> getNode() {
-		return VnfExtCp.class;
+		return com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp.class;
 	}
 
 }

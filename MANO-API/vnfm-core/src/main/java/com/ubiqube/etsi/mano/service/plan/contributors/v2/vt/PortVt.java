@@ -14,32 +14,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2;
+package com.ubiqube.etsi.mano.service.plan.contributors.v2.vt;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-
-import lombok.Getter;
-import lombok.Setter;
+import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
-@Setter
-@Entity
-public class ExternalCpTask extends VnfTask {
+public class PortVt extends VnfVtBase<ExternalCpTask> {
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+	public PortVt(final ExternalCpTask nt) {
+		super(nt);
+	}
 
-	@ManyToOne
-	private VnfExtCp vnfExtCp;
+	@Override
+	public List<NamedDependency> getNameDependencies() {
+		return Arrays.asList(new NamedDependency(Compute.class, getParameters().getVnfExtCp().getInternalVirtualLink()));
+	}
 
-	private Boolean port;
+	@Override
+	public List<NamedDependency> getNamedProduced() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public String getProviderId() {
+		return "PORT";
+	}
 
 }
