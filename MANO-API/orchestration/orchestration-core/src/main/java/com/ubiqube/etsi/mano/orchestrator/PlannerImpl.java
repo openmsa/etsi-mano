@@ -198,11 +198,20 @@ public class PlannerImpl<U> implements Planner<U> {
 		final DexecutorConfig<UnitOfWork<?>, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
 		final DefaultDexecutor<UnitOfWork<?>, String> executor = new DefaultDexecutor<>(config);
+		addRoot(g, executor);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
 		final ExecutionResults<UnitOfWork<?>, String> res = executor.execute(ExecutionConfig.TERMINATING);
 		executorService.shutdown();
 		return res;
+	}
+
+	private static void addRoot(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final DefaultDexecutor<UnitOfWork<?>, String> executor) {
+		g.vertexSet().forEach(x -> {
+			if (g.incomingEdgesOf(x).isEmpty()) {
+				executor.addIndependent(x);
+			}
+		});
 	}
 
 }
