@@ -50,6 +50,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -109,15 +110,23 @@ public class VnfPackageOnboardingImpl {
 	}
 
 	private void uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
-		vnfPackage.setChecksum(getChecksum(data));
-		vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
-		final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
-		if (null != packageProvider) {
-			mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
+		try {
+			vnfPackage.setChecksum(getChecksum(data));
+			vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
+			final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
+			if (null != packageProvider) {
+				mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
 
+			}
+			finishOnboarding(vnfPackage);
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
+		} catch (final RuntimeException e) {
+			LOG.error("", e);
+			// XXX It is ERROR in
+			vnfPackage.setOnboardingState(OnboardingStateType.CREATED);
+			vnfPackage.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
+			vnfPackageService.save(vnfPackage);
 		}
-		finishOnboarding(vnfPackage);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 	}
 
 	private void mapVnfPackage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
