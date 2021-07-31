@@ -166,12 +166,13 @@ public class OpenStackVim implements Vim {
 		if (!networks.isEmpty()) {
 			bs.networks(networks);
 		}
-		storages.forEach(x -> {
+		for (int i = 0; i < storages.size(); i++) {
 			final BlockDeviceMappingCreate blockDevice = Builders.blockDeviceMapping()
-					.volumeId(x)
+					.uuid(storages.get(i))
+					.bootIndex(i)
 					.build();
 			bs.blockDevice(blockDevice);
-		});
+		}
 
 		final Server res = os.compute().servers().boot(bs.build());
 		return res.getId();
