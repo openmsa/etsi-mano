@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -61,7 +62,12 @@ public class PlannerImpl<U> implements Planner<U> {
 
 	public PlannerImpl(final List<PlanContributor> contributorRaw, final ImplementationService implementationService) {
 		super();
-		this.contributors = contributorRaw.stream().collect(Collectors.toMap(PlanContributor::getNode, Function.identity()));
+		this.contributors = contributorRaw.stream()
+				.collect(Collectors.toMap(
+						PlanContributor::getNode,
+						Function.identity(),
+						(u, v) -> v,
+						LinkedHashMap::new));
 		this.implementationService = implementationService;
 	}
 
@@ -208,7 +214,7 @@ public class PlannerImpl<U> implements Planner<U> {
 
 	private static void addRoot(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final DefaultDexecutor<UnitOfWork<?>, String> executor) {
 		g.vertexSet().forEach(x -> {
-			if (g.incomingEdgesOf(x).isEmpty()) {
+			if (g.incomingEdgesOf(x).isEmpty() && g.outgoingEdgesOf(x).isEmpty()) {
 				executor.addIndependent(x);
 			}
 		});
