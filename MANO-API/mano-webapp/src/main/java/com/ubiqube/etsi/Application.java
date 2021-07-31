@@ -36,7 +36,7 @@ public class Application extends SpringBootServletInitializer {
 	public static void main(final String[] args) {
 		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
-		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/home/olivier/workspace/workspace17.1.1/ubi-etsi-mano/tmp/");
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/okika");
 		SpringApplication.run(Application.class, args);
 	}
 
