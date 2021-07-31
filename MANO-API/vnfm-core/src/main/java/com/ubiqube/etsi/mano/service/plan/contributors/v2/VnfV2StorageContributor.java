@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
@@ -46,8 +47,9 @@ import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.StorageVt;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Priority(200)
 @Service
-public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTask, StorageVt, VnfBlueprint> {
+public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTask, StorageVt> {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public VnfV2StorageContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
@@ -56,7 +58,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 	}
 
 	@Override
-	public List<StorageVt> contribute(final Bundle bundle, final VnfBlueprint plan) {
+	public List<StorageVt> vnfContribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
@@ -67,13 +69,12 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 				.map(ComputeTask.class::cast)
 				.forEach(x -> {
 					x.getVnfCompute().getStorages().forEach(y -> {
-						final StorageTask task = new StorageTask();
-						task.setToscaName(y);
+						final StorageTask task = createTask(StorageTask::new);
 						task.setType(ResourceTypeEnum.STORAGE);
+						task.setToscaName(y);
 						task.setAlias(y + "-" + x.getAlias() + "-" + RandomStringUtils.random(5, true, true));
 						task.setParentAlias(x.getAlias());
 						task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));
-						task.setChangeType(ChangeType.ADDED);
 						ret.add(new StorageVt(task));
 					});
 				});
@@ -83,14 +84,9 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 	private List<StorageVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final StorageTask task = new StorageTask();
-			task.setToscaName(x.getTask().getToscaName());
+			final StorageTask task = createDeleteTask(StorageTask::new, x);
 			task.setType(ResourceTypeEnum.STORAGE);
-			task.setParentAlias(x.getTask().getAlias());
-			task.setChangeType(ChangeType.REMOVED);
 			task.setRemovedVnfLiveInstance(x.getId());
-			task.setVimResourceId(x.getResourceId());
-			task.setVimConnectionId(x.getVimConnectionId());
 			task.setVnfStorage(((StorageTask) x.getTask()).getVnfStorage());
 			return new StorageVt(task);
 		}).collect(Collectors.toList());
@@ -107,4 +103,5 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 	public Class<? extends Node> getNode() {
 		return Storage.class;
 	}
+
 }

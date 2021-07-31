@@ -47,9 +47,14 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 	@Override
 	public String execute(final Context context) {
 		final ComputeTask t = getTask().getParameters();
-		final List<String> storages = context.getParent(Storage.class, getTask().getParameters().getToscaName());
+
+		final List<String> storages = getTask().getParameters().getVnfCompute().getStorages().stream()
+				.map(x -> context.getParent(Storage.class, x))
+				.flatMap(List::stream)
+				.collect(Collectors.toList());
 		final List<String> net = t.getVnfCompute().getNetworks().stream()
-				.flatMap(x -> context.getParent(Network.class, x).stream())
+				.map(x -> context.getParent(Network.class, x))
+				.flatMap(List::stream)
 				.collect(Collectors.toList());
 		return vim.createCompute(vimConnectionInformation, t.getAlias(), t.getFlavorId(), t.getImageId(), net, storages, t.getBootData());
 	}

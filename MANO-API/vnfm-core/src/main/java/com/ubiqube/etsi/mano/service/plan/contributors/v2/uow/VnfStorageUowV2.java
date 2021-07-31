@@ -19,8 +19,8 @@ package com.ubiqube.etsi.mano.service.plan.contributors.v2.uow;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.Task;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
@@ -29,11 +29,13 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  *
  */
 public class VnfStorageUowV2 extends AbstractUowV2<StorageTask> {
-	private Vim vim;
-	private VimConnectionInformation vimConnectionInformation;
+	private final Vim vim;
+	private final VimConnectionInformation vimConnectionInformation;
 
-	public VnfStorageUowV2(final Task<StorageTask> task) {
+	public VnfStorageUowV2(final VirtualTask<StorageTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
 		super(task, Storage.class);
+		this.vim = vim;
+		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 	@Override
