@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Priority;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,8 @@ import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.VnfExtCpVt;
  *
  */
 @Service
-public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTask, VnfExtCpVt, VnfBlueprint> {
+@Priority(100)
+public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTask, VnfExtCpVt> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfExtCpContributor.class);
 
@@ -60,7 +63,7 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 	}
 
 	@Override
-	public List<VnfExtCpVt> contribute(final Bundle bundle, final VnfBlueprint plan) {
+	public List<VnfExtCpVt> vnfContribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
@@ -127,5 +130,4 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 	public Class<? extends Node> getNode() {
 		return VnfExtCp.class;
 	}
-
 }

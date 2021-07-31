@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
+
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -40,8 +42,9 @@ import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.DnsZoneVT;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Priority(100)
 //@Service
-public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTask, DnsZoneVT, VnfBlueprint> {
+public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTask, DnsZoneVT> {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public VnfV2DnsZoneContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
@@ -50,7 +53,7 @@ public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTa
 	}
 
 	@Override
-	public List<DnsZoneVT> contribute(final Bundle bundle, final VnfBlueprint plan) {
+	public List<DnsZoneVT> vnfContribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
@@ -77,4 +80,5 @@ public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTa
 	public Class<? extends Node> getNode() {
 		return DnsZone.class;
 	}
+
 }

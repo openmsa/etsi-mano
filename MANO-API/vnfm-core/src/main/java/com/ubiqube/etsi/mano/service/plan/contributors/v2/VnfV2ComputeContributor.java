@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
@@ -48,8 +50,14 @@ import com.ubiqube.etsi.mano.service.plan.ScalingStrategy;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy.NumberOfCompute;
 import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.ComputeVt;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Priority(100)
 @Service
-public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTask, ComputeVt, VnfBlueprint> {
+public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTask, ComputeVt> {
 	private final ScalingStrategy scalingStrategy;
 	private final VduNamingStrategy vduNamingStrategy;
 	private final VnfInstanceService vnfInstanceService;
@@ -63,7 +71,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	}
 
 	@Override
-	public List<ComputeVt> contribute(final Bundle bundle, final VnfBlueprint blueprint) {
+	public List<ComputeVt> vnfContribute(final Bundle bundle, final VnfBlueprint blueprint) {
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getVnfInstance());
 		}
@@ -140,5 +148,4 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	public Class<? extends Node> getNode() {
 		return Compute.class;
 	}
-
 }

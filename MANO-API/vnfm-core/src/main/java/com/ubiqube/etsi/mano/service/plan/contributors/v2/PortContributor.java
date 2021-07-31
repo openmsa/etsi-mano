@@ -41,7 +41,7 @@ import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.PortVt;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class PortContributor extends AbstractContributorV2Base<ExternalCpTask, PortVt, VnfBlueprint> {
+public class PortContributor extends AbstractContributorV2Base<ExternalCpTask, PortVt> {
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public PortContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
@@ -50,7 +50,7 @@ public class PortContributor extends AbstractContributorV2Base<ExternalCpTask, P
 	}
 
 	@Override
-	public List<PortVt> contribute(final Bundle bundle, final VnfBlueprint plan) {
+	public List<PortVt> vnfContribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}

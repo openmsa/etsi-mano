@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
@@ -45,8 +47,9 @@ import com.ubiqube.etsi.mano.service.plan.contributors.v2.vt.NetWorkVt;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Priority(100)
 @Service
-public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTask, NetWorkVt, VnfBlueprint> {
+public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTask, NetWorkVt> {
 	private final VnfBlueprintService planService;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
@@ -57,7 +60,7 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 	}
 
 	@Override
-	public List<NetWorkVt> contribute(final Bundle bundle, final VnfBlueprint parameters) {
+	public List<NetWorkVt> vnfContribute(final Bundle bundle, final VnfBlueprint parameters) {
 		if (PlanOperationType.INSTANTIATE != parameters.getOperation()) {
 			return doTerminatePlan(parameters.getVnfInstance());
 		}
@@ -99,4 +102,5 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 	public Class<? extends Node> getNode() {
 		return Network.class;
 	}
+
 }

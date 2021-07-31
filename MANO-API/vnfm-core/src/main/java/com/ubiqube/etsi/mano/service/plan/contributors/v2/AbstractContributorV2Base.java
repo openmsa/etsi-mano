@@ -17,16 +17,20 @@
 package com.ubiqube.etsi.mano.service.plan.contributors.v2;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.PlanContributor;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
-public abstract class AbstractContributorV2Base<U, T extends VirtualTask<U>, P> implements PlanContributor<U, T, P> {
+public abstract class AbstractContributorV2Base<U extends VnfTask, T extends VirtualTask<U>> implements PlanContributor<U, T, VnfBlueprint> {
 
 	protected static <U extends VnfTask> U createTask(final Supplier<U> newInstance, final VnfTask t) {
 		final U task = createTask(newInstance);
@@ -55,4 +59,14 @@ public abstract class AbstractContributorV2Base<U, T extends VirtualTask<U>, P> 
 		task.setRemovedVnfLiveInstance(vli.getId());
 		return task;
 	}
+
+	@Override
+	public final List<T> contribute(final Bundle bundle, final VnfBlueprint blueprint) {
+		final List<T> r = vnfContribute(bundle, blueprint);
+		final List<U> rr = r.stream().map(VirtualTask::getParameters).collect(Collectors.toList());
+		blueprint.getTasks().addAll(rr);
+		return r;
+	}
+
+	protected abstract List<T> vnfContribute(final Bundle bundle, final VnfBlueprint blueprint);
 }
