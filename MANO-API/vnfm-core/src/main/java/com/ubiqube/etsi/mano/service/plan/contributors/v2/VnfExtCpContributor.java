@@ -71,18 +71,20 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
 		final List ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
-			final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
-					.filter(y -> y.getToscaName().equals(x.getInternalVirtualLink()))
-					.findFirst();
-			if (vl.isPresent()) {
-				final VnfVl y = vl.get();
-				final ExternalCpTask task = createTask(ExternalCpTask::new);
-				task.setToscaName(x.getToscaName());
-				task.setAlias(y.getToscaName() + "-" + x.getToscaName());
-				task.setChangeType(ChangeType.ADDED);
-				task.setType(ResourceTypeEnum.LINKPORT);
-				task.setVnfExtCp(x);
-				ret.add(new VnfExtCpVt(task));
+			if (!have(instances, x.getToscaName())) {
+				final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
+						.filter(y -> y.getToscaName().equals(x.getInternalVirtualLink()))
+						.findFirst();
+				if (vl.isPresent()) {
+					final VnfVl y = vl.get();
+					final ExternalCpTask task = createTask(ExternalCpTask::new);
+					task.setToscaName(x.getToscaName());
+					task.setAlias(y.getToscaName() + "-" + x.getToscaName());
+					task.setChangeType(ChangeType.ADDED);
+					task.setType(ResourceTypeEnum.LINKPORT);
+					task.setVnfExtCp(x);
+					ret.add(new VnfExtCpVt(task));
+				}
 			} else {
 				final Optional<VnfCompute> compute = vnfPackage.getVnfCompute().stream()
 						.filter(y -> {
@@ -103,6 +105,10 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 			}
 		});
 		return ret;
+	}
+
+	private static boolean have(final List<VnfLiveInstance> instances, final String toscaName) {
+		return instances.stream().anyMatch(x -> x.getTask().getToscaName().equals(toscaName));
 	}
 
 	private List doTerminatePlan(final VnfInstance vnfInstance) {
