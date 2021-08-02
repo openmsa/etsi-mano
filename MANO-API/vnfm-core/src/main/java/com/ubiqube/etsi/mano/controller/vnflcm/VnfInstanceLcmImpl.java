@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -113,6 +114,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		return vnfInstance;
 	}
 
+	@Transactional
 	@Override
 	public void delete(@Nonnull final UUID vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
@@ -123,6 +125,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 			vnfPkg.setUsageState(PackageUsageState.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
+		planService.deleteByVnfInstance(vnfInstance);
 		vnfInstanceService.delete(vnfInstanceId);
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
