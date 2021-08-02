@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
@@ -36,6 +35,6 @@ public interface Context extends Serializable {
 
 	List<String> getParent(Class<? extends Node> class1, String toscaName);
 
-	void add(Class<Network> class1, String vnfVirtualLinkDescId, String resourceId);
+	void add(Class<? extends Node> class1, String name, String resourceId);
 
 }
