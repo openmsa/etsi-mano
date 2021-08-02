@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -138,7 +139,8 @@ public abstract class AbstractGenericAction {
 	private static void removeScaleStatus(final Instance localVnfInstance, final Set<ScaleInfo> newScale) {
 		final Set<ScaleInfo> scales = localVnfInstance.getInstantiatedVnfInfo().getScaleStatus();
 		newScale.stream().forEach(x -> find(scales, x.getAspectId()).ifPresent(scales::remove));
-		newScale.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).forEach(newScale::add);
+		final List<ScaleInfo> si = newScale.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).collect(Collectors.toList());
+		newScale.addAll(si);
 	}
 
 	private static Optional<? extends ScaleInfo> find(final Set<? extends ScaleInfo> scales, final String aspectId) {
@@ -178,7 +180,7 @@ public abstract class AbstractGenericAction {
 
 	public final void scaleToLevel(@NotNull final UUID blueprintId) {
 		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
+		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
 			LOG.info("Scale to level {} Success...", blueprintId);
