@@ -52,20 +52,20 @@ public interface VnfInstanceService {
 
 	int getNumberOfLiveStorage(final VnfInstance vnfInstance, final VnfStorage x);
 
-	@Nonnull
+	// @Nonnull
 	VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId);
 
-	@Nonnull
+	// @Nonnull
 	VnfInstance findById(final UUID id);
 
 	VnfInstance save(final VnfInstance vnfInstance);
 
 	void delete(final UUID vnfInstanceId);
 
-	@Nonnull
+	// @Nonnull
 	VnfLiveInstance findLiveInstanceByInstantiated(final UUID id);
 
-	@Nonnull
+	// @Nonnull
 	VnfLiveInstance save(final VnfLiveInstance vli);
 
 	Optional<VnfLiveInstance> findLiveInstanceById(final UUID vnfLiveInstance);
