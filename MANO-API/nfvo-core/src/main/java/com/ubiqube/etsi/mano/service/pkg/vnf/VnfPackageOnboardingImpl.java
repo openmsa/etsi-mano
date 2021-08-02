@@ -131,6 +131,9 @@ public class VnfPackageOnboardingImpl {
 
 	private void mapVnfPackage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
 		final ProviderData pd = vnfPackageReader.getProviderPadata();
+		if (null == pd.getVnfdId()) {
+			throw new GenericException("VNFD cannot be null.");
+		}
 		final Optional<VnfPackage> optPackage = getVnfPackage(pd);
 		optPackage.ifPresent(x -> {
 			throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
