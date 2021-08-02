@@ -55,4 +55,6 @@ public interface VnfLiveInstanceJpa extends CrudRepository<VnfLiveInstance, UUID
 	List<VnfLiveInstance> findByVnfInstanceIdAndClass(VnfInstance vnfInstance, String string);
 
 	List<VnfLiveInstance> findByVnfInstanceId(UUID id);
+
+	List<VnfLiveInstance> findByVnfInstance(VnfInstance vnfInstance);
 }
