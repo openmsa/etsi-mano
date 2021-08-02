@@ -61,7 +61,7 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 
 	@Override
 	public List<NetWorkVt> vnfContribute(final Bundle bundle, final VnfBlueprint parameters) {
-		if (PlanOperationType.INSTANTIATE != parameters.getOperation()) {
+		if (PlanOperationType.TERMINATE == parameters.getOperation()) {
 			return doTerminatePlan(parameters.getVnfInstance());
 		}
 		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
