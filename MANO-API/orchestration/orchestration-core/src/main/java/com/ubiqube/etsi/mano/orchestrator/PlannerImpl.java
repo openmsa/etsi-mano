@@ -36,7 +36,6 @@ import com.github.dexecutor.core.DexecutorConfig;
 import com.github.dexecutor.core.ExecutionConfig;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
-import com.ubiqube.etsi.mano.orchestrator.exceptions.OrchestrationException;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.service.ImplementationService;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
@@ -109,8 +108,12 @@ public class PlannerImpl<U> implements Planner<U> {
 	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf) {
 		gf.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
 			final VirtualTask<?> dep = findDependency(y, gf);
-			LOG.debug("Add edge : {} <-> {}", dep, x);
-			gf.addEdge(dep, x);
+			if (null == dep) {
+				LOG.info("Skipping: {} ", x);
+			} else {
+				LOG.debug("Add edge : {} <-> {}", dep, x);
+				gf.addEdge(dep, x);
+			}
 		}));
 	}
 
@@ -167,7 +170,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		return gf.vertexSet().stream().filter(x -> x.getNamedProduced().stream()
 				.anyMatch(namedDependency::match))
 				.findAny()
-				.orElseThrow(() -> new OrchestrationException("Could not find named dependency " + namedDependency));
+				.orElse(null);
 	}
 
 	@Override
