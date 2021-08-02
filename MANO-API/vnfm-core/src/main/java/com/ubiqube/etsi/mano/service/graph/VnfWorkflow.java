@@ -24,10 +24,13 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfTaskJpa;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.ExecutionGraph;
@@ -37,7 +40,13 @@ import com.ubiqube.etsi.mano.orchestrator.Planner;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Monitoring;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SubNetwork;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
@@ -60,14 +69,16 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	private final VnfTaskJpa vnfTaskJpa;
 	private final List<AbstractContributorV2Base> planContributors;
 	private final OrchestrationService<?> orchestrationService;
+	private final VnfLiveInstanceJpa vnfInstanceJpa;
 
-	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final VnfTaskJpa vnfTaskJpa, final List<AbstractContributorV2Base> _planContributors, final Planner<VnfBlueprint> planv2, final OrchestrationService<?> orchestrationService) {
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final VnfTaskJpa vnfTaskJpa, final List<AbstractContributorV2Base> _planContributors, final Planner<VnfBlueprint> planv2, final OrchestrationService<?> orchestrationService, final VnfLiveInstanceJpa vnfInstanceJpa) {
 		this.planner = planner;
 		this.executor = executor;
 		planContributors = _planContributors;
 		this.vnfTaskJpa = vnfTaskJpa;
 		this.planv2 = planv2;
 		this.orchestrationService = orchestrationService;
+		this.vnfInstanceJpa = vnfInstanceJpa;
 	}
 
 	@Override
@@ -90,7 +101,34 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 		parameters.getExtManagedVirtualLinks().forEach(x -> {
 			context.add(Network.class, x.getVnfVirtualLinkDescId(), x.getResourceId());
 		});
-
+		final List<VnfLiveInstance> l = vnfInstanceJpa.findByVnfInstance(parameters.getInstance());
+		l.forEach(x -> {
+			switch (x.getTask().getType()) {
+			case COMPUTE:
+				context.add(Compute.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case DNSZONE:
+				context.add(DnsZone.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case LINKPORT:
+				context.add(VnfExtCp.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case MONITORING:
+				context.add(Monitoring.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case STORAGE:
+				context.add(Storage.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case SUBNETWORK:
+				context.add(SubNetwork.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case VL:
+				context.add(Network.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			default:
+				throw new GenericException(x.getTask().getType() + " is not handled.");
+			}
+		});
 	}
 
 	@Override
