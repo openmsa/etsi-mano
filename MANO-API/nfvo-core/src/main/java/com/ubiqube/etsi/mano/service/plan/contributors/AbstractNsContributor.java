@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.service.plan.contributors;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
@@ -41,5 +43,18 @@ public abstract class AbstractNsContributor implements PlanContributor<NsdPackag
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);
 		return (U) task;
+	}
+
+	protected static <U extends NsTask> U createDeleteTask(final Supplier<U> newInstance, final NsLiveInstance vli) {
+		final NsTask t = vli.getNsTask();
+		final U task = newInstance.get();
+		task.setStartDate(LocalDateTime.now());
+		task.setChangeType(ChangeType.REMOVED);
+		task.setStatus(PlanStatusType.NOT_STARTED);
+		task.setToscaName(t.getToscaName());
+		task.setAlias(t.getAlias());
+		task.setVimResourceId(vli.getResourceId());
+		task.setVimConnectionId(t.getVimConnectionId());
+		return task;
 	}
 }
