@@ -118,6 +118,7 @@ public class NfvoActions {
 		final NsParameters params = new NsParameters(vim, vimInfo, new HashMap<>(), null);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execDelete(executionPlane, () -> new UowNsTaskDeleteProvider(params));
 		setResultLcmInstance(localPlan, results);
+		nsBlueprintService.save(localPlan);
 		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), blueprint.getId());
 	}
 
