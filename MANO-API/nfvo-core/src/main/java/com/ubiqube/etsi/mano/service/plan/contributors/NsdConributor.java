@@ -26,12 +26,15 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
@@ -51,11 +54,13 @@ public class NsdConributor extends AbstractNsContributor {
 	private final NsInstanceService nsInstanceService;
 	private final NsInstanceControllerService nsInstanceControllerService;
 	private final VnfInstanceLcm nsLcmOpOccsService;
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsdConributor(final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService) {
+	public NsdConributor(final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService, NsLiveInstanceJpa nsLiveInstanceJpa) {
 		nsInstanceService = _nsInstanceService;
 		nsInstanceControllerService = _nsInstanceControllerService;
 		nsLcmOpOccsService = _nsLcmOpOccsService;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
 	@Override
@@ -65,6 +70,9 @@ public class NsdConributor extends AbstractNsContributor {
 
 	@Override
 	public List<NsTask> contribute(final NsdPackage bundle, final NsBlueprint blueprint, final Set<ScaleInfo> scaling) {
+		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminate(blueprint.getInstance());
+		}
 		final Set<NsdPackage> saps = nsInstanceService.findNestedNsdByNsInstance(bundle);
 		return saps.stream()
 				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfNsd(blueprint.getNsInstance(), x.getId()))
@@ -77,12 +85,22 @@ public class NsdConributor extends AbstractNsContributor {
 				}).collect(Collectors.toList());
 	}
 
+	private List<NsTask> doTerminate(NsdInstance instance) {
+		List<NsTask> ret = new ArrayList<>();
+		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsdTask.class.getSimpleName());
+		insts.stream().forEach(x -> {
+			NsdTask nt = createDeleteTask(NsdTask::new, x);
+			ret.add(nt);
+		});
+		return ret;
+	}
+
 	@Override
 	public List<UnitOfWork<NsTask, NsParameters>> convertTasksToExecNode(final Set<NsTask> tasks, final NsBlueprint blueprint) {
 		final ArrayList<UnitOfWork<NsTask, NsParameters>> ret = new ArrayList<>();
 		tasks.stream()
-				.filter(x -> x instanceof NsdTask)
-				.map(x -> (NsdTask) x)
+				.filter(NsdTask.class::isInstance)
+				.map(NsdTask.class::cast)
 				.forEach(x -> {
 					// XXX Null is a future problem.
 					ret.add(new NsUow(x, null, nsInstanceControllerService, nsLcmOpOccsService));

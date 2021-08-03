@@ -24,12 +24,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
@@ -45,11 +49,13 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
  */
 @Service
 public class NsVirtualLinkContributor extends AbstractNsContributor {
-	NsBlueprintService blueprintService;
+	private final NsBlueprintService blueprintService;
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsVirtualLinkContributor(final NsBlueprintService blueprintService) {
+	public NsVirtualLinkContributor(final NsBlueprintService blueprintService, NsLiveInstanceJpa nsLiveInstanceJpa) {
 		super();
 		this.blueprintService = blueprintService;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
 	@Override
@@ -59,6 +65,9 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 
 	@Override
 	public List<NsTask> contribute(final NsdPackage bundle, final NsBlueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminate(plan.getInstance());
+		}
 		final Set<NsVirtualLink> vlss = bundle.getNsVirtualLinks();
 		return vlss.stream()
 				.filter(x -> 0 == blueprintService.getNumberOfLiveVl(plan.getNsInstance(), x))
@@ -70,12 +79,22 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 				}).collect(Collectors.toList());
 	}
 
+	private List<NsTask> doTerminate(NsdInstance instance) {
+		List<NsTask> ret = new ArrayList<>();
+		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVirtualLinkTask.class.getSimpleName());
+		insts.stream().forEach(x -> {
+			NsVirtualLinkTask nt = createDeleteTask(NsVirtualLinkTask::new, x);
+			ret.add(nt);
+		});
+		return ret;
+	}
+
 	@Override
 	public List<UnitOfWork<NsTask, NsParameters>> convertTasksToExecNode(final Set<NsTask> tasks, final NsBlueprint plan) {
 		final ArrayList<UnitOfWork<NsTask, NsParameters>> ret = new ArrayList<>();
 		tasks.stream()
-				.filter(x -> x instanceof NsVirtualLinkTask)
-				.map(x -> (NsVirtualLinkTask) x)
+				.filter(NsVirtualLinkTask.class::isInstance)
+				.map(NsVirtualLinkTask.class::cast)
 				.forEach(x -> {
 					ret.add(new NsVlUow(x));
 				});

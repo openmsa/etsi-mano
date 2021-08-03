@@ -24,12 +24,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
@@ -47,11 +51,11 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 @Service
 public class SapContributor extends AbstractNsContributor {
 	private final NsBlueprintService blueprintService;
-	private final NsdPackageService nsdPackageService;
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public SapContributor(final NsBlueprintService _blueprintService, final NsdPackageService _nsdPackageService) {
+	public SapContributor(final NsBlueprintService _blueprintService, final NsdPackageService _nsdPackageService, NsLiveInstanceJpa nsLiveInstanceJpa) {
 		blueprintService = _blueprintService;
-		nsdPackageService = _nsdPackageService;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
 	@Override
@@ -61,6 +65,9 @@ public class SapContributor extends AbstractNsContributor {
 
 	@Override
 	public List<NsTask> contribute(final NsdPackage bundle, final NsBlueprint plan, final Set<ScaleInfo> scaling) {
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+			return doTerminate(plan.getInstance());
+		}
 		final Set<NsSap> saps = bundle.getNsSaps();
 		return saps.stream()
 				.filter(x -> 0 == blueprintService.getNumberOfLiveSap(plan.getNsInstance(), x))
@@ -72,12 +79,23 @@ public class SapContributor extends AbstractNsContributor {
 				}).collect(Collectors.toList());
 	}
 
+	private List<NsTask> doTerminate(NsdInstance instance) {
+		List<NsTask> ret = new ArrayList<>();
+		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsSapTask.class.getSimpleName());
+		insts.stream().forEach(x -> {
+			NsSapTask nt = createDeleteTask(NsSapTask::new, x);
+			nt.setNsSap(((NsSapTask) x.getNsTask()).getNsSap());
+			ret.add(nt);
+		});
+		return ret;
+	}
+
 	@Override
 	public List<UnitOfWork<NsTask, NsParameters>> convertTasksToExecNode(final Set<NsTask> tasks, final NsBlueprint plan) {
 		final ArrayList<UnitOfWork<NsTask, NsParameters>> ret = new ArrayList<>();
 		tasks.stream()
-				.filter(x -> x instanceof NsSapTask)
-				.map(x -> (NsSapTask) x)
+				.filter(NsSapTask.class::isInstance)
+				.map(NsSapTask.class::cast)
 				.forEach(x -> {
 					ret.add(new SapUow(x));
 				});
