@@ -31,7 +31,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
@@ -99,11 +98,11 @@ public class VnfContributor extends AbstractNsContributor {
 
 	private List<NsTask> doTerminatePlan(NsdInstance instance) {
 		List<NsTask> ret = new ArrayList<>();
-		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfInstance.class.getSimpleName());
+		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
 		insts.stream().forEach(x -> {
 			NsVnfTask task = (NsVnfTask) x.getNsTask();
 			NsVnfTask nt = createDeleteTask(NsVnfTask::new, x);
-			nt.setVnfInstance(x.getResourceId());
+			nt.setVnfInstance(task.getVnfInstance());
 			ret.add(nt);
 		});
 		return ret;
