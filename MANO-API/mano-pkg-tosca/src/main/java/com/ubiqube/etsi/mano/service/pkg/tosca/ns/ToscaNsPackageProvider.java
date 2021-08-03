@@ -85,7 +85,14 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.field("version", "nsdVersion")
 				.byDefault()
 				.register();
-
+		mapperFactory.classMap(Sap.class, NsSap.class)
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(tosca.nodes.nfv.NsVirtualLink.class, NsVirtualLink.class)
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
 	}
 
 	@Override
