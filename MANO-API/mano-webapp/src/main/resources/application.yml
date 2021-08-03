@@ -58,6 +58,10 @@ spring:
     name: etsi-mano
   artemis:
     mode: embedded
+  cloud:
+    httpclientfactories:
+      ok:
+        enabled: false
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/etsi-mano.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
