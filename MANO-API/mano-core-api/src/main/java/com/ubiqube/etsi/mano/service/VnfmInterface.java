@@ -30,10 +30,10 @@ public interface VnfmInterface {
 
 	VnfInstance createVnfInstance(final VnfPackage vnf, String vnfInstanceDescription, String vnfInstanceName);
 
-	VnfBlueprint vnfInstatiate(@Nonnull UUID vnfInstanceId, VnfInstantiate instantiateVnfRequest, UUID vnfId);
+	VnfBlueprint vnfInstatiate(@Nonnull String vnfInstanceId, VnfInstantiate instantiateVnfRequest, UUID vnfId);
 
 	VnfBlueprint vnfLcmOpOccsGet(@NotNull UUID id);
 
-	VnfBlueprint vnfTerminate(@Nonnull UUID nsInstanceId);
+	VnfBlueprint vnfTerminate(@Nonnull String nsInstanceId);
 
 }

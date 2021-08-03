@@ -28,6 +28,11 @@ import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 public class NsVnfTask extends NsTask {
 
@@ -41,7 +46,7 @@ public class NsVnfTask extends NsTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private NsdPackageVnfPackage nsPackageVnfPackage;
 
-	private UUID vnfInstance;
+	private String vnfInstance;
 
 	private String vnfdId;
 
@@ -53,30 +58,6 @@ public class NsVnfTask extends NsTask {
 	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public NsdPackageVnfPackage getNsPackageVnfPackage() {
-		return nsPackageVnfPackage;
-	}
-
-	public void setNsPackageVnfPackage(final NsdPackageVnfPackage nsPackageVnfPackage) {
-		this.nsPackageVnfPackage = nsPackageVnfPackage;
-	}
-
-	public UUID getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final UUID vnfInstance) {
-		this.vnfInstance = vnfInstance;
-	}
-
-	public String getVnfdId() {
-		return vnfdId;
-	}
-
-	public void setVnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
 	}
 
 }

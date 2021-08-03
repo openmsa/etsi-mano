@@ -43,8 +43,8 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfBlueprint vnfInstatiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest, final UUID vnfId) {
-		return lcm.instantiate(vnfInstanceId, instantiateVnfRequest);
+	public VnfBlueprint vnfInstatiate(final String vnfInstanceId, final VnfInstantiate instantiateVnfRequest, final UUID vnfId) {
+		return lcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfBlueprint vnfTerminate(final UUID nsInstanceId) {
-		return lcm.terminate(nsInstanceId, CancelModeTypeEnum.FORCEFUL, null);
+	public VnfBlueprint vnfTerminate(final String nsInstanceId) {
+		return lcm.terminate(UUID.fromString(nsInstanceId), CancelModeTypeEnum.FORCEFUL, null);
 	}
 
 }
