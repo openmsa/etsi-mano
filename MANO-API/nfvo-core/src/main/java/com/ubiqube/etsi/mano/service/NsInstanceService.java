@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
@@ -101,7 +102,13 @@ public class NsInstanceService {
 	}
 
 	public NsdInstance findById(final UUID nsUuid) {
-		return nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("Not found " + nsUuid));
+		final NsdInstance inst = nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("Not found " + nsUuid));
+		inst.setInstantiationState(isLive(nsUuid));
+		return inst;
+	}
+
+	private InstantiationState isLive(final UUID nsUuid) {
+		return nsLiveInstanceJpa.findByNsInstanceId(nsUuid).isEmpty() ? InstantiationState.NOT_INSTANTIATED : InstantiationState.INSTANTIATED;
 	}
 
 	public List<NsdInstance> query(final String filter) {
