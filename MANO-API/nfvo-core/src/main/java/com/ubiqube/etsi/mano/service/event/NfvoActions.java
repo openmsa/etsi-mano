@@ -145,7 +145,7 @@ public class NfvoActions {
 		// Make plan in lcmOpOccs
 		final NsConnections nsConn = new NsConnections();
 		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
-		final NsBlueprint localBlueprint = nsBlueprintService.save(blueprint);
+		NsBlueprint localBlueprint = nsBlueprintService.save(blueprint);
 		//
 		final VimConnectionInformation vimInfo = electVim(null, null);
 		final Vim vim = vimManager.getVimById(vimInfo.getId());
@@ -159,6 +159,7 @@ public class NfvoActions {
 		setLiveStatus(localBlueprint, results);
 		setResultLcmInstance(localBlueprint, results);
 		LOG.debug("Done, Saving ...");
+		localBlueprint = nsBlueprintService.save(localBlueprint);
 		// XXX Send COMPLETED event.
 		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localBlueprint.getId());
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
