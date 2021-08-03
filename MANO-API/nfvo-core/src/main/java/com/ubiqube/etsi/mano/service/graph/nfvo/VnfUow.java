@@ -92,7 +92,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	private static VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = tmp.getOperationStatus();
-		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
+		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state) || (OperationStatusType.NOT_STARTED == state)) {
 			tmp = vnfm.vnfLcmOpOccsGet(vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
