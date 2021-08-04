@@ -64,6 +64,8 @@ public interface Vim {
 
 	ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation);
 
+	PhysResources getPhysicalResources(final VimConnectionInformation vimConnectionInformation);
+
 	List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation);
 
 	void allocateResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);

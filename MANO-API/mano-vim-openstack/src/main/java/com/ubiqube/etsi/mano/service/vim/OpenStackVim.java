@@ -48,6 +48,7 @@ import org.openstack4j.model.compute.Flavor;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.builder.ServerCreateBuilder;
 import org.openstack4j.model.compute.ext.AvailabilityZone;
+import org.openstack4j.model.compute.ext.HypervisorStatistics;
 import org.openstack4j.model.network.Agent;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
@@ -277,6 +278,7 @@ public class OpenStackVim implements Vim {
 
 		Optional.ofNullable(usage.getMaxTotalKeypairs()).ifPresent(quotas::setKeyPairsMax);
 		Optional.ofNullable(usage.getTotalKeyPairsUsed()).ifPresent(quotas::setKeyPairsUsed);
+
 		return quotas;
 	}
 
@@ -391,6 +393,22 @@ public class OpenStackVim implements Vim {
 	public Dns dns(final VimConnectionInformation vimConnectionInformation) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		return new OsDns(os);
+	}
+
+	@Override
+	public PhysResources getPhysicalResources(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final HypervisorStatistics stats = os.compute().hypervisors().statistics();
+		final OsPhysResources ret = new OsPhysResources();
+		ret.setFreeDisk(stats.getFreeDisk());
+		ret.setFreeRam(stats.getFreeRam());
+		ret.setLeastAvailableDisk(stats.getLeastAvailableDisk());
+		ret.setMemory(stats.getMemory());
+		ret.setMemoryUsed(stats.getMemoryUsed());
+		ret.setRunningVM(stats.getRunningVM());
+		ret.setVirtualCPU(stats.getVirtualCPU());
+		ret.setVirtualUsedCPU(stats.getVirtualUsedCPU());
+		return ret;
 	}
 
 }
