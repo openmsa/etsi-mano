@@ -123,9 +123,10 @@ public class VnfPackageOnboardingImpl {
 		} catch (final RuntimeException e) {
 			LOG.error("", e);
 			// XXX It is ERROR in
-			vnfPackage.setOnboardingState(OnboardingStateType.CREATED);
-			vnfPackage.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
-			vnfPackageService.save(vnfPackage);
+			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
+			v2.setOnboardingState(OnboardingStateType.CREATED);
+			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
+			vnfPackageService.save(v2);
 		}
 	}
 
