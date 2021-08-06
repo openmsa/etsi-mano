@@ -18,13 +18,13 @@ package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +51,7 @@ import org.openstack4j.model.compute.ext.AvailabilityZone;
 import org.openstack4j.model.compute.ext.HypervisorStatistics;
 import org.openstack4j.model.network.Agent;
 import org.openstack4j.openstack.OSFactory;
+import org.openstack4j.openstack.internal.OSClientSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -120,20 +121,21 @@ public class OpenStackVim implements Vim {
 		return base.authenticate();
 	}
 
-	private OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
+	private synchronized OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
 		final Map<String, OSClientV3> sess = sessions.get();
 		if (null == sess) {
-			LOG.debug("Creation session cache for thread: {}", Thread.currentThread().getName());
-			final HashMap<String, OSClientV3> newSess = new HashMap<>();
+			final Map<String, OSClientV3> newSess = new ConcurrentHashMap<>();
 			final OSClientV3 osv3 = authenticate(vimConnectionInformation);
 			newSess.put(vimConnectionInformation.getVimId(), osv3);
 			sessions.set(newSess);
 			return osv3;
 		}
-		return sess.computeIfAbsent(vimConnectionInformation.getVimId(), x -> {
-			final Optional<VimConnectionInformation> vim = vciJpa.findById(vimConnectionInformation.getId());
-			return authenticate(vim.orElseThrow(() -> new VimException("Unable to find Vim " + x)));
+		final OSClientV3 os = sess.computeIfAbsent(vimConnectionInformation.getVimId(), x -> {
+			LOG.debug("OS connection: {} ", vimConnectionInformation.getVimId());
+			return authenticate(vimConnectionInformation);
 		});
+		OSClientSession.set((OSClientSession) os);
+		return os;
 	}
 
 	@Override
