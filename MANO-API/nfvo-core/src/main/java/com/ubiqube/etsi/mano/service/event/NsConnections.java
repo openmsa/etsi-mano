@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
@@ -32,8 +33,9 @@ public class NsConnections {
 
 	public NsConnections() {
 		connections = new ArrayList<>();
-		connections.add(new NodeConnectivity(Start.class, VnfNode.class));
-		connections.add(new NodeConnectivity(Start.class, NsdNode.class));
+		connections.add(new NodeConnectivity(Start.class, NsVlNode.class));
+		connections.add(new NodeConnectivity(NsVlNode.class, VnfNode.class));
+		connections.add(new NodeConnectivity(NsVlNode.class, NsdNode.class));
 
 		connections.add(new NodeConnectivity(VnfNode.class, SapNode.class));
 		connections.add(new NodeConnectivity(NsdNode.class, SapNode.class));
