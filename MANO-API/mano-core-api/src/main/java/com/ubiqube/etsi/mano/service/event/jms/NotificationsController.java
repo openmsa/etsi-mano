@@ -44,6 +44,9 @@ public class NotificationsController {
 		case VNF_PKG_ONCHANGE:
 			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
 			break;
+		case VRQAN:
+			vnfEvent.onEvent(ev.getObjectId(), "VrQuotaAvailNotification");
+			break;
 		default:
 			LOG.error("Unable to handle event type {}", ev.getNotificationEvent());
 			break;

@@ -36,8 +36,8 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsUow;
@@ -110,7 +110,7 @@ public class NsdConributor extends AbstractNsContributor {
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		dependencyBuilder.connectionFrom(Network.class);
+		dependencyBuilder.connectionFrom(NsVlNode.class);
 	}
 
 }

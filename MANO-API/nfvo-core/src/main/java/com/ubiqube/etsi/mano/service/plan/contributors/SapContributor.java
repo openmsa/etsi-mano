@@ -35,7 +35,9 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
@@ -104,7 +106,7 @@ public class SapContributor extends AbstractNsContributor {
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		// Nothing.
+		dependencyBuilder.connectionFrom(NsdNode.class).connectionFrom(VnfNode.class);
 	}
 
 }

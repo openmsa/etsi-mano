@@ -40,6 +40,7 @@ import com.ubiqube.etsi.mano.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -129,8 +130,7 @@ public class VnfContributor extends AbstractNsContributor {
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		// TODO Auto-generated method stub
-
+		dependencyBuilder.connectionFrom(NsVlNode.class);
 	}
 
 }
