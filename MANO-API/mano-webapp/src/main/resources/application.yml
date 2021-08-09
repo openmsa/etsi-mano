@@ -10,7 +10,7 @@ logging:
     org:
       hibernate:
         SQL: INFO
-      openstack4j: DEBUG
+      openstack4j: INFO
       springframework:
         boot:
           autoconfigure:
