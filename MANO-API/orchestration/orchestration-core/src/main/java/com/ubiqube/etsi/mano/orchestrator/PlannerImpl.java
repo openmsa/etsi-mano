@@ -109,7 +109,8 @@ public class PlannerImpl<U> implements Planner<U> {
 		gf.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
 			final VirtualTask<?> dep = findDependency(y, gf);
 			if (null == dep) {
-				LOG.info("Skipping: {} ", x);
+				LOG.info("Single: {} ", x);
+				gf.addVertex(x);
 			} else {
 				LOG.debug("Add edge : {} <-> {}", dep, x);
 				gf.addEdge(dep, x);
