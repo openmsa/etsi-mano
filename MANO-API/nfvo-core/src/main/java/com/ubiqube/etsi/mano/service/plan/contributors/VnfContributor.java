@@ -80,21 +80,27 @@ public class VnfContributor extends AbstractNsContributor {
 		return vnfs.stream()
 				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfVnf(blueprint.getNsInstance(), x.getId()))
 				.map(x -> {
-					final NsVnfTask sap = createTask(NsVnfTask::new);
-					sap.setChangeType(ChangeType.ADDED);
+					final NsVnfTask vnf = createTask(NsVnfTask::new);
+					vnf.setChangeType(ChangeType.ADDED);
 					final NsdPackageVnfPackage nsPackageVnfPackage = find(x, bundle.getVnfPkgIds());
-					sap.setNsPackageVnfPackage(nsPackageVnfPackage);
+					Set<String> nets = getNetworks(x);
+					vnf.setExternalNetworks(nets);
+					vnf.setNsPackageVnfPackage(nsPackageVnfPackage);
 					final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + blueprint.getNsInstance().getId(), x.getId().toString());
 					final VnfInstance vnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
 					vnfInstance.setNsInstance(blueprint.getNsInstance());
 					// vnfInstance.setMetadata(metadata);
 					// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
-					sap.setVnfInstance(vnfInstance.getId().toString());
-					sap.setAlias(nsPackageVnfPackage.getToscaName());
-					sap.setToscaName(nsPackageVnfPackage.getToscaName());
+					vnf.setVnfInstance(vnfInstance.getId().toString());
+					vnf.setAlias(nsPackageVnfPackage.getToscaName());
+					vnf.setToscaName(nsPackageVnfPackage.getToscaName());
 					// XXX Not sure about the profileId is.
-					return sap;
+					return vnf;
 				}).collect(Collectors.toList());
+	}
+
+	private static Set<String> getNetworks(VnfPackage x) {
+		return x.getVnfCompute().stream().flatMap(y -> y.getNetworks().stream()).collect(Collectors.toSet());
 	}
 
 	private List<NsTask> doTerminatePlan(NsdInstance instance) {

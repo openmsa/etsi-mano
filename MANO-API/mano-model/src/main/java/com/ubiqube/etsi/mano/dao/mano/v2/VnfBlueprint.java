@@ -42,6 +42,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -93,6 +94,9 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
 	@Override
 	public UUID getId() {
@@ -195,6 +199,14 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	@Override
 	public VnfInstance getInstance() {
 		return vnfInstance;
+	}
+
+	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
+		return extVirtualLinks;
+	}
+
+	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
 	}
 
 }

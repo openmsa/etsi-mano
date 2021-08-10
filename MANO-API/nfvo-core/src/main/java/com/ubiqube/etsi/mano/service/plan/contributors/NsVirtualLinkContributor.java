@@ -72,10 +72,10 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 		return vlss.stream()
 				.filter(x -> 0 == blueprintService.getNumberOfLiveVl(plan.getNsInstance(), x))
 				.map(x -> {
-					final NsVirtualLinkTask sap = createTask(NsVirtualLinkTask::new, x);
-					// XXX ???
-					sap.setChangeType(ChangeType.ADDED);
-					return sap;
+					final NsVirtualLinkTask nsVl = createTask(NsVirtualLinkTask::new, x);
+					nsVl.setChangeType(ChangeType.ADDED);
+					nsVl.setNsVirtualLink(x);
+					return nsVl;
 				}).collect(Collectors.toList());
 	}
 
@@ -84,6 +84,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVirtualLinkTask.class.getSimpleName());
 		insts.stream().forEach(x -> {
 			NsVirtualLinkTask nt = createDeleteTask(NsVirtualLinkTask::new, x);
+			nt.setVimResourceId(x.getResourceId());
 			ret.add(nt);
 		});
 		return ret;
@@ -103,8 +104,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 
 	@Override
 	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		// TODO Auto-generated method stub
-
+		// Nothing.
 	}
 
 }

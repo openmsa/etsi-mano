@@ -16,9 +16,12 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,6 +34,11 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Getter
 @Setter
 @Entity
@@ -49,6 +57,9 @@ public class NsVnfTask extends NsTask {
 	private String vnfInstance;
 
 	private String vnfdId;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> externalNetworks = new LinkedHashSet<>();
 
 	@Override
 	public UUID getId() {

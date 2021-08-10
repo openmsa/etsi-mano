@@ -16,18 +16,22 @@
  */
 package com.ubiqube.etsi.mano.service.graph.nfvo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
@@ -59,6 +63,21 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String exec(final NsParameters params) {
+		final Set<ExtVirtualLinkDataEntity> net = task.getExternalNetworks().stream().map(x -> {
+			final String resource = params.getContext().get(x);
+			if (null == resource) {
+				return null;
+			}
+			final ExtVirtualLinkDataEntity ext = new ExtVirtualLinkDataEntity();
+			ext.setResourceId(resource);
+			ext.setVimLevelResourceType(x);
+			ext.setResourceProviderId("PROVIDER");
+			ext.setVimConnectionId("VIM");
+			return ext;
+		})
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+		request.setExtVirtualLinks(net);
 		final VnfBlueprint res = vnfm.vnfInstatiate(task.getVnfInstance(), request, null);
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
@@ -112,7 +131,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public List<WfDependency> getDependencies() {
-		return new ArrayList<>();
+		return task.getExternalNetworks().stream().map(x -> new WfDependency(NsVlNode.class, x)).collect(Collectors.toList());
 	}
 
 	@Override

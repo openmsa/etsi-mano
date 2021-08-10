@@ -19,7 +19,9 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
+import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
@@ -42,9 +44,8 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 	public String exec(final NsParameters params) {
 		final VlProtocolData vlProtocolData = new VlProtocolData();
 		final L2Data l2 = new L2Data();
-		l2.setMtu(1500);
-		// l2.setName(name);
-		l2.setNetworkType("flat");
+		l2.setMtu(1442);
+		l2.setName(task.getToscaName());
 		l2.setVlanTransparent(false);
 		vlProtocolData.setL2ProtocolData(l2);
 		final L3Data l3 = new L3Data();
@@ -52,8 +53,15 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 		l3.setDhcpEnabled(true);
 		// l3.setGatewayIp(gatewayIp);
 		l3.setIpVersion("ipv4");
-		// l3.setL3Name(l3Name);
-		return params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, null, null, null);
+		l3.setL3Name(task.getToscaName());
+		final String ret = params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, task.getToscaName(), null, null);
+		final IpPool ipAllocationPool = new IpPool();
+		final int rnd = new Random().nextInt(0, 250);
+		l3.setCidr("192.168." + rnd + ".0/24");
+		ipAllocationPool.setStartIpAddress("192.168." + rnd + ".5");
+		ipAllocationPool.setEndIpAddress("192.168." + rnd + ".250");
+		params.getVim().network(params.getVimConnectionInformation()).createSubnet(l3, ipAllocationPool, ret);
+		return ret;
 	}
 
 	@Override
