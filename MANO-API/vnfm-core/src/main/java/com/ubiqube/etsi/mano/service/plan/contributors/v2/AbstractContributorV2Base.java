@@ -56,7 +56,7 @@ public abstract class AbstractContributorV2Base<U extends VnfTask, T extends Vir
 		task.setAlias(t.getAlias());
 		task.setVimResourceId(vli.getResourceId());
 		task.setVimConnectionId(t.getVimConnectionId());
-		task.setRemovedVnfLiveInstance(vli.getId());
+		task.setRemovedLiveInstance(vli.getId());
 		return task;
 	}
 

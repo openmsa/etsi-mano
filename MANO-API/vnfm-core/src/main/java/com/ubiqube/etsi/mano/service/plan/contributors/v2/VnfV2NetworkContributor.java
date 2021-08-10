@@ -90,7 +90,7 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 			networkTask.setChangeType(ChangeType.REMOVED);
 			networkTask.setToscaName(x.getTask().getToscaName());
 			networkTask.setType(ResourceTypeEnum.VL);
-			networkTask.setRemovedVnfLiveInstance(x.getId());
+			networkTask.setRemovedLiveInstance(x.getId());
 			networkTask.setVimResourceId(x.getResourceId());
 			networkTask.setVimConnectionId(x.getVimConnectionId());
 			networkTask.setVnfVl(((NetworkTask) (x.getTask())).getVnfVl());

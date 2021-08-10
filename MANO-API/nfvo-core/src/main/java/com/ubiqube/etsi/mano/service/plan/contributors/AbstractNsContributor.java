@@ -28,21 +28,30 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.service.graph.nfvo.NsParameters;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public abstract class AbstractNsContributor implements PlanContributor<NsdPackage, NsBlueprint, NsTask, NsParameters> {
-	protected static <U> U createTask(final Supplier<NsTask> newInstance, final ToscaEntity toscaEntity) {
-		final NsTask task = newInstance.get();
+	protected AbstractNsContributor() {
+		// Nothing.
+	}
+
+	protected static <U extends NsTask> U createTask(final Supplier<U> newInstance, final ToscaEntity toscaEntity) {
+		final U task = newInstance.get();
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);
 		task.setToscaName(toscaEntity.getToscaName());
 		task.setAlias(toscaEntity.getToscaName());
-		return (U) task;
+		return task;
 	}
 
-	protected static <U> U createTask(final Supplier<NsTask> newInstance) {
-		final NsTask task = newInstance.get();
+	protected static <U extends NsTask> U createTask(final Supplier<U> newInstance) {
+		final U task = newInstance.get();
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);
-		return (U) task;
+		return task;
 	}
 
 	protected static <U extends NsTask> U createDeleteTask(final Supplier<U> newInstance, final NsLiveInstance vli) {
@@ -55,6 +64,7 @@ public abstract class AbstractNsContributor implements PlanContributor<NsdPackag
 		task.setAlias(t.getAlias());
 		task.setVimResourceId(vli.getResourceId());
 		task.setVimConnectionId(t.getVimConnectionId());
+		task.setRemovedLiveInstance(vli.getId());
 		return task;
 	}
 }

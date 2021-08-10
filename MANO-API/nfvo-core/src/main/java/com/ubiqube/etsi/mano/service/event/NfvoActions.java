@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.event;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -118,7 +119,7 @@ public class NfvoActions {
 		final NsParameters params = new NsParameters(vim, vimInfo, new HashMap<>(), null);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execDelete(executionPlane, () -> new UowNsTaskDeleteProvider(params));
 		setResultLcmInstance(localPlan, results);
-		nsBlueprintService.save(localPlan);
+		setLiveStatus(localPlan, results);
 		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), blueprint.getId());
 	}
 
@@ -188,8 +189,12 @@ public class NfvoActions {
 				}
 			} else if (ct == ChangeType.REMOVED) {
 				LOG.info("Removing {}", rhe.getId());
-				final NsLiveInstance vli = nsLiveInstanceJpa.findByNsBlueprintId(rhe.getVimResourceId());
-				nsLiveInstanceJpa.deleteById(vli.getId());
+				final Optional<NsLiveInstance> vli = nsLiveInstanceJpa.findById(rhe.getRemovedLiveInstance());
+				if (!vli.isPresent()) {
+					LOG.warn("Could not find a VLI for task {}", rhe.getRemovedLiveInstance());
+					return;
+				}
+				nsLiveInstanceJpa.deleteById(vli.get().getId());
 			}
 		});
 		LOG.info("Saving NS LCM.");

@@ -69,6 +69,8 @@ public abstract class AbstractTask implements Task {
 	private String vimResourceId;
 	private String vimConnectionId;
 
+	private UUID removedLiveInstance;
+
 	public abstract void setId(final UUID id);
 
 	@Override
@@ -179,6 +181,15 @@ public abstract class AbstractTask implements Task {
 
 	public void setVimConnectionId(final String vimConnectionId) {
 		this.vimConnectionId = vimConnectionId;
+	}
+
+	@Override
+	public UUID getRemovedLiveInstance() {
+		return removedLiveInstance;
+	}
+
+	public void setRemovedLiveInstance(final UUID removedLiveInstance) {
+		this.removedLiveInstance = removedLiveInstance;
 	}
 
 }

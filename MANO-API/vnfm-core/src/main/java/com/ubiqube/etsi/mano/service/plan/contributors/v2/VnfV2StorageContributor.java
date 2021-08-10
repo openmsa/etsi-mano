@@ -86,7 +86,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 		return instances.stream().map(x -> {
 			final StorageTask task = createDeleteTask(StorageTask::new, x);
 			task.setType(ResourceTypeEnum.STORAGE);
-			task.setRemovedVnfLiveInstance(x.getId());
+			task.setRemovedLiveInstance(x.getId());
 			task.setVnfStorage(((StorageTask) x.getTask()).getVnfStorage());
 			return new StorageVt(task);
 		}).collect(Collectors.toList());
