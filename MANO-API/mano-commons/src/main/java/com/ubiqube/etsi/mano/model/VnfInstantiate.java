@@ -17,58 +17,32 @@
 package com.ubiqube.etsi.mano.model;
 
 import java.util.List;
+import java.util.Set;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class VnfInstantiate {
-	private String flavourId = null;
+	private String flavourId;
 
-	private String instantiationLevelId = null;
+	private String instantiationLevelId;
 
-	private List<VimConnectionInformation> vimConnectionInfo = null;
+	private List<VimConnectionInformation> vimConnectionInfo;
 
-	private List<ExternalManagedVirtualLink> extManagedVirtualLinks = null;
+	private List<ExternalManagedVirtualLink> extManagedVirtualLinks;
 
-	private String localizationLanguage = null;
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
-	public String getFlavourId() {
-		return flavourId;
-	}
-
-	public void setFlavourId(final String flavourId) {
-		this.flavourId = flavourId;
-	}
-
-	public String getInstantiationLevelId() {
-		return instantiationLevelId;
-	}
-
-	public void setInstantiationLevelId(final String instantiationLevelId) {
-		this.instantiationLevelId = instantiationLevelId;
-	}
-
-	public List<VimConnectionInformation> getVimConnectionInfo() {
-		return vimConnectionInfo;
-	}
-
-	public void setVimConnectionInfo(final List<VimConnectionInformation> vimConnectionInfo) {
-		this.vimConnectionInfo = vimConnectionInfo;
-	}
-
-	public List<ExternalManagedVirtualLink> getExtManagedVirtualLinks() {
-		return extManagedVirtualLinks;
-	}
-
-	public void setExtManagedVirtualLinks(final List<ExternalManagedVirtualLink> extManagedVirtualLinks) {
-		this.extManagedVirtualLinks = extManagedVirtualLinks;
-	}
-
-	public String getLocalizationLanguage() {
-		return localizationLanguage;
-	}
-
-	public void setLocalizationLanguage(final String localizationLanguage) {
-		this.localizationLanguage = localizationLanguage;
-	}
+	private String localizationLanguage;
 
 }
