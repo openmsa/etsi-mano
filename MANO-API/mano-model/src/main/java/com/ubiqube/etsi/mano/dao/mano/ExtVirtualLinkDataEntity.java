@@ -17,11 +17,13 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -57,12 +59,12 @@ public class ExtVirtualLinkDataEntity implements Serializable {
 	private String vimLevelResourceType;
 
 	@Valid
-	@OneToMany(mappedBy = "extVirtualLinkDataEntity")
-	private List<VnfExtCpDataEntity> extCps = new ArrayList<>();
+	@OneToMany(mappedBy = "extVirtualLinkDataEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VnfExtCpDataEntity> extCps = new LinkedHashSet<>();
 
 	@Valid
-	@OneToMany(mappedBy = "extVirtualLinkDataEntity")
-	private List<ExtLinkPortDataEntity> extLinkPorts = null;
+	@OneToMany(mappedBy = "extVirtualLinkDataEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExtLinkPortDataEntity> extLinkPorts = null;
 
 	@ManyToOne
 	private VnfInstance vnfInstance;
