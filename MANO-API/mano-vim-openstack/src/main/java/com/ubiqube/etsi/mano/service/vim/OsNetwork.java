@@ -74,9 +74,11 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	@Override
 	public String createSubnet(final L3Data l3ProtocolData, final IpPool ipAllocationPool, final String networkId) {
 		final SubnetBuilder bSub = Builders.subnet()
-				.name(l3ProtocolData.getL3Name())
-				.addPool(ipAllocationPool.getStartIpAddress(), ipAllocationPool.getEndIpAddress())
-				.cidr(l3ProtocolData.getCidr())
+				.name(l3ProtocolData.getL3Name());
+		if (null != ipAllocationPool) {
+			bSub.addPool(ipAllocationPool.getStartIpAddress(), ipAllocationPool.getEndIpAddress());
+		}
+		bSub.cidr(l3ProtocolData.getCidr())
 				.enableDHCP(l3ProtocolData.isDhcpEnabled())
 				.gateway(l3ProtocolData.getGatewayIp())
 				.tenantId(vimConnectionInformation.getAccessInfo().get("projectId"))
