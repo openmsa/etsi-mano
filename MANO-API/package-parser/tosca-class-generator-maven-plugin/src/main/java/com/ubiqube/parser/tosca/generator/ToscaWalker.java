@@ -186,6 +186,17 @@ public class ToscaWalker {
 		listener.terminateClass();
 	}
 
+	private void generateClassFromPolicyType(final String className, final PolicyType definition, final ToscaListener listener) {
+		LOG.debug("generateClassFromPolicyType class={}", className);
+		startClass(className, definition.getDerivedFrom(), listener);
+
+		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
+		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
+		LOG.debug("generateClassFromPolicyType end {}", className);
+		cache.add(className);
+		listener.terminateClass();
+	}
+
 	private void generateClassFromDataType(final String className, final DataType definition, final ToscaListener listener) {
 		LOG.debug("generateClassFromDataType class={}", className);
 		startClass(className, definition.getDerivedFrom(), listener);
@@ -333,7 +344,7 @@ public class ToscaWalker {
 			final String fieldName = fieldCamelCase(x + "_req");
 			final List<String> occ = y.getOccurrences();
 			LOG.debug("Forcing field Object");
-			listener.startField(fieldName, "string", true);
+			listener.startField(fieldName, "string", false);
 
 			// XXX: Probably one may be a concrete type.
 			if (null != y.getNode()) {
@@ -391,6 +402,11 @@ public class ToscaWalker {
 				final DataType dt = root.getDataTypes().get(derivedFrom);
 				if (null != dt) {
 					generateClassFromDataType(derivedFrom, dt, listener);
+					found = true;
+				}
+				final PolicyType pol = root.getPoliciesType().get(derivedFrom);
+				if (null != pol) {
+					generateClassFromPolicyType(derivedFrom, pol, listener);
 					found = true;
 				}
 				if (!found && classExistOnClassPath(ClassUtils.toscaToJava(derivedFrom))) {

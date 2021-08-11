@@ -261,7 +261,7 @@ public class JavaWalker extends AbstractWalker {
 		if (null != pack) {
 			return pack;
 		}
-		pack = codeModel._package(p.toLowerCase());
+		pack = codeModel._package(p);
 		cachePackage.put(p, pack);
 		return pack;
 	}
