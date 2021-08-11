@@ -33,6 +33,7 @@ import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.AddressData;
+import tosca.datatypes.nfv.NsVirtualLinkProtocolData;
 import tosca.nodes.nfv.NS;
 import tosca.nodes.nfv.NsTopology;
 import tosca.nodes.nfv.Sap;
@@ -52,6 +53,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 	@Override
 	protected void additionalMapping(final MapperFactory mapperFactory) {
 		mapperFactory.classMap(tosca.nodes.nfv.NsVirtualLink.class, NsVirtualLink.class)
+				.field("internalName", "toscaName")
 				.field("vlProfile", "nsVlProfile")
 				.field("connectivityType", "vlConnectivityType")
 				.byDefault()
@@ -61,7 +63,8 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.field("minBitrateRequirements.leaf", "linkBitrateLeaf")
 				.field("maxBitrateRequirements.root", "maxBitrateRequirementsRoot")
 				.field("maxBitrateRequirements.leaf", "maxBitrateRequirementsLeaf")
-				.field("serviceAvailability.level", "serviceAvailability")
+				.field("serviceAvailabilityLevel", "serviceAvailability")
+				.field("virtualLinkProtocolData", "vlProtocolData")
 				.byDefault()
 				.register();
 
@@ -89,8 +92,8 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
-		mapperFactory.classMap(tosca.nodes.nfv.NsVirtualLink.class, NsVirtualLink.class)
-				.field("internalName", "toscaName")
+		mapperFactory.classMap(NsVirtualLinkProtocolData.class, NsVirtualLinkProtocolData.class)
+				.field("l3ProtocolData.ipAllocationPools", "ipAllocationPools")
 				.byDefault()
 				.register();
 	}
