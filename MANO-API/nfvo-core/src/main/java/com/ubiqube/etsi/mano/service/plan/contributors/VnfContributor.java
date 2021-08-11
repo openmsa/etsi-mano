@@ -109,6 +109,8 @@ public class VnfContributor extends AbstractNsContributor {
 		insts.stream().forEach(x -> {
 			NsVnfTask task = (NsVnfTask) x.getNsTask();
 			NsVnfTask nt = createDeleteTask(NsVnfTask::new, x);
+			Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
+			nt.setExternalNetworks(nets);
 			nt.setVnfInstance(task.getVnfInstance());
 			ret.add(nt);
 		});
