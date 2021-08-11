@@ -19,11 +19,8 @@ package com.ubiqube.etsi.mano.service.graph.nfvo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
-import com.ubiqube.etsi.mano.dao.mano.L2Data;
-import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
@@ -34,33 +31,19 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 	private final NsVirtualLinkTask task;
+	private final VlProtocolData vlProtocolData;
 
 	public NsVlUow(final NsVirtualLinkTask _task) {
 		super(_task);
 		task = _task;
+		vlProtocolData = task.getNsVirtualLink().getNsVlProfile().getVlProtocolData().iterator().next();
 	}
 
 	@Override
 	public String exec(final NsParameters params) {
-		final VlProtocolData vlProtocolData = new VlProtocolData();
-		final L2Data l2 = new L2Data();
-		l2.setMtu(1442);
-		l2.setName(task.getToscaName());
-		l2.setVlanTransparent(false);
-		vlProtocolData.setL2ProtocolData(l2);
-		final L3Data l3 = new L3Data();
-		// l3.setCidr(cidr);
-		l3.setDhcpEnabled(true);
-		// l3.setGatewayIp(gatewayIp);
-		l3.setIpVersion("ipv4");
-		l3.setL3Name(task.getToscaName());
 		final String ret = params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, task.getToscaName(), null, null);
-		final IpPool ipAllocationPool = new IpPool();
-		final int rnd = new Random().nextInt(0, 250);
-		l3.setCidr("192.168." + rnd + ".0/24");
-		ipAllocationPool.setStartIpAddress("192.168." + rnd + ".5");
-		ipAllocationPool.setEndIpAddress("192.168." + rnd + ".250");
-		params.getVim().network(params.getVimConnectionInformation()).createSubnet(l3, ipAllocationPool, ret);
+		final IpPool ipAllocationPool = null;
+		params.getVim().network(params.getVimConnectionInformation()).createSubnet(vlProtocolData.getL3ProtocolData(), ipAllocationPool, ret);
 		return ret;
 	}
 
