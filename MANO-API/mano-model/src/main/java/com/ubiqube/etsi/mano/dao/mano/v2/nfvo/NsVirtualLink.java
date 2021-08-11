@@ -16,9 +16,11 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -37,6 +39,16 @@ import com.ubiqube.etsi.mano.dao.mano.NsVlProfile;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditListener.class)
 public class NsVirtualLink implements ToscaEntity, Auditable {
@@ -60,80 +72,10 @@ public class NsVirtualLink implements ToscaEntity, Auditable {
 	@ManyToOne
 	private NsdPackage nsdPackage;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> testAccess;
+
 	@Embedded
 	private Audit audit;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public NsVlProfile getNsVlProfile() {
-		return nsVlProfile;
-	}
-
-	public void setNsVlProfile(final NsVlProfile nsVlProfile) {
-		this.nsVlProfile = nsVlProfile;
-	}
-
-	public NsVlConnectivityType getVlConnectivityType() {
-		return vlConnectivityType;
-	}
-
-	public void setVlConnectivityType(final NsVlConnectivityType vlConnectivityType) {
-		this.vlConnectivityType = vlConnectivityType;
-	}
-
-	public NsdPackage getNsdPackage() {
-		return nsdPackage;
-	}
-
-	public void setNsdPackage(final NsdPackage nsdPackage) {
-		this.nsdPackage = nsdPackage;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
 
 }
