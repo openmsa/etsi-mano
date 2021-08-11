@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 import org.springframework.stereotype.Service;
@@ -83,7 +83,11 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 
 	@Override
 	public PreExecutionGraph<VnfTask> setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint) {
-		final List<Class<? extends Node>> planConstituent = planContributors.stream().map(AbstractContributorV2Base::getNode).collect(Collectors.toList());
+		final List<Class<? extends Node>> planConstituent = new ArrayList<>();
+		// Doesn't works with jdk17 but fine with eclipse. planContributors.stream().map(AbstractContributorV2Base::getNode).collect(Collectors.toList());
+		for (final AbstractContributorV2Base b : planContributors) {
+			planConstituent.add(b.getNode());
+		}
 		final PreExecutionGraph<VnfTask> plan = planv2.makePlan(new VnfBundleAdapter(bundle), planConstituent, blueprint);
 		plan.getPreTasks().stream().map(VirtualTask::getParameters).forEach(blueprint::addTask);
 		return plan;
