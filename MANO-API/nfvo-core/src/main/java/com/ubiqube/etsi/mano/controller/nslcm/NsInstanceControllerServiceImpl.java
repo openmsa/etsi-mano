@@ -36,7 +36,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -64,7 +63,7 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	private final NsBlueprintService nsBlueprintService;
 
 	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager _eventManager, final MapperFacade _mapper, final NsBlueprintService _nsBlueprintService, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, PmJob.class);
+		super(searchService, _em, NsdInstance.class);
 		this.nsdPackageService = nsdPackageService;
 		this.nsInstanceService = nsInstanceService;
 		eventManager = _eventManager;
