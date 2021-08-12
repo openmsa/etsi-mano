@@ -25,6 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsAddressData;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVlProfile;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -92,7 +93,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
-		mapperFactory.classMap(NsVirtualLinkProtocolData.class, NsVirtualLinkProtocolData.class)
+		mapperFactory.classMap(NsVirtualLinkProtocolData.class, VlProtocolData.class)
 				.field("l3ProtocolData.ipAllocationPools", "ipAllocationPools")
 				.byDefault()
 				.register();
