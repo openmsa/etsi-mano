@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -46,7 +45,7 @@ public class NsBlueprintServiceImpl extends SearchableService implements NsBluep
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
 	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, PnfDescriptor.class);
+		super(searchService, _em, NsBlueprint.class);
 		nsBlueprintJpa = _nsBlueprintJpa;
 		nsLiveInstanceJpa = _nsLiveInstanceJpa;
 	}
