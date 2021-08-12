@@ -32,19 +32,11 @@ package com.ubiqube.etsi.mano.common.v261.model.nslcm;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Value | Description ------|------------ STARTING | The LCM operation is
- * starting. PROCESSING | The LCM operation is currently in execution. COMPLETED
- * | he LCM operation has been completed successfully. FAILED_TEMP | The LCM
- * operation has failed and execution has stopped, but the execution of the
- * operation is not considered to be closed. FAILED | The LCM operation has
- * failed and it cannot be retried or rolled back, as it is determined that such
- * action won&#39;t succeed. ROLLING_BACK | The LCM operation is currently being
- * rolled back. ROLLED_BACK | The LCM operation has been successfully rolled
- * back, i.e. The state of the VNF prior to the original operation invocation
- * has been restored as closely as possible.
+ * Value | Description ------|------------ STARTING | The LCM operation is starting. PROCESSING | The LCM operation is currently in execution. COMPLETED | he LCM operation has been completed successfully. FAILED_TEMP | The LCM operation has failed and execution has stopped, but the execution of the operation is not considered to be closed. FAILED | The LCM operation has failed and it cannot be retried or rolled back, as it is determined that such action won&#39;t succeed. ROLLING_BACK | The LCM
+ * operation is currently being rolled back. ROLLED_BACK | The LCM operation has been successfully rolled back, i.e. The state of the VNF prior to the original operation invocation has been restored as closely as possible.
  */
 public enum LcmOperationStateType {
-
+	NOT_STARTED("NOT_STARTED"),
 	STARTING("STARTING"),
 
 	PROCESSING("PROCESSING"),
