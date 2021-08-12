@@ -46,6 +46,7 @@ import com.ubiqube.etsi.mano.jpa.VnfLinkPortJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 /**
  *
@@ -54,6 +55,8 @@ import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
  */
 @Service
 public class VnfPackageServiceImpl extends SearchableService implements VnfPackageService {
+	private final VnfPackageRepository vnfPackageRepository;
+
 	private final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa;
 
 	private final VnfStorageJpa vnfStorageJpa;
@@ -75,7 +78,7 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa,
 			final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa,
 			final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa, final EntityManager _em,
-			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa) {
+			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa, final VnfPackageRepository vnfPackageRepository) {
 		super(searchService, _em, VnfPackage.class);
 		vnfComputeAspectDeltaJpa = _vnfComputeAspectDeltaJpa;
 		vnfStorageJpa = _vnfStorageJpa;
@@ -86,6 +89,7 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 		vnfInstantiationLevelsJpa = _vnfInstantiationLevelsJpa;
 		vnfLinkPortJpa = _vnfLinkPortJpa;
 		this.vnfInstanceJpa = vnfInstanceJpa;
+		this.vnfPackageRepository = vnfPackageRepository;
 	}
 
 	@Override
@@ -148,7 +152,7 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 
 	@Override
 	public VnfPackage save(final VnfPackage vnfPackage) {
-		return vnfPackageJpa.save(vnfPackage);
+		return vnfPackageRepository.save(vnfPackage);
 	}
 
 	@Override
