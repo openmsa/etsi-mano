@@ -28,49 +28,49 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.factory.VnfPackageFactory;
-import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
 public class VnfPackageControllerImpl implements VnfPackageController {
-	private final VnfPackageRepository vnfPackageRepository;
+	private final VnfPackageService vnfPackageService;
 	private final Patcher patcher;
 	private final EventManager eventManager;
 
-	public VnfPackageControllerImpl(final Patcher _patcher, final VnfPackageRepository _vnfPackageRepository, final EventManager _eventManager) {
+	public VnfPackageControllerImpl(final Patcher _patcher, final EventManager _eventManager, final VnfPackageService vnfPackageService) {
 		patcher = _patcher;
-		vnfPackageRepository = _vnfPackageRepository;
 		eventManager = _eventManager;
+		this.vnfPackageService = vnfPackageService;
 	}
 
 	@Override
 	public VnfPackage vnfPackagesPost(final Map<String, String> userData) {
 		final VnfPackage vnfPackage = VnfPackageFactory.createVnfPkgInfo(userData);
-		return vnfPackageRepository.save(vnfPackage);
+		return vnfPackageService.save(vnfPackage);
 	}
 
 	@Override
 	public void vnfPackagesVnfPkgIdDelete(final UUID id) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
+		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureDisabled(vnfPackage);
 		ensureNotInUse(vnfPackage);
-		vnfPackageRepository.delete(id);
+		vnfPackageService.delete(id);
 	}
 
 	@Override
 	public VnfPackage vnfPackagesVnfPkgIdPatch(final UUID id, final String body) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
+		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		patcher.patch(body, vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, id);
-		return vnfPackageRepository.save(vnfPackage);
+		return vnfPackageService.save(vnfPackage);
 	}
 
 	@Override
 	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final byte[] data, final String accept) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
+		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> map = new HashMap<>();
 		map.put("data", data);
@@ -79,7 +79,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 
 	@Override
 	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final UUID id, final String contentType, final String uri) {
-		final VnfPackage vnfPackage = vnfPackageRepository.get(id);
+		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureNotOnboarded(vnfPackage);
 		final Map<String, Object> params = Map.of("contentType", contentType, "uri", uri);
 		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, params);

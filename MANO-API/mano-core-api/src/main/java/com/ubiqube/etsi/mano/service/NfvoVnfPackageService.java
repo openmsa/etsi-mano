@@ -151,4 +151,10 @@ public class NfvoVnfPackageService implements VnfPackageService {
 		return null;
 	}
 
+	@Override
+	public void delete(final UUID id) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
