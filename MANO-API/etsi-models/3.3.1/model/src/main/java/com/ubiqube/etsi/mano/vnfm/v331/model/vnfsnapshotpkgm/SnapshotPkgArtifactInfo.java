@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -46,7 +46,7 @@ public class SnapshotPkgArtifactInfo   {
   private Boolean isEncrypted = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public SnapshotPkgArtifactInfo artifactPath(String artifactPath) {
     this.artifactPath = artifactPath;
@@ -126,7 +126,7 @@ public class SnapshotPkgArtifactInfo   {
     this.isEncrypted = isEncrypted;
   }
 
-  public SnapshotPkgArtifactInfo metadata(KeyValuePairs metadata) {
+  public SnapshotPkgArtifactInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -138,11 +138,11 @@ public class SnapshotPkgArtifactInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

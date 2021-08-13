@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfSnapshotLinks;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfStateSnapshotInfo;
@@ -66,7 +66,7 @@ public class VnfSnapshot   {
   private VnfStateSnapshotInfo vnfStateSnapshotInfo = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   @JsonProperty("_links")
   private VnfSnapshotLinks _links = null;
@@ -236,7 +236,7 @@ public class VnfSnapshot   {
     this.vnfStateSnapshotInfo = vnfStateSnapshotInfo;
   }
 
-  public VnfSnapshot userDefinedData(KeyValuePairs userDefinedData) {
+  public VnfSnapshot userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -248,11 +248,11 @@ public class VnfSnapshot   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

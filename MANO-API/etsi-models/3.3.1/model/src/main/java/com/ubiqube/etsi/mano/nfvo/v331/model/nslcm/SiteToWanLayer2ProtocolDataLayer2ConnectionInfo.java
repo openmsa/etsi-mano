@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.SiteToWanLayer2ProtocolDataLayer2ConnectionInfoVxlanConfig;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.SiteToWanLayer2ProtocolDataLayer2ConnectionInfoWanSegmentIds;
@@ -216,7 +216,7 @@ public class SiteToWanLayer2ProtocolDataLayer2ConnectionInfo   {
   private SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData lagInterfaceData = null;
 
   @JsonProperty("layer2ControlProtocol")
-  private KeyValuePairs layer2ControlProtocol = null;
+  private Map<String, String> layer2ControlProtocol = null;
 
   public SiteToWanLayer2ProtocolDataLayer2ConnectionInfo connectionType(ConnectionTypeEnum connectionType) {
     this.connectionType = connectionType;
@@ -377,7 +377,7 @@ public class SiteToWanLayer2ProtocolDataLayer2ConnectionInfo   {
     this.lagInterfaceData = lagInterfaceData;
   }
 
-  public SiteToWanLayer2ProtocolDataLayer2ConnectionInfo layer2ControlProtocol(KeyValuePairs layer2ControlProtocol) {
+  public SiteToWanLayer2ProtocolDataLayer2ConnectionInfo layer2ControlProtocol(Map<String, String> layer2ControlProtocol) {
     this.layer2ControlProtocol = layer2ControlProtocol;
     return this;
   }
@@ -389,11 +389,11 @@ public class SiteToWanLayer2ProtocolDataLayer2ConnectionInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getLayer2ControlProtocol() {
+    public Map<String, String> getLayer2ControlProtocol() {
     return layer2ControlProtocol;
   }
 
-  public void setLayer2ControlProtocol(KeyValuePairs layer2ControlProtocol) {
+  public void setLayer2ControlProtocol(Map<String, String> layer2ControlProtocol) {
     this.layer2ControlProtocol = layer2ControlProtocol;
   }
 

@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -34,13 +34,13 @@ import javax.validation.constraints.*;
 
 public class ModificationsTriggeredByVnfPkgChange   {
   @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+  private Map<String, String> vnfConfigurableProperties = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+  private Map<String, String> extensions = null;
 
   @JsonProperty("vnfdId")
   private String vnfdId = null;
@@ -57,7 +57,7 @@ public class ModificationsTriggeredByVnfPkgChange   {
   @JsonProperty("vnfdVersion")
   private String vnfdVersion = null;
 
-  public ModificationsTriggeredByVnfPkgChange vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public ModificationsTriggeredByVnfPkgChange vnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
     return this;
   }
@@ -69,15 +69,15 @@ public class ModificationsTriggeredByVnfPkgChange   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getVnfConfigurableProperties() {
+    public Map<String, String> getVnfConfigurableProperties() {
     return vnfConfigurableProperties;
   }
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public void setVnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
   }
 
-  public ModificationsTriggeredByVnfPkgChange metadata(KeyValuePairs metadata) {
+  public ModificationsTriggeredByVnfPkgChange metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -89,15 +89,15 @@ public class ModificationsTriggeredByVnfPkgChange   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 
-  public ModificationsTriggeredByVnfPkgChange extensions(KeyValuePairs extensions) {
+  public ModificationsTriggeredByVnfPkgChange extensions(Map<String, String> extensions) {
     this.extensions = extensions;
     return this;
   }
@@ -109,11 +109,11 @@ public class ModificationsTriggeredByVnfPkgChange   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getExtensions() {
+    public Map<String, String> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(KeyValuePairs extensions) {
+  public void setExtensions(Map<String, String> extensions) {
     this.extensions = extensions;
   }
 

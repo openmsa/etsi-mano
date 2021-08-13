@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
@@ -156,7 +156,7 @@ public class VnfcSnapshotImageInfo   {
   private Integer size = null;
 
   @JsonProperty("userMetadata")
-  private KeyValuePairs userMetadata = null;
+  private Map<String, String> userMetadata = null;
 
   @JsonProperty("imagePath")
   private String imagePath = null;
@@ -386,7 +386,7 @@ public class VnfcSnapshotImageInfo   {
     this.size = size;
   }
 
-  public VnfcSnapshotImageInfo userMetadata(KeyValuePairs userMetadata) {
+  public VnfcSnapshotImageInfo userMetadata(Map<String, String> userMetadata) {
     this.userMetadata = userMetadata;
     return this;
   }
@@ -398,11 +398,11 @@ public class VnfcSnapshotImageInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserMetadata() {
+    public Map<String, String> getUserMetadata() {
     return userMetadata;
   }
 
-  public void setUserMetadata(KeyValuePairs userMetadata) {
+  public void setUserMetadata(Map<String, String> userMetadata) {
     this.userMetadata = userMetadata;
   }
 

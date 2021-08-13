@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.VnfLocationConstraint;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
@@ -65,16 +65,16 @@ public class InstantiateVnfData   {
   private String localizationLanguage = null;
 
   @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+  private Map<String, String> vnfConfigurableProperties = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+  private Map<String, String> extensions = null;
 
   @JsonProperty("locationConstraints")
   private VnfLocationConstraint locationConstraints = null;
@@ -249,7 +249,7 @@ public class InstantiateVnfData   {
     this.localizationLanguage = localizationLanguage;
   }
 
-  public InstantiateVnfData vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public InstantiateVnfData vnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
     return this;
   }
@@ -261,15 +261,15 @@ public class InstantiateVnfData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getVnfConfigurableProperties() {
+    public Map<String, String> getVnfConfigurableProperties() {
     return vnfConfigurableProperties;
   }
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public void setVnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
   }
 
-  public InstantiateVnfData additionalParams(KeyValuePairs additionalParams) {
+  public InstantiateVnfData additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -281,15 +281,15 @@ public class InstantiateVnfData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 
-  public InstantiateVnfData metadata(KeyValuePairs metadata) {
+  public InstantiateVnfData metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -301,15 +301,15 @@ public class InstantiateVnfData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 
-  public InstantiateVnfData extensions(KeyValuePairs extensions) {
+  public InstantiateVnfData extensions(Map<String, String> extensions) {
     this.extensions = extensions;
     return this;
   }
@@ -321,11 +321,11 @@ public class InstantiateVnfData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getExtensions() {
+    public Map<String, String> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(KeyValuePairs extensions) {
+  public void setExtensions(Map<String, String> extensions) {
     this.extensions = extensions;
   }
 

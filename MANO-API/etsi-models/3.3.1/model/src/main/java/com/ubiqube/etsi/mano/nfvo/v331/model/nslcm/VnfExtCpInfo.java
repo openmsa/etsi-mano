@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.CpProtocolInfo;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class VnfExtCpInfo  implements OneOfVnfExtCpInfo {
   private String extLinkPortId = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   @JsonProperty("associatedVnfcCpId")
   private String associatedVnfcCpId = null;
@@ -188,7 +188,7 @@ public class VnfExtCpInfo  implements OneOfVnfExtCpInfo {
     this.extLinkPortId = extLinkPortId;
   }
 
-  public VnfExtCpInfo metadata(KeyValuePairs metadata) {
+  public VnfExtCpInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -200,11 +200,11 @@ public class VnfExtCpInfo  implements OneOfVnfExtCpInfo {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

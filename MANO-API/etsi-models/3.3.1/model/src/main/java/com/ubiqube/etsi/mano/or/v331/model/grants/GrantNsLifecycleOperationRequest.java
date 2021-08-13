@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.or.v331.model.grants;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.or.v331.model.grants.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.or.v331.model.grants.NsLcmOperation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
@@ -47,7 +47,7 @@ public class GrantNsLifecycleOperationRequest   {
   private NsLcmOperation lifecycleOperation = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public GrantNsLifecycleOperationRequest nsInstanceId(String nsInstanceId) {
     this.nsInstanceId = nsInstanceId;
@@ -130,7 +130,7 @@ public class GrantNsLifecycleOperationRequest   {
     this.lifecycleOperation = lifecycleOperation;
   }
 
-  public GrantNsLifecycleOperationRequest additionalParams(KeyValuePairs additionalParams) {
+  public GrantNsLifecycleOperationRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -142,11 +142,11 @@ public class GrantNsLifecycleOperationRequest   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.model.vnf;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -89,7 +90,7 @@ public class VnfPackageArtifactInfo {
 	private ArtifactClassificationEnum artifactClassification = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public VnfPackageArtifactInfo artifactPath(final String artifactPath) {
 		this.artifactPath = artifactPath;
@@ -214,7 +215,7 @@ public class VnfPackageArtifactInfo {
 		this.artifactClassification = artifactClassification;
 	}
 
-	public VnfPackageArtifactInfo metadata(final KeyValuePairs metadata) {
+	public VnfPackageArtifactInfo metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -227,11 +228,11 @@ public class VnfPackageArtifactInfo {
 	@Schema(description = "")
 
 	@Valid
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

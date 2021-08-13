@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +52,13 @@ public class ChangeVnfPackageData   {
   private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+  private Map<String, String> extensions = null;
 
   @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+  private Map<String, String> vnfConfigurableProperties = null;
 
   public ChangeVnfPackageData vnfInstanceId(String vnfInstanceId) {
     this.vnfInstanceId = vnfInstanceId;
@@ -154,7 +154,7 @@ public class ChangeVnfPackageData   {
     this.extManagedVirtualLinks = extManagedVirtualLinks;
   }
 
-  public ChangeVnfPackageData additionalParams(KeyValuePairs additionalParams) {
+  public ChangeVnfPackageData additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -166,15 +166,15 @@ public class ChangeVnfPackageData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 
-  public ChangeVnfPackageData extensions(KeyValuePairs extensions) {
+  public ChangeVnfPackageData extensions(Map<String, String> extensions) {
     this.extensions = extensions;
     return this;
   }
@@ -186,15 +186,15 @@ public class ChangeVnfPackageData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getExtensions() {
+    public Map<String, String> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(KeyValuePairs extensions) {
+  public void setExtensions(Map<String, String> extensions) {
     this.extensions = extensions;
   }
 
-  public ChangeVnfPackageData vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public ChangeVnfPackageData vnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
     return this;
   }
@@ -206,11 +206,11 @@ public class ChangeVnfPackageData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getVnfConfigurableProperties() {
+    public Map<String, String> getVnfConfigurableProperties() {
     return vnfConfigurableProperties;
   }
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public void setVnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
   }
 

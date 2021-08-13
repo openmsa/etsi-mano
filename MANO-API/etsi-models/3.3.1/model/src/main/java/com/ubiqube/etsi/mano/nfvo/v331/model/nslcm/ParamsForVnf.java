@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -43,16 +43,16 @@ public class ParamsForVnf   {
   private String vnfInstanceDescription = null;
 
   @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+  private Map<String, String> vnfConfigurableProperties = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+  private Map<String, String> extensions = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public ParamsForVnf vnfProfileId(String vnfProfileId) {
     this.vnfProfileId = vnfProfileId;
@@ -112,7 +112,7 @@ public class ParamsForVnf   {
     this.vnfInstanceDescription = vnfInstanceDescription;
   }
 
-  public ParamsForVnf vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public ParamsForVnf vnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
     return this;
   }
@@ -124,15 +124,15 @@ public class ParamsForVnf   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getVnfConfigurableProperties() {
+    public Map<String, String> getVnfConfigurableProperties() {
     return vnfConfigurableProperties;
   }
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public void setVnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
   }
 
-  public ParamsForVnf metadata(KeyValuePairs metadata) {
+  public ParamsForVnf metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -144,15 +144,15 @@ public class ParamsForVnf   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 
-  public ParamsForVnf extensions(KeyValuePairs extensions) {
+  public ParamsForVnf extensions(Map<String, String> extensions) {
     this.extensions = extensions;
     return this;
   }
@@ -164,15 +164,15 @@ public class ParamsForVnf   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getExtensions() {
+    public Map<String, String> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(KeyValuePairs extensions) {
+  public void setExtensions(Map<String, String> extensions) {
     this.extensions = extensions;
   }
 
-  public ParamsForVnf additionalParams(KeyValuePairs additionalParams) {
+  public ParamsForVnf additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -184,11 +184,11 @@ public class ParamsForVnf   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

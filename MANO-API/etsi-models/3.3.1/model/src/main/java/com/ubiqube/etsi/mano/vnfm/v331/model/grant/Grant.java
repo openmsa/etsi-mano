@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.grant.ExtVirtualLinkData;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantLinks;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantVimAssets;
-import com.ubiqube.etsi.mano.vnfm.v331.model.grant.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.VimConnectionInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.ZoneGroupInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.ZoneInfo;
@@ -94,7 +94,7 @@ public class Grant   {
   private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   @JsonProperty("_links")
   private GrantLinks _links = null;
@@ -422,7 +422,7 @@ public class Grant   {
     this.extManagedVirtualLinks = extManagedVirtualLinks;
   }
 
-  public Grant additionalParams(KeyValuePairs additionalParams) {
+  public Grant additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -434,11 +434,11 @@ public class Grant   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

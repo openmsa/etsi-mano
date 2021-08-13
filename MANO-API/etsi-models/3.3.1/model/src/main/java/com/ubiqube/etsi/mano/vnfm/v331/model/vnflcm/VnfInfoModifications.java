@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VimConnectionInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.HashMap;
@@ -44,13 +44,13 @@ public class VnfInfoModifications   {
   private String vnfInstanceDescription = null;
 
   @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+  private Map<String, String> vnfConfigurableProperties = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+  private Map<String, String> extensions = null;
 
   @JsonProperty("vimConnectionInfo")
   @Valid
@@ -109,7 +109,7 @@ public class VnfInfoModifications   {
     this.vnfInstanceDescription = vnfInstanceDescription;
   }
 
-  public VnfInfoModifications vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public VnfInfoModifications vnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
     return this;
   }
@@ -121,15 +121,15 @@ public class VnfInfoModifications   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getVnfConfigurableProperties() {
+    public Map<String, String> getVnfConfigurableProperties() {
     return vnfConfigurableProperties;
   }
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public void setVnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
   }
 
-  public VnfInfoModifications metadata(KeyValuePairs metadata) {
+  public VnfInfoModifications metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -141,15 +141,15 @@ public class VnfInfoModifications   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 
-  public VnfInfoModifications extensions(KeyValuePairs extensions) {
+  public VnfInfoModifications extensions(Map<String, String> extensions) {
     this.extensions = extensions;
     return this;
   }
@@ -161,11 +161,11 @@ public class VnfInfoModifications   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getExtensions() {
+    public Map<String, String> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(KeyValuePairs extensions) {
+  public void setExtensions(Map<String, String> extensions) {
     this.extensions = extensions;
   }
 

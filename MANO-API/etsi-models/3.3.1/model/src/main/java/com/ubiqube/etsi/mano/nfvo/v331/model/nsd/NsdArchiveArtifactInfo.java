@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -41,7 +41,7 @@ public class NsdArchiveArtifactInfo   {
   private Checksum checksum = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public NsdArchiveArtifactInfo artifactPath(String artifactPath) {
     this.artifactPath = artifactPath;
@@ -84,7 +84,7 @@ public class NsdArchiveArtifactInfo   {
     this.checksum = checksum;
   }
 
-  public NsdArchiveArtifactInfo metadata(KeyValuePairs metadata) {
+  public NsdArchiveArtifactInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -96,11 +96,11 @@ public class NsdArchiveArtifactInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.PnfdArchiveArtifactInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.PnfdOnboardingStateType;
@@ -109,7 +109,7 @@ public class PnfdInfo   {
   private PnfdUsageStateType pnfdUsageState = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   @JsonProperty("_links")
   private PnfdInfoLinks _links = null;
@@ -356,7 +356,7 @@ public class PnfdInfo   {
     this.pnfdUsageState = pnfdUsageState;
   }
 
-  public PnfdInfo userDefinedData(KeyValuePairs userDefinedData) {
+  public PnfdInfo userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -368,11 +368,11 @@ public class PnfdInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

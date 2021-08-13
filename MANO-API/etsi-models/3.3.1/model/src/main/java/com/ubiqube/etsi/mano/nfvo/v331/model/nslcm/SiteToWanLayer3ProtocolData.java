@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.SiteToWanLayer3ProtocolDataLogicalInterfaceIpAddress;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.SiteToWanLayer3ProtocolDataRoutingInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.SiteToWanLayer3ProtocolDataVirtualRoutingAndForwarding;
@@ -50,7 +50,7 @@ public class SiteToWanLayer3ProtocolData   {
   private SiteToWanLayer3ProtocolDataVirtualRoutingAndForwarding virtualRoutingAndForwarding = null;
 
   @JsonProperty("bfdConfig")
-  private KeyValuePairs bfdConfig = null;
+  private Map<String, String> bfdConfig = null;
 
   public SiteToWanLayer3ProtocolData logicalInterfaceIpAddress(SiteToWanLayer3ProtocolDataLogicalInterfaceIpAddress logicalInterfaceIpAddress) {
     this.logicalInterfaceIpAddress = logicalInterfaceIpAddress;
@@ -133,7 +133,7 @@ public class SiteToWanLayer3ProtocolData   {
     this.virtualRoutingAndForwarding = virtualRoutingAndForwarding;
   }
 
-  public SiteToWanLayer3ProtocolData bfdConfig(KeyValuePairs bfdConfig) {
+  public SiteToWanLayer3ProtocolData bfdConfig(Map<String, String> bfdConfig) {
     this.bfdConfig = bfdConfig;
     return this;
   }
@@ -145,11 +145,11 @@ public class SiteToWanLayer3ProtocolData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getBfdConfig() {
+    public Map<String, String> getBfdConfig() {
     return bfdConfig;
   }
 
-  public void setBfdConfig(KeyValuePairs bfdConfig) {
+  public void setBfdConfig(Map<String, String> bfdConfig) {
     this.bfdConfig = bfdConfig;
   }
 

@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
@@ -72,7 +72,7 @@ public class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution   {
   private BigDecimal sequence = null;
 
   @JsonProperty("matchAndSetRule")
-  private KeyValuePairs matchAndSetRule = null;
+  private Map<String, String> matchAndSetRule = null;
 
   public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution policy(PolicyEnum policy) {
     this.policy = policy;
@@ -115,7 +115,7 @@ public class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution   {
     this.sequence = sequence;
   }
 
-  public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution matchAndSetRule(KeyValuePairs matchAndSetRule) {
+  public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution matchAndSetRule(Map<String, String> matchAndSetRule) {
     this.matchAndSetRule = matchAndSetRule;
     return this;
   }
@@ -128,11 +128,11 @@ public class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution   {
       @NotNull
 
     @Valid
-    public KeyValuePairs getMatchAndSetRule() {
+    public Map<String, String> getMatchAndSetRule() {
     return matchAndSetRule;
   }
 
-  public void setMatchAndSetRule(KeyValuePairs matchAndSetRule) {
+  public void setMatchAndSetRule(Map<String, String> matchAndSetRule) {
     this.matchAndSetRule = matchAndSetRule;
   }
 

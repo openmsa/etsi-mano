@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.AddPnfData;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.AffinityOrAntiAffinityRule;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NestedNsInstanceData;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NestedNsLocationConstraint;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ParamsForNestedNs;
@@ -73,7 +73,7 @@ public class InstantiateNsRequest   {
   private List<NestedNsLocationConstraint> nestedNslocationConstraints = null;
 
   @JsonProperty("additionalParamsForNs")
-  private KeyValuePairs additionalParamsForNs = null;
+  private Map<String, String> additionalParamsForNs = null;
 
   @JsonProperty("additionalParamForNestedNs")
   @Valid
@@ -279,7 +279,7 @@ public class InstantiateNsRequest   {
     this.nestedNslocationConstraints = nestedNslocationConstraints;
   }
 
-  public InstantiateNsRequest additionalParamsForNs(KeyValuePairs additionalParamsForNs) {
+  public InstantiateNsRequest additionalParamsForNs(Map<String, String> additionalParamsForNs) {
     this.additionalParamsForNs = additionalParamsForNs;
     return this;
   }
@@ -291,11 +291,11 @@ public class InstantiateNsRequest   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParamsForNs() {
+    public Map<String, String> getAdditionalParamsForNs() {
     return additionalParamsForNs;
   }
 
-  public void setAdditionalParamsForNs(KeyValuePairs additionalParamsForNs) {
+  public void setAdditionalParamsForNs(Map<String, String> additionalParamsForNs) {
     this.additionalParamsForNs = additionalParamsForNs;
   }
 

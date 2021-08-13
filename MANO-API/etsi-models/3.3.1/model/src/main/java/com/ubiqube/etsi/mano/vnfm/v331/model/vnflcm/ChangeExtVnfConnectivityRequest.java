@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VimConnectionInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class ChangeExtVnfConnectivityRequest   {
   private Map<String, VimConnectionInfo> vimConnectionInfo = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public ChangeExtVnfConnectivityRequest extVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
     this.extVirtualLinks = extVirtualLinks;
@@ -102,7 +102,7 @@ public class ChangeExtVnfConnectivityRequest   {
     this.vimConnectionInfo = vimConnectionInfo;
   }
 
-  public ChangeExtVnfConnectivityRequest additionalParams(KeyValuePairs additionalParams) {
+  public ChangeExtVnfConnectivityRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -114,11 +114,11 @@ public class ChangeExtVnfConnectivityRequest   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

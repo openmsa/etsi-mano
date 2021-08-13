@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -61,8 +62,7 @@ public class VnfPkgInfo {
 	private Checksum checksum = null;
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of
-	 * ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
 	 */
 	public enum PackageSecurityOptionEnum {
 		_1("OPTION_1"),
@@ -120,7 +120,7 @@ public class VnfPkgInfo {
 	private List<String> vnfmInfo = new ArrayList<>();
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	@JsonProperty("onboardingFailureDetails")
 	private ProblemDetails onboardingFailureDetails = null;
@@ -175,9 +175,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Provider of the VNF package and the VNFD. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
+	 * Provider of the VNF package and the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProvider
 	 **/
@@ -197,9 +195,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
-	 * information is copied from the VNFD. It shall be present after the VNF
-	 * package content has been on-boarded and absent otherwise.
+	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProductName
 	 **/
@@ -300,8 +296,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of
-	 * ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
 	 *
 	 * @return packageSecurityOption
 	 **/
@@ -322,8 +317,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * The singleton signing certificate if it is included as a file in the VNF
-	 * package.
+	 * The singleton signing certificate if it is included as a file in the VNF package.
 	 *
 	 * @return signingCertificate
 	 **/
@@ -351,10 +345,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts that are software images. This
-	 * attribute shall not be present before the VNF package content is on-boarded.
-	 * Otherwise, this attribute shall be present unless it has been requested to be
-	 * excluded per attribute selector.
+	 * Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector.
 	 *
 	 * @return softwareImages
 	 **/
@@ -382,10 +373,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts contained in the VNF package that are
-	 * not software images. This attribute shall not be present before the VNF
-	 * package content is on-boarded. Otherwise, this attribute shall be present if
-	 * the VNF package contains additional artifacts.
+	 * Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts.
 	 *
 	 * @return additionalArtifacts
 	 **/
@@ -476,8 +464,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Specifies VNFMs compatible with the VNF. This information is copied from the
-	 * VNFD. See note 4.
+	 * Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. See note 4.
 	 *
 	 * @return vnfmInfo
 	 **/
@@ -492,7 +479,7 @@ public class VnfPkgInfo {
 		this.vnfmInfo = vnfmInfo;
 	}
 
-	public VnfPkgInfo userDefinedData(final KeyValuePairs userDefinedData) {
+	public VnfPkgInfo userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -505,11 +492,11 @@ public class VnfPkgInfo {
 	@ApiModelProperty(value = "")
 
 	@Valid
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
@@ -620,8 +607,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

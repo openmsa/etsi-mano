@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.model.vnf;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -28,8 +29,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents modifications to the information of a VNF package. It
- * shall comply with the provisions defined in Table 9.5.2.3-1.
+ * This type represents modifications to the information of a VNF package. It shall comply with the provisions defined in Table 9.5.2.3-1.
  */
 @ApiModel(description = "This type represents modifications to the information of a VNF package.  It shall comply with the provisions defined in Table 9.5.2.3-1. ")
 @Validated
@@ -38,7 +38,7 @@ public class VnfPkgInfoModifications implements AnyOfVnfPkgInfoModifications {
 	private PackageOperationalStateType operationalState = null;
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	public VnfPkgInfoModifications operationalState(final PackageOperationalStateType operationalState) {
 		this.operationalState = operationalState;
@@ -61,7 +61,7 @@ public class VnfPkgInfoModifications implements AnyOfVnfPkgInfoModifications {
 		this.operationalState = operationalState;
 	}
 
-	public VnfPkgInfoModifications userDefinedData(final KeyValuePairs userDefinedData) {
+	public VnfPkgInfoModifications userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -74,11 +74,11 @@ public class VnfPkgInfoModifications implements AnyOfVnfPkgInfoModifications {
 	@ApiModelProperty(value = "")
 
 	@Valid
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
@@ -112,8 +112,7 @@ public class VnfPkgInfoModifications implements AnyOfVnfPkgInfoModifications {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
