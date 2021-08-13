@@ -36,6 +36,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.CreateNsInstance;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -83,7 +84,7 @@ public class NsInstanceGenericFrontController {
 
 	public <U> ResponseEntity<U> findById(final String nsInstanceId, final Class<U> clazz, final Consumer<U> makeLink) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
+		final NsInstanceDto nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
 		final U nsInstance = mapper.map(nsInstanceDb, clazz);
 		makeLink.accept(nsInstance);
 		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
@@ -91,7 +92,7 @@ public class NsInstanceGenericFrontController {
 
 	public <U> ResponseEntity<U> heal(final String nsInstanceId, final Object request) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
+		final NsInstanceDto nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
 		throw new GenericException("TODO");
 	}
 

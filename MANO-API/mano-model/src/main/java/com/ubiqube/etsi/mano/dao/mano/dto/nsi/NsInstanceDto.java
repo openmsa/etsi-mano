@@ -14,32 +14,46 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.nslcm;
+package com.ubiqube.etsi.mano.dao.mano.dto.nsi;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Merge with {@link NsInstanceControllerService}
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsInstanceController {
+@Getter
+@Setter
+public class NsInstanceDto {
+	private String id = null;
 
-	List<NsdInstance> nsInstancesGet(String filter);
+	private String nsInstanceName = null;
 
-	void nsInstancesNsInstanceIdDelete(UUID id);
+	private String nsInstanceDescription = null;
 
-	NsInstanceDto nsInstancesNsInstanceIdGet(UUID id);
+	private String nsdId = null;
 
-	NsdInstance nsInstancesNsInstanceIdHealPost(UUID id);
+	private String nsdInfoId = null;
 
-	NsdInstance nsInstancesNsInstanceIdScalePost(UUID id);
+	private String flavourId = null;
 
-	void nsInstancesNsInstanceIdUpdatePost(UUID id);
+	private List<VnfInstanceDto> vnfInstance = new ArrayList<>();
+
+	// private final List<PnfInfo> pnfInfo = null;
+
+	private List<NsVirtualLinkInfoDto> virtualLinkInfo = new ArrayList<>();
+
+	// private final List<VnffgInfo> vnffgInfo = null;
+
+	// private final List<SapInfo> sapInfo = null;
+
+	// private final List<String> nestedNsInstanceId = null;
+
+	// private final List<String> vnfSnapshotInfoIds = null;
 
 }

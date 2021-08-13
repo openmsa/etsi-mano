@@ -14,32 +14,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.nslcm;
+package com.ubiqube.etsi.mano.dao.mano.dto.nsi;
 
 import java.util.List;
-import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Merge with {@link NsInstanceControllerService}
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsInstanceController {
+@Getter
+@Setter
+public class NsVirtualLinkInfoDto {
+	private String id;
 
-	List<NsdInstance> nsInstancesGet(String filter);
+	private String nsVirtualLinkDescId;
 
-	void nsInstancesNsInstanceIdDelete(UUID id);
+	private String nsVirtualLinkProfileId;
 
-	NsInstanceDto nsInstancesNsInstanceIdGet(UUID id);
+	private List<ResourceHandle> resourceHandle;
 
-	NsdInstance nsInstancesNsInstanceIdHealPost(UUID id);
-
-	NsdInstance nsInstancesNsInstanceIdScalePost(UUID id);
-
-	void nsInstancesNsInstanceIdUpdatePost(UUID id);
+	// private List<NsLinkPortInfo> linkPort ;
 
 }

@@ -83,7 +83,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
-		return res.getId().toString();
+		return res.getInstance().getId().toString();
 	}
 
 	@Override

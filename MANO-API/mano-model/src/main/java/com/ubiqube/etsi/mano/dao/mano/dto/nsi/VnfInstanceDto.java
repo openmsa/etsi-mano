@@ -14,32 +14,51 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.nslcm;
+package com.ubiqube.etsi.mano.dao.mano.dto.nsi;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Merge with {@link NsInstanceControllerService}
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsInstanceController {
+@Getter
+@Setter
+public class VnfInstanceDto {
+	private String id;
 
-	List<NsdInstance> nsInstancesGet(String filter);
+	private String vnfInstanceName;
 
-	void nsInstancesNsInstanceIdDelete(UUID id);
+	private String vnfInstanceDescription;
 
-	NsInstanceDto nsInstancesNsInstanceIdGet(UUID id);
+	private String vnfdId;
 
-	NsdInstance nsInstancesNsInstanceIdHealPost(UUID id);
+	private String vnfProvider;
 
-	NsdInstance nsInstancesNsInstanceIdScalePost(UUID id);
+	private String vnfProductName;
 
-	void nsInstancesNsInstanceIdUpdatePost(UUID id);
+	private String vnfSoftwareVersion;
+
+	private String vnfdVersion;
+
+	private String vnfPkgId;
+
+	private Map<String, String> vnfConfigurableProperties;
+
+	private String vimId;
+
+	private InstantiationState instantiationState;
+
+	private VnfInstanceInstantiatedVnfInfoDto instantiatedVnfInfo;
+
+	private Map<String, String> metadata;
+
+	private Map<String, String> extensions;
 
 }

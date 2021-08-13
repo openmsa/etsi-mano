@@ -21,25 +21,44 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.VnfInstanceDto;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
+import com.ubiqube.etsi.mano.jpa.NsLiveInstanceJpa;
+import com.ubiqube.etsi.mano.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceService;
+
+import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsBlueprintService blueprintService;
 	private final NsInstanceService nsInstanceService;
+	private final NsdPackageJpa nsdPackageJpa;
+	private final MapperFacade mapper;
+	private final VnfInstanceService vnfInstancesService;
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService) {
+	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
+			final NsdPackageJpa nsdPackageJpa, final MapperFacade mapper, final VnfInstanceService vnfInstancesService) {
 		nsInstanceService = _nsInstanceService;
 		blueprintService = _lcmOpOccsService;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.nsdPackageJpa = nsdPackageJpa;
+		this.mapper = mapper;
+		this.vnfInstancesService = vnfInstancesService;
 	}
 
 	@Override
@@ -55,8 +74,18 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	}
 
 	@Override
-	public NsdInstance nsInstancesNsInstanceIdGet(final UUID id) {
-		return nsInstanceService.findById(id);
+	public NsInstanceDto nsInstancesNsInstanceIdGet(final UUID id) {
+		final NsdInstance ret = nsInstanceService.findById(id);
+
+		final NsInstanceDto dto = mapper.map(ret.getNsdInfo(), NsInstanceDto.class);
+		mapper.map(ret, dto);
+		final List<NsLiveInstance> vnfs = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVnfTask.class.getSimpleName());
+		final List<VnfInstanceDto> vnfInstance = vnfs.stream()
+				.map(x -> vnfInstancesService.findById(UUID.fromString(x.getResourceId())))
+				.map(x -> mapper.map(x, VnfInstanceDto.class))
+				.collect(Collectors.toList());
+		dto.setVnfInstance(vnfInstance);
+		return dto;
 	}
 
 	@Override
