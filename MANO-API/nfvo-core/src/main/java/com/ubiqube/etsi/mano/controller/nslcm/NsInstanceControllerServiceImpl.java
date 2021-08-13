@@ -35,11 +35,11 @@ import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
-import com.ubiqube.etsi.mano.model.NsInstantiate;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.NsInstanceService;
@@ -103,7 +103,6 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		ensureNotInstantiated(nsInstanceDb);
 		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.INSTANTIATE);
 		nsBlueprintService.save(nsLcm);
-		// XXX Should be mapped in lcm as an intermediate result.
 		mapper.map(req, nsInstanceDb);
 		nsInstanceService.save(nsInstanceDb);
 		eventManager.sendActionNfvo(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());

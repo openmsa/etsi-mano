@@ -37,10 +37,10 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.CreateNsInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.model.NsInstantiate;
 
 import ma.glasnost.orika.MapperFacade;
 

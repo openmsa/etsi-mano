@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -27,6 +28,8 @@ import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
@@ -112,10 +115,16 @@ public class OrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("flavourId", "parameters.flavourId")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(NsInstantiate.class, NsdInstance.class)
+				.field("nsFlavourId", "instanceFlavourId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(NsInstanceDto.class, NsdInstance.class)
+				.field("flavourId", "instanceFlavourId")
+				.byDefault()
+				.register();
 		/*
-		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.
-		 * class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}")
-		 * .byDefault() .register();
+		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance. class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}") .byDefault() .register();
 		 */
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());

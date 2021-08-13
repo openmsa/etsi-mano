@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.controller.nslcm;
 import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,10 +28,13 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
+import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsVirtualLinkInfoDto;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.VnfInstanceDto;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.factory.LcmFactory;
@@ -85,6 +89,20 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 				.map(x -> mapper.map(x, VnfInstanceDto.class))
 				.collect(Collectors.toList());
 		dto.setVnfInstance(vnfInstance);
+		final List<NsLiveInstance> vls = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVirtualLinkTask.class.getSimpleName());
+		final List<NsVirtualLinkInfoDto> vlsDto = vls.stream().map(x -> {
+			final NsVirtualLinkInfoDto vlDto = new NsVirtualLinkInfoDto();
+
+			vlDto.setId(x.getId().toString());
+			vlDto.setNsVirtualLinkDescId(x.getNsTask().getToscaName());
+			// vlDto.setNsVirtualLinkProfileId(nsVirtualLinkProfileId);
+			final List<ResourceHandle> resourceHandle = new ArrayList<>();
+			final ResourceHandle r = mapper.map(x.getNsTask(), ResourceHandle.class);
+			resourceHandle.add(r);
+			vlDto.setResourceHandle(resourceHandle);
+			return vlDto;
+		}).collect(Collectors.toList());
+		dto.setVirtualLinkInfo(vlsDto);
 		return dto;
 	}
 

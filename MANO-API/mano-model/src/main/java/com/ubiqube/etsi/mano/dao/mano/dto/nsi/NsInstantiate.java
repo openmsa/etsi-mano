@@ -14,11 +14,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.model;
+package com.ubiqube.etsi.mano.dao.mano.dto.nsi;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Map;
 
+import com.ubiqube.etsi.mano.dao.mano.NestedNsInstanceData;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstanceData;
+import com.ubiqube.etsi.mano.dao.mano.dto.ParamsForNestedNsd;
+import com.ubiqube.etsi.mano.dao.mano.nfvo.ParamsForVnf;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class NsInstantiate implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -29,28 +46,13 @@ public class NsInstantiate implements Serializable {
 
 	private String nsInstantiationLevelId = null;
 
-	public String getNsFlavourId() {
-		return nsFlavourId;
-	}
+	private List<VnfInstanceData> vnfInstanceData;
 
-	public void setNsFlavourId(final String nsFlavourId) {
-		this.nsFlavourId = nsFlavourId;
-	}
+	private List<NestedNsInstanceData> nestedNsInstanceData;
 
-	public OffsetDateTime getStartTime() {
-		return startTime;
-	}
+	private Map<String, String> additionalParamsForNs;
 
-	public void setStartTime(final OffsetDateTime startTime) {
-		this.startTime = startTime;
-	}
+	private List<ParamsForNestedNsd> additionalParamForNestedNs;
 
-	public String getNsInstantiationLevelId() {
-		return nsInstantiationLevelId;
-	}
-
-	public void setNsInstantiationLevelId(final String nsInstantiationLevelId) {
-		this.nsInstantiationLevelId = nsInstantiationLevelId;
-	}
-
+	private List<ParamsForVnf> additionalParamsForVnf;
 }

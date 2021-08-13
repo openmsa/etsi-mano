@@ -18,9 +18,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -30,7 +32,9 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.dto.ParamsForNestedNsd;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.nfvo.ParamsForVnf;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
 import lombok.Getter;
@@ -78,16 +82,27 @@ public class NsdInstance extends Instance {
 
 	// XXX Add additionalAffinityOrAntiAffinityRule
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
+	private Set<NsBlueprint> blueprint;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private List<VnfInstanceData> vnfInstanceData;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<NestedNsInstanceData> nestedNsInstanceData;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<VnfInstanceData> vnfInstanceData;
+	@ElementCollection
+	private Map<String, String> additionalParamsForNs;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "nsInstance")
-	private Set<NsBlueprint> blueprint;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ParamsForNestedNsd> additionalParamForNestedNs;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn
+	private Set<ParamsForVnf> additionalParamsForVnf;
 
 	public void addNestedNsInstance(final NsdInstance nsIn) {
 		if (null == nestedNsInstance) {
