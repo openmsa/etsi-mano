@@ -22,7 +22,6 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmController;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;

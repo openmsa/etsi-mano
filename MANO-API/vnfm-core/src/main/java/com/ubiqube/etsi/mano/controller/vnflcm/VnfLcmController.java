@@ -14,14 +14,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.controller.vnf;
+package com.ubiqube.etsi.mano.controller.vnflcm;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
-public interface OnboardedVnfPackageService {
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
-	VnfPackage vnfPackagesVnfPkgIdGet(UUID fromString);
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface VnfLcmController {
+
+	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
+
+	VnfBlueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id);
 
 }
