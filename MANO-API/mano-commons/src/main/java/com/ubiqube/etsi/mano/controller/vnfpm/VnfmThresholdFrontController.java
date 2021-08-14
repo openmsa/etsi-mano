@@ -16,65 +16,22 @@
  */
 package com.ubiqube.etsi.mano.controller.vnfpm;
 
-import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFTHR_SEARCH_MANDATORY_FIELDS;
-
-import java.net.URI;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import ma.glasnost.orika.MapperFacade;
+public interface VnfmThresholdFrontController {
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Service
-public class VnfmThresholdFrontController {
-	private final VnfmThresholdController vnfmThresholdController;
+	<U> ResponseEntity<U> thresholdsCreate(Object request, Class<U> clazz, Consumer<U> makeLink, Function<U, String> getSelfLink);
 
-	private final MapperFacade mapper;
+	ResponseEntity<Void> deleteById(String thresholdId);
 
-	public VnfmThresholdFrontController(final VnfmThresholdController vnfmThresholdController, final MapperFacade mapper) {
-		super();
-		this.vnfmThresholdController = vnfmThresholdController;
-		this.mapper = mapper;
-	}
+	<U> ResponseEntity<U> findById(String thresholdId, Class<U> clazz, Consumer<U> makeLink);
 
-	public <U> ResponseEntity<U> thresholdsCreate(final Object request, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> getSelfLink) {
-		com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = mapper.map(request, com.ubiqube.etsi.mano.dao.mano.pm.Threshold.class);
-		res = vnfmThresholdController.save(res);
-		final U ret = mapper.map(res, clazz);
-		makeLink.accept(ret);
-		final String link = getSelfLink.apply(ret);
-		return ResponseEntity.created(URI.create(link)).body(ret);
-	}
+	<U> ResponseEntity<String> search(MultiValueMap<String, String> requestParams, String nextpageOpaqueMarker, Class<U> clazz, Consumer<U> makeLink);
 
-	public ResponseEntity<Void> deleteById(final String thresholdId) {
-		vnfmThresholdController.delete(UUID.fromString(thresholdId));
-		return ResponseEntity.noContent().build();
-	}
-
-	public <U> ResponseEntity<U> findById(final String thresholdId, final Class<U> clazz, final Consumer<U> makeLink) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.Threshold res = vnfmThresholdController.findById(UUID.fromString(thresholdId));
-		final U ret = mapper.map(res, clazz);
-		makeLink.accept(ret);
-		return ResponseEntity.ok(ret);
-	}
-
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> makeLink) {
-		return vnfmThresholdController.search(requestParams, clazz, VNFTHR_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFTHR_SEARCH_MANDATORY_FIELDS, makeLink);
-	}
-
-	public <U> ResponseEntity<U> patch(final String thresholdId, final Object body, final Class<U> clazz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	<U> ResponseEntity<U> patch(String thresholdId, Object body, Class<U> clazz);
 
 }

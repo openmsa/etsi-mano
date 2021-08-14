@@ -19,54 +19,24 @@ package com.ubiqube.etsi.mano.controller.vnflcm;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.validation.Valid;
-
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Service
-public class VnfSnapshotsFrontController {
+public interface VnfSnapshotsFrontController {
 
-	public <U> ResponseEntity<List<U>> search(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> makeLink) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	<U> ResponseEntity<List<U>> search(MultiValueMap<String, String> requestParams, String nextpageOpaqueMarker, Class<U> clazz, Consumer<U> makeLink);
 
-	public <U> ResponseEntity<U> create(@Valid final Object body, final Class<U> clazz, final Consumer<U> makeLink) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	<U> ResponseEntity<U> create(Object body, Class<U> clazz, Consumer<U> makeLink);
 
-	public ResponseEntity<Void> delete(final String vnfSnapshotInfoId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	ResponseEntity<Void> delete(String vnfSnapshotInfoId);
 
-	public <U> ResponseEntity<U> findById(final String vnfSnapshotInfoId, final Class<U> clazz, final Consumer<U> makeLink) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	<U> ResponseEntity<U> findById(String vnfSnapshotInfoId, Class<U> clazz, Consumer<U> makeLink);
 
-	public <U> ResponseEntity<U> patch(final String vnfSnapshotInfoId, @Valid final Object body, final Class<U> clazz) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	<U> ResponseEntity<U> patch(String vnfSnapshotInfoId, Object body, Class<U> clazz);
 
-	public ResponseEntity<Resource> fetch(final String vnfSnapshotInfoId, final String range) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	ResponseEntity<Resource> fetch(String vnfSnapshotInfoId, String range);
 
-	public ResponseEntity<Resource> fetchArtifact(final String vnfSnapshotPkgId, final String artifactPath) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	ResponseEntity<Resource> fetchArtifact(String vnfSnapshotPkgId, String artifactPath);
 
 }

@@ -20,13 +20,31 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
-public interface IndicatorsFrontController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class IndicatorsFrontControllerImpl implements IndicatorsFrontController {
+	@Override
+	public <U> ResponseEntity<List<U>> search(final String filter, final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> makeLink) {
+		// TODO:
+		return null;
+	}
 
-	<U> ResponseEntity<List<U>> search(String filter, String nextpageOpaqueMarker, Class<U> clazz, Consumer<U> makeLink);
+	@Override
+	public <U> ResponseEntity<List<U>> findByVnfInstanceId(final String vnfInstanceId, final String filter, final String nextpageOpaqueMarker, final Class<U> clazz, final Consumer<U> makeLink) {
+		// TODO:
+		return null;
+	}
 
-	<U> ResponseEntity<List<U>> findByVnfInstanceId(String vnfInstanceId, String filter, String nextpageOpaqueMarker, Class<U> clazz, Consumer<U> makeLink);
-
-	<U> ResponseEntity<U> findByVnfInstanceIdAndIndicatorId(String vnfInstanceId, String indicatorId, Class<U> clazz, Consumer<U> makeLink);
+	@Override
+	public <U> ResponseEntity<U> findByVnfInstanceIdAndIndicatorId(final String vnfInstanceId, final String indicatorId, final Class<U> clazz, final Consumer<U> makeLink) {
+		// TODO:
+		return null;
+	}
 
 }

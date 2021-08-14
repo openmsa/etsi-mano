@@ -16,62 +16,24 @@
  */
 package com.ubiqube.etsi.mano.controller.vnffm;
 
-import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.ALARM_SEARCH_MANDATORY_FIELDS;
-
-import java.util.UUID;
 import java.util.function.Consumer;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
-import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
 import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
-import com.ubiqube.etsi.mano.service.AlarmVnfmController;
 
-import ma.glasnost.orika.MapperFacade;
+public interface AlarmFrontController {
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Service
-public class AlarmFrontController {
+	ResponseEntity<Void> escalate(String alarmId, @Nonnull PerceivedSeverityType perceivedSeverityRequest);
 
-	private final MapperFacade mapper;
+	<U> ResponseEntity<U> findById(String alarmId, Class<U> clazz, Consumer<U> makeLink);
 
-	private final AlarmVnfmController alarmVnfmController;
+	<U> ResponseEntity<U> patch(String alarmId, AckState ackState, String ifMatch, Class<U> clazz);
 
-	public AlarmFrontController(final MapperFacade mapper, final AlarmVnfmController alarmVnfmController) {
-		super();
-		this.mapper = mapper;
-		this.alarmVnfmController = alarmVnfmController;
-	}
-
-	public ResponseEntity<Void> escalate(final String alarmId, @NotNull final PerceivedSeverityType perceivedSeverityRequest) {
-		alarmVnfmController.escalate(UUID.fromString(alarmId), perceivedSeverityRequest);
-		return ResponseEntity.noContent().build();
-	}
-
-	public <U> ResponseEntity<U> findById(final String alarmId, final Class<U> clazz, final Consumer<U> makeLink) {
-		final Alarms alarm = alarmVnfmController.findById(UUID.fromString(alarmId));
-		final U ret = mapper.map(alarm, clazz);
-		makeLink.accept(ret);
-		return ResponseEntity.ok(ret);
-	}
-
-	public <U> ResponseEntity<U> patch(final String alarmId, final AckState ackState, final String ifMatch, final Class<U> clazz) {
-		final Alarms alarm = alarmVnfmController.modify(UUID.fromString(alarmId), ackState, ifMatch);
-		return ResponseEntity.ok(mapper.map(alarm, clazz));
-	}
-
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLink) {
-		return alarmVnfmController.search(requestParams, clazz, ALARM_SEARCH_DEFAULT_EXCLUDE_FIELDS, ALARM_SEARCH_MANDATORY_FIELDS, makeLink);
-	}
+	<U> ResponseEntity<String> search(MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> makeLink);
 
 }

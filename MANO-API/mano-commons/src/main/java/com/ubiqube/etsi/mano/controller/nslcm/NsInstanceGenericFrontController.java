@@ -16,123 +16,32 @@
  */
 package com.ubiqube.etsi.mano.controller.nslcm;
 
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.CreateNsInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
-import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
 
-import ma.glasnost.orika.MapperFacade;
+public interface NsInstanceGenericFrontController {
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Service
-public class NsInstanceGenericFrontController {
-	private static final String LOCATION = "Location";
+	<U> ResponseEntity<String> search(MultiValueMap<String, String> requestParams, Class<U> clazz, String nextpageOpaqueMarker, Consumer<U> makeLink);
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsInstanceGenericFrontController.class);
+	ResponseEntity<Void> delete(String nsInstanceId);
 
-	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsInstanceDescription", "nsdId", "nsdInfoId", "nsState", "nsInstanceName"));
+	<U> ResponseEntity<U> findById(String nsInstanceId, Class<U> clazz, Consumer<U> makeLink);
 
-	private static final String NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS = "vnfInstances,pnfInfo,virtualLinkInfo,vnffgInfo,sapInfo,,nsScaleStatus,additionalAffinityOrAntiAffinityRules";
+	<U> ResponseEntity<U> heal(String nsInstanceId, Object request);
 
-	private final MapperFacade mapper;
+	<U> ResponseEntity<U> instantiate(String nsInstanceId, Object request, Function<NsBlueprint, String> getSelfLink);
 
-	private final NsInstanceControllerService nsInstanceControllerService;
+	<U> ResponseEntity<U> scale(String nsInstanceId, Object request);
 
-	private final NsInstanceController nsLcmController;
+	<U> ResponseEntity<U> terminate(String nsInstanceId, Object request, Function<NsBlueprint, String> getSelfLink);
 
-	public NsInstanceGenericFrontController(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
-		mapper = _mapper;
-		nsInstanceControllerService = _nsInstanceControllerService;
-		nsLcmController = _nsLcmController;
-		LOG.debug("Starting Ns Instance SOL005 Controller.");
-	}
+	<U> ResponseEntity<U> update(String nsInstanceId, Object request);
 
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, @Valid final String nextpageOpaqueMarker, final Consumer<U> makeLink) {
-		return nsInstanceControllerService.search(requestParams, clazz, NSI_SEARCH_DEFAULT_EXCLUDE_FIELDS, NSI_SEARCH_MANDATORY_FIELDS, makeLink);
-	}
+	<U> ResponseEntity<U> create(Object request, Class<U> clazz, Consumer<U> makeLink, Function<U, String> getSelfLink);
 
-	public ResponseEntity<Void> delete(final String nsInstanceId) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		nsLcmController.nsInstancesNsInstanceIdDelete(nsInstanceUuid);
-		return ResponseEntity.noContent().build();
-	}
-
-	public <U> ResponseEntity<U> findById(final String nsInstanceId, final Class<U> clazz, final Consumer<U> makeLink) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsInstanceDto nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
-		final U nsInstance = mapper.map(nsInstanceDb, clazz);
-		makeLink.accept(nsInstance);
-		return new ResponseEntity<>(nsInstance, HttpStatus.OK);
-	}
-
-	public <U> ResponseEntity<U> heal(final String nsInstanceId, final Object request) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsInstanceDto nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
-		throw new GenericException("TODO");
-	}
-
-	public <U> ResponseEntity<U> instantiate(final String nsInstanceId, final Object request, final Function<NsBlueprint, String> getSelfLink) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsInstantiate nsInst = mapper.map(request, NsInstantiate.class);
-		final NsBlueprint nsLcm = nsInstanceControllerService.instantiate(nsInstanceUuid, nsInst);
-		final String link = getSelfLink.apply(nsLcm);
-		return ResponseEntity.accepted().header(LOCATION, link).build();
-	}
-
-	public <U> ResponseEntity<U> scale(final String nsInstanceId, final Object request) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdScalePost(nsInstanceUuid);
-		throw new GenericException("TODO");
-	}
-
-	public <U> ResponseEntity<U> terminate(final String nsInstanceId, final Object request, final Function<NsBlueprint, String> getSelfLink) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsBlueprint lcm = this.nsInstanceControllerService.terminate(nsInstanceUuid, OffsetDateTime.now());
-
-		final String link = getSelfLink.apply(lcm);
-		return ResponseEntity.accepted().header(LOCATION, link).build();
-	}
-
-	public <U> ResponseEntity<U> update(final String nsInstanceId, final Object request) {
-		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		nsLcmController.nsInstancesNsInstanceIdUpdatePost(nsInstanceUuid);
-		throw new GenericException("TODO");
-	}
-
-	public <U> ResponseEntity<U> create(final Object request, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> getSelfLink) {
-		final CreateNsInstance req = mapper.map(request, CreateNsInstance.class);
-		if (req.getNsdId() == null) {
-			throw new NotFoundException("NsdId field is empty.");
-		}
-		final NsdInstance nsInstance = nsInstanceControllerService.createNsd(req.getNsdId(), req.getNsName(), req.getNsDescription());
-		final U nsInstanceWeb = mapper.map(nsInstance, clazz);
-		makeLink.accept(nsInstanceWeb);
-		final String location = getSelfLink.apply(nsInstanceWeb);
-		return ResponseEntity.created(URI.create(location)).body(nsInstanceWeb);
-	}
 }

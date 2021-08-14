@@ -21,16 +21,39 @@ import java.util.function.Consumer;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-public interface VnfSnapshotPackagesFrontController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
+public class VnfSnapshotPackagesFrontControllerImpl implements VnfSnapshotPackagesFrontController {
 
-	<U> ResponseEntity<String> search(MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> makeLinks);
+	@Override
+	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLinks) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	<U> ResponseEntity<U> create(Object body);
+	@Override
+	public <U> ResponseEntity<U> create(final Object body) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	ResponseEntity<Resource> getArtifact(UUID uuid, String artifactPath, String range);
+	@Override
+	public ResponseEntity<Resource> getArtifact(final UUID uuid, final String artifactPath, final String range) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	ResponseEntity<Void> delete(UUID safeUUID);
+	@Override
+	public ResponseEntity<Void> delete(final UUID safeUUID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

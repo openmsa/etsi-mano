@@ -16,55 +16,26 @@
  */
 package com.ubiqube.etsi.mano.controller.nslcm;
 
-import static com.ubiqube.etsi.mano.Constants.VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS;
-
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Service
-public class VnfLcmOpOccGenericFrontController {
-	private final VnfLcmController vnfLcmController;
+public interface VnfLcmOpOccGenericFrontController {
 
-	public VnfLcmOpOccGenericFrontController(final VnfLcmController vnfLcmController) {
-		super();
-		this.vnfLcmController = vnfLcmController;
-	}
+	<U> ResponseEntity<String> search(MultiValueMap<String, String> requestParams, Class<U> class1, Consumer<U> makeLinks);
 
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> class1, final Consumer<U> makeLinks) {
-		return vnfLcmController.search(requestParams, class1, VNFLCMOPOCC_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFLCMOPOCC_SEARCH_MANDATORY_FIELDS, makeLinks);
-	}
+	ResponseEntity<Void> lcmOpOccRollback(UUID id);
 
-	public ResponseEntity<Void> lcmOpOccRollback(final UUID id) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	ResponseEntity<Void> lcmOpOccRetry(UUID id);
 
-	public ResponseEntity<Void> lcmOpOccRetry(final UUID id) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	VnfBlueprint lcmOpOccFindById(UUID id);
 
-	public VnfBlueprint lcmOpOccFindById(final UUID id) {
-		return vnfLcmController.vnfLcmOpOccsVnfLcmOpOccIdGet(id);
-	}
+	<U> ResponseEntity<U> lcmOpOccFail(UUID id);
 
-	public <U> ResponseEntity<U> lcmOpOccFail(final UUID id) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
-
-	public <U> ResponseEntity<U> lcmOpOccCancel(final UUID id) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-	}
+	<U> ResponseEntity<U> lcmOpOccCancel(UUID id);
 
 }

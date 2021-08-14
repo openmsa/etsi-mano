@@ -16,77 +16,25 @@
  */
 package com.ubiqube.etsi.mano.controller.vnfpm;
 
-import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS;
-import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
-
-import java.net.URI;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+public interface VnfmPmGenericFrontController {
 
-import ma.glasnost.orika.MapperFacade;
+	<U> ResponseEntity<String> search(MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> makeLink);
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Service
-public class VnfmPmGenericFrontController {
-	private final VnfmPmController vnfmPmController;
+	ResponseEntity<Void> deleteById(UUID pmJobId);
 
-	private final MapperFacade mapper;
+	<U> ResponseEntity<U> findById(UUID pmJobIdn, Class<U> clazz, Consumer<U> makeLinks);
 
-	public VnfmPmGenericFrontController(final VnfmPmController vnfmPmController, final MapperFacade mapper) {
-		super();
-		this.vnfmPmController = vnfmPmController;
-		this.mapper = mapper;
-	}
+	<U> ResponseEntity<U> findReportById(String pmJobId, String reportId, Class<U> clazz);
 
-	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLink) {
-		return vnfmPmController.search(requestParams, clazz, VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FIELDS, VNFPMJOB_SEARCH_MANDATORY_FIELDS, makeLink);
-	}
+	<U> ResponseEntity<U> pmJobsPost(Object createPmJobRequest, Class<U> clazz, Consumer<U> makeLinks, Function<U, String> getSelfLink);
 
-	public ResponseEntity<Void> deleteById(final UUID pmJobId) {
-		vnfmPmController.delete(pmJobId);
-		return ResponseEntity.noContent().build();
-	}
+	<U> ResponseEntity<U> pmJobsPmJobIdPatch(UUID pmJobId, Object pmJobModifications);
 
-	public <U> ResponseEntity<U> findById(final UUID pmJobIdn, final Class<U> clazz, final Consumer<U> makeLinks) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.PmJob pmJob = vnfmPmController.findById(pmJobIdn);
-		final U ret = mapper.map(pmJob, clazz);
-		makeLinks.accept(ret);
-		return new ResponseEntity<>(ret, HttpStatus.OK);
-	}
-
-	public <U> ResponseEntity<U> findReportById(final String pmJobId, final String reportId, final Class<U> clazz) {
-		final com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport pm = vnfmPmController.findReport(UUID.fromString(pmJobId), UUID.fromString(reportId));
-		return ResponseEntity.ok(mapper.map(pm, clazz));
-	}
-
-	public <U> ResponseEntity<U> pmJobsPost(@Valid final Object createPmJobRequest, final Class<U> clazz, final Consumer<U> makeLinks, final Function<U, String> getSelfLink) {
-		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
-		final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
-		vimConnectionInformation.setId(UUID.fromString("5916a837-1ea6-4cf4-8401-c77fb412c9fc"));
-		res.setVimConnectionInformation(vimConnectionInformation);
-		res = vnfmPmController.save(res);
-		final U obj = mapper.map(res, clazz);
-		makeLinks.accept(obj);
-		final String link = getSelfLink.apply(obj);
-		return ResponseEntity.created(URI.create(link)).body(obj);
-	}
-
-	public <U> ResponseEntity<U> pmJobsPmJobIdPatch(final UUID pmJobId, final Object pmJobModifications) {
-		// XXX
-		return null;
-	}
 }

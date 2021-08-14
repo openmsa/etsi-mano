@@ -27,6 +27,7 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -57,5 +58,7 @@ public interface VnfInstanceLcm {
 	VnfBlueprint operate(@Nonnull final UUID uuid, final VnfOperateRequest operateVnfRequest);
 
 	VnfBlueprint vnfLcmOpOccsGet(@NotNull UUID id);
+
+	VnfBlueprint changeExtConn(@NotNull UUID vnfInstanceId, ChangeExtVnfConnRequest cevcr);
 
 }
