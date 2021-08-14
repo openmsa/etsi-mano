@@ -90,7 +90,7 @@ public class NsDescriptors331Sol005Controller implements NsDescriptors331Sol005A
 
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(final String nsdInfoId, @Valid final String includeSignatures) {
-		return nsDescriptorGenericFrontController.getManifext(nsdInfoId, includeSignatures);
+		return nsDescriptorGenericFrontController.getManifest(nsdInfoId, includeSignatures);
 	}
 
 	@Override

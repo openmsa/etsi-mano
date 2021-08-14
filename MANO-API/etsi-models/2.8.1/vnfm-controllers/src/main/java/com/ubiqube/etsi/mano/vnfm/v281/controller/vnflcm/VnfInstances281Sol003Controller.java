@@ -71,12 +71,12 @@ public class VnfInstances281Sol003Controller implements VnfInstances281Sol003Api
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId, @Valid final ChangeExtVnfConnectivityRequest body) {
-		return frontController.changeExtConn(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeExtConn(getSafeUUID(vnfInstanceId), body, VnfInstances281Sol003Controller::getLcmLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId, @Valid final ChangeVnfFlavourRequest body) {
-		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), body, VnfInstances281Sol003Controller::getLcmLink);
 	}
 
 	@Override

@@ -96,7 +96,7 @@ public class NsDescriptors271Sol005Controller implements NsDescriptors271Sol005A
 
 	@Override
 	public ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(final String nsdInfoId) {
-		return nsDescriptorGenericFrontController.getManifext(nsdInfoId, null);
+		return nsDescriptorGenericFrontController.getManifest(nsdInfoId, null);
 	}
 
 	private static void makeLinks(@Nonnull final NsdInfo nsdInfo) {
