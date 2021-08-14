@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.controller.vnfpm;
 
 import java.util.UUID;
 
@@ -22,11 +22,12 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmController;
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
+import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.SearchableService;
 
 /**
  *

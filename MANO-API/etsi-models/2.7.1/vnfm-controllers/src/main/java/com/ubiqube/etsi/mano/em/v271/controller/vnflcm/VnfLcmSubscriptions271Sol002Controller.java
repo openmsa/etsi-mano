@@ -28,7 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmSubscriptionFrontController;
+import com.ubiqube.etsi.mano.controller.vnflcm.VnfLcmSubscriptionFrontController;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscription;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionLinks;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionRequest;

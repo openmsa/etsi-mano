@@ -29,7 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnflcm.VnfSnapshotsFrontController;
+import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfSnapshotsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.CreateVnfSnapshotInfoRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfSnapshotInfo;

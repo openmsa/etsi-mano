@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.em.v331.controller.vnflcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+import static com.ubiqube.etsi.mano.vnfm.fc.Constants.getSafeUUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -28,11 +28,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfLcmSubscriptionFrontController;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscription;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscriptionLinks;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
+import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfLcmSubscriptionFrontController;
 
 /**
  *

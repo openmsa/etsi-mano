@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
 
-import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+import static com.ubiqube.etsi.mano.nfvo.fc.controller.NfvoConstants.getSafeUUID;
 
 import java.util.List;
 import java.util.UUID;

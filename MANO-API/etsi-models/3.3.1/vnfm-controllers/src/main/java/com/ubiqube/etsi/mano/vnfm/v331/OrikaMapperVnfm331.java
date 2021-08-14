@@ -42,8 +42,6 @@ import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
-import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.ResourceDefinition;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.PkgmSubscriptionRequest;
@@ -74,7 +72,6 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfcResourceInfo;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
-import ma.glasnost.orika.converter.ConverterFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
 @Component
@@ -300,9 +297,9 @@ public class OrikaMapperVnfm331 implements OrikaMapperFactoryConfigurer {
 				.field("isRootCause", "rootCause")
 				.byDefault()
 				.register();
-		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new UuidConverter());
-		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
+		// final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
+		// converterFactory.registerConverter(new UuidConverter());
+		// converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
 	}
 
 }

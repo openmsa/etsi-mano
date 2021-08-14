@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
 import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.Alarm;
@@ -33,6 +32,7 @@ import com.ubiqube.etsi.mano.em.v331.model.vnffm.AlarmLinks;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.AlarmModifications;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.Link;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.PerceivedSeverityRequest;
+import com.ubiqube.etsi.mano.vnfm.fc.vnffm.AlarmFrontController;
 
 /**
  *
