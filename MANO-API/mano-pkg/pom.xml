@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>mano-super-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<artifactId>mano-pkg-aggregator</artifactId>
+	<name>mano-pkg-aggregator</name>
+	<description>Build document for ETSI-MANO project</description>
+	<packaging>pom</packaging>
+	<modules>
+		<module>mano-pkg-api</module>
+		<module>mano-pkg-tosca</module>
+	</modules>
+</project>
