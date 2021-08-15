@@ -51,6 +51,9 @@ public class VnfmActionController {
 		case VNF_OPERATE:
 			vnfmActions.vnfOperate(objectId);
 			break;
+		case VNF_CHANGE_CONN:
+			vnfmActions.vnfChangeVnfConn(objectId);
+			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);
 			break;

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -120,5 +121,17 @@ public class VnfmActions extends AbstractGenericAction {
 		// Add all present VL if any.
 		context.putAll(getLiveVl((VnfInstance) vnfInstance));
 		return new VnfParameters(vimConnection, vim, vnfLiveInstanceJpa, context, null);
+	}
+
+	public void vnfChangeVnfConn(@NotNull final UUID blueprintId) {
+		final VnfBlueprint blueprint = blueprintService.findById(blueprintId);
+		final VnfInstance vnfInstance = vnfInstancesService.findById(blueprint.getVnfInstance().getId());
+		final List<ExtVirtualLinkDataEntity> evl = blueprint.getChangeExtVnfConnRequest().getExtVirtualLinks();
+		evl.forEach(x -> {
+			x.getExtCps().forEach(y -> {
+				final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId());
+			});
+		});
+
 	}
 }

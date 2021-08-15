@@ -38,13 +38,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.controller.lcmgrant.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -204,6 +204,15 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	@Override
 	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
 		return vnfLcmService.findById(id);
+	}
+
+	@Override
+	public VnfBlueprint changeExtConn(@NotNull final UUID uuid, final ChangeExtVnfConnRequest cevcr) {
+		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
+		ensureInstantiated(vnfInstance);
+		final VnfBlueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, cevcr);
+		eventManager.sendActionVnfm(ActionType.VNF_CHANGE_CONN, lcmOpOccs.getId(), new HashMap<>());
+		return lcmOpOccs;
 	}
 
 }

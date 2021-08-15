@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -94,6 +95,12 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	@Override
 	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
 		return versionService.vnfLcmOpOccsGet(id);
+	}
+
+	@Override
+	public VnfBlueprint changeExtConn(@NotNull final UUID vnfInstanceId, final ChangeExtVnfConnRequest cevcr) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -32,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
@@ -47,6 +48,7 @@ import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 
 @Entity
 @Indexed
@@ -97,6 +99,9 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private ChangeExtVnfConnRequest changeExtVnfConnRequest;
 
 	@Override
 	public UUID getId() {
@@ -207,6 +212,14 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
 		this.extVirtualLinks = extVirtualLinks;
+	}
+
+	public ChangeExtVnfConnRequest getChangeExtVnfConnRequest() {
+		return changeExtVnfConnRequest;
+	}
+
+	public void setChangeExtVnfConnRequest(final ChangeExtVnfConnRequest changeExtVnfConnRequest) {
+		this.changeExtVnfConnRequest = changeExtVnfConnRequest;
 	}
 
 }
