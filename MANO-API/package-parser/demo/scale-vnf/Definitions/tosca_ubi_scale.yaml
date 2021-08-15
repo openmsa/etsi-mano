@@ -55,6 +55,9 @@ topology_template:
       name: webserver
       description: A node.
       properties:
+        boot_order: true
+        nfvi_constraints:
+          key: "value"
         sw_image_data:
           name: cirros
           version: 1.0.0
@@ -73,6 +76,7 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
+        # boot_data:
       requirements:
         - virtual_storage: block01
       capabilities:
@@ -97,7 +101,7 @@ topology_template:
                 virtual_mem_size: 512 MiB
                 virtual_mem_oversubscription_policy: what
                 vdu_mem_requirements:
-                  read: openstack
+                  key: value
                 numa_enabled: true
             virtual_cpu: # tosca.datatypes.nfv.VirtualCpu
               properties:
@@ -105,7 +109,7 @@ topology_template:
                 num_virtual_cpu: 1
                 virtual_cpu_clock: 3 GHz
                 vdu_cpu_requirements: # map string
-                  read: openstack
+                  key: value
                 virtual_cpu_pinning: # tosca.datatypes.nfv.VirtualCpuPinning
                   virtual_cpu_pinning_policy: static
                   virtual_cpu_pinning_rule:
@@ -372,6 +376,7 @@ topology_template:
                 vlan_transparent: true
                 #network_type: VXLAN
                 mtu: 1442
+                segmentation_id: 0
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
                 dhcp_enabled: true
                 cidr: 192.168.0.0/24
